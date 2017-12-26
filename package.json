@@ -1,0 +1,47 @@
+{
+  "name": "datx",
+  "version": "0.0.1",
+  "description": "A MobX data store",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infinum/datx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/infinum/datx/issues"
+  },
+  "homepage": "https://github.com/infinum/datx#readme",
+  "author": "Infinum JavaScript Team <hello@infinum.co>",
+  "license": "MIT",
+  "devDependencies": {
+    "@infinumjs/tslint-config": "^1.1.1",
+    "@types/jest": "^21.1.9",
+    "@types/node": "^8.5.2",
+    "husky": "^0.14.3",
+    "jest": "^22.0.4",
+    "mobx": "^3.4.1",
+    "ts-jest": "^22.0.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
+  },
+  "peerDependencies": {
+    "mobx": "^3.4.1"
+  },
+  "scripts": {
+    "test": "jest",
+    "lint": "tslint --project .",
+    "precommit": "npm run lint & npm run test",
+    "build": "tsc --project tsconfig.json --verbose"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "testRegex": "test/(.*).ts",
+    "transform": {
+      ".ts": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    }
+  }
+}

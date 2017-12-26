@@ -1,0 +1,8 @@
+docs
+examples
+src
+test
+.codeclimate.yml
+.travis.yml
+tsconfig.json
+tslint.json

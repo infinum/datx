@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "alwaysStrict": true,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedParameters": true,
+    "outDir": "./dist",
+    "strict": true,
+    "strictFunctionTypes": true,
+    "target": "es5"
+  },
+  "exclude": [
+    "node_modules",
+    "examples"
+  ],
+  "include": [
+    "src/**/*"
+  ],
+}
