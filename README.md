@@ -2,6 +2,8 @@
 
 A MobX data store
 
+The store meant to replace [mobx-collection-store](https://github.com/infinum/mobx-collection-store). Coming soon...
+
 ***
 
 [![Build Status](https://travis-ci.org/infinum/datx.svg?branch=master)](https://travis-ci.org/infinum/datx)
