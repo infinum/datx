@@ -5,7 +5,7 @@ import {autorun} from 'mobx';
 import {
   Model,
   prop,
-} from '../src/index';
+} from '../src';
 
 describe('Model', () => {
   describe('Basic deatures', () => {

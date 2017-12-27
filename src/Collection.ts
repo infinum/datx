@@ -15,20 +15,7 @@ export class Collection {
   private __data: IObservableArray<Model> = observable.array([]);
 
   constructor(data: Array<IRawModel> = []) {
-    const models: Array<Model> = data.map((item, index) => {
-      if ('__META__' in item && item.__META__ && 'type' in item.__META__) {
-        const type = item.__META__.type;
-        const TypeModel = (this.constructor as typeof Collection).types
-          .find((model) => model.type === type);
-        if (!TypeModel) {
-          throw new Error(`A Model for type ${type} is not defined.`);
-        }
-        return new TypeModel(item);
-      } else {
-        throw new Error(`Object on index ${index} doesn't have a type defined`);
-      }
-    });
-    this.__data.replace(models);
+    this.__data.replace(data.map(this.__initModel.bind(this)));
     storage.registerCollection(this);
   }
 
@@ -41,16 +28,7 @@ export class Collection {
     model?: IType|{new(): Model},
   ): Model|Array<Model> {
     if (data instanceof Array) {
-      // @ts-ignore
-      return data.map((item) => {
-        if (item instanceof Model) {
-          this.__data.push(item);
-          return item;
-        } else if (model) {
-          return this.add(item, model);
-        }
-        throw new Error('The type needs to be defined if the object is not an instance of the model.');
-      });
+      this.__addArray(data, model);
     }
 
     if (data instanceof Model) {
@@ -85,15 +63,8 @@ export class Collection {
         return this.__data.find(model as TFilterFn);
       }
     }
-    const type = getModelType(model as typeof Model);
 
-    if (id) {
-      const models = this.__dataMap[type] || {};
-      return models[id] || null;
-    } else {
-      const data = this.__dataList[type] || [];
-      return data[0] || null;
-    }
+    return this.__findByType(model as typeof Model, id);
   }
 
   public filter(test: TFilterFn): Array<Model> {
@@ -155,5 +126,49 @@ export class Collection {
     });
 
     return list;
+  }
+
+  public __addArray<T extends Model>(data: Array<T>): Array<T>;
+  public __addArray<T extends Model>(data: Array<IDictionary<any>>, model?: IType|{new(): T}): Array<T>;
+  public __addArray(
+    data: Array<Model>|Array<IDictionary<any>>,
+    model?: IType|{new(): Model},
+  ): Array<Model> {
+    // @ts-ignore
+    return data.map((item) => {
+      if (item instanceof Model) {
+        this.__data.push(item);
+        return item;
+      } else if (model) {
+        return this.add(item, model);
+      }
+      throw new Error('The type needs to be defined if the object is not an instance of the model.');
+    });
+  }
+
+  private __initModel(item: IRawModel, index: number) {
+    if ('__META__' in item && item.__META__ && 'type' in item.__META__) {
+      const type = item.__META__.type;
+      const TypeModel = (this.constructor as typeof Collection).types
+        .find((model) => model.type === type);
+      if (!TypeModel) {
+        throw new Error(`A Model for type ${type} is not defined.`);
+      }
+      return new TypeModel(item);
+    } else {
+      throw new Error(`Object on index ${index} doesn't have a type defined`);
+    }
+  }
+
+  private __findByType(model: IType|typeof Model, id?: IIdentifier) {
+    const type = getModelType(model as typeof Model);
+
+    if (id) {
+      const models = this.__dataMap[type] || {};
+      return models[id] || null;
+    } else {
+      const data = this.__dataList[type] || [];
+      return data[0] || null;
+    }
   }
 }

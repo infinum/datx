@@ -1,10 +1,10 @@
 import {computed, extendObservable} from 'mobx';
 
+import {Collection} from '../Collection';
 import {IIdentifier} from '../interfaces/IIdentifier';
 import {IType} from '../interfaces/IType';
 import {Model} from '../Model';
 import {storage} from '../services/storage';
-import { Collection } from '../index';
 
 export function setInitial<T extends Model>(obj: T, key: string, defaultValue: any) {
 
@@ -29,7 +29,6 @@ export function getModelType(model: IType|typeof Model|Model): IType {
   return model;
 }
 
-// TODO: Get the real model id
 export function getModelId(model: Model): IIdentifier {
   return storage.getModelMetaKey(model, 'id');
 }

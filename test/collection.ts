@@ -6,7 +6,7 @@ import {
   getModelId,
   Model,
   prop,
-} from '../src/index';
+} from '../src';
 
 describe('Collection', () => {
   describe('Basic features', () => {
