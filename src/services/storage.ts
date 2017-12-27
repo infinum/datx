@@ -1,5 +1,6 @@
-import {extendObservable} from 'mobx';
+import {extendObservable, IObservableArray, observable} from 'mobx';
 
+import {Collection} from '../Collection';
 import {IDataStorage} from '../interfaces/IDataStorage';
 import {IDictionary} from '../interfaces/IDictionary';
 import {Model} from '../Model';
@@ -7,6 +8,7 @@ import {Model} from '../Model';
 export class DataStorage {
   private modelData = new Map<Model, IDataStorage>();
   private modelDefaults = new Map<typeof Model, IDictionary<any>>();
+  private collections: Array<Collection> = observable.array([]);
 
   public initModel(model: Model) {
     const modelData = {data: {}, meta: {}};
@@ -38,6 +40,12 @@ export class DataStorage {
     return modelData ? modelData.meta : null;
   }
 
+  public getModelMetaKey(model: Model, key: string): any {
+    const modelData = this.modelData.get(model);
+    const meta = modelData ? modelData.meta : null;
+    return meta ? meta[key] : undefined;
+  }
+
   public setModelMeta(model: Model, meta: IDictionary<any>) {
     const modelData = this.__getModelData(model);
     extendObservable(modelData.meta, meta);
@@ -59,6 +67,14 @@ export class DataStorage {
       model = Object.getPrototypeOf(model);
     }
     return Object.assign({}, ...defaults.reverse());
+  }
+
+  public registerCollection(collection: Collection) {
+    this.collections.push(collection);
+  }
+
+  public getModelCollections(model: Model): Array<Collection> {
+    return this.collections.filter((item) => item.hasItem(model));
   }
 
   private __getModelData(model: Model): IDataStorage {
