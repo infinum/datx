@@ -17,7 +17,7 @@ describe('Model', () => {
     storage.clear();
   });
 
-  describe('Basic deatures', () => {
+  describe('Basic features', () => {
     it('should work with initial data', () => {
       class Foo extends Model {
         @prop public foo: number;
@@ -117,6 +117,18 @@ describe('Model', () => {
       expect(foo2).toBeInstanceOf(Foo);
       expect(getModelId(foo)).not.toBe(getModelId(foo2));
       expect(getOriginalModel(foo2)).toBe(foo);
+    });
+
+    it('should not allow two models with same id', () => {
+      class Foo extends Model {
+        @prop public foo: number;
+      }
+
+      const foo = new Foo({foo: 1});
+      const fooRaw = foo.toJSON();
+      expect(() => {
+        const fooCopy = new Foo(fooRaw);
+      }).toThrowError('Model already exists, please update it instead.');
     });
   });
 });

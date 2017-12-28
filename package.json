@@ -34,7 +34,7 @@
     "lint": "tslint --project .",
     "precommit": "npm run lint & npm run test",
     "prepublish": "npm run build",
-    "build": "tsc"
+    "build": "tsc --project tsconfig.build.json"
   },
   "jest": {
     "moduleFileExtensions": [
