@@ -1,9 +1,9 @@
 import {computed, IObservableArray, observable} from 'mobx';
 
 import {UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
-import {initCollectionModel} from './helpers/collection';
+import {initCollectionModel, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
-import {getModelId, getModelType} from './helpers/model';
+import {getModelId, getModelType, updateModel} from './helpers/model';
 import {ICollection} from './interfaces/ICollection';
 import {IDictionary} from './interfaces/IDictionary';
 import {IIdentifier} from './interfaces/IIdentifier';
@@ -19,8 +19,15 @@ export class Collection implements ICollection {
   private __data: IObservableArray<Model> = observable.array([]);
 
   constructor(data: Array<IRawModel> = []) {
-    this.__data.replace(data.map((item, index) => initCollectionModel(this, item, index)));
+    this.insert(data);
     storage.registerCollection(this);
+  }
+
+  public insert(data: Array<IRawModel> = []): Array<Model> {
+    const staticCollection = this.constructor as typeof Collection;
+    const models = data.map((item, index) => initCollectionModel(staticCollection, item, index));
+    this.__data.push(...models);
+    return models;
   }
 
   public add<T extends Model>(data: T): T;
@@ -141,17 +148,7 @@ export class Collection implements ICollection {
     }
 
     const type = getModelType(model as IType|typeof Model);
-    const TypeModel = (this.constructor as typeof Collection).types.find((item) => item.type === type);
-
-    if (!type) {
-      throw error(UNDEFINED_TYPE);
-    }
-
-    if (!TypeModel) {
-      throw error(UNDEFINED_MODEL, {type});
-    }
-
-    const modelInstance = new TypeModel(data);
+    const modelInstance = upsertModel(data, type, this.constructor as typeof Collection);
     this.__data.push(modelInstance);
     return modelInstance;
   }

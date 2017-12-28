@@ -1,14 +1,18 @@
 import {extendObservable, IObservableArray, observable} from 'mobx';
 
 import {Collection} from '../Collection';
+import {getModelId, getModelType} from '../helpers/model';
 import {IDataStorage} from '../interfaces/IDataStorage';
 import {IDictionary} from '../interfaces/IDictionary';
+import {IIdentifier} from '../interfaces/IIdentifier';
+import {IType} from '../interfaces/IType';
 import {Model} from '../Model';
 
 export class DataStorage {
   private modelData = new Map<Model, IDataStorage>();
   private modelDefaults = new Map<typeof Model, IDictionary<any>>();
-  private collections: Array<Collection> = observable.array([]);
+  private collections: IObservableArray<Collection> = observable.array([]);
+  private models: IDictionary<IDictionary<Model>> = {};
 
   public initModel(model: Model) {
     const modelData = {data: {}, meta: {}};
@@ -70,6 +74,7 @@ export class DataStorage {
   }
 
   public registerCollection(collection: Collection) {
+    // TODO: Figure out how to avoid memory leaks
     this.collections.push(collection);
   }
 
@@ -77,8 +82,31 @@ export class DataStorage {
     return this.collections.filter((item) => item.hasItem(model));
   }
 
+  public registerModel(model: Model) {
+    // TODO: Figure out how to avoid memory leaks
+    const type = getModelType(model);
+    const id = getModelId(model);
+    this.models[type] = this.models[type] || {};
+    this.models[type][id] = model;
+  }
+
+  public findModel(model: IType|typeof Model|Model, id: IIdentifier): Model|null {
+    const type = getModelType(model);
+    if (type in this.models && id in this.models[type]) {
+      return this.models[type][id];
+    }
+    return null;
+  }
+
   private __getModelData(model: Model): IDataStorage {
     return this.modelData.get(model) || this.initModel(model);
+  }
+
+  private clear() {
+    this.modelData.clear();
+    this.modelDefaults.clear();
+    this.collections.replace([]);
+    this.models = {};
   }
 }
 

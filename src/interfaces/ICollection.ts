@@ -9,6 +9,8 @@ import {TFilterFn} from './TFilterFn';
 export interface ICollection {
   length: number;
 
+  insert(data: Array<IRawModel>): Array<Model>;
+
   add<T extends Model>(data: T): T;
   add<T extends Model>(data: Array<T>): Array<T>;
   add<T extends Model>(data: IDictionary<any>, model: IType|{new(): T}): T;

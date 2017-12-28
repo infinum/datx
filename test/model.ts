@@ -3,11 +3,20 @@
 import {autorun} from 'mobx';
 
 import {
+  cloneModel,
+  getModelId,
+  getOriginalModel,
   Model,
   prop,
 } from '../src';
+import {storage} from '../src/services/storage';
 
 describe('Model', () => {
+  beforeEach(() => {
+    // @ts-ignore
+    storage.clear();
+  });
+
   describe('Basic deatures', () => {
     it('should work with initial data', () => {
       class Foo extends Model {
@@ -93,6 +102,21 @@ describe('Model', () => {
       expect(bar.foo).toBe(4);
       expect(bar.bar).toBe(2);
       expect(bar.baz).toBe(9);
+    });
+
+    it('should support cloning', () => {
+      class Foo extends Model {
+        @prop public foo: number;
+      }
+
+      const foo = new Foo({foo: 1});
+      expect(foo.foo).toBe(1);
+
+      const foo2 = cloneModel(foo);
+      expect(foo2.foo).toBe(1);
+      expect(foo2).toBeInstanceOf(Foo);
+      expect(getModelId(foo)).not.toBe(getModelId(foo2));
+      expect(getOriginalModel(foo2)).toBe(foo);
     });
   });
 });

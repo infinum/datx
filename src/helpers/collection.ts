@@ -1,18 +1,38 @@
 import {Collection} from '../Collection';
-import {OBJECT_NO_TYPE, UNDEFINED_MODEL} from '../errors';
-import {error} from '../helpers/format';
+import {OBJECT_NO_TYPE, UNDEFINED_MODEL, UNDEFINED_TYPE} from '../errors';
 import {IRawModel} from '../interfaces/IRawModel';
+import {IType} from '../interfaces/IType';
 import {Model} from '../Model';
+import {storage} from '../services/storage';
+import {error} from './format';
+import {getMetaKeyFromRaw, updateModel} from './model';
 
-export function initCollectionModel(collection: Collection, item: IRawModel, index: number): Model {
-  if ('__META__' in item && item.__META__ && 'type' in item.__META__) {
-    const type = item.__META__.type;
-    const TypeModel = (collection.constructor as typeof Collection).types
-      .find((model) => model.type === type);
-    if (!TypeModel) {
-      throw error(UNDEFINED_MODEL);
-    }
-    return new TypeModel(item);
+export function initCollectionModel(collection: typeof Collection, data: IRawModel, index: number): Model {
+  const type = getMetaKeyFromRaw(data, 'type');
+  if (type) {
+    return upsertModel(data, type, collection);
   }
   throw error(OBJECT_NO_TYPE, {index});
+}
+
+export function upsertModel(data: IRawModel, type: IType|typeof Model, collection: typeof Collection): Model {
+  const TypeModel = collection.types.find((item) => item.type === type);
+
+  if (!type) {
+    throw error(UNDEFINED_TYPE);
+  }
+
+  if (!TypeModel) {
+    throw error(UNDEFINED_MODEL, {type});
+  }
+
+  const id = getMetaKeyFromRaw(data, 'id');
+  if (id) {
+    const existingModel = storage.findModel(type, id);
+    if (existingModel) {
+      return updateModel(existingModel, data);
+    }
+  }
+
+  return new TypeModel(data);
 }

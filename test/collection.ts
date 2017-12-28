@@ -7,8 +7,14 @@ import {
   Model,
   prop,
 } from '../src';
+import {storage} from '../src/services/storage';
 
 describe('Collection', () => {
+  beforeEach(() => {
+    // @ts-ignore
+    storage.clear();
+  });
+
   describe('Basic features', () => {
     it('should initialize', () => {
       const collection = new Collection();
@@ -103,10 +109,42 @@ describe('Collection', () => {
       const foo1b = store2.find((item: Foo) => item.foo === 1);
       expect(foo1b).toBeInstanceOf(Foo);
       expect(getModelId(foo1b)).toBe(getModelId(foo1));
-      expect(foo1b === foo1).toBe(false);
+      expect(foo1b).toBe(foo1);
 
       const fooB = store2.find(Foo);
       expect(fooB).toBeInstanceOf(Foo);
+    });
+
+    it('should upsert existing models', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+
+        @prop public foo: number;
+        @prop public bar: number;
+        @prop public baz: number;
+      }
+
+      class Store extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new Store();
+      const foo1 = store.add({foo: 1}, Foo);
+      const foo2 = store.add<Foo>({foo: 2}, 'foo');
+      const foo3 = store.add(new Foo({foo: 3}));
+      expect(foo1.foo).toBe(1);
+
+      const raw = store.toJSON();
+      raw[0].foo = 4;
+      expect(foo1.foo).toBe(1);
+
+      const store2 = new Store(raw);
+      expect(store2.length).toBe(3);
+      const foo1b = store2.find((item: Foo) => item.foo === 1);
+      const foo1c = store2.find((item: Foo) => item.foo === 4);
+      expect(foo1b).toBe(undefined);
+      expect(foo1c).toBe(foo1);
+      expect(foo1.foo).toBe(4);
     });
   });
 });

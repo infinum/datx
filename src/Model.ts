@@ -2,6 +2,8 @@ import {toJS} from 'mobx';
 
 import {Collection} from './Collection';
 import {DEFAULT_TYPE, META_FIELD} from './consts';
+import {MODEL_EXISTS} from './errors';
+import {error} from './helpers/format';
 import {getModelType, setInitial} from './helpers/model';
 import {IDictionary} from './interfaces/IDictionary';
 import {IRawModel} from './interfaces/IRawModel';
@@ -37,6 +39,10 @@ export class Model {
     } else {
       storage.setModelMeta(this, meta);
     }
+    const existingModel = storage.findModel(meta.type, meta.id);
+    if (existingModel) {
+      throw error(MODEL_EXISTS);
+    }
 
     const defaults = storage.getModelDefaults(staticModel);
     Object.keys(defaults)
@@ -49,6 +55,8 @@ export class Model {
       .forEach((key) => {
         setInitial(this, key, data[key]);
       });
+
+    storage.registerModel(this);
   }
 
   public toJSON(): IRawModel {
