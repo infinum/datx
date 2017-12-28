@@ -57,7 +57,7 @@ describe('Collection', () => {
 
       // @ts-ignore - TS won't allow this mistake
       expect(() => store.add({foo: 4}, FooBar))
-        .toThrowError('No model is defined for the type undefined.');
+        .toThrowError('The type needs to be defined if the object is not an instance of the model.');
 
       // @ts-ignore - TS won't allow this mistake
       expect(() => store.add([{foo: 4}, {foo: 5}]))

@@ -1,6 +1,10 @@
 import {computed, IObservableArray, observable} from 'mobx';
 
+import {UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
+import {initCollectionModel} from './helpers/collection';
+import {error} from './helpers/format';
 import {getModelId, getModelType} from './helpers/model';
+import {ICollection} from './interfaces/ICollection';
 import {IDictionary} from './interfaces/IDictionary';
 import {IIdentifier} from './interfaces/IIdentifier';
 import {IRawModel} from './interfaces/IRawModel';
@@ -9,13 +13,13 @@ import {TFilterFn} from './interfaces/TFilterFn';
 import {Model} from './Model';
 import {storage} from './services/storage';
 
-export class Collection {
+export class Collection implements ICollection {
   public static types: Array<typeof Model> = [];
 
   private __data: IObservableArray<Model> = observable.array([]);
 
   constructor(data: Array<IRawModel> = []) {
-    this.__data.replace(data.map(this.__initModel.bind(this)));
+    this.__data.replace(data.map((item, index) => initCollectionModel(this, item, index)));
     storage.registerCollection(this);
   }
 
@@ -27,29 +31,7 @@ export class Collection {
     data: Model|IDictionary<any>|Array<Model>|Array<IDictionary<any>>,
     model?: IType|{new(): Model},
   ): Model|Array<Model> {
-    if (data instanceof Array) {
-      this.__addArray(data, model);
-    }
-
-    if (data instanceof Model) {
-      this.__data.push(data);
-      return data;
-    }
-
-    if (!model) {
-      throw new Error('The type needs to be defined if the object is not an instance of the model.');
-    }
-
-    const type = getModelType(model as IType|typeof Model);
-    const TypeModel = (this.constructor as typeof Collection).types.find((item) => item.type === type);
-
-    if (!TypeModel) {
-      throw new Error(`No model is defined for the type ${type}.`);
-    }
-
-    const modelInstance = new TypeModel(data);
-    this.__data.push(modelInstance);
-    return modelInstance;
+    return (data instanceof Array) ? this.__addArray(data, model) : this.__addSingle(data, model);
   }
 
   public find(model: IType|typeof Model, id?: IIdentifier): Model|null;
@@ -128,9 +110,9 @@ export class Collection {
     return list;
   }
 
-  public __addArray<T extends Model>(data: Array<T>): Array<T>;
-  public __addArray<T extends Model>(data: Array<IDictionary<any>>, model?: IType|{new(): T}): Array<T>;
-  public __addArray(
+  private __addArray<T extends Model>(data: Array<T>): Array<T>;
+  private __addArray<T extends Model>(data: Array<IDictionary<any>>, model?: IType|{new(): T}): Array<T>;
+  private __addArray(
     data: Array<Model>|Array<IDictionary<any>>,
     model?: IType|{new(): Model},
   ): Array<Model> {
@@ -142,22 +124,36 @@ export class Collection {
       } else if (model) {
         return this.add(item, model);
       }
-      throw new Error('The type needs to be defined if the object is not an instance of the model.');
+      throw error(UNDEFINED_TYPE);
     });
   }
 
-  private __initModel(item: IRawModel, index: number) {
-    if ('__META__' in item && item.__META__ && 'type' in item.__META__) {
-      const type = item.__META__.type;
-      const TypeModel = (this.constructor as typeof Collection).types
-        .find((model) => model.type === type);
-      if (!TypeModel) {
-        throw new Error(`A Model for type ${type} is not defined.`);
-      }
-      return new TypeModel(item);
-    } else {
-      throw new Error(`Object on index ${index} doesn't have a type defined`);
+  private __addSingle<T extends Model>(data: T): T;
+  private __addSingle<T extends Model>(data: IDictionary<any>, model?: IType|{new(): T}): T;
+  private __addSingle(data: Model|IDictionary<any>, model?: IType|{new(): Model}) {
+    if (data instanceof Model) {
+      this.__data.push(data);
+      return data;
     }
+
+    if (!model) {
+      throw error(UNDEFINED_TYPE);
+    }
+
+    const type = getModelType(model as IType|typeof Model);
+    const TypeModel = (this.constructor as typeof Collection).types.find((item) => item.type === type);
+
+    if (!type) {
+      throw error(UNDEFINED_TYPE);
+    }
+
+    if (!TypeModel) {
+      throw error(UNDEFINED_MODEL, {type});
+    }
+
+    const modelInstance = new TypeModel(data);
+    this.__data.push(modelInstance);
+    return modelInstance;
   }
 
   private __findByType(model: IType|typeof Model, id?: IIdentifier) {
