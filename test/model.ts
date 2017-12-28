@@ -7,6 +7,7 @@ import {
   getModelId,
   getOriginalModel,
   Model,
+  modelToJSON,
   prop,
 } from '../src';
 import {storage} from '../src/services/storage';
@@ -125,7 +126,7 @@ describe('Model', () => {
       }
 
       const foo = new Foo({foo: 1});
-      const fooRaw = foo.toJSON();
+      const fooRaw = modelToJSON(foo);
       expect(() => {
         const fooCopy = new Foo(fooRaw);
       }).toThrowError('Model already exists, please update it instead.');

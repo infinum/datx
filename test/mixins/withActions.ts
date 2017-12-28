@@ -3,12 +3,13 @@
 import {autorun} from 'mobx';
 
 import {
-  cloneModel,
   Collection,
   Model,
   prop,
+  withActions,
   withMeta,
 } from '../../src';
+import {META_FIELD} from '../../src/consts';
 import {storage} from '../../src/services/storage';
 
 describe('Collection', () => {
@@ -26,46 +27,41 @@ describe('Collection', () => {
     }
 
     const FooMeta = withMeta(Foo);
+    const FooActions = withActions(FooMeta);
 
-    const foo = new FooMeta({foo: 1, bar: 2});
-
-    expect(foo.foo).toBe(1);
-    expect(foo.bar).toBe(2);
-    expect(foo.baz).toBe(undefined);
+    const foo = new FooActions({foo: 1, bar: 2});
     expect(foo.meta.type).toBe('foo');
-    expect(foo.meta.original).toBe(undefined);
-    expect(foo.meta.collections).toHaveLength(0);
+    expect(foo.foo).toBe(1);
 
-    let bazValue: number;
-    let autorunCount = 0;
+    const foo2 = foo.clone();
 
-    autorun(() => {
-      expect(foo.baz).toBe(bazValue);
-      autorunCount++;
-    });
-
-    bazValue = 3;
-    foo.baz = 3;
-
-    expect(autorunCount).toBe(2);
-
-    const foo2 = cloneModel(foo);
     expect(foo2).not.toBe(foo);
     expect(foo2.meta.original).toBe(foo);
+    expect(foo2.foo).toBe(1);
 
-    expect(() => foo2.meta.type = 'bar').toThrowError();
+    foo2.update({foo: 3, baz: 4});
+    expect(foo2.foo).toBe(3);
+    expect(foo.foo).toBe(1);
+    expect(foo2.baz).toBe(4);
+
+    foo2.assign('foobar', 5);
+    // @ts-ignore - A new value not defined in typings
+    expect(foo2.foobar).toBe(5);
+
+    const rawFoo2 = foo2.toJSON();
+    expect(rawFoo2).toHaveProperty(META_FIELD);
   });
 
   it('should fail for collections', () => {
 
     // @ts-ignore - TS won't allow this mistake
-    expect(() => withMeta(Collection)).toThrowError('This mixin can only decorate models');
+    expect(() => withActions(Collection)).toThrowError('This mixin can only decorate models');
   });
 
   it('should fail for other classes', () => {
     class A {}
 
     // @ts-ignore - TS won't allow this mistake
-    expect(() => withMeta(A)).toThrowError('This mixin can only decorate models');
+    expect(() => withActions(A)).toThrowError('This mixin can only decorate models');
   });
 });

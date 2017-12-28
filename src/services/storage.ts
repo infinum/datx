@@ -53,6 +53,7 @@ export class DataStorage {
   public setModelMeta(model: Model, meta: IDictionary<any>) {
     const modelData = this.__getModelData(model);
     extendObservable(modelData.meta, meta);
+    return modelData.meta;
   }
 
   public addModelDefaultField(model: typeof Model, key: string, value?: any) {

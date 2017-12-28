@@ -3,7 +3,7 @@ import {computed, IObservableArray, observable} from 'mobx';
 import {UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
 import {initCollectionModel, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
-import {getModelId, getModelType, updateModel} from './helpers/model';
+import {getModelId, getModelType, modelToJSON, updateModel} from './helpers/model';
 import {ICollection} from './interfaces/ICollection';
 import {IDictionary} from './interfaces/IDictionary';
 import {IIdentifier} from './interfaces/IIdentifier';
@@ -75,7 +75,7 @@ export class Collection implements ICollection {
   }
 
   public toJSON(): Array<IRawModel> {
-    return this.__data.map((model) => model.toJSON());
+    return this.__data.map(modelToJSON);
   }
 
   public remove(model: IType|typeof Model, id?: IIdentifier);

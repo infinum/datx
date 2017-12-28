@@ -1,8 +1,8 @@
-import {computed, extendObservable} from 'mobx';
+import {computed, extendObservable, toJS} from 'mobx';
 
 import {Collection} from '../Collection';
 import {META_FIELD} from '../consts';
-import {NOT_A_CLONE} from '../errors';
+import {MODEL_EXISTS, NOT_A_CLONE} from '../errors';
 import {IDictionary} from '../interfaces/IDictionary';
 import {IIdentifier} from '../interfaces/IIdentifier';
 import {IRawModel} from '../interfaces/IRawModel';
@@ -44,7 +44,7 @@ export function getModelCollections(model: Model): Array<Collection> {
 
 export function cloneModel<T extends Model>(model: T): T {
   const TypeModel = model.constructor as typeof Model;
-  const rawData = model.toJSON();
+  const rawData = modelToJSON(model);
   if (rawData[META_FIELD] && typeof rawData[META_FIELD] === 'object' && rawData[META_FIELD] !== undefined) {
     // @ts-ignore - TS is stupid...
     rawData[META_FIELD].originalId = rawData[META_FIELD].id;
@@ -85,4 +85,59 @@ export function getMetaKeyFromRaw(data: IRawModel, key: string): any {
     return data[META_FIELD][key];
   }
   return undefined;
+}
+
+export function initModelData(model: Model, data: IRawModel) {
+  const staticModel = model.constructor as typeof Model;
+
+  const defaults = storage.getModelDefaults(staticModel);
+  Object.keys(defaults)
+    .filter((key) => !(key in data))
+    .forEach((key) => {
+      setInitial(model, key, defaults[key]);
+    });
+
+  Object.keys(data)
+    .forEach((key) => {
+      setInitial(model, key, data[key]);
+    });
+}
+
+export function initModelMeta(model: Model, data: IRawModel): IDictionary<any> {
+  const staticModel = model.constructor as typeof Model;
+  const meta = {
+    id: staticModel.getAutoId(),
+    type: getModelType(model),
+  };
+
+  let newMeta;
+  if (META_FIELD in data && data[META_FIELD]) {
+    newMeta = storage.setModelMeta(model, Object.assign(meta, data[META_FIELD] || {}));
+    delete data[META_FIELD];
+  } else {
+    newMeta = storage.setModelMeta(model, meta);
+  }
+  return newMeta;
+}
+
+export function initModel(model: Model, rawData: IRawModel) {
+  const staticModel = model.constructor as typeof Model;
+  const data = Object.assign({}, staticModel.preprocess(rawData));
+
+  const meta = initModelMeta(model, data);
+
+  const existingModel = storage.findModel(meta.type, meta.id);
+  if (existingModel) {
+    throw error(MODEL_EXISTS);
+  }
+
+  initModelData(model, data);
+
+  storage.registerModel(model);
+}
+
+export function modelToJSON(model: Model): IRawModel {
+  const data = toJS(storage.getModelData(model));
+  const meta = toJS(storage.getModelMeta(model));
+  return Object.assign(data, {[META_FIELD]: meta});
 }
