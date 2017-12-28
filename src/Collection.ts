@@ -7,6 +7,7 @@ import {getModelId, getModelType, modelToJSON, updateModel} from './helpers/mode
 import {ICollection} from './interfaces/ICollection';
 import {IDictionary} from './interfaces/IDictionary';
 import {IIdentifier} from './interfaces/IIdentifier';
+import {IModelConstructor} from './interfaces/IModelConstructor';
 import {IRawModel} from './interfaces/IRawModel';
 import {IType} from './interfaces/IType';
 import {TFilterFn} from './interfaces/TFilterFn';
@@ -32,11 +33,11 @@ export class Collection implements ICollection {
 
   public add<T extends Model>(data: T): T;
   public add<T extends Model>(data: Array<T>): Array<T>;
-  public add<T extends Model>(data: IDictionary<any>, model: IType|{new(): T}): T;
-  public add<T extends Model>(data: Array<IDictionary<any>>, model: IType|{new(): T}): Array<T>;
+  public add<T extends Model>(data: IDictionary<any>, model: IType|IModelConstructor<T>): T;
+  public add<T extends Model>(data: Array<IDictionary<any>>, model: IType|IModelConstructor<T>): Array<T>;
   public add(
     data: Model|IDictionary<any>|Array<Model>|Array<IDictionary<any>>,
-    model?: IType|{new(): Model},
+    model?: IType|IModelConstructor,
   ): Model|Array<Model> {
     return (data instanceof Array) ? this.__addArray(data, model) : this.__addSingle(data, model);
   }
@@ -118,12 +119,11 @@ export class Collection implements ICollection {
   }
 
   private __addArray<T extends Model>(data: Array<T>): Array<T>;
-  private __addArray<T extends Model>(data: Array<IDictionary<any>>, model?: IType|{new(): T}): Array<T>;
+  private __addArray<T extends Model>(data: Array<IDictionary<any>>, model?: IType|IModelConstructor<T>): Array<T>;
   private __addArray(
-    data: Array<Model>|Array<IDictionary<any>>,
-    model?: IType|{new(): Model},
+    data: Array<Model|IDictionary<any>>,
+    model?: IType|IModelConstructor,
   ): Array<Model> {
-    // @ts-ignore
     return data.map((item) => {
       if (item instanceof Model) {
         this.__data.push(item);
@@ -136,8 +136,8 @@ export class Collection implements ICollection {
   }
 
   private __addSingle<T extends Model>(data: T): T;
-  private __addSingle<T extends Model>(data: IDictionary<any>, model?: IType|{new(): T}): T;
-  private __addSingle(data: Model|IDictionary<any>, model?: IType|{new(): Model}) {
+  private __addSingle<T extends Model>(data: IDictionary<any>, model?: IType|IModelConstructor<T>): T;
+  private __addSingle(data: Model|IDictionary<any>, model?: IType|IModelConstructor) {
     if (data instanceof Model) {
       this.__data.push(data);
       return data;

@@ -46,10 +46,9 @@ export function cloneModel<T extends Model>(model: T): T {
   const TypeModel = model.constructor as typeof Model;
   const rawData = modelToJSON(model);
   if (rawData[META_FIELD] && typeof rawData[META_FIELD] === 'object' && rawData[META_FIELD] !== undefined) {
-    // @ts-ignore - TS is stupid...
-    rawData[META_FIELD].originalId = rawData[META_FIELD].id;
-    // @ts-ignore - TS is stupid...
-    delete rawData[META_FIELD].id;
+    const meta = (rawData[META_FIELD] as IDictionary<any>);
+    meta.originalId = meta.id;
+    delete meta.id;
   }
   return new TypeModel(rawData) as T;
 }
@@ -81,8 +80,7 @@ export function assignModelKey<T extends Model>(model: T, key: string, value: an
 
 export function getMetaKeyFromRaw(data: IRawModel, key: string): any {
   if (META_FIELD in data && typeof data[META_FIELD] === 'object' && data[META_FIELD] !== undefined) {
-    // @ts-ignore - TS is stupid...
-    return data[META_FIELD][key];
+    return (data[META_FIELD] as IDictionary<any>)[key];
   }
   return undefined;
 }

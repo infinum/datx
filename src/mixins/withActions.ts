@@ -7,11 +7,9 @@ import {assignModelKey, cloneModel, modelToJSON, updateModel} from '../helpers/m
 import {IActionsMixin} from '../interfaces/IActionsMixin';
 import {IDictionary} from '../interfaces/IDictionary';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
-import {IRawModel} from '../interfaces/IRawModel';
 import {Model} from '../Model';
 
 export function withActions<T extends Model>(Base: IModelConstructor<T>) {
-  // @ts-ignore
   const BaseClass = Base as typeof Model;
 
   if (!isModel(BaseClass)) {
@@ -37,6 +35,5 @@ export function withActions<T extends Model>(Base: IModelConstructor<T>) {
     }
   }
 
-  // @ts-ignore
   return WithActions as IModelConstructor<IActionsMixin<T> & T>;
 }

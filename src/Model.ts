@@ -16,8 +16,6 @@ export class Model {
     return --this.autoIdValue;
   }
 
-  private static __defaults: IDictionary<any> = {};
-
   constructor(rawData: IRawModel = {}) {
     initModel(this, rawData);
   }
