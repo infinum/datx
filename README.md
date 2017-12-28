@@ -22,7 +22,11 @@ The store meant to replace [mobx-collection-store](https://github.com/infinum/mo
 
 **todo**
 
-## API regerence
+## API reference
+
+**todo**
+
+## Mixins
 
 **todo**
 

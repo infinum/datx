@@ -20,7 +20,7 @@
     "noUnusedParameters": true,
     "outDir": "./dist",
     "strict": true,
-    "strictFunctionTypes": true,
+    "strictFunctionTypes": false,
     "target": "es5"
   },
   "exclude": [
