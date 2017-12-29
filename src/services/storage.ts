@@ -1,16 +1,18 @@
-import {extendObservable, IObservableArray, observable} from 'mobx';
+import {extendObservable, IObservableArray, observable, toJS} from 'mobx';
 
 import {Collection} from '../Collection';
 import {getModelId, getModelType} from '../helpers/model';
 import {IDataStorage} from '../interfaces/IDataStorage';
 import {IDictionary} from '../interfaces/IDictionary';
 import {IIdentifier} from '../interfaces/IIdentifier';
+import {IReferenceOptions} from '../interfaces/IReferenceOptions';
 import {IType} from '../interfaces/IType';
 import {Model} from '../Model';
 
 export class DataStorage {
-  private modelData = new Map<Model, IDataStorage>();
-  private modelDefaults = new Map<typeof Model, IDictionary<any>>();
+  private modelData = new WeakMap<Model, IDataStorage>();
+  private modelClassDefaults = new WeakMap<typeof Model, IDictionary<any>>();
+  private modelClassReferences = new WeakMap<typeof Model, IDictionary<IReferenceOptions>>();
   private collections: IObservableArray<Collection> = observable.array([]);
   private models: IDictionary<IDictionary<Model>> = {};
 
@@ -57,10 +59,10 @@ export class DataStorage {
   }
 
   public addModelDefaultField(model: typeof Model, key: string, value?: any) {
-    if (this.modelDefaults.has(model)) {
-      Object.assign(this.modelDefaults.get(model), {[key]: value});
+    if (this.modelClassDefaults.has(model)) {
+      Object.assign(this.modelClassDefaults.get(model), {[key]: value});
     } else {
-      this.modelDefaults.set(model, {[key]: value});
+      this.modelClassDefaults.set(model, {[key]: value});
     }
   }
 
@@ -68,7 +70,7 @@ export class DataStorage {
     const defaults: Array<IDictionary<any>> = [];
     let model = obj;
     while (model) {
-      defaults.push(this.modelDefaults.get(model) || {});
+      defaults.push(this.modelClassDefaults.get(model) || {});
       model = Object.getPrototypeOf(model);
     }
     return Object.assign({}, ...defaults.reverse());
@@ -99,13 +101,32 @@ export class DataStorage {
     return null;
   }
 
+  public addModelClassReference(model: typeof Model, key: string, options: IReferenceOptions) {
+    const references = this.modelClassReferences.get(model);
+    if (references) {
+      Object.assign(references, {[key]: options});
+    } else {
+      this.modelClassReferences.set(model, {[key]: options});
+    }
+  }
+
+  public getModelClassReferences(model: typeof Model): IDictionary<IReferenceOptions> {
+    return this.modelClassReferences.get(model) || {};
+  }
+
+  public getModelsByType(type: IType) {
+    return this.models[type];
+  }
+
   private __getModelData(model: Model): IDataStorage {
     return this.modelData.get(model) || this.initModel(model);
   }
 
+  // For testing purposes only
   private clear() {
-    this.modelData.clear();
-    this.modelDefaults.clear();
+    this.modelData = new WeakMap<Model, IDataStorage>();
+    this.modelClassDefaults = new WeakMap<typeof Model, IDictionary<any>>();
+    this.modelClassReferences = new WeakMap<typeof Model, IDictionary<IReferenceOptions>>();
     this.collections.replace([]);
     this.models = {};
   }

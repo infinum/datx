@@ -3,10 +3,12 @@ import {computed} from 'mobx';
 import {DECORATE_MODEL} from '../errors';
 import {error} from '../helpers/format';
 import {isModel} from '../helpers/mixin';
-import {assignModelKey, cloneModel, modelToJSON, updateModel} from '../helpers/model';
+import {assignModel, cloneModel, initModelRef, modelToJSON, updateModel} from '../helpers/model';
 import {IActionsMixin} from '../interfaces/IActionsMixin';
 import {IDictionary} from '../interfaces/IDictionary';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
+import {IReferenceOptions} from '../interfaces/IReferenceOptions';
+import {TRefValue} from '../interfaces/TRefValue';
 import {Model} from '../Model';
 
 export function withActions<T extends Model>(Base: IModelConstructor<T>) {
@@ -27,7 +29,11 @@ export function withActions<T extends Model>(Base: IModelConstructor<T>) {
     }
 
     public assign(key: string, value: any) {
-      assignModelKey(this, key, value);
+      assignModel(this, key, value);
+    }
+
+    public addReference(key: string, value: TRefValue, options: IReferenceOptions) {
+      initModelRef(this, key, options, value);
     }
 
     public toJSON() {

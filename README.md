@@ -30,6 +30,19 @@ The store meant to replace [mobx-collection-store](https://github.com/infinum/mo
 
 **todo**
 
+## TODO to match mobx-collection-store v2 feature set
+
+* [ ] Snapshots/patches
+  * patchListen
+  * applyPatch
+  * snapshot
+* [ ] Back reference
+* [ ] idAttribute
+* [ ] typeAttribute
+* [ ] Support for id updating
+* [ ] Destroy model/collection
+* [ ] Reset collection
+
 ## License
 
 The [MIT License](LICENSE)

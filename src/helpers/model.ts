@@ -1,28 +1,206 @@
-import {computed, extendObservable, toJS} from 'mobx';
+import {
+  computed,
+  extendObservable,
+  IArrayChange,
+  IArraySplice,
+  intercept,
+  IObservableArray,
+  isObservableArray,
+  observable,
+  toJS,
+} from 'mobx';
 
 import {Collection} from '../Collection';
 import {META_FIELD} from '../consts';
-import {MODEL_EXISTS, NOT_A_CLONE} from '../errors';
+import {ReferenceType} from '../enums/ReferenceType';
+import {MODEL_EXISTS, NO_REFS, NOT_A_CLONE, REF_ARRAY, REF_NEEDS_INIT, REF_SINGLE} from '../errors';
 import {IDictionary} from '../interfaces/IDictionary';
 import {IIdentifier} from '../interfaces/IIdentifier';
 import {IRawModel} from '../interfaces/IRawModel';
+import {IReferenceOptions} from '../interfaces/IReferenceOptions';
 import {IType} from '../interfaces/IType';
+import {TRefValue} from '../interfaces/TRefValue';
 import {Model} from '../Model';
 import {storage} from '../services/storage';
 import {error} from './format';
+import {mapItems} from './utils';
 
-export function setInitial<T extends Model>(obj: T, key: string, defaultValue: any) {
+type IChange = IArraySplice<Model> | IArrayChange<Model>;
+interface IMetaToInit {
+  fields: Array<string>;
+  refs: IDictionary<IReferenceOptions>;
+}
 
-  // Initialize the observable field to the default value
-  storage.setModelDataKey(obj, key, defaultValue);
+export function initModelField<T extends Model>(obj: T, key: string, defaultValue: any) {
+  const fields = storage.getModelMetaKey(obj, 'fields') as Array<string>;
+  if (fields.indexOf(key) === -1) {
+    // Initialize the observable field to the default value
+    storage.setModelDataKey(obj, key, defaultValue);
+    fields.push(key);
 
-  // Set up the computed prop
-  extendObservable(obj, {
-    [key]: computed(
-      () => storage.getModelDataKey(obj, key),
-      (value) => storage.setModelDataKey(obj, key, value),
-    ),
-  });
+    // Set up the computed prop
+    extendObservable(obj, {
+      [key]: computed(
+        () => getField(obj, key),
+        (value) => updateField(obj, key, value),
+      ),
+    });
+  } else {
+    obj[key] = defaultValue;
+  }
+}
+
+export function initModelRef<T extends Model>(
+  obj: T,
+  key: string,
+  options: IReferenceOptions,
+  initialValue: TRefValue,
+) {
+  const refs = storage.getModelMetaKey(obj, 'refs');
+
+  if (!(key in refs)) {
+    // Initialize the observable field to the given value
+    refs[key] = options;
+    const initialIds = mapItems(initialValue, getModelId);
+    storage.setModelDataKey(obj, key, initialIds);
+
+    // Set up the computed prop
+    extendObservable(obj, {
+      [key]: computed(
+        () => getRef(obj, key),
+        (value) => updateRef(obj, key, value),
+      ),
+    });
+  }
+
+  obj[key] = initialValue;
+}
+
+function getField(model: Model, key: string) {
+  return storage.getModelDataKey(model, key);
+}
+
+function updateField(model: Model, key: string, value: any) {
+  storage.setModelDataKey(model, key, value);
+}
+
+function partialRefUpdate(model: Model, key: string, change: IChange) {
+  const refs = storage.getModelMetaKey(model, 'refs');
+  const refOptions = refs[key] as IReferenceOptions;
+  const data = storage.getModelDataKey(model, key);
+
+  if (change.type === 'splice') {
+    const added = change.added.map(getModelId);
+    data[key].splice(change.index, change.removedCount, ...added);
+    return null;
+  } else if (change.type === 'update') {
+    data[key][change.index] = getModelId(change.newValue);
+    return null;
+  }
+
+  return change;
+}
+
+function modelAddReference(model: Model, key: string, newReference: Model) {
+  const refs = storage.getModelMetaKey(model, 'refs');
+  const refOptions = refs[key] as IReferenceOptions;
+  const newRefId = getModelId(newReference);
+  const data = storage.getModelDataKey(model, key);
+  if (refOptions.type === ReferenceType.TO_ONE) {
+    storage.setModelDataKey(model, key, newRefId);
+  } else if (refOptions.type === ReferenceType.TO_MANY || isObservableArray(data)) {
+    data.push(newRefId);
+  } else {
+    // OneOrMany - single value
+    // Convert to array or overwrite?
+    storage.setModelDataKey(model, key, newRefId); // Overwrite
+  }
+}
+
+function modelRemoveReference(model: Model, key: string, oldReference: Model) {
+  const refs = storage.getModelMetaKey(model, 'refs');
+  const refOptions = refs[key] as IReferenceOptions;
+  const oldRefId = getModelId(oldReference);
+  const data = storage.getModelDataKey(model, key);
+  if (refOptions.type === ReferenceType.TO_ONE) {
+    storage.setModelDataKey(model, key, null);
+  } else if (refOptions.type === ReferenceType.TO_MANY || isObservableArray(data)) {
+    data.remove(oldRefId);
+  } else {
+    storage.setModelDataKey(model, key, null);
+  }
+
+}
+
+function partialBackRefUpdate(model: Model, key: string, change: IChange) {
+  const refs = storage.getModelMetaKey(model, 'refs');
+  const refOptions = refs[key] as IReferenceOptions;
+  const data = storage.getModelDataKey(model, key);
+  const property = refOptions.property as string;
+
+  if (change.type === 'splice') {
+    change.added.map((item) => modelAddReference(item, property, model));
+    change.removed.map((item) => modelRemoveReference(item, property, model));
+    return null;
+  } else if (change.type === 'update') {
+    modelAddReference(change.newValue, property, model);
+    modelRemoveReference(change.oldValue, property, model);
+    return null;
+  }
+
+  return change;
+}
+
+function getRef(model: Model, key: string): Model|Array<Model>|null {
+  const refs = storage.getModelMetaKey(model, 'refs');
+  const refOptions = refs[key] as IReferenceOptions;
+
+  if (typeof refOptions.property === 'string') {
+    const type = getModelType(refOptions.model);
+    const allModels = Object.values(storage.getModelsByType(type));
+    const backModels = allModels.filter((item) => {
+      const data = item[refOptions.property || '']; // Empty string just to make TS happy... We check the type before
+      if (data === null) {
+        return false;
+      } else if (data instanceof Model) {
+        return data === model;
+      } else {
+        return data.indexOf(model) !== -1;
+      }
+    });
+
+    const backData: IObservableArray<Model> = observable.array(backModels);
+    intercept(backData, (change: IChange) => partialBackRefUpdate(model, key, change));
+    return backData;
+  }
+
+  const value = storage.getModelDataKey(model, key);
+  const dataModels = mapItems(value, (id) => storage.findModel(refOptions.model, id));
+  if (dataModels instanceof Array) {
+    const data: IObservableArray<Model> = observable.array(dataModels);
+    intercept(data, (change: IChange) => partialRefUpdate(model, key, change));
+    return data;
+  }
+
+  return dataModels;
+}
+
+function updateRef(model: Model, key: string, value: TRefValue) {
+  const refs = storage.getModelMetaKey(model, 'refs');
+  const refOptions = refs[key] as IReferenceOptions;
+  const ids = mapItems(value, getModelId);
+
+  if (refOptions.type === ReferenceType.TO_ONE && ids instanceof Array) {
+    throw error(REF_SINGLE, {key});
+  } else if (refOptions.type === ReferenceType.TO_MANY && !(ids instanceof Array)) {
+    throw error(REF_ARRAY, {key});
+  }
+
+  if (refOptions.property) {
+    // TODO: Back reference
+  }
+
+  storage.setModelDataKey(model, key, ids);
 }
 
 export function getModelType(model: IType|typeof Model|Model): IType {
@@ -34,8 +212,11 @@ export function getModelType(model: IType|typeof Model|Model): IType {
   return model;
 }
 
-export function getModelId(model: Model): IIdentifier {
-  return storage.getModelMetaKey(model, 'id');
+export function getModelId(model: Model|IIdentifier): IIdentifier {
+  if (model instanceof Model) {
+    return storage.getModelMetaKey(model, 'id');
+  }
+  return model;
 }
 
 export function getModelCollections(model: Model): Array<Collection> {
@@ -64,17 +245,42 @@ export function getOriginalModel(model: Model) {
 export function updateModel<T extends Model>(model: T, data: IDictionary<any>): T {
   Object.keys(data).forEach((key) => {
     if (key !== META_FIELD) {
-      assignModelKey(model, key, data[key]);
+      assignModel(model, key, data[key]);
     }
   });
   return model;
 }
 
-export function assignModelKey<T extends Model>(model: T, key: string, value: any): void {
-  if (key in model) {
+export function assignModel<T extends Model>(model: T, key: string, value: any): void {
+  const refs = storage.getModelMetaKey(model, 'refs') as IDictionary<IReferenceOptions>;
+  if (key in refs) {
+    assignModelRef(model, key, value);
+  } else if (value instanceof Model) {
+    throw error(NO_REFS, {key});
+  } else {
+    assignModelField(model, key, value);
+  }
+}
+
+function assignModelField<T extends Model>(model: T, key: string, value: any): void {
+  const fields = storage.getModelMetaKey(model, 'fields') as Array<string>;
+  if (fields.indexOf(key) !== -1) {
     model[key] = value;
   } else {
-    setInitial(model, key, value);
+    initModelField(model, key, value);
+  }
+}
+
+function assignModelRef<T extends Model>(
+  model: T,
+  key: string,
+  value: IIdentifier|Model|Array<IIdentifier>|Array<Model>,
+): void {
+  const refs = storage.getModelMetaKey(model, 'refs');
+  if (key in refs) {
+    model[key] = value;
+  } else {
+    throw error(REF_NEEDS_INIT, {key});
   }
 }
 
@@ -85,37 +291,56 @@ export function getMetaKeyFromRaw(data: IRawModel, key: string): any {
   return undefined;
 }
 
-export function initModelData(model: Model, data: IRawModel) {
+function initModelData(model: Model, data: IRawModel, meta: IMetaToInit) {
   const staticModel = model.constructor as typeof Model;
 
+  const classRefs = storage.getModelClassReferences(staticModel);
+  const refs = Object.assign({}, classRefs, meta.refs);
+  const fields = meta.fields.slice();
   const defaults = storage.getModelDefaults(staticModel);
-  Object.keys(defaults)
-    .filter((key) => !(key in data))
+
+  Object.keys(data).concat(Object.keys(defaults))
     .forEach((key) => {
-      setInitial(model, key, defaults[key]);
+      if (!(key in refs) && fields.indexOf(key) === -1) {
+        fields.push(key);
+      }
     });
 
-  Object.keys(data)
-    .forEach((key) => {
-      setInitial(model, key, data[key]);
-    });
+  fields.forEach((key) => {
+    initModelField(model, key, data[key] || defaults[key] || undefined);
+  });
+
+  Object.keys(refs).forEach((key) => {
+    const opts = refs[key];
+    initModelRef(model, key, opts, data[key] || defaults[key] || undefined);
+  });
 }
 
-export function initModelMeta(model: Model, data: IRawModel): IDictionary<any> {
+function initModelMeta(model: Model, data: IRawModel): IDictionary<any> & IMetaToInit {
   const staticModel = model.constructor as typeof Model;
   const meta = {
+    fields: [],
     id: staticModel.getAutoId(),
+    refs: {},
     type: getModelType(model),
   };
 
   let newMeta;
+  const toInit: IMetaToInit = {fields: [], refs: {}};
   if (META_FIELD in data && data[META_FIELD]) {
-    newMeta = storage.setModelMeta(model, Object.assign(meta, data[META_FIELD] || {}));
+    const oldMeta = data[META_FIELD] || {};
+    if (oldMeta) {
+      toInit.fields = oldMeta.fields;
+      delete oldMeta.fields;
+      toInit.refs = oldMeta.refs;
+      delete oldMeta.refs;
+    }
+    newMeta = storage.setModelMeta(model, Object.assign(meta, oldMeta));
     delete data[META_FIELD];
   } else {
     newMeta = storage.setModelMeta(model, meta);
   }
-  return newMeta;
+  return Object.assign({}, newMeta, toInit);
 }
 
 export function initModel(model: Model, rawData: IRawModel) {
@@ -129,8 +354,7 @@ export function initModel(model: Model, rawData: IRawModel) {
     throw error(MODEL_EXISTS);
   }
 
-  initModelData(model, data);
-
+  initModelData(model, data, meta);
   storage.registerModel(model);
 }
 
