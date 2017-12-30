@@ -64,12 +64,14 @@ function backRefSplice(model: Model, key: string, change: IArraySplice<Model>, r
   removed
     .map((item) => storage.findModel(refOptions.model, item))
     .map((item) => modelRemoveReference(item, property, model));
+  return null;
 }
 
 function backRefChange(model: Model, change: IArrayChange<Model>, refOptions: IReferenceOptions) {
   const property = refOptions.property as string;
   modelAddReference(change.newValue, property, model);
   modelRemoveReference(change.oldValue, property, model);
+  return null;
 }
 
 function partialBackRefUpdate(model: Model, key: string, change: IChange) {
