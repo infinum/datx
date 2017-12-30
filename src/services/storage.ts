@@ -2,7 +2,8 @@ import {computed, extendObservable, IObservableArray, observable, toJS} from 'mo
 
 import {Collection} from '../Collection';
 import {getModelId, getModelType} from '../helpers/model/utils';
-import {byId, reducePrototypeChain} from '../helpers/selectors';
+import {reducePrototypeChain} from '../helpers/selectors';
+import {flatten, uniq} from '../helpers/utils';
 import {IDataStorage} from '../interfaces/IDataStorage';
 import {IDictionary} from '../interfaces/IDictionary';
 import {IIdentifier} from '../interfaces/IIdentifier';
@@ -14,11 +15,7 @@ export class DataStorage {
   private modelData = new WeakMap<Model, IDataStorage>();
   private modelClassDefaults = new WeakMap<typeof Model, IDictionary<any>>();
   private modelClassReferences = new WeakMap<typeof Model, IDictionary<IReferenceOptions>>();
-  private collections: IObservableArray<Collection> = observable.array([]);
-
-  @computed private get models(): IDictionary<IDictionary<Model>> {
-    return byId(this.collections);
-  }
+  private collections: IObservableArray<Collection> = observable.shallowArray([]);
 
   public initModel(model: Model) {
     const modelData = {data: {}, meta: {}};
@@ -90,11 +87,14 @@ export class DataStorage {
   }
 
   public findModel(model: IType|typeof Model|Model, modelId: Model|IIdentifier|null): Model|null {
-    if (modelId !== null) {
+    if (modelId !== null && modelId !== undefined) {
       const type = getModelType(model);
       const id = getModelId(modelId);
-      if (type in this.models && id in this.models[type]) {
-        return this.models[type][id];
+      for (const collection of this.collections) {
+        const item = collection.find(type, id);
+        if (item) {
+          return item;
+        }
       }
     }
     return null;
@@ -122,7 +122,8 @@ export class DataStorage {
   }
 
   public getModelsByType(type: IType) {
-    return this.models[type];
+    const models = this.collections.map((collection) => Array.from(collection.findAll(type)));
+    return uniq(flatten(models));
   }
 
   private __getModelData(model: Model): IDataStorage {

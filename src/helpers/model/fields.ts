@@ -4,14 +4,13 @@ import {ReferenceType} from '../../enums/ReferenceType';
 import {BACK_REF_READ_ONLY, REF_ARRAY, REF_NEEDS_COLLECTION, REF_SINGLE} from '../../errors';
 import {IIdentifier} from '../../interfaces/IIdentifier';
 import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
+import {TChange} from '../../interfaces/TChange';
 import {TRefValue} from '../../interfaces/TRefValue';
 import {Model} from '../../Model';
 import {storage} from '../../services/storage';
 import {error} from '../format';
 import {isFalsyArray, mapItems} from '../utils';
 import {getModelId, getModelType} from './utils';
-
-type IChange = IArraySplice<Model> | IArrayChange<Model>;
 
 function modelAddReference(model: Model, key: string, newReference: Model) {
   const refOptions = storage.getModelReferenceOptions(model, key);
@@ -41,7 +40,7 @@ function modelRemoveReference(model: Model, key: string, oldReference: Model) {
 
 }
 
-function partialRefUpdate(model: Model, key: string, change: IChange) {
+function partialRefUpdate(model: Model, key: string, change: TChange) {
   const refOptions = storage.getModelReferenceOptions(model, key);
   const data = storage.getModelDataKey(model, key);
 
@@ -61,26 +60,29 @@ function backRefSplice(model: Model, key: string, change: IArraySplice<Model>, r
   const property = refOptions.property as string;
   (change.added || []).map((item) => modelAddReference(item, property, model));
   const removed = model[key].slice(change.index, change.index + change.removedCount);
-  removed
-    .map((item) => storage.findModel(refOptions.model, item))
-    .map((item) => modelRemoveReference(item, property, model));
+  removed.map((item) => modelRemoveReference(item, property, model));
   return null;
 }
 
-function backRefChange(model: Model, change: IArrayChange<Model>, refOptions: IReferenceOptions) {
+function backRefChange(model: Model, key: string, change: IArrayChange<Model>, refOptions: IReferenceOptions) {
   const property = refOptions.property as string;
-  modelAddReference(change.newValue, property, model);
-  modelRemoveReference(change.oldValue, property, model);
+  const oldValue = model[key].length > change.index ? model[key][change.index] : null;
+  if (change.newValue) {
+    modelAddReference(change.newValue, property, model);
+  }
+  if (oldValue) {
+    modelRemoveReference(oldValue, property, model);
+  }
   return null;
 }
 
-function partialBackRefUpdate(model: Model, key: string, change: IChange) {
+function partialBackRefUpdate(model: Model, key: string, change: TChange) {
   const refOptions = storage.getModelReferenceOptions(model, key);
 
   if (change.type === 'splice') {
     return backRefSplice(model, key, change, refOptions);
   } else if (change.type === 'update') {
-    return backRefChange(model, change, refOptions);
+    return backRefChange(model, key, change, refOptions);
   }
 
   return change;
@@ -95,7 +97,7 @@ export function updateField(model: Model, key: string, value: any) {
 }
 
 function hasBackRef(item: Model, property: string, target: Model): boolean {
-  if (item[property] === null) {
+  if (item[property] === null || item[property] === undefined) {
     return false;
   } else if (item[property] instanceof Model) {
     return item[property] === target;
@@ -109,10 +111,11 @@ function getBackRef(model: Model, key: string, refOptions: IReferenceOptions): M
 
   const allModels = storage.getModelsByType(type);
   const backModels = Object.keys(allModels)
-    .filter((id) => hasBackRef(allModels[id], refOptions.property as string, model));
+    .map((id) => allModels[id])
+    .filter((item) => hasBackRef(item, refOptions.property as string, model));
 
-  const backData: IObservableArray<Model> = observable.array(backModels);
-  intercept(backData, (change: IChange) => partialBackRefUpdate(model, key, change));
+  const backData: IObservableArray<Model> = observable.shallowArray(backModels);
+  intercept(backData, (change: TChange) => partialBackRefUpdate(model, key, change));
   return backData;
 }
 
@@ -120,8 +123,8 @@ function getNormalRef(model: Model, key: string, refOptions: IReferenceOptions):
   const value = storage.getModelDataKey(model, key);
   const dataModels = mapItems(value, (id) => storage.findModel(refOptions.model, id));
   if (dataModels instanceof Array) {
-    const data: IObservableArray<Model> = observable.array(dataModels);
-    intercept(data, (change: IChange) => partialRefUpdate(model, key, change));
+    const data: IObservableArray<Model> = observable.shallowArray(dataModels);
+    intercept(data, (change: TChange) => partialRefUpdate(model, key, change));
     return data;
   }
   return dataModels;

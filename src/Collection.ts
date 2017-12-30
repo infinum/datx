@@ -4,7 +4,6 @@ import {COLLECTION_DESTROYED, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
 import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
 import {getModelId, getModelType, modelToJSON, updateModel} from './helpers/model/utils';
-import {byId, byType} from './helpers/selectors';
 import {IDictionary} from './interfaces/IDictionary';
 import {IIdentifier} from './interfaces/IIdentifier';
 import {IModelConstructor} from './interfaces/IModelConstructor';
@@ -17,8 +16,11 @@ import {storage} from './services/storage';
 export class Collection {
   public static types: Array<typeof Model> = [];
 
-  private __data: IObservableArray<Model> = observable.array([]);
+  private __data: IObservableArray<Model> = observable.shallowArray([]);
   private __initialized: boolean = true;
+
+  @observable private __dataMap: IDictionary<IDictionary<Model>> = {};
+  @observable private __dataList: IDictionary<IObservableArray<Model>> = {};
 
   constructor(data: Array<IRawModel> = []) {
     this.insert(data);
@@ -28,7 +30,7 @@ export class Collection {
   public insert(data: Array<IRawModel> = []): Array<Model> {
     this.__confirmValid();
     const models = initModels(this, data);
-    this.__data.push(...models);
+    this.__insertModel(models);
     return models;
   }
 
@@ -44,7 +46,7 @@ export class Collection {
     return (data instanceof Array) ? this.__addArray(data, model) : this.__addSingle(data, model);
   }
 
-  public find(model: IType|typeof Model, id?: IIdentifier): Model|null;
+  public find(model: IType|typeof Model|Model, id?: IIdentifier): Model|null;
   public find(test: TFilterFn): Model|null;
   public find(model: IType|typeof Model|(TFilterFn), id?: IIdentifier): Model|null {
     return isSelectorFunction(model)
@@ -80,7 +82,7 @@ export class Collection {
     this.__confirmValid();
     const model = typeof obj === 'object' ? obj : this.find(obj, id);
     if (model) {
-      this.__data.remove(model);
+      this.__removeModel(model);
     }
   }
 
@@ -97,20 +99,17 @@ export class Collection {
   public reset() {
     this.__confirmValid();
     this.__data.replace([]);
+    const types = Object.keys(this.__dataList);
+    types.forEach((type) => {
+      delete this.__dataList[type];
+      delete this.__dataMap[type];
+    });
   }
 
   private __confirmValid() {
     if (!this.__initialized) {
       throw error(COLLECTION_DESTROYED);
     }
-  }
-
-  @computed private get __dataMap(): IDictionary<IDictionary<Model>> {
-    return byId([this]);
-  }
-
-  @computed private get __dataList(): IDictionary<Array<Model>> {
-    return byType(this.__data);
   }
 
   private __addArray<T extends Model>(data: Array<T>): Array<T>;
@@ -123,7 +122,7 @@ export class Collection {
   private __addSingle<T extends Model>(data: IDictionary<any>, model?: IType|IModelConstructor<T>): T;
   private __addSingle(data: Model|IDictionary<any>, model?: IType|IModelConstructor) {
     if (data instanceof Model) {
-      this.__data.push(data);
+      this.__insertModel(data);
       return data;
     }
 
@@ -133,15 +132,45 @@ export class Collection {
 
     const type = getModelType(model as IType|typeof Model);
     const modelInstance = upsertModel(data, type, this.constructor as typeof Collection);
-    this.__data.push(modelInstance);
+    this.__insertModel(modelInstance, type);
+
+    const id = getModelId(modelInstance);
+
     return modelInstance;
   }
 
-  private __findByType(model: IType|typeof Model, id?: IIdentifier) {
-    const type = getModelType(model as typeof Model);
+  private __insertModel(model: Model|Array<Model>, type?: IType, id?: IIdentifier) {
+    if (model instanceof Array) {
+      return model.forEach((item) => this.__insertModel(item, type, id));
+    }
+
+    const modelType = type || getModelType(model);
+    const modelId = id || getModelId(model);
+    this.__data.push(model);
+    this.__dataList[modelType] = this.__dataList[modelType] || observable.shallowArray([]);
+    this.__dataList[modelType].push(model);
+    this.__dataMap[modelType] = this.__dataMap[modelType] || observable.shallowObject({});
+    this.__dataMap[modelType][modelId] = model;
+  }
+
+  private __removeModel(model: Model|Array<Model>, type?: IType, id?: IIdentifier) {
+    if (model instanceof Array) {
+      return model.forEach((item) => this.__removeModel(item, type, id));
+    }
+
+    const modelType = type || getModelType(model);
+    const modelId = id || getModelId(model);
+    this.__data.remove(model);
+    this.__dataList[modelType].remove(model);
+    delete this.__dataMap[modelType][modelId];
+  }
+
+  private __findByType(model: IType|typeof Model|Model, id?: IIdentifier) {
+    const type = getModelType(model);
 
     if (id) {
       const models = this.__dataMap[type] || {};
+      // console.log('Find by type', type, id, Object.keys(models))
       return models[id] || null;
     } else {
       const data = this.__dataList[type] || [];

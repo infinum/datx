@@ -441,6 +441,11 @@ describe('Model', () => {
         expect(foo1.children).toHaveLength(2);
         expect(foo4.parent).toBe(foo1);
         expect(foo2.children).toHaveLength(0);
+
+        foo1.children[1] = foo3;
+        expect(foo1.children).toHaveLength(2);
+        expect(foo3.parent).toBe(foo1);
+        expect(foo4.parent).toBeNull();
       });
     });
   });

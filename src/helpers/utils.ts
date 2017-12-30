@@ -7,6 +7,14 @@ export function mapItems<T, U>(data: T|Array<T>, fn: (item: T) => U): U|Array<U>
   return data === null ? null : fn(data);
 }
 
+export function flatten<T>(data: Array<Array<T>>): Array<T> {
+  return ([] as Array<T>).concat(...data);
+}
+
+export function uniq<T>(data: Array<T>): Array<T> {
+  return Array.from(new Set(data));
+}
+
 export function isFalsyArray(value): boolean {
   return value instanceof Array && !value.every(Boolean);
 }
