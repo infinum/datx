@@ -1,16 +1,29 @@
-export * from './Collection';
-export * from './helpers/model/init';
-export * from './helpers/model/utils';
-export * from './Model';
+export {Collection} from './Collection';
+export {Model} from './Model';
 
-export * from './interfaces/IIdentifier';
-export * from './interfaces/IRawModel';
-export * from './interfaces/IType';
+export {
+  initModelRef,
+} from './helpers/model/init';
 
-export * from './enums/ReferenceType';
+export {
+  assignModel,
+  cloneModel,
+  getModelCollections,
+  getModelId,
+  getModelType,
+  getOriginalModel,
+  modelToJSON,
+  updateModel,
+} from './helpers/model/utils';
 
-export * from './mixins/withActions';
-export * from './mixins/withMeta';
+export {IIdentifier} from './interfaces/IIdentifier';
+export {IRawModel} from './interfaces/IRawModel';
+export {IType} from './interfaces/IType';
+
+export {ReferenceType} from './enums/ReferenceType';
+
+export {withActions} from './mixins/withActions';
+export {withMeta} from './mixins/withMeta';
 
 import prop from './prop';
 
