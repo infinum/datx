@@ -6,3 +6,7 @@ export function mapItems<T, U>(data: T|Array<T>, fn: (item: T) => U): U|Array<U>
   }
   return data === null ? null : fn(data);
 }
+
+export function isFalsyArray(value): boolean {
+  return value instanceof Array && !value.every(Boolean);
+}

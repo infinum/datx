@@ -2,19 +2,19 @@ import {IArrayChange, IArraySplice, intercept, IObservableArray, isObservableArr
 
 import {ReferenceType} from '../../enums/ReferenceType';
 import {BACK_REF_READ_ONLY, REF_ARRAY, REF_NEEDS_COLLECTION, REF_SINGLE} from '../../errors';
+import {IIdentifier} from '../../interfaces/IIdentifier';
 import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
 import {TRefValue} from '../../interfaces/TRefValue';
 import {Model} from '../../Model';
 import {storage} from '../../services/storage';
 import {error} from '../format';
-import {mapItems} from '../utils';
+import {isFalsyArray, mapItems} from '../utils';
 import {getModelId, getModelType} from './utils';
 
 type IChange = IArraySplice<Model> | IArrayChange<Model>;
 
 function modelAddReference(model: Model, key: string, newReference: Model) {
-  const refs = storage.getModelMetaKey(model, 'refs');
-  const refOptions = refs[key] as IReferenceOptions;
+  const refOptions = storage.getModelReferenceOptions(model, key);
   const newRefId = getModelId(newReference);
   const data = storage.getModelDataKey(model, key);
   if (refOptions.type === ReferenceType.TO_ONE) {
@@ -22,15 +22,13 @@ function modelAddReference(model: Model, key: string, newReference: Model) {
   } else if (refOptions.type === ReferenceType.TO_MANY || isObservableArray(data)) {
     data.push(newRefId);
   } else {
-    // OneOrMany - single value
-    // Convert to array or overwrite?
+    // OneOrMany - single value - convert to array or overwrite?
     storage.setModelDataKey(model, key, newRefId); // Overwrite
   }
 }
 
 function modelRemoveReference(model: Model, key: string, oldReference: Model) {
-  const refs = storage.getModelMetaKey(model, 'refs');
-  const refOptions = refs[key] as IReferenceOptions;
+  const refOptions = storage.getModelReferenceOptions(model, key);
   const oldRefId = getModelId(oldReference);
   const data = storage.getModelDataKey(model, key);
   if (refOptions.type === ReferenceType.TO_ONE) {
@@ -44,8 +42,7 @@ function modelRemoveReference(model: Model, key: string, oldReference: Model) {
 }
 
 function partialRefUpdate(model: Model, key: string, change: IChange) {
-  const refs = storage.getModelMetaKey(model, 'refs');
-  const refOptions = refs[key] as IReferenceOptions;
+  const refOptions = storage.getModelReferenceOptions(model, key);
   const data = storage.getModelDataKey(model, key);
 
   if (change.type === 'splice') {
@@ -60,23 +57,28 @@ function partialRefUpdate(model: Model, key: string, change: IChange) {
   return change;
 }
 
-function partialBackRefUpdate(model: Model, key: string, change: IChange) {
-  const refs = storage.getModelMetaKey(model, 'refs');
-  const refOptions = refs[key] as IReferenceOptions;
-  const data = storage.getModelDataKey(model, key);
+function backRefSplice(model: Model, key: string, change: IArraySplice<Model>, refOptions: IReferenceOptions) {
   const property = refOptions.property as string;
+  (change.added || []).map((item) => modelAddReference(item, property, model));
+  const removed = model[key].slice(change.index, change.index + change.removedCount);
+  removed
+    .map((item) => storage.findModel(refOptions.model, item))
+    .map((item) => modelRemoveReference(item, property, model));
+}
+
+function backRefChange(model: Model, change: IArrayChange<Model>, refOptions: IReferenceOptions) {
+  const property = refOptions.property as string;
+  modelAddReference(change.newValue, property, model);
+  modelRemoveReference(change.oldValue, property, model);
+}
+
+function partialBackRefUpdate(model: Model, key: string, change: IChange) {
+  const refOptions = storage.getModelReferenceOptions(model, key);
 
   if (change.type === 'splice') {
-    (change.added || []).map((item) => modelAddReference(item, property, model));
-    const removed = model[key].slice(change.index, change.index + change.removedCount);
-    removed
-      .map((item) => storage.findModel(refOptions.model, item))
-      .map((item) => modelRemoveReference(item, property, model));
-    return null;
+    return backRefSplice(model, key, change, refOptions);
   } else if (change.type === 'update') {
-    modelAddReference(change.newValue, property, model);
-    modelRemoveReference(change.oldValue, property, model);
-    return null;
+    return backRefChange(model, change, refOptions);
   }
 
   return change;
@@ -90,31 +92,29 @@ export function updateField(model: Model, key: string, value: any) {
   storage.setModelDataKey(model, key, value);
 }
 
-export function getRef(model: Model, key: string): Model|Array<Model>|null {
-  const refs = storage.getModelMetaKey(model, 'refs');
-  const refOptions = refs[key] as IReferenceOptions;
-
-  if (typeof refOptions.property === 'string') {
-    const type = getModelType(refOptions.model);
-
-    const allModels = storage.getModelsByType(type);
-    const backModels = Object.keys(allModels).filter((id) => {
-      const item = allModels[id];
-      const data = item[refOptions.property || '']; // Empty string just to make TS happy... We check the type before
-      if (data === null) {
-        return false;
-      } else if (data instanceof Model) {
-        return data === model;
-      } else {
-        return data.indexOf(model) !== -1;
-      }
-    });
-
-    const backData: IObservableArray<Model> = observable.array(backModels);
-    intercept(backData, (change: IChange) => partialBackRefUpdate(model, key, change));
-    return backData;
+function hasBackRef(item: Model, property: string, target: Model): boolean {
+  if (item[property] === null) {
+    return false;
+  } else if (item[property] instanceof Model) {
+    return item[property] === target;
+  } else {
+    return item[property].indexOf(target) !== -1;
   }
+}
 
+function getBackRef(model: Model, key: string, refOptions: IReferenceOptions): Model|Array<Model>|null {
+  const type = getModelType(refOptions.model);
+
+  const allModels = storage.getModelsByType(type);
+  const backModels = Object.keys(allModels)
+    .filter((id) => hasBackRef(allModels[id], refOptions.property as string, model));
+
+  const backData: IObservableArray<Model> = observable.array(backModels);
+  intercept(backData, (change: IChange) => partialBackRefUpdate(model, key, change));
+  return backData;
+}
+
+function getNormalRef(model: Model, key: string, refOptions: IReferenceOptions): Model|Array<Model>|null {
   const value = storage.getModelDataKey(model, key);
   const dataModels = mapItems(value, (id) => storage.findModel(refOptions.model, id));
   if (dataModels instanceof Array) {
@@ -122,32 +122,41 @@ export function getRef(model: Model, key: string): Model|Array<Model>|null {
     intercept(data, (change: IChange) => partialRefUpdate(model, key, change));
     return data;
   }
-
   return dataModels;
+
+}
+
+export function getRef(model: Model, key: string): Model|Array<Model>|null {
+  const refOptions = storage.getModelReferenceOptions(model, key);
+
+  return (typeof refOptions.property === 'string')
+    ? getBackRef(model, key, refOptions)
+    : getNormalRef(model, key, refOptions);
+}
+
+function validateRef(refOptions: IReferenceOptions, isArray: boolean, key: string) {
+  if (refOptions.type === ReferenceType.TO_ONE && isArray) {
+    throw error(REF_SINGLE, {key});
+  } else if (refOptions.type === ReferenceType.TO_MANY && !isArray) {
+    throw error(REF_ARRAY, {key});
+  } else if (refOptions.property) {
+    throw error(BACK_REF_READ_ONLY);
+  }
 }
 
 export function updateRef(model: Model, key: string, value: TRefValue) {
-  const refs = storage.getModelMetaKey(model, 'refs');
-  const refOptions = refs[key] as IReferenceOptions;
+  const refOptions = storage.getModelReferenceOptions(model, key);
   const ids = refOptions.type === ReferenceType.TO_MANY
     ? (mapItems(value, getModelId) || [])
     : mapItems(value, getModelId);
 
-  if (refOptions.type === ReferenceType.TO_ONE && ids instanceof Array) {
-    throw error(REF_SINGLE, {key});
-  } else if (refOptions.type === ReferenceType.TO_MANY && !(ids instanceof Array)) {
-    throw error(REF_ARRAY, {key});
-  }
+  validateRef(refOptions, ids instanceof Array, key);
 
-  if (refOptions.property) {
-    throw error(BACK_REF_READ_ONLY);
-  }
+  const referencedModels = mapItems(value, (ref) => storage.findModel(refOptions.model, ref));
 
-  const referencedModels = mapItems(value, (ref) => storage.findModel(refs[key].model, ref));
-  if (
-    (referencedModels instanceof Array && !referencedModels.every(Boolean) && (value as Array<any>).length) ||
-    (value && !referencedModels)
-  ) {
+  const isInvalidArray = isFalsyArray(referencedModels) && (value as Array<any>).length;
+  const isInvalidModel = Boolean(value) && !referencedModels;
+  if (isInvalidArray || isInvalidModel) {
     throw error(REF_NEEDS_COLLECTION);
   }
 

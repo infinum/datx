@@ -116,6 +116,11 @@ export class DataStorage {
     return Object.assign({}, ...defaults.reverse());
   }
 
+  public getModelReferenceOptions(model: Model, key: string): IReferenceOptions {
+    const refs = this.getModelMetaKey(model, 'refs');
+    return refs[key];
+  }
+
   public getModelsByType(type: IType) {
     return this.models[type];
   }

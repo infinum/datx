@@ -61,12 +61,12 @@ export function initModelRef<T extends Model>(obj: T, key: string, options: IRef
   }
 }
 
-function initModelData(model: Model, data: IRawModel, meta: IMetaToInit) {
+function prepareFields(data: IRawModel, meta: IMetaToInit, model: Model) {
   const staticModel = model.constructor as typeof Model;
-
+  const fields = meta.fields.slice();
   const classRefs = storage.getModelClassReferences(staticModel);
   const refs = Object.assign({}, classRefs, meta.refs);
-  const fields = meta.fields.slice();
+
   const defaults = storage.getModelDefaults(staticModel);
 
   Object.keys(data).concat(Object.keys(defaults))
@@ -75,6 +75,12 @@ function initModelData(model: Model, data: IRawModel, meta: IMetaToInit) {
         fields.push(key);
       }
     });
+
+  return {defaults, fields, refs};
+}
+
+function initModelData(model: Model, data: IRawModel, meta: IMetaToInit) {
+  const {defaults, fields, refs} = prepareFields(data, meta, model);
 
   fields.forEach((key) => {
     initModelField(model, key, data[key] || defaults[key] || undefined);

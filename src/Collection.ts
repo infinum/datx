@@ -115,19 +115,8 @@ export class Collection {
 
   private __addArray<T extends Model>(data: Array<T>): Array<T>;
   private __addArray<T extends Model>(data: Array<IDictionary<any>>, model?: IType|IModelConstructor<T>): Array<T>;
-  private __addArray(
-    data: Array<Model|IDictionary<any>>,
-    model?: IType|IModelConstructor,
-  ): Array<Model> {
-    return data.map((item) => {
-      if (item instanceof Model) {
-        this.__data.push(item);
-        return item;
-      } else if (model) {
-        return this.add(item, model);
-      }
-      throw error(UNDEFINED_TYPE);
-    });
+  private __addArray(data: Array<Model|IDictionary<any>>, model?: IType|IModelConstructor): Array<Model> {
+    return data.map((item) => this.__addSingle(item, model));
   }
 
   private __addSingle<T extends Model>(data: T): T;

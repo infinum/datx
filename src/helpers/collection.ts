@@ -27,11 +27,9 @@ export function upsertModel(data: IRawModel, type: IType|typeof Model, collectio
   }
 
   const id = getMetaKeyFromRaw(data, 'id');
-  if (id) {
-    const existingModel = storage.findModel(type, id);
-    if (existingModel) {
-      return updateModel(existingModel, data);
-    }
+  const existingModel = storage.findModel(type, id);
+  if (existingModel) {
+    return updateModel(existingModel, data);
   }
 
   return new TypeModel(data);
