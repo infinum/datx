@@ -1,5 +1,5 @@
 import {DEFAULT_TYPE} from './consts';
-import {initModel} from './helpers/model';
+import {initModel} from './helpers/model/init';
 import {IDictionary} from './interfaces/IDictionary';
 import {IRawModel} from './interfaces/IRawModel';
 import {IType} from './interfaces/IType';

@@ -5,7 +5,7 @@ import {IType} from '../interfaces/IType';
 import {Model} from '../Model';
 import {storage} from '../services/storage';
 import {error} from './format';
-import {getMetaKeyFromRaw, updateModel} from './model';
+import {getMetaKeyFromRaw, updateModel} from './model/utils';
 
 export function initCollectionModel(collection: typeof Collection, data: IRawModel, index: number): Model {
   const type = getMetaKeyFromRaw(data, 'type');

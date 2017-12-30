@@ -114,7 +114,6 @@ describe('Model', () => {
         @prop public foo: number;
       }
 
-
       const foo = new Foo({foo: 1});
       expect(foo.foo).toBe(1);
 

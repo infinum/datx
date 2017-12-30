@@ -1,5 +1,6 @@
 export * from './Collection';
-export * from './helpers/model';
+export * from './helpers/model/init';
+export * from './helpers/model/utils';
 export * from './Model';
 
 export * from './interfaces/ICollection';

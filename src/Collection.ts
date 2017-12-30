@@ -3,7 +3,7 @@ import {computed, IObservableArray, observable} from 'mobx';
 import {COLLECTION_DESTROYED, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
 import {initCollectionModel, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
-import {getModelId, getModelType, modelToJSON, updateModel} from './helpers/model';
+import {getModelId, getModelType, modelToJSON, updateModel} from './helpers/model/utils';
 import {ICollection} from './interfaces/ICollection';
 import {IDictionary} from './interfaces/IDictionary';
 import {IIdentifier} from './interfaces/IIdentifier';

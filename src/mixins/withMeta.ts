@@ -3,7 +3,7 @@ import {computed} from 'mobx';
 import {DECORATE_MODEL} from '../errors';
 import {error} from '../helpers/format';
 import {isModel} from '../helpers/mixin';
-import {getModelCollections, getModelId, getModelType, getOriginalModel} from '../helpers/model';
+import {getModelCollections, getModelId, getModelType, getOriginalModel} from '../helpers/model/utils';
 import {IMetaMixin} from '../interfaces/IMetaMixin';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
 import {Model} from '../Model';

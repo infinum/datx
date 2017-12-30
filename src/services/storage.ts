@@ -1,7 +1,7 @@
 import {computed, extendObservable, IObservableArray, observable, toJS} from 'mobx';
 
 import {Collection} from '../Collection';
-import {getModelId, getModelType} from '../helpers/model';
+import {getModelId, getModelType} from '../helpers/model/utils';
 import {IDataStorage} from '../interfaces/IDataStorage';
 import {IDictionary} from '../interfaces/IDictionary';
 import {IIdentifier} from '../interfaces/IIdentifier';
