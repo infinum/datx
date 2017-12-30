@@ -1,6 +1,6 @@
 import {computed, IObservableArray, observable} from 'mobx';
 
-import {UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
+import {COLLECTION_DESTROYED, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
 import {initCollectionModel, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
 import {getModelId, getModelType, modelToJSON, updateModel} from './helpers/model';
@@ -18,6 +18,7 @@ export class Collection implements ICollection {
   public static types: Array<typeof Model> = [];
 
   private __data: IObservableArray<Model> = observable.array([]);
+  private __initialized: boolean = true;
 
   constructor(data: Array<IRawModel> = []) {
     this.insert(data);
@@ -25,6 +26,7 @@ export class Collection implements ICollection {
   }
 
   public insert(data: Array<IRawModel> = []): Array<Model> {
+    this.__confirmValid();
     const staticCollection = this.constructor as typeof Collection;
     const models = data.map((item, index) => initCollectionModel(staticCollection, item, index));
     this.__data.push(...models);
@@ -39,6 +41,7 @@ export class Collection implements ICollection {
     data: Model|IRawModel|IDictionary<any>|Array<Model>|Array<IRawModel|IDictionary<any>>,
     model?: IType|IModelConstructor,
   ): Model|Array<Model> {
+    this.__confirmValid();
     return (data instanceof Array) ? this.__addArray(data, model) : this.__addSingle(data, model);
   }
 
@@ -82,6 +85,7 @@ export class Collection implements ICollection {
   public remove(model: IType|typeof Model, id?: IIdentifier);
   public remove(model: Model);
   public remove(obj: IType|typeof Model|Model, id?: IIdentifier) {
+    this.__confirmValid();
     const model = typeof obj === 'object' ? obj : this.find(obj, id);
     if (model) {
       this.__data.remove(model);
@@ -93,7 +97,20 @@ export class Collection implements ICollection {
   }
 
   public destroy() {
+    this.__confirmValid();
     storage.unregisterCollection(this);
+    this.__initialized = false;
+  }
+
+  public reset() {
+    this.__confirmValid();
+    this.__data.replace([]);
+  }
+
+  private __confirmValid() {
+    if (!this.__initialized) {
+      throw error(COLLECTION_DESTROYED);
+    }
   }
 
   @computed private get __dataMap(): IDictionary<IDictionary<Model>> {

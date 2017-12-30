@@ -383,6 +383,34 @@ describe('Model', () => {
       expect(foo4.parent && foo4.parent[0].foo).toBe(2);
     });
 
+    it('should support default references', () => {
+      class Bar extends Model {
+        public static type = 'bar';
+      }
+
+      const bar = new Bar({});
+
+      class Foo extends Model {
+        public static type = 'foo';
+
+        @prop.defaultValue(bar)
+        @prop.toOne(Bar)
+        public bar?: Bar;
+
+        @prop
+        public foo: number;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [Foo, Bar];
+      }
+
+      const collection = new TestCollection();
+      collection.add(bar);
+
+      const foo1 = collection.add(new Foo({foo: 2}));
+    });
+
     describe('Back references', () => {
       it('should support basic back references', () => {
         class Foo extends Model {

@@ -11,7 +11,6 @@ function prop<T extends Model>(obj: T, key: string) {
 prop['defaultValue'] = (value: any) => {
   return <T extends Model>(obj: T, key: string) => {
     storage.addModelDefaultField(obj.constructor as typeof Model, key, value);
-    return prop as IProp;
   };
 };
 
@@ -22,7 +21,6 @@ prop['toOne'] = (refModel: typeof Model) => {
       model: refModel,
       type: ReferenceType.TO_ONE,
     });
-    return prop as IProp;
   };
 };
 
@@ -33,7 +31,6 @@ prop['toMany'] = (refModel: typeof Model, property?: string) => {
       property,
       type: ReferenceType.TO_MANY,
     });
-    return prop as IProp;
   };
 };
 
@@ -43,7 +40,6 @@ prop['toOneOrMany'] = (refModel: typeof Model) => {
       model: refModel,
       type: ReferenceType.TO_ANY,
     });
-    return prop as IProp;
   };
 };
 

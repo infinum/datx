@@ -103,8 +103,13 @@ export class DataStorage {
     return this.collections.filter((item) => item.hasItem(model));
   }
 
-  public findModel(model: IType|typeof Model|Model, id: IIdentifier): Model|null {
+  public findModel(model: IType|typeof Model|Model, modelId: Model|IIdentifier|null): Model|null {
+    if (modelId === null) {
+      return null;
+    }
+
     const type = getModelType(model);
+    const id = getModelId(modelId);
     if (type in this.models && id in this.models[type]) {
       return this.models[type][id];
     }
@@ -126,15 +131,6 @@ export class DataStorage {
 
   public getModelsByType(type: IType) {
     return this.models[type];
-  }
-
-  public isInCollection(model: IType|typeof Model, id: Model|IIdentifier|null) {
-    if (id === null) {
-      return false;
-    }
-
-    const type = getModelType(model);
-    return type in this.models && getModelId(id) in this.models[type];
   }
 
   private __getModelData(model: Model): IDataStorage {

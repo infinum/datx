@@ -25,6 +25,7 @@ import {error} from './format';
 import {mapItems} from './utils';
 
 import {
+  BACK_REF_READ_ONLY,
   MODEL_EXISTS,
   NO_REFS,
   NOT_A_CLONE,
@@ -83,7 +84,9 @@ export function initModelRef<T extends Model>(
     });
   }
 
-  obj[key] = initialValue;
+  if (!options.property) {
+    obj[key] = initialValue;
+  }
 }
 
 function getField(model: Model, key: string) {
@@ -210,14 +213,13 @@ function updateRef(model: Model, key: string, value: TRefValue) {
   }
 
   if (refOptions.property) {
-    // TODO: Back reference
-    return;
+    throw error(BACK_REF_READ_ONLY);
   }
 
-  const inCollection = mapItems(value, (ref) => storage.isInCollection(refs[key].model, ref));
+  const referencedModels = mapItems(value, (ref) => storage.findModel(refs[key].model, ref));
   if (
-    (inCollection instanceof Array && !inCollection.every(Boolean) && (value as Array<any>).length) ||
-    (value && !inCollection)
+    (referencedModels instanceof Array && !referencedModels.every(Boolean) && (value as Array<any>).length) ||
+    (value && !referencedModels)
   ) {
     throw error(REF_NEEDS_COLLECTION);
   }
@@ -374,7 +376,7 @@ export function initModel(model: Model, rawData: IRawModel) {
 
   const meta = initModelMeta(model, data);
 
-  const existingModel = storage.isInCollection(meta.type, meta.id);
+  const existingModel = storage.findModel(meta.type, meta.id);
   if (existingModel) {
     throw error(MODEL_EXISTS);
   }

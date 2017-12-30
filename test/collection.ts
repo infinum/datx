@@ -105,6 +105,34 @@ describe('Collection', () => {
 
       expect(storage.findModel('foo', getModelId(foo2))).toBeFalsy();
       expect(getModelCollections(foo1)).toHaveLength(0);
+
+      expect(() => store.add(foo1)).toThrowError('Can\'t modify a destroyed collection');
+    });
+
+    it('should reset the collection', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+        @prop public foo: number;
+      }
+
+      class Store extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new Store();
+      const foo1 = store.add({foo: 1}, Foo);
+      const foo2 = store.add<Foo>({foo: 2}, 'foo');
+
+      expect(storage.findModel('foo', getModelId(foo2))).toBeTruthy();
+      expect(getModelCollections(foo1)).toHaveLength(1);
+
+      store.reset();
+
+      expect(storage.findModel('foo', getModelId(foo2))).toBeFalsy();
+      expect(getModelCollections(foo1)).toHaveLength(0);
+
+      store.add(foo1);
+      expect(getModelCollections(foo1)).toHaveLength(1);
     });
 
     it('Should support serialization/deserialization', () => {

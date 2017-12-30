@@ -38,18 +38,33 @@ The store meant to replace [mobx-collection-store](https://github.com/infinum/mo
   * patchListen
   * applyPatch
   * snapshot
-* [ ] Back reference
+* [x] Reference
+* [x] Back reference
 * [ ] idAttribute
 * [ ] typeAttribute
 * [ ] Support for id updating
-* [ ] Destroy model/collection
-* [ ] Reset collection
+* [x] Destroy collection
+* [x] Reset collection
 
-## Dev mode
+### Dev mode
 
+* [ ] Dev mode flag
 * [ ] Error when assigning properties directly (with ES6 proxy)
-* [ ] Warn if back reference correctness can't be ensured
-* [ ] Deprecation warnings (future)
+* [ ] Warning mechanism
+  * [ ] Warn if back reference correctness can't be ensured
+  * [ ] Deprecation warnings (future)
+
+### New features
+
+* [x] Mixin support
+  * [x] Meta mixin
+  * [x] Actions mixin
+* [x] Model in multiple collections
+
+### V1 features
+
+* [ ] Usage documentation
+* [ ] Code documentation
 
 ## License
 
