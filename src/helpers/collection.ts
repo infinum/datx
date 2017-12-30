@@ -7,7 +7,7 @@ import {storage} from '../services/storage';
 import {error} from './format';
 import {getMetaKeyFromRaw, updateModel} from './model/utils';
 
-export function initCollectionModel(collection: typeof Collection, data: IRawModel, index: number): Model {
+function initCollectionModel(collection: typeof Collection, data: IRawModel, index: number): Model {
   const type = getMetaKeyFromRaw(data, 'type');
   if (type) {
     return upsertModel(data, type, collection);
@@ -35,4 +35,13 @@ export function upsertModel(data: IRawModel, type: IType|typeof Model, collectio
   }
 
   return new TypeModel(data);
+}
+
+export function isSelectorFunction(fn: any) {
+  return (typeof fn === 'function') && (fn !== Model && !(fn.prototype instanceof Model));
+}
+
+export function initModels(collection: Collection, data: Array<IRawModel> = []) {
+  const staticCollection = collection.constructor as typeof Collection;
+  return data.map((item, index) => initCollectionModel(staticCollection, item, index));
 }

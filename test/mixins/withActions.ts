@@ -2,13 +2,7 @@
 
 import {autorun} from 'mobx';
 
-import {
-  Collection,
-  Model,
-  prop,
-  withActions,
-  withMeta,
-} from '../../src';
+import {Collection, Model, prop, withActions, withMeta} from '../../src';
 import {META_FIELD} from '../../src/consts';
 import {storage} from '../../src/services/storage';
 

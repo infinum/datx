@@ -2,13 +2,7 @@
 
 import {autorun} from 'mobx';
 
-import {
-  cloneModel,
-  Collection,
-  Model,
-  prop,
-  withMeta,
-} from '../../src';
+import {cloneModel, Collection, Model, prop, withMeta} from '../../src';
 import {storage} from '../../src/services/storage';
 
 describe('Collection', () => {

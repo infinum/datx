@@ -2,6 +2,7 @@ import {computed, extendObservable, IObservableArray, observable, toJS} from 'mo
 
 import {Collection} from '../Collection';
 import {getModelId, getModelType} from '../helpers/model/utils';
+import {byId, reducePrototypeChain} from '../helpers/selectors';
 import {IDataStorage} from '../interfaces/IDataStorage';
 import {IDictionary} from '../interfaces/IDictionary';
 import {IIdentifier} from '../interfaces/IIdentifier';
@@ -16,19 +17,7 @@ export class DataStorage {
   private collections: IObservableArray<Collection> = observable.array([]);
 
   @computed private get models(): IDictionary<IDictionary<Model>> {
-    const modelHash = {};
-
-    this.collections.forEach((collection) => {
-      collection.findAll().forEach((model) => {
-        const id = getModelId(model);
-        const type = getModelType(model);
-
-        modelHash[type] = modelHash[type] || [];
-        modelHash[type][id] = modelHash[type][id] || model;
-      });
-    });
-
-    return modelHash;
+    return byId(this.collections);
   }
 
   public initModel(model: Model) {
@@ -82,12 +71,9 @@ export class DataStorage {
   }
 
   public getModelDefaults(obj: typeof Model): IDictionary<any> {
-    const defaults: Array<IDictionary<any>> = [];
-    let model = obj;
-    while (model) {
-      defaults.push(this.modelClassDefaults.get(model) || {});
-      model = Object.getPrototypeOf(model);
-    }
+    const defaults = reducePrototypeChain(obj, (state, model) => {
+      return state.concat(this.modelClassDefaults.get(model) || {});
+    }, [] as Array<IDictionary<any>>);
     return Object.assign({}, ...defaults.reverse());
   }
 
@@ -104,14 +90,12 @@ export class DataStorage {
   }
 
   public findModel(model: IType|typeof Model|Model, modelId: Model|IIdentifier|null): Model|null {
-    if (modelId === null) {
-      return null;
-    }
-
-    const type = getModelType(model);
-    const id = getModelId(modelId);
-    if (type in this.models && id in this.models[type]) {
-      return this.models[type][id];
+    if (modelId !== null) {
+      const type = getModelType(model);
+      const id = getModelId(modelId);
+      if (type in this.models && id in this.models[type]) {
+        return this.models[type][id];
+      }
     }
     return null;
   }
@@ -125,8 +109,11 @@ export class DataStorage {
     }
   }
 
-  public getModelClassReferences(model: typeof Model): IDictionary<IReferenceOptions> {
-    return this.modelClassReferences.get(model) || {};
+  public getModelClassReferences(obj: typeof Model): IDictionary<IReferenceOptions> {
+    const defaults = reducePrototypeChain(obj, (state, model) => {
+      return state.concat(this.modelClassReferences.get(model) || {});
+    }, [] as Array<IDictionary<any>>);
+    return Object.assign({}, ...defaults.reverse());
   }
 
   public getModelsByType(type: IType) {

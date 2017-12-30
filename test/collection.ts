@@ -1,12 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import {
-  Collection,
-  getModelCollections,
-  getModelId,
-  Model,
-  prop,
-} from '../src';
+import {Collection, getModelCollections, getModelId, Model, prop} from '../src';
 import {storage} from '../src/services/storage';
 
 describe('Collection', () => {

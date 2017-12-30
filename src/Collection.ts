@@ -1,10 +1,10 @@
 import {computed, IObservableArray, observable} from 'mobx';
 
 import {COLLECTION_DESTROYED, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
-import {initCollectionModel, upsertModel} from './helpers/collection';
+import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
 import {getModelId, getModelType, modelToJSON, updateModel} from './helpers/model/utils';
-import {ICollection} from './interfaces/ICollection';
+import {byId, byType} from './helpers/selectors';
 import {IDictionary} from './interfaces/IDictionary';
 import {IIdentifier} from './interfaces/IIdentifier';
 import {IModelConstructor} from './interfaces/IModelConstructor';
@@ -14,7 +14,7 @@ import {TFilterFn} from './interfaces/TFilterFn';
 import {Model} from './Model';
 import {storage} from './services/storage';
 
-export class Collection implements ICollection {
+export class Collection {
   public static types: Array<typeof Model> = [];
 
   private __data: IObservableArray<Model> = observable.array([]);
@@ -27,8 +27,7 @@ export class Collection implements ICollection {
 
   public insert(data: Array<IRawModel> = []): Array<Model> {
     this.__confirmValid();
-    const staticCollection = this.constructor as typeof Collection;
-    const models = data.map((item, index) => initCollectionModel(staticCollection, item, index));
+    const models = initModels(this, data);
     this.__data.push(...models);
     return models;
   }
@@ -47,17 +46,10 @@ export class Collection implements ICollection {
 
   public find(model: IType|typeof Model, id?: IIdentifier): Model|null;
   public find(test: TFilterFn): Model|null;
-  public find(
-    model: IType|typeof Model|(TFilterFn),
-    id?: IIdentifier,
-  ): Model|null {
-    if (typeof model === 'function') {
-      if (model !== Model && !(model.prototype instanceof Model)) {
-        return this.__data.find(model as TFilterFn);
-      }
-    }
-
-    return this.__findByType(model as typeof Model, id);
+  public find(model: IType|typeof Model|(TFilterFn), id?: IIdentifier): Model|null {
+    return isSelectorFunction(model)
+      ? this.__data.find(model as TFilterFn)
+      : this.__findByType(model as typeof Model, id);
   }
 
   public filter(test: TFilterFn): Array<Model> {
@@ -114,29 +106,11 @@ export class Collection implements ICollection {
   }
 
   @computed private get __dataMap(): IDictionary<IDictionary<Model>> {
-    const map = {};
-
-    this.__data.forEach((model) => {
-      const type = getModelType(model);
-      const id = getModelId(model);
-      map[type] = map[type] || {};
-      map[type][id] = model;
-    });
-
-    return map;
+    return byId([this]);
   }
 
   @computed private get __dataList(): IDictionary<Array<Model>> {
-    const list = {};
-
-    this.__data.forEach((model) => {
-      const type = getModelType(model);
-      const id = getModelId(model);
-      list[type] = list[type] || [];
-      list[type].push(model);
-    });
-
-    return list;
+    return byType(this.__data);
   }
 
   private __addArray<T extends Model>(data: Array<T>): Array<T>;
