@@ -1,9 +1,9 @@
 import {Model} from '../Model';
-import {IPropDefaultDecorator} from './IPropDefaultDecorator';
+import {IPropChainableDecorator} from './IPropChainableDecorator';
 
 export interface IPropDecorators {
-  defaultValue(value: any): IPropDefaultDecorator;
-  toOne(refModel: typeof Model): IPropDefaultDecorator;
-  toMany(refModel: typeof Model, property?: string): IPropDefaultDecorator;
-  toOneOrMany(refModel: typeof Model): IPropDefaultDecorator;
+  defaultValue(value: any): IPropChainableDecorator;
+  toOne(refModel: typeof Model): IPropChainableDecorator;
+  toMany(refModel: typeof Model, property?: string): IPropChainableDecorator;
+  toOneOrMany(refModel: typeof Model): IPropChainableDecorator;
 }

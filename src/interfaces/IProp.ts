@@ -1,4 +1,4 @@
+import {IPropChainableDecorator} from './IPropChainableDecorator';
 import {IPropDecorators} from './IPropDecorators';
-import {IPropDefaultDecorator} from './IPropDefaultDecorator';
 
-export type IProp = IPropDefaultDecorator & IPropDecorators;
+export type IProp = IPropChainableDecorator & IPropDecorators;

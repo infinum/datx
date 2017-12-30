@@ -62,7 +62,8 @@ export function initModelRef<T extends Model>(
     // Initialize the observable field to the given value
     refs[key] = options;
     const initialIds = mapItems(initialValue, getModelId);
-    storage.setModelDataKey(obj, key, initialIds);
+    const isArray = options.type === ReferenceType.TO_MANY;
+    storage.setModelDataKey(obj, key, isArray ? (initialIds || []) : initialIds);
 
     // Set up the computed prop
     extendObservable(obj, {
@@ -90,11 +91,11 @@ function partialRefUpdate(model: Model, key: string, change: IChange) {
   const data = storage.getModelDataKey(model, key);
 
   if (change.type === 'splice') {
-    const added = change.added.map(getModelId);
-    data[key].splice(change.index, change.removedCount, ...added);
+    const added = (change.added || []).map(getModelId);
+    data.splice(change.index, change.removedCount, ...added);
     return null;
   } else if (change.type === 'update') {
-    data[key][change.index] = getModelId(change.newValue);
+    data[change.index] = getModelId(change.newValue);
     return null;
   }
 
@@ -139,8 +140,9 @@ function partialBackRefUpdate(model: Model, key: string, change: IChange) {
   const property = refOptions.property as string;
 
   if (change.type === 'splice') {
-    change.added.map((item) => modelAddReference(item, property, model));
-    change.removed.map((item) => modelRemoveReference(item, property, model));
+    (change.added || []).map((item) => modelAddReference(item, property, model));
+    const removed = model[key].slice(change.index, change.index + change.removedCount);
+    removed.map((item) => modelRemoveReference(item, property, model));
     return null;
   } else if (change.type === 'update') {
     modelAddReference(change.newValue, property, model);
@@ -188,7 +190,9 @@ function getRef(model: Model, key: string): Model|Array<Model>|null {
 function updateRef(model: Model, key: string, value: TRefValue) {
   const refs = storage.getModelMetaKey(model, 'refs');
   const refOptions = refs[key] as IReferenceOptions;
-  const ids = mapItems(value, getModelId);
+  const ids = refOptions.type === ReferenceType.TO_MANY
+    ? (mapItems(value, getModelId) || [])
+    : mapItems(value, getModelId);
 
   if (refOptions.type === ReferenceType.TO_ONE && ids instanceof Array) {
     throw error(REF_SINGLE, {key});

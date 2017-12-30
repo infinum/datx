@@ -8,6 +8,8 @@ export * from './interfaces/IIdentifier';
 export * from './interfaces/IRawModel';
 export * from './interfaces/IType';
 
+export * from './enums/ReferenceType';
+
 export * from './mixins/withActions';
 export * from './mixins/withMeta';
 

@@ -30,7 +30,9 @@ The store meant to replace [mobx-collection-store](https://github.com/infinum/mo
 
 **todo**
 
-## TODO to match mobx-collection-store v2 feature set
+## TODO
+
+### To match mobx-collection-store v2 feature set
 
 * [ ] Snapshots/patches
   * patchListen
@@ -42,6 +44,12 @@ The store meant to replace [mobx-collection-store](https://github.com/infinum/mo
 * [ ] Support for id updating
 * [ ] Destroy model/collection
 * [ ] Reset collection
+
+## Dev mode
+
+* [ ] Error when assigning properties directly (with ES6 proxy)
+* [ ] Warn if back reference correctness can't be ensured
+* [ ] Deprecation warnings (future)
 
 ## License
 
