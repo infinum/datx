@@ -154,7 +154,9 @@ function partialBackRefUpdate(model: Model, key: string, change: IChange) {
   if (change.type === 'splice') {
     (change.added || []).map((item) => modelAddReference(item, property, model));
     const removed = model[key].slice(change.index, change.index + change.removedCount);
-    removed.map((item) => modelRemoveReference(item, property, model));
+    removed
+      .map((item) => storage.findModel(refOptions.model, item))
+      .map((item) => modelRemoveReference(item, property, model));
     return null;
   } else if (change.type === 'update') {
     modelAddReference(change.newValue, property, model);
@@ -171,8 +173,10 @@ function getRef(model: Model, key: string): Model|Array<Model>|null {
 
   if (typeof refOptions.property === 'string') {
     const type = getModelType(refOptions.model);
-    const allModels = Object.values(storage.getModelsByType(type));
-    const backModels = allModels.filter((item) => {
+
+    const allModels = storage.getModelsByType(type);
+    const backModels = Object.keys(allModels).filter((id) => {
+      const item = allModels[id];
       const data = item[refOptions.property || '']; // Empty string just to make TS happy... We check the type before
       if (data === null) {
         return false;
