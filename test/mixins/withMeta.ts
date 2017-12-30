@@ -49,6 +49,12 @@ describe('Collection', () => {
 
     expect(autorunCount).toBe(2);
 
+    class TestCollection extends Collection {
+      public static types = [Foo];
+    }
+    const collection = new TestCollection();
+    collection.add(foo);
+
     const foo2 = cloneModel(foo);
     expect(foo2).not.toBe(foo);
     expect(foo2.meta.original).toBe(foo);

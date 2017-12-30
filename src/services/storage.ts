@@ -1,4 +1,4 @@
-import {extendObservable, IObservableArray, observable, toJS} from 'mobx';
+import {computed, extendObservable, IObservableArray, observable, toJS} from 'mobx';
 
 import {Collection} from '../Collection';
 import {getModelId, getModelType} from '../helpers/model';
@@ -14,7 +14,22 @@ export class DataStorage {
   private modelClassDefaults = new WeakMap<typeof Model, IDictionary<any>>();
   private modelClassReferences = new WeakMap<typeof Model, IDictionary<IReferenceOptions>>();
   private collections: IObservableArray<Collection> = observable.array([]);
-  private models: IDictionary<IDictionary<Model>> = {};
+
+  @computed private get models(): IDictionary<IDictionary<Model>> {
+    const modelHash = {};
+
+    this.collections.forEach((collection) => {
+      collection.findAll().forEach((model) => {
+        const id = getModelId(model);
+        const type = getModelType(model);
+
+        modelHash[type] = modelHash[type] || [];
+        modelHash[type][id] = modelHash[type][id] || model;
+      });
+    });
+
+    return modelHash;
+  }
 
   public initModel(model: Model) {
     const modelData = {data: {}, meta: {}};
@@ -77,20 +92,15 @@ export class DataStorage {
   }
 
   public registerCollection(collection: Collection) {
-    // TODO: Figure out how to avoid memory leaks
     this.collections.push(collection);
+  }
+
+  public unregisterCollection(collection: Collection) {
+    this.collections.remove(collection);
   }
 
   public getModelCollections(model: Model): Array<Collection> {
     return this.collections.filter((item) => item.hasItem(model));
-  }
-
-  public registerModel(model: Model) {
-    // TODO: Figure out how to avoid memory leaks
-    const type = getModelType(model);
-    const id = getModelId(model);
-    this.models[type] = this.models[type] || {};
-    this.models[type][id] = model;
   }
 
   public findModel(model: IType|typeof Model|Model, id: IIdentifier): Model|null {
@@ -118,6 +128,15 @@ export class DataStorage {
     return this.models[type];
   }
 
+  public isInCollection(model: IType|typeof Model, id: Model|IIdentifier|null) {
+    if (id === null) {
+      return false;
+    }
+
+    const type = getModelType(model);
+    return type in this.models && getModelId(id) in this.models[type];
+  }
+
   private __getModelData(model: Model): IDataStorage {
     return this.modelData.get(model) || this.initModel(model);
   }
@@ -128,7 +147,6 @@ export class DataStorage {
     this.modelClassDefaults = new WeakMap<typeof Model, IDictionary<any>>();
     this.modelClassReferences = new WeakMap<typeof Model, IDictionary<IReferenceOptions>>();
     this.collections.replace([]);
-    this.models = {};
   }
 }
 

@@ -33,10 +33,10 @@ export class Collection implements ICollection {
 
   public add<T extends Model>(data: T): T;
   public add<T extends Model>(data: Array<T>): Array<T>;
-  public add<T extends Model>(data: IDictionary<any>, model: IType|IModelConstructor<T>): T;
-  public add<T extends Model>(data: Array<IDictionary<any>>, model: IType|IModelConstructor<T>): Array<T>;
+  public add<T extends Model>(data: IRawModel|IDictionary<any>, model: IType|IModelConstructor<T>): T;
+  public add<T extends Model>(data: Array<IRawModel|IDictionary<any>>, model: IType|IModelConstructor<T>): Array<T>;
   public add(
-    data: Model|IDictionary<any>|Array<Model>|Array<IDictionary<any>>,
+    data: Model|IRawModel|IDictionary<any>|Array<Model>|Array<IRawModel|IDictionary<any>>,
     model?: IType|IModelConstructor,
   ): Model|Array<Model> {
     return (data instanceof Array) ? this.__addArray(data, model) : this.__addSingle(data, model);
@@ -90,6 +90,10 @@ export class Collection implements ICollection {
 
   @computed public get length(): number {
     return this.__data.length;
+  }
+
+  public destroy() {
+    storage.unregisterCollection(this);
   }
 
   @computed private get __dataMap(): IDictionary<IDictionary<Model>> {

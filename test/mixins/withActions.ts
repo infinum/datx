@@ -33,6 +33,12 @@ describe('Collection', () => {
     expect(foo.meta.type).toBe('foo');
     expect(foo.foo).toBe(1);
 
+    class TestCollection extends Collection {
+      public static types = [Foo];
+    }
+    const collection = new TestCollection();
+    collection.add(foo);
+
     const foo2 = foo.clone();
 
     expect(foo2).not.toBe(foo);

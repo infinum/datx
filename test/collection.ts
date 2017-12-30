@@ -84,6 +84,29 @@ describe('Collection', () => {
       expect(store.length).toBe(store.findAll().length);
     });
 
+    it('should destroy the collection', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+        @prop public foo: number;
+      }
+
+      class Store extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new Store();
+      const foo1 = store.add({foo: 1}, Foo);
+      const foo2 = store.add<Foo>({foo: 2}, 'foo');
+
+      expect(storage.findModel('foo', getModelId(foo2))).toBeTruthy();
+      expect(getModelCollections(foo1)).toHaveLength(1);
+
+      store.destroy();
+
+      expect(storage.findModel('foo', getModelId(foo2))).toBeFalsy();
+      expect(getModelCollections(foo1)).toHaveLength(0);
+    });
+
     it('Should support serialization/deserialization', () => {
       class Foo extends Model {
         public static type = 'foo';

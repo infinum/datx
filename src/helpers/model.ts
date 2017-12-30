@@ -13,7 +13,6 @@ import {
 import {Collection} from '../Collection';
 import {META_FIELD} from '../consts';
 import {ReferenceType} from '../enums/ReferenceType';
-import {MODEL_EXISTS, NO_REFS, NOT_A_CLONE, REF_ARRAY, REF_NEEDS_INIT, REF_SINGLE} from '../errors';
 import {IDictionary} from '../interfaces/IDictionary';
 import {IIdentifier} from '../interfaces/IIdentifier';
 import {IRawModel} from '../interfaces/IRawModel';
@@ -24,6 +23,16 @@ import {Model} from '../Model';
 import {storage} from '../services/storage';
 import {error} from './format';
 import {mapItems} from './utils';
+
+import {
+  MODEL_EXISTS,
+  NO_REFS,
+  NOT_A_CLONE,
+  REF_ARRAY,
+  REF_NEEDS_COLLECTION,
+  REF_NEEDS_INIT,
+  REF_SINGLE,
+} from '../errors';
 
 type IChange = IArraySplice<Model> | IArrayChange<Model>;
 interface IMetaToInit {
@@ -61,9 +70,9 @@ export function initModelRef<T extends Model>(
   if (!(key in refs)) {
     // Initialize the observable field to the given value
     refs[key] = options;
-    const initialIds = mapItems(initialValue, getModelId);
+
     const isArray = options.type === ReferenceType.TO_MANY;
-    storage.setModelDataKey(obj, key, isArray ? (initialIds || []) : initialIds);
+    storage.setModelDataKey(obj, key, isArray ? [] : undefined);
 
     // Set up the computed prop
     extendObservable(obj, {
@@ -202,6 +211,15 @@ function updateRef(model: Model, key: string, value: TRefValue) {
 
   if (refOptions.property) {
     // TODO: Back reference
+    return;
+  }
+
+  const inCollection = mapItems(value, (ref) => storage.isInCollection(refs[key].model, ref));
+  if (
+    (inCollection instanceof Array && !inCollection.every(Boolean) && (value as Array<any>).length) ||
+    (value && !inCollection)
+  ) {
+    throw error(REF_NEEDS_COLLECTION);
   }
 
   storage.setModelDataKey(model, key, ids);
@@ -235,6 +253,9 @@ export function cloneModel<T extends Model>(model: T): T {
     meta.originalId = meta.id;
     delete meta.id;
   }
+
+  // TODO: Warning if model is not in a collection
+
   return new TypeModel(rawData) as T;
 }
 
@@ -353,13 +374,12 @@ export function initModel(model: Model, rawData: IRawModel) {
 
   const meta = initModelMeta(model, data);
 
-  const existingModel = storage.findModel(meta.type, meta.id);
+  const existingModel = storage.isInCollection(meta.type, meta.id);
   if (existingModel) {
     throw error(MODEL_EXISTS);
   }
 
   initModelData(model, data, meta);
-  storage.registerModel(model);
 }
 
 export function modelToJSON(model: Model): IRawModel {

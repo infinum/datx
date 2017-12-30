@@ -5,6 +5,7 @@ import {autorun, isObservableArray} from 'mobx';
 import {
   assignModel,
   cloneModel,
+  Collection,
   getModelId,
   getOriginalModel,
   initModelRef,
@@ -113,8 +114,12 @@ describe('Model', () => {
         @prop public foo: number;
       }
 
+
       const foo = new Foo({foo: 1});
       expect(foo.foo).toBe(1);
+
+      const collection = new Collection();
+      collection.add(foo);
 
       const foo2 = cloneModel(foo);
       expect(foo2.foo).toBe(1);
@@ -134,6 +139,9 @@ describe('Model', () => {
       expect(foo.foo).toBe(1);
       expect(foo.bar).toBe(2);
 
+      const collection = new Collection();
+      collection.add(foo);
+
       const foo2 = cloneModel(foo);
       expect(foo2.foo).toBe(1);
       expect(foo2.bar).toBe(2);
@@ -141,54 +149,86 @@ describe('Model', () => {
       expect(getModelId(foo)).not.toBe(getModelId(foo2));
       expect(getOriginalModel(foo2)).toBe(foo);
     });
-
-    it('should not allow two models with same id', () => {
-      class Foo extends Model {
-        @prop public foo: number;
-      }
-
-      const foo = new Foo({foo: 1});
-      const fooRaw = modelToJSON(foo);
-      expect(() => {
-        const fooCopy = new Foo(fooRaw);
-      }).toThrowError('Model already exists, please update it instead.');
-    });
   });
 
   describe('References', () => {
     it('should support basic references', () => {
       class Foo extends Model {
+        public static type = 'foo';
         @prop.toOne(Foo) public parent?: Foo;
         @prop.defaultValue(1) public foo: number;
       }
 
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+      const collection = new TestCollection();
+
       const foo1 = new Foo({foo: 2});
-      const foo2 = new Foo({foo: 3, parent: foo1});
+      collection.add(foo1);
+
+      const foo2 = collection.add({foo: 3, parent: foo1}, Foo);
+
       expect(foo2.parent).toBe(foo1);
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2 = modelToJSON(foo2);
       expect(raw2.parent).toBe(getModelId(foo1));
     });
 
-    it('should throw if array is given', () => {
+    it('should throw if model is not in a collection', () => {
       class Foo extends Model {
         @prop.toOne(Foo) public parent?: Foo;
         @prop.defaultValue(1) public foo: number;
       }
 
       const foo1 = new Foo({foo: 2});
+
+      expect(() => {
+        const foo2 = new Foo({foo: 3, parent: foo1});
+      }).toThrowError('The model needs to be in one of collections to be referenceable');
+
+      expect(() => {
+        foo1.parent = foo1;
+      }).toThrowError('The model needs to be in one of collections to be referenceable');
+    });
+
+    it('should throw if array is given', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+        @prop.toOne(Foo) public parent?: Foo;
+        @prop.defaultValue(1) public foo: number;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+      const collection = new TestCollection();
+
+      const foo1 = new Foo({foo: 2});
+      collection.add(foo1);
+
+      expect(() => collection.add({foo: 3, parent: [foo1]}, Foo))
+        .toThrowError('The reference parent can\'t be an array of values.');
+
       expect(() => new Foo({foo: 3, parent: [foo1]}))
         .toThrowError('The reference parent can\'t be an array of values.');
     });
 
     it('should support array references', () => {
       class Foo extends Model {
+        public static type = 'foo';
         @prop.toMany(Foo) public parent: Array<Foo>;
         @prop.defaultValue(1) public foo: number;
       }
 
-      const foo1 = new Foo({foo: 2});
-      const foo2 = new Foo({foo: 3, parent: [foo1]});
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+      const collection = new TestCollection();
+
+      const foo1 = collection.add(new Foo({foo: 2}));
+      const foo2 = collection.add({foo: 3, parent: [foo1]}, Foo);
+
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
       const raw2 = modelToJSON(foo2);
@@ -197,13 +237,19 @@ describe('Model', () => {
 
     it('should support array reference modification', () => {
       class Foo extends Model {
+        public static type = 'foo';
         @prop.toMany(Foo) public parent: Array<Foo>;
         @prop.defaultValue(1) public foo: number;
       }
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+      const collection = new TestCollection();
 
-      const foo1 = new Foo({foo: 2});
-      const foo2 = new Foo({foo: 3, parent: [foo1]});
-      const foo3 = new Foo({foo: 4});
+      const foo1 = collection.add({foo: 2}, Foo);
+      const foo2 = collection.add({foo: 3, parent: [foo1]}, Foo);
+      const foo3 = collection.add({foo: 4}, Foo);
+
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
       const raw2 = modelToJSON(foo2);
@@ -243,12 +289,18 @@ describe('Model', () => {
 
     it('should support single/array references', () => {
       class Foo extends Model {
+        public static type = 'foo';
         @prop.toOneOrMany(Foo) public parent: Foo|Array<Foo>;
         @prop.defaultValue(1) public foo: number;
       }
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+      const collection = new TestCollection();
 
-      const foo1 = new Foo({foo: 2});
-      const foo2 = new Foo({foo: 3, parent: [foo1]});
+      const foo1 = collection.add({foo: 2}, Foo);
+      const foo2 = collection.add({foo: 3, parent: [foo1]}, Foo);
+
       expect(isObservableArray(foo2.parent)).toBe(true);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
       const raw2 = modelToJSON(foo2);
@@ -266,12 +318,19 @@ describe('Model', () => {
 
     it('should support reference serialization/deserialization', () => {
       class Foo extends Model {
+        public static type = 'foo';
         @prop.toMany(Foo) public parent: Array<Foo>;
         @prop.defaultValue(1) public foo: number;
       }
 
-      const foo1 = new Foo({foo: 2});
-      const foo2 = new Foo({foo: 3, parent: [foo1]});
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+      const collection = new TestCollection();
+
+      const foo1 = collection.add(new Foo({foo: 2}));
+      const foo2 = collection.add({foo: 3, parent: [foo1]}, Foo);
+
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
 
@@ -291,12 +350,21 @@ describe('Model', () => {
 
     it('should support custom reference serialization/deserialization', () => {
       class Foo extends Model {
+        public static type = 'foo';
         @prop.defaultValue(1) public foo: number;
         public parent: Array<Foo>;
       }
 
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+      const collection = new TestCollection();
+
       const foo1 = new Foo({foo: 2});
       const foo2 = new Foo({foo: 3});
+
+      collection.add([foo1, foo2]);
+
       initModelRef(foo2, 'parent', {model: Foo, type: ReferenceType.TO_MANY}, [foo1]);
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
@@ -318,15 +386,22 @@ describe('Model', () => {
     describe('Back references', () => {
       it('should support basic back references', () => {
         class Foo extends Model {
+          public static type = 'foo';
           @prop.toOne(Foo) public parent: Foo;
           @prop.defaultValue(1) public foo: number;
           @prop.toMany(Foo, 'parent') public children: Array<Foo>;
         }
 
-        const foo1 = new Foo({foo: 2});
-        const foo2 = new Foo({foo: 3, parent: foo1});
-        const foo3 = new Foo({foo: 3, parent: foo1});
-        const foo4 = new Foo({foo: 3, parent: foo2});
+        class TestCollection extends Collection {
+          public static types = [Foo];
+        }
+        const collection = new TestCollection();
+
+        const foo1 = collection.add({foo: 2}, Foo);
+        const foo2 = collection.add({foo: 3, parent: foo1}, Foo);
+        const foo3 = collection.add({foo: 3, parent: foo1}, Foo);
+        const foo4 = collection.add({foo: 3, parent: foo2}, Foo);
+
         expect(foo1.children).toHaveLength(2);
         expect(foo2.children).toHaveLength(1);
         expect(foo3.children).toHaveLength(0);
