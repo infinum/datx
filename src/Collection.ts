@@ -70,18 +70,26 @@ export class Collection {
   public add<T extends Model>(data: Array<T>): Array<T>;
 
   /**
-   * Add a new model or array of models to the collection
+   * Add a new model to the collection
    *
    * @template T
-   * @param {(IRawModel|IDictionary<any>|Array<IRawModel|IDictionary<any>>)} data New data to be added
+   * @param {(IRawModel|IDictionary<any>)} data New data to be added
    * @param {(IType|IModelConstructor<T>)} model Model type to be added
-   * @returns {T} Added model(s)
+   * @returns {T} Added model
    * @memberof Collection
    */
-  public add<T extends Model>(
-    data: IRawModel|IDictionary<any>|Array<IRawModel|IDictionary<any>>,
-    model: IType|IModelConstructor<T>,
-  ): T;
+  public add<T extends Model>(data: IRawModel|IDictionary<any>, model: IType|IModelConstructor<T>): T;
+
+  /**
+   * Add an array of new models to the collection
+   *
+   * @template T
+   * @param {Array<IRawModel|IDictionary<any>>} data Array of new data to be added
+   * @param {(IType|IModelConstructor<T>)} model Model type to be added
+   * @returns {Array<T>} Added models
+   * @memberof Collection
+   */
+  public add<T extends Model>(data: Array<IRawModel|IDictionary<any>>, model: IType|IModelConstructor<T>): Array<T>;
 
   public add(
     data: Model|IRawModel|IDictionary<any>|Array<Model>|Array<IRawModel|IDictionary<any>>,
