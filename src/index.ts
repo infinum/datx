@@ -26,6 +26,7 @@ export {IType} from './interfaces/IType';
 
 export {ReferenceType} from './enums/ReferenceType';
 
+export {setupModel} from './mixins/setupModel';
 export {withActions} from './mixins/withActions';
 export {withMeta} from './mixins/withMeta';
 

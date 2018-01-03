@@ -14,6 +14,7 @@ import {
   modelToJSON,
   prop,
   ReferenceType,
+  setupModel,
   updateModelId,
 } from '../src';
 import {storage} from '../src/services/storage';
@@ -31,6 +32,36 @@ describe('Model', () => {
         @prop public bar: number;
         @prop public baz: number;
       }
+
+      const foo = new Foo({foo: 1, bar: 2});
+
+      expect(foo.foo).toBe(1);
+      expect(foo.bar).toBe(2);
+      expect(foo.baz).toBe(undefined);
+
+      let bazValue: number;
+      let autorunCount = 0;
+
+      autorun(() => {
+        expect(foo.baz).toBe(bazValue);
+        autorunCount++;
+      });
+
+      bazValue = 3;
+      foo.baz = 3;
+
+      expect(autorunCount).toBe(2);
+    });
+
+    it('should work with initial data and no decorators', () => {
+      // @ts-ignore - Avoiding the TypeScript features on purpose
+      const Foo = setupModel(Model, {
+        fields: {
+          bar: undefined,
+          baz: undefined,
+          foo: undefined,
+        },
+      });
 
       const foo = new Foo({foo: 1, bar: 2});
 
@@ -452,59 +483,107 @@ describe('Model', () => {
     });
 
     describe('Custom id & type', () => {
-      class Foo extends Model {
-        public static type = 'foo';
-        @prop.identifier public id: string;
-        @prop.type public type: string;
+      it('Should work for the basic use case', () => {
+        class Foo extends Model {
+          public static type = 'foo';
+          @prop.identifier public id: string;
+          @prop.type public type: string;
 
-        @prop.toOne(Foo) public parent: Foo;
-        @prop.toMany(Foo) public foos: Array<Foo>;
-        @prop.toMany(Foo, 'parent') public children: Array<Foo>;
-      }
+          @prop.toOne(Foo) public parent: Foo;
+          @prop.toMany(Foo) public foos: Array<Foo>;
+          @prop.toMany(Foo, 'parent') public children: Array<Foo>;
+        }
 
-      class TestCollection extends Collection {
-        public static types = [Foo];
-      }
+        class TestCollection extends Collection {
+          public static types = [Foo];
+        }
 
-      const store = new TestCollection();
+        const store = new TestCollection();
 
-      const foo = new Foo({id: '123', type: '456'});
-      expect(foo.id).toBe('123');
-      expect(getModelId(foo)).toBe(foo.id);
-      expect(foo.type).toBe('456');
-      expect(getModelType(foo)).toBe(foo.type);
+        const foo = new Foo({id: '123', type: '456'});
+        expect(foo.id).toBe('123');
+        expect(getModelId(foo)).toBe(foo.id);
+        expect(foo.type).toBe('456');
+        expect(getModelType(foo)).toBe(foo.type);
 
-      expect(() => foo.type = 'bar').toThrowError('Model type can\'t be changed after initialization.');
-      expect(() => foo.id = '789')
-        .toThrowError('Model ID can\'t be updated directly. Use the `updateModelId` helper function instead.');
+        expect(() => foo.type = 'bar').toThrowError('Model type can\'t be changed after initialization.');
+        expect(() => foo.id = '789')
+          .toThrowError('Model ID can\'t be updated directly. Use the `updateModelId` helper function instead.');
 
-      const foo1 = store.add(new Foo({id: '234'}));
-      expect(foo1.id).toBe('234');
+        const foo1 = store.add(new Foo({id: '234'}));
+        expect(foo1.id).toBe('234');
 
-      const foo2 = store.add({parent: foo1, foos: [foo1]}, Foo);
-      expect(foo2.id).toBeLessThan(0);
-      expect(getModelId(foo2)).toBe(foo2.id);
-      expect(foo2.type).toBe('foo');
-      expect(getModelType(foo2)).toBe('foo');
-      expect(modelToJSON(foo2).parent).toBe(foo1.id);
-      expect(modelToJSON(foo2).foos).toContain(foo1.id);
+        const foo2 = store.add({parent: foo1, foos: [foo1]}, Foo);
+        expect(foo2.id).toBeLessThan(0);
+        expect(getModelId(foo2)).toBe(foo2.id);
+        expect(foo2.type).toBe('foo');
+        expect(getModelType(foo2)).toBe('foo');
+        expect(modelToJSON(foo2).parent).toBe(foo1.id);
+        expect(modelToJSON(foo2).foos).toContain(foo1.id);
 
-      // @ts-ignore
-      expect(modelToJSON(foo1).__META__.id).toBe(foo1.id);
-      expect(modelToJSON(foo1).id).toBe(foo1.id);
+        // @ts-ignore
+        expect(modelToJSON(foo1).__META__.id).toBe(foo1.id);
+        expect(modelToJSON(foo1).id).toBe(foo1.id);
 
-      updateModelId(foo1, '345');
-      expect(foo1.id).toBe('345');
-      expect(getModelId(foo1)).toBe(foo1.id);
-      expect(store.find(Foo, foo1.id)).toBe(foo1);
-      expect(foo2.parent).toBe(foo1);
-      expect(foo2.foos).toContain(foo1);
-      expect(modelToJSON(foo2).parent).toBe(foo1.id);
-      expect(modelToJSON(foo2).foos).toContain(foo1.id);
+        updateModelId(foo1, '345');
+        expect(foo1.id).toBe('345');
+        expect(getModelId(foo1)).toBe(foo1.id);
+        expect(store.find(Foo, foo1.id)).toBe(foo1);
+        expect(foo2.parent).toBe(foo1);
+        expect(foo2.foos).toContain(foo1);
+        expect(modelToJSON(foo2).parent).toBe(foo1.id);
+        expect(modelToJSON(foo2).foos).toContain(foo1.id);
 
-      // @ts-ignore
-      expect(modelToJSON(foo1).__META__.id).toBe(foo1.id);
-      expect(modelToJSON(foo1).id).toBe(foo1.id);
+        // @ts-ignore
+        expect(modelToJSON(foo1).__META__.id).toBe(foo1.id);
+        expect(modelToJSON(foo1).id).toBe(foo1.id);
+      });
+
+      it('Should work without decorators', () => {
+        class FooModel extends Model {}
+        FooModel.type = 'foo';
+
+        // @ts-ignore - Avoiding the TypeScript features on purpose
+        const Foo = setupModel(FooModel, {
+          idAttribute: 'id',
+          references: {
+            children: {model: FooModel, type: ReferenceType.TO_MANY, property: 'parent'},
+            foos: {model: FooModel, type: ReferenceType.TO_MANY},
+            parent: {model: FooModel, type: ReferenceType.TO_ONE},
+          },
+          typeAttribute: 'type',
+        });
+
+        class TestCollection extends Collection {
+          public static types = [Foo];
+        }
+
+        const store = new TestCollection();
+
+        const foo = new Foo({id: '123', type: '456'});
+        expect(foo.id).toBe('123');
+        expect(getModelId(foo)).toBe(foo.id);
+        expect(foo.type).toBe('456');
+        expect(getModelType(foo)).toBe(foo.type);
+
+        expect(() => foo.type = 'bar').toThrowError('Model type can\'t be changed after initialization.');
+        expect(() => foo.id = '789')
+          .toThrowError('Model ID can\'t be updated directly. Use the `updateModelId` helper function instead.');
+
+        const foo1 = store.add(new Foo({id: '234'}));
+        expect(foo1.id).toBe('234');
+
+        const foo2 = store.add({parent: foo1, foos: [foo1]}, Foo);
+        // @ts-ignore - Avoiding the TypeScript features on purpose
+        expect(foo2.id).toBeLessThan(0);
+        // @ts-ignore - Avoiding the TypeScript features on purpose
+        expect(getModelId(foo2)).toBe(foo2.id);
+        // @ts-ignore - Avoiding the TypeScript features on purpose
+        expect(foo2.type).toBe('foo');
+        expect(getModelType(foo2)).toBe('foo');
+        expect(modelToJSON(foo2).parent).toBe(foo1.id);
+        expect(modelToJSON(foo2).foos).toContain(foo1.id);
+      });
     });
   });
 });

@@ -45,6 +45,7 @@ The store meant to replace [mobx-collection-store](https://github.com/infinum/mo
 * [x] Support for id updating
 * [x] Destroy collection
 * [x] Reset collection
+* [x] Defining models without decorators
 
 ### Dev mode
 
@@ -64,7 +65,7 @@ The store meant to replace [mobx-collection-store](https://github.com/infinum/mo
 ### V1 features
 
 * [ ] Usage documentation
-* [ ] Code documentation
+* [x] Code documentation
 
 ## License
 
