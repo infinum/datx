@@ -14,6 +14,13 @@ import {storage} from '../../services/storage';
 import {error} from '../format';
 import {initModelField} from '../model/init';
 
+/**
+ * Get the model type
+ *
+ * @export
+ * @param {(IType|typeof Model|Model)} model Model to be checked
+ * @returns {IType} Model type
+ */
 export function getModelType(model: IType|typeof Model|Model): IType {
   if (typeof model === 'function') {
     return model.type;
@@ -23,6 +30,13 @@ export function getModelType(model: IType|typeof Model|Model): IType {
   return model;
 }
 
+/**
+ * Get the model identifier
+ *
+ * @export
+ * @param {(Model|IIdentifier)} model Model to be checked
+ * @returns {IIdentifier} Model identifier
+ */
 export function getModelId(model: Model|IIdentifier): IIdentifier {
   if (model instanceof Model) {
     return storage.getModelMetaKey(model, 'id');
@@ -30,10 +44,25 @@ export function getModelId(model: Model|IIdentifier): IIdentifier {
   return model;
 }
 
+/**
+ * Get a list of collections the given model belongs to
+ *
+ * @export
+ * @param {Model} model Model to be checked
+ * @returns {Array<Collection>} A list of collections the given model belongs to
+ */
 export function getModelCollections(model: Model): Array<Collection> {
   return storage.getModelCollections(model);
 }
 
+/**
+ * Clone the given model
+ *
+ * @export
+ * @template T
+ * @param {T} model Model to be clones
+ * @returns {T} Cloned model object
+ */
 export function cloneModel<T extends Model>(model: T): T {
   const TypeModel = model.constructor as typeof Model;
   const rawData = modelToJSON(model);
@@ -48,23 +77,51 @@ export function cloneModel<T extends Model>(model: T): T {
   return new TypeModel(rawData) as T;
 }
 
-export function getOriginalModel(model: Model) {
+/**
+ * Get the original model for the cloned model
+ *
+ * @export
+ * @param {Model} model Cloned model
+ * @returns {Model} Original model
+ */
+export function getOriginalModel(model: Model): Model {
   const originalId = storage.getModelMetaKey(model, 'originalId');
   if (originalId) {
-    return storage.findModel(model, originalId);
+    return storage.findModel(model, originalId) as Model;
   }
   throw error(NOT_A_CLONE);
 }
 
+/**
+ * Bulk update the model data
+ *
+ * @export
+ * @template T
+ * @param {T} model Model to be updated
+ * @param {IDictionary<any>} data Data that should be assigned to the model
+ * @returns {T}
+ */
 export function updateModel<T extends Model>(model: T, data: IDictionary<any>): T {
+  const modelId = storage.getModelClassMetaKey(model.constructor as typeof Model, 'id');
+  const modelType = storage.getModelClassMetaKey(model.constructor as typeof Model, 'id');
+
   Object.keys(data).forEach((key) => {
-    if (key !== META_FIELD) {
+    if (key !== META_FIELD && key !== modelId && key !== modelType) {
       assignModel(model, key, data[key]);
     }
   });
   return model;
 }
 
+/**
+ * Assign a property to a model
+ *
+ * @export
+ * @template T
+ * @param {T} model A model to modify
+ * @param {string} key Property name
+ * @param {*} value Property value
+ */
 export function assignModel<T extends Model>(model: T, key: string, value: any): void {
   const refs = storage.getModelMetaKey(model, 'refs') as IDictionary<IReferenceOptions>;
   if (key in refs) {
@@ -101,6 +158,13 @@ export function getMetaKeyFromRaw(data: IRawModel, key: string): any {
   return undefined;
 }
 
+/**
+ * Get a serializable value of the model
+ *
+ * @export
+ * @param {Model} model Model to serialize
+ * @returns {IRawModel} Pure JS value of the model
+ */
 export function modelToJSON(model: Model): IRawModel {
   const data = toJS(storage.getModelData(model));
   const meta = toJS(storage.getModelMeta(model));

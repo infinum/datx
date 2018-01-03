@@ -38,6 +38,16 @@ export function initModelField<T extends Model>(obj: T, key: string, defValue: a
   }
 }
 
+/**
+ * Initialize a reference to other models
+ *
+ * @export
+ * @template T
+ * @param {T} obj Model to which the reference should be added
+ * @param {string} key Model property where the reference will be defined
+ * @param {IReferenceOptions} options Reference options
+ * @param {TRefValue} initialVal Initial reference value
+ */
 export function initModelRef<T extends Model>(obj: T, key: string, options: IReferenceOptions, initialVal: TRefValue) {
   const refs = storage.getModelMetaKey(obj, 'refs');
 

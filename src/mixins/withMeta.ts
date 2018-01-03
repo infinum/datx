@@ -9,6 +9,14 @@ import {IModelConstructor} from '../interfaces/IModelConstructor';
 import {Model} from '../Model';
 import {storage} from '../services/storage';
 
+/**
+ * Extends the model with the exposed meta data
+ *
+ * @export
+ * @template T
+ * @param {IModelConstructor<T>} Base Model to extend
+ * @returns Extended model
+ */
 export function withMeta<T extends Model>(Base: IModelConstructor<T>) {
   const BaseClass = Base as typeof Model;
 

@@ -205,6 +205,13 @@ function updateModelReferences(newId: IIdentifier, oldId: IIdentifier, type: ITy
   });
 }
 
+/**
+ * Updates the model identifier and all the existing references to the model
+ *
+ * @export
+ * @param {Model} model Model to be updated
+ * @param {IIdentifier} newId New model identifier
+ */
 export function updateModelId(model: Model, newId: IIdentifier): void {
   const collections = getModelCollections(model);
 
