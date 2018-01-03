@@ -1,6 +1,6 @@
 {
   "name": "datx",
-  "version": "0.0.1",
+  "version": "0.5.0",
   "description": "A MobX data store",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
