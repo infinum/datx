@@ -40,9 +40,9 @@ The store meant to replace [mobx-collection-store](https://github.com/infinum/mo
   * snapshot
 * [x] Reference
 * [x] Back reference
-* [ ] idAttribute
-* [ ] typeAttribute
-* [ ] Support for id updating
+* [x] idAttribute
+* [x] typeAttribute
+* [x] Support for id updating
 * [x] Destroy collection
 * [x] Reset collection
 

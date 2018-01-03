@@ -489,6 +489,10 @@ describe('Model', () => {
       expect(modelToJSON(foo2).parent).toBe(foo1.id);
       expect(modelToJSON(foo2).foos).toContain(foo1.id);
 
+      // @ts-ignore
+      expect(modelToJSON(foo1).__META__.id).toBe(foo1.id);
+      expect(modelToJSON(foo1).id).toBe(foo1.id);
+
       updateModelId(foo1, '345');
       expect(foo1.id).toBe('345');
       expect(getModelId(foo1)).toBe(foo1.id);
@@ -497,6 +501,10 @@ describe('Model', () => {
       expect(foo2.foos).toContain(foo1);
       expect(modelToJSON(foo2).parent).toBe(foo1.id);
       expect(modelToJSON(foo2).foos).toContain(foo1.id);
+
+      // @ts-ignore
+      expect(modelToJSON(foo1).__META__.id).toBe(foo1.id);
+      expect(modelToJSON(foo1).id).toBe(foo1.id);
     });
   });
 });
