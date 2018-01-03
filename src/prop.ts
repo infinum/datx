@@ -74,11 +74,25 @@ prop['toOneOrMany'] = (refModel: typeof Model) => {
   };
 };
 
+/**
+ * Define the identifier property on the model
+ *
+ * @param {T} obj Target model
+ * @param {string} key Identifier property name
+ * @returns {undefined}
+ */
 prop['identifier'] = <T extends Model>(obj: T, key: string) => {
   storage.addModelDefaultField(obj.constructor as typeof Model, key);
   storage.setModelClassMetaKey(obj.constructor as typeof Model, 'id', key);
 };
 
+/**
+ * Define the type property on the model
+ *
+ * @param {T} obj Target model
+ * @param {string} key Type property name
+ * @returns {undefined}
+ */
 prop['type'] = <T extends Model>(obj: T, key: string) => {
   storage.addModelDefaultField(obj.constructor as typeof Model, key);
   storage.setModelClassMetaKey(obj.constructor as typeof Model, 'type', key);

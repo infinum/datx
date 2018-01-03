@@ -45,6 +45,9 @@ describe('Collection', () => {
       expect(foo2.foo).toBe(2);
       expect(foo3.foo).toBe(3);
 
+      store.add(foo1);
+      expect(store.length).toBe(3);
+
       // @ts-ignore - TS won't allow this mistake
       expect(() => store.add({foo: 4}))
         .toThrowError('The type needs to be defined if the object is not an instance of the model.');

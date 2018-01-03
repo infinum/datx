@@ -14,6 +14,14 @@ import {Model} from './Model';
 import {storage} from './services/storage';
 
 export class Collection {
+
+  /**
+   * List of models available in the collection
+   *
+   * @static
+   * @type {Array<typeof Model>}
+   * @memberof Collection
+   */
   public static types: Array<typeof Model> = [];
 
   private __data: IObservableArray<Model> = observable.shallowArray([]);
@@ -27,6 +35,13 @@ export class Collection {
     storage.registerCollection(this);
   }
 
+  /**
+   * Function for inserting raw models into the collection. Used when hydrating the collection
+   *
+   * @param {Array<IRawModel>} [data=[]] Raw model data
+   * @returns {Array<Model>} A list of initialized models
+   * @memberof Collection
+   */
   public insert(data: Array<IRawModel> = []): Array<Model> {
     this.__confirmValid();
     const models = initModels(this, data);
@@ -34,10 +49,40 @@ export class Collection {
     return models;
   }
 
+  /**
+   * Add an existing model to the collection
+   *
+   * @template T
+   * @param {T} data Model to be added
+   * @returns {T} Added model
+   * @memberof Collection
+   */
   public add<T extends Model>(data: T): T;
+
+  /**
+   * Add an array of existing models to the collection
+   *
+   * @template T
+   * @param {Array<T>} data Array of models to be added
+   * @returns {Array<T>} Added models
+   * @memberof Collection
+   */
   public add<T extends Model>(data: Array<T>): Array<T>;
-  public add<T extends Model>(data: IRawModel|IDictionary<any>, model: IType|IModelConstructor<T>): T;
-  public add<T extends Model>(data: Array<IRawModel|IDictionary<any>>, model: IType|IModelConstructor<T>): Array<T>;
+
+  /**
+   * Add a new model or array of models to the collection
+   *
+   * @template T
+   * @param {(IRawModel|IDictionary<any>|Array<IRawModel|IDictionary<any>>)} data New data to be added
+   * @param {(IType|IModelConstructor<T>)} model Model type to be added
+   * @returns {T} Added model(s)
+   * @memberof Collection
+   */
+  public add<T extends Model>(
+    data: IRawModel|IDictionary<any>|Array<IRawModel|IDictionary<any>>,
+    model: IType|IModelConstructor<T>,
+  ): T;
+
   public add(
     data: Model|IRawModel|IDictionary<any>|Array<Model>|Array<IRawModel|IDictionary<any>>,
     model?: IType|IModelConstructor,
@@ -46,18 +91,49 @@ export class Collection {
     return (data instanceof Array) ? this.__addArray(data, model) : this.__addSingle(data, model);
   }
 
-  public find(model: IType|typeof Model|Model, id?: IIdentifier): Model|null;
+  /**
+   * Find a model based on the defined type and (optional) identifier
+   *
+   * @param {(IType|typeof Model|Model)} type Model type
+   * @param {IIdentifier} [id] Model identifier
+   * @returns {(Model|null)} The first matching model
+   * @memberof Collection
+   */
+  public find(type: IType|typeof Model|Model, id?: IIdentifier): Model|null;
+
+  /**
+   * Find a model based on a matching function
+   *
+   * @param {TFilterFn} test Function used to match the model
+   * @returns {(Model|null)} The first matching model
+   * @memberof Collection
+   */
   public find(test: TFilterFn): Model|null;
+
   public find(model: IType|typeof Model|(TFilterFn), id?: IIdentifier): Model|null {
     return isSelectorFunction(model)
       ? this.__data.find(model as TFilterFn)
       : this.__findByType(model as typeof Model, id);
   }
 
+  /**
+   * Filter models based on a matching function
+   *
+   * @param {TFilterFn} test Function used to match the models
+   * @returns {(Model|null)} The matching models
+   * @memberof Collection
+   */
   public filter(test: TFilterFn): Array<Model> {
     return this.__data.filter(test);
   }
 
+  /**
+   * Find all matching models or all models if no type is given
+   *
+   * @param {(IType|typeof Model)} [model] Model type to select
+   * @returns {Array<Model>} List of matching models
+   * @memberof Collection
+   */
   public findAll(model?: IType|typeof Model): Array<Model> {
     if (model) {
       const type = getModelType(model);
@@ -66,18 +142,36 @@ export class Collection {
     return this.__data;
   }
 
+  /**
+   * Check if a model is in the collection
+   *
+   * @param {Model} model Model to check
+   * @returns {boolean} The given model is in the collection
+   * @memberof Collection
+   */
   public hasItem(model: Model): boolean {
     const type = getModelType(model);
     const id = getModelId(model);
     return type in this.__dataMap && id in this.__dataMap[type];
   }
 
-  public toJSON(): Array<IRawModel> {
-    return this.__data.map(modelToJSON);
-  }
+  /**
+   * Remove the first model based on the type and (optional) identifier
+   *
+   * @param {(IType|typeof Model)} type Model type
+   * @param {IIdentifier} [id] Model identifier
+   * @memberof Collection
+   */
+  public remove(type: IType|typeof Model, id?: IIdentifier);
 
-  public remove(model: IType|typeof Model, id?: IIdentifier);
+  /**
+   * Remove the given model from the collection
+   *
+   * @param {Model} model Model to be removed from the collection
+   * @memberof Collection
+   */
   public remove(model: Model);
+
   public remove(obj: IType|typeof Model|Model, id?: IIdentifier) {
     this.__confirmValid();
     const model = typeof obj === 'object' ? obj : this.find(obj, id);
@@ -86,16 +180,43 @@ export class Collection {
     }
   }
 
+  /**
+   * A total count of models in the collection
+   *
+   * @readonly
+   * @type {number}
+   * @memberof Collection
+   */
   @computed public get length(): number {
     return this.__data.length;
   }
 
+  /**
+   * Get the serializable value of the collection
+   *
+   * @returns {Array<IRawModel>} Pure JS value of the collection
+   * @memberof Collection
+   */
+  public toJSON(): Array<IRawModel> {
+    return this.__data.map(modelToJSON);
+  }
+
+  /**
+   * Destroy the collection and clean up all references
+   *
+   * @memberof Collection
+   */
   public destroy() {
     this.__confirmValid();
     storage.unregisterCollection(this);
     this.__initialized = false;
   }
 
+  /**
+   * Reset the collection (remove all models)
+   *
+   * @memberof Collection
+   */
   public reset() {
     this.__confirmValid();
     this.__data.replace([]);
@@ -122,6 +243,10 @@ export class Collection {
   private __addSingle<T extends Model>(data: IDictionary<any>, model?: IType|IModelConstructor<T>): T;
   private __addSingle(data: Model|IDictionary<any>, model?: IType|IModelConstructor) {
     if (data instanceof Model) {
+      if (this.hasItem(data)) {
+        return;
+      }
+
       this.__insertModel(data);
       return data;
     }
