@@ -1,5 +1,4 @@
 import {ReferenceType} from './enums/ReferenceType';
-import {IProp} from './interfaces/IProp';
 import {Model} from './Model';
 import {storage} from './services/storage';
 
@@ -71,7 +70,7 @@ export default Object.assign(propFn, {
     return <T extends Model>(obj: T, key: string) => {
       storage.addModelClassReference(obj.constructor as typeof Model, key, {
         model: refModel,
-        type: ReferenceType.TO_ANY,
+        type: ReferenceType.TO_ONE_OR_MANY,
       });
     };
   },

@@ -1,5 +1,5 @@
 export enum ReferenceType {
   TO_ONE,
   TO_MANY,
-  TO_ANY,
+  TO_ONE_OR_MANY,
 }

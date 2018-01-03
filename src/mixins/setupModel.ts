@@ -1,18 +1,16 @@
-import {computed} from 'mobx';
-
+import {ReferenceType} from '../enums/ReferenceType';
 import {DECORATE_MODEL} from '../errors';
 import {error} from '../helpers/format';
 import {isModel} from '../helpers/mixin';
-import {getModelCollections, getModelId, getModelType, getOriginalModel} from '../helpers/model/utils';
 import {IDictionary} from '../interfaces/IDictionary';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
 import {IReferenceOptions} from '../interfaces/IReferenceOptions';
 import {IType} from '../interfaces/IType';
 import {Model} from '../Model';
-import {storage} from '../services/storage';
+import prop from '../prop';
 
-export function setupModel<T extends Model>(
-  Base: IModelConstructor<T>,
+export function setupModel<IModel extends Model, IFields extends IDictionary<any>>(
+  Base: IModelConstructor<IModel>,
   {
     fields,
     references,
@@ -20,12 +18,12 @@ export function setupModel<T extends Model>(
     idAttribute,
     typeAttribute,
   }: {
-    fields?: IDictionary<any>;
+    fields: IFields;
     references?: IDictionary<IReferenceOptions>;
     type?: IType;
     idAttribute?: string;
     typeAttribute?: string;
-  },
+  } = {fields: {} as IFields},
 ) {
   const BaseClass = Base as typeof Model;
 
@@ -40,26 +38,32 @@ export function setupModel<T extends Model>(
   }
 
   if (idAttribute) {
-    storage.addModelDefaultField(ModelWithProps, idAttribute);
-    storage.setModelClassMetaKey(ModelWithProps, 'id', idAttribute);
+    prop.identifier(ModelWithProps.prototype, idAttribute);
   }
 
   if (typeAttribute) {
-    storage.addModelDefaultField(ModelWithProps, typeAttribute);
-    storage.setModelClassMetaKey(ModelWithProps, 'type', typeAttribute);
+    prop.type(ModelWithProps.prototype, typeAttribute);
   }
 
   if (fields) {
     Object.keys(fields).forEach((key) => {
-      storage.addModelDefaultField(ModelWithProps, key, fields[key]);
+      prop.defaultValue(fields[key])(ModelWithProps.prototype, key);
     });
   }
 
   if (references) {
     Object.keys(references).forEach((key) => {
-      storage.addModelClassReference(ModelWithProps, key, references[key]);
+      const {model, property} = references[key];
+      switch (references[key].type) {
+        case ReferenceType.TO_ONE:
+          return prop.toOne(model)(ModelWithProps.prototype, key);
+        case ReferenceType.TO_MANY:
+          return prop.toMany(model, property)(ModelWithProps.prototype, key);
+        default:
+          return prop.toOneOrMany(model)(ModelWithProps.prototype, key);
+      }
     });
   }
 
-  return ModelWithProps as IModelConstructor<T>;
+  return ModelWithProps as IModelConstructor<IModel & IFields>;
 }
