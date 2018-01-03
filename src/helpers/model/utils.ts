@@ -104,5 +104,18 @@ export function getMetaKeyFromRaw(data: IRawModel, key: string): any {
 export function modelToJSON(model: Model): IRawModel {
   const data = toJS(storage.getModelData(model));
   const meta = toJS(storage.getModelMeta(model));
-  return Object.assign(data, {[META_FIELD]: meta});
+
+  const raw = Object.assign(data, {[META_FIELD]: meta});
+
+  const staticModel = model.constructor as typeof Model;
+  const modelId = storage.getModelClassMetaKey(staticModel, 'id');
+  const modelType = storage.getModelClassMetaKey(staticModel, 'type');
+  if (meta && modelId) {
+    raw[modelId] = meta.id;
+  }
+  if (meta && modelType) {
+    raw[modelType] = meta.type;
+  }
+
+  return raw;
 }

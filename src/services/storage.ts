@@ -13,8 +13,13 @@ import {Model} from '../Model';
 
 export class DataStorage {
   private modelData = new WeakMap<Model, IDataStorage>();
-  private modelClassDefaults = new WeakMap<typeof Model, IDictionary<any>>();
-  private modelClassReferences = new WeakMap<typeof Model, IDictionary<IReferenceOptions>>();
+
+  private modelClassData = new WeakMap<typeof Model, {
+    data: IDictionary<any>;
+    meta: IDictionary<any>;
+    references: IDictionary<IReferenceOptions>;
+  }>();
+
   private collections: IObservableArray<Collection> = observable.shallowArray([]);
 
   public initModel(model: Model) {
@@ -59,17 +64,50 @@ export class DataStorage {
     return modelData.meta;
   }
 
-  public addModelDefaultField(model: typeof Model, key: string, value?: any) {
-    if (this.modelClassDefaults.has(model)) {
-      Object.assign(this.modelClassDefaults.get(model), {[key]: value});
+  public setModelMetaKey(model: Model, key: string, value?: any) {
+    this.setModelMeta(model, {[key]: value});
+  }
+
+  public getAllModels() {
+    const models = this.collections.map((collection) => Array.from(collection.findAll()));
+    return uniq(flatten(models));
+  }
+
+  public setModelClassMetaKey(model: typeof Model, key: string, value?: any) {
+    const data = this.modelClassData.get(model);
+    if (data) {
+      Object.assign(data.meta, {[key]: value});
     } else {
-      this.modelClassDefaults.set(model, {[key]: value});
+      this.modelClassData.set(model, {
+        data: {},
+        meta: {[key]: value},
+        references: {},
+      });
+    }
+  }
+
+  public getModelClassMetaKey(obj: typeof Model, key: string): any {
+    return reducePrototypeChain(obj, (value, model) => {
+      return value || (this.modelClassData.get(model) || {meta: {}}).meta[key] || null;
+    }, null);
+  }
+
+  public addModelDefaultField(model: typeof Model, key: string, value?: any) {
+    const data = this.modelClassData.get(model);
+    if (data) {
+      Object.assign(data.data, {[key]: value});
+    } else {
+      this.modelClassData.set(model, {
+        data: {[key]: value},
+        meta: {},
+        references: {},
+      });
     }
   }
 
   public getModelDefaults(obj: typeof Model): IDictionary<any> {
     const defaults = reducePrototypeChain(obj, (state, model) => {
-      return state.concat(this.modelClassDefaults.get(model) || {});
+      return state.concat((this.modelClassData.get(model) || {data: []}).data);
     }, [] as Array<IDictionary<any>>);
     return Object.assign({}, ...defaults.reverse());
   }
@@ -101,17 +139,21 @@ export class DataStorage {
   }
 
   public addModelClassReference(model: typeof Model, key: string, options: IReferenceOptions) {
-    const references = this.modelClassReferences.get(model);
-    if (references) {
-      Object.assign(references, {[key]: options});
+    const data = this.modelClassData.get(model);
+    if (data) {
+      Object.assign(data.references, {[key]: options});
     } else {
-      this.modelClassReferences.set(model, {[key]: options});
+      this.modelClassData.set(model, {
+        data: {},
+        meta: {},
+        references: {[key]: options},
+      });
     }
   }
 
   public getModelClassReferences(obj: typeof Model): IDictionary<IReferenceOptions> {
     const defaults = reducePrototypeChain(obj, (state, model) => {
-      return state.concat(this.modelClassReferences.get(model) || {});
+      return state.concat((this.modelClassData.get(model) || {references: {}}).references);
     }, [] as Array<IDictionary<any>>);
     return Object.assign({}, ...defaults.reverse());
   }
@@ -133,9 +175,13 @@ export class DataStorage {
   // For testing purposes only
   private clear() {
     this.modelData = new WeakMap<Model, IDataStorage>();
-    this.modelClassDefaults = new WeakMap<typeof Model, IDictionary<any>>();
-    this.modelClassReferences = new WeakMap<typeof Model, IDictionary<IReferenceOptions>>();
     this.collections.replace([]);
+
+    this.modelClassData = new WeakMap<typeof Model, {
+      data: IDictionary<any>;
+      meta: IDictionary<any>;
+      references: IDictionary<IReferenceOptions>;
+    }>();
   }
 }
 

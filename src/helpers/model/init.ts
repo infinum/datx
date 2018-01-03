@@ -1,6 +1,7 @@
 import {computed, extendObservable} from 'mobx';
 
 import {META_FIELD} from '../../consts';
+import {FieldType} from '../../enums/FieldType';
 import {ReferenceType} from '../../enums/ReferenceType';
 import {MODEL_EXISTS} from '../../errors';
 import {IDictionary} from '../../interfaces/IDictionary';
@@ -13,27 +14,27 @@ import {error} from '../format';
 import {getField, getRef, updateField, updateRef} from './fields';
 import {getModelType} from './utils';
 
-interface IMetaToInit {
+interface IMetaToInit extends IDictionary<any> {
   fields: Array<string>;
   refs: IDictionary<IReferenceOptions>;
 }
 
-export function initModelField<T extends Model>(obj: T, key: string, defaultValue: any) {
+export function initModelField<T extends Model>(obj: T, key: string, defValue: any, type: FieldType = FieldType.DATA) {
   const fields = storage.getModelMetaKey(obj, 'fields') as Array<string>;
   if (fields.indexOf(key) === -1) {
     // Initialize the observable field to the default value
-    storage.setModelDataKey(obj, key, defaultValue);
+    storage.setModelDataKey(obj, key, defValue);
     fields.push(key);
 
     // Set up the computed prop
     extendObservable(obj, {
       [key]: computed(
         () => getField(obj, key),
-        (value) => updateField(obj, key, value),
+        (value) => updateField(obj, key, value, type),
       ),
     });
   } else {
-    obj[key] = defaultValue;
+    obj[key] = defValue;
   }
 }
 
@@ -82,8 +83,21 @@ function prepareFields(data: IRawModel, meta: IMetaToInit, model: Model) {
 function initModelData(model: Model, data: IRawModel, meta: IMetaToInit) {
   const {defaults, fields, refs} = prepareFields(data, meta, model);
 
+  const staticModel = model.constructor as typeof Model;
+  const modelId = storage.getModelClassMetaKey(staticModel, 'id');
+  const modelType = storage.getModelClassMetaKey(staticModel, 'type');
+
   fields.forEach((key) => {
-    initModelField(model, key, data[key] || defaults[key] || undefined);
+    let type = FieldType.DATA;
+    let value = data[key] || defaults[key] || undefined;
+    if (key === modelId) {
+      type = FieldType.ID;
+      value = meta.id;
+    } else if (key === modelType) {
+      type = FieldType.TYPE;
+      value = meta.type;
+    }
+    initModelField(model, key, value, type);
   });
 
   Object.keys(refs).forEach((key) => {
@@ -94,11 +108,14 @@ function initModelData(model: Model, data: IRawModel, meta: IMetaToInit) {
 
 function initModelMeta(model: Model, data: IRawModel): IDictionary<any> & IMetaToInit {
   const staticModel = model.constructor as typeof Model;
+  const modelId = storage.getModelClassMetaKey(staticModel, 'id');
+  const modelType = storage.getModelClassMetaKey(staticModel, 'type');
+
   const meta = {
     fields: [],
-    id: staticModel.getAutoId(),
+    id: (modelId && data[modelId]) || staticModel.getAutoId(),
     refs: {},
-    type: getModelType(model),
+    type: (modelType && data[modelType]) || getModelType(model),
   };
 
   let newMeta;

@@ -1,16 +1,25 @@
 import {IArrayChange, IArraySplice, intercept, IObservableArray, isObservableArray, observable} from 'mobx';
 
+import {FieldType} from '../../enums/FieldType';
 import {ReferenceType} from '../../enums/ReferenceType';
-import {BACK_REF_READ_ONLY, REF_ARRAY, REF_NEEDS_COLLECTION, REF_SINGLE} from '../../errors';
+import {
+  BACK_REF_READ_ONLY,
+  ID_READONLY,
+  REF_ARRAY,
+  REF_NEEDS_COLLECTION,
+  REF_SINGLE,
+  TYPE_READONLY,
+} from '../../errors';
 import {IIdentifier} from '../../interfaces/IIdentifier';
 import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
+import {IType} from '../../interfaces/IType';
 import {TChange} from '../../interfaces/TChange';
 import {TRefValue} from '../../interfaces/TRefValue';
 import {Model} from '../../Model';
 import {storage} from '../../services/storage';
 import {error} from '../format';
 import {isFalsyArray, mapItems} from '../utils';
-import {getModelId, getModelType} from './utils';
+import {getModelCollections, getModelId, getModelType} from './utils';
 
 function modelAddReference(model: Model, key: string, newReference: Model) {
   const refOptions = storage.getModelReferenceOptions(model, key);
@@ -92,7 +101,12 @@ export function getField(model: Model, key: string) {
   return storage.getModelDataKey(model, key);
 }
 
-export function updateField(model: Model, key: string, value: any) {
+export function updateField(model: Model, key: string, value: any, type: FieldType = FieldType.DATA) {
+  if (type === FieldType.TYPE) {
+    throw error(TYPE_READONLY);
+  } else if (type === FieldType.ID) {
+    throw error(ID_READONLY);
+  }
   storage.setModelDataKey(model, key, value);
 }
 
@@ -166,4 +180,48 @@ export function updateRef(model: Model, key: string, value: TRefValue) {
   }
 
   storage.setModelDataKey(model, key, ids);
+}
+
+function getModelRefsByType(model: Model, type: IType) {
+  const refs = storage.getModelMetaKey(model, 'refs');
+  return Object.keys(refs)
+    .filter((key) => !refs[key].property)
+    .filter((key) => getModelType(refs[key].model) === type);
+}
+
+function updateModelReferences(newId: IIdentifier, oldId: IIdentifier, type: IType) {
+  const allModels = storage.getAllModels().map((item) => {
+    getModelRefsByType(item, type).forEach((ref) => {
+      const data = storage.getModelDataKey(item, ref);
+      if (data instanceof Array || isObservableArray(data)) {
+        const targetIndex = data.indexOf(oldId);
+        if (targetIndex !== -1) {
+          data[targetIndex] = newId;
+        }
+      } else if (data === oldId) {
+        storage.setModelDataKey(item, ref, newId);
+      }
+    });
+  });
+}
+
+export function updateModelId(model: Model, newId: IIdentifier): void {
+  const collections = getModelCollections(model);
+
+  const oldId = getModelId(model);
+  const type = getModelType(model);
+  storage.setModelMetaKey(model, 'id', newId);
+
+  const staticModel = model.constructor as typeof Model;
+  const modelId = storage.getModelClassMetaKey(staticModel, 'id');
+  if (modelId) {
+    storage.setModelDataKey(model, modelId, newId);
+  }
+
+  collections.forEach((collection) => {
+    // @ts-ignore - I'm bad and I should feel bad...
+    collection.__changeModelId(oldId, newId, type);
+  });
+
+  updateModelReferences(newId, oldId, type);
 }

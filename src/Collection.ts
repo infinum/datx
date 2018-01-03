@@ -177,4 +177,9 @@ export class Collection {
       return data[0] || null;
     }
   }
+
+  private __changeModelId(oldId: IIdentifier, newId: IIdentifier, type: IType) {
+    this.__dataMap[type][newId] = this.__dataMap[type][oldId];
+    delete this.__dataMap[type][oldId];
+  }
 }

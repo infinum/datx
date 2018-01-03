@@ -74,6 +74,14 @@ prop['toOneOrMany'] = (refModel: typeof Model) => {
   };
 };
 
-// TODO: identifier - select the field as an identifier
+prop['identifier'] = <T extends Model>(obj: T, key: string) => {
+  storage.addModelDefaultField(obj.constructor as typeof Model, key);
+  storage.setModelClassMetaKey(obj.constructor as typeof Model, 'id', key);
+};
+
+prop['type'] = <T extends Model>(obj: T, key: string) => {
+  storage.addModelDefaultField(obj.constructor as typeof Model, key);
+  storage.setModelClassMetaKey(obj.constructor as typeof Model, 'type', key);
+};
 
 export default prop as IProp;

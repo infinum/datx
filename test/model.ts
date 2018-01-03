@@ -7,12 +7,14 @@ import {
   cloneModel,
   Collection,
   getModelId,
+  getModelType,
   getOriginalModel,
   initModelRef,
   Model,
   modelToJSON,
   prop,
   ReferenceType,
+  updateModelId,
 } from '../src';
 import {storage} from '../src/services/storage';
 
@@ -447,6 +449,54 @@ describe('Model', () => {
         expect(foo3.parent).toBe(foo1);
         expect(foo4.parent).toBeNull();
       });
+    });
+
+    describe('Custom id & type', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+        @prop.identifier public id: string;
+        @prop.type public type: string;
+
+        @prop.toOne(Foo) public parent: Foo;
+        @prop.toMany(Foo) public foos: Array<Foo>;
+        @prop.toMany(Foo, 'parent') public children: Array<Foo>;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new TestCollection();
+
+      const foo = new Foo({id: '123', type: '456'});
+      expect(foo.id).toBe('123');
+      expect(getModelId(foo)).toBe(foo.id);
+      expect(foo.type).toBe('456');
+      expect(getModelType(foo)).toBe(foo.type);
+
+      expect(() => foo.type = 'bar').toThrowError('Model type can\'t be changed after initialization.');
+      expect(() => foo.id = '789')
+        .toThrowError('Model ID can\'t be updated directly. Use the `updateModelId` helper function instead.');
+
+      const foo1 = store.add(new Foo({id: '234'}));
+      expect(foo1.id).toBe('234');
+
+      const foo2 = store.add({parent: foo1, foos: [foo1]}, Foo);
+      expect(foo2.id).toBeLessThan(0);
+      expect(getModelId(foo2)).toBe(foo2.id);
+      expect(foo2.type).toBe('foo');
+      expect(getModelType(foo2)).toBe('foo');
+      expect(modelToJSON(foo2).parent).toBe(foo1.id);
+      expect(modelToJSON(foo2).foos).toContain(foo1.id);
+
+      updateModelId(foo1, '345');
+      expect(foo1.id).toBe('345');
+      expect(getModelId(foo1)).toBe(foo1.id);
+      expect(store.find(Foo, foo1.id)).toBe(foo1);
+      expect(foo2.parent).toBe(foo1);
+      expect(foo2.foos).toContain(foo1);
+      expect(modelToJSON(foo2).parent).toBe(foo1.id);
+      expect(modelToJSON(foo2).foos).toContain(foo1.id);
     });
   });
 });
