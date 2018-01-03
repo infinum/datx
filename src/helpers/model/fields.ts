@@ -29,9 +29,6 @@ function modelAddReference(model: Model, key: string, newReference: Model) {
     storage.setModelDataKey(model, key, newRefId);
   } else if (refOptions.type === ReferenceType.TO_MANY || isObservableArray(data)) {
     data.push(newRefId);
-  } else {
-    // OneOrMany - single value - convert to array or overwrite?
-    storage.setModelDataKey(model, key, newRefId); // Overwrite
   }
 }
 
@@ -43,10 +40,7 @@ function modelRemoveReference(model: Model, key: string, oldReference: Model) {
     storage.setModelDataKey(model, key, null);
   } else if (refOptions.type === ReferenceType.TO_MANY || isObservableArray(data)) {
     data.remove(oldRefId);
-  } else {
-    storage.setModelDataKey(model, key, null);
   }
-
 }
 
 function partialRefUpdate(model: Model, key: string, change: TChange) {
@@ -54,7 +48,7 @@ function partialRefUpdate(model: Model, key: string, change: TChange) {
   const data = storage.getModelDataKey(model, key);
 
   if (change.type === 'splice') {
-    const added = (change.added || []).map(getModelId);
+    const added = change.added.map(getModelId);
     data.splice(change.index, change.removedCount, ...added);
     return null;
   } else if (change.type === 'update') {
@@ -67,7 +61,7 @@ function partialRefUpdate(model: Model, key: string, change: TChange) {
 
 function backRefSplice(model: Model, key: string, change: IArraySplice<Model>, refOptions: IReferenceOptions) {
   const property = refOptions.property as string;
-  (change.added || []).map((item) => modelAddReference(item, property, model));
+  change.added.map((item) => modelAddReference(item, property, model));
   const removed = model[key].slice(change.index, change.index + change.removedCount);
   removed.map((item) => modelRemoveReference(item, property, model));
   return null;

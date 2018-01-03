@@ -21,21 +21,18 @@ interface IMetaToInit extends IDictionary<any> {
 
 export function initModelField<T extends Model>(obj: T, key: string, defValue: any, type: FieldType = FieldType.DATA) {
   const fields = storage.getModelMetaKey(obj, 'fields') as Array<string>;
-  if (fields.indexOf(key) === -1) {
-    // Initialize the observable field to the default value
-    storage.setModelDataKey(obj, key, defValue);
-    fields.push(key);
 
-    // Set up the computed prop
-    extendObservable(obj, {
-      [key]: computed(
-        () => getField(obj, key),
-        (value) => updateField(obj, key, value, type),
-      ),
-    });
-  } else {
-    obj[key] = defValue;
-  }
+  // Initialize the observable field to the default value
+  storage.setModelDataKey(obj, key, defValue);
+  fields.push(key);
+
+  // Set up the computed prop
+  extendObservable(obj, {
+    [key]: computed(
+      () => getField(obj, key),
+      (value) => updateField(obj, key, value, type),
+    ),
+  });
 }
 
 /**
@@ -51,21 +48,19 @@ export function initModelField<T extends Model>(obj: T, key: string, defValue: a
 export function initModelRef<T extends Model>(obj: T, key: string, options: IReferenceOptions, initialVal: TRefValue) {
   const refs = storage.getModelMetaKey(obj, 'refs');
 
-  if (!(key in refs)) {
-    // Initialize the observable field to the given value
-    refs[key] = options;
+  // Initialize the observable field to the given value
+  refs[key] = options;
 
-    const isArray = options.type === ReferenceType.TO_MANY;
-    storage.setModelDataKey(obj, key, isArray ? [] : undefined);
+  const isArray = options.type === ReferenceType.TO_MANY;
+  storage.setModelDataKey(obj, key, isArray ? [] : undefined);
 
-    // Set up the computed prop
-    extendObservable(obj, {
-      [key]: computed(
-        () => getRef(obj, key),
-        (value) => updateRef(obj, key, value),
-      ),
-    });
-  }
+  // Set up the computed prop
+  extendObservable(obj, {
+    [key]: computed(
+      () => getRef(obj, key),
+      (value) => updateRef(obj, key, value),
+    ),
+  });
 
   if (!options.property) {
     obj[key] = initialVal;
