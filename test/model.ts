@@ -393,6 +393,9 @@ describe('Model', () => {
       const foo4 = cloneModel(foo2);
       expect(foo4.parent.length).toBe(1);
       expect(foo4.parent && foo4.parent[0].foo).toBe(2);
+
+      foo4.parent[0] = foo1;
+      expect(foo4.parent).toContain(foo1);
     });
 
     it('should support custom reference serialization/deserialization', () => {
@@ -468,6 +471,8 @@ describe('Model', () => {
 
           @prop.toMany(Foo) public foos: Array<Foo>;
           @prop.toMany(Foo, 'foos') public backFoos: Array<Foo>;
+          @prop.toOneOrMany(Foo) public fooRef: Foo|Array<Foo>;
+          @prop.toMany(Foo, 'fooRef') public fooBackRef: Array<Foo>;
         }
 
         class TestCollection extends Collection {
@@ -510,6 +515,41 @@ describe('Model', () => {
         expect(foo3.backFoos).toHaveLength(2);
         expect(foo3.backFoos).toContain(foo1);
         expect(foo3.backFoos).toContain(foo2);
+
+        foo3.backFoos.push(foo4);
+        expect(foo4.foos).toHaveLength(1);
+        expect(foo4.foos).toContain(foo3);
+
+        foo3.backFoos.shift();
+        expect(foo1.foos).toHaveLength(1);
+        expect(foo1.foos).toContain(foo2);
+
+        foo3.fooRef = [foo4];
+        expect(foo4.fooBackRef).toHaveLength(1);
+        expect(foo4.fooBackRef).toContain(foo3);
+
+        foo3.fooRef.push(foo1);
+        foo3.fooRef.shift();
+        expect(foo3.fooRef).toHaveLength(1);
+        expect(foo3.fooRef).toContain(foo1);
+
+        foo4.fooBackRef.push(foo1);
+        expect(foo1.fooRef).toBe(foo4);
+        foo4.fooBackRef.pop();
+        expect(foo1.fooRef).toBeNull();
+
+        foo4.fooRef = foo1;
+        foo3.fooRef = foo1;
+        foo2.fooRef = foo1;
+        expect(foo1.fooBackRef).toHaveLength(3);
+
+        const toRemove = foo1.fooBackRef[1];
+        // @ts-ignore
+        foo1.fooBackRef[1] = undefined;
+        expect(foo1.fooBackRef).not.toContain(toRemove);
+
+        foo1.fooBackRef[1] = foo1;
+        expect(foo1.fooRef).toBe(foo1);
       });
     });
 

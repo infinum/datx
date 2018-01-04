@@ -29,6 +29,8 @@ function modelAddReference(model: Model, key: string, newReference: Model) {
     storage.setModelDataKey(model, key, newRefId);
   } else if (refOptions.type === ReferenceType.TO_MANY || isObservableArray(data)) {
     data.push(newRefId);
+  } else {
+    storage.setModelDataKey(model, key, newReference);
   }
 }
 
@@ -40,6 +42,8 @@ function modelRemoveReference(model: Model, key: string, oldReference: Model) {
     storage.setModelDataKey(model, key, null);
   } else if (refOptions.type === ReferenceType.TO_MANY || isObservableArray(data)) {
     data.remove(oldRefId);
+  } else {
+    storage.setModelDataKey(model, key, null);
   }
 }
 
