@@ -4,6 +4,7 @@
   "description": "A MobX data store",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/infinum/datx.git"
