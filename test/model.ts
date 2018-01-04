@@ -217,6 +217,10 @@ describe('Model', () => {
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2 = modelToJSON(foo2);
       expect(raw2.parent).toBe(getModelId(foo1));
+
+      const foo3 = collection.add({foo: 4, parent: {foo: 5}}, Foo);
+      expect(foo3.parent).toBeInstanceOf(Foo);
+      expect(foo3.parent && foo3.parent.foo).toBe(5);
     });
 
     it('should throw if model is not in a collection', () => {

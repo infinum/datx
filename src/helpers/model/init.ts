@@ -1,5 +1,6 @@
 import {computed, extendObservable} from 'mobx';
 
+import {Collection} from '../../Collection';
 import {META_FIELD} from '../../consts';
 import {FieldType} from '../../enums/FieldType';
 import {ReferenceType} from '../../enums/ReferenceType';
@@ -85,7 +86,7 @@ function prepareFields(data: IRawModel, meta: IMetaToInit, model: Model) {
   return {defaults, fields, refs};
 }
 
-function initModelData(model: Model, data: IRawModel, meta: IMetaToInit) {
+function initModelData(model: Model, data: IRawModel, meta: IMetaToInit, collection?: Collection) {
   const {defaults, fields, refs} = prepareFields(data, meta, model);
 
   const staticModel = model.constructor as typeof Model;
@@ -107,7 +108,9 @@ function initModelData(model: Model, data: IRawModel, meta: IMetaToInit) {
 
   Object.keys(refs).forEach((key) => {
     const opts = refs[key];
-    initModelRef(model, key, opts, data[key] || defaults[key] || undefined);
+    const value = data[key] || defaults[key] || undefined;
+    let models: any = collection ? collection.add(value, getModelType(opts.model)) : value;
+    initModelRef(model, key, opts, models);
   });
 }
 
@@ -141,9 +144,9 @@ function initModelMeta(model: Model, data: IRawModel): IDictionary<any> & IMetaT
   return Object.assign({}, newMeta, toInit);
 }
 
-export function initModel(model: Model, rawData: IRawModel) {
+export function initModel(model: Model, rawData: IRawModel, collection?: Collection) {
   const staticModel = model.constructor as typeof Model;
   const data = Object.assign({}, staticModel.preprocess(rawData));
   const meta = initModelMeta(model, data);
-  initModelData(model, data, meta);
+  initModelData(model, data, meta, collection);
 }

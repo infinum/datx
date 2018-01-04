@@ -244,18 +244,21 @@ export class Collection {
   private __addArray<T extends Model>(data: Array<T>): Array<T>;
   private __addArray<T extends Model>(data: Array<IDictionary<any>>, model?: IType|IModelConstructor<T>): Array<T>;
   private __addArray(data: Array<Model|IDictionary<any>>, model?: IType|IModelConstructor): Array<Model> {
-    return data.map((item) => this.__addSingle(item, model));
+    return data.filter(Boolean).map((item) => this.__addSingle(item, model));
   }
 
   private __addSingle<T extends Model>(data: T): T;
   private __addSingle<T extends Model>(data: IDictionary<any>, model?: IType|IModelConstructor<T>): T;
   private __addSingle(data: Model|IDictionary<any>, model?: IType|IModelConstructor) {
+    if (!data) {
+      return data;
+    }
+
     if (data instanceof Model) {
-      if (this.hasItem(data)) {
-        return;
+      if (!this.hasItem(data)) {
+        this.__insertModel(data);
       }
 
-      this.__insertModel(data);
       return data;
     }
 
@@ -264,7 +267,7 @@ export class Collection {
     }
 
     const type = getModelType(model as IType|typeof Model);
-    const modelInstance = upsertModel(data, type, this.constructor as typeof Collection);
+    const modelInstance = upsertModel(data, type, this);
     this.__insertModel(modelInstance, type);
 
     const id = getModelId(modelInstance);

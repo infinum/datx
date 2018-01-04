@@ -1,3 +1,4 @@
+import {Collection} from './Collection';
 import {DEFAULT_TYPE} from './consts';
 import {initModel} from './helpers/model/init';
 import {IDictionary} from './interfaces/IDictionary';
@@ -47,7 +48,7 @@ export class Model {
     return --this.autoIdValue;
   }
 
-  constructor(rawData: IRawModel = {}) {
-    initModel(this, rawData);
+  constructor(rawData: IRawModel = {}, collection?: Collection) {
+    initModel(this, rawData, collection);
   }
 }

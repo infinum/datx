@@ -7,13 +7,14 @@ import {storage} from '../services/storage';
 import {error} from './format';
 import {getMetaKeyFromRaw, updateModel} from './model/utils';
 
-function initCollectionModel(collection: typeof Collection, data: IRawModel): Model {
+function initCollectionModel(collection: Collection, data: IRawModel): Model {
   const type = getMetaKeyFromRaw(data, 'type');
   return upsertModel(data, type, collection);
 }
 
-export function upsertModel(data: IRawModel, type: IType|typeof Model, collection: typeof Collection): Model {
-  const TypeModel = collection.types.find((item) => item.type === type);
+export function upsertModel(data: IRawModel, type: IType|typeof Model, collection: Collection): Model {
+  const staticCollection = collection.constructor as typeof Collection;
+  const TypeModel = staticCollection.types.find((item) => item.type === type);
 
   if (!type) {
     throw error(UNDEFINED_TYPE);
@@ -29,7 +30,7 @@ export function upsertModel(data: IRawModel, type: IType|typeof Model, collectio
     return updateModel(existingModel, data);
   }
 
-  return new TypeModel(data);
+  return new TypeModel(data, collection);
 }
 
 export function isSelectorFunction(fn: any) {
@@ -37,6 +38,5 @@ export function isSelectorFunction(fn: any) {
 }
 
 export function initModels(collection: Collection, data: Array<IRawModel>) {
-  const staticCollection = collection.constructor as typeof Collection;
-  return data.map((item) => initCollectionModel(staticCollection, item));
+  return data.map((item) => initCollectionModel(collection, item));
 }
