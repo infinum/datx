@@ -1,5 +1,5 @@
 import {Collection} from '../Collection';
-import {OBJECT_NO_TYPE, UNDEFINED_MODEL, UNDEFINED_TYPE} from '../errors';
+import {UNDEFINED_MODEL, UNDEFINED_TYPE} from '../errors';
 import {IRawModel} from '../interfaces/IRawModel';
 import {IType} from '../interfaces/IType';
 import {Model} from '../Model';
@@ -7,12 +7,9 @@ import {storage} from '../services/storage';
 import {error} from './format';
 import {getMetaKeyFromRaw, updateModel} from './model/utils';
 
-function initCollectionModel(collection: typeof Collection, data: IRawModel, index: number): Model {
+function initCollectionModel(collection: typeof Collection, data: IRawModel): Model {
   const type = getMetaKeyFromRaw(data, 'type');
-  if (type) {
-    return upsertModel(data, type, collection);
-  }
-  throw error(OBJECT_NO_TYPE, {index});
+  return upsertModel(data, type, collection);
 }
 
 export function upsertModel(data: IRawModel, type: IType|typeof Model, collection: typeof Collection): Model {
@@ -39,7 +36,7 @@ export function isSelectorFunction(fn: any) {
   return (typeof fn === 'function') && (fn !== Model && !(fn.prototype instanceof Model));
 }
 
-export function initModels(collection: Collection, data: Array<IRawModel> = []) {
+export function initModels(collection: Collection, data: Array<IRawModel>) {
   const staticCollection = collection.constructor as typeof Collection;
-  return data.map((item, index) => initCollectionModel(staticCollection, item, index));
+  return data.map((item) => initCollectionModel(staticCollection, item));
 }

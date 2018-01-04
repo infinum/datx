@@ -38,11 +38,11 @@ export class Collection {
   /**
    * Function for inserting raw models into the collection. Used when hydrating the collection
    *
-   * @param {Array<IRawModel>} [data=[]] Raw model data
+   * @param {Array<IRawModel>} data Raw model data
    * @returns {Array<Model>} A list of initialized models
    * @memberof Collection
    */
-  public insert(data: Array<IRawModel> = []): Array<Model> {
+  public insert(data: Array<IRawModel>): Array<Model> {
     this.__confirmValid();
     const models = initModels(this, data);
     this.__insertModel(models);

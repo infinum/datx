@@ -2,7 +2,7 @@
 
 import {autorun} from 'mobx';
 
-import {Collection, Model, prop, withActions, withMeta} from '../../src';
+import {Collection, Model, prop, ReferenceType, withActions, withMeta} from '../../src';
 import {META_FIELD} from '../../src/consts';
 import {storage} from '../../src/services/storage';
 
@@ -50,6 +50,11 @@ describe('Collection', () => {
 
     const rawFoo2 = foo2.toJSON();
     expect(rawFoo2).toHaveProperty(META_FIELD);
+
+    foo2.addReference<Foo, typeof Foo>('parent', foo.meta.id, {
+      model: FooActions as typeof Foo,
+      type: ReferenceType.TO_ONE,
+    });
   });
 
   it('should fail for collections', () => {

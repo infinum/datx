@@ -51,12 +51,10 @@ function partialRefUpdate(model: Model, key: string, change: TChange) {
     const added = change.added.map(getModelId);
     data.splice(change.index, change.removedCount, ...added);
     return null;
-  } else if (change.type === 'update') {
-    data[change.index] = getModelId(change.newValue);
-    return null;
   }
 
-  return change;
+  data[change.index] = getModelId(change.newValue);
+  return null;
 }
 
 function backRefSplice(model: Model, key: string, change: IArraySplice<Model>, refOptions: IReferenceOptions) {
@@ -84,18 +82,15 @@ function partialBackRefUpdate(model: Model, key: string, change: TChange) {
 
   if (change.type === 'splice') {
     return backRefSplice(model, key, change, refOptions);
-  } else if (change.type === 'update') {
-    return backRefChange(model, key, change, refOptions);
   }
-
-  return change;
+  return backRefChange(model, key, change, refOptions);
 }
 
 export function getField(model: Model, key: string) {
   return storage.getModelDataKey(model, key);
 }
 
-export function updateField(model: Model, key: string, value: any, type: FieldType = FieldType.DATA) {
+export function updateField(model: Model, key: string, value: any, type: FieldType) {
   if (type === FieldType.TYPE) {
     throw error(TYPE_READONLY);
   } else if (type === FieldType.ID) {

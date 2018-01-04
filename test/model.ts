@@ -33,24 +33,27 @@ describe('Model', () => {
         @prop public baz: number;
       }
 
-      const foo = new Foo({foo: 1, bar: 2});
+      const foo1 = new Foo({foo: 1, bar: 2});
 
-      expect(foo.foo).toBe(1);
-      expect(foo.bar).toBe(2);
-      expect(foo.baz).toBe(undefined);
+      expect(foo1.foo).toBe(1);
+      expect(foo1.bar).toBe(2);
+      expect(foo1.baz).toBe(undefined);
 
+      const foo2 = new Foo();
       let bazValue: number;
       let autorunCount = 0;
 
       autorun(() => {
-        expect(foo.baz).toBe(bazValue);
+        expect(foo2.baz).toBe(bazValue);
         autorunCount++;
       });
 
       bazValue = 3;
-      foo.baz = 3;
+      foo2.baz = 3;
 
       expect(autorunCount).toBe(2);
+
+      expect(() => assignModel(foo1, 'foo', foo2)).toThrowError('You should save this value as a reference.');
     });
 
     it('should work with initial data and no decorators', () => {
@@ -62,6 +65,14 @@ describe('Model', () => {
           foo: undefined,
         },
       });
+
+      // @ts-ignore - Avoiding the TypeScript features on purpose
+      const Bar = setupModel(Model, {
+        type: 'bar',
+      });
+
+      // @ts-ignore - Avoiding the TypeScript features on purpose
+      expect(() => setupModel(Collection)).toThrowError('This mixin can only decorate models');
 
       const foo = new Foo({foo: 1, bar: 2});
 
@@ -158,6 +169,7 @@ describe('Model', () => {
       expect(foo2).toBeInstanceOf(Foo);
       expect(getModelId(foo)).not.toBe(getModelId(foo2));
       expect(getOriginalModel(foo2)).toBe(foo);
+      expect(() => getOriginalModel(foo)).toThrowError('The given model is not a clone.');
     });
 
     it('should support cloning with additional fields', () => {
@@ -346,6 +358,9 @@ describe('Model', () => {
 
       foo1.foo = 4;
       expect(foo2.parent && foo2.parent.foo).toBe(4);
+
+      assignModel(foo1, 'parent', foo2);
+      expect(foo1.parent).toBe(foo2);
     });
 
     it('should support reference serialization/deserialization', () => {
@@ -450,6 +465,9 @@ describe('Model', () => {
           @prop.toOne(Foo) public parent: Foo;
           @prop.defaultValue(1) public foo: number;
           @prop.toMany(Foo, 'parent') public children: Array<Foo>;
+
+          @prop.toMany(Foo) public foos: Array<Foo>;
+          @prop.toMany(Foo, 'foos') public backFoos: Array<Foo>;
         }
 
         class TestCollection extends Collection {
@@ -479,6 +497,19 @@ describe('Model', () => {
         expect(foo1.children).toHaveLength(2);
         expect(foo3.parent).toBe(foo1);
         expect(foo4.parent).toBeNull();
+
+        updateModelId(foo1, '123');
+        expect(modelToJSON(foo3).parent).toBe('123');
+
+        expect(() => foo4.children = [foo1]).toThrowError('Back references are read only');
+
+        foo1.foos = [foo2, foo3];
+        foo2.foos = [foo1, foo3, foo4];
+        expect(foo1.backFoos).toHaveLength(1);
+        expect(foo1.backFoos).toContain(foo2);
+        expect(foo3.backFoos).toHaveLength(2);
+        expect(foo3.backFoos).toContain(foo1);
+        expect(foo3.backFoos).toContain(foo2);
       });
     });
 
@@ -547,6 +578,7 @@ describe('Model', () => {
         const Foo = setupModel(FooModel, {
           idAttribute: 'id',
           references: {
+            bars: {model: 'bar', type: ReferenceType.TO_ONE_OR_MANY},
             children: {model: FooModel, type: ReferenceType.TO_MANY, property: 'parent'},
             foos: {model: FooModel, type: ReferenceType.TO_MANY},
             parent: {model: FooModel, type: ReferenceType.TO_ONE},

@@ -2,7 +2,7 @@ import {toJS} from 'mobx';
 
 import {Collection} from '../../Collection';
 import {META_FIELD} from '../../consts';
-import {NO_REFS, NOT_A_CLONE, REF_NEEDS_INIT} from '../../errors';
+import {NO_REFS, NOT_A_CLONE} from '../../errors';
 import {IDictionary} from '../../interfaces/IDictionary';
 import {IIdentifier} from '../../interfaces/IIdentifier';
 import {IRawModel} from '../../interfaces/IRawModel';
@@ -66,11 +66,9 @@ export function getModelCollections(model: Model): Array<Collection> {
 export function cloneModel<T extends Model>(model: T): T {
   const TypeModel = model.constructor as typeof Model;
   const rawData = modelToJSON(model);
-  if (rawData[META_FIELD] && typeof rawData[META_FIELD] === 'object' && rawData[META_FIELD] !== undefined) {
-    const meta = (rawData[META_FIELD] as IDictionary<any>);
-    meta.originalId = meta.id;
-    delete meta.id;
-  }
+  const meta = (rawData[META_FIELD] as IDictionary<any>);
+  meta.originalId = meta.id;
+  delete meta.id;
 
   // TODO: Warning if model is not in a collection
 
@@ -144,11 +142,7 @@ function assignModelField<T extends Model>(model: T, key: string, value: any): v
 
 function assignModelRef<T extends Model>(model: T, key: string, value: TRefValue): void {
   const refs = storage.getModelMetaKey(model, 'refs');
-  if (key in refs) {
-    model[key] = value;
-  } else {
-    throw error(REF_NEEDS_INIT, {key});
-  }
+  model[key] = value;
 }
 
 export function getMetaKeyFromRaw(data: IRawModel, key: string): any {

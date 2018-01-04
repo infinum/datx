@@ -126,13 +126,13 @@ function initModelMeta(model: Model, data: IRawModel): IDictionary<any> & IMetaT
   let newMeta;
   const toInit: IMetaToInit = {fields: [], refs: {}};
   if (META_FIELD in data && data[META_FIELD]) {
-    const oldMeta = data[META_FIELD] || {};
-    if (oldMeta) {
-      toInit.fields = oldMeta.fields;
-      delete oldMeta.fields;
-      toInit.refs = oldMeta.refs;
-      delete oldMeta.refs;
-    }
+
+    const oldMeta = data[META_FIELD] as IDictionary<any>;
+    toInit.fields = oldMeta.fields;
+    delete oldMeta.fields;
+    toInit.refs = oldMeta.refs;
+    delete oldMeta.refs;
+
     newMeta = storage.setModelMeta(model, Object.assign(meta, oldMeta));
     delete data[META_FIELD];
   } else {
@@ -144,13 +144,6 @@ function initModelMeta(model: Model, data: IRawModel): IDictionary<any> & IMetaT
 export function initModel(model: Model, rawData: IRawModel) {
   const staticModel = model.constructor as typeof Model;
   const data = Object.assign({}, staticModel.preprocess(rawData));
-
   const meta = initModelMeta(model, data);
-
-  const existingModel = storage.findModel(meta.type, meta.id);
-  if (existingModel) {
-    throw error(MODEL_EXISTS);
-  }
-
   initModelData(model, data, meta);
 }

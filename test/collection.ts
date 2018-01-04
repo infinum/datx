@@ -1,6 +1,7 @@
 // tslint:disable:max-classes-per-file
 
 import {Collection, getModelCollections, getModelId, Model, prop} from '../src';
+import {isCollection, isModel} from '../src/helpers/mixin';
 import {storage} from '../src/services/storage';
 
 describe('Collection', () => {
@@ -13,6 +14,9 @@ describe('Collection', () => {
     it('should initialize', () => {
       const collection = new Collection();
       expect(collection.length).toBe(0);
+
+      expect(isCollection(Collection)).toBe(true);
+      expect(isModel(Collection)).toBe(false);
     });
 
     it('Should work with models', () => {
@@ -72,13 +76,21 @@ describe('Collection', () => {
       expect(getModelCollections(foo1).length).toBe(1);
       store.remove(foo1);
       expect(getModelCollections(foo1).length).toBe(0);
+      expect(store.find(Foo, 'unexisting')).toBeNull();
+      expect(store.find('unexisting')).toBeNull();
 
       expect(getModelCollections(foo2).length).toBe(1);
       store.remove(Foo, getModelId(foo2));
       expect(getModelCollections(foo2).length).toBe(0);
+      store.remove(Foo, 'unexisting'); // Should not do anything
 
       expect(store.filter((item: Foo) => item.foo > 2).length).toBe(1);
       expect(store.length).toBe(store.findAll().length);
+      expect(store.findAll('unexisting').length).toBe(0);
+
+      store.remove([foo3, foo4]); // Remove foo3, ignore foo4
+      expect(store.length).toBe(0);
+
     });
 
     it('should destroy the collection', () => {

@@ -11,14 +11,16 @@ import {IReferenceOptions} from '../interfaces/IReferenceOptions';
 import {IType} from '../interfaces/IType';
 import {Model} from '../Model';
 
+interface IModelClassData {
+  data: IDictionary<any>;
+  meta: IDictionary<any>;
+  references: IDictionary<IReferenceOptions>;
+}
+
 export class DataStorage {
   private modelData = new WeakMap<Model, IDataStorage>();
 
-  private modelClassData = new WeakMap<typeof Model, {
-    data: IDictionary<any>;
-    meta: IDictionary<any>;
-    references: IDictionary<IReferenceOptions>;
-  }>();
+  private modelClassData = new WeakMap<typeof Model, IModelClassData>();
 
   private collections: IObservableArray<Collection> = observable.shallowArray([]);
 
@@ -47,15 +49,12 @@ export class DataStorage {
     this.setModelData(model, {[key]: value});
   }
 
-  public getModelMeta(model: Model): IDictionary<any>|null {
-    const modelData = this.modelData.get(model);
-    return modelData ? modelData.meta : null;
+  public getModelMeta(model: Model): IDictionary<any> {
+    return (this.modelData.get(model) as IDataStorage).meta;
   }
 
   public getModelMetaKey(model: Model, key: string): any {
-    const modelData = this.modelData.get(model);
-    const meta = modelData ? modelData.meta : null;
-    return meta ? meta[key] : undefined;
+    return this.getModelMeta(model)[key];
   }
 
   public setModelMeta(model: Model, meta: IDictionary<any>) {
@@ -74,16 +73,8 @@ export class DataStorage {
   }
 
   public setModelClassMetaKey(model: typeof Model, key: string, value?: any) {
-    const data = this.modelClassData.get(model);
-    if (data) {
-      Object.assign(data.meta, {[key]: value});
-    } else {
-      this.modelClassData.set(model, {
-        data: {},
-        meta: {[key]: value},
-        references: {},
-      });
-    }
+    const data = this.modelClassData.get(model) as IModelClassData;
+    Object.assign(data.meta, {[key]: value});
   }
 
   public getModelClassMetaKey(obj: typeof Model, key: string): any {
@@ -175,13 +166,8 @@ export class DataStorage {
   // For testing purposes only
   private clear() {
     this.modelData = new WeakMap<Model, IDataStorage>();
+    this.modelClassData = new WeakMap<typeof Model, IModelClassData>();
     this.collections.replace([]);
-
-    this.modelClassData = new WeakMap<typeof Model, {
-      data: IDictionary<any>;
-      meta: IDictionary<any>;
-      references: IDictionary<IReferenceOptions>;
-    }>();
   }
 }
 

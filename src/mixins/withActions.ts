@@ -41,7 +41,11 @@ export function withActions<T extends Model>(Base: IModelConstructor<T>) {
       assignModel(this, key, value);
     }
 
-    public addReference(key: string, value: TRefValue, options: IReferenceOptions) {
+    public addReference<V extends Model, U extends typeof Model>(
+      key: string,
+      value: TRefValue<V>,
+      options: IReferenceOptions<U>,
+    ) {
       initModelRef(this, key, options, value);
     }
 
