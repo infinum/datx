@@ -22,11 +22,10 @@
   ],
   "devDependencies": {
     "@infinumjs/tslint-config": "^1.1.1",
-    "@types/jest": "^22.0.0",
+    "@types/jest": "^22.0.1",
     "@types/node": "^8.5.5",
     "jest": "^22.0.4",
     "mobx": "^3.4.1",
-    "mobx-collection-store": "^2.0.0",
     "ts-jest": "^22.0.0",
     "tslint": "^5.8.0",
     "typescript": "^2.6.2"
@@ -37,8 +36,6 @@
   "scripts": {
     "test": "jest --coverage",
     "watch": "jest --watch --coverage",
-    "benchmark": "jest benchmark",
-    "benchmark-watch": "jest benchmark --watch",
     "lint": "tslint --project .",
     "prepublish": "npm run build",
     "build": "tsc --project tsconfig.build.json"
