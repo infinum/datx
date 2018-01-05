@@ -6,6 +6,4 @@ node_js:
 install:
   - npm install -g lerna
   - lerna bootstrap
-env:
-  - PACKAGE=datx
-script: lerna run test --scope $PACKAGE
+script: lerna run test
