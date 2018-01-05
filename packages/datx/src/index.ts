@@ -20,7 +20,13 @@ export {
   updateModel,
 } from './helpers/model/utils';
 
+import {
+  isCollection,
+  isModel,
+} from './helpers/mixin';
+
 export {IIdentifier} from './interfaces/IIdentifier';
+export {IModelConstructor} from './interfaces/IModelConstructor';
 export {IRawModel} from './interfaces/IRawModel';
 export {IType} from './interfaces/IType';
 
