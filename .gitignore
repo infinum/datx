@@ -43,4 +43,4 @@ typings/
 yarn.lock
 
 # Build folder
-dist/*
+dist
