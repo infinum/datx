@@ -1,7 +1,7 @@
 {
-  "name": "datx",
+  "name": "datx-jsonapi",
   "version": "0.5.0",
-  "description": "A MobX data store",
+  "description": "DatX mixin for JSON API support",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "sideEffects": false,
@@ -15,6 +15,11 @@
   "homepage": "https://github.com/infinum/datx#readme",
   "author": "Infinum JavaScript Team <hello@infinum.co>",
   "license": "MIT",
+  "keywords": [
+    "datx",
+    "mobx",
+    "jsonapi"
+  ],
   "devDependencies": {
     "@infinumjs/tslint-config": "^1.1.1",
     "@types/jest": "^22.0.0",
