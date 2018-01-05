@@ -1,0 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DEFAULT_TYPE = '__DEFAULT_TYPE__';
+exports.META_FIELD = '__META__'; // Note: Hardcoded in interfaces/IRawModel
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY29uc3RzLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vc3JjL2NvbnN0cy50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFhLFFBQUEsWUFBWSxHQUFHLGtCQUFrQixDQUFDO0FBQ2xDLFFBQUEsVUFBVSxHQUFHLFVBQVUsQ0FBQyxDQUFDLDBDQUEwQyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBjb25zdCBERUZBVUxUX1RZUEUgPSAnX19ERUZBVUxUX1RZUEVfXyc7XG5leHBvcnQgY29uc3QgTUVUQV9GSUVMRCA9ICdfX01FVEFfXyc7IC8vIE5vdGU6IEhhcmRjb2RlZCBpbiBpbnRlcmZhY2VzL0lSYXdNb2RlbFxuIl19

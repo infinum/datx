@@ -7,12 +7,10 @@ The store meant to replace [mobx-collection-store](https://github.com/infinum/mo
 ***
 
 [![Build Status](https://travis-ci.org/infinum/datx.svg?branch=master)](https://travis-ci.org/infinum/datx)
-[![Test Coverage](https://codeclimate.com/github/infinum/datx/badges/coverage.svg)](https://codeclimate.com/github/infinum/datx/coverage)
 [![npm version](https://badge.fury.io/js/datx.svg)](https://badge.fury.io/js/datx)
 
-[![Dependency Status](https://david-dm.org/infinum/datx.svg)](https://david-dm.org/infinum/datx)
-[![devDependency Status](https://david-dm.org/infinum/datx/dev-status.svg)](https://david-dm.org/infinum/datx#info=devDependencies)
-[![Greenkeeper badge](https://badges.greenkeeper.io/infinum/datx.svg)](https://greenkeeper.io/)
+[![Dependency Status](https://david-dm.org/infinum/datx.svg?path=packages/datx)](https://david-dm.org/infinum/datx?path=packages/datx)
+[![devDependency Status](https://david-dm.org/infinum/datx/dev-status.svg?path=packages/datx)](https://david-dm.org/infinum/datx?path=packages/datx#info=devDependencies)
 
 ## Basic usage
 

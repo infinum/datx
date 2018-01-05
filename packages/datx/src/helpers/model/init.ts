@@ -109,7 +109,7 @@ function initModelData(model: Model, data: IRawModel, meta: IMetaToInit, collect
   Object.keys(refs).forEach((key) => {
     const opts = refs[key];
     const value = data[key] || defaults[key] || undefined;
-    let models: any = collection ? collection.add(value, getModelType(opts.model)) : value;
+    const models: any = collection ? collection.add(value, getModelType(opts.model)) : value;
     initModelRef(model, key, opts, models);
   });
 }
