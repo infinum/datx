@@ -1,0 +1,24 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Helper function used to iterate trough models prototype chain and collect data for all parents
+ *
+ * @export
+ * @template T
+ * @template U
+ * @param {U} obj Given model
+ * @param {(state: T, item: U) => T} reduceFn Function used to collect the data
+ * @param {T} initialValue Initial reducer data
+ * @returns {T} Collected data
+ */
+function reducePrototypeChain(obj, reduceFn, initialValue) {
+    var value = initialValue;
+    var model = obj;
+    while (model) {
+        value = reduceFn(value, model);
+        model = Object.getPrototypeOf(model);
+    }
+    return value;
+}
+exports.reducePrototypeChain = reducePrototypeChain;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2VsZWN0b3JzLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vc3JjL2hlbHBlcnMvc2VsZWN0b3JzLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBS0E7Ozs7Ozs7Ozs7R0FVRztBQUNILDhCQUEyQyxHQUFNLEVBQUUsUUFBa0MsRUFBRSxZQUFlO0lBQ3BHLElBQUksS0FBSyxHQUFHLFlBQVksQ0FBQztJQUN6QixJQUFJLEtBQUssR0FBRyxHQUFHLENBQUM7SUFDaEIsT0FBTyxLQUFLLEVBQUUsQ0FBQztRQUNiLEtBQUssR0FBRyxRQUFRLENBQUMsS0FBSyxFQUFFLEtBQUssQ0FBQyxDQUFDO1FBQy9CLEtBQUssR0FBRyxNQUFNLENBQUMsY0FBYyxDQUFDLEtBQUssQ0FBQyxDQUFDO0lBQ3ZDLENBQUM7SUFDRCxNQUFNLENBQUMsS0FBSyxDQUFDO0FBQ2YsQ0FBQztBQVJELG9EQVFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHtDb2xsZWN0aW9ufSBmcm9tICcuLi9Db2xsZWN0aW9uJztcbmltcG9ydCB7SURpY3Rpb25hcnl9IGZyb20gJy4uL2ludGVyZmFjZXMvSURpY3Rpb25hcnknO1xuaW1wb3J0IHtNb2RlbH0gZnJvbSAnLi4vTW9kZWwnO1xuaW1wb3J0IHtnZXRNb2RlbElkLCBnZXRNb2RlbFR5cGV9IGZyb20gJy4vbW9kZWwvdXRpbHMnO1xuXG4vKipcbiAqIEhlbHBlciBmdW5jdGlvbiB1c2VkIHRvIGl0ZXJhdGUgdHJvdWdoIG1vZGVscyBwcm90b3R5cGUgY2hhaW4gYW5kIGNvbGxlY3QgZGF0YSBmb3IgYWxsIHBhcmVudHNcbiAqXG4gKiBAZXhwb3J0XG4gKiBAdGVtcGxhdGUgVFxuICogQHRlbXBsYXRlIFVcbiAqIEBwYXJhbSB7VX0gb2JqIEdpdmVuIG1vZGVsXG4gKiBAcGFyYW0geyhzdGF0ZTogVCwgaXRlbTogVSkgPT4gVH0gcmVkdWNlRm4gRnVuY3Rpb24gdXNlZCB0byBjb2xsZWN0IHRoZSBkYXRhXG4gKiBAcGFyYW0ge1R9IGluaXRpYWxWYWx1ZSBJbml0aWFsIHJlZHVjZXIgZGF0YVxuICogQHJldHVybnMge1R9IENvbGxlY3RlZCBkYXRhXG4gKi9cbmV4cG9ydCBmdW5jdGlvbiByZWR1Y2VQcm90b3R5cGVDaGFpbjxULCBVPihvYmo6IFUsIHJlZHVjZUZuOiAoc3RhdGU6IFQsIGl0ZW06IFUpID0+IFQsIGluaXRpYWxWYWx1ZTogVCkge1xuICBsZXQgdmFsdWUgPSBpbml0aWFsVmFsdWU7XG4gIGxldCBtb2RlbCA9IG9iajtcbiAgd2hpbGUgKG1vZGVsKSB7XG4gICAgdmFsdWUgPSByZWR1Y2VGbih2YWx1ZSwgbW9kZWwpO1xuICAgIG1vZGVsID0gT2JqZWN0LmdldFByb3RvdHlwZU9mKG1vZGVsKTtcbiAgfVxuICByZXR1cm4gdmFsdWU7XG59XG4iXX0=

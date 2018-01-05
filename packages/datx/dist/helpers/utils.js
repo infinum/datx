@@ -1,0 +1,46 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+function mapItems(data, fn) {
+    if (data instanceof Array) {
+        return data.map(function (item) { return fn(item); });
+    }
+    return data === null ? null : fn(data);
+}
+exports.mapItems = mapItems;
+/**
+ * Flatten a 2D array to a single array
+ *
+ * @export
+ * @template T
+ * @param {Array<Array<T>>} data Arrays to flatten
+ * @returns {Array<T>} Flattened array
+ */
+function flatten(data) {
+    return (_a = []).concat.apply(_a, data);
+    var _a;
+}
+exports.flatten = flatten;
+/**
+ * Return a unique set of items in an array
+ *
+ * @export
+ * @template T
+ * @param {Array<T>} data Array to filter
+ * @returns {Array<T>} Filtered array
+ */
+function uniq(data) {
+    return Array.from(new Set(data));
+}
+exports.uniq = uniq;
+/**
+ * Check if the given variable is an array with at least one falsy value
+ *
+ * @export
+ * @param {any} value A variable to check
+ * @returns {boolean} The given variable is an array with at least one falsy value
+ */
+function isFalsyArray(value) {
+    return value instanceof Array && !value.every(Boolean);
+}
+exports.isFalsyArray = isFalsyArray;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidXRpbHMuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zcmMvaGVscGVycy91dGlscy50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQVlBLGtCQUErQixJQUFnQixFQUFFLEVBQWtCO0lBQ2pFLEVBQUUsQ0FBQyxDQUFDLElBQUksWUFBWSxLQUFLLENBQUMsQ0FBQyxDQUFDO1FBQzFCLE1BQU0sQ0FBQyxJQUFJLENBQUMsR0FBRyxDQUFDLFVBQUMsSUFBSSxJQUFLLE9BQUEsRUFBRSxDQUFDLElBQUksQ0FBQyxFQUFSLENBQVEsQ0FBQyxDQUFDO0lBQ3RDLENBQUM7SUFDRCxNQUFNLENBQUMsSUFBSSxLQUFLLElBQUksQ0FBQyxDQUFDLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxFQUFFLENBQUMsSUFBSSxDQUFDLENBQUM7QUFDekMsQ0FBQztBQUxELDRCQUtDO0FBRUQ7Ozs7Ozs7R0FPRztBQUNILGlCQUEyQixJQUFxQjtJQUM5QyxNQUFNLENBQUMsQ0FBQSxLQUFDLEVBQWUsQ0FBQSxDQUFDLE1BQU0sV0FBSSxJQUFJLEVBQUU7O0FBQzFDLENBQUM7QUFGRCwwQkFFQztBQUVEOzs7Ozs7O0dBT0c7QUFDSCxjQUF3QixJQUFjO0lBQ3BDLE1BQU0sQ0FBQyxLQUFLLENBQUMsSUFBSSxDQUFDLElBQUksR0FBRyxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUM7QUFDbkMsQ0FBQztBQUZELG9CQUVDO0FBRUQ7Ozs7OztHQU1HO0FBQ0gsc0JBQTZCLEtBQUs7SUFDaEMsTUFBTSxDQUFDLEtBQUssWUFBWSxLQUFLLElBQUksQ0FBQyxLQUFLLENBQUMsS0FBSyxDQUFDLE9BQU8sQ0FBQyxDQUFDO0FBQ3pELENBQUM7QUFGRCxvQ0FFQyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogTWFwIGEgc2luZ2xlIGl0ZW0gb3IgYW4gYXJyYXkgb2YgaXRlbXNcbiAqXG4gKiBAZXhwb3J0XG4gKiBAdGVtcGxhdGUgVFxuICogQHRlbXBsYXRlIFVcbiAqIEBwYXJhbSB7KFR8QXJyYXk8VD4pfSBkYXRhIERhdGEgdG8gaXRlcmF0ZSBvdmVyXG4gKiBAcGFyYW0geyhpdGVtOiBUKSA9PiBVfSBmbiBGdW5jdGlvbiBjYWxsZWQgZm9yIGV2ZXJ5IGRhdGEgaXRlbVxuICogQHJldHVybnMgeyhVfEFycmF5PFU+fG51bGwpfSBSZXR1cm4gdmFsdWUgb2YgdGhlIGNhbGxiYWNrIGZ1bmN0aW9uXG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBtYXBJdGVtczxULCBVPihkYXRhOiBULCBmbjogKGl0ZW06IFQpID0+IFUpOiBVfG51bGw7XG5leHBvcnQgZnVuY3Rpb24gbWFwSXRlbXM8VCwgVT4oZGF0YTogQXJyYXk8VD4sIGZuOiAoaXRlbTogVCkgPT4gVSk6IEFycmF5PFU+O1xuZXhwb3J0IGZ1bmN0aW9uIG1hcEl0ZW1zPFQsIFU+KGRhdGE6IFR8QXJyYXk8VD4sIGZuOiAoaXRlbTogVCkgPT4gVSk6IFV8QXJyYXk8VT58bnVsbCB7XG4gIGlmIChkYXRhIGluc3RhbmNlb2YgQXJyYXkpIHtcbiAgICByZXR1cm4gZGF0YS5tYXAoKGl0ZW0pID0+IGZuKGl0ZW0pKTtcbiAgfVxuICByZXR1cm4gZGF0YSA9PT0gbnVsbCA/IG51bGwgOiBmbihkYXRhKTtcbn1cblxuLyoqXG4gKiBGbGF0dGVuIGEgMkQgYXJyYXkgdG8gYSBzaW5nbGUgYXJyYXlcbiAqXG4gKiBAZXhwb3J0XG4gKiBAdGVtcGxhdGUgVFxuICogQHBhcmFtIHtBcnJheTxBcnJheTxUPj59IGRhdGEgQXJyYXlzIHRvIGZsYXR0ZW5cbiAqIEByZXR1cm5zIHtBcnJheTxUPn0gRmxhdHRlbmVkIGFycmF5XG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBmbGF0dGVuPFQ+KGRhdGE6IEFycmF5PEFycmF5PFQ+Pik6IEFycmF5PFQ+IHtcbiAgcmV0dXJuIChbXSBhcyBBcnJheTxUPikuY29uY2F0KC4uLmRhdGEpO1xufVxuXG4vKipcbiAqIFJldHVybiBhIHVuaXF1ZSBzZXQgb2YgaXRlbXMgaW4gYW4gYXJyYXlcbiAqXG4gKiBAZXhwb3J0XG4gKiBAdGVtcGxhdGUgVFxuICogQHBhcmFtIHtBcnJheTxUPn0gZGF0YSBBcnJheSB0byBmaWx0ZXJcbiAqIEByZXR1cm5zIHtBcnJheTxUPn0gRmlsdGVyZWQgYXJyYXlcbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIHVuaXE8VD4oZGF0YTogQXJyYXk8VD4pOiBBcnJheTxUPiB7XG4gIHJldHVybiBBcnJheS5mcm9tKG5ldyBTZXQoZGF0YSkpO1xufVxuXG4vKipcbiAqIENoZWNrIGlmIHRoZSBnaXZlbiB2YXJpYWJsZSBpcyBhbiBhcnJheSB3aXRoIGF0IGxlYXN0IG9uZSBmYWxzeSB2YWx1ZVxuICpcbiAqIEBleHBvcnRcbiAqIEBwYXJhbSB7YW55fSB2YWx1ZSBBIHZhcmlhYmxlIHRvIGNoZWNrXG4gKiBAcmV0dXJucyB7Ym9vbGVhbn0gVGhlIGdpdmVuIHZhcmlhYmxlIGlzIGFuIGFycmF5IHdpdGggYXQgbGVhc3Qgb25lIGZhbHN5IHZhbHVlXG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBpc0ZhbHN5QXJyYXkodmFsdWUpOiBib29sZWFuIHtcbiAgcmV0dXJuIHZhbHVlIGluc3RhbmNlb2YgQXJyYXkgJiYgIXZhbHVlLmV2ZXJ5KEJvb2xlYW4pO1xufVxuIl19

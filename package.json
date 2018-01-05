@@ -1,54 +1,5 @@
 {
-  "name": "datx",
-  "version": "0.5.0",
-  "description": "A MobX data store",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "sideEffects": false,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/infinum/datx.git"
-  },
-  "bugs": {
-    "url": "https://github.com/infinum/datx/issues"
-  },
-  "homepage": "https://github.com/infinum/datx#readme",
-  "author": "Infinum JavaScript Team <hello@infinum.co>",
-  "license": "MIT",
-  "devDependencies": {
-    "@infinumjs/tslint-config": "^1.1.1",
-    "@types/jest": "^22.0.0",
-    "@types/node": "^8.5.5",
-    "husky": "^0.14.3",
-    "jest": "^22.0.4",
-    "mobx": "^3.4.1",
-    "mobx-collection-store": "^2.0.0",
-    "ts-jest": "^22.0.0",
-    "tslint": "^5.8.0",
-    "typescript": "^2.6.2"
-  },
-  "peerDependencies": {
-    "mobx": "^3.4.1"
-  },
-  "scripts": {
-    "test": "jest --coverage",
-    "watch": "jest --watch --coverage",
-    "benchmark": "jest benchmark",
-    "benchmark-watch": "jest benchmark --watch",
-    "lint": "tslint --project .",
-    "precommit": "npm run lint & npm run test",
-    "prepublish": "npm run build",
-    "build": "tsc --project tsconfig.build.json"
-  },
-  "jest": {
-    "mapCoverage": true,
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
-    "testRegex": "test/(.*).ts",
-    "transform": {
-      ".ts": "ts-jest"
-    }
-  }
+	"devDependencies": {
+		"lerna": "^2.5.1"
+	}
 }
