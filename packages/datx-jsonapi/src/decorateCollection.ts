@@ -12,7 +12,7 @@ import {IHeaders} from './interfaces/IHeaders';
 import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
 import {IRequestOptions} from './interfaces/IRequestOptions';
-import {IRelationship, IRequest, IDefinition} from './interfaces/JsonApi';
+import {IDefinition, IRelationship, IRequest} from './interfaces/JsonApi';
 import {IRecord, IResponse} from './interfaces/JsonApi';
 import {config} from './NetworkUtils';
 

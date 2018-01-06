@@ -9,4 +9,5 @@ export interface IRequestOptions {
   sort?: string|Array<string>;
   fields?: IDictionary<string|Array<string>>;
   params?: Array<{key: string, value: string}|string>;
+  skipCache?: boolean;
 }

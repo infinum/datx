@@ -1,6 +1,7 @@
 import {storage} from 'datx/dist/services/storage';
 import {fetch, Response} from 'isomorphic-fetch';
 
+import {MODEL_PERSISTED_FIELD, MODEL_PROP_FIELD, MODEL_QUEUE_FIELD, MODEL_RELATED_FIELD} from './consts';
 import {ParamArrayType} from './enums/ParamArrayType';
 import {isBrowser} from './helpers/utils';
 import {IDictionary} from './interfaces/IDictionary';
@@ -288,16 +289,16 @@ export function handleResponse(record: IJsonapiModel, prop?: string): (LibRespon
     }
 
     if (response.status === 204) {
-      storage.setModelMetaKey(record, 'jsonapiPersisted', true);
+      storage.setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
       return record as IJsonapiModel;
     } else if (response.status === 202) {
       const responseRecord = response.data as IJsonapiModel;
-      storage.setModelMetaKey(responseRecord, 'jsonapiProp', prop);
-      storage.setModelMetaKey(responseRecord, 'jsonapiQueue', true);
-      storage.setModelMetaKey(responseRecord, 'jsonapiRelated', record);
+      storage.setModelMetaKey(responseRecord, MODEL_PROP_FIELD, prop);
+      storage.setModelMetaKey(responseRecord, MODEL_QUEUE_FIELD, true);
+      storage.setModelMetaKey(responseRecord, MODEL_RELATED_FIELD, record);
       return responseRecord;
     } else {
-      storage.setModelMetaKey(record, 'jsonapiPersisted', true);
+      storage.setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
       return response.replaceData(record).data as IJsonapiModel;
     }
   };
