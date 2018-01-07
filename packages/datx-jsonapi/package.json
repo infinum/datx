@@ -52,5 +52,7 @@
       ".ts": "ts-jest"
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "datx": "^0.6.0"
+  }
 }
