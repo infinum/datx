@@ -1,10 +1,10 @@
-import {Collection, getModelType, IIdentifier, initModelRef, Model, ReferenceType, updateModel} from 'datx';
+import {Collection, getModelType, IIdentifier, initModelRef, IType, Model, ReferenceType, updateModel} from 'datx';
 import {mapItems} from 'datx/dist/helpers/utils';
 import {IRawModel} from 'datx/dist/interfaces/IRawModel';
 
 import {decorateModel} from './decorateModel';
 import {ParamArrayType} from './enums/ParamArrayType';
-import {flattenModel} from './helpers/model';
+import {flattenModel, removeModel} from './helpers/model';
 import {getValue} from './helpers/utils';
 import {IDictionary} from './interfaces/IDictionary';
 import {IFilters} from './interfaces/IFilters';
@@ -14,7 +14,8 @@ import {IJsonapiModel} from './interfaces/IJsonapiModel';
 import {IRequestOptions} from './interfaces/IRequestOptions';
 import {IDefinition, IRelationship, IRequest} from './interfaces/JsonApi';
 import {IRecord, IResponse} from './interfaces/JsonApi';
-import {config} from './NetworkUtils';
+import {config, fetch} from './NetworkUtils';
+import {Response} from './Response';
 
 export function decorateCollection(BaseClass: typeof Collection) {
 
@@ -33,9 +34,30 @@ export function decorateCollection(BaseClass: typeof Collection) {
 
     // fetch
     // fetchAll
-    // request
-    // remove(model, remote)
-    // removeAll(type, remote)
+
+    public request(url: string, method: string = 'GET', data?: object, options?: IRequestOptions): Promise<Response> {
+      return fetch({url: this.__prefixUrl(url), options, data, method, collection: this});
+    }
+
+    public remove(type: IType|typeof Model, id?: IIdentifier, remote?: boolean|IRequestOptions);
+    public remove(model: Model, remote?: boolean|IRequestOptions);
+    public remove(
+      obj: IType|typeof Model|Model,
+      id?: IIdentifier|boolean|IRequestOptions,
+      remote?: boolean|IRequestOptions,
+    ) {
+      const remove = (typeof id === 'boolean' || typeof id === 'object') ? id : remote;
+      const modelId = (typeof id !== 'boolean' && typeof id !== 'object') ? id : undefined;
+      const type = getModelType(obj);
+      const model: Model = this.find(type, modelId) as Model;
+
+      if (remove) {
+        return removeModel(model, typeof remove === 'object' ? remove : undefined);
+      }
+
+      super.remove(model);
+      return Promise.resolve();
+    }
 
     private __addRecord(obj: IRecord): IJsonapiModel {
       const staticCollection = this.constructor as typeof Collection;

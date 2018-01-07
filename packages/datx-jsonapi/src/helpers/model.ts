@@ -10,8 +10,9 @@ import {IJsonapiCollection} from '../interfaces/IJsonapiCollection';
 import {IJsonapiModel} from '../interfaces/IJsonapiModel';
 import {IRequestOptions} from '../interfaces/IRequestOptions';
 import {IDefinition, ILink, IRecord, IRelationship} from '../interfaces/JsonApi';
-import {config, create, handleResponse, update} from '../NetworkUtils';
+import {config, create, handleResponse, remove, update} from '../NetworkUtils';
 import {getValue} from './utils';
+import { Response } from '../Response';
 
 export function flattenModel(): null;
 export function flattenModel(data?: IRecord): IRawModel;
@@ -50,6 +51,10 @@ export function getModelLinks(model: IJsonapiModel): IDictionary<ILink> {
 
 function isModelPersisted(model: IJsonapiModel): boolean {
   return storage.getModelMetaKey(model, MODEL_PERSISTED_FIELD);
+}
+
+function setModelPersisted(model: IJsonapiModel, status: boolean) {
+  storage.setModelMetaKey(model, MODEL_PERSISTED_FIELD, status);
 }
 
 export function modelToJsonApi(model: IJsonapiModel): IRecord {
@@ -105,4 +110,27 @@ export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Prom
   const url = getModelEndpointUrl(model);
   return requestMethod(collection, url, {data}, options && options.headers)
     .then(handleResponse(model));
+}
+
+export function removeModel(model: IJsonapiModel, options?: IRequestOptions): Promise<void> {
+  const collections = getModelCollections(model);
+  const collection: IJsonapiCollection = collections[0] as IJsonapiCollection;
+
+  const isPersisted = isModelPersisted(model);
+  const url = getModelEndpointUrl(model);
+
+  if (isPersisted) {
+    return remove(collection, url, options && options.headers)
+      .then((response: Response) => {
+        if (response.error) {
+          throw response.error;
+        }
+
+        setModelPersisted(model, false);
+
+        collections.forEach((coll) => coll.remove(model));
+      });
+  }
+
+  return Promise.resolve();
 }
