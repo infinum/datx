@@ -19,7 +19,7 @@ import {Model} from '../../Model';
 import {storage} from '../../services/storage';
 import {error} from '../format';
 import {isFalsyArray, mapItems} from '../utils';
-import {getModelCollections, getModelId, getModelType} from './utils';
+import {getModelCollection, getModelId, getModelType} from './utils';
 
 function modelAddReference(model: Model, key: string, newReference: Model) {
   const refOptions = storage.getModelReferenceOptions(model, key);
@@ -116,9 +116,13 @@ function hasBackRef(item: Model, property: string, target: Model): boolean {
 function getBackRef(model: Model, key: string, refOptions: IReferenceOptions): Model|Array<Model>|null {
   const type = getModelType(refOptions.model);
 
-  const allModels = storage.getModelsByType(type);
-  const backModels = Object.keys(allModels)
-    .map((id) => allModels[id])
+  const collection = getModelCollection(model);
+  if (!collection) {
+    return null;
+  }
+
+  const backModels = collection
+    .findAll(type)
     .filter((item) => hasBackRef(item, refOptions.property as string, model));
 
   const backData: IObservableArray<Model> = observable.shallowArray(backModels);
@@ -128,7 +132,15 @@ function getBackRef(model: Model, key: string, refOptions: IReferenceOptions): M
 
 function getNormalRef(model: Model, key: string, refOptions: IReferenceOptions): Model|Array<Model>|null {
   const value = storage.getModelDataKey(model, key);
-  const dataModels = mapItems(value, (id) => storage.findModel(refOptions.model, id));
+  const collection = getModelCollection(model);
+  if (!collection) {
+    return null;
+  }
+
+  let dataModels = mapItems(value, (id) => id ? collection.find(refOptions.model, id) : id);
+  if (refOptions.type === ReferenceType.TO_MANY && !(dataModels instanceof Array)) {
+    dataModels = [dataModels];
+  }
   if (dataModels instanceof Array) {
     const data: IObservableArray<Model> = observable.shallowArray(dataModels);
     intercept(data, (change: TChange) => partialRefUpdate(model, key, change));
@@ -164,15 +176,28 @@ export function updateRef(model: Model, key: string, value: TRefValue) {
 
   validateRef(refOptions, ids instanceof Array, key);
 
-  const referencedModels = mapItems(value, (ref) => storage.findModel(refOptions.model, ref));
+  if (!ids || (ids instanceof Array && ids.length === 0)) {
+    storage.setModelDataKey(model, key, ids);
+  } else {
+    const collection = getModelCollection(model);
 
-  const isInvalidArray = isFalsyArray(referencedModels) && (value as Array<any>).length;
-  const isInvalidModel = Boolean(value) && !referencedModels;
-  if (isInvalidArray || isInvalidModel) {
-    throw error(REF_NEEDS_COLLECTION);
+    const referencedModels = mapItems(value, (ref) => {
+      if (ref !== null && collection) {
+        return collection.find(refOptions.model, ref);
+      } else if (ref instanceof Model) {
+        throw error(REF_NEEDS_COLLECTION);
+      }
+      return ref;
+    });
+
+    const isInvalidArray = isFalsyArray(referencedModels) && (value as Array<any>).length;
+    const isInvalidModel = Boolean(value) && !referencedModels;
+    if (isInvalidArray || isInvalidModel) {
+      throw error(REF_NEEDS_COLLECTION);
+    }
+
+    storage.setModelDataKey(model, key, ids);
   }
-
-  storage.setModelDataKey(model, key, ids);
 }
 
 function getModelRefsByType(model: Model, type: IType) {
@@ -182,20 +207,23 @@ function getModelRefsByType(model: Model, type: IType) {
     .filter((key) => getModelType(refs[key].model) === type);
 }
 
-function updateModelReferences(newId: IIdentifier, oldId: IIdentifier, type: IType) {
-  const allModels = storage.getAllModels().map((item) => {
-    getModelRefsByType(item, type).forEach((ref) => {
-      const data = storage.getModelDataKey(item, ref);
-      if (data instanceof Array || isObservableArray(data)) {
-        const targetIndex = data.indexOf(oldId);
-        if (targetIndex !== -1) {
-          data[targetIndex] = newId;
+function updateModelReferences(model: Model, newId: IIdentifier, oldId: IIdentifier, type: IType) {
+  const collection = getModelCollection(model);
+  if (collection) {
+    const allModels = collection.getAllModels().map((item) => {
+      getModelRefsByType(item, type).forEach((ref) => {
+        const data = storage.getModelDataKey(item, ref);
+        if (data instanceof Array || isObservableArray(data)) {
+          const targetIndex = data.indexOf(oldId);
+          if (targetIndex !== -1) {
+            data[targetIndex] = newId;
+          }
+        } else if (data === oldId) {
+          storage.setModelDataKey(item, ref, newId);
         }
-      } else if (data === oldId) {
-        storage.setModelDataKey(item, ref, newId);
-      }
+      });
     });
-  });
+  }
 }
 
 /**
@@ -206,7 +234,7 @@ function updateModelReferences(newId: IIdentifier, oldId: IIdentifier, type: ITy
  * @param {IIdentifier} newId New model identifier
  */
 export function updateModelId(model: Model, newId: IIdentifier): void {
-  const collections = getModelCollections(model);
+  const collection = getModelCollection(model);
 
   const oldId = getModelId(model);
   const type = getModelType(model);
@@ -218,10 +246,8 @@ export function updateModelId(model: Model, newId: IIdentifier): void {
     storage.setModelDataKey(model, modelId, newId);
   }
 
-  collections.forEach((collection) => {
-    // @ts-ignore - I'm bad and I should feel bad...
-    collection.__changeModelId(oldId, newId, type);
-  });
+  // @ts-ignore - I'm bad and I should feel bad...
+  collection.__changeModelId(oldId, newId, type);
 
-  updateModelReferences(newId, oldId, type);
+  updateModelReferences(model, newId, oldId, type);
 }

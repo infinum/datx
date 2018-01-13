@@ -28,7 +28,7 @@ describe('Collection', () => {
     expect(foo.baz).toBe(undefined);
     expect(foo.meta.type).toBe('foo');
     expect(foo.meta.original).toBe(undefined);
-    expect(foo.meta.collections).toHaveLength(0);
+    expect(foo.meta.collection).toBeFalsy();
 
     let bazValue: number;
     let autorunCount = 0;

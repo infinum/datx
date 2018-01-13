@@ -22,8 +22,6 @@ export class DataStorage {
 
   private modelClassData = new WeakMap<typeof Model, IModelClassData>();
 
-  private collections: IObservableArray<Collection> = observable.shallowArray([]);
-
   public initModel(model: Model) {
     const modelData = {data: {}, meta: {}};
     extendObservable(modelData);
@@ -67,11 +65,6 @@ export class DataStorage {
     this.setModelMeta(model, {[key]: value});
   }
 
-  public getAllModels() {
-    const models = this.collections.map((collection) => Array.from(collection.findAll()));
-    return uniq(flatten(models));
-  }
-
   public setModelClassMetaKey(model: typeof Model, key: string, value?: any) {
     const data = this.modelClassData.get(model) as IModelClassData;
     Object.assign(data.meta, {[key]: value});
@@ -103,32 +96,6 @@ export class DataStorage {
     return Object.assign({}, ...defaults.reverse());
   }
 
-  public registerCollection(collection: Collection) {
-    this.collections.push(collection);
-  }
-
-  public unregisterCollection(collection: Collection) {
-    this.collections.remove(collection);
-  }
-
-  public getModelCollections(model: Model): Array<Collection> {
-    return this.collections.filter((item) => item.hasItem(model));
-  }
-
-  public findModel(model: IType|typeof Model|Model, modelId: Model|IIdentifier|null): Model|null {
-    if (modelId !== null && modelId !== undefined) {
-      const type = getModelType(model);
-      const id = getModelId(modelId);
-      for (const collection of this.collections) {
-        const item = collection.find(type, id);
-        if (item) {
-          return item;
-        }
-      }
-    }
-    return null;
-  }
-
   public addModelClassReference(model: typeof Model, key: string, options: IReferenceOptions) {
     const data = this.modelClassData.get(model);
     if (data) {
@@ -154,11 +121,6 @@ export class DataStorage {
     return refs[key];
   }
 
-  public getModelsByType(type: IType) {
-    const models = this.collections.map((collection) => Array.from(collection.findAll(type)));
-    return uniq(flatten(models));
-  }
-
   private __getModelData(model: Model): IDataStorage {
     return this.modelData.get(model) || this.initModel(model);
   }
@@ -167,7 +129,6 @@ export class DataStorage {
   private clear() {
     this.modelData = new WeakMap<Model, IDataStorage>();
     this.modelClassData = new WeakMap<typeof Model, IModelClassData>();
-    this.collections.replace([]);
   }
 }
 

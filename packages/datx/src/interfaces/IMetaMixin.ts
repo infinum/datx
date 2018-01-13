@@ -5,7 +5,7 @@ import {Model} from '../Model';
 
 export interface IMetaMixin<T = Model> {
   meta: {
-    collections: Array<Collection>;
+    collection?: Collection;
     id: IIdentifier;
     original?: T;
     type: IType;

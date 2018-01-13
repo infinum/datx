@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import {Collection, getModelCollections, getModelId, Model, prop} from '../src';
+import {Collection, getModelCollection, getModelId, Model, prop} from '../src';
 import {isCollection, isModel} from '../src/helpers/mixin';
 import {storage} from '../src/services/storage';
 
@@ -73,15 +73,15 @@ describe('Collection', () => {
       expect(store.hasItem(foo1)).toBe(true);
       expect(store.hasItem(foo4)).toBe(false);
 
-      expect(getModelCollections(foo1).length).toBe(1);
+      expect(getModelCollection(foo1)).toBe(store);
       store.remove(foo1);
-      expect(getModelCollections(foo1).length).toBe(0);
+      expect(getModelCollection(foo1)).toBe(undefined);
       expect(store.find(Foo, 'unexisting')).toBeNull();
       expect(store.find('unexisting')).toBeNull();
 
-      expect(getModelCollections(foo2).length).toBe(1);
+      expect(getModelCollection(foo2)).toBe(store);
       store.remove(Foo, getModelId(foo2));
-      expect(getModelCollections(foo2).length).toBe(0);
+      expect(getModelCollection(foo2)).toBe(undefined);
       store.remove(Foo, 'unexisting'); // Should not do anything
 
       expect(store.filter((item: Foo) => item.foo > 2).length).toBe(1);
@@ -91,31 +91,6 @@ describe('Collection', () => {
       store.remove([foo3, foo4]); // Remove foo3, ignore foo4
       expect(store.length).toBe(0);
 
-    });
-
-    it('should destroy the collection', () => {
-      class Foo extends Model {
-        public static type = 'foo';
-        @prop public foo: number;
-      }
-
-      class Store extends Collection {
-        public static types = [Foo];
-      }
-
-      const store = new Store();
-      const foo1 = store.add({foo: 1}, Foo);
-      const foo2 = store.add<Foo>({foo: 2}, 'foo');
-
-      expect(storage.findModel('foo', getModelId(foo2))).toBeTruthy();
-      expect(getModelCollections(foo1)).toHaveLength(1);
-
-      store.destroy();
-
-      expect(storage.findModel('foo', getModelId(foo2))).toBeFalsy();
-      expect(getModelCollections(foo1)).toHaveLength(0);
-
-      expect(() => store.add(foo1)).toThrowError('Can\'t modify a destroyed collection');
     });
 
     it('should reset the collection', () => {
@@ -132,16 +107,16 @@ describe('Collection', () => {
       const foo1 = store.add({foo: 1}, Foo);
       const foo2 = store.add<Foo>({foo: 2}, 'foo');
 
-      expect(storage.findModel('foo', getModelId(foo2))).toBeTruthy();
-      expect(getModelCollections(foo1)).toHaveLength(1);
+      expect(store.find('foo', getModelId(foo2))).toBeTruthy();
+      expect(getModelCollection(foo1)).toBe(store);
 
       store.reset();
 
-      expect(storage.findModel('foo', getModelId(foo2))).toBeFalsy();
-      expect(getModelCollections(foo1)).toHaveLength(0);
+      expect(store.find('foo', getModelId(foo2))).toBeFalsy();
+      expect(getModelCollection(foo1)).toBe(undefined);
 
       store.add(foo1);
-      expect(getModelCollections(foo1)).toHaveLength(1);
+      expect(getModelCollection(foo1)).toBe(store);
     });
 
     it('Should support serialization/deserialization', () => {
@@ -168,8 +143,8 @@ describe('Collection', () => {
       expect(store2.length).toBe(3);
       const foo1b = store2.find((item: Foo) => item.foo === 1);
       expect(foo1b).toBeInstanceOf(Foo);
-      expect(getModelId(foo1b)).toBe(getModelId(foo1));
-      expect(foo1b).toBe(foo1);
+      expect(foo1b && getModelId(foo1b)).toBe(getModelId(foo1));
+      expect(foo1b).not.toBe(foo1);
 
       const fooB = store2.find(Foo);
       expect(fooB).toBeInstanceOf(Foo);
@@ -203,8 +178,8 @@ describe('Collection', () => {
       const foo1b = store2.find((item: Foo) => item.foo === 1);
       const foo1c = store2.find((item: Foo) => item.foo === 4);
       expect(foo1b).toBe(undefined);
-      expect(foo1c).toBe(foo1);
-      expect(foo1.foo).toBe(4);
+      expect(foo1c).not.toBe(foo1);
+      expect(foo1.foo).toBe(1);
     });
   });
 });

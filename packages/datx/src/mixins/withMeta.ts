@@ -3,7 +3,7 @@ import {computed} from 'mobx';
 import {DECORATE_MODEL} from '../errors';
 import {error} from '../helpers/format';
 import {isModel} from '../helpers/mixin';
-import {getModelCollections, getModelId, getModelType, getOriginalModel} from '../helpers/model/utils';
+import {getModelCollection, getModelId, getModelType, getOriginalModel} from '../helpers/model/utils';
 import {IMetaMixin} from '../interfaces/IMetaMixin';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
 import {Model} from '../Model';
@@ -27,7 +27,7 @@ export function withMeta<T extends Model>(Base: IModelConstructor<T>) {
   class WithMeta extends BaseClass implements IMetaMixin {
     @computed public get meta() {
       return Object.freeze({
-        collections: getModelCollections(this),
+        collection: getModelCollection(this),
         id: getModelId(this),
         original: storage.getModelMetaKey(this, 'originalId') && getOriginalModel(this) || undefined,
         type: getModelType(this),

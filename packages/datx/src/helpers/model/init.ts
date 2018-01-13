@@ -15,6 +15,7 @@ import {storage} from '../../services/storage';
 import {error} from '../format';
 import {getField, getRef, updateField, updateRef} from './fields';
 import {getModelType} from './utils';
+import { IIdentifier } from '../../interfaces/IIdentifier';
 
 interface IMetaToInit extends IDictionary<any> {
   fields: Array<string>;
@@ -147,6 +148,7 @@ function initModelMeta(model: Model, data: IRawModel): IDictionary<any> & IMetaT
 export function initModel(model: Model, rawData: IRawModel, collection?: Collection) {
   const staticModel = model.constructor as typeof Model;
   const data = Object.assign({}, staticModel.preprocess(rawData));
+  storage.setModelMetaKey(model, 'collection', collection);
   const meta = initModelMeta(model, data);
   initModelData(model, data, meta, collection);
 }

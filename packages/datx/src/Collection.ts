@@ -1,9 +1,9 @@
 import {computed, IObservableArray, observable} from 'mobx';
 
-import {COLLECTION_DESTROYED, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
+import {MODEL_SINGLE_COLLECTION, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
 import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
-import {getModelId, getModelType, modelToJSON, updateModel} from './helpers/model/utils';
+import {getModelCollection, getModelId, getModelType, modelToJSON, updateModel} from './helpers/model/utils';
 import {IDictionary} from './interfaces/IDictionary';
 import {IIdentifier} from './interfaces/IIdentifier';
 import {IModelConstructor} from './interfaces/IModelConstructor';
@@ -25,14 +25,12 @@ export class Collection {
   public static types: Array<typeof Model> = [];
 
   private __data: IObservableArray<Model> = observable.shallowArray([]);
-  private __initialized: boolean = true;
 
   @observable private __dataMap: IDictionary<IDictionary<Model>> = {};
   @observable private __dataList: IDictionary<IObservableArray<Model>> = {};
 
   constructor(data: Array<IRawModel> = []) {
     this.insert(data);
-    storage.registerCollection(this);
   }
 
   /**
@@ -43,7 +41,6 @@ export class Collection {
    * @memberof Collection
    */
   public insert(data: Array<IRawModel>): Array<Model> {
-    this.__confirmValid();
     const models = initModels(this, data);
     this.__insertModel(models);
     return models;
@@ -95,7 +92,6 @@ export class Collection {
     data: Model|IRawModel|IDictionary<any>|Array<Model>|Array<IRawModel|IDictionary<any>>,
     model?: IType|IModelConstructor,
   ): Model|Array<Model> {
-    this.__confirmValid();
     return (data instanceof Array) ? this.__addArray(data, model) : this.__addSingle(data, model);
   }
 
@@ -107,7 +103,7 @@ export class Collection {
    * @returns {(Model|null)} The first matching model
    * @memberof Collection
    */
-  public find(type: IType|typeof Model|Model, id?: IIdentifier): Model|null;
+  public find(type: IType|typeof Model|Model, id?: IIdentifier|Model): Model|null;
 
   /**
    * Find a model based on a matching function
@@ -118,7 +114,11 @@ export class Collection {
    */
   public find(test: TFilterFn): Model|null;
 
-  public find(model: IType|typeof Model|(TFilterFn), id?: IIdentifier): Model|null {
+  public find(model: IType|typeof Model|(TFilterFn), id?: IIdentifier|Model): Model|null {
+    if (id instanceof Model) {
+      return id;
+    }
+
     return isSelectorFunction(model)
       ? this.__data.find(model as TFilterFn)
       : this.__findByType(model as typeof Model, id);
@@ -181,7 +181,6 @@ export class Collection {
   public remove(model: Model);
 
   public remove(obj: IType|typeof Model|Model, id?: IIdentifier) {
-    this.__confirmValid();
     const model = typeof obj === 'object' ? obj : this.find(obj, id);
     if (model) {
       this.__removeModel(model);
@@ -210,23 +209,12 @@ export class Collection {
   }
 
   /**
-   * Destroy the collection and clean up all references
-   *
-   * @memberof Collection
-   */
-  public destroy() {
-    this.__confirmValid();
-    storage.unregisterCollection(this);
-    this.__initialized = false;
-  }
-
-  /**
    * Reset the collection (remove all models)
    *
    * @memberof Collection
    */
   public reset() {
-    this.__confirmValid();
+    this.__data.map((model) => storage.setModelMetaKey(model, 'collection', undefined));
     this.__data.replace([]);
     const types = Object.keys(this.__dataList);
     types.forEach((type) => {
@@ -235,10 +223,8 @@ export class Collection {
     });
   }
 
-  private __confirmValid() {
-    if (!this.__initialized) {
-      throw error(COLLECTION_DESTROYED);
-    }
+  public getAllModels() {
+    return this.__data.slice();
   }
 
   private __addArray<T extends Model>(data: Array<T>): Array<T>;
@@ -249,8 +235,8 @@ export class Collection {
 
   private __addSingle<T extends Model>(data: T): T;
   private __addSingle<T extends Model>(data: IDictionary<any>, model?: IType|IModelConstructor<T>): T;
-  private __addSingle(data: Model|IDictionary<any>, model?: IType|IModelConstructor) {
-    if (!data) {
+  private __addSingle(data: Model|IDictionary<any>|IIdentifier, model?: IType|IModelConstructor) {
+    if (!data || typeof data === 'number' || typeof data === 'string') {
       return data;
     }
 
@@ -280,6 +266,11 @@ export class Collection {
       return model.forEach((item) => this.__insertModel(item, type, id));
     }
 
+    const collection = getModelCollection(model);
+    if (collection && collection !== this) {
+      throw error(MODEL_SINGLE_COLLECTION);
+    }
+
     const modelType = type || getModelType(model);
     const modelId = id || getModelId(model);
     this.__data.push(model);
@@ -287,6 +278,7 @@ export class Collection {
     this.__dataList[modelType].push(model);
     this.__dataMap[modelType] = this.__dataMap[modelType] || observable.shallowObject({});
     this.__dataMap[modelType][modelId] = model;
+    storage.setModelMetaKey(model, 'collection', this);
   }
 
   private __removeModel(model: Model|Array<Model>, type?: IType, id?: IIdentifier) {
@@ -299,6 +291,7 @@ export class Collection {
     this.__data.remove(model);
     this.__dataList[modelType].remove(model);
     delete this.__dataMap[modelType][modelId];
+    storage.setModelMetaKey(model, 'collection', undefined);
   }
 
   private __findByType(model: IType|typeof Model|Model, id?: IIdentifier) {

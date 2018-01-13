@@ -12,7 +12,7 @@ export {
 export {
   assignModel,
   cloneModel,
-  getModelCollections,
+  getModelCollection,
   getModelId,
   getModelType,
   getOriginalModel,

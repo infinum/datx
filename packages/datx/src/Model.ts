@@ -48,6 +48,10 @@ export class Model {
     return --this.autoIdValue;
   }
 
+  public static toJSON() {
+    return this.type;
+  }
+
   constructor(rawData: IRawModel = {}, collection?: Collection) {
     initModel(this, rawData, collection);
   }

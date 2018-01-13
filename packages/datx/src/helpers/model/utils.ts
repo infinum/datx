@@ -2,7 +2,7 @@ import {toJS} from 'mobx';
 
 import {Collection} from '../../Collection';
 import {META_FIELD} from '../../consts';
-import {NO_REFS, NOT_A_CLONE} from '../../errors';
+import {NO_REFS, NOT_A_CLONE, REF_NEEDS_COLLECTION} from '../../errors';
 import {IDictionary} from '../../interfaces/IDictionary';
 import {IIdentifier} from '../../interfaces/IIdentifier';
 import {IRawModel} from '../../interfaces/IRawModel';
@@ -45,14 +45,14 @@ export function getModelId(model: Model|IIdentifier): IIdentifier {
 }
 
 /**
- * Get a list of collections the given model belongs to
+ * Get a collection the given model belongs to
  *
  * @export
  * @param {Model} model Model to be checked
- * @returns {Array<Collection>} A list of collections the given model belongs to
+ * @returns {Collection} A collection the given model belongs to
  */
-export function getModelCollections(model: Model): Array<Collection> {
-  return storage.getModelCollections(model);
+export function getModelCollection(model: Model): Collection|undefined {
+  return storage.getModelMetaKey(model, 'collection');
 }
 
 /**
@@ -70,9 +70,15 @@ export function cloneModel<T extends Model>(model: T): T {
   meta.originalId = meta.id;
   delete meta.id;
 
+  const clone = new TypeModel(rawData) as T;
+
+  const collection = getModelCollection(model);
+  if (collection) {
+    collection.add(clone);
+  }
   // TODO: Warning if model is not in a collection
 
-  return new TypeModel(rawData) as T;
+  return clone;
 }
 
 /**
@@ -83,9 +89,14 @@ export function cloneModel<T extends Model>(model: T): T {
  * @returns {Model} Original model
  */
 export function getOriginalModel(model: Model): Model {
+  const collection = getModelCollection(model);
   const originalId = storage.getModelMetaKey(model, 'originalId');
   if (originalId) {
-    return storage.findModel(model, originalId) as Model;
+    if (!collection) {
+      throw error(REF_NEEDS_COLLECTION);
+    }
+
+    return collection.find(model, originalId) as Model;
   }
   throw error(NOT_A_CLONE);
 }
@@ -162,6 +173,8 @@ export function getMetaKeyFromRaw(data: IRawModel, key: string): any {
 export function modelToJSON(model: Model): IRawModel {
   const data = toJS(storage.getModelData(model));
   const meta = toJS(storage.getModelMeta(model));
+
+  delete meta.collection;
 
   const raw = Object.assign(data, {[META_FIELD]: meta});
 
