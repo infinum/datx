@@ -1,4 +1,4 @@
-import {Collection, getModelCollections, getModelId, getModelType, Model, modelToJSON} from 'datx';
+import {Collection, getModelCollection, getModelId, getModelType, Model, modelToJSON} from 'datx';
 import {META_FIELD} from 'datx/dist/consts';
 import {mapItems} from 'datx/dist/helpers/utils';
 import {IRawModel} from 'datx/dist/interfaces/IRawModel';
@@ -11,8 +11,8 @@ import {IJsonapiModel} from '../interfaces/IJsonapiModel';
 import {IRequestOptions} from '../interfaces/IRequestOptions';
 import {IDefinition, ILink, IRecord, IRelationship} from '../interfaces/JsonApi';
 import {config, create, handleResponse, remove, update} from '../NetworkUtils';
+import {Response} from '../Response';
 import {getValue} from './utils';
-import { Response } from '../Response';
 
 export function flattenModel(): null;
 export function flattenModel(data?: IRecord): IRawModel;
@@ -103,7 +103,7 @@ function getModelEndpointUrl(model: IJsonapiModel): string {
 }
 
 export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Promise<IJsonapiModel> {
-  const collection: IJsonapiCollection = getModelCollections(model)[0] as IJsonapiCollection;
+  const collection = getModelCollection(model) as IJsonapiCollection;
 
   const data: IRecord = modelToJsonApi(model);
   const requestMethod = isModelPersisted(model) ? update : create;
@@ -113,8 +113,7 @@ export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Prom
 }
 
 export function removeModel(model: IJsonapiModel, options?: IRequestOptions): Promise<void> {
-  const collections = getModelCollections(model);
-  const collection: IJsonapiCollection = collections[0] as IJsonapiCollection;
+  const collection = getModelCollection(model) as IJsonapiCollection;
 
   const isPersisted = isModelPersisted(model);
   const url = getModelEndpointUrl(model);
@@ -128,7 +127,7 @@ export function removeModel(model: IJsonapiModel, options?: IRequestOptions): Pr
 
         setModelPersisted(model, false);
 
-        collections.forEach((coll) => coll.remove(model));
+        collection.remove(model);
       });
   }
 
