@@ -11,4 +11,5 @@ export interface IModelConstructor<T = Model> {
 
   preprocess(data: object): object;
   getAutoId(): IIdentifier;
+  toJSON(): IIdentifier;
 }
