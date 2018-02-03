@@ -1,4 +1,5 @@
-import {IDictionary} from './IDictionary';
+import {IDictionary} from 'datx-utils';
+
 import {IFilters} from './IFilters';
 import {IHeaders} from './IHeaders';
 

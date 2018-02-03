@@ -1,3 +1,3 @@
-import {IDictionary} from './IDictionary';
+import {IDictionary} from 'datx-utils';
 
 export type IHeaders = IDictionary<string>;

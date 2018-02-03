@@ -53,6 +53,7 @@
     }
   },
   "dependencies": {
-    "datx": "^0.6.0"
+    "datx": "^0.6.0",
+    "datx-utils": "^0.5.0"
   }
 }

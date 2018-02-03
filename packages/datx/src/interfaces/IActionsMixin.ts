@@ -1,6 +1,6 @@
+import {IDictionary, IRawModel} from 'datx-utils';
+
 import {PureModel} from '../PureModel';
-import {IDictionary} from './IDictionary';
-import {IRawModel} from './IRawModel';
 import {IReferenceOptions} from './IReferenceOptions';
 import {TRefValue} from './TRefValue';
 

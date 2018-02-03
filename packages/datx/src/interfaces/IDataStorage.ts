@@ -1,4 +1,4 @@
-import {IDictionary} from './IDictionary';
+import {IDictionary} from 'datx-utils';
 
 export interface IDataStorage {
   data: IDictionary<any>;

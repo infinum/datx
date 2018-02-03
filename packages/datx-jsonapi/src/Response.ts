@@ -1,7 +1,7 @@
 import {getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId} from 'datx';
+import {IDictionary} from 'datx-utils';
 import {action, computed, extendObservable, IComputedValue, isObservableArray} from 'mobx';
 
-import {IDictionary} from './interfaces/IDictionary';
 import {IHeaders} from './interfaces/IHeaders';
 import {IRawResponse} from './interfaces/IRawResponse';
 import {IRequestOptions} from './interfaces/IRequestOptions';

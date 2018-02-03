@@ -1,4 +1,5 @@
-import {IDictionary} from '../interfaces/IDictionary';
+import {IDictionary} from 'datx-utils';
+
 import {PureCollection} from '../PureCollection';
 import {PureModel} from '../PureModel';
 import {getModelId, getModelType} from './model/utils';

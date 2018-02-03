@@ -1,13 +1,12 @@
+import {IDictionary, IRawModel} from 'datx-utils';
 import {computed, IObservableArray, observable} from 'mobx';
 
 import {MODEL_SINGLE_COLLECTION, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
 import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
 import {getModelCollection, getModelId, getModelType, modelToJSON, updateModel} from './helpers/model/utils';
-import {IDictionary} from './interfaces/IDictionary';
 import {IIdentifier} from './interfaces/IIdentifier';
 import {IModelConstructor} from './interfaces/IModelConstructor';
-import {IRawModel} from './interfaces/IRawModel';
 import {IType} from './interfaces/IType';
 import {TFilterFn} from './interfaces/TFilterFn';
 import {PureModel} from './PureModel';

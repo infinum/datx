@@ -1,12 +1,19 @@
-import {getModelType, IIdentifier, initModelRef, IType, Model, PureCollection, ReferenceType, updateModel} from 'datx';
-import {mapItems} from 'datx/dist/helpers/utils';
-import {IRawModel} from 'datx/dist/interfaces/IRawModel';
+import {
+  getModelType,
+  IIdentifier,
+  initModelRef,
+  IType,
+  PureCollection,
+  PureModel,
+  ReferenceType,
+  updateModel,
+} from 'datx';
+import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 
 import {decorateModel} from './decorateModel';
 import {ParamArrayType} from './enums/ParamArrayType';
 import {flattenModel, removeModel} from './helpers/model';
 import {getValue} from './helpers/utils';
-import {IDictionary} from './interfaces/IDictionary';
 import {IFilters} from './interfaces/IFilters';
 import {IHeaders} from './interfaces/IHeaders';
 import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
@@ -21,13 +28,13 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
   class JsonapiCollection extends BaseClass {
 
-      public static types = [decorateModel(Model)];
+      public static types = [decorateModel(PureModel)];
 
-    public sync(body?: IResponse): Model|Array<Model>|null {
+    public sync(body?: IResponse): PureModel|Array<PureModel>|null {
       if (!body) {
         return null;
       }
-      const data: Model|Array<Model>|null = this.__iterateEntries(body, this.__addRecord.bind(this));
+      const data: PureModel|Array<PureModel>|null = this.__iterateEntries(body, this.__addRecord.bind(this));
       this.__iterateEntries(body, this.__updateRelationships.bind(this));
       return data;
     }
@@ -61,17 +68,17 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return fetch({url: this.__prefixUrl(url), options, data, method, collection: this});
     }
 
-    public remove(type: IType|typeof Model, id?: IIdentifier, remote?: boolean|IRequestOptions);
-    public remove(model: Model, remote?: boolean|IRequestOptions);
+    public remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequestOptions);
+    public remove(model: PureModel, remote?: boolean|IRequestOptions);
     public remove(
-      obj: IType|typeof Model|Model,
+      obj: IType|typeof PureModel|PureModel,
       id?: IIdentifier|boolean|IRequestOptions,
       remote?: boolean|IRequestOptions,
     ) {
       const remove = (typeof id === 'boolean' || typeof id === 'object') ? id : remote;
       const modelId = (typeof id !== 'boolean' && typeof id !== 'object') ? id : undefined;
       const type = getModelType(obj);
-      const model: Model = this.find(type, modelId) as Model;
+      const model: PureModel = this.find(type, modelId) as PureModel;
 
       if (remove) {
         return removeModel(model, typeof remove === 'object' ? remove : undefined);
@@ -107,14 +114,14 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       } else if (staticCollection.types.filter((item) => item.type === obj.type).length) {
         record = this.add(flattened, obj.type) as IJsonapiModel;
       } else {
-        record = this.add(new Model(flattened));
+        record = this.add(new PureModel(flattened));
       }
 
       return record;
     }
 
     private __updateRelationships(obj: IRecord): void {
-      const record: Model|null = this.find(obj.type, obj.id);
+      const record: PureModel|null = this.find(obj.type, obj.id);
       const refs: Array<string> = obj.relationships ? Object.keys(obj.relationships) : [];
       refs.forEach((ref: string) => {
         const items = (obj.relationships as IDictionary<IRelationship>)[ref].data;
@@ -123,7 +130,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
           return;
         }
         if (items && record) {
-          const models: Model|Array<Model>|IIdentifier|undefined|null = mapItems(
+          const models: PureModel|Array<PureModel>|IIdentifier|undefined|null = mapItems(
             items,
             (def: IDefinition) => this.find(def.type, def.id) || def.id,
           );
@@ -139,7 +146,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       });
     }
 
-    private __iterateEntries(body: IResponse, fn: (item: Model) => Model) {
+    private __iterateEntries(body: IResponse, fn: (item: PureModel) => PureModel) {
       mapItems((body && body.included) || [], fn);
       return mapItems((body && body.data) || [], fn);
     }
@@ -243,7 +250,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
   }
 
   return JsonapiCollection as typeof PureCollection & {
-    types: Array<typeof Model>;
+    types: Array<typeof PureModel>;
     new(): IJsonapiCollection;
   };
 }

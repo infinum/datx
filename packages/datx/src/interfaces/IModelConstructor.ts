@@ -1,8 +1,8 @@
+import {IDictionary, IRawModel} from 'datx-utils';
+
 import {PureCollection} from '../PureCollection';
 import {PureModel} from '../PureModel';
-import {IDictionary} from './IDictionary';
 import {IIdentifier} from './IIdentifier';
-import {IRawModel} from './IRawModel';
 import {IType} from './IType';
 
 export interface IModelConstructor<T = PureModel> {

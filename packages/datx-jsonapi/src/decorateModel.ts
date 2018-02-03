@@ -1,5 +1,5 @@
 import {PureCollection, PureModel} from 'datx';
-import {IRawModel} from 'datx/dist/interfaces/IRawModel';
+import {IRawModel} from 'datx-utils';
 
 import {flattenModel, removeModel, saveModel} from './helpers/model';
 import {IRequestOptions} from './interfaces/IRequestOptions';

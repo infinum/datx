@@ -1,12 +1,10 @@
+import {IDictionary, IRawModel, META_FIELD} from 'datx-utils';
 import {computed, extendObservable} from 'mobx';
 
-import {META_FIELD} from '../../consts';
 import {FieldType} from '../../enums/FieldType';
 import {ReferenceType} from '../../enums/ReferenceType';
 import {MODEL_EXISTS} from '../../errors';
-import {IDictionary} from '../../interfaces/IDictionary';
 import {IIdentifier} from '../../interfaces/IIdentifier';
-import {IRawModel} from '../../interfaces/IRawModel';
 import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
 import {IType} from '../../interfaces/IType';
 import {TRefValue} from '../../interfaces/TRefValue';

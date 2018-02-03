@@ -1,4 +1,4 @@
-import {IDictionary} from '../interfaces/IDictionary';
+import {IDictionary} from 'datx-utils';
 
 const REGEX = /\$\{\s*([a-zA-Z0-9\-\_]+)\s*\}/g;
 

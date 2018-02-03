@@ -1,3 +1,4 @@
+import {IDictionary} from 'datx-utils';
 import {computed} from 'mobx';
 
 import {DECORATE_MODEL} from '../errors';
@@ -6,7 +7,6 @@ import {isModel} from '../helpers/mixin';
 import {initModelRef} from '../helpers/model/init';
 import {assignModel, cloneModel, modelToJSON, updateModel} from '../helpers/model/utils';
 import {IActionsMixin} from '../interfaces/IActionsMixin';
-import {IDictionary} from '../interfaces/IDictionary';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
 import {IReferenceOptions} from '../interfaces/IReferenceOptions';
 import {TRefValue} from '../interfaces/TRefValue';

@@ -1,8 +1,7 @@
-import {DEFAULT_TYPE} from './consts';
+import {DEFAULT_TYPE, IDictionary, IRawModel} from 'datx-utils';
+
 import {initModel} from './helpers/model/init';
-import {IDictionary} from './interfaces/IDictionary';
 import {IIdentifier} from './interfaces/IIdentifier';
-import {IRawModel} from './interfaces/IRawModel';
 import {IType} from './interfaces/IType';
 import {PureCollection} from './PureCollection';
 

@@ -1,5 +1,5 @@
 import {getModelType, IType} from 'datx';
-import {IDictionary} from 'datx/src/interfaces/IDictionary';
+import {IDictionary} from 'datx-utils';
 
 import {Response} from './Response';
 

@@ -1,6 +1,7 @@
+import {IDictionary} from 'datx-utils';
+
 import {PureCollection} from '../PureCollection';
 import {PureModel} from '../PureModel';
-import {IDictionary} from './IDictionary';
 import {IIdentifier} from './IIdentifier';
 import {IType} from './IType';
 

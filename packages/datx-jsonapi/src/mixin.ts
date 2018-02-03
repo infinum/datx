@@ -1,6 +1,4 @@
-import {PureCollection, PureModel} from 'datx';
-import {isCollection, isModel} from 'datx/dist/helpers/mixin';
-import {IModelConstructor} from 'datx/dist/interfaces/IModelConstructor';
+import {IModelConstructor, isCollection, isModel, PureCollection, PureModel} from 'datx';
 
 import {decorateCollection} from './decorateCollection';
 import {decorateModel} from './decorateModel';

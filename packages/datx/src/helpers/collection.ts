@@ -1,5 +1,6 @@
+import {IRawModel} from 'datx-utils';
+
 import {UNDEFINED_MODEL, UNDEFINED_TYPE} from '../errors';
-import {IRawModel} from '../interfaces/IRawModel';
 import {IType} from '../interfaces/IType';
 import {PureCollection} from '../PureCollection';
 import {PureModel} from '../PureModel';

@@ -17,20 +17,23 @@ export {
   cloneModel,
   getModelCollection,
   getModelId,
+  getModelMetaKey,
   getModelType,
   getOriginalModel,
   modelToJSON,
+  setModelMetaKey,
   updateModel,
 } from './helpers/model/utils';
 
-import {
+export {
   isCollection,
   isModel,
 } from './helpers/mixin';
 
+export {IRawModel} from 'datx-utils';
+
 export {IIdentifier} from './interfaces/IIdentifier';
 export {IModelConstructor} from './interfaces/IModelConstructor';
-export {IRawModel} from './interfaces/IRawModel';
 export {IType} from './interfaces/IType';
 export {IActionsMixin} from './interfaces/IActionsMixin';
 export {IMetaMixin} from './interfaces/IMetaMixin';

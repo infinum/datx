@@ -1,4 +1,4 @@
-import {IDictionary} from './IDictionary';
+import {IDictionary} from 'datx-utils';
 
 interface IDefinition {
   id?: number|string;

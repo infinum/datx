@@ -1,10 +1,9 @@
+import {flatten, IDictionary, uniq} from 'datx-utils';
 import {computed, extendObservable, IObservableArray, observable, toJS} from 'mobx';
 
 import {getModelId, getModelType} from '../helpers/model/utils';
 import {reducePrototypeChain} from '../helpers/selectors';
-import {flatten, uniq} from '../helpers/utils';
 import {IDataStorage} from '../interfaces/IDataStorage';
-import {IDictionary} from '../interfaces/IDictionary';
 import {IIdentifier} from '../interfaces/IIdentifier';
 import {IReferenceOptions} from '../interfaces/IReferenceOptions';
 import {IType} from '../interfaces/IType';

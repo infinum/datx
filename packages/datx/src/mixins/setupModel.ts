@@ -1,8 +1,9 @@
+import {IDictionary} from 'datx-utils';
+
 import {ReferenceType} from '../enums/ReferenceType';
 import {DECORATE_MODEL} from '../errors';
 import {error} from '../helpers/format';
 import {isModel} from '../helpers/mixin';
-import {IDictionary} from '../interfaces/IDictionary';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
 import {IReferenceOptions} from '../interfaces/IReferenceOptions';
 import {IType} from '../interfaces/IType';

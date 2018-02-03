@@ -1,10 +1,8 @@
+import {IDictionary, IRawModel, META_FIELD} from 'datx-utils';
 import {toJS} from 'mobx';
 
-import {META_FIELD} from '../../consts';
 import {NO_REFS, NOT_A_CLONE, REF_NEEDS_COLLECTION} from '../../errors';
-import {IDictionary} from '../../interfaces/IDictionary';
 import {IIdentifier} from '../../interfaces/IIdentifier';
-import {IRawModel} from '../../interfaces/IRawModel';
 import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
 import {IType} from '../../interfaces/IType';
 import {TRefValue} from '../../interfaces/TRefValue';
@@ -189,4 +187,12 @@ export function modelToJSON(model: PureModel): IRawModel {
   }
 
   return raw;
+}
+
+export function getModelMetaKey(model: PureModel, key: string) {
+  return storage.getModelMetaKey(model, key);
+}
+
+export function setModelMetaKey(model: PureModel, key: string, value: any) {
+  return storage.setModelMetaKey(model, key, value);
 }

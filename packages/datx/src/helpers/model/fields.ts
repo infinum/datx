@@ -1,3 +1,4 @@
+import {isFalsyArray, mapItems} from 'datx-utils';
 import {IArrayChange, IArraySplice, intercept, IObservableArray, isObservableArray, observable} from 'mobx';
 
 import {FieldType} from '../../enums/FieldType';
@@ -18,7 +19,6 @@ import {TRefValue} from '../../interfaces/TRefValue';
 import {PureModel} from '../../PureModel';
 import {storage} from '../../services/storage';
 import {error} from '../format';
-import {isFalsyArray, mapItems} from '../utils';
 import {getModelCollection, getModelId, getModelType} from './utils';
 
 function modelAddReference(model: PureModel, key: string, newReference: PureModel) {
