@@ -1,10 +1,10 @@
-import {Collection, Model} from 'datx';
+import {PureCollection, PureModel} from 'datx';
 import {IRawModel} from 'datx/dist/interfaces/IRawModel';
 
 import {flattenModel} from './helpers/model';
 import {IRecord} from './interfaces/JsonApi';
 
-export function decorateModel(BaseClass: typeof Model) {
+export function decorateModel(BaseClass: typeof PureModel) {
 
   class JsonapiModel extends BaseClass {
 
@@ -26,7 +26,7 @@ export function decorateModel(BaseClass: typeof Model) {
      */
     public static endpoint: string|(() => string);
 
-    constructor(rawData: IRawModel|IRecord = {}, collection?: Collection) {
+    constructor(rawData: IRawModel|IRecord = {}, collection?: PureCollection) {
       let data = rawData;
       if ('type' in rawData && ('attributes' in rawData || 'relationships' in rawData)) {
         data = flattenModel(rawData as IRecord);
@@ -35,5 +35,5 @@ export function decorateModel(BaseClass: typeof Model) {
     }
   }
 
-  return JsonapiModel as typeof Model;
+  return JsonapiModel as typeof PureModel;
 }

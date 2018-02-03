@@ -2,7 +2,7 @@
 
 import {autorun} from 'mobx';
 
-import {Collection, Model, prop, ReferenceType, withActions, withMeta} from '../../src';
+import {Collection, prop, PureModel, ReferenceType, withActions, withMeta} from '../../src';
 import {META_FIELD} from '../../src/consts';
 import {storage} from '../../src/services/storage';
 
@@ -13,7 +13,7 @@ describe('Collection', () => {
   });
 
   it('should work with initial data', () => {
-    class Foo extends Model {
+    class Foo extends PureModel {
       public static type = 'foo';
       @prop public foo: number;
       @prop public bar: number;

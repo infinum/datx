@@ -1,3 +1,1 @@
-type IType = string | number;
-
-export {IType};
+export type IType = string | number;

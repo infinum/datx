@@ -1,28 +1,33 @@
 import {computed, extendObservable} from 'mobx';
 
-import {Collection} from '../../Collection';
 import {META_FIELD} from '../../consts';
 import {FieldType} from '../../enums/FieldType';
 import {ReferenceType} from '../../enums/ReferenceType';
 import {MODEL_EXISTS} from '../../errors';
 import {IDictionary} from '../../interfaces/IDictionary';
+import {IIdentifier} from '../../interfaces/IIdentifier';
 import {IRawModel} from '../../interfaces/IRawModel';
 import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
 import {IType} from '../../interfaces/IType';
 import {TRefValue} from '../../interfaces/TRefValue';
-import {Model} from '../../Model';
+import {PureCollection} from '../../PureCollection';
+import {PureModel} from '../../PureModel';
 import {storage} from '../../services/storage';
 import {error} from '../format';
 import {getField, getRef, updateField, updateRef} from './fields';
 import {getModelType} from './utils';
-import { IIdentifier } from '../../interfaces/IIdentifier';
 
 interface IMetaToInit extends IDictionary<any> {
   fields: Array<string>;
   refs: IDictionary<IReferenceOptions>;
 }
 
-export function initModelField<T extends Model>(obj: T, key: string, defValue: any, type: FieldType = FieldType.DATA) {
+export function initModelField<T extends PureModel>(
+  obj: T,
+  key: string,
+  defValue: any,
+  type: FieldType = FieldType.DATA,
+) {
   const fields = storage.getModelMetaKey(obj, 'fields') as Array<string>;
 
   // Initialize the observable field to the default value
@@ -42,12 +47,12 @@ export function initModelField<T extends Model>(obj: T, key: string, defValue: a
  * Initialize a reference to other models
  *
  * @export
- * @param {(Model|IType)} obj Model to which the reference should be added
+ * @param {(PureModel|IType)} obj Model to which the reference should be added
  * @param {string} key Model property where the reference will be defined
  * @param {IReferenceOptions} options Reference options
  * @param {TRefValue} initialVal Initial reference value
  */
-export function initModelRef(obj: Model|IType, key: string, options: IReferenceOptions, initialVal: TRefValue) {
+export function initModelRef(obj: PureModel|IType, key: string, options: IReferenceOptions, initialVal: TRefValue) {
   const refs = storage.getModelMetaKey(obj, 'refs');
 
   // Initialize the observable field to the given value
@@ -69,8 +74,8 @@ export function initModelRef(obj: Model|IType, key: string, options: IReferenceO
   }
 }
 
-function prepareFields(data: IRawModel, meta: IMetaToInit, model: Model) {
-  const staticModel = model.constructor as typeof Model;
+function prepareFields(data: IRawModel, meta: IMetaToInit, model: PureModel) {
+  const staticModel = model.constructor as typeof PureModel;
   const fields = meta.fields.slice();
   const classRefs = storage.getModelClassReferences(staticModel);
   const refs = Object.assign({}, classRefs, meta.refs);
@@ -87,10 +92,10 @@ function prepareFields(data: IRawModel, meta: IMetaToInit, model: Model) {
   return {defaults, fields, refs};
 }
 
-function initModelData(model: Model, data: IRawModel, meta: IMetaToInit, collection?: Collection) {
+function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, collection?: PureCollection) {
   const {defaults, fields, refs} = prepareFields(data, meta, model);
 
-  const staticModel = model.constructor as typeof Model;
+  const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id');
   const modelType = storage.getModelClassMetaKey(staticModel, 'type');
 
@@ -115,8 +120,8 @@ function initModelData(model: Model, data: IRawModel, meta: IMetaToInit, collect
   });
 }
 
-function initModelMeta(model: Model, data: IRawModel): IDictionary<any> & IMetaToInit {
-  const staticModel = model.constructor as typeof Model;
+function initModelMeta(model: PureModel, data: IRawModel): IDictionary<any> & IMetaToInit {
+  const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id');
   const modelType = storage.getModelClassMetaKey(staticModel, 'type');
 
@@ -145,8 +150,8 @@ function initModelMeta(model: Model, data: IRawModel): IDictionary<any> & IMetaT
   return Object.assign({}, newMeta, toInit);
 }
 
-export function initModel(model: Model, rawData: IRawModel, collection?: Collection) {
-  const staticModel = model.constructor as typeof Model;
+export function initModel(model: PureModel, rawData: IRawModel, collection?: PureCollection) {
+  const staticModel = model.constructor as typeof PureModel;
   const data = Object.assign({}, staticModel.preprocess(rawData));
   storage.setModelMetaKey(model, 'collection', collection);
   const meta = initModelMeta(model, data);

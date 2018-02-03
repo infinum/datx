@@ -2,7 +2,7 @@
 
 import {autorun} from 'mobx';
 
-import {cloneModel, Collection, getModelId, Model, prop, withMeta} from '../../src';
+import {cloneModel, Collection, getModelId, prop, PureModel, withMeta} from '../../src';
 import {storage} from '../../src/services/storage';
 
 describe('Collection', () => {
@@ -12,7 +12,7 @@ describe('Collection', () => {
   });
 
   it('should work with initial data', () => {
-    class Foo extends Model {
+    class Foo extends PureModel {
       public static type = 'foo';
       @prop public foo: number;
       @prop public bar: number;
@@ -71,7 +71,7 @@ describe('Collection', () => {
   });
 
   it ('should support meta ref ids', () => {
-    class Foo extends Model {
+    class Foo extends PureModel {
       public static type = 'foo';
       @prop.toOne(Foo) public parent?: Foo;
       @prop.defaultValue(1) public foo: number;

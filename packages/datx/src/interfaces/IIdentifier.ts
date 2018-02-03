@@ -1,3 +1,1 @@
-type IIdentifier = number|string;
-
-export {IIdentifier};
+export type IIdentifier = number|string;

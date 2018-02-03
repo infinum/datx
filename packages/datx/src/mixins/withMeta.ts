@@ -7,7 +7,7 @@ import {getRefId} from '../helpers/model/fields';
 import {getModelCollection, getModelId, getModelType, getOriginalModel} from '../helpers/model/utils';
 import {IMetaMixin} from '../interfaces/IMetaMixin';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
-import {Model} from '../Model';
+import {PureModel} from '../PureModel';
 import {storage} from '../services/storage';
 
 /**
@@ -18,8 +18,8 @@ import {storage} from '../services/storage';
  * @param {IModelConstructor<T>} Base Model to extend
  * @returns Extended model
  */
-export function withMeta<T extends Model>(Base: IModelConstructor<T>) {
-  const BaseClass = Base as typeof Model;
+export function withMeta<T extends PureModel>(Base: IModelConstructor<T>) {
+  const BaseClass = Base as typeof PureModel;
 
   if (!isModel(BaseClass)) {
     throw error(DECORATE_MODEL);
@@ -43,5 +43,5 @@ export function withMeta<T extends Model>(Base: IModelConstructor<T>) {
     }
   }
 
-  return WithMeta as typeof BaseClass & IModelConstructor<IMetaMixin<T> & T>;
+  return WithMeta as IModelConstructor<IMetaMixin<T> & T>;
 }

@@ -1,4 +1,4 @@
-import {Collection, getModelCollection, getModelId, getModelType, Model, modelToJSON} from 'datx';
+import {getModelCollection, getModelId, getModelType, Model, modelToJSON} from 'datx';
 import {META_FIELD} from 'datx/dist/consts';
 import {mapItems} from 'datx/dist/helpers/utils';
 import {IRawModel} from 'datx/dist/interfaces/IRawModel';

@@ -1,5 +1,3 @@
-interface IDictionary<T = any> {
+export interface IDictionary<T = any> {
   [key: string]: T;
 }
-
-export {IDictionary};

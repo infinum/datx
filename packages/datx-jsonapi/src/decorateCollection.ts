@@ -1,4 +1,4 @@
-import {Collection, getModelType, IIdentifier, initModelRef, IType, Model, ReferenceType, updateModel} from 'datx';
+import {getModelType, IIdentifier, initModelRef, IType, Model, PureCollection, ReferenceType, updateModel} from 'datx';
 import {mapItems} from 'datx/dist/helpers/utils';
 import {IRawModel} from 'datx/dist/interfaces/IRawModel';
 
@@ -17,7 +17,7 @@ import {IRecord, IResponse} from './interfaces/JsonApi';
 import {config, fetch} from './NetworkUtils';
 import {Response} from './Response';
 
-export function decorateCollection(BaseClass: typeof Collection) {
+export function decorateCollection(BaseClass: typeof PureCollection) {
 
   class JsonapiCollection extends BaseClass {
 
@@ -205,7 +205,7 @@ export function decorateCollection(BaseClass: typeof Collection) {
     }
   }
 
-  return JsonapiCollection as typeof Collection & {
+  return JsonapiCollection as typeof PureCollection & {
     types: Array<typeof Model>;
     new(): IJsonapiCollection;
   };

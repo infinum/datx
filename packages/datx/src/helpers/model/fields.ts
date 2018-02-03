@@ -15,13 +15,13 @@ import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
 import {IType} from '../../interfaces/IType';
 import {TChange} from '../../interfaces/TChange';
 import {TRefValue} from '../../interfaces/TRefValue';
-import {Model} from '../../Model';
+import {PureModel} from '../../PureModel';
 import {storage} from '../../services/storage';
 import {error} from '../format';
 import {isFalsyArray, mapItems} from '../utils';
 import {getModelCollection, getModelId, getModelType} from './utils';
 
-function modelAddReference(model: Model, key: string, newReference: Model) {
+function modelAddReference(model: PureModel, key: string, newReference: PureModel) {
   const refOptions = storage.getModelReferenceOptions(model, key);
   const newRefId = getModelId(newReference);
   const data = storage.getModelDataKey(model, key);
@@ -34,7 +34,7 @@ function modelAddReference(model: Model, key: string, newReference: Model) {
   }
 }
 
-function modelRemoveReference(model: Model, key: string, oldReference: Model) {
+function modelRemoveReference(model: PureModel, key: string, oldReference: PureModel) {
   const refOptions = storage.getModelReferenceOptions(model, key);
   const oldRefId = getModelId(oldReference);
   const data = storage.getModelDataKey(model, key);
@@ -47,7 +47,7 @@ function modelRemoveReference(model: Model, key: string, oldReference: Model) {
   }
 }
 
-function partialRefUpdate(model: Model, key: string, change: TChange) {
+function partialRefUpdate(model: PureModel, key: string, change: TChange) {
   const refOptions = storage.getModelReferenceOptions(model, key);
   const data = storage.getModelDataKey(model, key);
 
@@ -61,7 +61,7 @@ function partialRefUpdate(model: Model, key: string, change: TChange) {
   return null;
 }
 
-function backRefSplice(model: Model, key: string, change: IArraySplice<Model>, refOptions: IReferenceOptions) {
+function backRefSplice(model: PureModel, key: string, change: IArraySplice<PureModel>, refOptions: IReferenceOptions) {
   const property = refOptions.property as string;
   change.added.map((item) => modelAddReference(item, property, model));
   const removed = model[key].slice(change.index, change.index + change.removedCount);
@@ -69,7 +69,7 @@ function backRefSplice(model: Model, key: string, change: IArraySplice<Model>, r
   return null;
 }
 
-function backRefChange(model: Model, key: string, change: IArrayChange<Model>, refOptions: IReferenceOptions) {
+function backRefChange(model: PureModel, key: string, change: IArrayChange<PureModel>, refOptions: IReferenceOptions) {
   const property = refOptions.property as string;
   const oldValue = model[key].length > change.index ? model[key][change.index] : null;
   if (change.newValue) {
@@ -81,7 +81,7 @@ function backRefChange(model: Model, key: string, change: IArrayChange<Model>, r
   return null;
 }
 
-function partialBackRefUpdate(model: Model, key: string, change: TChange) {
+function partialBackRefUpdate(model: PureModel, key: string, change: TChange) {
   const refOptions = storage.getModelReferenceOptions(model, key);
 
   if (change.type === 'splice') {
@@ -90,11 +90,11 @@ function partialBackRefUpdate(model: Model, key: string, change: TChange) {
   return backRefChange(model, key, change, refOptions);
 }
 
-export function getField(model: Model, key: string) {
+export function getField(model: PureModel, key: string) {
   return storage.getModelDataKey(model, key);
 }
 
-export function updateField(model: Model, key: string, value: any, type: FieldType) {
+export function updateField(model: PureModel, key: string, value: any, type: FieldType) {
   if (type === FieldType.TYPE) {
     throw error(TYPE_READONLY);
   } else if (type === FieldType.ID) {
@@ -103,17 +103,17 @@ export function updateField(model: Model, key: string, value: any, type: FieldTy
   storage.setModelDataKey(model, key, value);
 }
 
-function hasBackRef(item: Model, property: string, target: Model): boolean {
+function hasBackRef(item: PureModel, property: string, target: PureModel): boolean {
   if (item[property] === null || item[property] === undefined) {
     return false;
-  } else if (item[property] instanceof Model) {
+  } else if (item[property] instanceof PureModel) {
     return item[property] === target;
   } else {
     return item[property].indexOf(target) !== -1;
   }
 }
 
-function getBackRef(model: Model, key: string, refOptions: IReferenceOptions): Model|Array<Model>|null {
+function getBackRef(model: PureModel, key: string, refOptions: IReferenceOptions): PureModel|Array<PureModel>|null {
   const type = getModelType(refOptions.model);
 
   const collection = getModelCollection(model);
@@ -125,12 +125,12 @@ function getBackRef(model: Model, key: string, refOptions: IReferenceOptions): M
     .findAll(type)
     .filter((item) => hasBackRef(item, refOptions.property as string, model));
 
-  const backData: IObservableArray<Model> = observable.shallowArray(backModels);
+  const backData: IObservableArray<PureModel> = observable.shallowArray(backModels);
   intercept(backData, (change: TChange) => partialBackRefUpdate(model, key, change));
   return backData;
 }
 
-function getNormalRef(model: Model, key: string, refOptions: IReferenceOptions): Model|Array<Model>|null {
+function getNormalRef(model: PureModel, key: string, refOptions: IReferenceOptions): PureModel|Array<PureModel>|null {
   const value = storage.getModelDataKey(model, key);
   const collection = getModelCollection(model);
   if (!collection) {
@@ -142,7 +142,7 @@ function getNormalRef(model: Model, key: string, refOptions: IReferenceOptions):
     dataModels = [dataModels];
   }
   if (dataModels instanceof Array) {
-    const data: IObservableArray<Model> = observable.shallowArray(dataModels);
+    const data: IObservableArray<PureModel> = observable.shallowArray(dataModels);
     intercept(data, (change: TChange) => partialRefUpdate(model, key, change));
     return data;
   }
@@ -150,7 +150,7 @@ function getNormalRef(model: Model, key: string, refOptions: IReferenceOptions):
 
 }
 
-export function getRef(model: Model, key: string): Model|Array<Model>|null {
+export function getRef(model: PureModel, key: string): PureModel|Array<PureModel>|null {
   const refOptions = storage.getModelReferenceOptions(model, key);
 
   return (typeof refOptions.property === 'string')
@@ -168,7 +168,7 @@ function validateRef(refOptions: IReferenceOptions, isArray: boolean, key: strin
   }
 }
 
-export function updateRef(model: Model, key: string, value: TRefValue) {
+export function updateRef(model: PureModel, key: string, value: TRefValue) {
   const refOptions = storage.getModelReferenceOptions(model, key);
   const ids = refOptions.type === ReferenceType.TO_MANY
     ? (mapItems(value, getModelId) || [])
@@ -184,7 +184,7 @@ export function updateRef(model: Model, key: string, value: TRefValue) {
     const referencedModels = mapItems(value, (ref) => {
       if (ref !== null && collection) {
         return collection.find(refOptions.model, ref);
-      } else if (ref instanceof Model) {
+      } else if (ref instanceof PureModel) {
         throw error(REF_NEEDS_COLLECTION);
       }
       return ref;
@@ -200,14 +200,14 @@ export function updateRef(model: Model, key: string, value: TRefValue) {
   }
 }
 
-function getModelRefsByType(model: Model, type: IType) {
+function getModelRefsByType(model: PureModel, type: IType) {
   const refs = storage.getModelMetaKey(model, 'refs');
   return Object.keys(refs)
     .filter((key) => !refs[key].property)
     .filter((key) => getModelType(refs[key].model) === type);
 }
 
-function updateModelReferences(model: Model, newId: IIdentifier, oldId: IIdentifier, type: IType) {
+function updateModelReferences(model: PureModel, newId: IIdentifier, oldId: IIdentifier, type: IType) {
   const collection = getModelCollection(model);
   if (collection) {
     const allModels = collection.getAllModels().map((item) => {
@@ -230,17 +230,17 @@ function updateModelReferences(model: Model, newId: IIdentifier, oldId: IIdentif
  * Updates the model identifier and all the existing references to the model
  *
  * @export
- * @param {Model} model Model to be updated
+ * @param {PureModel} model Model to be updated
  * @param {IIdentifier} newId New model identifier
  */
-export function updateModelId(model: Model, newId: IIdentifier): void {
+export function updateModelId(model: PureModel, newId: IIdentifier): void {
   const collection = getModelCollection(model);
 
   const oldId = getModelId(model);
   const type = getModelType(model);
   storage.setModelMetaKey(model, 'id', newId);
 
-  const staticModel = model.constructor as typeof Model;
+  const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id');
   if (modelId) {
     storage.setModelDataKey(model, modelId, newId);
@@ -256,10 +256,10 @@ export function updateModelId(model: Model, newId: IIdentifier): void {
  * Get the id of the referenced model
  *
  * @export
- * @param {Model} model Source model
+ * @param {PureModel} model Source model
  * @param {string} key Referenced model property name
  * @returns {IIdentifier} Referenced model id
  */
-export function getRefId(model: Model, key: string): IIdentifier {
+export function getRefId(model: PureModel, key: string): IIdentifier {
   return storage.getModelDataKey(model, key);
 }

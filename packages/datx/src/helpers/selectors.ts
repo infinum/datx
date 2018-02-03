@@ -1,6 +1,6 @@
-import {Collection} from '../Collection';
 import {IDictionary} from '../interfaces/IDictionary';
-import {Model} from '../Model';
+import {PureCollection} from '../PureCollection';
+import {PureModel} from '../PureModel';
 import {getModelId, getModelType} from './model/utils';
 
 /**

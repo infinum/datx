@@ -1,4 +1,4 @@
-import {Collection, getModelId, getModelType, Model, modelToJSON, updateModel, updateModelId} from 'datx';
+import {getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId} from 'datx';
 import {action, computed, extendObservable, IComputedValue, isObservableArray} from 'mobx';
 
 import {IDictionary} from './interfaces/IDictionary';
@@ -17,10 +17,10 @@ export class Response {
   /**
    * API response data (synced with the store)
    *
-   * @type {(Model|Array<Model>)}
+   * @type {(PureModel|Array<PureModel>)}
    * @memberOf Response
    */
-  public data: Model|Array<Model>|null = null;
+  public data: PureModel|Array<PureModel>|null = null;
 
   /**
    * API response metadata
@@ -150,7 +150,7 @@ export class Response {
     response: IRawResponse,
     collection: IJsonapiCollection,
     options?: IRequestOptions,
-    overrideData?: Model|Array<Model>,
+    overrideData?: PureModel|Array<PureModel>,
   ) {
     this.__collection = collection;
     this.__options = options;
@@ -167,7 +167,7 @@ export class Response {
         throw new Error('A save/remove operation should not return an array of results');
       }
 
-      this.data = overrideData || new Model(flattenModel(resp.data));
+      this.data = overrideData || new PureModel(flattenModel(resp.data));
     }
 
     this.meta = (response.data && response.data.meta) || {};
@@ -196,13 +196,13 @@ export class Response {
   /**
    * Replace the response record with a different record. Used to replace a record while keeping the same reference
    *
-   * @param {Model} data New data
+   * @param {PureModel} data New data
    * @returns {Response}
    *
    * @memberOf Response
    */
-  @action public replaceData(data: Model): Response {
-    const record: Model = this.data as Model;
+  @action public replaceData(data: PureModel): Response {
+    const record: PureModel = this.data as PureModel;
     if (record === data) {
       return this;
     }

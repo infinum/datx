@@ -6,10 +6,10 @@ import {IDictionary} from '../interfaces/IDictionary';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
 import {IReferenceOptions} from '../interfaces/IReferenceOptions';
 import {IType} from '../interfaces/IType';
-import {Model} from '../Model';
 import prop from '../prop';
+import {PureModel} from '../PureModel';
 
-export function setupModel<IModel extends Model, IFields extends IDictionary<any>>(
+export function setupModel<IModel extends PureModel, IFields extends IDictionary<any>>(
   Base: IModelConstructor<IModel>,
   {
     fields,
@@ -25,7 +25,7 @@ export function setupModel<IModel extends Model, IFields extends IDictionary<any
     typeAttribute?: string;
   } = {fields: {} as IFields},
 ) {
-  const BaseClass = Base as typeof Model;
+  const BaseClass = Base as typeof PureModel;
 
   if (!isModel(BaseClass)) {
     throw error(DECORATE_MODEL);

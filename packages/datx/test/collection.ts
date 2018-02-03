@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import {Collection, getModelCollection, getModelId, Model, prop} from '../src';
+import {Collection, getModelCollection, getModelId, prop, PureModel} from '../src';
 import {isCollection, isModel} from '../src/helpers/mixin';
 import {storage} from '../src/services/storage';
 
@@ -20,7 +20,7 @@ describe('Collection', () => {
     });
 
     it('Should work with models', () => {
-      class Foo extends Model {
+      class Foo extends PureModel {
         public static type = 'foo';
 
         @prop public foo: number;
@@ -28,7 +28,7 @@ describe('Collection', () => {
         @prop public baz: number;
       }
 
-      class Baz extends Model {
+      class Baz extends PureModel {
         public static type = 'baz';
       }
 
@@ -94,7 +94,7 @@ describe('Collection', () => {
     });
 
     it('should reset the collection', () => {
-      class Foo extends Model {
+      class Foo extends PureModel {
         public static type = 'foo';
         @prop public foo: number;
       }
@@ -120,7 +120,7 @@ describe('Collection', () => {
     });
 
     it('Should support serialization/deserialization', () => {
-      class Foo extends Model {
+      class Foo extends PureModel {
         public static type = 'foo';
 
         @prop public foo: number;
@@ -151,7 +151,7 @@ describe('Collection', () => {
     });
 
     it('should upsert existing models', () => {
-      class Foo extends Model {
+      class Foo extends PureModel {
         public static type = 'foo';
 
         @prop public foo: number;

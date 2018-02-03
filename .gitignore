@@ -44,3 +44,5 @@ yarn.lock
 
 # Build folder
 dist
+
+.vscode

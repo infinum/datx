@@ -1,3 +1,3 @@
-import {Model} from '../Model';
+import {PureModel} from '../PureModel';
 
-export type TFilterFn = (item: Model, index: number, arr: Array<Model>) => boolean;
+export type TFilterFn = (item: PureModel, index: number, arr: Array<PureModel>) => boolean;

@@ -1,4 +1,4 @@
-import {Model} from '../Model';
+import {PureModel} from '../PureModel';
 import {IIdentifier} from './IIdentifier';
 
-export type TRefValue<T = Model> = IIdentifier|Array<IIdentifier>|T|Array<T>|null;
+export type TRefValue<T = PureModel> = IIdentifier|Array<IIdentifier>|T|Array<T>|null;

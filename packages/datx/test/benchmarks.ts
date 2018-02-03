@@ -2,7 +2,7 @@
 
 import {Collection as OldCollection, Model as OldModel} from 'mobx-collection-store';
 
-import {Collection, Model, prop} from '../src';
+import {Collection, prop, PureModel} from '../src';
 import {storage} from '../src/services/storage';
 
 const test1 = 1000;
@@ -21,7 +21,7 @@ describe('Benchmarks', () => {
         data.push({index});
       }
 
-      class Count extends Model {
+      class Count extends PureModel {
         public static type = 'count';
         @prop public index: number;
       }

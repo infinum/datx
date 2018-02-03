@@ -1,5 +1,5 @@
-import {Model} from 'datx';
+import {PureModel} from 'datx';
 
-export interface IJsonapiModel extends Model {
+export interface IJsonapiModel extends PureModel {
 
 }

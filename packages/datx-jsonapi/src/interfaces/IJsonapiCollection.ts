@@ -1,7 +1,7 @@
-import {Collection, Model} from 'datx';
+import {PureCollection, PureModel} from 'datx';
 
 import {IResponse} from './JsonApi';
 
-export interface IJsonapiCollection extends Collection {
-  sync(body?: IResponse): Model|Array<Model>|null;
+export interface IJsonapiCollection extends PureCollection {
+  sync(body?: IResponse): PureModel|Array<PureModel>|null;
 }

@@ -1,9 +1,9 @@
-import {Model} from '../Model';
+import {PureModel} from '../PureModel';
 import {IDictionary} from './IDictionary';
 import {IIdentifier} from './IIdentifier';
 import {IRawModel} from './IRawModel';
 
-export interface IModelConstructor<T = Model> {
+export interface IModelConstructor<T = PureModel> {
   type: string;
   autoIdValue: number ;
 

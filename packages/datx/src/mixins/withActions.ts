@@ -10,7 +10,7 @@ import {IDictionary} from '../interfaces/IDictionary';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
 import {IReferenceOptions} from '../interfaces/IReferenceOptions';
 import {TRefValue} from '../interfaces/TRefValue';
-import {Model} from '../Model';
+import {PureModel} from '../PureModel';
 
 /**
  * Extends the model with some handy actions
@@ -20,8 +20,8 @@ import {Model} from '../Model';
  * @param {IModelConstructor<T>} Base Model to extend
  * @returns Extended model
  */
-export function withActions<T extends Model>(Base: IModelConstructor<T>) {
-  const BaseClass = Base as typeof Model;
+export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
+  const BaseClass = Base as typeof PureModel;
 
   if (!isModel(BaseClass)) {
     throw error(DECORATE_MODEL);
@@ -41,7 +41,7 @@ export function withActions<T extends Model>(Base: IModelConstructor<T>) {
       assignModel(this, key, value);
     }
 
-    public addReference<V extends Model, U extends typeof Model>(
+    public addReference<V extends PureModel, U extends typeof PureModel>(
       key: string,
       value: TRefValue<V>,
       options: IReferenceOptions<U>,

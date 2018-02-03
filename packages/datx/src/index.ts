@@ -1,5 +1,7 @@
 export {Collection} from './Collection';
 export {Model} from './Model';
+export {PureCollection} from './PureCollection';
+export {PureModel} from './PureModel';
 
 export {
   getRefId,
@@ -30,6 +32,8 @@ export {IIdentifier} from './interfaces/IIdentifier';
 export {IModelConstructor} from './interfaces/IModelConstructor';
 export {IRawModel} from './interfaces/IRawModel';
 export {IType} from './interfaces/IType';
+export {IActionsMixin} from './interfaces/IActionsMixin';
+export {IMetaMixin} from './interfaces/IMetaMixin';
 
 export {ReferenceType} from './enums/ReferenceType';
 

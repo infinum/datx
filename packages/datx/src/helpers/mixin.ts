@@ -1,5 +1,5 @@
-import {Collection} from '../Collection';
-import {Model} from '../Model';
+import {PureCollection} from '../PureCollection';
+import {PureModel} from '../PureModel';
 
 /**
  * Check if a class is of a certain type
@@ -25,20 +25,20 @@ function isOfType(obj: Function, type: Function): boolean {
  * Check if a class is a model
  *
  * @export
- * @param {(typeof Model | typeof Collection)} obj Class to check
+ * @param {(typeof PureModel | typeof PureCollection)} obj Class to check
  * @returns {boolean} Class is a model
  */
-export function isModel(obj: typeof Model | typeof Collection): boolean {
-  return isOfType(obj, Model);
+export function isModel(obj: typeof PureModel | typeof PureCollection): boolean {
+  return isOfType(obj, PureModel);
 }
 
 /**
  * Check if a class is a collection
  *
  * @export
- * @param {(typeof Model | typeof Collection)} obj Class to check
+ * @param {(typeof PureModel | typeof PureCollection)} obj Class to check
  * @returns {boolean} Class is a collection
  */
-export function isCollection(obj: typeof Model | typeof Collection): boolean {
-  return isOfType(obj, Collection);
+export function isCollection(obj: typeof PureModel | typeof PureCollection): boolean {
+  return isOfType(obj, PureCollection);
 }
