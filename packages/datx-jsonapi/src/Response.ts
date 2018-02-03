@@ -76,7 +76,7 @@ export class Response {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public first!: Promise<Response>; // Handled by the __fetchLink
+  public first?: Promise<Response>; // Handled by the __fetchLink
 
   /**
    * Previous data page
@@ -84,7 +84,7 @@ export class Response {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public prev!: Promise<Response>; // Handled by the __fetchLink
+  public prev?: Promise<Response>; // Handled by the __fetchLink
 
   /**
    * Next data page
@@ -92,7 +92,7 @@ export class Response {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public next!: Promise<Response>; // Handled by the __fetchLink
+  public next?: Promise<Response>; // Handled by the __fetchLink
 
   /**
    * Last data page
@@ -100,7 +100,7 @@ export class Response {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public last!: Promise<Response>; // Handled by the __fetchLink
+  public last?: Promise<Response>; // Handled by the __fetchLink
 
   /**
    * Received HTTP status

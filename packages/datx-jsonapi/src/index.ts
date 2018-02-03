@@ -9,3 +9,8 @@ export {
   modelToJsonApi,
   saveModel,
 } from './helpers/model';
+
+export {
+  clearAllCache,
+  clearCacheByType,
+} from './cache';

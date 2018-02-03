@@ -1,6 +1,7 @@
 import {storage} from 'datx/dist/services/storage';
 import {fetch, Response} from 'isomorphic-fetch';
 
+import {getCache, saveCache} from './cache';
 import {MODEL_PERSISTED_FIELD, MODEL_PROP_FIELD, MODEL_QUEUE_FIELD, MODEL_RELATED_FIELD} from './consts';
 import {ParamArrayType} from './enums/ParamArrayType';
 import {isBrowser} from './helpers/utils';
@@ -29,17 +30,28 @@ export interface ICollectionFetchOpts {
   data?: object;
   method: string;
   collection: IJsonapiCollection;
+  skipCache?: boolean;
 }
 
 export type CollectionFetchType = (options: ICollectionFetchOpts) => Promise<LibResponse>;
 
+export interface IResponseObject {
+  data: IResponse;
+  error?: Error;
+  headers: IResponseHeaders;
+  requestHeaders: IHeaders;
+  status: number;
+}
+
 export interface IConfigType {
   baseFetch: FetchType;
   baseUrl: string;
+  cache: boolean,
   defaultHeaders: IHeaders;
   fetchReference: fetch;
   paramArrayType: ParamArrayType;
   collectionFetch: CollectionFetchType;
+  onError: (IResponseObject) => IResponseObject;
   transformRequest: (options: ICollectionFetchOpts) => ICollectionFetchOpts;
   transformResponse: (response: IRawResponse) => IRawResponse;
 }
@@ -48,6 +60,9 @@ export const config: IConfigType = {
 
   /** Base URL for all API calls */
   baseUrl: '/',
+
+  /** Enable caching by default in the browser */
+  cache: isBrowser,
 
   /** Default headers that will be sent to the server */
   defaultHeaders: {
@@ -59,6 +74,7 @@ export const config: IConfigType = {
 
   /** Determines how will the request param arrays be stringified */
   paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
+
   /**
    * Base implementation of the fetch function (can be overridden)
    *
@@ -97,11 +113,11 @@ export const config: IConfigType = {
         headers = response.headers;
         return response.json();
       })
-      .catch((e: Error) => {
+      .catch((error: Error) => {
         if (status === 204) {
           return null;
         }
-        throw e;
+        throw error;
       })
       .then((responseData: IResponse) => {
         data = responseData;
@@ -115,9 +131,10 @@ export const config: IConfigType = {
         return {data, headers, requestHeaders, status};
       })
       .catch((error) => {
-        return {data, error, headers, requestHeaders, status};
+        return this.onError({data, error, headers, requestHeaders, status});
       });
   },
+
   /**
    * Base implementation of the statefull fetch function (can be overridden)
    *
@@ -133,10 +150,25 @@ export const config: IConfigType = {
       collection,
     } = config.transformRequest(reqOptions);
 
+    if (this.cache && !reqOptions.skipCache) {
+      const cache = getCache(url);
+      if (cache) {
+        return Promise.resolve(cache.response);
+      }
+    }
+
     return config.baseFetch(method, url, data, options && options.headers)
       .then((response: IRawResponse) => {
-        return new LibResponse(config.transformResponse(response), collection, options);
+        const resp = new LibResponse(config.transformResponse(response), collection, options);
+        if (this.cache) {
+          saveCache(url, resp);
+        }
+        return resp;
       });
+  },
+
+  onError(resp: IResponseObject) {
+    return resp;
   },
 
   transformRequest(options: ICollectionFetchOpts): ICollectionFetchOpts {
