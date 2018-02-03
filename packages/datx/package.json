@@ -17,14 +17,14 @@
   "license": "MIT",
   "devDependencies": {
     "@infinumjs/tslint-config": "^1.1.1",
-    "@types/jest": "^22.0.1",
-    "@types/node": "^8.5.5",
-    "jest": "^22.0.4",
+    "@types/jest": "^22.1.1",
+    "@types/node": "^9.4.0",
+    "jest": "^22.1.4",
     "mobx": "^3.4.1",
     "mobx-collection-store": "^2.0.0",
-    "ts-jest": "^22.0.0",
-    "tslint": "^5.8.0",
-    "typescript": "^2.6.2"
+    "ts-jest": "^22.0.3",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.1"
   },
   "peerDependencies": {
     "mobx": "^3.4.1"

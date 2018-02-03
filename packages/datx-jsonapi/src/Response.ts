@@ -20,7 +20,7 @@ export class Response {
    * @type {(Model|Array<Model>)}
    * @memberOf Response
    */
-  public data: Model|Array<Model>|null;
+  public data: Model|Array<Model>|null = null;
 
   /**
    * API response metadata
