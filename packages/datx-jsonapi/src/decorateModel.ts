@@ -1,7 +1,8 @@
 import {PureCollection, PureModel} from 'datx';
 import {IRawModel} from 'datx/dist/interfaces/IRawModel';
 
-import {flattenModel} from './helpers/model';
+import {flattenModel, removeModel, saveModel} from './helpers/model';
+import {IRequestOptions} from './interfaces/IRequestOptions';
 import {IRecord} from './interfaces/JsonApi';
 
 export function decorateModel(BaseClass: typeof PureModel) {
@@ -32,6 +33,14 @@ export function decorateModel(BaseClass: typeof PureModel) {
         data = flattenModel(rawData as IRecord);
       }
       super(data, collection);
+    }
+
+    public save(options?: IRequestOptions) {
+      return saveModel(this, options);
+    }
+
+    public destroy(options?: IRequestOptions) {
+      return removeModel(this, options);
     }
   }
 
