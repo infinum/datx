@@ -2,6 +2,7 @@ export {Collection} from './Collection';
 export {Model} from './Model';
 
 export {
+  getRefId,
   updateModelId,
 } from './helpers/model/fields';
 
