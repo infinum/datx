@@ -150,7 +150,9 @@ export const config: IConfigType = {
       collection,
     } = config.transformRequest(reqOptions);
 
-    if (this.cache && !reqOptions.skipCache) {
+    const isCacheSupported = method.toUpperCase() === 'GET';
+
+    if (this.cache && isCacheSupported && !reqOptions.skipCache) {
       const cache = getCache(url);
       if (cache) {
         return Promise.resolve(cache.response);
@@ -160,7 +162,7 @@ export const config: IConfigType = {
     return config.baseFetch(method, url, data, options && options.headers)
       .then((response: IRawResponse) => {
         const resp = new LibResponse(config.transformResponse(response), collection, options);
-        if (this.cache) {
+        if (this.cache && isCacheSupported) {
           saveCache(url, resp);
         }
         return resp;

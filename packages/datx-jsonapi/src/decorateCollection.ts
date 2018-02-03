@@ -14,7 +14,7 @@ import {IJsonapiModel} from './interfaces/IJsonapiModel';
 import {IRequestOptions} from './interfaces/IRequestOptions';
 import {IDefinition, IRelationship, IRequest} from './interfaces/JsonApi';
 import {IRecord, IResponse} from './interfaces/JsonApi';
-import {config, fetch} from './NetworkUtils';
+import {config, fetch, read} from './NetworkUtils';
 import {Response} from './Response';
 
 export function decorateCollection(BaseClass: typeof PureCollection) {
@@ -32,8 +32,30 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return data;
     }
 
-    // fetch
-    // fetchAll
+    /**
+     * Fetch the records with the given type and id
+     *
+     * @param {string} type Record type
+     * @param {number|string} type Record id
+     * @param {IRequestOptions} [options] Server options
+     * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
+     */
+    public fetch(type: string, id: number|string, options?: IRequestOptions): Promise<Response> {
+      const query = this.__prepareQuery(type, id, undefined, options);
+      return read(this, query.url, query.headers, options).then(this.__handleErrors);
+    }
+
+    /**
+     * Fetch the first page of records of the given type
+     *
+     * @param {string} type Record type
+     * @param {IRequestOptions} [options] Server options
+     * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
+     */
+    public fetchAll(type: string, options?: IRequestOptions): Promise<Response> {
+      const query = this.__prepareQuery(type, undefined, undefined, options);
+      return read(this, query.url, query.headers, options).then(this.__handleErrors);
+    }
 
     public request(url: string, method: string = 'GET', data?: object, options?: IRequestOptions): Promise<Response> {
       return fetch({url: this.__prefixUrl(url), options, data, method, collection: this});
@@ -57,6 +79,21 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
       super.remove(model);
       return Promise.resolve();
+    }
+
+    /**
+     * Function used to handle response errors
+     *
+     * @private
+     * @param {Response} response API response
+     * @returns API response
+     */
+    private __handleErrors(response: Response) {
+      if (response.error) {
+        throw response.error;
+      }
+
+      return response;
     }
 
     private __addRecord(obj: IRecord): IJsonapiModel {
