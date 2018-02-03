@@ -1,6 +1,6 @@
 {
   "name": "datx-utils",
-  "version": "0.5.0",
+  "version": "0.7.0",
   "description": "DatX lib utils for mixins",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
