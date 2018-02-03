@@ -8,8 +8,8 @@
  * @param {(item: T) => U} fn Function called for every data item
  * @returns {(U|Array<U>|null)} Return value of the callback function
  */
-export function mapItems<T, U>(data: T, fn: (item: T) => U): U|null;
 export function mapItems<T, U>(data: Array<T>, fn: (item: T) => U): Array<U>;
+export function mapItems<T, U>(data: T, fn: (item: T) => U): U|null;
 export function mapItems<T, U>(data: T|Array<T>, fn: (item: T) => U): U|Array<U>|null {
   if (data instanceof Array) {
     return data.map((item) => fn(item));
