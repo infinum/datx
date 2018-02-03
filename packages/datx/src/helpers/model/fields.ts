@@ -251,3 +251,15 @@ export function updateModelId(model: Model, newId: IIdentifier): void {
 
   updateModelReferences(model, newId, oldId, type);
 }
+
+/**
+ * Get the id of the referenced model
+ *
+ * @export
+ * @param {Model} model Source model
+ * @param {string} key Referenced model property name
+ * @returns {IIdentifier} Referenced model id
+ */
+export function getRefId(model: Model, key: string): IIdentifier {
+  return storage.getModelDataKey(model, key);
+}

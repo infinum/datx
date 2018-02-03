@@ -2,7 +2,7 @@
 
 import {autorun} from 'mobx';
 
-import {cloneModel, Collection, Model, prop, withMeta} from '../../src';
+import {cloneModel, Collection, getModelId, Model, prop, withMeta} from '../../src';
 import {storage} from '../../src/services/storage';
 
 describe('Collection', () => {
@@ -53,6 +53,7 @@ describe('Collection', () => {
     expect(foo2).not.toBe(foo);
     expect(foo2.meta.original).toBe(foo);
 
+    // @ts-ignore - TS won't allow this mistake
     expect(() => foo2.meta.type = 'bar').toThrowError();
   });
 
@@ -67,5 +68,27 @@ describe('Collection', () => {
 
     // @ts-ignore - TS won't allow this mistake
     expect(() => withMeta(A)).toThrowError('This mixin can only decorate models');
+  });
+
+  it ('should support meta ref ids', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+      @prop.toOne(Foo) public parent?: Foo;
+      @prop.defaultValue(1) public foo: number;
+    }
+
+    const FooMeta = withMeta(Foo);
+
+    class TestCollection extends Collection {
+      public static types = [FooMeta];
+    }
+    const collection = new TestCollection();
+
+    const foo1 = new FooMeta({foo: 2});
+    collection.add(foo1);
+
+    const foo2 = collection.add({foo: 3, parent: foo1}, FooMeta);
+
+    expect(foo2.meta.refs.parent).toBe(getModelId(foo1));
   });
 });
