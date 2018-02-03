@@ -1,6 +1,7 @@
 import {DEFAULT_TYPE} from './consts';
 import {initModel} from './helpers/model/init';
 import {IDictionary} from './interfaces/IDictionary';
+import {IIdentifier} from './interfaces/IIdentifier';
 import {IRawModel} from './interfaces/IRawModel';
 import {IType} from './interfaces/IType';
 import {PureCollection} from './PureCollection';
@@ -44,7 +45,7 @@ export class PureModel {
    * @returns {IIdentifier} A new model id
    * @memberof Model
    */
-  public static getAutoId() {
+  public static getAutoId(): IIdentifier {
     return --this.autoIdValue;
   }
 

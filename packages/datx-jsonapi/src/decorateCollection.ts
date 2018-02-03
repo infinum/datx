@@ -60,7 +60,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     }
 
     private __addRecord(obj: IRecord): IJsonapiModel {
-      const staticCollection = this.constructor as typeof Collection;
+      const staticCollection = this.constructor as typeof PureCollection;
       const {type, id} = obj;
       let record: IJsonapiModel = this.find(type, id) as IJsonapiModel;
       const flattened: IRawModel = flattenModel(obj);
@@ -117,7 +117,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       data?: object,
       headers: IHeaders,
     } {
-      const staticCollection = this.constructor as typeof Collection;
+      const staticCollection = this.constructor as typeof PureCollection;
       const model: IJsonapiModel = staticCollection.types.filter((item) => item.type === type)[0];
       const path: string = model
         ? (getValue<string>(model['endpoint']) || model['baseUrl'] || getModelType(model))
