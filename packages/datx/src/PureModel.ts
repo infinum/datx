@@ -20,10 +20,10 @@ export class PureModel {
    * Current autoincrement value used for automatic id generation
    *
    * @static
-   * @type {number}
+   * @type {IIdentifier}
    * @memberof Model
    */
-  public static autoIdValue: number = 0;
+  public static autoIdValue: IIdentifier = 0;
 
   /**
    * Function used to preprocess the model input data. Called during the model initialization
@@ -45,7 +45,7 @@ export class PureModel {
    * @memberof Model
    */
   public static getAutoId(): IIdentifier {
-    return --this.autoIdValue;
+    return typeof this.autoIdValue === 'number' ? --this.autoIdValue : this.autoIdValue;
   }
 
   public static toJSON() {

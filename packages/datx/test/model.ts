@@ -29,9 +29,9 @@ describe('Model', () => {
   describe('Basic features', () => {
     it('should work with initial data', () => {
       class Foo extends PureModel {
-        @prop public foo: number;
-        @prop public bar: number;
-        @prop public baz: number;
+        @prop public foo!: number;
+        @prop public bar!: number;
+        @prop public baz!: number;
       }
 
       const foo1 = new Foo({foo: 1, bar: 2});
@@ -90,6 +90,7 @@ describe('Model', () => {
       });
 
       bazValue = 3;
+      // @ts-ignore
       foo.baz = 3;
 
       expect(autorunCount).toBe(2);
@@ -97,8 +98,8 @@ describe('Model', () => {
 
     it('should work with default data', () => {
       class Foo extends PureModel {
-        @prop.defaultValue(4) public foo: number;
-        @prop.defaultValue(5) public bar: number;
+        @prop.defaultValue(4) public foo!: number;
+        @prop.defaultValue(5) public bar!: number;
       }
 
       const foo = new Foo({bar: 2});
@@ -122,13 +123,13 @@ describe('Model', () => {
 
     it('should work with two models', () => {
       class Foo extends PureModel {
-        @prop.defaultValue(4) public foo: number;
-        @prop.defaultValue(5) public bar: number;
+        @prop.defaultValue(4) public foo!: number;
+        @prop.defaultValue(5) public bar!: number;
       }
 
       class Bar extends PureModel {
-        public foo: number;
-        public bar: number;
+        public foo!: number;
+        public bar!: number;
       }
 
       const bar = new Bar({bar: 2});
@@ -139,12 +140,12 @@ describe('Model', () => {
 
     it('should work with extended models', () => {
       class Foo extends PureModel {
-        @prop.defaultValue(4) public foo: number;
-        @prop.defaultValue(5) public bar: number;
+        @prop.defaultValue(4) public foo!: number;
+        @prop.defaultValue(5) public bar!: number;
       }
 
       class Bar extends Foo {
-        @prop.defaultValue(9) public baz: number;
+        @prop.defaultValue(9) public baz!: number;
       }
 
       const bar = new Bar({bar: 2});
@@ -156,7 +157,7 @@ describe('Model', () => {
 
     it('should support cloning', () => {
       class Foo extends PureModel {
-        @prop public foo: number;
+        @prop public foo!: number;
       }
 
       const foo = new Foo({foo: 1});
@@ -175,8 +176,8 @@ describe('Model', () => {
 
     it('should support cloning with additional fields', () => {
       class Foo extends PureModel {
-        @prop public foo: number;
-        public bar: number; // Not observable
+        @prop public foo!: number;
+        public bar!: number; // Not observable
       }
 
       const foo = new Foo({foo: 1});
@@ -201,7 +202,34 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
         @prop.toOne(Foo) public parent?: Foo;
-        @prop.defaultValue(1) public foo: number;
+        @prop.defaultValue(1) public foo!: number;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+      const collection = new TestCollection();
+
+      const foo1 = new Foo({foo: 2});
+      collection.add(foo1);
+
+      const foo2 = collection.add({foo: 3, parent: foo1}, Foo);
+
+      expect(foo2.parent).toBe(foo1);
+      expect(foo2.parent && foo2.parent.foo).toBe(2);
+      const raw2 = modelToJSON(foo2);
+      expect(raw2.parent).toBe(getModelId(foo1));
+
+      const foo3 = collection.add({foo: 4, parent: {foo: 5}}, Foo);
+      expect(foo3.parent).toBeInstanceOf(Foo);
+      expect(foo3.parent && foo3.parent.foo).toBe(5);
+    });
+
+    it('should support basic references with primitive type', () => {
+      class Foo extends PureModel {
+        public static type = 'foo';
+        @prop.toOne('foo') public parent?: Foo;
+        @prop.defaultValue(1) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -227,7 +255,7 @@ describe('Model', () => {
     it('should throw if model is not in a collection', () => {
       class Foo extends PureModel {
         @prop.toOne(Foo) public parent?: Foo;
-        @prop.defaultValue(1) public foo: number;
+        @prop.defaultValue(1) public foo!: number;
       }
 
       const foo1 = new Foo({foo: 2});
@@ -245,7 +273,7 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
         @prop.toOne(Foo) public parent?: Foo;
-        @prop.defaultValue(1) public foo: number;
+        @prop.defaultValue(1) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -266,8 +294,8 @@ describe('Model', () => {
     it('should support array references', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toMany(Foo) public parent: Array<Foo>;
-        @prop.defaultValue(1) public foo: number;
+        @prop.toMany(Foo) public parent!: Array<Foo>;
+        @prop.defaultValue(1) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -287,8 +315,8 @@ describe('Model', () => {
     it('should support array reference modification', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toMany(Foo) public parent: Array<Foo>;
-        @prop.defaultValue(1) public foo: number;
+        @prop.toMany(Foo) public parent!: Array<Foo>;
+        @prop.defaultValue(1) public foo!: number;
       }
       class TestCollection extends Collection {
         public static types = [Foo];
@@ -319,8 +347,8 @@ describe('Model', () => {
 
     it('should throw if single item is given', () => {
       class Foo extends PureModel {
-        @prop.toMany(Foo) public parent: Array<Foo>;
-        @prop.defaultValue(1) public foo: number;
+        @prop.toMany(Foo) public parent!: Array<Foo>;
+        @prop.defaultValue(1) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -345,8 +373,8 @@ describe('Model', () => {
     it('should support single/array references', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toOneOrMany(Foo) public parent: Foo|Array<Foo>;
-        @prop.defaultValue(1) public foo: number;
+        @prop.toOneOrMany(Foo) public parent!: Foo|Array<Foo>;
+        @prop.defaultValue(1) public foo!: number;
       }
       class TestCollection extends Collection {
         public static types = [Foo];
@@ -377,8 +405,8 @@ describe('Model', () => {
     it('should support reference serialization/deserialization', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toMany(Foo) public parent: Array<Foo>;
-        @prop.defaultValue(1) public foo: number;
+        @prop.toMany(Foo) public parent!: Array<Foo>;
+        @prop.defaultValue(1) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -412,8 +440,8 @@ describe('Model', () => {
     it('should support custom reference serialization/deserialization', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.defaultValue(1) public foo: number;
-        public parent: Array<Foo>;
+        @prop.defaultValue(1) public foo!: number;
+        public parent!: Array<Foo>;
       }
 
       class TestCollection extends Collection {
@@ -459,7 +487,7 @@ describe('Model', () => {
         public bar?: Bar;
 
         @prop
-        public foo: number;
+        public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -476,14 +504,14 @@ describe('Model', () => {
       it('should support basic back references', () => {
         class Foo extends PureModel {
           public static type = 'foo';
-          @prop.toOne(Foo) public parent: Foo;
-          @prop.defaultValue(1) public foo: number;
-          @prop.toMany(Foo, 'parent') public children: Array<Foo>;
+          @prop.toOne(Foo) public parent!: Foo;
+          @prop.defaultValue(1) public foo!: number;
+          @prop.toMany(Foo, 'parent') public children!: Array<Foo>;
 
-          @prop.toMany(Foo) public foos: Array<Foo>;
-          @prop.toMany(Foo, 'foos') public backFoos: Array<Foo>;
-          @prop.toOneOrMany(Foo) public fooRef: Foo|Array<Foo>;
-          @prop.toMany(Foo, 'fooRef') public fooBackRef: Array<Foo>;
+          @prop.toMany(Foo) public foos!: Array<Foo>;
+          @prop.toMany(Foo, 'foos') public backFoos!: Array<Foo>;
+          @prop.toOneOrMany(Foo) public fooRef!: Foo|Array<Foo>;
+          @prop.toMany(Foo, 'fooRef') public fooBackRef!: Array<Foo>;
         }
 
         class TestCollection extends Collection {
@@ -568,12 +596,12 @@ describe('Model', () => {
       it('Should work for the basic use case', () => {
         class Foo extends PureModel {
           public static type = 'foo';
-          @prop.identifier public id: string;
-          @prop.type public type: string;
+          @prop.identifier public id!: string;
+          @prop.type public type!: string;
 
-          @prop.toOne(Foo) public parent: Foo;
-          @prop.toMany(Foo) public foos: Array<Foo>;
-          @prop.toMany(Foo, 'parent') public children: Array<Foo>;
+          @prop.toOne(Foo) public parent!: Foo;
+          @prop.toMany(Foo) public foos!: Array<Foo>;
+          @prop.toMany(Foo, 'parent') public children!: Array<Foo>;
         }
 
         class TestCollection extends Collection {

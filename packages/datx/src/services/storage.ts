@@ -19,7 +19,7 @@ interface IModelClassData {
 export class DataStorage {
   private modelData = new WeakMap<PureModel, IDataStorage>();
 
-  private modelClassData = new WeakMap<typeof PureModel, IModelClassData>();
+  private modelClassData = new WeakMap<typeof PureModel|{type: IType}, IModelClassData>();
 
   public initModel(model: PureModel) {
     const modelData = {data: {}, meta: {}};
@@ -95,12 +95,18 @@ export class DataStorage {
     return Object.assign({}, ...defaults.reverse());
   }
 
-  public addModelClassReference(model: typeof PureModel, key: string, options: IReferenceOptions) {
-    const data = this.modelClassData.get(model);
+  public addModelClassReference(model: typeof PureModel|IType, key: string, options: IReferenceOptions) {
+    let modelObj: typeof PureModel|{type: IType};
+    if (typeof model === 'number' || typeof model === 'string') {
+      modelObj = {type: model};
+    } else {
+      modelObj = model;
+    }
+    const data = this.modelClassData.get(modelObj);
     if (data) {
       Object.assign(data.references, {[key]: options});
     } else {
-      this.modelClassData.set(model, {
+      this.modelClassData.set(modelObj, {
         data: {},
         meta: {},
         references: {[key]: options},

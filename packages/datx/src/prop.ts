@@ -1,4 +1,5 @@
 import {ReferenceType} from './enums/ReferenceType';
+import {IType} from './interfaces/IType';
 import {PureModel} from './PureModel';
 import {storage} from './services/storage';
 
@@ -34,7 +35,7 @@ export default Object.assign(propFn, {
    * @param {typeof PureModel} refModel Model type the reference will point to
    * @returns {undefined}
    */
-  toOne(refModel: typeof PureModel) {
+  toOne(refModel: typeof PureModel|IType) {
     return <T extends PureModel>(obj: T, key: string) => {
       storage.addModelClassReference(obj.constructor as typeof PureModel, key, {
         model: refModel,
@@ -50,7 +51,7 @@ export default Object.assign(propFn, {
    * @param {string} [property] Use a foreign key from the other model to get this reference (computed back reference)
    * @returns {undefined}
    */
-  toMany(refModel: typeof PureModel, property?: string) {
+  toMany(refModel: typeof PureModel|IType, property?: string) {
     return <T extends PureModel>(obj: T, key: string) => {
       storage.addModelClassReference(obj.constructor as typeof PureModel, key, {
         model: refModel,
@@ -66,7 +67,7 @@ export default Object.assign(propFn, {
    * @param {typeof PureModel} refModel Model type the reference will point to
    * @returns {undefined}
    */
-  toOneOrMany(refModel: typeof PureModel) {
+  toOneOrMany(refModel: typeof PureModel|IType) {
     return <T extends PureModel>(obj: T, key: string) => {
       storage.addModelClassReference(obj.constructor as typeof PureModel, key, {
         model: refModel,

@@ -7,7 +7,7 @@ import {IType} from './IType';
 
 export interface IModelConstructor<T = PureModel> {
   type: IType;
-  autoIdValue: number ;
+  autoIdValue: IIdentifier;
 
   new(data?: IRawModel, collection?: PureCollection): T;
 
