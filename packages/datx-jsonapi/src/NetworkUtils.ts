@@ -70,7 +70,7 @@ export const config: IConfigType = {
   },
 
   /** Reference of the fetch method that should be used */
-  fetchReference: isBrowser && window.fetch.bind(window),
+  fetchReference: isBrowser && 'fetch' in window && window.fetch.bind(window),
 
   /** Determines how will the request param arrays be stringified */
   paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec

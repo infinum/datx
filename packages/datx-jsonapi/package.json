@@ -42,12 +42,12 @@
     "build": "tsc --project tsconfig.build.json"
   },
   "jest": {
-    "mapCoverage": true,
+    "mapCoverage": false,
     "moduleFileExtensions": [
       "ts",
       "js"
     ],
-    "testRegex": "test/(.*).ts",
+    "testRegex": "test/main.ts",
     "transform": {
       ".ts": "ts-jest"
     }

@@ -27,6 +27,7 @@ export function flattenModel(data?: IRecord): IRawModel|null {
 
   const rawData = {
     [META_FIELD]: {
+      fields: [],
       id: data.id,
       [MODEL_LINKS_FIELD]: data.links,
       [MODEL_META_FIELD]: data.meta,
@@ -45,19 +46,19 @@ export function flattenModel(data?: IRecord): IRawModel|null {
   return Object.assign(rawData, data.attributes);
 }
 
-export function getModelMeta(model: IJsonapiModel): IDictionary<any> {
+export function getModelMeta(model: PureModel): IDictionary<any> {
   return getModelMetaKey(model, MODEL_META_FIELD);
 }
 
-export function getModelLinks(model: IJsonapiModel): IDictionary<ILink> {
+export function getModelLinks(model: PureModel): IDictionary<ILink> {
   return getModelMetaKey(model, MODEL_LINKS_FIELD);
 }
 
-function isModelPersisted(model: IJsonapiModel): boolean {
+function isModelPersisted(model: PureModel): boolean {
   return getModelMetaKey(model, MODEL_PERSISTED_FIELD);
 }
 
-function setModelPersisted(model: IJsonapiModel, status: boolean) {
+function setModelPersisted(model: PureModel, status: boolean) {
   setModelMetaKey(model, MODEL_PERSISTED_FIELD, status);
 }
 
@@ -91,7 +92,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
   return data;
 }
 
-function getModelEndpointUrl(model: IJsonapiModel): string {
+function getModelEndpointUrl(model: PureModel): string {
   const staticModel = model.constructor as PureModel;
   const links: IDictionary<ILink> = getModelLinks(model);
   if (links && links.self) {
@@ -116,7 +117,7 @@ export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Prom
     .then(handleResponse(model));
 }
 
-export function removeModel(model: IJsonapiModel, options?: IRequestOptions): Promise<void> {
+export function removeModel(model: PureModel, options?: IRequestOptions): Promise<void> {
   const collection = getModelCollection(model) as IJsonapiCollection;
 
   const isPersisted = isModelPersisted(model);

@@ -1,15 +1,25 @@
-import {IModelConstructor, isCollection, isModel, PureCollection, PureModel} from 'datx';
+import {ICollectionConstructor, IModelConstructor, isCollection, isModel, PureCollection, PureModel} from 'datx';
 
 import {decorateCollection} from './decorateCollection';
 import {decorateModel} from './decorateModel';
+import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
+import {IJsonapiModel} from './interfaces/IJsonapiModel';
 
-export function jsonapi<T extends PureModel>(Base: IModelConstructor<T>|typeof PureCollection) {
-  const BaseClass = Base as typeof PureModel|typeof PureCollection;
+export function jsonapi<T extends PureModel>(
+  Base: IModelConstructor<T>,
+): IModelConstructor<T & IJsonapiModel>;
 
-  if (isModel(BaseClass)) {
-    return decorateModel(BaseClass as typeof PureModel) as IModelConstructor<T>;
-  } else if (isCollection(BaseClass)) {
-    return decorateCollection(BaseClass as typeof PureCollection) as typeof PureCollection;
+export function jsonapi<T extends PureCollection>(
+  Base: ICollectionConstructor<T>,
+): ICollectionConstructor<T & IJsonapiCollection>;
+
+export function jsonapi<T extends PureModel|PureCollection>(
+  Base: IModelConstructor<T>|ICollectionConstructor<T>,
+) {
+  if (isModel(Base)) {
+    return decorateModel(Base as typeof PureModel);
+  } else if (isCollection(Base)) {
+    return decorateCollection(Base as typeof PureCollection);
   }
 
   throw new Error('The instance needs to be a model or a collection');

@@ -10,7 +10,9 @@ import {PureModel} from '../PureModel';
  * @returns {boolean} Class is of the given type
  */
 // tslint:disable-next-line:ban-types
-function isOfType(obj: Function, type: Function): boolean {
+function isOfType<T>(obj: T, type: T): true;
+function isOfType<T>(obj: any, type: T): false;
+function isOfType<T>(obj: any, type: T) {
   let model = obj;
   while (model) {
     if (model === type) {
@@ -25,10 +27,12 @@ function isOfType(obj: Function, type: Function): boolean {
  * Check if a class is a model
  *
  * @export
- * @param {(typeof PureModel | typeof PureCollection)} obj Class to check
+ * @param {any} obj Class to check
  * @returns {boolean} Class is a model
  */
-export function isModel(obj: typeof PureModel | typeof PureCollection): boolean {
+export function isModel(obj: typeof PureModel): true;
+export function isModel(obj: any): false;
+export function isModel(obj: any) {
   return isOfType(obj, PureModel);
 }
 
@@ -36,9 +40,11 @@ export function isModel(obj: typeof PureModel | typeof PureCollection): boolean 
  * Check if a class is a collection
  *
  * @export
- * @param {(typeof PureModel | typeof PureCollection)} obj Class to check
+ * @param {any} obj Class to check
  * @returns {boolean} Class is a collection
  */
-export function isCollection(obj: typeof PureModel | typeof PureCollection): boolean {
+export function isCollection(obj: typeof PureCollection): true;
+export function isCollection(obj: any): false;
+export function isCollection(obj: any) {
   return isOfType(obj, PureCollection);
 }

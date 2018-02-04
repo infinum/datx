@@ -23,7 +23,7 @@ import {PureModel} from '../PureModel';
 export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
   const BaseClass = Base as typeof PureModel;
 
-  if (!isModel(BaseClass)) {
+  if (!isModel(Base)) {
     throw error(DECORATE_MODEL);
   }
 

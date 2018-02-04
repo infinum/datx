@@ -1,5 +1,6 @@
 import {
   getModelType,
+  ICollectionConstructor,
   IIdentifier,
   initModelRef,
   IType,
@@ -10,8 +11,8 @@ import {
 } from 'datx';
 import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 
-import {decorateModel} from './decorateModel';
 import {ParamArrayType} from './enums/ParamArrayType';
+import {GenericModel} from './GenericModel';
 import {flattenModel, removeModel} from './helpers/model';
 import {getValue} from './helpers/utils';
 import {IFilters} from './interfaces/IFilters';
@@ -28,7 +29,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
   class JsonapiCollection extends BaseClass {
 
-      public static types = [decorateModel(PureModel)];
+    public static types = [GenericModel];
 
     public sync(body?: IResponse): PureModel|Array<PureModel>|null {
       if (!body) {
@@ -114,7 +115,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       } else if (staticCollection.types.filter((item) => item.type === obj.type).length) {
         record = this.add(flattened, obj.type) as IJsonapiModel;
       } else {
-        record = this.add(new PureModel(flattened));
+        record = this.add(new GenericModel(flattened));
       }
 
       return record;
@@ -162,7 +163,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       headers: IHeaders,
     } {
       const staticCollection = this.constructor as typeof PureCollection;
-      const model: IJsonapiModel = staticCollection.types.filter((item) => item.type === type)[0];
+      const model: PureModel = staticCollection.types.filter((item) => item.type === type)[0];
       const path: string = model
         ? (getValue<string>(model['endpoint']) || model['baseUrl'] || getModelType(model))
         : type;
@@ -249,8 +250,5 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     }
   }
 
-  return JsonapiCollection as typeof PureCollection & {
-    types: Array<typeof PureModel>;
-    new(): IJsonapiCollection;
-  };
+  return JsonapiCollection as ICollectionConstructor<PureCollection & IJsonapiCollection>;
 }
