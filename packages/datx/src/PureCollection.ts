@@ -102,7 +102,7 @@ export class PureCollection {
    * @returns {(PureModel|null)} The first matching model
    * @memberof Collection
    */
-  public find(type: IType|typeof PureModel|PureModel, id?: IIdentifier|PureModel): PureModel|null;
+  public find<T extends PureModel>(type: IType|T|IModelConstructor<T>, id?: IIdentifier|PureModel): T|null;
 
   /**
    * Find a model based on a matching function
@@ -111,15 +111,15 @@ export class PureCollection {
    * @returns {(PureModel|null)} The first matching model
    * @memberof Collection
    */
-  public find(test: TFilterFn): PureModel|null;
+  public find<T extends PureModel>(test: TFilterFn): T|null;
 
-  public find(model: IType|typeof PureModel|(TFilterFn), id?: IIdentifier|PureModel): PureModel|null {
+  public find(model: IType|typeof PureModel|(TFilterFn), id?: IIdentifier|PureModel) {
     if (id instanceof PureModel) {
       return id;
     }
 
     return isSelectorFunction(model)
-      ? this.__data.find(model as TFilterFn)
+      ? (this.__data.find(model as TFilterFn) || null)
       : this.__findByType(model as typeof PureModel, id);
   }
 
@@ -141,12 +141,12 @@ export class PureCollection {
    * @returns {Array<PureModel>} List of matching models
    * @memberof Collection
    */
-  public findAll(model?: IType|typeof PureModel): Array<PureModel> {
+  public findAll<T extends PureModel>(model?: IType|IModelConstructor<T>): Array<T> {
     if (model) {
       const type = getModelType(model);
-      return this.__dataList[type] || [];
+      return (this.__dataList[type] || []).slice() as Array<T>;
     }
-    return this.__data;
+    return this.__data.slice() as Array<T>;
   }
 
   /**
@@ -184,6 +184,16 @@ export class PureCollection {
     if (model) {
       this.__removeModel(model);
     }
+  }
+
+  /**
+   * Remove all models of the given model type from the collection
+   *
+   * @param {(IType|typeof PureModel)} type Model type
+   * @memberof Collection
+   */
+  public removeAll(type: IType|typeof PureModel) {
+    this.__removeModel(this.findAll(type));
   }
 
   /**

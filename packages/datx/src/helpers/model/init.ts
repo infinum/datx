@@ -99,7 +99,10 @@ function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, col
 
   fields.forEach((key) => {
     let type = FieldType.DATA;
-    let value = data[key] || defaults[key] || undefined;
+    let value = data[key];
+    if (value === undefined) {
+      value = defaults[key];
+    }
     if (key === modelId) {
       type = FieldType.ID;
       value = meta.id;

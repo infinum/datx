@@ -9,7 +9,7 @@ import {
 } from 'datx';
 import {IDictionary, IRawModel, mapItems, META_FIELD} from 'datx-utils';
 
-import {MODEL_LINKS_FIELD, MODEL_META_FIELD, MODEL_PERSISTED_FIELD} from '../consts';
+import {MODEL_LINKS_FIELD, MODEL_META_FIELD, MODEL_PERSISTED_FIELD, MODEL_REF_LINKS_FIELD} from '../consts';
 import {IJsonapiCollection} from '../interfaces/IJsonapiCollection';
 import {IJsonapiModel} from '../interfaces/IJsonapiModel';
 import {IRequestOptions} from '../interfaces/IRequestOptions';
@@ -27,7 +27,7 @@ export function flattenModel(data?: IRecord): IRawModel|null {
 
   const rawData = {
     [META_FIELD]: {
-      fields: [],
+      fields: Object.keys(data.attributes),
       id: data.id,
       [MODEL_LINKS_FIELD]: data.links,
       [MODEL_META_FIELD]: data.meta,
@@ -37,10 +37,18 @@ export function flattenModel(data?: IRecord): IRawModel|null {
   };
 
   if (data.relationships) {
+    const refLinks = {};
     Object.keys(data.relationships).forEach((key) => {
       const ref = (data.relationships as IDictionary<IRelationship>)[key] as IRelationship;
-      rawData[key] = mapItems(ref.data, (item: IDefinition) => item.id);
+      if ('data' in ref) {
+        rawData[key] = mapItems(ref.data, (item: IDefinition) => item.id);
+      }
+      if ('links' in ref) {
+        refLinks[key] = ref.links;
+      }
     });
+
+    rawData[META_FIELD][MODEL_REF_LINKS_FIELD] = refLinks;
   }
 
   return Object.assign(rawData, data.attributes);
@@ -52,6 +60,10 @@ export function getModelMeta(model: PureModel): IDictionary<any> {
 
 export function getModelLinks(model: PureModel): IDictionary<ILink> {
   return getModelMetaKey(model, MODEL_LINKS_FIELD);
+}
+
+export function getModelRefLinks(model: PureModel): IDictionary<ILink> {
+  return getModelMetaKey(model, MODEL_REF_LINKS_FIELD);
 }
 
 function isModelPersisted(model: PureModel): boolean {

@@ -1,4 +1,5 @@
 export const MODEL_LINKS_FIELD = 'jsonapiLinks';
+export const MODEL_REF_LINKS_FIELD = 'jsonapiRefLinks';
 export const MODEL_META_FIELD = 'jsonapiMeta';
 export const MODEL_PERSISTED_FIELD = 'jsonapiPersisted';
 export const MODEL_PROP_FIELD = 'jsonapiProp';

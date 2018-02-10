@@ -23,7 +23,7 @@ export class Image extends Model {
   public static type: IType = 'images';
 
   @prop public name!: string;
-  @prop.toOne('events') public event!: Event;
+  @prop.toOne('events') public event!: any;
 }
 
 @jsonapi

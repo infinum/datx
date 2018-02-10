@@ -23,9 +23,9 @@ describe('Collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop public foo: number;
-        @prop public bar: number;
-        @prop public baz: number;
+        @prop public foo!: number;
+        @prop public bar!: number;
+        @prop public baz!: number;
       }
 
       class Baz extends PureModel {
@@ -96,7 +96,7 @@ describe('Collection', () => {
     it('should reset the collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop public foo: number;
+        @prop public foo!: number;
       }
 
       class Store extends Collection {
@@ -123,9 +123,9 @@ describe('Collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop public foo: number;
-        @prop public bar: number;
-        @prop public baz: number;
+        @prop public foo!: number;
+        @prop public bar!: number;
+        @prop public baz!: number;
       }
 
       class Store extends Collection {
@@ -154,9 +154,9 @@ describe('Collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop public foo: number;
-        @prop public bar: number;
-        @prop public baz: number;
+        @prop public foo!: number;
+        @prop public bar!: number;
+        @prop public baz!: number;
       }
 
       class Store extends Collection {
@@ -177,7 +177,7 @@ describe('Collection', () => {
       expect(store2.length).toBe(3);
       const foo1b = store2.find((item: Foo) => item.foo === 1);
       const foo1c = store2.find((item: Foo) => item.foo === 4);
-      expect(foo1b).toBe(undefined);
+      expect(foo1b).toBeNull();
       expect(foo1c).not.toBe(foo1);
       expect(foo1.foo).toBe(1);
     });

@@ -1,8 +1,8 @@
-import {Collection, Model} from 'datx';
+import {Collection, getModelId, getModelType, Model} from 'datx';
 import {IDictionary} from 'datx-utils';
 import {autorun, extendObservable, observable} from 'mobx';
 
-import {config, jsonapi} from '../src';
+import {config, GenericModel, getModelRefLinks, jsonapi} from '../src';
 import {Event, Image, Organiser, Photo, TestStore, User} from './utils/setup';
 
 // tslint:disable:no-string-literal
@@ -28,7 +28,7 @@ describe('General', () => {
     expect(event.name).toBe('Demo');
   });
 
-  xit('should handle missing reference', () => {
+  it('should handle missing reference', () => {
     const store = new TestStore();
     const event = store.sync({
       data: {
@@ -53,491 +53,537 @@ describe('General', () => {
     expect(event.image).toBeNull();
   });
 
-  // it('should find an event', () => {
-  //   const store = new TestStore();
-  //   const ev = store.sync({
-  //     data: {
-  //       attributes: {
-  //         name: 'Demo',
-  //       },
-  //       id: 1,
-  //       type: 'events',
-  //     },
-  //   }) as Event;
+  it('should find an event', () => {
+    const store = new TestStore();
+    const ev = store.sync({
+      data: {
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        type: 'events',
+      },
+    }) as Event;
 
-  //   const event = store.find(Event, 1);
-  //   expect(event.meta.id).toBe(1);
-  //   expect(event.meta.type).toBe('events');
-  //   expect(event.name).toBe('Demo');
-  // });
+    const event = store.find(Event , 1);
+    expect(event).not.toBeNull();
+    if (event) {
+      expect(event.meta.id).toBe(1);
+      expect(event.meta.type).toBe('events');
+      expect(event.name).toBe('Demo');
+    }
+  });
 
-  // it('should trigger autorun on change', (done) => {
-  //   const store = new TestStore();
-  //   store.sync({
-  //     data: {
-  //       attributes: {
-  //         name: 'Demo',
-  //       },
-  //       id: 1,
-  //       type: 'events',
-  //     },
-  //   });
+  // FIXME: Not sure why it doesn't work - works in the datx tests...
+  xit('should trigger autorun on change', () => {
+    const store = new TestStore();
+    store.sync({
+      data: {
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        type: 'events',
+      },
+    });
 
-  //   let name = 'Demo';
+    const event = store.find(Event, 1);
 
-  //   const event = store.find(Event, 1);
-  //   expect(event.name).toBe('Demo');
+    expect(event).not.toBeNull();
+    if (event) {
+      let name = 'Demo';
+      let autorunCount = 0;
+      autorun(() => {
+        expect(event.name).toBe(name);
+        autorunCount++;
+      });
 
-  //   autorun(() => {
-  //     expect(event.name).toBe(name);
+      name = 'Foo';
+      event.name = 'Foo';
+      expect(autorunCount).toBe(2);
+    }
+  });
 
-  //     if (name === 'Foo') {
-  //       done();
-  //     }
-  //   });
+  it('should handle relationships with duplicates', () => {
+    const store = new TestStore();
+    store.sync({
+      data: {
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        relationships: {
+          images: {
+            data: [{
+              id: 2,
+              type: 'images',
+            }],
+          },
+        },
+        type: 'events',
+      },
+      included: [{
+        attributes: {
+          name: 'Header',
+        },
+        id: 2,
+        type: 'images',
+      }, {
+        attributes: {
+          name: 'Header',
+        },
+        id: 2,
+        type: 'images',
+      }],
+    });
 
-  //   name = 'Foo';
-  //   event.name = 'Foo';
-  // });
+    const event = store.find(Event, 1);
+    expect(event).not.toBeNull();
+    if (event) {
+      expect(event.name).toBe('Demo');
+      expect(event.images.length).toBe(1);
+    }
 
-  // it('should handle relationships with duplicates', () => {
-  //   const store = new TestStore();
-  //   store.sync({
-  //     data: {
-  //       attributes: {
-  //         name: 'Demo',
-  //       },
-  //       id: 1,
-  //       relationships: {
-  //         images: {
-  //           data: [{
-  //             id: 2,
-  //             type: 'images',
-  //           }],
-  //         },
-  //       },
-  //       type: 'events',
-  //     },
-  //     included: [{
-  //       attributes: {
-  //         name: 'Header',
-  //       },
-  //       id: 2,
-  //       type: 'images',
-  //     }, {
-  //       attributes: {
-  //         name: 'Header',
-  //       },
-  //       id: 2,
-  //       type: 'images',
-  //     }],
-  //   });
+    const images = store.findAll('images');
+    expect(images.length).toBe(1);
 
-  //   const event = store.find(Event, 1);
-  //   expect(event.name).toBe('Demo');
-  //   expect(event.images.length).toBe(1);
+    const foo = store.findAll('foo');
+    expect(foo.length).toBe(0);
+  });
 
-  //   const images = store.findAll('images');
-  //   expect(images.length).toBe(1);
+  it('should handle relationship elements without links attribute', () => {
+    const store = new TestStore();
+    store.sync({
+      data: {
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        relationships: {
+          image: {
+            data: {
+              id: 2,
+              type: 'images',
+            },
+          },
+        },
+        type: 'events',
+      },
+    });
 
-  //   const foo = store.findAll('foo');
-  //   expect(foo.length).toBe(0);
-  // });
+    const event = store.find(Event, 1);
+    expect(event).not.toBeNull();
+    if (event) {
+      expect(event.name).toBe('Demo');
+      expect(event.image).toBe(null);
+    }
+  });
 
-  // it('should handle relationship elements without links attribute', () => {
-  //   const store = new TestStore();
-  //   store.sync({
-  //     data: {
-  //       attributes: {
-  //         name: 'Demo',
-  //       },
-  //       id: 1,
-  //       relationships: {
-  //         image: {
-  //           data: {
-  //             id: 2,
-  //             type: 'images',
-  //           },
-  //         },
-  //       },
-  //       type: 'events',
-  //     },
-  //   });
+  it('should handle basic circular relations', () => {
+    const store = new TestStore();
+    store.sync({
+      data: {
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        relationships: {
+          images: {
+            data: [{
+              id: 2,
+              type: 'images',
+            }],
+          },
+        },
+        type: 'events',
+      },
+      included: [{
+        attributes: {
+          name: 'Header',
+        },
+        id: 2,
+        relationships: {
+          event: {
+            data: {
+              id: 1,
+              type: 'events',
+            },
+          },
+        },
+        type: 'images',
+      }],
+    });
 
-  //   const event = store.find(Event, 1);
-  //   expect(event.name).toBe('Demo');
-  //   expect(event.image).toBe(null);
-  // });
+    const event = store.find(Event, 1);
+    expect(event).not.toBeNull();
+    if (event) {
+      expect(event.name).toBe('Demo');
+      expect(event.images[0].name).toBe('Header');
+      expect(event.images[0].event.meta.id).toBe(1);
+    }
+  });
 
-  // it('should handle basic circular relations', () => {
-  //   const store = new TestStore();
-  //   store.sync({
-  //     data: {
-  //       attributes: {
-  //         name: 'Demo',
-  //       },
-  //       id: 1,
-  //       relationships: {
-  //         images: {
-  //           data: [{
-  //             id: 2,
-  //             type: 'images',
-  //           }],
-  //         },
-  //       },
-  //       type: 'events',
-  //     },
-  //     included: [{
-  //       attributes: {
-  //         name: 'Header',
-  //       },
-  //       id: 2,
-  //       relationships: {
-  //         event: {
-  //           data: {
-  //             id: 1,
-  //             type: 'events',
-  //           },
-  //         },
-  //       },
-  //       type: 'images',
-  //     }],
-  //   });
+  it('should return a event with all associated objects', () => {
+    const store = new TestStore();
+    store.sync({
+      data: {
+        attributes: {
+          name: 'Nordic.js',
+          slug: 'nordicjs',
+        },
+        id: 1,
+        relationships: {
+          images: {
+            data: [
+              {type: 'images', id: 1},
+              {type: 'images', id: 2},
+              {type: 'images', id: 3},
+            ],
+          },
+          organisers: {
+            data: [
+              {type: 'organisers', id: 1},
+              {type: 'organisers', id: 2},
+            ],
+          },
+        },
+        type: 'events',
+      }, included: [{
+        attributes: {
+          firstName: 'Jonny',
+        },
+        id: 1,
+        relationships: {
+          event: {
+            data: {type: 'events', id: 1},
+          },
+          image: {
+            data: {type: 'images', id: 2},
+          },
+        },
+        type: 'organisers',
+      }, {
+        attributes: {
+          firstName: 'Martina',
+        },
+        id: 2,
+        relationships: {
+          event: {
+            data: {type: 'events', id: 1},
+          },
+          image: {
+            data: {type: 'images', id: 3},
+          },
+        },
+        type: 'organisers',
+      }, {
+        attributes: {
+          name: 'Header',
+        },
+        id: 1,
+        relationships: {
+          event: {
+            data: {type: 'events', id: 1},
+          },
+        },
+        type: 'images',
+      }, {
+        attributes: {
+          name: 'Organiser Johannes',
+        },
+        id: 2,
+        relationships: {
+          event: {
+            data: {type: 'events', id: 1},
+          },
+        },
+        type: 'images',
+      }, {
+        attributes: {
+          name: 'Organiser Martina',
+        },
+        id: 3,
+        relationships: {
+          event: {
+            data: {type: 'events', id: 1},
+          },
+        },
+        type: 'images',
+      }],
+    });
 
-  //   const event = store.find(Event, 1);
-  //   expect(event.name).toBe('Demo');
-  //   expect(event.images[0].name).toBe('Header');
-  //   expect(event.images[0].event.meta.id).toBe(1);
-  // });
+    const event = store.find(Event, 1);
+    expect(event).not.toBeNull();
+    if (event) {
+      expect(event.organisers.length).toBe(2);
+      expect(event.images.length).toBe(3);
+      expect(event.organisers[0].image.meta.id).toBe(2);
+    }
+  });
 
-  // it('should return a event with all associated objects', () => {
-  //   const store = new TestStore();
-  //   store.sync({
-  //     data: {
-  //       attributes: {
-  //         name: 'Nordic.js',
-  //         slug: 'nordicjs',
-  //       },
-  //       id: 1,
-  //       relationships: {
-  //         images: {
-  //           data: [
-  //             {type: 'images', id: 1},
-  //             {type: 'images', id: 2},
-  //             {type: 'images', id: 3},
-  //           ],
-  //         },
-  //         organisers: {
-  //           data: [
-  //             {type: 'organisers', id: 1},
-  //             {type: 'organisers', id: 2},
-  //           ],
-  //         },
-  //       },
-  //       type: 'events',
-  //     }, included: [{
-  //       attributes: {
-  //         firstName: 'Jonny',
-  //       },
-  //       id: 1,
-  //       relationships: {
-  //         event: {
-  //           data: {type: 'events', id: 1},
-  //         },
-  //         image: {
-  //           data: {type: 'images', id: 2},
-  //         },
-  //       },
-  //       type: 'organisers',
-  //     }, {
-  //       attributes: {
-  //         firstName: 'Martina',
-  //       },
-  //       id: 2,
-  //       relationships: {
-  //         event: {
-  //           data: {type: 'events', id: 1},
-  //         },
-  //         image: {
-  //           data: {type: 'images', id: 3},
-  //         },
-  //       },
-  //       type: 'organisers',
-  //     }, {
-  //       attributes: {
-  //         name: 'Header',
-  //       },
-  //       id: 1,
-  //       relationships: {
-  //         event: {
-  //           data: {type: 'events', id: 1},
-  //         },
-  //       },
-  //       type: 'images',
-  //     }, {
-  //       attributes: {
-  //         name: 'Organiser Johannes',
-  //       },
-  //       id: 2,
-  //       relationships: {
-  //         event: {
-  //           data: {type: 'events', id: 1},
-  //         },
-  //       },
-  //       type: 'images',
-  //     }, {
-  //       attributes: {
-  //         name: 'Organiser Martina',
-  //       },
-  //       id: 3,
-  //       relationships: {
-  //         event: {
-  //           data: {type: 'events', id: 1},
-  //         },
-  //       },
-  //       type: 'images',
-  //     }],
-  //   });
+  it('should remove an event', () => {
+    const store = new TestStore();
+    store.sync({
+      data: [
+        {id: 1, type: 'events', attributes: {}},
+        {id: 2, type: 'events', attributes: {}},
+      ],
+    });
 
-  //   const event = store.find(Event, 1);
-  //   expect(event.organisers.length).toBe(2);
-  //   expect(event.images.length).toBe(3);
-  //   expect(event.organisers[0].image.getRecordId()).toBe(2);
-  // });
+    const event = store.find(Event, 1);
+    expect(event).not.toBeNull();
+    if (event) {
+      expect(event.meta.id).toBe(1);
+    }
+    store.remove('events', 1);
+    const event2 = store.find(Event, 1);
+    expect(event2).toBe(null);
+  });
 
-  // it('should remove an event', () => {
-  //   const store = new TestStore();
-  //   store.sync({
-  //     data: [
-  //       {id: 1, type: 'events', attributes: {}},
-  //       {id: 2, type: 'events', attributes: {}},
-  //     ],
-  //   });
+  it('should remove all events', () => {
+    const store = new TestStore();
+    store.sync({
+      data: [
+        {id: 1, type: 'events', attributes: {}},
+        {id: 2, type: 'events', attributes: {}},
+      ],
+    });
 
-  //   const event = store.find(Event, 1);
-  //   expect(event.getRecordId()).toBe(1);
-  //   store.remove('events', 1);
-  //   const event2 = store.find(Event, 1);
-  //   expect(event2).toBe(null);
-  // });
+    const events = store.findAll(Event);
+    expect(events.length).toBe(2);
+    store.removeAll(Event);
+    const events2 = store.findAll(Event);
+    expect(events2).toHaveLength(0);
+  });
 
-  // it('should remove all events', () => {
-  //   const store = new TestStore();
-  //   store.sync({
-  //     data: [
-  //       {id: 1, type: 'events', attributes: {}},
-  //       {id: 2, type: 'events', attributes: {}},
-  //     ],
-  //   });
+  it('should reset', () => {
+    const store = new TestStore();
+    store.sync({
+      data: [{
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        relationships: {
+          images: {
+            data: [{
+              id: 2,
+              type: 'images',
+            }],
+          },
+        },
+        type: 'events',
+      }, {
+        attributes: {
+          name: 'Demo 2',
+        },
+        id: 2,
+        type: 'events',
+      }],
+      included: [{
+        attributes: {
+          name: 'Header',
+        },
+        id: 2,
+        relationships: {
+          event: {
+            data: {type: 'events', id: 1},
+          },
+        },
+        type: 'images',
+      }],
+    });
 
-  //   const events = store.findAll(Event);
-  //   expect(events.length).toBe(2);
-  //   store.removeAll(Event);
-  //   const events2 = store.findAll(Event);
-  //   expect(events2).toEqual([]);
-  // });
+    const events = store.findAll(Event);
+    const images = store.findAll('images');
+    expect(events.length).toBe(2);
+    expect(images.length).toBe(1);
 
-  // it('should reset', () => {
-  //   const store = new TestStore();
-  //   store.sync({
-  //     data: [{
-  //       attributes: {
-  //         name: 'Demo',
-  //       },
-  //       id: 1,
-  //       relationships: {
-  //         images: {
-  //           data: [{
-  //             id: 2,
-  //             type: 'images',
-  //           }],
-  //         },
-  //       },
-  //       type: 'events',
-  //     }, {
-  //       attributes: {
-  //         name: 'Demo 2',
-  //       },
-  //       id: 2,
-  //       type: 'events',
-  //     }],
-  //     included: [{
-  //       attributes: {
-  //         name: 'Header',
-  //       },
-  //       id: 2,
-  //       relationships: {
-  //         event: {
-  //           data: {type: 'events', id: 1},
-  //         },
-  //       },
-  //       type: 'images',
-  //     }],
-  //   });
+    store.reset();
 
-  //   const events = store.findAll(Event);
-  //   const images = store.findAll('images');
-  //   expect(events.length).toBe(2);
-  //   expect(images.length).toBe(1);
+    const events2 = store.findAll(Event);
+    const images2 = store.findAll('images');
+    expect(events2).toHaveLength(0);
+    expect(images2).toHaveLength(0);
+  });
 
-  //   store.reset();
+  it('should handle circular relations', () => {
+    const store = new TestStore();
+    store.sync({
+      data: {
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        relationships: {
+          images: {
+            links: {
+              self: 'http://example.com/events/1/relationships/images',
+            },
+          },
+        },
+        type: 'events',
+      },
+    });
 
-  //   const events2 = store.findAll(Event);
-  //   const images2 = store.findAll('images');
-  //   expect(events2).toEqual([]);
-  //   expect(images2).toEqual([]);
-  // });
+    const event = store.find(Event, 1);
+    expect(event).not.toBeNull();
 
-  // it('should handle circular relations', () => {
-  //   const store = new TestStore();
-  //   store.sync({
-  //     data: {
-  //       attributes: {
-  //         name: 'Demo',
-  //       },
-  //       id: 1,
-  //       relationships: {
-  //         images: {
-  //           links: {
-  //             self: 'http://example.com/events/1/relationships/images',
-  //           },
-  //         },
-  //       },
-  //       type: 'events',
-  //     },
-  //   });
+    if (event) {
+      expect(event.name).toBe('Demo');
+      expect(getModelRefLinks(event).images)
+        .toEqual({self: 'http://example.com/events/1/relationships/images'});
+    }
+  });
 
-  //   const event = store.find(Event, 1);
-  //   expect(event.name).toBe('Demo');
-  //   expect(event.getRelationshipLinks()['images'])
-  //     .to.deep.equal({self: 'http://example.com/events/1/relationships/images'});
-  // });
+  it('should handle serialization/deserialization with circular relations', () => {
+    const store = new TestStore();
+    store.sync({
+      data: {
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        relationships: {
+          images: {
+            links: {
+              self: 'http://example.com/events/1/relationships/images',
+            },
+          },
+        },
+        type: 'events',
+      },
+    });
 
-  // it('should handle serialization/deserialization with circular relations', () => {
-  //   const store = new TestStore();
-  //   store.sync({
-  //     data: {
-  //       attributes: {
-  //         name: 'Demo',
-  //       },
-  //       id: 1,
-  //       relationships: {
-  //         images: {
-  //           links: {
-  //             self: 'http://example.com/events/1/relationships/images',
-  //           },
-  //         },
-  //       },
-  //       type: 'events',
-  //     },
-  //   });
+    const data = JSON.stringify(store.toJSON());
 
-  //   const data = JSON.stringify(store.toJS());
+    const newStore = new TestStore(JSON.parse(data));
 
-  //   const newStore = new TestStore(JSON.parse(data));
+    const event = newStore.find(Event, 1);
+    expect(event).not.toBeNull();
 
-  //   const event = newStore.find(Event, 1);
-  //   expect(event.name).toBe('Demo');
-  //   expect(event.getRelationshipLinks()['images'])
-  //     .to.deep.equal({self: 'http://example.com/events/1/relationships/images'});
-  // });
+    if (event) {
+      expect(event.name).toBe('Demo');
+      expect(getModelRefLinks(event).images)
+        .toEqual({self: 'http://example.com/events/1/relationships/images'});
+    }
+  });
 
-  // it('should support custom models', () => {
-  //   const store = new TestStore();
+  it('should support custom models', () => {
+    const store = new TestStore();
 
-  //   store.sync({
-  //     data: {
-  //       attributes: {
-  //         firstName: 'John',
-  //         lastName: 'Doe',
-  //       },
-  //       id: 1,
-  //       type: 'user',
-  //     },
-  //   });
+    store.sync({
+      data: {
+        attributes: {
+          firstName: 'John',
+          lastName: 'Doe',
+        },
+        id: 1,
+        type: 'user',
+      },
+    });
 
-  //   const user = store.find(User, 1);
-  //   expect(user.fullName).toBe('John Doe');
-  // });
+    const user = store.find(User, 1);
+    expect(user).not.toBeNull();
 
-  // it('should support default properties', () => {
-  //   const store = new TestStore();
+    if (user) {
+      expect(user.fullName).toBe('John Doe');
+    }
+  });
 
-  //   store.sync({
-  //     data: [
-  //       {
-  //         attributes: {
-  //           firstName: 'John',
-  //           lastName: 'Doe',
-  //         },
-  //         id: 1,
-  //         type: 'user',
-  //       }, {
-  //         attributes: {
-  //           filename: 'foo.jpg',
-  //         },
-  //         id: 1,
-  //         type: 'photo',
-  //       }, {
-  //         attributes: {
-  //           filename: 'bar.png',
-  //           selected: true,
-  //         },
-  //         id: 2,
-  //         type: 'photo',
-  //       }, {
-  //         attributes: {
-  //           filename: 'baz.png',
-  //           selected: false,
-  //         },
-  //         id: 3,
-  //         type: 'photo',
-  //       },
-  //     ],
-  //   });
+  it('should support default properties', () => {
+    const store = new TestStore();
 
-  //   const user = store.find(User, 1);
-  //   expect(user['selected']).toBeUndefined();
+    store.sync({
+      data: [
+        {
+          attributes: {
+            firstName: 'John',
+            lastName: 'Doe',
+          },
+          id: 1,
+          type: 'user',
+        }, {
+          attributes: {
+            filename: 'foo.jpg',
+          },
+          id: 1,
+          type: 'photo',
+        }, {
+          attributes: {
+            filename: 'bar.png',
+            selected: true,
+          },
+          id: 2,
+          type: 'photo',
+        }, {
+          attributes: {
+            filename: 'baz.png',
+            selected: false,
+          },
+          id: 3,
+          type: 'photo',
+        },
+      ],
+    });
 
-  //   const photo1 = store.find(Photo, 1);
-  //   expect(photo1.selected).toBe(false);
-  //   expect(photo1['foo']).not.toBe(false);
-  //   expect(photo1['foo']).toBeUndefined();
+    const user = store.find(User, 1);
+    expect(user).not.toBeNull();
 
-  //   const photo2 = store.find(Photo, 2);
-  //   expect(photo2.selected).toBe(true);
-  //   const photo3 = store.find(Photo, 3);
-  //   expect(photo3.selected).toBe(false);
+    if (user) {
+      expect(user['selected']).toBeUndefined();
+    }
 
-  //   const photos = store.findAll(Photo);
-  //   const selected = photos.filter((photo) => photo.selected);
-  //   expect(selected.length).toBe(1);
-  //   expect(selected[0].meta.id).toBe(2);
-  // });
+    const photo1 = store.find(Photo, 1);
+    expect(photo1).not.toBeNull();
+    if (photo1) {
+      expect(photo1.selected).toBe(false);
+      expect(photo1['foo']).not.toBe(false);
+      expect(photo1['foo']).toBeUndefined();
+    }
 
-  // it('should support generic records', () => {
-  //   const JsonapiCollection = jsonapi(Collection);
-  //   const store = new JsonapiCollection();
-  //   const user = store.sync({
-  //     data: {
-  //       attributes: {
-  //         name: 'John',
-  //       },
-  //       id: 1,
-  //       relationships: {
-  //         self: {
-  //           data: {
-  //             id: 1,
-  //             type: 'user',
-  //           },
-  //         },
-  //       },
-  //       type: 'user',
-  //     },
-  //   }) as Model;
+    const photo2 = store.find(Photo, 2);
+    expect(photo2).not.toBeNull();
+    if (photo2) {
+      expect(photo2.selected).toBe(true);
+    }
 
-  //   expect(user['name']).toBe('John');
-  //   expect(user['self'].getRecordId()).toBe(1);
-  //   expect(store.findAll('user').length).toBe(1);
-  // });
+    const photo3 = store.find(Photo, 3);
+    expect(photo3).not.toBeNull();
+    if (photo3) {
+      expect(photo3.selected).toBe(false);
+    }
+
+    const photos = store.findAll(Photo);
+    const selected = photos.filter((photo) => photo.selected);
+    expect(selected.length).toBe(1);
+    expect(selected[0].meta.id).toBe(2);
+  });
+
+  it('should support generic records', () => {
+    const JsonapiCollection = jsonapi(Collection);
+    const store = new JsonapiCollection();
+    const user = store.sync({
+      data: {
+        attributes: {
+          name: 'John',
+        },
+        id: 1,
+        relationships: {
+          self: {
+            data: {
+              id: 1,
+              type: 'user',
+            },
+          },
+        },
+        type: 'user',
+      },
+    }) as GenericModel;
+
+    expect(user['name']).toBe('John');
+    expect(getModelId(user['self'])).toBe(1);
+    expect(getModelType(user)).toBe('user');
+    expect(store.findAll('user').length).toBe(1);
+  });
 });

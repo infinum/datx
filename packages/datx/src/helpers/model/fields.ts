@@ -191,7 +191,10 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
     });
 
     const isInvalidArray = isFalsyArray(referencedModels) && (value as Array<any>).length;
-    const isInvalidModel = Boolean(value) && !referencedModels;
+
+    // TODO: Should this be checked?
+    const isInvalidModel = false; // Boolean(value) && !referencedModels;
+
     if (isInvalidArray || isInvalidModel) {
       throw error(REF_NEEDS_COLLECTION);
     }

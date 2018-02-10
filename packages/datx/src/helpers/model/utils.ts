@@ -23,7 +23,7 @@ export function getModelType(model: IType|typeof PureModel|PureModel): IType {
   if (typeof model === 'function') {
     return model.type;
   } else if (typeof model === 'object') {
-    return storage.getModelDataKey(model, 'type') || (model.constructor as typeof PureModel).type;
+    return storage.getModelMetaKey(model, 'type') || (model.constructor as typeof PureModel).type;
   }
   return model;
 }

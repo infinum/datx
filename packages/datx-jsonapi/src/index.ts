@@ -7,6 +7,7 @@ export {GenericModel} from './GenericModel';
 export {
   getModelLinks,
   getModelMeta,
+  getModelRefLinks,
   modelToJsonApi,
   saveModel,
 } from './helpers/model';

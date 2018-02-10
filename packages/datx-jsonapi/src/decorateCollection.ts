@@ -29,7 +29,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
   class JsonapiCollection extends BaseClass {
 
-    public static types = [GenericModel];
+    public static types = (BaseClass.types && BaseClass.types.length) ? BaseClass.types : [GenericModel];
 
     public sync(body?: IResponse): PureModel|Array<PureModel>|null {
       if (!body) {
@@ -79,13 +79,15 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       const remove = (typeof id === 'boolean' || typeof id === 'object') ? id : remote;
       const modelId = (typeof id !== 'boolean' && typeof id !== 'object') ? id : undefined;
       const type = getModelType(obj);
-      const model: PureModel = this.find(type, modelId) as PureModel;
+      const model = this.find(type, modelId);
 
-      if (remove) {
+      if (model && remove) {
         return removeModel(model, typeof remove === 'object' ? remove : undefined);
       }
 
-      super.remove(model);
+      if (model) {
+        super.remove(model);
+      }
       return Promise.resolve();
     }
 
@@ -107,7 +109,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     private __addRecord(obj: IRecord): IJsonapiModel {
       const staticCollection = this.constructor as typeof PureCollection;
       const {type, id} = obj;
-      let record: IJsonapiModel = this.find(type, id) as IJsonapiModel;
+      let record = this.find(type, id) as IJsonapiModel|null;
       const flattened: IRawModel = flattenModel(obj);
 
       if (record) {
