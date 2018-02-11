@@ -25,7 +25,7 @@ export interface IMockArgs {
   hostname?: string;
   url?: string;
   data?: any;
-  query?: boolean|(() => void)|object;
+  query?: boolean|(() => boolean)|object;
   responseFn?: () => void;
   headers?: nock.HttpHeaders;
   reqheaders?: IDictionary<any>;
