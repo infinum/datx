@@ -14,13 +14,12 @@ function initCollectionModel(collection: PureCollection, data: IRawModel): PureM
 }
 
 export function upsertModel(data: IRawModel, type: IType|typeof PureModel, collection: PureCollection): PureModel {
-  const staticCollection = collection.constructor as typeof PureCollection;
-  const TypeModel = staticCollection.types.find((item) => item.type === type);
-
   if (!type) {
     throw error(UNDEFINED_TYPE);
   }
 
+  const staticCollection = collection.constructor as typeof PureCollection;
+  const TypeModel = staticCollection.types.find((item) => item.type === type) || staticCollection.defaultModel;
   if (!TypeModel) {
     throw error(UNDEFINED_MODEL, {type});
   }

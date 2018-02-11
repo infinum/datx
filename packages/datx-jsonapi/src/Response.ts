@@ -1,4 +1,4 @@
-import {getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId} from 'datx';
+import {getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId, getModelCollection} from 'datx';
 import {IDictionary} from 'datx-utils';
 import {action, computed, extendObservable, IComputedValue, isObservableArray} from 'mobx';
 
@@ -217,6 +217,7 @@ export class Response<T extends IJsonapiModel> {
 
     if (this.__collection) {
       this.__collection.remove(record);
+      this.__collection.add(data);
     }
 
     updateModel(data, modelToJSON(record));

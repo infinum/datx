@@ -23,6 +23,8 @@ export class PureCollection {
    */
   public static types: Array<typeof PureModel|IModelConstructor<PureModel>> = [];
 
+  public static defaultModel?: typeof PureModel;
+
   private __data: IObservableArray<PureModel> = observable.shallowArray([]);
 
   @observable private __dataMap: IDictionary<IDictionary<PureModel>> = {};

@@ -115,13 +115,16 @@ describe('error handling', () => {
 
     const event = response.data && response.data[0] as Event;
 
-    let hasFailed = false;
-    try {
-      const res = await event.destroy();
-    } catch (response) {
-      hasFailed = true;
-      expect(response.error[0]).toBeInstanceOf(Object);
+    expect(event).toBeInstanceOf(Event);
+    if (event) {
+      let hasFailed = false;
+      try {
+        const res = await event.destroy();
+      } catch (response) {
+        hasFailed = true;
+        expect(response.error[0]).toBeInstanceOf(Object);
+      }
+      expect(hasFailed).toBe(true);
     }
-    expect(hasFailed).toBe(true);
   });
 });

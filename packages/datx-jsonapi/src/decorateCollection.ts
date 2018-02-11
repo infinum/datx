@@ -34,11 +34,15 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
   class JsonapiCollection extends BaseClass {
 
-    public static types = (BaseClass.types && BaseClass.types.length) ? BaseClass.types : [GenericModel];
+    public static types = (BaseClass.types && BaseClass.types.length)
+      ? BaseClass.types.concat(GenericModel)
+      : [GenericModel];
 
     public static cache: boolean = BaseClass['cache'] === undefined
       ? typeof window !== 'undefined'
       : BaseClass['cache'];
+
+    public static defaultModel = BaseClass['defaultModel'] || GenericModel;
 
     public sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T|Array<T>|null {
       if (!body) {

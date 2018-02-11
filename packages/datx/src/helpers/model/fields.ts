@@ -249,8 +249,10 @@ export function updateModelId(model: PureModel, newId: IIdentifier): void {
     storage.setModelDataKey(model, modelId, newId);
   }
 
-  // @ts-ignore - I'm bad and I should feel bad...
-  collection.__changeModelId(oldId, newId, type);
+  if (collection) {
+    // @ts-ignore - I'm bad and I should feel bad...
+    collection.__changeModelId(oldId, newId, type);
+  }
 
   updateModelReferences(model, newId, oldId, type);
 }

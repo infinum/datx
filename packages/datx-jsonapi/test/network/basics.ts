@@ -46,15 +46,15 @@ describe('Network basics', () => {
       const event = events.data[0];
       expect(event['title']).toBe('Test 1');
       expect(getModelMeta(event).createdAt).toBe('2017-03-19T16:00:00.000Z');
-      expect(event.meta.refs.image).toBe('1');
-      expect(getModelRefMeta(event).image.foo).toBe('bar');
+      expect(event.meta.refs.images).toBe('1');
+      expect(getModelRefMeta(event).images.foo).toBe('bar');
 
       const data = modelToJsonApi(event);
       expect(data.id).toBe(1);
       expect(data.type).toBe('event');
       expect(data.attributes.title).toBe('Test 1');
-      expect(data.relationships && data.relationships.image.data).toEqual({type: 'image', id: '1'});
-      expect('image' in data.attributes).toBe(false);
+      expect(data.relationships && data.relationships.images.data).toEqual({type: 'image', id: '1'});
+      expect('images' in data.attributes).toBe(false);
     }
   });
 
@@ -207,7 +207,7 @@ describe('Network basics', () => {
     if (event) {
       const image = await fetchModelLink<Image>(event, 'image');
 
-      const imageData = image.data;
+      const imageData = image.data as Image;
       expect(imageData.meta.id).toBe(1);
       expect(imageData.meta.type).toBe('image');
       expect(imageData['url']).toBe('http://example.com/1.jpg');
@@ -256,7 +256,7 @@ describe('Network basics', () => {
 
     expect(event).toBeInstanceOf(Event);
     if (event) {
-      const image = await fetchModelRefLink(event, 'image', 'self');
+      const image = await fetchModelRefLink(event, 'images', 'self');
       const imageData = image.data as Image;
       expect(imageData.meta.id).toBe(1);
       expect(imageData.meta.type).toBe('image');
@@ -267,12 +267,10 @@ describe('Network basics', () => {
 
   it('should support endpoint', async () => {
     // tslint:disable-next-line:max-classes-per-file
-    class TestEventModel extends Model {
+    class TestEvent extends jsonapi(Model) {
       public static type = 'event';
       public static endpoint = 'foo/event';
     }
-
-    const TestEvent = jsonapi(TestEventModel);
 
     // tslint:disable-next-line:max-classes-per-file
     class TestCollection extends Collection {
@@ -293,12 +291,10 @@ describe('Network basics', () => {
 
   it('should support functional endpoint', async () => {
     // tslint:disable-next-line:max-classes-per-file
-    class TestEventModel extends Model {
+    class TestEvent extends jsonapi(Model) {
       public static type = 'event';
       public static endpoint = () => 'foo/event';
     }
-
-    const TestEvent = jsonapi(TestEventModel);
 
     // tslint:disable-next-line:max-classes-per-file
     class TestCollection extends Collection {

@@ -23,7 +23,7 @@ import {IJsonapiCollection} from '../interfaces/IJsonapiCollection';
 import {IJsonapiModel} from '../interfaces/IJsonapiModel';
 import {IRequestOptions} from '../interfaces/IRequestOptions';
 import {IDefinition, ILink, IRecord, IRelationship} from '../interfaces/JsonApi';
-import {config, create, handleResponse, remove, update, fetchLink} from '../NetworkUtils';
+import {config, create, fetchLink, handleResponse, remove, update} from '../NetworkUtils';
 import {Response} from '../Response';
 import {getValue} from './utils';
 
