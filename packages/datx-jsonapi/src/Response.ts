@@ -165,11 +165,13 @@ export class Response<T extends IJsonapiModel> {
       // The case when a record is not in a store and save/remove are used
       const resp = response.data;
 
-      if (resp.data instanceof Array) {
-        throw new Error('A save/remove operation should not return an array of results');
-      }
+      if (resp.data) {
+        if (resp.data instanceof Array) {
+          throw new Error('A save/remove operation should not return an array of results');
+        }
 
-      this.data = overrideData || new GenericModel(flattenModel(resp.data));
+        this.data = overrideData || new GenericModel(flattenModel(resp.data));
+      }
     }
 
     this.meta = (response.data && response.data.meta) || {};

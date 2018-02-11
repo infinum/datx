@@ -26,7 +26,7 @@ export type FetchType = (
 
 export interface ICollectionFetchOpts {
   url: string;
-  options?: IRequestOptions;
+  options?: IRequestOptions&{headers?: IHeaders};
   data?: object;
   method: string;
   collection: IJsonapiCollection;
@@ -150,9 +150,12 @@ export const config: IConfigType = {
       collection,
     } = config.transformRequest(reqOptions);
 
+    const staticCollection = collection && collection.constructor as {cache?: boolean};
+    const collectionCache = staticCollection && staticCollection.cache;
     const isCacheSupported = method.toUpperCase() === 'GET';
+    const skipCache = reqOptions.options && reqOptions.options.skipCache;
 
-    if (this.cache && isCacheSupported && !reqOptions.skipCache) {
+    if (this.cache && isCacheSupported && collectionCache && !skipCache) {
       const cache = getCache(url);
       if (cache) {
         return Promise.resolve(cache.response) as Promise<LibResponse<T>>;

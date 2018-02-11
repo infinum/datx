@@ -12,6 +12,7 @@ import {
 } from 'datx';
 import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 
+import {clearAllCache, clearCacheByType} from './cache';
 import {URL_REGEX} from './consts';
 import {ParamArrayType} from './enums/ParamArrayType';
 import {GenericModel} from './GenericModel';
@@ -27,11 +28,17 @@ import {IRecord, IResponse} from './interfaces/JsonApi';
 import {config, fetch, read} from './NetworkUtils';
 import {Response} from './Response';
 
+declare var window: object|undefined;
+
 export function decorateCollection(BaseClass: typeof PureCollection) {
 
   class JsonapiCollection extends BaseClass {
 
     public static types = (BaseClass.types && BaseClass.types.length) ? BaseClass.types : [GenericModel];
+
+    public static cache: boolean = BaseClass['cache'] === undefined
+      ? typeof window !== 'undefined'
+      : BaseClass['cache'];
 
     public sync(body?: IResponse): PureModel|Array<PureModel>|null {
       if (!body) {
@@ -109,6 +116,16 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return Promise.resolve();
     }
 
+    public removeAll(type: string | number | typeof PureModel) {
+      super.removeAll(type);
+      clearCacheByType(getModelType(type));
+    }
+
+    public reset() {
+      super.reset();
+      clearAllCache();
+    }
+
     /**
      * Function used to handle response errors
      *
@@ -129,7 +146,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       const {type, id} = obj;
       let record = this.find(type, id) as IJsonapiModel|null;
       const flattened: IRawModel = flattenModel(obj);
-=
+
       if (record) {
         updateModel(record, flattened);
       } else if (staticCollection.types.filter((item) => item.type === type).length) {

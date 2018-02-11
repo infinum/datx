@@ -15,6 +15,7 @@ import {
   modelToJsonApi,
 } from '../../src';
 
+import {clearAllCache} from '../../src/cache';
 import mockApi from '../utils/api';
 import {Event, Image, Organiser, Photo, TestStore, User} from '../utils/setup';
 
@@ -27,6 +28,7 @@ describe('Network basics', () => {
     config.baseUrl = 'http://example.com/';
     config.transformRequest = baseTransformRequest;
     config.transformResponse = baseTransformResponse;
+    clearAllCache();
   });
 
   it('should fetch the basic data', async () => {
@@ -172,11 +174,6 @@ describe('Network basics', () => {
       expect(events2.data).toHaveLength(2);
       expect(events2.data instanceof Array && events2.data[0]['title']).toBe('Test 5');
 
-      mockApi({
-        name: 'events-1',
-        url: 'event',
-      });
-
       const events1 = await events2.prev;
 
       expect(events1).toBeInstanceOf(Object);
@@ -186,7 +183,7 @@ describe('Network basics', () => {
         expect(events1.data instanceof Array && events1.data[0]['title']).toBe('Test 1');
 
         const events1b = await events2.prev;
-        expect(events1).not.toEqual(events);
+        expect(events1).toEqual(events);
         expect(events1).toBe(events1b);
       }
     }
