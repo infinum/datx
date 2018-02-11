@@ -40,11 +40,11 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       ? typeof window !== 'undefined'
       : BaseClass['cache'];
 
-    public sync(body?: IResponse): PureModel|Array<PureModel>|null {
+    public sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T|Array<T>|null {
       if (!body) {
         return null;
       }
-      const data: PureModel|Array<PureModel>|null = this.__iterateEntries(body, this.__addRecord.bind(this));
+      const data: T|Array<T>|null = this.__iterateEntries(body, (obj: IRecord) => this.__addRecord<T>(obj));
       this.__iterateEntries(body, this.__updateRelationships.bind(this));
       return data;
     }
@@ -141,18 +141,18 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return response;
     }
 
-    private __addRecord(obj: IRecord): IJsonapiModel {
+    private __addRecord<T extends IJsonapiModel = IJsonapiModel>(obj: IRecord): T {
       const staticCollection = this.constructor as typeof PureCollection;
       const {type, id} = obj;
-      let record = this.find(type, id) as IJsonapiModel|null;
+      let record: T|null = this.find(type, id) as T|null;
       const flattened: IRawModel = flattenModel(obj);
 
       if (record) {
         updateModel(record, flattened);
       } else if (staticCollection.types.filter((item) => item.type === type).length) {
-        record = this.add(flattened, type) as IJsonapiModel;
+        record = this.add(flattened, type) as T;
       } else {
-        record = this.add(new GenericModel(flattened));
+        record = this.add(new GenericModel(flattened)) as T;
       }
 
       return record;
@@ -184,7 +184,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       });
     }
 
-    private __iterateEntries(body: IResponse, fn: (item: PureModel) => PureModel) {
+    private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T) {
       mapItems((body && body.included) || [], fn);
       return mapItems((body && body.data) || [], fn);
     }

@@ -160,7 +160,7 @@ export class Response<T extends IJsonapiModel> {
     this.status = response.status;
 
     if (collection) {
-      this.data = overrideData ? collection.add<T>(overrideData as T) : collection.sync(response.data);
+      this.data = overrideData ? collection.add<T>(overrideData as T) : collection.sync<T>(response.data);
     } else if (response.data) {
       // The case when a record is not in a store and save/remove are used
       const resp = response.data;
@@ -170,7 +170,7 @@ export class Response<T extends IJsonapiModel> {
           throw new Error('A save/remove operation should not return an array of results');
         }
 
-        this.data = overrideData || new GenericModel(flattenModel(resp.data));
+        this.data = overrideData || new GenericModel(flattenModel(resp.data)) as T;
       }
     }
 

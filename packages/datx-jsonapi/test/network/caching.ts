@@ -9,8 +9,6 @@ import {clearAllCache} from '../../src/cache';
 import mockApi from '../utils/api';
 import {Event, Image, Organiser, Photo, TestStore, User} from '../utils/setup';
 
-const baseStoreFetch = config.collectionFetch;
-
 describe('caching', () => {
   beforeEach(() => {
     config.fetchReference = fetch;

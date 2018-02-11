@@ -6,7 +6,7 @@ import {IRequestOptions} from './IRequestOptions';
 import {IResponse} from './JsonApi';
 
 export interface IJsonapiCollection extends PureCollection {
-  sync(body?: IResponse): PureModel|Array<PureModel>|null;
+  sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T|Array<T>|null;
 
   /**
    * Fetch the records with the given type and id

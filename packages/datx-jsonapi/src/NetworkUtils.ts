@@ -50,7 +50,6 @@ export interface IConfigType {
   defaultHeaders: IHeaders;
   fetchReference: fetch;
   paramArrayType: ParamArrayType;
-  collectionFetch: CollectionFetchType;
   onError: (IResponseObject) => IResponseObject;
   transformRequest: (options: ICollectionFetchOpts) => ICollectionFetchOpts;
   transformResponse: (response: IRawResponse) => IRawResponse;
@@ -135,43 +134,6 @@ export const config: IConfigType = {
       });
   },
 
-  /**
-   * Base implementation of the statefull fetch function (can be overridden)
-   *
-   * @param {ICollectionFetchOpts} reqOptions API request options
-   * @returns {Promise<Response>} Resolves with a response object
-   */
-  collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOpts): Promise<LibResponse<T>> {
-    const {
-      url,
-      options,
-      data,
-      method = 'GET',
-      collection,
-    } = config.transformRequest(reqOptions);
-
-    const staticCollection = collection && collection.constructor as {cache?: boolean};
-    const collectionCache = staticCollection && staticCollection.cache;
-    const isCacheSupported = method.toUpperCase() === 'GET';
-    const skipCache = reqOptions.options && reqOptions.options.skipCache;
-
-    if (this.cache && isCacheSupported && collectionCache && !skipCache) {
-      const cache = getCache(url);
-      if (cache) {
-        return Promise.resolve(cache.response) as Promise<LibResponse<T>>;
-      }
-    }
-
-    return config.baseFetch(method, url, data, options && options.headers)
-      .then((response: IRawResponse) => {
-        const resp = new LibResponse<T>(config.transformResponse(response), collection, options);
-        if (this.cache && isCacheSupported) {
-          saveCache(url, resp);
-        }
-        return resp;
-      });
-  },
-
   onError(resp: IResponseObject) {
     return resp;
   },
@@ -185,8 +147,45 @@ export const config: IConfigType = {
   },
 };
 
+/**
+ * Base implementation of the statefull fetch function (can be overridden)
+ *
+ * @param {ICollectionFetchOpts} reqOptions API request options
+ * @returns {Promise<Response>} Resolves with a response object
+ */
+function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOpts): Promise<LibResponse<T>> {
+  const {
+    url,
+    options,
+    data,
+    method = 'GET',
+    collection,
+  } = config.transformRequest(reqOptions);
+
+  const staticCollection = collection && collection.constructor as {cache?: boolean};
+  const collectionCache = staticCollection && staticCollection.cache;
+  const isCacheSupported = method.toUpperCase() === 'GET';
+  const skipCache = reqOptions.options && reqOptions.options.skipCache;
+
+  if (config.cache && isCacheSupported && collectionCache && !skipCache) {
+    const cache = getCache(url);
+    if (cache) {
+      return Promise.resolve(cache.response) as Promise<LibResponse<T>>;
+    }
+  }
+
+  return config.baseFetch(method, url, data, options && options.headers)
+    .then((response: IRawResponse) => {
+      const resp = new LibResponse<T>(config.transformResponse(response), collection, options);
+      if (config.cache && isCacheSupported) {
+        saveCache(url, resp);
+      }
+      return resp;
+    });
+}
+
 export function fetch<T extends IJsonapiModel = IJsonapiModel>(options: ICollectionFetchOpts) {
-  return config.collectionFetch<T>(options);
+  return collectionFetch<T>(options);
 }
 
 /**
@@ -205,7 +204,7 @@ export function read<T extends IJsonapiModel = IJsonapiModel>(
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse<T>> {
-  return config.collectionFetch<T>({
+  return collectionFetch<T>({
     collection,
     data: undefined,
     method: 'GET',
@@ -232,7 +231,7 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse<T>> {
-  return config.collectionFetch<T>({
+  return collectionFetch<T>({
     collection,
     data,
     method: 'POST',
@@ -259,7 +258,7 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse<T>> {
-  return config.collectionFetch<T>({
+  return collectionFetch<T>({
     collection,
     data,
     method: 'PATCH',
@@ -284,7 +283,7 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse<T>> {
-  return config.collectionFetch<T>({
+  return collectionFetch<T>({
     collection,
     data: undefined,
     method: 'DELETE',
