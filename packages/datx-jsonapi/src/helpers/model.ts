@@ -212,8 +212,12 @@ export function removeModel<T extends IJsonapiModel>(model: T, options?: IReques
 
         setModelPersisted(model, false);
 
-        collection.remove(model);
+        if (collection) {
+          collection.remove(model);
+        }
       });
+  } else if (collection) {
+    collection.remove(model);
   }
 
   return Promise.resolve();
