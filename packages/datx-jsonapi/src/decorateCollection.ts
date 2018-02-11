@@ -2,6 +2,7 @@ import {
   getModelType,
   ICollectionConstructor,
   IIdentifier,
+  IModelConstructor,
   initModelRef,
   IType,
   PureCollection,
@@ -11,6 +12,7 @@ import {
 } from 'datx';
 import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 
+import {URL_REGEX} from './consts';
 import {ParamArrayType} from './enums/ParamArrayType';
 import {GenericModel} from './GenericModel';
 import {flattenModel, removeModel} from './helpers/model';
@@ -48,9 +50,15 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
      * @param {IRequestOptions} [options] Server options
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
-    public fetch(type: string, id: number|string, options?: IRequestOptions): Promise<Response> {
-      const query = this.__prepareQuery(type, id, undefined, options);
-      return read(this, query.url, query.headers, options).then(this.__handleErrors);
+    public fetch<T extends IJsonapiModel = IJsonapiModel>(
+      type: IType|IModelConstructor<T>,
+      id: number|string,
+      options?: IRequestOptions,
+    ): Promise<Response<T>> {
+      const modelType = getModelType(type);
+      const query = this.__prepareQuery(modelType, id, undefined, options);
+      return read<T>(this, query.url, query.headers, options)
+        .then((res) => this.__handleErrors<T>(res));
     }
 
     /**
@@ -60,13 +68,23 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
      * @param {IRequestOptions} [options] Server options
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
-    public fetchAll(type: string, options?: IRequestOptions): Promise<Response> {
-      const query = this.__prepareQuery(type, undefined, undefined, options);
-      return read(this, query.url, query.headers, options).then(this.__handleErrors);
+    public fetchAll<T extends IJsonapiModel = IJsonapiModel>(
+      type: IType|IModelConstructor<T>,
+      options?: IRequestOptions,
+    ): Promise<Response<T>> {
+      const modelType = getModelType(type);
+      const query = this.__prepareQuery(modelType, undefined, undefined, options);
+      return read<T>(this, query.url, query.headers, options)
+        .then((res) => this.__handleErrors<T>(res));
     }
 
-    public request(url: string, method: string = 'GET', data?: object, options?: IRequestOptions): Promise<Response> {
-      return fetch({url: this.__prefixUrl(url), options, data, method, collection: this});
+    public request<T extends IJsonapiModel = IJsonapiModel>(
+      url: string,
+      method: string = 'GET',
+      data?: object,
+      options?: IRequestOptions,
+    ): Promise<Response<T>> {
+      return fetch<T>({url: this.__prefixUrl(url), options, data, method, collection: this});
     }
 
     public remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequestOptions);
@@ -98,7 +116,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
      * @param {Response} response API response
      * @returns API response
      */
-    private __handleErrors(response: Response) {
+    private __handleErrors<T extends IJsonapiModel>(response: Response<T>) {
       if (response.error) {
         throw response.error;
       }
@@ -111,11 +129,11 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       const {type, id} = obj;
       let record = this.find(type, id) as IJsonapiModel|null;
       const flattened: IRawModel = flattenModel(obj);
-
+=
       if (record) {
         updateModel(record, flattened);
-      } else if (staticCollection.types.filter((item) => item.type === obj.type).length) {
-        record = this.add(flattened, obj.type) as IJsonapiModel;
+      } else if (staticCollection.types.filter((item) => item.type === type).length) {
+        record = this.add(flattened, type) as IJsonapiModel;
       } else {
         record = this.add(new GenericModel(flattened));
       }
@@ -155,7 +173,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     }
 
     private __prepareQuery(
-      type: string,
+      type: IType,
       id?: number|string,
       data?: IRequest,
       options?: IRequestOptions,
@@ -217,6 +235,9 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     }
 
     private __prefixUrl(url) {
+      if (URL_REGEX.test(url)) {
+        return url;
+      }
       return `${config.baseUrl}${url}`;
     }
 

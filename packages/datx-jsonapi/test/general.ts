@@ -3,7 +3,7 @@ import {IDictionary} from 'datx-utils';
 import {autorun, extendObservable, observable} from 'mobx';
 
 import {config, GenericModel, getModelRefLinks, jsonapi} from '../src';
-import {Event, Image, Organiser, Photo, TestStore, User} from './utils/setup';
+import {Event, Image, Photo, TestStore, User} from './utils/setup';
 
 // tslint:disable:no-string-literal
 
@@ -21,7 +21,7 @@ describe('General', () => {
           name: 'Demo',
         },
         id: 1,
-        type: 'events',
+        type: 'event',
       },
     }) as Event;
 
@@ -44,7 +44,7 @@ describe('General', () => {
             },
           },
         },
-        type: 'events',
+        type: 'event',
       },
     }) as Event;
 
@@ -61,7 +61,7 @@ describe('General', () => {
           name: 'Demo',
         },
         id: 1,
-        type: 'events',
+        type: 'event',
       },
     }) as Event;
 
@@ -69,7 +69,7 @@ describe('General', () => {
     expect(event).not.toBeNull();
     if (event) {
       expect(event.meta.id).toBe(1);
-      expect(event.meta.type).toBe('events');
+      expect(event.meta.type).toBe('event');
       expect(event.name).toBe('Demo');
     }
   });
@@ -83,7 +83,7 @@ describe('General', () => {
           name: 'Demo',
         },
         id: 1,
-        type: 'events',
+        type: 'event',
       },
     });
 
@@ -116,24 +116,24 @@ describe('General', () => {
           images: {
             data: [{
               id: 2,
-              type: 'images',
+              type: 'image',
             }],
           },
         },
-        type: 'events',
+        type: 'event',
       },
       included: [{
         attributes: {
           name: 'Header',
         },
         id: 2,
-        type: 'images',
+        type: 'image',
       }, {
         attributes: {
           name: 'Header',
         },
         id: 2,
-        type: 'images',
+        type: 'image',
       }],
     });
 
@@ -144,7 +144,7 @@ describe('General', () => {
       expect(event.images.length).toBe(1);
     }
 
-    const images = store.findAll('images');
+    const images = store.findAll(Image);
     expect(images.length).toBe(1);
 
     const foo = store.findAll('foo');
@@ -167,7 +167,7 @@ describe('General', () => {
             },
           },
         },
-        type: 'events',
+        type: 'event',
       },
     });
 
@@ -191,11 +191,11 @@ describe('General', () => {
           images: {
             data: [{
               id: 2,
-              type: 'images',
+              type: 'image',
             }],
           },
         },
-        type: 'events',
+        type: 'event',
       },
       included: [{
         attributes: {
@@ -206,11 +206,11 @@ describe('General', () => {
           event: {
             data: {
               id: 1,
-              type: 'events',
+              type: 'event',
             },
           },
         },
-        type: 'images',
+        type: 'image',
       }],
     });
 
@@ -228,16 +228,16 @@ describe('General', () => {
     store.sync({
       data: {
         attributes: {
-          name: 'Nordic.js',
-          slug: 'nordicjs',
+          name: 'Meetup',
+          slug: 'meetup-1',
         },
         id: 1,
         relationships: {
           images: {
             data: [
-              {type: 'images', id: 1},
-              {type: 'images', id: 2},
-              {type: 'images', id: 3},
+              {type: 'image', id: 1},
+              {type: 'image', id: 2},
+              {type: 'image', id: 3},
             ],
           },
           organisers: {
@@ -247,68 +247,68 @@ describe('General', () => {
             ],
           },
         },
-        type: 'events',
+        type: 'event',
       }, included: [{
         attributes: {
-          firstName: 'Jonny',
+          firstName: 'John',
         },
         id: 1,
         relationships: {
           event: {
-            data: {type: 'events', id: 1},
+            data: {type: 'event', id: 1},
           },
           image: {
-            data: {type: 'images', id: 2},
+            data: {type: 'image', id: 2},
           },
         },
         type: 'organisers',
       }, {
         attributes: {
-          firstName: 'Martina',
+          firstName: 'Jane',
         },
         id: 2,
         relationships: {
           event: {
-            data: {type: 'events', id: 1},
+            data: {type: 'event', id: 1},
           },
           image: {
-            data: {type: 'images', id: 3},
+            data: {type: 'image', id: 3},
           },
         },
         type: 'organisers',
       }, {
         attributes: {
-          name: 'Header',
+          name: 'Sam',
         },
         id: 1,
         relationships: {
           event: {
-            data: {type: 'events', id: 1},
+            data: {type: 'event', id: 1},
           },
         },
-        type: 'images',
+        type: 'image',
       }, {
         attributes: {
-          name: 'Organiser Johannes',
+          name: 'Organiser Sam',
         },
         id: 2,
         relationships: {
           event: {
-            data: {type: 'events', id: 1},
+            data: {type: 'event', id: 1},
           },
         },
-        type: 'images',
+        type: 'image',
       }, {
         attributes: {
-          name: 'Organiser Martina',
+          name: 'Organiser Jane',
         },
         id: 3,
         relationships: {
           event: {
-            data: {type: 'events', id: 1},
+            data: {type: 'event', id: 1},
           },
         },
-        type: 'images',
+        type: 'image',
       }],
     });
 
@@ -325,8 +325,8 @@ describe('General', () => {
     const store = new TestStore();
     store.sync({
       data: [
-        {id: 1, type: 'events', attributes: {}},
-        {id: 2, type: 'events', attributes: {}},
+        {id: 1, type: 'event', attributes: {}},
+        {id: 2, type: 'event', attributes: {}},
       ],
     });
 
@@ -335,7 +335,7 @@ describe('General', () => {
     if (event) {
       expect(event.meta.id).toBe(1);
     }
-    store.remove('events', 1);
+    store.remove(Event, 1);
     const event2 = store.find(Event, 1);
     expect(event2).toBe(null);
   });
@@ -344,8 +344,8 @@ describe('General', () => {
     const store = new TestStore();
     store.sync({
       data: [
-        {id: 1, type: 'events', attributes: {}},
-        {id: 2, type: 'events', attributes: {}},
+        {id: 1, type: 'event', attributes: {}},
+        {id: 2, type: 'event', attributes: {}},
       ],
     });
 
@@ -372,13 +372,13 @@ describe('General', () => {
             }],
           },
         },
-        type: 'events',
+        type: 'event',
       }, {
         attributes: {
           name: 'Demo 2',
         },
         id: 2,
-        type: 'events',
+        type: 'event',
       }],
       included: [{
         attributes: {
@@ -387,7 +387,7 @@ describe('General', () => {
         id: 2,
         relationships: {
           event: {
-            data: {type: 'events', id: 1},
+            data: {type: 'event', id: 1},
           },
         },
         type: 'images',
@@ -422,7 +422,7 @@ describe('General', () => {
             },
           },
         },
-        type: 'events',
+        type: 'event',
       },
     });
 
@@ -451,7 +451,7 @@ describe('General', () => {
             },
           },
         },
-        type: 'events',
+        type: 'event',
       },
     });
 

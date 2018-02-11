@@ -1,0 +1,12 @@
+{
+  "data": {
+    "type": "queue",
+    "id": "5234",
+    "attributes": {
+      "status": "Pending request, waiting other process"
+    },
+    "links": {
+      "self": "http://example.com/events/queue-jobs/123"
+    }
+  }
+}

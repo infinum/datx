@@ -5,9 +5,12 @@ export {ParamArrayType} from './enums/ParamArrayType';
 export {GenericModel} from './GenericModel';
 
 export {
+  fetchModelLink,
+  fetchModelRefLink,
   getModelLinks,
   getModelMeta,
   getModelRefLinks,
+  getModelRefMeta,
   modelToJsonApi,
   saveModel,
 } from './helpers/model';

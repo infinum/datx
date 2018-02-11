@@ -1,0 +1,12 @@
+{
+  "data": {
+    "id": 12345,
+    "type": "sessions",
+    "attributes": {
+      "token": "test123"
+    },
+    "links": {
+      "image": "http://example.com/user/1"
+    }
+  }
+}

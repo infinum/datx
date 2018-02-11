@@ -3,16 +3,18 @@ import {IDictionary} from 'datx-utils';
 import {action, computed, extendObservable, IComputedValue, isObservableArray} from 'mobx';
 
 import {IHeaders} from './interfaces/IHeaders';
+import {IJsonapiModel} from './interfaces/IJsonapiModel';
 import {IRawResponse} from './interfaces/IRawResponse';
 import {IRequestOptions} from './interfaces/IRequestOptions';
 import {IResponseHeaders} from './interfaces/IResponseHeaders';
 import {IError, IJsonApiObject, ILink} from './interfaces/JsonApi';
 
+import {GenericModel} from './GenericModel';
 import {flattenModel} from './helpers/model';
 import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 import {fetchLink} from './NetworkUtils';
 
-export class Response {
+export class Response<T extends IJsonapiModel> {
 
   /**
    * API response data (synced with the store)
@@ -20,7 +22,7 @@ export class Response {
    * @type {(PureModel|Array<PureModel>)}
    * @memberOf Response
    */
-  public data: PureModel|Array<PureModel>|null = null;
+  public data: T|Array<T>|null = null;
 
   /**
    * API response metadata
@@ -76,7 +78,7 @@ export class Response {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public first?: Promise<Response>; // Handled by the __fetchLink
+  public first?: Promise<Response<T>>; // Handled by the __fetchLink
 
   /**
    * Previous data page
@@ -84,7 +86,7 @@ export class Response {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public prev?: Promise<Response>; // Handled by the __fetchLink
+  public prev?: Promise<Response<T>>; // Handled by the __fetchLink
 
   /**
    * Next data page
@@ -92,7 +94,7 @@ export class Response {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public next?: Promise<Response>; // Handled by the __fetchLink
+  public next?: Promise<Response<T>>; // Handled by the __fetchLink
 
   /**
    * Last data page
@@ -100,7 +102,7 @@ export class Response {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public last?: Promise<Response>; // Handled by the __fetchLink
+  public last?: Promise<Response<T>>; // Handled by the __fetchLink
 
   /**
    * Received HTTP status
@@ -144,13 +146,13 @@ export class Response {
    * @type {IDictionary<Promise<Response>>}
    * @memberOf Response
    */
-  private __cache: IDictionary<Promise<Response>> = {};
+  private __cache: IDictionary<Promise<Response<T>>> = {};
 
   constructor(
     response: IRawResponse,
     collection: IJsonapiCollection,
     options?: IRequestOptions,
-    overrideData?: PureModel|Array<PureModel>,
+    overrideData?: T|Array<T>,
   ) {
     this.__collection = collection;
     this.__options = options;
@@ -158,7 +160,7 @@ export class Response {
     this.status = response.status;
 
     if (collection) {
-      this.data = overrideData ? collection.add(overrideData) : collection.sync(response.data);
+      this.data = overrideData ? collection.add<T>(overrideData as T) : collection.sync(response.data);
     } else if (response.data) {
       // The case when a record is not in a store and save/remove are used
       const resp = response.data;
@@ -167,7 +169,7 @@ export class Response {
         throw new Error('A save/remove operation should not return an array of results');
       }
 
-      this.data = overrideData || new PureModel(flattenModel(resp.data));
+      this.data = overrideData || new GenericModel(flattenModel(resp.data));
     }
 
     this.meta = (response.data && response.data.meta) || {};
@@ -177,7 +179,7 @@ export class Response {
     this.requestHeaders = response.requestHeaders;
     this.error = (response.data && response.data.errors) || response.error;
 
-    const linkGetter: IDictionary<IComputedValue<Promise<Response>>> = {};
+    const linkGetter: IDictionary<IComputedValue<Promise<Response<T>>>> = {};
     if (this.links) {
       Object.keys(this.links).forEach((link: string) => {
         linkGetter[link] = computed(() => this.__fetchLink(link));
@@ -201,7 +203,7 @@ export class Response {
    *
    * @memberOf Response
    */
-  @action public replaceData(data: PureModel): Response {
+  @action public replaceData(data: T): Response<T> {
     const record: PureModel = this.data as PureModel;
     if (record === data) {
       return this;
@@ -283,7 +285,7 @@ export class Response {
       const link: ILink|null = (this.links && name in this.links) ? this.links[name] : null;
 
       if (link) {
-        this.__cache[name] = fetchLink(link, this.__collection, this.requestHeaders, this.__options);
+        this.__cache[name] = fetchLink<T>(link, this.__collection, this.requestHeaders, this.__options);
       }
     }
     return this.__cache[name];

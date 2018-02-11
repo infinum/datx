@@ -33,7 +33,7 @@ export interface ICollectionFetchOpts {
   skipCache?: boolean;
 }
 
-export type CollectionFetchType = (options: ICollectionFetchOpts) => Promise<LibResponse>;
+export type CollectionFetchType = <T extends IJsonapiModel>(options: ICollectionFetchOpts) => Promise<LibResponse<T>>;
 
 export interface IResponseObject {
   data: IResponse;
@@ -141,7 +141,7 @@ export const config: IConfigType = {
    * @param {ICollectionFetchOpts} reqOptions API request options
    * @returns {Promise<Response>} Resolves with a response object
    */
-  collectionFetch(reqOptions: ICollectionFetchOpts): Promise<LibResponse> {
+  collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOpts): Promise<LibResponse<T>> {
     const {
       url,
       options,
@@ -155,13 +155,13 @@ export const config: IConfigType = {
     if (this.cache && isCacheSupported && !reqOptions.skipCache) {
       const cache = getCache(url);
       if (cache) {
-        return Promise.resolve(cache.response);
+        return Promise.resolve(cache.response) as Promise<LibResponse<T>>;
       }
     }
 
     return config.baseFetch(method, url, data, options && options.headers)
       .then((response: IRawResponse) => {
-        const resp = new LibResponse(config.transformResponse(response), collection, options);
+        const resp = new LibResponse<T>(config.transformResponse(response), collection, options);
         if (this.cache && isCacheSupported) {
           saveCache(url, resp);
         }
@@ -182,8 +182,8 @@ export const config: IConfigType = {
   },
 };
 
-export function fetch(options: ICollectionFetchOpts) {
-  return config.collectionFetch(options);
+export function fetch<T extends IJsonapiModel = IJsonapiModel>(options: ICollectionFetchOpts) {
+  return config.collectionFetch<T>(options);
 }
 
 /**
@@ -196,13 +196,13 @@ export function fetch(options: ICollectionFetchOpts) {
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
  */
-export function read(
+export function read<T extends IJsonapiModel = IJsonapiModel>(
   collection: IJsonapiCollection,
   url: string,
   headers?: IHeaders,
   options?: IRequestOptions,
-): Promise<LibResponse> {
-  return config.collectionFetch({
+): Promise<LibResponse<T>> {
+  return config.collectionFetch<T>({
     collection,
     data: undefined,
     method: 'GET',
@@ -222,14 +222,14 @@ export function read(
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
  */
-export function create(
+export function create<T extends IJsonapiModel = IJsonapiModel>(
   collection: IJsonapiCollection,
   url: string,
   data?: object,
   headers?: IHeaders,
   options?: IRequestOptions,
-): Promise<LibResponse> {
-  return config.collectionFetch({
+): Promise<LibResponse<T>> {
+  return config.collectionFetch<T>({
     collection,
     data,
     method: 'POST',
@@ -249,14 +249,14 @@ export function create(
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
  */
-export function update(
+export function update<T extends IJsonapiModel = IJsonapiModel>(
   collection: IJsonapiCollection,
   url: string,
   data?: object,
   headers?: IHeaders,
   options?: IRequestOptions,
-): Promise<LibResponse> {
-  return config.collectionFetch({
+): Promise<LibResponse<T>> {
+  return config.collectionFetch<T>({
     collection,
     data,
     method: 'PATCH',
@@ -275,13 +275,13 @@ export function update(
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<Response>} Resolves with a Response object
  */
-export function remove(
+export function remove<T extends IJsonapiModel = IJsonapiModel>(
   collection: IJsonapiCollection,
   url: string,
   headers?: IHeaders,
   options?: IRequestOptions,
-): Promise<LibResponse> {
-  return config.collectionFetch({
+): Promise<LibResponse<T>> {
+  return config.collectionFetch<T>({
     collection,
     data: undefined,
     method: 'DELETE',
@@ -300,24 +300,27 @@ export function remove(
  * @param {IRequestOptions} [options] Server options
  * @returns {Promise<LibResponse>} Response promise
  */
-export function fetchLink(
+export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
   link: ILink,
   collection: IJsonapiCollection,
   requestHeaders?: IDictionary<string>,
   options?: IRequestOptions,
-): Promise<LibResponse> {
+): Promise<LibResponse<T>> {
   if (link) {
     const href: string = typeof link === 'object' ? link.href : link;
 
     if (href) {
-      return read(collection, href, requestHeaders, options);
+      return read<T>(collection, href, requestHeaders, options);
     }
   }
   return Promise.resolve(new LibResponse({data: undefined}, collection));
 }
 
-export function handleResponse(record: IJsonapiModel, prop?: string): (LibResponse) => IJsonapiModel {
-  return (response: LibResponse): IJsonapiModel => {
+export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
+  record: T,
+  prop?: string,
+): (response: LibResponse<T>) => T {
+  return (response: LibResponse<T>): T => {
 
     if (response.error) {
       throw response.error;
@@ -325,16 +328,16 @@ export function handleResponse(record: IJsonapiModel, prop?: string): (LibRespon
 
     if (response.status === 204) {
       setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
-      return record as IJsonapiModel;
+      return record as T;
     } else if (response.status === 202) {
-      const responseRecord = response.data as IJsonapiModel;
+      const responseRecord = response.data as T;
       setModelMetaKey(responseRecord, MODEL_PROP_FIELD, prop);
       setModelMetaKey(responseRecord, MODEL_QUEUE_FIELD, true);
       setModelMetaKey(responseRecord, MODEL_RELATED_FIELD, record);
       return responseRecord;
     } else {
       setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
-      return response.replaceData(record).data as IJsonapiModel;
+      return response.replaceData(record).data as T;
     }
   };
 }

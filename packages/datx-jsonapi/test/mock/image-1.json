@@ -1,0 +1,9 @@
+{
+  "data": {
+    "id": 1,
+    "type": "image",
+    "attributes": {
+      "url": "http://example.com/1.jpg"
+    }
+  }
+}

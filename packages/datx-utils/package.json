@@ -21,16 +21,16 @@
   ],
   "devDependencies": {
     "@infinumjs/tslint-config": "^1.1.1",
-    "@types/jest": "^22.1.1",
-    "@types/node": "^9.4.0",
-    "jest": "^22.1.4",
-    "mobx": "^3.4.1",
+    "@types/jest": "^22.1.2",
+    "@types/node": "^9.4.4",
+    "jest": "^22.2.2",
+    "mobx": "^3.5.1",
     "ts-jest": "^22.0.3",
     "tslint": "^5.9.1",
     "typescript": "^2.7.1"
   },
   "peerDependencies": {
-    "mobx": "^3.4.1"
+    "mobx": "^3.5.1"
   },
   "scripts": {
     "test": "jest --coverage",
