@@ -17,8 +17,11 @@ import {
   MODEL_LINKS_FIELD,
   MODEL_META_FIELD,
   MODEL_PERSISTED_FIELD,
+  MODEL_PROP_FIELD,
+  MODEL_QUEUE_FIELD,
   MODEL_REF_LINKS_FIELD,
   MODEL_REF_META_FIELD,
+  MODEL_RELATED_FIELD,
 } from '../consts';
 import {IJsonapiCollection} from '../interfaces/IJsonapiCollection';
 import {IJsonapiModel} from '../interfaces/IJsonapiModel';
@@ -91,15 +94,32 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
   options?: IRequestOptions,
 ): Promise<Response<T>> {
   const collection = getModelCollection(model);
-  if (!collection) {
-    throw new Error('The model needs to be in a collection');
-  }
   const links = getModelLinks(model);
   if (!(key in links)) {
     throw new Error(`Link ${key} doesn't exist on the model`);
   }
   const link = links[key];
-  return fetchLink<T>(link, collection as IJsonapiCollection, requestHeaders, options);
+  const responseObj = fetchLink<T>(link, collection as IJsonapiCollection, requestHeaders, options);
+
+  if (getModelMetaKey(model, MODEL_QUEUE_FIELD)) {
+    return responseObj.then((response) => {
+      const related = getModelMetaKey(model, MODEL_RELATED_FIELD);
+      const prop = getModelMetaKey(model, MODEL_PROP_FIELD);
+      const record = response.data;
+      const recordType = record && getModelType(record);
+      if (record && recordType !== getModelType(model) && recordType === getModelType(related)) {
+        if (prop) {
+          related[prop] = record;
+          return response;
+        }
+        setModelMetaKey(related, MODEL_PERSISTED_FIELD, true);
+        return response.replaceData(related);
+      }
+      return response;
+    });
+  }
+
+  return responseObj;
 }
 
 export async function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>(

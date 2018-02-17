@@ -82,20 +82,16 @@ describe('updates', () => {
     });
 
     it('should add a referenced record', async () => {
-      class FooModel extends Event {
+      class Foo extends jsonapi(Event) {
         public static type = 'event';
       }
 
-      const Foo = jsonapi(FooModel);
-
       // tslint:disable-next-line:max-classes-per-file
-      class BarModel extends Model {
+      class Bar extends jsonapi(Model) {
         public static type = 'bar';
 
         @prop.toOne(Foo) public foo!: Foo;
       }
-
-      const Bar = jsonapi(BarModel);
 
       // tslint:disable-next-line:max-classes-per-file
       class Test extends Collection {
@@ -144,7 +140,7 @@ describe('updates', () => {
       expect(getRefId(baz, 'foo')).toBe(foo.meta.id);
     });
 
-    xit('should add a record with queue (202)', async () => {
+    it('should add a record with queue (202)', async () => {
       const store = new TestStore();
       const record = new Event({
         title: 'Example title',
@@ -194,7 +190,7 @@ describe('updates', () => {
       expect(updated).toBe(record);
     });
 
-    xit('should add a record with queue (202) if not in store', async () => {
+    it('should add a record with queue (202) if not in store', async () => {
       const record = new Event({
         title: 'Example title',
       });
@@ -224,16 +220,16 @@ describe('updates', () => {
         url: 'events/queue-jobs/123',
       });
 
-      const queue2 = await queue.fetchLink('self', null, true);
+      const queue2 = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
       const queueRecord = queue2.data as GenericModel;
-      expect(queueRecord.meta.type).toBe('queue');
+      expect(getModelType(queueRecord)).toBe('queue');
 
       mockApi({
         name: 'event-1',
         url: 'events/queue-jobs/123',
       });
 
-      const updatedRes = await queue.fetchLink('self', null, true);
+      const updatedRes = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
       const updated = updatedRes.data as GenericModel;
       expect(updated.meta.type).toBe('event');
 
@@ -379,7 +375,7 @@ describe('updates', () => {
       const store = new TestStore();
       const events = await store.fetch('event', 12345);
 
-      const record = events.data as Record;
+      const record = events.data as GenericModel;
 
       mockApi({
         data: JSON.stringify({
