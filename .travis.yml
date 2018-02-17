@@ -7,4 +7,5 @@ install:
   - npm install -g lerna
   - yarn
   - lerna bootstrap
+  - lerna run build
 script: lerna run test
