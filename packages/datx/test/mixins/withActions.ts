@@ -15,9 +15,9 @@ describe('Collection', () => {
   it('should work with initial data', () => {
     class Foo extends PureModel {
       public static type = 'foo';
-      @prop public foo: number;
-      @prop public bar: number;
-      @prop public baz: number;
+      @prop public foo!: number;
+      @prop public bar!: number;
+      @prop public baz!: number;
     }
 
     const FooMeta = withMeta(Foo);

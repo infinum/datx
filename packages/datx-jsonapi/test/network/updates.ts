@@ -1,6 +1,7 @@
 import {
   Collection,
   getModelCollection,
+  getModelId,
   getModelType,
   getRefId,
   initModelRef,
@@ -231,10 +232,10 @@ describe('updates', () => {
 
       const updatedRes = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
       const updated = updatedRes.data as GenericModel;
-      expect(updated.meta.type).toBe('event');
+      expect(getModelType(updated)).toBe('event');
 
       expect(updated['title']).toBe('Test 1');
-      expect(updated.meta.id).toBe(12345);
+      expect(getModelId(updated)).toBe(12345);
       expect(updated).toBe(record);
     });
 

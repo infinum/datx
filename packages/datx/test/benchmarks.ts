@@ -23,7 +23,7 @@ describe('Benchmarks', () => {
 
       class Count extends PureModel {
         public static type = 'count';
-        @prop public index: number;
+        @prop public index!: number;
       }
 
       class TestCollection extends Collection {
@@ -52,7 +52,7 @@ describe('Benchmarks', () => {
           index: undefined,
         };
 
-        public index: number;
+        public index!: number;
       }
 
       class TestCollection extends OldCollection {
