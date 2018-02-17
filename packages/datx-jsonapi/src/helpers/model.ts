@@ -11,6 +11,7 @@ import {
   setModelMetaKey,
 } from 'datx';
 import {IDictionary, IRawModel, mapItems, META_FIELD} from 'datx-utils';
+import {isObservableArray} from 'mobx';
 
 import {
   MODEL_LINKS_FIELD,
@@ -158,10 +159,16 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
   Object.keys(refs).forEach((key) => {
     data.relationships = data.relationships || {};
     const refIds = getRefId(model, key);
-    const rel = mapItems(refIds, (id: IIdentifier) => {
+    let rel: IDefinition|Array<IDefinition>;
+    if (isObservableArray(refIds)) {
+      rel = refIds.map((id, index) => {
+        const type = model[key][index] ? getModelType(model[key][index]) : refs[key].model;
+        return {id, type};
+      });
+    } else {
       const type = model[key] ? getModelType(model[key]) : refs[key].model;
-      return {id, type};
-    });
+      rel = {id: refIds, type};
+    }
 
     data.relationships[key] = {data: rel} as IRelationship;
     delete data.attributes[key];
@@ -193,7 +200,7 @@ export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Prom
   const data: IRecord = modelToJsonApi(model);
   const requestMethod = isModelPersisted(model) ? update : create;
   const url = getModelEndpointUrl(model);
-  return requestMethod(collection, url, {data}, options && options.headers)
+  return requestMethod(url, {data}, collection, options && options.headers)
     .then(handleResponse(model));
 }
 
@@ -204,7 +211,7 @@ export function removeModel<T extends IJsonapiModel>(model: T, options?: IReques
   const url = getModelEndpointUrl(model);
 
   if (isPersisted) {
-    return remove(collection, url, options && options.headers)
+    return remove(url, collection, options && options.headers)
       .then((response: Response<T>) => {
         if (response.error) {
           throw response.error;
@@ -221,4 +228,33 @@ export function removeModel<T extends IJsonapiModel>(model: T, options?: IReques
   }
 
   return Promise.resolve();
+}
+
+export function saveRelationship<T extends IJsonapiModel>(
+  model: T,
+  ref: string,
+  options?: IRequestOptions,
+): Promise<T> {
+  const collection = getModelCollection(model) as IJsonapiCollection;
+  if (!collection) {
+    throw new Error('The model needs to be in a collection');
+  }
+  const links = getModelRefLinks(model);
+  if (!(ref in links)) {
+    throw new Error(`The reference ${ref} doesn't have any links`);
+  }
+  const refLinks = links[ref];
+  if (!('self' in refLinks)) {
+    throw new Error('The relationship doesn\'t have a defined link');
+  }
+  const link = refLinks.self;
+  const href: string = typeof link === 'object' ? link.href : link;
+
+  const ids: IIdentifier = getRefId(model, ref);
+  const type = getModelType(getModelMetaKey(model, 'refs')[ref].model);
+  type ID = IDefinition|Array<IDefinition>;
+  const data: ID = mapItems(ids, (id) => ({id, type})) as ID;
+
+  return update(href, {data}, collection, options && options.headers)
+    .then(handleResponse(model, ref));
 }

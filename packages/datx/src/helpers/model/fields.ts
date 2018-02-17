@@ -1,4 +1,4 @@
-import {isFalsyArray, mapItems} from 'datx-utils';
+import {mapItems} from 'datx-utils';
 import {IArrayChange, IArraySplice, intercept, IObservableArray, isObservableArray, observable} from 'mobx';
 
 import {FieldType} from '../../enums/FieldType';
@@ -190,15 +190,6 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
       return ref;
     });
 
-    const isInvalidArray = isFalsyArray(referencedModels) && (value as Array<any>).length;
-
-    // TODO: Should this be checked?
-    const isInvalidModel = false; // Boolean(value) && !referencedModels;
-
-    if (isInvalidArray || isInvalidModel) {
-      throw error(REF_NEEDS_COLLECTION);
-    }
-
     storage.setModelDataKey(model, key, ids);
   }
 }
@@ -267,4 +258,17 @@ export function updateModelId(model: PureModel, newId: IIdentifier): void {
  */
 export function getRefId(model: PureModel, key: string): IIdentifier {
   return storage.getModelDataKey(model, key);
+}
+
+/**
+ * Set the id of the referenced model
+ *
+ * @export
+ * @param {PureModel} model Source model
+ * @param {string} key Referenced model property name
+ * @param {IIdentifier} value The new value
+ * @returns {IIdentifier} Referenced model id
+ */
+export function setRefId(model: PureModel, key: string, value: IIdentifier|Array<IIdentifier>) {
+  return storage.setModelDataKey(model, key, value);
 }

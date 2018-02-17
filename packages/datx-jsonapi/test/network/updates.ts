@@ -1,9 +1,19 @@
-import {Collection, getModelCollection, getModelType, getRefId, initModelRef, Model, prop, ReferenceType} from 'datx';
+import {
+  Collection,
+  getModelCollection,
+  getModelType,
+  getRefId,
+  initModelRef,
+  Model,
+  prop,
+  ReferenceType,
+  setRefId,
+} from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
 // tslint:disable:no-string-literal
 
-import {config, fetchModelLink, GenericModel, jsonapi, modelToJsonApi} from '../../src';
+import {config, fetchModelLink, GenericModel, jsonapi, modelToJsonApi, saveRelationship} from '../../src';
 
 import {clearAllCache} from '../../src/cache';
 import mockApi from '../utils/api';
@@ -385,7 +395,7 @@ describe('updates', () => {
       expect(updated).toBe(record);
     });
 
-    xit('should support updating relationships', async () => {
+    it('should support updating relationships', async () => {
       mockApi({
         name: 'events-1',
         url: 'event',
@@ -395,11 +405,10 @@ describe('updates', () => {
       const events = await store.fetchAll('event');
       const event = events.data && events.data[0] as Event;
 
-      event.images.push('2');
-      // event['imageId'] = [event['imageId'], '2'];
+      setRefId(event, 'images', ['1', '2']);
 
       mockApi({
-        data:  {
+        data: {
           data: [{
             id: '1',
             type: 'image',
@@ -410,53 +419,19 @@ describe('updates', () => {
         },
         method: 'PATCH',
         name: 'event-1d',
-        url: 'images/1',
+        url: 'event/1/images',
       });
 
-      const event2 = await event.saveRelationship('images') as Event;
-      expect(event2.meta.id).toBe(12345);
-      expect(event2.meta.type).toBe('event');
-      expect(event2['imageId'][0]).toBe('1');
-      expect(event['imageId'][0]).toBe('1');
-      expect(event).toBe(event2);
-
-    });
-
-    xit('should support updating relationships if not in store', async () => {
-      mockApi({
-        name: 'events-1',
-        url: 'event',
-      });
-
-      const store = new TestStore();
-      const events = await store.fetchAll('event');
-      const event = events.data[0] as Record;
-      store.remove(event.meta.type, event.meta.id);
-
-      event['imageId'] = [event['imageId'], '2'];
-
-      mockApi({
-        data:  {
-          data: [{
-            id: '1',
-            type: 'image',
-          }, {
-            id: '2',
-            type: 'image',
-          }],
-        },
-        method: 'PATCH',
-        name: 'event-1d',
-        url: 'images/1',
-      });
-
-      const event2 = await event.saveRelationship('image') as Record;
-      expect(event2.meta.id).toBe(12345);
-      expect(event2.meta.type).toBe('event');
-      expect(event2['imageId'][0]).toBe('1');
-      expect(event['imageId'][0]).toBe('1');
-      expect(event).toBe(event2);
-
+      expect(event).toBeInstanceOf(Event);
+      if (event) {
+        const event2 = await saveRelationship(event, 'images');
+        expect(event2.meta.id).toBe(12345);
+        expect(event2.meta.type).toBe('event');
+        expect(getRefId(event2, 'images')).toHaveLength(2);
+        expect(getRefId(event2, 'images')).toContain('1');
+        expect(getRefId(event2, 'images')).toContain('2');
+        expect(event).toBe(event2);
+      }
     });
   });
 

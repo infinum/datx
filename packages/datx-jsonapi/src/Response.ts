@@ -1,4 +1,4 @@
-import {getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId, getModelCollection} from 'datx';
+import {getModelCollection, getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId} from 'datx';
 import {IDictionary} from 'datx-utils';
 import {action, computed, extendObservable, IComputedValue, isObservableArray} from 'mobx';
 
@@ -119,7 +119,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {IJsonapiCollection}
    * @memberOf Response
    */
-  private __collection: IJsonapiCollection;
+  private __collection?: IJsonapiCollection;
 
   /**
    * Server options
@@ -150,7 +150,7 @@ export class Response<T extends IJsonapiModel> {
 
   constructor(
     response: IRawResponse,
-    collection: IJsonapiCollection,
+    collection?: IJsonapiCollection,
     options?: IRequestOptions,
     overrideData?: T|Array<T>,
   ) {
@@ -224,53 +224,6 @@ export class Response<T extends IJsonapiModel> {
     updateModelId(data, newId);
 
     return new Response(this.__response, this.__collection, this.__options, data);
-  }
-
-  /**
-   * Update references in the store
-   *
-   * @private
-   * @param {any} type Record type
-   * @param {any} oldId Old redord ID
-   * @param {any} newId New record ID
-   * @memberof Response
-   */
-  private __updateStoreReferences(type, oldId, newId) {
-    if (this.__collection) {
-      const modelHash = this.__collection['__modelHash'][type];
-      const oldModel = modelHash[oldId];
-      modelHash[newId] = oldModel;
-      delete modelHash[oldId];
-
-      this.__updateReferences(oldId, newId);
-    }
-  }
-
-  /**
-   * Update models that reference the updated model
-   *
-   * @private
-   * @param {any} oldId Old record ID
-   * @param {any} newId new record ID
-   * @memberof Response
-   */
-  private __updateReferences(oldId, newId) {
-    this.__collection['__data'].map((model) => {
-      const keyList = Object.keys(model['__data']);
-      keyList.map((key) => {
-        const keyId = `${key}Id`;
-        if (key in model && keyId in model) {
-          if (isObservableArray(model[keyId])) {
-            const index = model[keyId].indexOf(oldId);
-            if (index > -1) {
-              model[keyId][index] = newId;
-            }
-          } else if (model[keyId] === oldId) {
-            model[keyId] = newId;
-          }
-        }
-      });
-    });
   }
 
   /**

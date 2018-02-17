@@ -13,6 +13,7 @@ export {
   getModelRefMeta,
   modelToJsonApi,
   saveModel,
+  saveRelationship,
 } from './helpers/model';
 
 export {

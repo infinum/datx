@@ -29,7 +29,7 @@ export interface ICollectionFetchOpts {
   options?: IRequestOptions&{headers?: IHeaders};
   data?: object;
   method: string;
-  collection: IJsonapiCollection;
+  collection?: IJsonapiCollection;
   skipCache?: boolean;
 }
 
@@ -199,8 +199,8 @@ export function fetch<T extends IJsonapiModel = IJsonapiModel>(options: ICollect
  * @returns {Promise<Response>} Resolves with a Response object
  */
 export function read<T extends IJsonapiModel = IJsonapiModel>(
-  collection: IJsonapiCollection,
   url: string,
+  collection?: IJsonapiCollection,
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse<T>> {
@@ -225,9 +225,9 @@ export function read<T extends IJsonapiModel = IJsonapiModel>(
  * @returns {Promise<Response>} Resolves with a Response object
  */
 export function create<T extends IJsonapiModel = IJsonapiModel>(
-  collection: IJsonapiCollection,
   url: string,
   data?: object,
+  collection?: IJsonapiCollection,
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse<T>> {
@@ -252,9 +252,9 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
  * @returns {Promise<Response>} Resolves with a Response object
  */
 export function update<T extends IJsonapiModel = IJsonapiModel>(
-  collection: IJsonapiCollection,
   url: string,
   data?: object,
+  collection?: IJsonapiCollection,
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse<T>> {
@@ -278,8 +278,8 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
  * @returns {Promise<Response>} Resolves with a Response object
  */
 export function remove<T extends IJsonapiModel = IJsonapiModel>(
-  collection: IJsonapiCollection,
   url: string,
+  collection?: IJsonapiCollection,
   headers?: IHeaders,
   options?: IRequestOptions,
 ): Promise<LibResponse<T>> {
@@ -304,7 +304,7 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
  */
 export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
   link: ILink,
-  collection: IJsonapiCollection,
+  collection?: IJsonapiCollection,
   requestHeaders?: IDictionary<string>,
   options?: IRequestOptions,
 ): Promise<LibResponse<T>> {
@@ -312,7 +312,7 @@ export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
     const href: string = typeof link === 'object' ? link.href : link;
 
     if (href) {
-      return read<T>(collection, href, requestHeaders, options);
+      return read<T>(href, collection, requestHeaders, options);
     }
   }
   return Promise.resolve(new LibResponse({data: undefined}, collection));

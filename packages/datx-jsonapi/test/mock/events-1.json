@@ -11,12 +11,12 @@
     },
     "relationships": {
       "images": {
-        "data": {
+        "data": [{
           "type": "image",
           "id": "1"
-        },
+        }],
         "links": {
-          "self": "http://example.com/images/1"
+          "self": "http://example.com/event/1/images"
         },
         "meta": {
           "foo": "bar"

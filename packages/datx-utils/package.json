@@ -40,6 +40,7 @@
     "build": "tsc --project tsconfig.build.json"
   },
   "jest": {
+    "coveragePathIgnorePatterns": ["/test/", "/node_modules/"],
     "mapCoverage": true,
     "moduleFileExtensions": [
       "ts",

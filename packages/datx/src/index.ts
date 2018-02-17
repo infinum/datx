@@ -5,6 +5,7 @@ export {PureModel} from './PureModel';
 
 export {
   getRefId,
+  setRefId,
   updateModelId,
 } from './helpers/model/fields';
 

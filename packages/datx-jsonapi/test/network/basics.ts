@@ -46,14 +46,17 @@ describe('Network basics', () => {
       const event = events.data[0];
       expect(event['title']).toBe('Test 1');
       expect(getModelMeta(event).createdAt).toBe('2017-03-19T16:00:00.000Z');
-      expect(event.meta.refs.images).toBe('1');
+      expect(event.meta.refs.images).toContain('1');
+      expect(event.meta.refs.images).toHaveLength(1);
       expect(getModelRefMeta(event).images.foo).toBe('bar');
 
       const data = modelToJsonApi(event);
       expect(data.id).toBe(1);
       expect(data.type).toBe('event');
       expect(data.attributes.title).toBe('Test 1');
-      expect(data.relationships && data.relationships.images.data).toEqual({type: 'image', id: '1'});
+      expect(
+        data.relationships && data.relationships.images.data && data.relationships.images.data[0],
+      ).toEqual({type: 'image', id: '1'});
       expect('images' in data.attributes).toBe(false);
     }
   });
@@ -251,7 +254,7 @@ describe('Network basics', () => {
 
     mockApi({
       name: 'image-1',
-      url: 'images/1',
+      url: 'event/1/images',
     });
 
     expect(event).toBeInstanceOf(Event);

@@ -68,7 +68,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, id, undefined, options);
-      return read<T>(this, query.url, query.headers, options)
+      return read<T>(query.url, this, query.headers, options)
         .then((res) => this.__handleErrors<T>(res));
     }
 
@@ -85,7 +85,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, undefined, undefined, options);
-      return read<T>(this, query.url, query.headers, options)
+      return read<T>(query.url, this, query.headers, options)
         .then((res) => this.__handleErrors<T>(res));
     }
 

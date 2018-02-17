@@ -262,11 +262,11 @@ describe('Model', () => {
 
       expect(() => {
         const foo2 = new Foo({foo: 3, parent: foo1});
-      }).toThrowError('The model needs to be in one of collections to be referenceable');
+      }).toThrowError('The model needs to be in a collection to be referenceable');
 
       expect(() => {
         foo1.parent = foo1;
-      }).toThrowError('The model needs to be in one of collections to be referenceable');
+      }).toThrowError('The model needs to be in a collection to be referenceable');
     });
 
     it('should throw if array is given', () => {
