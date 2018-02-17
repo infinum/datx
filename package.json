@@ -8,5 +8,9 @@
   "scripts": {
     "precommit": "lerna run lint & lerna run test"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
 }

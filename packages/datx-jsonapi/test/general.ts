@@ -74,8 +74,7 @@ describe('General', () => {
     }
   });
 
-  // FIXME: Not sure why it doesn't work - works in the datx tests...
-  xit('should trigger autorun on change', () => {
+  it('should trigger autorun on change', () => {
     const store = new TestStore();
     store.sync({
       data: {
@@ -89,7 +88,7 @@ describe('General', () => {
 
     const event = store.find(Event, 1);
 
-    expect(event).not.toBeNull();
+    expect(event).toBeInstanceOf(Event);
     if (event) {
       let name = 'Demo';
       let autorunCount = 0;
