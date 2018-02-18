@@ -13,7 +13,7 @@ import {PureModel} from '../../PureModel';
 import {storage} from '../../services/storage';
 import {error} from '../format';
 import {getField, getRef, updateField, updateRef} from './fields';
-import {getModelType} from './utils';
+import {getModelMetaKey, getModelType, setModelMetaKey} from './utils';
 
 interface IMetaToInit extends IDictionary<any> {
   fields: Array<string>;
@@ -26,7 +26,7 @@ export function initModelField<T extends PureModel>(
   defValue: any,
   type: FieldType = FieldType.DATA,
 ) {
-  const fields = storage.getModelMetaKey(obj, 'fields') as Array<string>;
+  const fields = getModelMetaKey(obj, 'fields') as Array<string>;
 
   // Initialize the observable field to the default value
   storage.setModelDataKey(obj, key, defValue);
@@ -51,7 +51,7 @@ export function initModelField<T extends PureModel>(
  * @param {TRefValue} initialVal Initial reference value
  */
 export function initModelRef(obj: PureModel|IType, key: string, options: IReferenceOptions, initialVal: TRefValue) {
-  const refs = storage.getModelMetaKey(obj, 'refs');
+  const refs = getModelMetaKey(obj, 'refs');
 
   // Initialize the observable field to the given value
   refs[key] = options;
@@ -154,7 +154,7 @@ function initModelMeta(model: PureModel, data: IRawModel): IDictionary<any> & IM
 export function initModel(model: PureModel, rawData: IRawModel, collection?: PureCollection) {
   const staticModel = model.constructor as typeof PureModel;
   const data = Object.assign({}, staticModel.preprocess(rawData));
-  storage.setModelMetaKey(model, 'collection', collection);
+  setModelMetaKey(model, 'collection', collection);
   const meta = initModelMeta(model, data);
   initModelData(model, data, meta, collection);
 }

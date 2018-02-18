@@ -23,7 +23,7 @@ export function getModelType(model: IType|typeof PureModel|PureModel): IType {
   if (typeof model === 'function') {
     return model.type;
   } else if (typeof model === 'object') {
-    return storage.getModelMetaKey(model, 'type') || (model.constructor as typeof PureModel).type;
+    return getModelMetaKey(model, 'type') || (model.constructor as typeof PureModel).type;
   }
   return model;
 }
@@ -37,7 +37,7 @@ export function getModelType(model: IType|typeof PureModel|PureModel): IType {
  */
 export function getModelId(model: PureModel|IIdentifier): IIdentifier {
   if (model instanceof PureModel) {
-    return storage.getModelMetaKey(model, 'id');
+    return getModelMetaKey(model, 'id');
   }
   return model;
 }
@@ -50,7 +50,7 @@ export function getModelId(model: PureModel|IIdentifier): IIdentifier {
  * @returns {PureCollection} A collection the given model belongs to
  */
 export function getModelCollection(model: PureModel): PureCollection|undefined {
-  return storage.getModelMetaKey(model, 'collection');
+  return getModelMetaKey(model, 'collection');
 }
 
 /**
@@ -88,7 +88,7 @@ export function cloneModel<T extends PureModel>(model: T): T {
  */
 export function getOriginalModel(model: PureModel): PureModel {
   const collection = getModelCollection(model);
-  const originalId = storage.getModelMetaKey(model, 'originalId');
+  const originalId = getModelMetaKey(model, 'originalId');
   if (originalId) {
     if (!collection) {
       throw error(REF_NEEDS_COLLECTION);
@@ -130,7 +130,7 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary<any
  * @param {*} value Property value
  */
 export function assignModel<T extends PureModel>(model: T, key: string, value: any): void {
-  const refs = storage.getModelMetaKey(model, 'refs') as IDictionary<IReferenceOptions>;
+  const refs = getModelMetaKey(model, 'refs') as IDictionary<IReferenceOptions>;
   if (key in refs) {
     assignModelRef(model, key, value);
   } else if (value instanceof PureModel) {
@@ -141,7 +141,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
 }
 
 function assignModelField<T extends PureModel>(model: T, key: string, value: any): void {
-  const fields = storage.getModelMetaKey(model, 'fields') as Array<string>;
+  const fields = getModelMetaKey(model, 'fields') as Array<string>;
   if (fields.indexOf(key) !== -1) {
     model[key] = value;
   } else {
@@ -150,7 +150,7 @@ function assignModelField<T extends PureModel>(model: T, key: string, value: any
 }
 
 function assignModelRef<T extends PureModel>(model: T, key: string, value: TRefValue): void {
-  const refs = storage.getModelMetaKey(model, 'refs');
+  const refs = getModelMetaKey(model, 'refs');
   model[key] = value;
 }
 

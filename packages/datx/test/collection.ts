@@ -39,6 +39,7 @@ describe('Collection', () => {
       }
 
       const store = new Store();
+      const store2 = new Store();
       const foo1 = store.add({foo: 1}, Foo);
       const foo2 = store.add<Foo>({foo: 2}, 'foo');
       const foo3 = store.add(new Foo({foo: 3}));
@@ -51,6 +52,8 @@ describe('Collection', () => {
 
       store.add(foo1);
       expect(store.length).toBe(3);
+
+      expect(() => store2.add(foo1)).toThrowError('A model can be in a single collection at once');
 
       // @ts-ignore - TS won't allow this mistake
       expect(() => store.add({foo: 4}))
@@ -91,6 +94,32 @@ describe('Collection', () => {
       store.remove([foo3, foo4]); // Remove foo3, ignore foo4
       expect(store.length).toBe(0);
 
+    });
+
+    it('should work with removing all models of a certain type', () => {
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        @prop public foo!: number;
+        @prop public bar!: number;
+        @prop public baz!: number;
+      }
+
+      class Baz extends PureModel {
+        public static type = 'baz';
+      }
+
+      class Store extends Collection {
+        public static types = [Foo, Baz];
+      }
+
+      const store = new Store();
+
+      store.add([{}, {}, {}], Foo);
+      store.add([{}, {}], Baz);
+      store.add({}, Foo);
+      store.removeAll(Foo);
+      expect(store.length).toBe(2);
     });
 
     it('should reset the collection', () => {

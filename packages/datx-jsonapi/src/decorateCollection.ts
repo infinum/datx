@@ -172,16 +172,15 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
           return;
         }
         if (items && record) {
-          const models: PureModel|Array<PureModel>|IIdentifier|undefined|null = mapItems(
+          const models: PureModel|Array<PureModel>|IIdentifier|null = mapItems(
             items,
             (def: IDefinition) => this.find(def.type, def.id) || def.id,
-          );
+          ) || null;
 
           const itemType: string = items instanceof Array ? items[0].type : items.type;
           if (ref in record) {
             record[ref] = models;
           } else {
-            // @ts-ignore - Ignore until datx is updated
             initModelRef(record, ref, {model: itemType, type: ReferenceType.TO_ONE_OR_MANY}, models);
           }
         }

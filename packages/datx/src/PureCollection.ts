@@ -4,13 +4,19 @@ import {computed, IObservableArray, observable} from 'mobx';
 import {MODEL_SINGLE_COLLECTION, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
 import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
-import {getModelCollection, getModelId, getModelType, modelToJSON, updateModel} from './helpers/model/utils';
+import {
+  getModelCollection,
+  getModelId,
+  getModelType,
+  modelToJSON,
+  setModelMetaKey,
+  updateModel,
+} from './helpers/model/utils';
 import {IIdentifier} from './interfaces/IIdentifier';
 import {IModelConstructor} from './interfaces/IModelConstructor';
 import {IType} from './interfaces/IType';
 import {TFilterFn} from './interfaces/TFilterFn';
 import {PureModel} from './PureModel';
-import {storage} from './services/storage';
 
 export class PureCollection {
 
@@ -225,7 +231,7 @@ export class PureCollection {
    * @memberof Collection
    */
   public reset() {
-    this.__data.map((model) => storage.setModelMetaKey(model, 'collection', undefined));
+    this.__data.map((model) => setModelMetaKey(model, 'collection', undefined));
     this.__data.replace([]);
     const types = Object.keys(this.__dataList);
     types.forEach((type) => {
@@ -289,7 +295,7 @@ export class PureCollection {
     this.__dataList[modelType].push(model);
     this.__dataMap[modelType] = this.__dataMap[modelType] || observable.shallowObject({});
     this.__dataMap[modelType][modelId] = model;
-    storage.setModelMetaKey(model, 'collection', this);
+    setModelMetaKey(model, 'collection', this);
   }
 
   private __removeModel(model: PureModel|Array<PureModel>, type?: IType, id?: IIdentifier) {
@@ -302,7 +308,7 @@ export class PureCollection {
     this.__data.remove(model);
     this.__dataList[modelType].remove(model);
     delete this.__dataMap[modelType][modelId];
-    storage.setModelMetaKey(model, 'collection', undefined);
+    setModelMetaKey(model, 'collection', undefined);
   }
 
   private __findByType(model: IType|typeof PureModel|PureModel, id?: IIdentifier) {
@@ -310,7 +316,6 @@ export class PureCollection {
 
     if (id) {
       const models = this.__dataMap[type] || {};
-      // console.log('Find by type', type, id, Object.keys(models))
       return models[id] || null;
     } else {
       const data = this.__dataList[type] || [];

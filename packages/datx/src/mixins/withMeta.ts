@@ -4,11 +4,10 @@ import {DECORATE_MODEL} from '../errors';
 import {error} from '../helpers/format';
 import {isModel} from '../helpers/mixin';
 import {getRefId} from '../helpers/model/fields';
-import {getModelCollection, getModelId, getModelType, getOriginalModel} from '../helpers/model/utils';
+import {getModelCollection, getModelId, getModelMetaKey, getModelType, getOriginalModel} from '../helpers/model/utils';
 import {IMetaMixin} from '../interfaces/IMetaMixin';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
 import {PureModel} from '../PureModel';
-import {storage} from '../services/storage';
 
 /**
  * Extends the model with the exposed meta data
@@ -27,7 +26,7 @@ export function withMeta<T extends PureModel>(Base: IModelConstructor<T>) {
 
   class WithMeta extends BaseClass implements IMetaMixin {
     @computed public get meta() {
-      const refDefs = storage.getModelMetaKey(this, 'refs');
+      const refDefs = getModelMetaKey(this, 'refs');
       const refs = {};
       Object.keys(refDefs).forEach((key) => {
         refs[key] = getRefId(this, key);
@@ -36,7 +35,7 @@ export function withMeta<T extends PureModel>(Base: IModelConstructor<T>) {
       return Object.freeze({
         collection: getModelCollection(this),
         id: getModelId(this),
-        original: storage.getModelMetaKey(this, 'originalId') && getOriginalModel(this) || undefined,
+        original: getModelMetaKey(this, 'originalId') && getOriginalModel(this) || undefined,
         refs,
         type: getModelType(this),
       });

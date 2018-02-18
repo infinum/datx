@@ -19,7 +19,7 @@ import {TRefValue} from '../../interfaces/TRefValue';
 import {PureModel} from '../../PureModel';
 import {storage} from '../../services/storage';
 import {error} from '../format';
-import {getModelCollection, getModelId, getModelType} from './utils';
+import {getModelCollection, getModelId, getModelMetaKey, getModelType, setModelMetaKey} from './utils';
 
 function modelAddReference(model: PureModel, key: string, newReference: PureModel) {
   const refOptions = storage.getModelReferenceOptions(model, key);
@@ -195,7 +195,7 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
 }
 
 function getModelRefsByType(model: PureModel, type: IType) {
-  const refs = storage.getModelMetaKey(model, 'refs');
+  const refs = getModelMetaKey(model, 'refs');
   return Object.keys(refs)
     .filter((key) => !refs[key].property)
     .filter((key) => getModelType(refs[key].model) === type);
@@ -232,12 +232,12 @@ export function updateModelId(model: PureModel, newId: IIdentifier): void {
 
   const oldId = getModelId(model);
   const type = getModelType(model);
-  storage.setModelMetaKey(model, 'id', newId);
+  setModelMetaKey(model, 'id', newId);
 
   const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id');
   if (modelId) {
-    storage.setModelDataKey(model, modelId, newId);
+    setRefId(model, modelId, newId);
   }
 
   if (collection) {
@@ -256,7 +256,7 @@ export function updateModelId(model: PureModel, newId: IIdentifier): void {
  * @param {string} key Referenced model property name
  * @returns {IIdentifier} Referenced model id
  */
-export function getRefId(model: PureModel, key: string): IIdentifier {
+export function getRefId(model: PureModel, key: string): IIdentifier|Array<IIdentifier> {
   return storage.getModelDataKey(model, key);
 }
 

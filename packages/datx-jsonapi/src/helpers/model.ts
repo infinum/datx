@@ -122,13 +122,7 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
   return responseObj;
 }
 
-export async function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>(
-  model: PureModel,
-  ref: string,
-  key: string,
-  requestHeaders?: IDictionary<string>,
-  options?: IRequestOptions,
-): Promise<Response<T>> {
+function getLink(model: PureModel, ref: string, key: string) {
   const collection = getModelCollection(model);
   if (!collection) {
     throw new Error('The model needs to be in a collection');
@@ -141,7 +135,18 @@ export async function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>
   if (!(key in refLinks)) {
     throw new Error(`Link ${key} doesn't exist on the model`);
   }
-  const link = refLinks[key];
+  return refLinks[key];
+}
+
+export async function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>(
+  model: PureModel,
+  ref: string,
+  key: string,
+  requestHeaders?: IDictionary<string>,
+  options?: IRequestOptions,
+): Promise<Response<T>> {
+  const collection = getModelCollection(model);
+  const link = getLink(model, ref, key);
   return fetchLink<T>(link, collection as IJsonapiCollection, requestHeaders, options);
 }
 
@@ -256,18 +261,7 @@ export function saveRelationship<T extends IJsonapiModel>(
   options?: IRequestOptions,
 ): Promise<T> {
   const collection = getModelCollection(model) as IJsonapiCollection;
-  if (!collection) {
-    throw new Error('The model needs to be in a collection');
-  }
-  const links = getModelRefLinks(model);
-  if (!(ref in links)) {
-    throw new Error(`The reference ${ref} doesn't have any links`);
-  }
-  const refLinks = links[ref];
-  if (!('self' in refLinks)) {
-    throw new Error('The relationship doesn\'t have a defined link');
-  }
-  const link = refLinks.self;
+  const link = getLink(model, ref, 'self');
   const href: string = typeof link === 'object' ? link.href : link;
 
   const ids: IIdentifier = getRefId(model, ref);

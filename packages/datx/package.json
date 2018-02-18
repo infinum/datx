@@ -39,8 +39,12 @@
     "build": "tsc --project tsconfig.build.json"
   },
   "jest": {
-    "coveragePathIgnorePatterns": ["/test/", "/node_modules/"],
-    "mapCoverage": false,
+    "coveragePathIgnorePatterns": [
+      "/test/",
+      "/node_modules/",
+      "../datx-utils/dist"
+    ],
+    "mapCoverage": true,
     "moduleFileExtensions": [
       "ts",
       "js"

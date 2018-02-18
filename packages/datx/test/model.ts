@@ -172,6 +172,8 @@ describe('Model', () => {
       expect(getModelId(foo)).not.toBe(getModelId(foo2));
       expect(getOriginalModel(foo2)).toBe(foo);
       expect(() => getOriginalModel(foo)).toThrowError('The given model is not a clone.');
+      collection.remove(foo2);
+      expect(() => getOriginalModel(foo2)).toThrowError('The model needs to be in a collection to be referenceable');
     });
 
     it('should support cloning with additional fields', () => {
@@ -209,6 +211,7 @@ describe('Model', () => {
         public static types = [Foo];
       }
       const collection = new TestCollection();
+      expect(Foo.toJSON()).toBe('foo');
 
       const foo1 = new Foo({foo: 2});
       collection.add(foo1);

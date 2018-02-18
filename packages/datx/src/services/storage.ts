@@ -95,18 +95,12 @@ export class DataStorage {
     return Object.assign({}, ...defaults.reverse());
   }
 
-  public addModelClassReference(model: typeof PureModel|IType, key: string, options: IReferenceOptions) {
-    let modelObj: typeof PureModel|{type: IType};
-    if (typeof model === 'number' || typeof model === 'string') {
-      modelObj = {type: model};
-    } else {
-      modelObj = model;
-    }
-    const data = this.modelClassData.get(modelObj);
+  public addModelClassReference(model: typeof PureModel, key: string, options: IReferenceOptions) {
+    const data = this.modelClassData.get(model);
     if (data) {
       Object.assign(data.references, {[key]: options});
     } else {
-      this.modelClassData.set(modelObj, {
+      this.modelClassData.set(model, {
         data: {},
         meta: {},
         references: {[key]: options},
