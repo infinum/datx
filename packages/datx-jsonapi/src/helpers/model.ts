@@ -191,7 +191,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
         return {id, type};
       });
     } else {
-      const type = model[key] ? getModelType(model[key]) : refs[key].model;
+      const type: string = model[key] ? getModelType(model[key]) : refs[key].model;
       rel = {id: refIds, type};
     }
 
