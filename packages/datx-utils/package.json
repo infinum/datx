@@ -1,6 +1,6 @@
 {
   "name": "datx-utils",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "DatX lib utils for mixins",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -40,7 +40,10 @@
     "build": "tsc --project tsconfig.build.json"
   },
   "jest": {
-    "coveragePathIgnorePatterns": ["/test/", "/node_modules/"],
+    "coveragePathIgnorePatterns": [
+      "/test/",
+      "/node_modules/"
+    ],
     "mapCoverage": true,
     "moduleFileExtensions": [
       "ts",
