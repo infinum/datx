@@ -185,8 +185,8 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
     data.relationships = data.relationships || {};
     const refIds = getRefId(model, key);
     let rel: IDefinition|Array<IDefinition>;
-    if (isObservableArray(refIds)) {
-      rel = refIds.map((id, index) => {
+    if (refIds instanceof Array || isObservableArray(refIds)) {
+      rel = (refIds as Array<IIdentifier>).map((id, index) => {
         const type = model[key][index] ? getModelType(model[key][index]) : refs[key].model;
         return {id, type};
       });
@@ -264,7 +264,7 @@ export function saveRelationship<T extends IJsonapiModel>(
   const link = getLink(model, ref, 'self');
   const href: string = typeof link === 'object' ? link.href : link;
 
-  const ids: IIdentifier = getRefId(model, ref);
+  const ids = getRefId(model, ref);
   const type = getModelType(getModelMetaKey(model, 'refs')[ref].model);
   type ID = IDefinition|Array<IDefinition>;
   const data: ID = mapItems(ids, (id) => ({id, type})) as ID;
