@@ -25,6 +25,8 @@ export class PureModel {
    */
   public static autoIdValue: IIdentifier = 0;
 
+  public static enableAutoId: boolean = true;
+
   /**
    * Function used to preprocess the model input data. Called during the model initialization
    *

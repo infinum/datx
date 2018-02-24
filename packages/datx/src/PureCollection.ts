@@ -47,7 +47,7 @@ export class PureCollection {
    * @returns {Array<PureModel>} A list of initialized models
    * @memberof Collection
    */
-  public insert(data: Array<IRawModel>): Array<PureModel> {
+  public insert(data: Array<Partial<IRawModel>>): Array<PureModel> {
     const models = initModels(this, data);
     this.__insertModel(models);
     return models;
@@ -74,17 +74,6 @@ export class PureCollection {
   public add<T extends PureModel>(data: Array<T>): Array<T>;
 
   /**
-   * Add a new model to the collection
-   *
-   * @template T
-   * @param {(IRawModel|IDictionary<any>)} data New data to be added
-   * @param {(IType|IModelConstructor<T>)} model Model type to be added
-   * @returns {T} Added model
-   * @memberof Collection
-   */
-  public add<T extends PureModel>(data: IRawModel|IDictionary<any>, model: IType|IModelConstructor<T>): T;
-
-  /**
    * Add an array of new models to the collection
    *
    * @template T
@@ -94,6 +83,17 @@ export class PureCollection {
    * @memberof Collection
    */
   public add<T extends PureModel>(data: Array<IRawModel|IDictionary<any>>, model: IType|IModelConstructor<T>): Array<T>;
+
+  /**
+   * Add a new model to the collection
+   *
+   * @template T
+   * @param {(IRawModel|IDictionary<any>)} data New data to be added
+   * @param {(IType|IModelConstructor<T>)} model Model type to be added
+   * @returns {T} Added model
+   * @memberof Collection
+   */
+  public add<T extends PureModel>(data: IRawModel|IDictionary<any>, model: IType|IModelConstructor<T>): T;
 
   public add(
     data: PureModel|IRawModel|IDictionary<any>|Array<PureModel>|Array<IRawModel|IDictionary<any>>,
@@ -225,6 +225,10 @@ export class PureCollection {
     return this.__data.map(modelToJSON);
   }
 
+  public get snapshot() {
+    return this.toJSON();
+  }
+
   /**
    * Reset the collection (remove all models)
    *
@@ -265,15 +269,13 @@ export class PureCollection {
       return data;
     }
 
-    if (!model) {
+    if (!model && model !== 0) {
       throw error(UNDEFINED_TYPE);
     }
 
     const type = getModelType(model as IType|typeof PureModel);
     const modelInstance = upsertModel(data, type, this);
     this.__insertModel(modelInstance, type);
-
-    const id = getModelId(modelInstance);
 
     return modelInstance;
   }
@@ -290,6 +292,13 @@ export class PureCollection {
 
     const modelType = type || getModelType(model);
     const modelId = id || getModelId(model);
+
+    const existingModel = this.find(modelType, modelId);
+    if (existingModel) {
+      updateModel(existingModel, model);
+      return;
+    }
+
     this.__data.push(model);
     this.__dataList[modelType] = this.__dataList[modelType] || observable.shallowArray([]);
     this.__dataList[modelType].push(model);

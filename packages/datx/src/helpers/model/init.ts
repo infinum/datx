@@ -3,7 +3,7 @@ import {computed, extendObservable} from 'mobx';
 
 import {FieldType} from '../../enums/FieldType';
 import {ReferenceType} from '../../enums/ReferenceType';
-import {MODEL_EXISTS} from '../../errors';
+import {ID_REQUIRED, MODEL_EXISTS} from '../../errors';
 import {IIdentifier} from '../../interfaces/IIdentifier';
 import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
 import {IType} from '../../interfaces/IType';
@@ -30,7 +30,9 @@ export function initModelField<T extends PureModel>(
 
   // Initialize the observable field to the default value
   storage.setModelDataKey(obj, key, defValue);
-  fields.push(key);
+  if (fields.indexOf(key) === -1) {
+    fields.push(key);
+  }
 
   // Set up the computed prop
   extendObservable(obj, {
@@ -103,15 +105,19 @@ function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, col
     if (value === undefined) {
       value = defaults[key];
     }
-    if (key === modelId) {
+    if (key === (modelId || 'id')) {
       type = FieldType.ID;
       value = meta.id;
-    } else if (key === modelType) {
+    } else if (key === (modelType || 'type')) {
       type = FieldType.TYPE;
       value = meta.type;
     }
     initModelField(model, key, value, type);
   });
+
+  if (modelId && !(modelId in fields)) {
+    initModelField(model, modelId, meta.id, FieldType.ID);
+  }
 
   Object.keys(refs).forEach((key) => {
     const opts = refs[key];
@@ -121,16 +127,29 @@ function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, col
   });
 }
 
-function initModelMeta(model: PureModel, data: IRawModel): IDictionary<any> & IMetaToInit {
+function initModelMeta(model: PureModel, data: IRawModel, collection?: PureCollection): IDictionary<any> & IMetaToInit {
   const staticModel = model.constructor as typeof PureModel;
-  const modelId = storage.getModelClassMetaKey(staticModel, 'id');
-  const modelType = storage.getModelClassMetaKey(staticModel, 'type');
+  const modelId = storage.getModelClassMetaKey(staticModel, 'id') || 'id';
+  const modelType = storage.getModelClassMetaKey(staticModel, 'type') || 'type';
+
+  const type = (modelType && data[modelType]) || getModelType(model);
+  let id = (modelId && data[modelId]);
+
+  if (!id) {
+    if (!staticModel.enableAutoId) {
+      throw new Error(ID_REQUIRED);
+    }
+    id = staticModel.getAutoId();
+    while (collection && collection.find(type, id)) {
+      id = staticModel.getAutoId();
+    }
+  }
 
   const meta = {
     fields: [],
-    id: (modelId && data[modelId]) || staticModel.getAutoId(),
+    id,
     refs: {},
-    type: (modelType && data[modelType]) || getModelType(model),
+    type,
   };
 
   let newMeta;
@@ -155,6 +174,6 @@ export function initModel(model: PureModel, rawData: IRawModel, collection?: Pur
   const staticModel = model.constructor as typeof PureModel;
   const data = Object.assign({}, staticModel.preprocess(rawData));
   setModelMetaKey(model, 'collection', collection);
-  const meta = initModelMeta(model, data);
+  const meta = initModelMeta(model, data, collection);
   initModelData(model, data, meta, collection);
 }

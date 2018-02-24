@@ -2,6 +2,8 @@ export {Collection} from './Collection';
 export {Model} from './Model';
 export {PureCollection} from './PureCollection';
 export {PureModel} from './PureModel';
+export {CompatCollection} from './CompatCollection';
+export {CompatModel} from './CompatModel';
 
 export {
   getRefId,

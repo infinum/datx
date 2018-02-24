@@ -110,7 +110,7 @@ export function getOriginalModel(model: PureModel): PureModel {
  */
 export function updateModel<T extends PureModel>(model: T, data: IDictionary<any>): T {
   const modelId = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'id');
-  const modelType = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'id');
+  const modelType = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type');
 
   Object.keys(data).forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
@@ -154,9 +154,13 @@ function assignModelRef<T extends PureModel>(model: T, key: string, value: TRefV
   model[key] = value;
 }
 
-export function getMetaKeyFromRaw(data: IRawModel, key: string): any {
+export function getMetaKeyFromRaw(data: IRawModel, key: string, model?: typeof PureModel): any {
   if (META_FIELD in data && typeof data[META_FIELD] === 'object' && data[META_FIELD] !== undefined) {
     return (data[META_FIELD] as IDictionary<any>)[key];
+  }
+  if (model) {
+    const modelId = storage.getModelClassMetaKey(model, key);
+    return modelId && data[modelId];
   }
   return undefined;
 }
@@ -170,7 +174,10 @@ export function getMetaKeyFromRaw(data: IRawModel, key: string): any {
  */
 export function modelToJSON(model: PureModel): IRawModel {
   const data = toJS(storage.getModelData(model));
-  const meta = toJS(storage.getModelMeta(model));
+
+  const rawMeta = Object.assign({}, storage.getModelMeta(model));
+  delete rawMeta.collection;
+  const meta = toJS(rawMeta);
 
   delete meta.collection;
 

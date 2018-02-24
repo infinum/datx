@@ -10,12 +10,14 @@ import {
   REF_NEEDS_COLLECTION,
   REF_SINGLE,
   TYPE_READONLY,
+  WRONG_REF_TYPE,
 } from '../../errors';
 import {IIdentifier} from '../../interfaces/IIdentifier';
 import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
 import {IType} from '../../interfaces/IType';
 import {TChange} from '../../interfaces/TChange';
 import {TRefValue} from '../../interfaces/TRefValue';
+import {PureCollection} from '../../PureCollection';
 import {PureModel} from '../../PureModel';
 import {storage} from '../../services/storage';
 import {error} from '../format';
@@ -47,17 +49,31 @@ function modelRemoveReference(model: PureModel, key: string, oldReference: PureM
   }
 }
 
+function ensureModel(refOptions: IReferenceOptions, collection?: PureCollection) {
+  return (data) => {
+    let model = data;
+    if (!(data instanceof PureModel) && typeof data === 'object') {
+      if (!collection) {
+        throw new Error(REF_NEEDS_COLLECTION);
+      }
+      model = collection.add(data, refOptions.model);
+    }
+    return getModelId(model);
+  };
+}
+
 function partialRefUpdate(model: PureModel, key: string, change: TChange) {
   const refOptions = storage.getModelReferenceOptions(model, key);
   const data = storage.getModelDataKey(model, key);
+  const collection = getModelCollection(model);
 
   if (change.type === 'splice') {
-    const added = change.added.map(getModelId);
+    const added = change.added.map(ensureModel(refOptions, collection));
     data.splice(change.index, change.removedCount, ...added);
     return null;
   }
 
-  data[change.index] = getModelId(change.newValue);
+  data[change.index] = ensureModel(refOptions, collection)(change.newValue);
   return null;
 }
 
@@ -100,7 +116,13 @@ export function updateField(model: PureModel, key: string, value: any, type: Fie
   } else if (type === FieldType.ID) {
     throw error(ID_READONLY);
   }
-  storage.setModelDataKey(model, key, value);
+
+  const refs = getModelMetaKey(model, 'refs');
+  if (key in refs) {
+    updateRef(model, key, value);
+  } else {
+    storage.setModelDataKey(model, key, value);
+  }
 }
 
 function hasBackRef(item: PureModel, property: string, target: PureModel): boolean {
@@ -170,25 +192,42 @@ function validateRef(refOptions: IReferenceOptions, isArray: boolean, key: strin
 
 export function updateRef(model: PureModel, key: string, value: TRefValue) {
   const refOptions = storage.getModelReferenceOptions(model, key);
-  const ids = refOptions.type === ReferenceType.TO_MANY
+  const oldIds = refOptions.type === ReferenceType.TO_MANY
     ? (mapItems(value, getModelId) || [])
     : mapItems(value, getModelId);
 
-  validateRef(refOptions, ids instanceof Array, key);
+  const check = refOptions.type === ReferenceType.TO_MANY ? value || [] : value;
+  const isArray = check instanceof Array || isObservableArray(check);
+  validateRef(refOptions, isArray, key);
+
+  const collection = getModelCollection(model);
+
+  let ids: IIdentifier|Array<IIdentifier>|null = mapItems(value, (ref: IIdentifier|PureModel) => {
+    if (ref && collection) {
+      if (ref instanceof PureModel) {
+        const refType = getModelType(ref);
+        if (refType !== getModelType(refOptions.model)) {
+          throw new Error(WRONG_REF_TYPE);
+        }
+      }
+      let instance = collection.find(refOptions.model, ref);
+      if (!instance && typeof ref === 'object') {
+        instance = collection.add(ref, refOptions.model);
+      }
+      return getModelId(instance || ref);
+    } else if (ref instanceof PureModel) {
+      throw error(REF_NEEDS_COLLECTION);
+    }
+    return ref;
+  });
+
+  if (refOptions.type === ReferenceType.TO_MANY) {
+    ids = ids || [];
+  }
 
   if (!ids || (ids instanceof Array && ids.length === 0)) {
     storage.setModelDataKey(model, key, ids);
   } else {
-    const collection = getModelCollection(model);
-
-    const referencedModels = mapItems(value, (ref) => {
-      if (ref !== null && collection) {
-        return collection.find(refOptions.model, ref);
-      } else if (ref instanceof PureModel) {
-        throw error(REF_NEEDS_COLLECTION);
-      }
-      return ref;
-    });
 
     storage.setModelDataKey(model, key, ids);
   }

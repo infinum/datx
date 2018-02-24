@@ -14,7 +14,7 @@ function initCollectionModel(collection: PureCollection, data: IRawModel): PureM
 }
 
 export function upsertModel(data: IRawModel, type: IType|typeof PureModel, collection: PureCollection): PureModel {
-  if (!type) {
+  if (!type && type !== 0) {
     throw error(UNDEFINED_TYPE);
   }
 
@@ -24,8 +24,8 @@ export function upsertModel(data: IRawModel, type: IType|typeof PureModel, colle
     throw error(UNDEFINED_MODEL, {type});
   }
 
-  const id = getMetaKeyFromRaw(data, 'id');
-  const existingModel = id === undefined ? id : collection.find(type, id);
+  const id = getMetaKeyFromRaw(data, 'id', TypeModel as typeof PureModel|undefined);
+  const existingModel = id && collection.find(type, id);
   if (existingModel) {
     return updateModel(existingModel, data);
   }
