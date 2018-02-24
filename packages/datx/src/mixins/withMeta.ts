@@ -4,7 +4,14 @@ import {DECORATE_MODEL} from '../errors';
 import {error} from '../helpers/format';
 import {isModel} from '../helpers/mixin';
 import {getRefId} from '../helpers/model/fields';
-import {getModelCollection, getModelId, getModelMetaKey, getModelType, getOriginalModel} from '../helpers/model/utils';
+import {
+  getModelCollection,
+  getModelId,
+  getModelMetaKey,
+  getModelType,
+  getOriginalModel,
+  modelToJSON,
+} from '../helpers/model/utils';
 import {IMetaMixin} from '../interfaces/IMetaMixin';
 import {IModelConstructor} from '../interfaces/IModelConstructor';
 import {PureModel} from '../PureModel';
@@ -37,6 +44,7 @@ export function withMeta<T extends PureModel>(Base: IModelConstructor<T>) {
         id: getModelId(this),
         original: getModelMetaKey(this, 'originalId') && getOriginalModel(this) || undefined,
         refs,
+        snapshot: modelToJSON(this),
         type: getModelType(this),
       });
     }
