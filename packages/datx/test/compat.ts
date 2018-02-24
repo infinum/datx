@@ -2,7 +2,7 @@
 
 import {autorun, computed} from 'mobx';
 
-import {CompatCollection, CompatModel, getModelId, getRefId, prop, IIdentifier} from '../src';
+import {CompatCollection, CompatModel, getModelId, getRefId, IIdentifier, prop} from '../src';
 import {storage} from '../src/services/storage';
 
 describe('Compat Model', () => {
