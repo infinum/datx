@@ -18,7 +18,7 @@ import {config, fetchModelLink, GenericModel, jsonapi, modelToJsonApi, saveRelat
 
 import {clearAllCache} from '../../src/cache';
 import mockApi from '../utils/api';
-import {Event, Image, Organiser, Photo, TestStore, User} from '../utils/setup';
+import {Event, Image, Organizer, Photo, TestStore, User} from '../utils/setup';
 
 describe('updates', () => {
   beforeEach(() => {

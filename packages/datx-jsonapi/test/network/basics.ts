@@ -17,7 +17,7 @@ import {
 
 import {clearAllCache} from '../../src/cache';
 import mockApi from '../utils/api';
-import {Event, Image, Organiser, Photo, TestStore, User} from '../utils/setup';
+import {Event, Image, Organizer, Photo, TestStore, User} from '../utils/setup';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;

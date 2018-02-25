@@ -239,10 +239,10 @@ describe('General', () => {
               {type: 'image', id: 3},
             ],
           },
-          organisers: {
+          organizers: {
             data: [
-              {type: 'organisers', id: 1},
-              {type: 'organisers', id: 2},
+              {type: 'organizers', id: 1},
+              {type: 'organizers', id: 2},
             ],
           },
         },
@@ -260,7 +260,7 @@ describe('General', () => {
             data: {type: 'image', id: 2},
           },
         },
-        type: 'organisers',
+        type: 'organizers',
       }, {
         attributes: {
           firstName: 'Jane',
@@ -274,7 +274,7 @@ describe('General', () => {
             data: {type: 'image', id: 3},
           },
         },
-        type: 'organisers',
+        type: 'organizers',
       }, {
         attributes: {
           name: 'Sam',
@@ -288,7 +288,7 @@ describe('General', () => {
         type: 'image',
       }, {
         attributes: {
-          name: 'Organiser Sam',
+          name: 'Organizer Sam',
         },
         id: 2,
         relationships: {
@@ -299,7 +299,7 @@ describe('General', () => {
         type: 'image',
       }, {
         attributes: {
-          name: 'Organiser Jane',
+          name: 'Organizer Jane',
         },
         id: 3,
         relationships: {
@@ -314,9 +314,9 @@ describe('General', () => {
     const event = store.find(Event, 1);
     expect(event).not.toBeNull();
     if (event) {
-      expect(event.organisers.length).toBe(2);
+      expect(event.organizers.length).toBe(2);
       expect(event.images.length).toBe(3);
-      expect(event.organisers[0].image.meta.id).toBe(2);
+      expect(event.organizers[0].image.meta.id).toBe(2);
     }
   });
 
