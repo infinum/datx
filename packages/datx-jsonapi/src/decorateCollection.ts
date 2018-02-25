@@ -95,7 +95,8 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       data?: object,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
-      return fetch<T>({url: this.__prefixUrl(url), options, data, method, collection: this});
+      const query = this.__buildUrl(url, data, options);
+      return fetch<T>({url: query.url, options, data, method, collection: this});
     }
 
     public remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequestOptions);
@@ -209,6 +210,10 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
         : type;
 
       const url: string = id ? `${path}/${id}` : `${path}`;
+      return this.__buildUrl(url, data, options);
+    }
+
+    private __buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
       const headers: IDictionary<string> = (options && options.headers) || {};
 
       const params: Array<string> = [
@@ -263,7 +268,8 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
     private __appendParams(url: string, params: Array<string>): string {
       if (params.length) {
-        url += '?' + params.join('&');
+        const separator = url.indexOf('?') === -1 ? '?' : '&';
+        url += separator + params.join('&');
       }
       return url;
     }

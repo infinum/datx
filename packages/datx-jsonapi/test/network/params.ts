@@ -212,4 +212,32 @@ describe('params', () => {
       expect(events.data).toHaveLength(4);
     });
   });
+
+  it('should support request params', async () => {
+    mockApi({
+      name: 'events-1',
+      query: {filter: {name: 'foo'}},
+      url: 'event',
+    });
+
+    const store = new TestStore();
+    const events = await store.request('event', 'GET', undefined, {filter: {name: 'foo'}});
+
+    expect(events.data).toBeInstanceOf(Array);
+    expect(events.data).toHaveLength(4);
+  });
+
+  it('should support request params with other params', async () => {
+    mockApi({
+      name: 'events-1',
+      query: {filter: {name: 'foo'}, foo: '1'},
+      url: 'event',
+    });
+
+    const store = new TestStore();
+    const events = await store.request('event?foo=1', 'GET', undefined, {filter: {name: 'foo'}});
+
+    expect(events.data).toBeInstanceOf(Array);
+    expect(events.data).toHaveLength(4);
+  });
 });
