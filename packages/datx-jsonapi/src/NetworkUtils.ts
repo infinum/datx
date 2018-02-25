@@ -180,7 +180,8 @@ function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOp
 
   return config.baseFetch(method, url, data, options && options.headers)
     .then((response: IRawResponse) => {
-      const resp = new LibResponse<T>(config.transformResponse(response), collection, options);
+      const collectionResponse = Object.assign(response, {collection});
+      const resp = new LibResponse<T>(config.transformResponse(collectionResponse), collection, options);
       if (config.cache && isCacheSupported) {
         saveCache(url, resp);
       }
