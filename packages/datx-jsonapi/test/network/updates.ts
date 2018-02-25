@@ -402,25 +402,25 @@ describe('updates', () => {
       const events = await store.fetchAll('event');
       const event = events.data && events.data[0] as Event;
 
-      setRefId(event, 'images', ['1', '2']);
-
-      mockApi({
-        data: {
-          data: [{
-            id: '1',
-            type: 'image',
-          }, {
-            id: '2',
-            type: 'image',
-          }],
-        },
-        method: 'PATCH',
-        name: 'event-1d',
-        url: 'event/1/images',
-      });
-
       expect(event).toBeInstanceOf(Event);
       if (event) {
+        setRefId(event, 'images', ['1', '2']);
+
+        mockApi({
+          data: {
+            data: [{
+              id: '1',
+              type: 'image',
+            }, {
+              id: '2',
+              type: 'image',
+            }],
+          },
+          method: 'PATCH',
+          name: 'event-1d',
+          url: 'event/1/images',
+        });
+
         const event2 = await saveRelationship(event, 'images');
         expect(event2.meta.id).toBe(12345);
         expect(event2.meta.type).toBe('event');

@@ -152,7 +152,7 @@ export const config: IConfigType = {
 };
 
 /**
- * Base implementation of the statefull fetch function (can be overridden)
+ * Base implementation of the stateful fetch function (can be overridden)
  *
  * @param {ICollectionFetchOpts} reqOptions API request options
  * @returns {Promise<Response>} Resolves with a response object
