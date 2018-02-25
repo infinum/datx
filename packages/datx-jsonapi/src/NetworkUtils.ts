@@ -47,7 +47,7 @@ export interface IConfigType {
   baseFetch: FetchType;
   baseUrl: string;
   cache: boolean,
-  defaultHeaders: IHeaders;
+  defaultFetchOptions: IDictionary<any>;
   fetchReference: fetch;
   paramArrayType: ParamArrayType;
   onError: (IResponseObject) => IResponseObject;
@@ -63,9 +63,11 @@ export const config: IConfigType = {
   /** Enable caching by default in the browser */
   cache: isBrowser,
 
-  /** Default headers that will be sent to the server */
-  defaultHeaders: {
-    'content-type': 'application/vnd.api+json',
+  /** Default options that will be passed to the fetch function */
+  defaultFetchOptions: {
+    headers: {
+      'content-type': 'application/vnd.api+json',
+    },
   },
 
   /** Reference of the fetch method that should be used */
@@ -100,12 +102,14 @@ export const config: IConfigType = {
 
     return request
       .then(() => {
-        const reqHeaders: IHeaders = Object.assign({}, config.defaultHeaders, requestHeaders) as IHeaders;
-        return this.fetchReference(url, {
+        const defaultHeaders = config.defaultFetchOptions.headers || {};
+        const reqHeaders: IHeaders = Object.assign({}, defaultHeaders, requestHeaders) as IHeaders;
+        const options = Object.assign({}, config.defaultFetchOptions, {
           body: isBodySupported && JSON.stringify(body) || undefined,
           headers: reqHeaders,
           method,
         });
+        return this.fetchReference(url, options);
       })
       .then((response: Response) => {
         status = response.status;

@@ -11,9 +11,11 @@ describe('headers', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
     config.baseUrl = 'http://example.com/';
-    config.defaultHeaders = {
-      'X-Auth': '12345',
-      'content-type': 'application/vnd.api+json',
+    config.defaultFetchOptions = {
+      headers: {
+        'X-Auth': '12345',
+        'content-type': 'application/vnd.api+json',
+      },
     };
     clearAllCache();
   });
