@@ -1,5 +1,5 @@
 import {IDictionary, IRawModel} from 'datx-utils';
-import {computed, IObservableArray, observable} from 'mobx';
+import {computed, IObservableArray, observable, extendObservable} from 'mobx';
 
 import {MODEL_SINGLE_COLLECTION, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
 import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
@@ -300,10 +300,15 @@ export class PureCollection {
     }
 
     this.__data.push(model);
-    this.__dataList[modelType] = this.__dataList[modelType] || observable.shallowArray([]);
+    extendObservable(this.__dataList, {
+      [modelType]: this.__dataList[modelType] || observable.shallowArray([]),
+    });
     this.__dataList[modelType].push(model);
-    this.__dataMap[modelType] = this.__dataMap[modelType] || observable.shallowObject({});
-    this.__dataMap[modelType][modelId] = model;
+
+    extendObservable(this.__dataMap, {
+      [modelType]: this.__dataMap[modelType] || observable.shallowObject({}),
+    });
+    extendObservable(this.__dataMap[modelType], {[modelId]: model});
     setModelMetaKey(model, 'collection', this);
   }
 
