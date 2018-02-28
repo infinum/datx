@@ -1,5 +1,5 @@
 import {IDictionary, IRawModel} from 'datx-utils';
-import {computed, IObservableArray, observable, extendObservable} from 'mobx';
+import {computed, extendObservable, IObservableArray, observable} from 'mobx';
 
 import {MODEL_SINGLE_COLLECTION, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
 import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
@@ -37,6 +37,7 @@ export class PureCollection {
   @observable private __dataList: IDictionary<IObservableArray<PureModel>> = {};
 
   constructor(data: Array<IRawModel> = []) {
+    extendObservable(this);
     this.insert(data);
   }
 
