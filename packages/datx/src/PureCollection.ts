@@ -152,9 +152,9 @@ export class PureCollection {
   public findAll<T extends PureModel>(model?: IType|IModelConstructor<T>): Array<T> {
     if (model) {
       const type = getModelType(model);
-      return (this.__dataList[type] || []).slice() as Array<T>;
+      return (this.__dataList[type] || []) as IObservableArray<T>;
     }
-    return this.__data.slice() as Array<T>;
+    return this.__data as IObservableArray<T>;
   }
 
   /**
@@ -201,7 +201,7 @@ export class PureCollection {
    * @memberof Collection
    */
   public removeAll(type: IType|typeof PureModel) {
-    this.__removeModel(this.findAll(type));
+    this.__removeModel(this.findAll(type).slice());
   }
 
   /**
@@ -321,7 +321,7 @@ export class PureCollection {
     const modelId = id || getModelId(model);
     this.__data.remove(model);
     this.__dataList[modelType].remove(model);
-    delete this.__dataMap[modelType][modelId];
+    extendObservable(this.__dataMap[modelType], {[modelId]: undefined});
     setModelMetaKey(model, 'collection', undefined);
   }
 
