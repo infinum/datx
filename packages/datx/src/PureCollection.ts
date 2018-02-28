@@ -166,9 +166,8 @@ export class PureCollection {
    * @memberof Collection
    */
   public hasItem(model: PureModel): boolean {
-    const type = getModelType(model);
     const id = getModelId(model);
-    return type in this.__dataMap && id in this.__dataMap[type];
+    return Boolean(this.find(model, id));
   }
 
   /**
