@@ -1,5 +1,5 @@
 import {IDictionary, IRawModel} from 'datx-utils';
-import {computed, extendObservable, IObservableArray, observable} from 'mobx';
+import {action, computed, extendObservable, IObservableArray, observable} from 'mobx';
 
 import {MODEL_SINGLE_COLLECTION, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
 import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
@@ -48,7 +48,7 @@ export class PureCollection {
    * @returns {Array<PureModel>} A list of initialized models
    * @memberof Collection
    */
-  public insert(data: Array<Partial<IRawModel>>): Array<PureModel> {
+  @action public insert(data: Array<Partial<IRawModel>>): Array<PureModel> {
     const models = initModels(this, data);
     this.__insertModel(models);
     return models;
@@ -96,7 +96,7 @@ export class PureCollection {
    */
   public add<T extends PureModel>(data: IRawModel|IDictionary<any>, model: IType|IModelConstructor<T>): T;
 
-  public add(
+  @action public add(
     data: PureModel|IRawModel|IDictionary<any>|Array<PureModel>|Array<IRawModel|IDictionary<any>>,
     model?: IType|IModelConstructor,
   ): PureModel|Array<PureModel> {
@@ -129,7 +129,7 @@ export class PureCollection {
 
     return isSelectorFunction(model)
       ? (this.__data.find(model as TFilterFn) || null)
-      : this.__findByType(model as typeof PureModel, id);
+      : (this.__findByType(model as typeof PureModel, id) || null);
   }
 
   /**
@@ -153,7 +153,10 @@ export class PureCollection {
   public findAll<T extends PureModel>(model?: IType|IModelConstructor<T>): Array<T> {
     if (model) {
       const type = getModelType(model);
-      return (this.__dataList[type] || []) as IObservableArray<T>;
+      if (!(type in this.__dataList)) {
+        extendObservable(this.__dataList, {[type]: observable.array([])});
+      }
+      return this.__dataList[type] as IObservableArray<T>;
     }
     return this.__data as IObservableArray<T>;
   }
@@ -187,7 +190,7 @@ export class PureCollection {
    */
   public remove(model: PureModel);
 
-  public remove(obj: IType|typeof PureModel|PureModel, id?: IIdentifier) {
+  @action public remove(obj: IType|typeof PureModel|PureModel, id?: IIdentifier) {
     const model = typeof obj === 'object' ? obj : this.find(obj, id);
     if (model) {
       this.__removeModel(model);
@@ -200,7 +203,7 @@ export class PureCollection {
    * @param {(IType|typeof PureModel)} type Model type
    * @memberof Collection
    */
-  public removeAll(type: IType|typeof PureModel) {
+  @action public removeAll(type: IType|typeof PureModel) {
     this.__removeModel(this.findAll(type).slice());
   }
 
@@ -234,7 +237,7 @@ export class PureCollection {
    *
    * @memberof Collection
    */
-  public reset() {
+  @action public reset() {
     this.__data.map((model) => setModelMetaKey(model, 'collection', undefined));
     this.__data.replace([]);
     const types = Object.keys(this.__dataList);
@@ -300,15 +303,21 @@ export class PureCollection {
     }
 
     this.__data.push(model);
-    extendObservable(this.__dataList, {
-      [modelType]: this.__dataList[modelType] || observable.shallowArray([]),
-    });
-    this.__dataList[modelType].push(model);
+    if (modelType in this.__dataList) {
+      this.__dataList[modelType].push(model);
+    } else {
+      extendObservable(this.__dataList, {
+        [modelType]: observable.shallowArray([model]),
+      });
+    }
 
-    extendObservable(this.__dataMap, {
-      [modelType]: this.__dataMap[modelType] || observable.shallowObject({}),
-    });
-    extendObservable(this.__dataMap[modelType], {[modelId]: model});
+    if (modelType in this.__dataMap) {
+      extendObservable(this.__dataMap[modelType], {[modelId]: model});
+    } else {
+      extendObservable(this.__dataMap, {
+        [modelType]: observable.shallowObject({[modelId]: model}),
+      });
+    }
     setModelMetaKey(model, 'collection', this);
   }
 
@@ -329,11 +338,19 @@ export class PureCollection {
     const type = getModelType(model);
 
     if (id) {
-      const models = this.__dataMap[type] || {};
-      return models[id] || null;
+      if (!(type in this.__dataMap)) {
+        extendObservable(this.__dataMap, {[type]: {[id]: undefined}});
+      } else if (!(id in this.__dataMap[type])) {
+        extendObservable(this.__dataMap[type], {[id]: undefined});
+      }
+      return this.__dataMap[type][id];
     } else {
-      const data = this.__dataList[type] || [];
-      return data[0] || null;
+      if (!(type in this.__dataList)) {
+        extendObservable(this.__dataList, {
+          [type]: observable.shallowArray([]),
+        });
+      }
+      return this.__dataList[type].length ? this.__dataList[type][0] : null;
     }
   }
 

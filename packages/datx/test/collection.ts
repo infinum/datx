@@ -1,4 +1,5 @@
 // tslint:disable:max-classes-per-file
+import {autorun} from 'mobx';
 
 import {Collection, getModelCollection, getModelId, prop, PureModel} from '../src';
 import {isCollection, isModel} from '../src/helpers/mixin';
@@ -209,6 +210,44 @@ describe('Collection', () => {
       expect(foo1b).toBeNull();
       expect(foo1c).not.toBe(foo1);
       expect(foo1.foo).toBe(1);
+    });
+
+    it('should trigger autorun after a model is added', () => {
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        @prop public foo!: number;
+        @prop public bar!: number;
+        @prop public baz!: number;
+      }
+
+      class Store extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new Store();
+
+      let autorunLengthCount = 0;
+      let fooLength;
+      autorun(() => {
+        autorunLengthCount++;
+        fooLength = store.findAll(Foo).length;
+      });
+
+      let autorunModelCount = 0;
+      let foo;
+      autorun(() => {
+        autorunModelCount++;
+        foo = store.find(Foo, '123');
+      });
+
+      const foo2 = store.add({id: '123'}, Foo);
+
+      expect(autorunModelCount).toBe(2);
+      expect(foo).toBe(foo2);
+
+      expect(autorunLengthCount).toBe(2);
+      expect(fooLength).toBe(1);
     });
   });
 });
