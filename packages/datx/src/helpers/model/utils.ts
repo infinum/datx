@@ -112,7 +112,8 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary<any
   const modelId = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'id');
   const modelType = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type');
 
-  Object.keys(data).forEach((key) => {
+  const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
+  keys.forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
       assignModel(model, key, data[key]);
     }
@@ -162,7 +163,7 @@ export function getMetaKeyFromRaw(data: IRawModel, key: string, model?: typeof P
     const modelId = storage.getModelClassMetaKey(model, key);
     return modelId && data[modelId];
   }
-  return undefined;
+  return data && data[key];
 }
 
 /**
