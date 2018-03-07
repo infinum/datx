@@ -109,8 +109,8 @@ export function getOriginalModel(model: PureModel): PureModel {
  * @returns {T}
  */
 export function updateModel<T extends PureModel>(model: T, data: IDictionary<any>): T {
-  const modelId = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'id');
-  const modelType = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type');
+  const modelId = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'id') || 'id';
+  const modelType = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type') || 'type';
 
   const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
   keys.forEach((key) => {
