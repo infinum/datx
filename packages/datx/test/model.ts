@@ -503,6 +503,24 @@ describe('Model', () => {
       const foo1 = collection.add({foo: 2}, Foo);
     });
 
+    it ('should work if an independent type is defined', () => {
+
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        @prop public type!: string;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+
+      const collection = new TestCollection();
+      const foo = collection.add({type: 'foobar'}, Foo);
+      expect(getModelType(foo)).toBe('foo');
+      expect(foo.type).toBe('foobar');
+    });
+
     describe('Back references', () => {
       it('should support basic back references', () => {
         class Foo extends PureModel {

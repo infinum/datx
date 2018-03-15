@@ -108,7 +108,7 @@ function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, col
     if (key === (modelId || 'id')) {
       type = FieldType.ID;
       value = meta.id;
-    } else if (key === (modelType || 'type')) {
+    } else if (key === modelType) {
       type = FieldType.TYPE;
       value = meta.type;
     }
@@ -130,7 +130,7 @@ function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, col
 function initModelMeta(model: PureModel, data: IRawModel, collection?: PureCollection): IDictionary<any> & IMetaToInit {
   const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id') || 'id';
-  const modelType = storage.getModelClassMetaKey(staticModel, 'type') || 'type';
+  const modelType = storage.getModelClassMetaKey(staticModel, 'type');
 
   const type = (modelType && data[modelType]) || getModelType(model);
   let id = (modelId && data[modelId]);
