@@ -1,5 +1,4 @@
 import {IModelConstructor, IType, Model, prop} from 'datx';
-import {computed} from 'mobx';
 
 import {IJsonapiModel, jsonapi} from '../../../src';
 import {Image} from './Image';

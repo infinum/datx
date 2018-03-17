@@ -1,6 +1,6 @@
-import {getModelCollection, getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId} from 'datx';
-import {IDictionary} from 'datx-utils';
-import {action, computed, extendObservable, IComputedValue, isObservableArray} from 'mobx';
+import {getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId} from 'datx';
+import {assignComputed, IDictionary} from 'datx-utils';
+import {action, extendObservable, IComputedValue} from 'mobx';
 
 import {IHeaders} from './interfaces/IHeaders';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
@@ -159,6 +159,8 @@ export class Response<T extends IJsonapiModel> {
     this.__response = response;
     this.status = response.status;
 
+    // extendObservable(this, {}, {}, {deep: true});
+
     if (collection) {
       this.data = overrideData ? collection.add<T>(overrideData as T) : collection.sync<T>(response.data);
     } else if (response.data) {
@@ -184,11 +186,9 @@ export class Response<T extends IJsonapiModel> {
     const linkGetter: IDictionary<IComputedValue<Promise<Response<T>>>> = {};
     if (this.links) {
       Object.keys(this.links).forEach((link: string) => {
-        linkGetter[link] = computed(() => this.__fetchLink(link));
+        assignComputed(this, link, () => this.__fetchLink(link));
       });
     }
-
-    extendObservable(this, linkGetter);
 
     Object.freeze(this);
 

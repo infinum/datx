@@ -1,4 +1,4 @@
-import {IRawModel} from 'datx-utils';
+import {assignComputed, IRawModel} from 'datx-utils';
 import {computed, decorate, extendObservable} from 'mobx';
 
 import {Collection} from './Collection';
@@ -15,13 +15,8 @@ export class CompatCollection extends Collection {
 
     this.static.types.forEach((model) => {
       const type = getModelType(model);
-      // getters[type] = computed(() => this.findAll(type));
-      Object.defineProperty(this, type, {
-        get: () => this.findAll(type),
-      });
+      assignComputed(this, type.toString(), () => this.findAll(type));
     });
-
-    // extendObservable(this, getters);
   }
 
   public get static(): typeof CompatCollection {

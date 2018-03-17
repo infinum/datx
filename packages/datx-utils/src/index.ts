@@ -4,6 +4,7 @@ export {IDictionary} from './interfaces/IDictionary';
 export {IRawModel} from './interfaces/IRawModel';
 
 export {
+  assignComputed,
   mapItems,
   flatten,
   uniq,

@@ -300,7 +300,7 @@ describe('Compat Model', () => {
     expect(model2.foo).toBe(4);
   });
 
-  it('should support array refereces', () => {
+  it('should support array references', () => {
     class FooModel extends CompatModel {
       public static type = 'foo';
 

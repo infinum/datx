@@ -1,6 +1,5 @@
 import {Collection, ICollectionConstructor, IModelConstructor, IType, Model, prop} from 'datx';
 import {IDictionary} from 'datx-utils';
-import {computed} from 'mobx';
 
 import {IJsonapiCollection, IJsonapiModel, jsonapi} from '../../src';
 import {Event} from './models/Event';

@@ -1,6 +1,5 @@
 import {IActionsMixin, IMetaMixin, IModelConstructor, IType, Model, prop, PureModel} from 'datx';
 import {IDictionary} from 'datx-utils';
-import {computed} from 'mobx';
 
 import {IJsonapiModel, jsonapi} from '../../../src';
 import {Image} from './Image';

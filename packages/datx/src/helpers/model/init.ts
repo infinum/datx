@@ -1,5 +1,5 @@
-import {IDictionary, IRawModel, META_FIELD} from 'datx-utils';
-import {computed, decorate, isObservable, set} from 'mobx';
+import {assignComputed, IDictionary, IRawModel, META_FIELD} from 'datx-utils';
+import {computed, decorate, extendObservable, IObservableObject, isObservable, set} from 'mobx';
 
 import {FieldType} from '../../enums/FieldType';
 import {ReferenceType} from '../../enums/ReferenceType';
@@ -34,11 +34,7 @@ export function initModelField<T extends PureModel>(
     fields.push(key);
   }
 
-  Object.defineProperty(obj, key, {
-    configurable: true,
-    get: () => getField(obj, key),
-    set: (value) => updateField(obj, key, value, type),
-  });
+  assignComputed(obj, key, () => getField(obj, key), (value) => updateField(obj, key, value, type));
 }
 
 /**
@@ -59,11 +55,7 @@ export function initModelRef(obj: PureModel, key: string, options: IReferenceOpt
   const isArray = options.type === ReferenceType.TO_MANY;
   storage.setModelDataKey(obj, key, isArray ? [] : undefined);
 
-  Object.defineProperty(obj, key, {
-    configurable: true,
-    get: () => getRef(obj, key),
-    set: (value) => updateRef(obj, key, value),
-  });
+  assignComputed(obj, key, () => getRef(obj, key), (value) => updateRef(obj, key, value));
 
   if (!options.property) {
     obj[key] = initialVal;

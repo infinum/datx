@@ -1,5 +1,4 @@
 import {IDictionary} from 'datx-utils';
-import {computed} from 'mobx';
 
 import {DECORATE_MODEL} from '../errors';
 import {error} from '../helpers/format';

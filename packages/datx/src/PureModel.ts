@@ -1,5 +1,5 @@
 import {DEFAULT_TYPE, IDictionary, IRawModel} from 'datx-utils';
-import {extendObservable} from 'mobx';
+import {extendObservable, IObservableObject} from 'mobx';
 
 import {initModel} from './helpers/model/init';
 import {IIdentifier} from './interfaces/IIdentifier';

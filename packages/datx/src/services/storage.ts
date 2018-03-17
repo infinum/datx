@@ -1,5 +1,5 @@
 import {flatten, IDictionary, uniq} from 'datx-utils';
-import {computed, IObservableArray, IObservableObject, observable, set, toJS} from 'mobx';
+import {IObservableArray, IObservableObject, observable, set, toJS} from 'mobx';
 
 import {getModelId, getModelType} from '../helpers/model/utils';
 import {reducePrototypeChain} from '../helpers/selectors';
