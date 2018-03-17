@@ -147,7 +147,7 @@ function getBackRef(model: PureModel, key: string, refOptions: IReferenceOptions
     .findAll(type)
     .filter((item) => hasBackRef(item, refOptions.property as string, model));
 
-  const backData: IObservableArray<PureModel> = observable.shallowArray(backModels);
+  const backData: IObservableArray<PureModel> = observable.array(backModels, {deep: false});
   intercept(backData, (change: TChange) => partialBackRefUpdate(model, key, change));
   return backData;
 }
@@ -164,7 +164,7 @@ function getNormalRef(model: PureModel, key: string, refOptions: IReferenceOptio
     dataModels = [dataModels];
   }
   if (dataModels instanceof Array) {
-    const data: IObservableArray<PureModel> = observable.shallowArray(dataModels);
+    const data: IObservableArray<PureModel> = observable.array(dataModels, {deep: false});
     intercept(data, (change: TChange) => partialRefUpdate(model, key, change));
     return data;
   }

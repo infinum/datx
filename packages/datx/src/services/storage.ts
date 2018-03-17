@@ -1,5 +1,5 @@
 import {flatten, IDictionary, uniq} from 'datx-utils';
-import {computed, extendObservable, IObservableArray, observable, toJS} from 'mobx';
+import {computed, IObservableArray, IObservableObject, observable, set, toJS} from 'mobx';
 
 import {getModelId, getModelType} from '../helpers/model/utils';
 import {reducePrototypeChain} from '../helpers/selectors';
@@ -22,8 +22,7 @@ export class DataStorage {
   private modelClassData = new WeakMap<typeof PureModel|{type: IType}, IModelClassData>();
 
   public initModel(model: PureModel) {
-    const modelData = {data: {}, meta: {}};
-    extendObservable(modelData);
+    const modelData = observable({data: {}, meta: {}});
     this.modelData.set(model, modelData);
     return modelData;
   }
@@ -39,7 +38,7 @@ export class DataStorage {
 
   public setModelData(model: PureModel, data: IDictionary<any>) {
     const modelData = this.__getModelData(model);
-    extendObservable(modelData.data, data);
+    set(modelData.data, data);
   }
 
   public setModelDataKey(model: PureModel, key: string, value?: any) {
@@ -56,7 +55,7 @@ export class DataStorage {
 
   public setModelMeta(model: PureModel, meta: IDictionary<any>) {
     const modelData = this.__getModelData(model);
-    extendObservable(modelData.meta, meta);
+    set(modelData.meta, meta);
     return modelData.meta;
   }
 

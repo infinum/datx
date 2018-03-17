@@ -1,5 +1,5 @@
 import {IDictionary, IRawModel, mapItems} from 'datx-utils';
-import {isObservableArray} from 'mobx';
+import {isObservableArray, set} from 'mobx';
 
 import {Collection} from './Collection';
 import {FieldType} from './enums/FieldType';
@@ -33,6 +33,7 @@ export class CompatModel extends PureModel {
       }
       const ref = this.static.refs[prop];
       const data = mapItems(this[prop] || this.static.defaults[prop], getModelId);
+      delete this[prop];
       if (typeof ref === 'object') {
         // Back reference
         initModelRef(this, prop, {

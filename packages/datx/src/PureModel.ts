@@ -1,4 +1,5 @@
 import {DEFAULT_TYPE, IDictionary, IRawModel} from 'datx-utils';
+import {extendObservable} from 'mobx';
 
 import {initModel} from './helpers/model/init';
 import {IIdentifier} from './interfaces/IIdentifier';
@@ -55,6 +56,7 @@ export class PureModel {
   }
 
   constructor(rawData: IRawModel = {}, collection?: PureCollection) {
+    extendObservable(this, {});
     initModel(this, rawData, collection);
   }
 }

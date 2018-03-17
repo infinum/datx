@@ -1,5 +1,5 @@
 import {IDictionary, IRawModel, META_FIELD} from 'datx-utils';
-import {computed, extendObservable} from 'mobx';
+import {computed, decorate, isObservable, set} from 'mobx';
 
 import {FieldType} from '../../enums/FieldType';
 import {ReferenceType} from '../../enums/ReferenceType';
@@ -34,12 +34,10 @@ export function initModelField<T extends PureModel>(
     fields.push(key);
   }
 
-  // Set up the computed prop
-  extendObservable(obj, {
-    [key]: computed(
-      () => getField(obj, key),
-      (value) => updateField(obj, key, value, type),
-    ),
+  Object.defineProperty(obj, key, {
+    configurable: true,
+    get: () => getField(obj, key),
+    set: (value) => updateField(obj, key, value, type),
   });
 }
 
@@ -47,12 +45,12 @@ export function initModelField<T extends PureModel>(
  * Initialize a reference to other models
  *
  * @export
- * @param {(PureModel|IType)} obj Model to which the reference should be added
+ * @param {PureModel} obj Model to which the reference should be added
  * @param {string} key Model property where the reference will be defined
  * @param {IReferenceOptions} options Reference options
  * @param {TRefValue} initialVal Initial reference value
  */
-export function initModelRef(obj: PureModel|IType, key: string, options: IReferenceOptions, initialVal: TRefValue) {
+export function initModelRef(obj: PureModel, key: string, options: IReferenceOptions, initialVal: TRefValue) {
   const refs = getModelMetaKey(obj, 'refs');
 
   // Initialize the observable field to the given value
@@ -61,12 +59,10 @@ export function initModelRef(obj: PureModel|IType, key: string, options: IRefere
   const isArray = options.type === ReferenceType.TO_MANY;
   storage.setModelDataKey(obj, key, isArray ? [] : undefined);
 
-  // Set up the computed prop
-  extendObservable(obj, {
-    [key]: computed(
-      () => getRef(obj, key),
-      (value) => updateRef(obj, key, value),
-    ),
+  Object.defineProperty(obj, key, {
+    configurable: true,
+    get: () => getRef(obj, key),
+    set: (value) => updateRef(obj, key, value),
   });
 
   if (!options.property) {
