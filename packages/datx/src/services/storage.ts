@@ -1,6 +1,8 @@
 import {flatten, IDictionary, uniq} from 'datx-utils';
 import {IObservableArray, IObservableObject, observable, set, toJS} from 'mobx';
 
+import {MODEL_REQUIRED} from '../errors';
+import {error} from '../helpers/format';
 import {getModelId, getModelType} from '../helpers/model/utils';
 import {reducePrototypeChain} from '../helpers/selectors';
 import {IDataStorage} from '../interfaces/IDataStorage';
@@ -95,6 +97,10 @@ export class DataStorage {
   }
 
   public addModelClassReference(model: typeof PureModel, key: string, options: IReferenceOptions) {
+    if (!options.model && options.model !== 0) {
+      throw error(MODEL_REQUIRED);
+    }
+
     const data = this.modelClassData.get(model);
     if (data) {
       Object.assign(data.references, {[key]: options});

@@ -197,6 +197,16 @@ describe('Model', () => {
       expect(getModelId(foo)).not.toBe(getModelId(foo2));
       expect(getOriginalModel(foo2)).toBe(foo);
     });
+
+    it('should throw if missing ref models', () => {
+      expect(() => {
+        class Foo extends PureModel {
+          public static type = 'foo';
+
+          @prop.toOne(undefined) public bar!: number;
+        }
+      }).toThrow('The model type is a required parameter. Do you maybe have a circular dependency?');
+    });
   });
 
   describe('References', () => {

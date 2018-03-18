@@ -12,6 +12,7 @@ export const TYPE_READONLY = 'Model type can\'t be changed after initialization.
 export const MODEL_SINGLE_COLLECTION = 'A model can be in a single collection at once';
 export const ID_REQUIRED = 'Model id is required (autoincrement is disabled)';
 export const WRONG_REF_TYPE = 'The new reference type doesn\'t match to the declared one.';
+export const MODEL_REQUIRED = 'The model type is a required parameter. Do you maybe have a circular dependency?';
 
 export const DECORATE_MODEL = 'This mixin can only decorate models';
 export const DECORATE_COLLECTION = 'This mixin can only decorate collections';
