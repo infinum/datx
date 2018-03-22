@@ -5,4 +5,4 @@ import {withActions} from './mixins/withActions';
 import {withMeta} from './mixins/withMeta';
 import {PureModel} from './PureModel';
 
-export const Model = withActions(withMeta(PureModel)) as IModelConstructor<IActionsMixin & IMetaMixin & PureModel>;
+export class Model extends withActions(withMeta(PureModel)) {}
