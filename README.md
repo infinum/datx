@@ -9,7 +9,7 @@ The library is still work in progress, but it's feature complete. You can track 
 ## Basic usage
 
 ```typescript
-import { Collection, Model, props } from 'datx';
+import { Collection, Model, prop } from 'datx';
 import { computed } from 'mobx';
 
 class Person extends Model {
