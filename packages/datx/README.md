@@ -35,7 +35,7 @@ const jane = store.add({name: 'Jane', surname: 'Smith', spouse: john}, Person); 
 
 ## Getting started
 
-Note: `datx` has a peer dependency to `mobx@^3.5.1`, so don't forget to install the latest MobX version:
+Note: `datx` has a peer dependency to `mobx@^4.1.0`, so don't forget to install the latest MobX version:
 
 ```bash
 npm install --save datx mobx
