@@ -1,4 +1,4 @@
-import {mapItems} from 'datx-utils';
+import {mapItems, warn} from 'datx-utils';
 import {IArrayChange, IArraySplice, intercept, IObservableArray, isObservableArray, observable} from 'mobx';
 
 import {FieldType} from '../../enums/FieldType';
@@ -94,6 +94,8 @@ function backRefChange(model: PureModel, key: string, change: IArrayChange<PureM
   if (oldValue) {
     modelRemoveReference(oldValue, property, model);
   }
+
+  warn(`This shouldn't have happened. Please open an issue: https://github.com/infinum/datx/issues/new`);
   return null;
 }
 

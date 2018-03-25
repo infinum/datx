@@ -9,4 +9,8 @@ export {
   flatten,
   uniq,
   isFalsyArray,
+  error,
+  warn,
+  deprecated,
+  info,
 } from './helpers';

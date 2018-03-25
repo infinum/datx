@@ -1,4 +1,4 @@
-import {IDictionary, IRawModel, mapItems} from 'datx-utils';
+import {deprecated, IDictionary, IRawModel, mapItems, warn} from 'datx-utils';
 import {isObservableArray, set} from 'mobx';
 
 import {Collection} from './Collection';
@@ -18,6 +18,8 @@ import {IReferences} from './interfaces/IReferences';
 import {IType} from './interfaces/IType';
 import {PureModel} from './PureModel';
 import {storage} from './services/storage';
+
+warn('CompatModel is just a migration tool. Please move to Model or PureModel as soon as possible.');
 
 export class CompatModel extends PureModel {
   public static refs: IReferences = {};
@@ -58,14 +60,17 @@ export class CompatModel extends PureModel {
   }
 
   public getRecordId() {
+    deprecated('model.getRecordId is deprecated. Use getModelId() instead.');
     return getModelId(this);
   }
 
   public getRecordType() {
+    deprecated('model.getRecordType is deprecated. Use getModelType() instead.');
     return getModelType(this);
   }
 
   public assign(key: string, value: any) {
+    deprecated('model.assign is deprecated. Use assignModel() instead.');
     let type = FieldType.DATA;
     const modelId = storage.getModelClassMetaKey(this.static, 'id');
     const modelType = storage.getModelClassMetaKey(this.static, 'type');
@@ -80,6 +85,7 @@ export class CompatModel extends PureModel {
   }
 
   public assignRef(key: string, value: any, type?: IType) {
+    deprecated('model.assignRef is deprecated. Use initModelRef() instead.');
     const refs = getModelMetaKey(this, 'refs');
 
     if (refs[key]) {
@@ -107,6 +113,7 @@ export class CompatModel extends PureModel {
   }
 
   public update(data: PureModel | IDictionary<any>): object {
+    deprecated('model.update is deprecated. Use updateModel() instead.');
     const updateData = Object.assign({}, data);
     Object.keys(updateData).forEach((key) => {
       if (typeof this[key] === 'function') {
@@ -117,18 +124,22 @@ export class CompatModel extends PureModel {
   }
 
   public get static() {
+    deprecated('model.static is deprecated.');
     return this.constructor as typeof CompatModel;
   }
 
   public toJS() {
+    deprecated('model.toJS() is deprecated. Use modelToJSON() instead.');
     return modelToJSON(this);
   }
 
   public get snapshot() {
+    deprecated('model.snapshot is deprecated. Use modelToJSON() instead.');
     return modelToJSON(this);
   }
 
   private get __collection() {
+    deprecated('model.__collection is deprecated. Use getModelCollection() instead.');
     return getModelCollection(this);
   }
 }

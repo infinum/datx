@@ -77,3 +77,35 @@ export function assignComputed(
   });
   extendObservable(obj, newObj);
 }
+
+export function error(...args) {
+  // tslint:disable-next-line:no-console
+  console.error(`[datx error]`, ...args);
+}
+
+export function warn(...args) {
+  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+    return;
+  }
+
+  // tslint:disable-next-line:no-console
+  console.warn(`[datx warning]`, ...args);
+}
+
+export function deprecated(...args) {
+  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+    return;
+  }
+
+  // tslint:disable-next-line:no-console
+  console.warn(`[datx deprecated]`, ...args);
+}
+
+export function info(...args) {
+  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
+    return;
+  }
+
+  // tslint:disable-next-line:no-console
+  console.info(`[datx info]`, ...args);
+}

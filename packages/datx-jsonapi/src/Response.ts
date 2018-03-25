@@ -159,8 +159,6 @@ export class Response<T extends IJsonapiModel> {
     this.__response = response;
     this.status = response.status;
 
-    // extendObservable(this, {}, {}, {deep: true});
-
     if (collection) {
       this.data = overrideData ? collection.add<T>(overrideData as T) : collection.sync<T>(response.data);
     } else if (response.data) {

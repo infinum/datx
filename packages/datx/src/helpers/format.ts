@@ -12,5 +12,5 @@ function msg(str: string, keys: IDictionary<any>) {
 }
 
 export function error(str: string, keys: IDictionary<any> = {}): Error {
-  return new Error(msg(str, keys));
+  return new Error(`[datx exception] ${msg(str, keys)}`);
 }

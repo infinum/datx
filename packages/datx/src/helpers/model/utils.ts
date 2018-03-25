@@ -1,4 +1,4 @@
-import {IDictionary, IRawModel, META_FIELD} from 'datx-utils';
+import {IDictionary, IRawModel, META_FIELD, warn} from 'datx-utils';
 import {toJS} from 'mobx';
 
 import {NO_REFS, NOT_A_CLONE, REF_NEEDS_COLLECTION} from '../../errors';
@@ -73,8 +73,9 @@ export function cloneModel<T extends PureModel>(model: T): T {
   const collection = getModelCollection(model);
   if (collection) {
     collection.add(clone);
+  } else {
+    warn(`The model is not in the collection. Referencing the original model won't be possible`);
   }
-  // TODO: Warning if model is not in a collection
 
   return clone;
 }
