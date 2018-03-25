@@ -1,6 +1,6 @@
 {
   "name": "datx-jsonapi",
-  "version": "0.9.11",
+  "version": "0.9.12",
   "description": "DatX mixin for JSON API support",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -62,7 +62,7 @@
     }
   },
   "dependencies": {
-    "datx": "^0.9.11",
+    "datx": "^0.9.12",
     "datx-utils": "^0.9.10"
   }
 }
