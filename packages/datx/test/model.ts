@@ -96,6 +96,40 @@ describe('Model', () => {
       expect(autorunCount).toBe(2);
     });
 
+    it('should work with nested data', () => {
+      class Foo extends PureModel {
+        @prop public foo!: number;
+        @prop public bar!: number;
+        @prop public baz!: {foobar: number};
+      }
+
+      const foo = new Foo({foo: 1, bar: 2, baz: {foobar: 3}});
+
+      let foobarValue: number = 3;
+      let autorunCount = 0;
+      let autorunSnapshotCount = 0;
+
+      autorun(() => {
+        expect(foo.baz.foobar).toBe(foobarValue);
+        autorunCount++;
+      });
+
+      autorun(() => {
+        expect(modelToJSON(foo).baz.foobar).toBe(foobarValue);
+        autorunSnapshotCount++;
+      });
+
+      // Trigger both autoruns
+      foobarValue = 4;
+      foo.baz.foobar = 4;
+
+      // Trigger the snapshot autorun
+      foo.bar++;
+
+      expect(autorunSnapshotCount).toBe(3);
+      expect(autorunCount).toBe(2);
+    });
+
     it('should work with default data', () => {
       class Foo extends PureModel {
         @prop.defaultValue(4) public foo!: number;
