@@ -56,6 +56,8 @@ npm install --save datx-jsonapi mobx
   * [Collection](https://github.com/infinum/datx/wiki/JSONAPI-Collection)
   * [Response](https://github.com/infinum/datx/wiki/JSONAPI-Response)
   * [Config](https://github.com/infinum/datx/wiki/JSONAPI-Config)
+  * [Utils](https://github.com/infinum/datx/wiki/JSONAPI-Utils)
+  * [TypeScript Interfaces](https://github.com/infinum/datx/wiki/JSONAPI-Interfaces)
 
 ***
 
