@@ -47,6 +47,13 @@ npm install --save datx mobx
   * [Using the collection](https://github.com/infinum/datx/wiki/Using-the-collection)
   * [Persisting data locally](https://github.com/infinum/datx/wiki/Persisting-data-locally)
 
+### Polyfilling
+
+The lib makes use of the following features that are not yet available everywhere. Based on your browser support, you might want to polyfill them:
+
+  * [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
+  * [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
+
 ## Concepts
 
 The library contains two main classes - [`Model`](https://github.com/infinum/datx/wiki/Model) and [`Collection`](https://github.com/infinum/datx/wiki/Collection).

@@ -40,12 +40,20 @@ Note: `datx` has a peer dependency to `mobx@^4.1.0`, so don't forget to install 
 ```bash
 npm install --save datx mobx
 ```
+
   * [Installation](https://github.com/infinum/datx/wiki/Installation)
   * [Defining models](https://github.com/infinum/datx/wiki/Defining-models)
   * [References](https://github.com/infinum/datx/wiki/References)
   * [Configuring the collection](https://github.com/infinum/datx/wiki/Configuring-the-collection)
   * [Using the collection](https://github.com/infinum/datx/wiki/Using-the-collection)
   * [Persisting data locally](https://github.com/infinum/datx/wiki/Persisting-data-locally)
+
+### Polyfilling
+
+The lib makes use of the following features that are not yet available everywhere. Based on your browser support, you might want to polyfill them:
+
+  * [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
+  * [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
 
 ## Concepts
 

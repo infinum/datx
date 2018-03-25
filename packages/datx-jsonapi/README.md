@@ -50,6 +50,15 @@ npm install --save datx-jsonapi mobx
   * [Network usage](https://github.com/infinum/datx/wiki/Network-usage)
   * [Spec compliance](https://github.com/infinum/datx/wiki/Spec-compliance)
 
+# Polyfilling
+
+The lib makes use of the following features that are not yet available everywhere. Based on your browser support, you might want to polyfill them:
+
+* [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
+* [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
+* [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+* [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+
 ## API reference
   
   * [Model](https://github.com/infinum/datx/wiki/JSONAPI-Model)
