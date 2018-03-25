@@ -50,7 +50,7 @@ npm install --save datx-jsonapi mobx
   * [Network usage](https://github.com/infinum/datx/wiki/Network-usage)
   * [Spec compliance](https://github.com/infinum/datx/wiki/Spec-compliance)
 
-# Polyfilling
+### Polyfilling
 
 The lib makes use of the following features that are not yet available everywhere. Based on your browser support, you might want to polyfill them:
 
