@@ -565,6 +565,58 @@ describe('Model', () => {
       expect(foo.type).toBe('foobar');
     });
 
+    it('should support deep model nesting', () => {
+      class Bar extends PureModel {
+        public static type = 'bar';
+
+        @prop.identifier public id!: number;
+        @prop.toOne('foo') public foo?: Foo;
+        @prop public key!: number;
+      }
+
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        @prop.identifier public id!: number;
+        @prop.toMany(Bar) public bars?: Array<Bar>;
+        @prop public key!: number;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [Foo, Bar];
+      }
+
+      const collection = new TestCollection();
+      collection.add({
+        bars: [{
+          foo: {
+            id: 4,
+            key: 4,
+          },
+          key: 2,
+        }, {
+          foo: {
+            bars: [{id: 6, key: 6}],
+            id: 5,
+            key: 5,
+          },
+          key: 3,
+        }],
+        id: 1,
+        key: 1,
+      }, Foo);
+
+      expect(collection.length).toBe(6);
+
+      const foo5 = collection.find(Foo, 5);
+      expect(foo5).toBeTruthy();
+      expect(foo5.key).toBe(5);
+
+      const bar6 = collection.find(Bar, 6);
+      expect(bar6).toBeTruthy();
+      expect(bar6.key).toBe(6);
+    });
+
     describe('Back references', () => {
       it('should support basic back references', () => {
         class Foo extends PureModel {
