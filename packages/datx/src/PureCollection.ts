@@ -301,12 +301,12 @@ export class PureCollection {
    * @returns {View} The created view
    * @memberof PureCollection
    */
-  public addView<T extends PureModel>(
+  public addView<T extends PureModel = PureModel>(
     name: string,
     type: IModelConstructor<T>|IType,
-    {sortMethod, models, unique, mixins}: {
+    {sortMethod, models = [], unique, mixins}: {
       sortMethod?: string|((item: T) => any),
-      models?: Array<IIdentifier|PureModel>,
+      models?: Array<IIdentifier|T>,
       unique?: boolean,
       mixins?: Array<(view: any) => any>,
     } = {},
