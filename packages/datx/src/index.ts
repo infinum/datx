@@ -32,6 +32,7 @@ export {
 export {
   isCollection,
   isModel,
+  isView,
 } from './helpers/mixin';
 
 export {IRawModel} from 'datx-utils';

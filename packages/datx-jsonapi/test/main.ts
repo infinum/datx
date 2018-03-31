@@ -1,4 +1,5 @@
 import './general';
+import './views';
 
 import './network/basics';
 import './network/caching';

@@ -63,6 +63,7 @@ The lib makes use of the following features that are not yet available everywher
   
   * [Model](https://github.com/infinum/datx/wiki/JSONAPI-Model)
   * [Collection](https://github.com/infinum/datx/wiki/JSONAPI-Collection)
+  * [View](https://github.com/infinum/datx/wiki/JSONAPI-View)
   * [Response](https://github.com/infinum/datx/wiki/JSONAPI-Response)
   * [Config](https://github.com/infinum/datx/wiki/JSONAPI-Config)
   * [Utils](https://github.com/infinum/datx/wiki/JSONAPI-Utils)

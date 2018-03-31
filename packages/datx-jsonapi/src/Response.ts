@@ -1,4 +1,4 @@
-import {getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId} from 'datx';
+import {getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId, View} from 'datx';
 import {assignComputed, IDictionary} from 'datx-utils';
 import {action, extendObservable, IComputedValue} from 'mobx';
 
@@ -112,6 +112,8 @@ export class Response<T extends IJsonapiModel> {
    */
   public status?: number;
 
+  public views: Array<View> = [];
+
   /**
    * Related Store
    *
@@ -153,11 +155,15 @@ export class Response<T extends IJsonapiModel> {
     collection?: IJsonapiCollection,
     options?: IRequestOptions,
     overrideData?: T|Array<T>,
+    views?: Array<View>,
   ) {
     this.__collection = collection;
     this.__options = options;
     this.__response = response;
     this.status = response.status;
+    if (views) {
+      this.views = views;
+    }
 
     if (collection) {
       this.data = overrideData ? collection.add<T>(overrideData as T) : collection.sync<T>(response.data);
@@ -173,6 +179,10 @@ export class Response<T extends IJsonapiModel> {
         this.data = overrideData || new GenericModel(flattenModel(resp.data)) as T;
       }
     }
+
+    this.views.forEach((view) => {
+      view.add(this.data);
+    });
 
     this.meta = (response.data && response.data.meta) || {};
     this.links = (response.data && response.data.links) || {};
@@ -213,6 +223,8 @@ export class Response<T extends IJsonapiModel> {
     const newId = getModelId(record);
     const type = getModelType(record);
 
+    const viewIndexes = this.views.map((view) => view.list.indexOf(record));
+
     if (this.__collection) {
       this.__collection.remove(record);
       this.__collection.add(data);
@@ -220,6 +232,12 @@ export class Response<T extends IJsonapiModel> {
 
     updateModel(data, modelToJSON(record));
     updateModelId(data, newId);
+
+    this.views.forEach((view, index) => {
+      if (viewIndexes[index] !== -1) {
+        view.list[viewIndexes[index]] = data;
+      }
+    });
 
     return new Response(this.__response, this.__collection, this.__options, data);
   }
@@ -239,7 +257,7 @@ export class Response<T extends IJsonapiModel> {
       const link: ILink|null = (this.links && name in this.links) ? this.links[name] : null;
 
       if (link) {
-        this.__cache[name] = fetchLink<T>(link, this.__collection, this.requestHeaders, this.__options);
+        this.__cache[name] = fetchLink<T>(link, this.__collection, this.requestHeaders, this.__options, this.views);
       }
     }
     return this.__cache[name];
