@@ -78,6 +78,7 @@ Want to make your own mixin? Check out [the guide](https://github.com/infinum/da
 
   * [Collection](https://github.com/infinum/datx/wiki/Collection)
   * [Model](https://github.com/infinum/datx/wiki/Model)
+  * [View](https://github.com/infinum/datx/wiki/View)
   * [prop](https://github.com/infinum/datx/wiki/prop)
   * [PureModel](https://github.com/infinum/datx/wiki/PureModel)
   * [CompatModel](https://github.com/infinum/datx/wiki/CompatModel)
