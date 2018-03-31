@@ -181,7 +181,9 @@ export class Response<T extends IJsonapiModel> {
     }
 
     this.views.forEach((view) => {
-      view.add(this.data);
+      if (this.data) {
+        view.add(this.data);
+      }
     });
 
     this.meta = (response.data && response.data.meta) || {};
@@ -257,7 +259,9 @@ export class Response<T extends IJsonapiModel> {
       const link: ILink|null = (this.links && name in this.links) ? this.links[name] : null;
 
       if (link) {
-        this.__cache[name] = fetchLink<T>(link, this.__collection, this.requestHeaders, this.__options, this.views);
+        this.__cache[name] = fetchLink<T>(
+          link, this.__collection, this.requestHeaders, this.__options, this.views,
+        );
       }
     }
     return this.__cache[name];

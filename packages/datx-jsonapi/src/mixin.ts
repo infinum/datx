@@ -27,17 +27,20 @@ export function jsonapi<T extends PureCollection>(
 
 export function jsonapi<T extends View>(
   Base: IViewConstructor<T>,
-): IViewConstructor<T & IJsonapiView>;
+): IViewConstructor<IJsonapiModel, T & IJsonapiView>;
 
-export function jsonapi<T extends PureModel|PureCollection>(
-  Base: IModelConstructor<T>|ICollectionConstructor<T>,
+export function jsonapi<T>(
+  Base: IModelConstructor<T>|ICollectionConstructor<T>|IViewConstructor<T>,
 ) {
   if (isModel(Base)) {
-    return decorateModel(Base as typeof PureModel);
+    // @ts-ignore
+    return decorateModel(Base);
   } else if (isCollection(Base)) {
-    return decorateCollection(Base as typeof PureCollection);
+    // @ts-ignore
+    return decorateCollection(Base);
   } else if (isView(Base)) {
-    return decorateView(Base as typeof View);
+    // @ts-ignore
+    return decorateView<T>(Base);
   }
 
   throw new Error('The instance needs to be a model, collection or a view');

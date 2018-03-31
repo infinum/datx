@@ -102,5 +102,47 @@ describe('Views', () => {
         expect(view.length).toBe(6);
       }
     });
+
+    it('should support collection views with mixins', async () => {
+      mockApi({
+        name: 'events-1',
+        url: 'event',
+      });
+
+      class NewStore extends TestStore {
+        public static views = {
+          test: {
+            mixins: [jsonapi],
+            modelType: Event,
+          },
+        };
+
+        public test: View;
+      }
+
+      const store = new NewStore();
+      const events = await store.test.fetchAll();
+
+      expect(events.data).toBeInstanceOf(Array);
+      expect(events.data).toHaveLength(4);
+      expect(store.test.length).toBe(4);
+
+      mockApi({
+        name: 'events-2',
+        query: {
+          page: 2,
+        },
+        url: 'event',
+      });
+
+      const events2 = await events.next;
+
+      expect(events2).toBeInstanceOf(Object);
+      if (events2) {
+        expect(events2.data).toBeInstanceOf(Array);
+        expect(events2.data).toHaveLength(2);
+        expect(store.test.length).toBe(6);
+      }
+    });
   });
 });

@@ -20,9 +20,9 @@ export class View<T extends PureModel = PureModel> {
 
   constructor(
     modelType: IModelConstructor<T>|IType,
-    private __collection: PureCollection,
+    protected __collection: PureCollection,
     sortMethod?: string|((item: T) => any),
-    models: Array<IIdentifier|PureModel> = [],
+    models: Array<IIdentifier|T> = [],
     public unique: boolean = false,
   ) {
     this.__models.replace(models.map(getModelId));
@@ -87,8 +87,8 @@ export class View<T extends PureModel = PureModel> {
   public add(data: Array<T|IRawModel|IDictionary<any>>): Array<T>;
 
   @action public add(
-    data: PureModel|IRawModel|IDictionary<any>|Array<PureModel>|Array<IRawModel|IDictionary<any>>,
-  ): PureModel|Array<PureModel> {
+    data: T|IRawModel|IDictionary<any>|Array<T>|Array<IRawModel|IDictionary<any>>,
+  ): T|Array<T> {
     const models = this.__collection.add(([] as Array<any>).concat(data), this.modelType) as Array<T>;
 
     models.forEach((instance) => {
@@ -104,11 +104,11 @@ export class View<T extends PureModel = PureModel> {
   /**
    * Check if a model is in the collection
    *
-   * @param {PureModel|IIdentifier} model Model to check
+   * @param {T|IIdentifier} model Model to check
    * @returns {boolean} The given model is in the collection
    * @memberof Collection
    */
-  public hasItem(model: PureModel|IIdentifier): boolean {
+  public hasItem(model: T|IIdentifier): boolean {
     const id = getModelId(model);
     return this.__models.indexOf(id) !== -1;
   }
@@ -116,10 +116,10 @@ export class View<T extends PureModel = PureModel> {
   /**
    * Remove a model from the view
    *
-   * @param {IIdentifier|PureModel} model Model identifier
+   * @param {IIdentifier|T} model Model identifier
    * @memberof Collection
    */
-  @action public remove(model: IIdentifier|PureModel) {
+  @action public remove(model: IIdentifier|T) {
     const id = getModelId(model);
     this.__models.remove(id);
   }

@@ -41,6 +41,7 @@ export {ICollectionConstructor} from './interfaces/ICollectionConstructor';
 export {IIdentifier} from './interfaces/IIdentifier';
 export {IModelConstructor} from './interfaces/IModelConstructor';
 export {IType} from './interfaces/IType';
+export {IViewConstructor} from './interfaces/IViewConstructor';
 export {IActionsMixin} from './interfaces/IActionsMixin';
 export {IMetaMixin} from './interfaces/IMetaMixin';
 
