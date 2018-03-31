@@ -200,7 +200,7 @@ describe('Collection', () => {
       expect(foo1.foo).toBe(1);
 
       const raw = store.toJSON();
-      raw[0].foo = 4;
+      raw.models[0].foo = 4;
       expect(foo1.foo).toBe(1);
 
       const store2 = new Store(raw);

@@ -39,6 +39,7 @@ import state from './store';
     console.log(state.findAll(Person).length); // 16 (4 new people, others were merged)
   }
 
+  // Find a model either by id or with a function
   const party = state.find(Event, 2);
   const john = state.find(Person, (item) => item.name === 'John');
 

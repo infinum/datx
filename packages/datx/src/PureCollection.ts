@@ -36,9 +36,13 @@ export class PureCollection {
   @observable private __dataMap: IDictionary<IDictionary<PureModel>> = {};
   @observable private __dataList: IDictionary<IObservableArray<PureModel>> = {};
 
-  constructor(data: Array<IRawModel> = []) {
+  constructor(data: Array<IRawModel>|{models: Array<IRawModel>} = []) {
     extendObservable(this, {});
-    this.insert(data);
+    if (data instanceof Array) {
+      this.insert(data);
+    } else if (data && 'models' in data) {
+      this.insert(data.models);
+    }
   }
 
   /**
@@ -221,11 +225,13 @@ export class PureCollection {
   /**
    * Get the serializable value of the collection
    *
-   * @returns {Array<IRawModel>} Pure JS value of the collection
+   * @returns {{models: Array<IRawModel>}} Pure JS value of the collection
    * @memberof Collection
    */
-  public toJSON(): Array<IRawModel> {
-    return this.__data.map(modelToJSON);
+  public toJSON(): {models: Array<IRawModel>} {
+    return {
+      models: this.__data.map(modelToJSON),
+    };
   }
 
   public get snapshot() {

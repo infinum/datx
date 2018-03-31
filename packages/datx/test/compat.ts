@@ -926,7 +926,7 @@ describe('Compat Model', () => {
       const raw2 = model.snapshot;
       expect(raw2.__META__ && raw2.__META__.type).toBe('foo');
 
-      const rawCollection = collection.snapshot;
+      const rawCollection = collection.snapshot.models;
       const raw3 = rawCollection[0];
       expect(raw3.__META__ && raw3.__META__.type).toBe('foo');
     });
