@@ -118,6 +118,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       if (model) {
         super.remove(model);
       }
+      clearCacheByType(type);
       return Promise.resolve();
     }
 

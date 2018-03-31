@@ -13,6 +13,7 @@ import {
 import {IDictionary, IRawModel, mapItems, META_FIELD} from 'datx-utils';
 import {isObservableArray} from 'mobx';
 
+import {clearCacheByType} from '../cache';
 import {
   MODEL_LINKS_FIELD,
   MODEL_META_FIELD,
@@ -226,7 +227,11 @@ export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Prom
   const requestMethod = isModelPersisted(model) ? update : create;
   const url = getModelEndpointUrl(model);
   return requestMethod(url, {data}, collection, options && options.headers)
-    .then(handleResponse(model));
+    .then(handleResponse(model))
+    .then((response) => {
+      clearCacheByType(getModelType(model));
+      return response;
+    });
 }
 
 export function removeModel<T extends IJsonapiModel>(model: T, options?: IRequestOptions): Promise<void> {
