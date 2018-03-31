@@ -1,5 +1,6 @@
 import {PureCollection} from '../PureCollection';
 import {PureModel} from '../PureModel';
+import {View} from '../View';
 
 /**
  * Check if a class is of a certain type
@@ -47,4 +48,17 @@ export function isCollection(obj: typeof PureCollection): true;
 export function isCollection(obj: any): false;
 export function isCollection(obj: any) {
   return isOfType(obj, PureCollection);
+}
+
+/**
+ * Check if a class is a collection
+ *
+ * @export
+ * @param {any} obj Class to check
+ * @returns {boolean} Class is a collection
+ */
+export function isView(obj: typeof View): true;
+export function isView(obj: any): false;
+export function isView(obj: any) {
+  return isOfType(obj, View);
 }
