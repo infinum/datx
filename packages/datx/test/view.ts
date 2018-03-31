@@ -271,4 +271,56 @@ describe('Model', () => {
     expect(view2.list[1]).toBeInstanceOf(Foo);
     expect(view2.list[0]).toBe(foos[0]);
   });
+
+  describe('Collections', () => {
+    it('should be possible to add a view', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+      }
+      class AppCollection extends Collection {
+        public static types = [Foo];
+
+        public test: View<Foo>;
+      }
+
+      const collection = new AppCollection();
+      const foos = collection.add([{}, {}], Foo);
+
+      collection.addView('test', Foo, {models: foos});
+
+      expect(collection.test.length).toBe(2);
+      expect(collection.test.list[0]).toBeInstanceOf(Foo);
+      expect(collection.test.list[1]).toBeInstanceOf(Foo);
+      expect(collection.test.list[0]).toBe(foos[0]);
+    });
+
+    it('should be possible to define views upfront', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+      }
+      class AppCollection extends Collection {
+        public static types = [Foo];
+
+        public static views = {
+          test: {modelType: Foo},
+        };
+
+        public test: View<Foo>;
+      }
+
+      const collection = new AppCollection();
+      expect(collection.test.modelType).toBe('foo');
+      const foos = collection.test.add([{}, {}]);
+
+      expect(collection.test.length).toBe(2);
+      expect(collection.test.list[0]).toBeInstanceOf(Foo);
+      expect(collection.test.list[1]).toBeInstanceOf(Foo);
+      expect(collection.test.list[0]).toBe(foos[0]);
+
+      const snapshot = collection.snapshot;
+
+      const collection2 = new AppCollection(snapshot);
+      expect(collection2.test.length).toBe(2);
+    });
+  });
 });

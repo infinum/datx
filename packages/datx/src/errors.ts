@@ -15,6 +15,7 @@ export const WRONG_REF_TYPE = 'The new reference type doesn\'t match to the decl
 export const MODEL_REQUIRED = 'The model type is a required parameter. Do you maybe have a circular dependency?';
 export const SORTED_NO_WRITE = 'New models can\'t be added directly to a sorted view list';
 export const UNIQUE_MODEL = 'The models in this view need to be unique';
+export const VIEW_NAME_TAKEN = 'The name is already taken';
 
 export const DECORATE_MODEL = 'This mixin can only decorate models';
 export const DECORATE_COLLECTION = 'This mixin can only decorate collections';

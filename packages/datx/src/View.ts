@@ -6,12 +6,13 @@ import {error} from './helpers/format';
 import {getModelId, getModelType} from './helpers/model/utils';
 import {IIdentifier} from './interfaces/IIdentifier';
 import {IModelConstructor} from './interfaces/IModelConstructor';
+import {IRawView} from './interfaces/IRawView';
 import {IType} from './interfaces/IType';
 import {TChange} from './interfaces/TChange';
 import {PureCollection} from './PureCollection';
 import {PureModel} from './PureModel';
 
-export class View<T extends PureModel> {
+export class View<T extends PureModel = PureModel> {
   public readonly modelType: IType;
   private __models: IObservableArray<IIdentifier> = observable.array([]);
 
@@ -46,7 +47,7 @@ export class View<T extends PureModel> {
     return instances;
   }
 
-  public toJSON(): {modelType: IType, models: Array<IIdentifier>, unique: boolean} {
+  public toJSON(): IRawView {
     return {
       modelType: this.modelType,
       models: this.__models.slice(),

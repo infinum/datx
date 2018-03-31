@@ -1,7 +1,7 @@
 import {IDictionary, IRawModel} from 'datx-utils';
 import {action, computed, decorate, extendObservable, IObservableArray, IObservableObject, observable, set} from 'mobx';
 
-import {MODEL_SINGLE_COLLECTION, UNDEFINED_MODEL, UNDEFINED_TYPE} from './errors';
+import {MODEL_SINGLE_COLLECTION, UNDEFINED_MODEL, UNDEFINED_TYPE, VIEW_NAME_TAKEN} from './errors';
 import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
 import {
@@ -14,9 +14,12 @@ import {
 } from './helpers/model/utils';
 import {IIdentifier} from './interfaces/IIdentifier';
 import {IModelConstructor} from './interfaces/IModelConstructor';
+import {IRawCollection} from './interfaces/IRawCollection';
+import {IRawView} from './interfaces/IRawView';
 import {IType} from './interfaces/IType';
 import {TFilterFn} from './interfaces/TFilterFn';
 import {PureModel} from './PureModel';
+import {View} from './View';
 
 export class PureCollection {
 
@@ -29,20 +32,42 @@ export class PureCollection {
    */
   public static types: Array<typeof PureModel|IModelConstructor<PureModel>> = [];
 
+  public static views: IDictionary<{
+    modelType: IType|PureModel,
+    sortMethod?: string|((PureModel) => any);
+    unique?: boolean;
+    mixins?: Array<(view: any) => any>;
+  }> = {};
+
   public static defaultModel?: typeof PureModel;
 
   private __data: IObservableArray<PureModel> = observable.array([], {deep: false});
 
+  private __views: Array<string> = [];
+
   @observable private __dataMap: IDictionary<IDictionary<PureModel>> = {};
   @observable private __dataList: IDictionary<IObservableArray<PureModel>> = {};
 
-  constructor(data: Array<IRawModel>|{models: Array<IRawModel>} = []) {
+  constructor(data: Array<IRawModel>|IRawCollection = []) {
     extendObservable(this, {});
     if (data instanceof Array) {
       this.insert(data);
     } else if (data && 'models' in data) {
       this.insert(data.models);
     }
+
+    const staticCollection = this.constructor as typeof PureCollection;
+    const initViews = (data && 'views' in data) ? data.views : {};
+    Object.keys(staticCollection.views).forEach((key) => {
+      const view = staticCollection.views[key];
+      const init = initViews[key] || view;
+      this.addView(key, init.modelType, {
+        mixins: view.mixins,
+        models: init.models || [],
+        sortMethod: view.sortMethod,
+        unique: init.unique,
+      });
+    });
   }
 
   /**
@@ -225,12 +250,19 @@ export class PureCollection {
   /**
    * Get the serializable value of the collection
    *
-   * @returns {{models: Array<IRawModel>}} Pure JS value of the collection
+   * @returns {IRawCollection} Pure JS value of the collection
    * @memberof Collection
    */
-  public toJSON(): {models: Array<IRawModel>} {
+  public toJSON(): IRawCollection {
+    const views: IDictionary<IRawView> = {};
+
+    this.__views.forEach((key) => {
+      views[key] = this[key].toJSON();
+    });
+
     return {
       models: this.__data.map(modelToJSON),
+      views,
     };
   }
 
@@ -252,6 +284,47 @@ export class PureCollection {
 
   public getAllModels() {
     return this.__data.slice();
+  }
+
+  /**
+   * Add a view to the collection
+   *
+   * @template T Model type of the view
+   * @param {string} name View name
+   * @param {(IModelConstructor<T>|IType)} type Model type the view will represent
+   * @param {({
+   *       sortMethod?: string|((item: T) => any),
+   *       models?: Array<IIdentifier|PureModel>,
+   *       unique?: boolean,
+   *       mixins?: Array<(view: any) => any>,
+   *     })} [{sortMethod, models, unique, mixins}={}] View options
+   * @returns {View} The created view
+   * @memberof PureCollection
+   */
+  public addView<T extends PureModel>(
+    name: string,
+    type: IModelConstructor<T>|IType,
+    {sortMethod, models, unique, mixins}: {
+      sortMethod?: string|((item: T) => any),
+      models?: Array<IIdentifier|PureModel>,
+      unique?: boolean,
+      mixins?: Array<(view: any) => any>,
+    } = {},
+  ) {
+    if (name in this) {
+      throw error(VIEW_NAME_TAKEN);
+    }
+
+    const ViewConstructor = mixins
+      ? mixins.reduce((view: any, mixin: (view: any) => any) => {
+          return mixin(view);
+        }, View) as typeof View
+      : View;
+
+    this.__views.push(name);
+    this[name] = new ViewConstructor<T>(type, this, sortMethod, models, unique);
+
+    return this[name];
   }
 
   private __addArray<T extends PureModel>(data: Array<T>): Array<T>;
