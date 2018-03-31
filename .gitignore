@@ -39,9 +39,6 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# Libs shouldn't lock dependencies
-yarn.lock
-
 # Build folder
 dist
 
