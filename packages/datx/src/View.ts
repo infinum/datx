@@ -14,16 +14,19 @@ import {PureModel} from './PureModel';
 
 export class View<T extends PureModel = PureModel> {
   public readonly modelType: IType;
+  @observable public sortMethod?: string|((item: T) => any);
+
   private __models: IObservableArray<IIdentifier> = observable.array([]);
 
   constructor(
     modelType: IModelConstructor<T>|IType,
     private __collection: PureCollection,
-    public sortMethod?: string|((item: T) => any),
+    sortMethod?: string|((item: T) => any),
     models: Array<IIdentifier|PureModel> = [],
     public unique: boolean = false,
   ) {
     this.__models.replace(models.map(getModelId));
+    this.sortMethod = sortMethod;
     this.modelType = getModelType(modelType);
   }
 
@@ -101,11 +104,11 @@ export class View<T extends PureModel = PureModel> {
   /**
    * Check if a model is in the collection
    *
-   * @param {PureModel} model Model to check
+   * @param {PureModel|IIdentifier} model Model to check
    * @returns {boolean} The given model is in the collection
    * @memberof Collection
    */
-  public hasItem(model: PureModel): boolean {
+  public hasItem(model: PureModel|IIdentifier): boolean {
     const id = getModelId(model);
     return this.__models.indexOf(id) !== -1;
   }

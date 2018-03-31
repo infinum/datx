@@ -124,6 +124,43 @@ describe('Model', () => {
     expect(view.list[2].key).toBe(2);
   });
 
+  it('should be able to update sort method', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+
+      @prop public key: number;
+    }
+    class AppCollection extends Collection {
+      public static types = [Foo];
+    }
+
+    const collection = new AppCollection();
+    const foos = collection.add([{key: 2}, {key: 3}, {key: 1}], Foo);
+    const view = new View(Foo, collection, (item: Foo) => item.key, foos);
+
+    expect(view.length).toBe(3);
+    expect(view.list[0].key).toBe(1);
+    expect(view.list[2].key).toBe(3);
+
+    let keyList = [];
+    let autorunCount = 0;
+
+    autorun(() => {
+      keyList = view.list.map((item) => item.key);
+      autorunCount++;
+    });
+
+    expect(keyList[2]).toBe(3);
+
+    view.sortMethod = 'id';
+
+    expect(view.list[0].key).toBe(2);
+    expect(view.list[2].key).toBe(1);
+    expect(keyList[2]).toBe(1);
+
+    expect(autorunCount).toBe(2);
+  });
+
   it('should be able to sort models by prop', () => {
     class Foo extends Model {
       public static type = 'foo';
