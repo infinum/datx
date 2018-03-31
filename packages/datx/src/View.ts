@@ -31,19 +31,23 @@ export class View<T extends PureModel = PureModel> {
     return this.__models.length;
   }
 
-  @computed public get list(): Array<T> {
+  @computed public get list(): Array<T|null> {
     const list = this.__models.map((id) => this.__collection.find(this.modelType, id));
 
     if (this.sortMethod) {
       const sortFn = typeof this.sortMethod === 'string'
         ? (item) => item[this.sortMethod as 'string']
         : this.sortMethod;
-      list.sort((a, b) => sortFn(a) - sortFn(b));
+      list.sort((a: T|null, b: T|null) => {
+        const valA = a ? sortFn(a) : Infinity;
+        const valB = b ? sortFn(b) : Infinity;
+        return valA - valB;
+      });
     }
 
     const instances = observable.array(list, {deep: false});
 
-    intercept(instances, (change: TChange) => this.__partialListUpdate(change));
+    intercept(instances, this.__partialListUpdate.bind(this));
     return instances;
   }
 
@@ -82,7 +86,7 @@ export class View<T extends PureModel = PureModel> {
   @action public add(
     data: PureModel|IRawModel|IDictionary<any>|Array<PureModel>|Array<IRawModel|IDictionary<any>>,
   ): PureModel|Array<PureModel> {
-    const models = this.__collection.add([].concat(data), this.modelType);
+    const models = this.__collection.add(([] as Array<any>).concat(data), this.modelType) as Array<T>;
 
     models.forEach((instance) => {
       const id = getModelId(instance);
@@ -122,7 +126,6 @@ export class View<T extends PureModel = PureModel> {
   }
 
   private __partialListUpdate(change: TChange) {
-    // TODO: if this.unique, throw if already exists
     if (change.type === 'splice') {
       if (this.sortMethod && change.added.length > 0) {
         throw error(SORTED_NO_WRITE);
