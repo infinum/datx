@@ -674,7 +674,8 @@ describe('Compat Model', () => {
     class Foo extends CompatModel {
       public static type = 'foo';
       public static refs = {bar: 'bar'};
-      public static preprocess(rawData) {
+      public static preprocess(rawData, coll) {
+        expect(coll).toBeInstanceOf(TestCollection);
         return Object.assign({newProp: 1}, rawData);
       }
       public bar!: Bar|Array<Bar>;

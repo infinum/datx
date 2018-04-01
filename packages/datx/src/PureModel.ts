@@ -33,10 +33,11 @@ export class PureModel {
    *
    * @static
    * @param {object} data Input data
+   * @param {PureCollection} [collection] The collection the new model will belong to
    * @returns Target model data
    * @memberof Model
    */
-  public static preprocess(data: object) {
+  public static preprocess(data: object, _collection?: PureCollection) {
     return data;
   }
 

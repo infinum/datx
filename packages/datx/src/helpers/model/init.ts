@@ -160,7 +160,7 @@ function initModelMeta(model: PureModel, data: IRawModel, collection?: PureColle
 
 export function initModel(model: PureModel, rawData: IRawModel, collection?: PureCollection) {
   const staticModel = model.constructor as typeof PureModel;
-  const data = Object.assign({}, staticModel.preprocess(rawData));
+  const data = Object.assign({}, staticModel.preprocess(rawData, collection));
   setModelMetaKey(model, 'collection', collection);
   const meta = initModelMeta(model, data, collection);
   initModelData(model, data, meta, collection);
