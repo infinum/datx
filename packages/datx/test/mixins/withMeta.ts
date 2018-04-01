@@ -70,7 +70,7 @@ describe('Collection', () => {
     expect(() => withMeta(A)).toThrowError('This mixin can only decorate models');
   });
 
-  it ('should support meta ref ids', () => {
+  it('should support meta ref ids', () => {
     class Foo extends PureModel {
       public static type = 'foo';
       @prop.toOne(Foo) public parent?: Foo;

@@ -61,6 +61,23 @@ describe('Network basics', () => {
     }
   });
 
+  it('should serialize existing relationships', async () => {
+    mockApi({
+      name: 'events-1',
+      url: 'event',
+    });
+
+    const store = new TestStore();
+    const events = await store.fetchAll(Event);
+
+    const event = events.data[0];
+    const data = modelToJsonApi(event);
+
+    expect('id' in data.attributes).toBe(false);
+    expect(data.relationships.images.data).toHaveLength(1);
+    expect(data.relationships.image.data).toBeUndefined();
+  });
+
   it('should support transformRequest hook', async () => {
     mockApi({
       name: 'events-1',

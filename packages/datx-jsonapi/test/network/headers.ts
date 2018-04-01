@@ -20,7 +20,7 @@ describe('headers', () => {
     clearAllCache();
   });
 
-  it ('should send the default headers', async () => {
+  it('should send the default headers', async () => {
     mockApi({
       name: 'events-1',
       reqheaders: {
@@ -35,7 +35,7 @@ describe('headers', () => {
     expect(events.data).toBeInstanceOf(Array);
   });
 
-  it ('should send custom headers', async () => {
+  it('should send custom headers', async () => {
     mockApi({
       name: 'events-1',
       reqheaders: {
@@ -54,7 +54,7 @@ describe('headers', () => {
     expect(events.data).toBeInstanceOf(Array);
   });
 
-  it ('should receive headers', async () => {
+  it('should receive headers', async () => {
     mockApi({
       headers: {
         'X-Auth': '98765',

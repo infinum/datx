@@ -547,7 +547,7 @@ describe('Model', () => {
       const foo1 = collection.add({foo: 2}, Foo);
     });
 
-    it ('should work if an independent type is defined', () => {
+    it('should work if an independent type is defined', () => {
 
       class Foo extends PureModel {
         public static type = 'foo';

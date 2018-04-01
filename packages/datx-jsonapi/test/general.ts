@@ -2,7 +2,7 @@ import {Collection, getModelId, getModelType, Model} from 'datx';
 import {IDictionary} from 'datx-utils';
 import {autorun, extendObservable, observable} from 'mobx';
 
-import {config, GenericModel, getModelRefLinks, jsonapi} from '../src';
+import {config, GenericModel, getModelRefLinks, jsonapi, modelToJsonApi} from '../src';
 import {Event, Image, Photo, TestStore, User} from './utils/setup';
 
 // tslint:disable:no-string-literal
@@ -584,5 +584,25 @@ describe('General', () => {
     expect(getModelId(user['self'])).toBe(1);
     expect(getModelType(user)).toBe('user');
     expect(store.findAll('user').length).toBe(1);
+  });
+
+  it('should serialize empty relationships', () => {
+    const event = new Event({name: 'Foo'});
+
+    const data = modelToJsonApi(event);
+
+    expect('id' in data.attributes).toBe(false);
+    expect(data.relationships.images.data).toHaveLength(0);
+    expect(data.relationships.image.data).toBeUndefined();
+  });
+
+  it('should serialize model id correctly', () => {
+    const event = new Event({id: '1234', name: 'Foo'});
+
+    const data = modelToJsonApi(event);
+
+    expect('id' in data.attributes).toBe(false);
+    expect(data.relationships.images.data).toHaveLength(0);
+    expect(data.relationships.image.data).toBeUndefined();
   });
 });

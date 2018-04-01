@@ -185,7 +185,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
   Object.keys(refs).forEach((key) => {
     data.relationships = data.relationships || {};
     const refIds = getRefId(model, key);
-    let rel: IDefinition|Array<IDefinition>;
+    let rel: IDefinition|Array<IDefinition>|undefined;
     if (refIds instanceof Array || isObservableArray(refIds)) {
       rel = (refIds as Array<IIdentifier>).map((id, index) => {
         const type = model[key][index] ? getModelType(model[key][index]) : refs[key].model;
@@ -193,12 +193,14 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
       });
     } else {
       const type: string = model[key] ? getModelType(model[key]) : refs[key].model;
-      rel = {id: refIds, type};
+      rel = refIds ? {id: refIds, type} : undefined;
     }
 
     data.relationships[key] = {data: rel} as IRelationship;
     delete data.attributes[key];
   });
+
+  delete data.attributes.id;
 
   delete data.attributes[META_FIELD];
 
