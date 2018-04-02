@@ -1,4 +1,4 @@
-import {deprecated, IDictionary, IRawModel, mapItems, warn} from 'datx-utils';
+import {deprecated, IDictionary, IRawModel, mapItems} from 'datx-utils';
 import {isObservableArray, set} from 'mobx';
 
 import {Collection} from './Collection';
@@ -19,14 +19,14 @@ import {IType} from './interfaces/IType';
 import {PureModel} from './PureModel';
 import {storage} from './services/storage';
 
-warn('CompatModel is just a migration tool. Please move to Model or PureModel as soon as possible.');
-
 export class CompatModel extends PureModel {
   public static refs: IReferences = {};
   public static defaults: IDictionary<any> = {};
 
   constructor(initialData: object, collection?: Collection) {
     super(initialData, collection);
+
+    deprecated('CompatModel is just a migration tool. Please move to Model or PureModel as soon as possible.');
 
     Object.keys(this.static.refs).forEach((prop) => {
       const refs = getModelMetaKey(this, 'refs');

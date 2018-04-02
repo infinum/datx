@@ -1,4 +1,4 @@
-import {assignComputed, deprecated, IRawModel, warn} from 'datx-utils';
+import {assignComputed, deprecated, IRawModel} from 'datx-utils';
 import {computed, decorate, extendObservable} from 'mobx';
 
 import {Collection} from './Collection';
@@ -6,13 +6,13 @@ import {CompatModel} from './CompatModel';
 import {getModelType} from './helpers/model/utils';
 import {IRawCollection} from './interfaces/IRawCollection';
 
-warn('CompatCollection is just a migration tool. Please move to Collection as soon as possible.');
-
 export class CompatCollection extends Collection {
   public static types = [CompatModel];
 
   constructor(data?) {
     super(data);
+
+    deprecated('CompatCollection is just a migration tool. Please move to Collection as soon as possible.');
 
     const getters = {};
 
