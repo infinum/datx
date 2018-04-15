@@ -179,10 +179,15 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
             (def: IDefinition) => this.find(def.type, def.id) || def.id,
           ) || null;
 
-          const itemType: string = items instanceof Array ? items[0].type : items.type;
+          const isArray = items instanceof Array;
+          if (isArray && items.length === 0) {
+            return;
+          }
+
           if (ref in record) {
             record[ref] = models;
           } else {
+            const itemType: string = isArray ? items[0].type : items.type;
             initModelRef(record, ref, {model: itemType, type: ReferenceType.TO_ONE_OR_MANY}, models);
           }
         }
