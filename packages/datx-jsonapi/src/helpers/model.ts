@@ -57,7 +57,7 @@ export function flattenModel(data?: IRecord): IRawModel|null {
     const refs = {};
     Object.keys(data.relationships).forEach((key) => {
       const ref = (data.relationships as IDictionary<IRelationship>)[key] as IRelationship;
-      if ('data' in ref && ref.data) {
+      if ('data' in ref && ref.data && (!(ref.data instanceof Array) || ref.data.length > 0)) {
         rawData[key] = mapItems(ref.data, (item: IDefinition) => item.id);
         refs[key] = {
           model: ref.data instanceof Array ? ref.data[0].type : ref.data.type,

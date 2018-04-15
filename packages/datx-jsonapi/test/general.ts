@@ -28,6 +28,44 @@ describe('General', () => {
     expect(event.name).toBe('Demo');
   });
 
+  it('should handle empty array reference', () => {
+    const store = new TestStore();
+    const event = store.sync({
+      data: {
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        relationships: {
+          image: {
+            data: [],
+          },
+        },
+        type: 'event',
+      },
+    }) as Event;
+
+    expect(event.name).toBe('Demo');
+  });
+
+  it('should handle empty reference', () => {
+    const store = new TestStore();
+    const event = store.sync({
+      data: {
+        attributes: {
+          name: 'Demo',
+        },
+        id: 1,
+        relationships: {
+          image: {},
+        },
+        type: 'event',
+      },
+    }) as Event;
+
+    expect(event.name).toBe('Demo');
+  });
+
   it('should handle missing reference', () => {
     const store = new TestStore();
     const event = store.sync({
