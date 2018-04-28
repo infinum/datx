@@ -11,6 +11,7 @@ import {
   updateModel,
 } from 'datx';
 import {IDictionary, IRawModel, mapItems} from 'datx-utils';
+import {action} from 'mobx';
 
 import {clearAllCache, clearCacheByType} from './cache';
 import {URL_REGEX} from './consts';
@@ -44,7 +45,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
     public static defaultModel = BaseClass['defaultModel'] || GenericModel;
 
-    public sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T|Array<T>|null {
+    @action public sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T|Array<T>|null {
       if (!body) {
         return null;
       }
@@ -101,7 +102,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
     public remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequestOptions);
     public remove(model: PureModel, remote?: boolean|IRequestOptions);
-    public remove(
+    @action public remove(
       obj: IType|typeof PureModel|PureModel,
       id?: IIdentifier|boolean|IRequestOptions,
       remote?: boolean|IRequestOptions,
@@ -122,12 +123,12 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return Promise.resolve();
     }
 
-    public removeAll(type: string | number | typeof PureModel) {
+    @action public removeAll(type: string | number | typeof PureModel) {
       super.removeAll(type);
       clearCacheByType(getModelType(type));
     }
 
-    public reset() {
+    @action public reset() {
       super.reset();
       clearAllCache();
     }
