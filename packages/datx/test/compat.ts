@@ -1075,7 +1075,8 @@ describe('Compat Model', () => {
 
       expect(foo.bar).toHaveLength(2);
 
-      foo.bar.push({});
+      // tslint:disable-next-line:no-object-literal-type-assertion
+      foo.bar.push({} as Bar);
 
       expect(foo.bar).toHaveLength(3);
       expect(getRefId(foo, 'bar')).toHaveLength(3);

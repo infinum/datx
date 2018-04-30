@@ -33,7 +33,7 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}], Foo);
-    const view = new View(Foo, collection, null, [-1, -2]);
+    const view = new View(Foo, collection, undefined, [-1, -2]);
 
     expect(view.length).toBe(2);
     expect(view.list[0]).toBeInstanceOf(Foo);
@@ -114,14 +114,18 @@ describe('Model', () => {
     const view = new View(Foo, collection, (item: Foo) => item.key, foos);
 
     expect(view.length).toBe(3);
-    expect(view.list[0].key).toBe(1);
-    expect(view.list[2].key).toBe(3);
+    const item0a = view.list[0];
+    const item2a = view.list[2];
+    expect(item0a && item0a.key).toBe(1);
+    expect(item2a && item2a.key).toBe(3);
 
     const foo0 = collection.add({key: 0}, Foo);
     expect(view.length).toBe(3);
     view.add(foo0);
-    expect(view.list[0].key).toBe(0);
-    expect(view.list[2].key).toBe(2);
+    const item0b = view.list[0];
+    const item2b = view.list[2];
+    expect(item0b && item0b.key).toBe(0);
+    expect(item2b && item2b.key).toBe(2);
   });
 
   it('should be able to update sort method', () => {
@@ -139,8 +143,10 @@ describe('Model', () => {
     const view = new View(Foo, collection, (item: Foo) => item.key, foos);
 
     expect(view.length).toBe(3);
-    expect(view.list[0].key).toBe(1);
-    expect(view.list[2].key).toBe(3);
+    const item0a = view.list[0];
+    const item2a = view.list[2];
+    expect(item0a && item0a.key).toBe(1);
+    expect(item2a && item2a.key).toBe(3);
 
     let keyList: Array<number|null> = [];
     let autorunCount = 0;
@@ -154,8 +160,10 @@ describe('Model', () => {
 
     view.sortMethod = 'id';
 
-    expect(view.list[0].key).toBe(2);
-    expect(view.list[2].key).toBe(1);
+    const item0b = view.list[0];
+    const item2b = view.list[2];
+    expect(item0b && item0b.key).toBe(2);
+    expect(item2b && item2b.key).toBe(1);
     expect(keyList[2]).toBe(1);
 
     expect(autorunCount).toBe(2);
@@ -176,14 +184,18 @@ describe('Model', () => {
     const view = new View(Foo, collection, 'key', foos);
 
     expect(view.length).toBe(3);
-    expect(view.list[0].key).toBe(1);
-    expect(view.list[2].key).toBe(3);
+    const item0a = view.list[0];
+    const item2a = view.list[2];
+    expect(item0a && item0a.key).toBe(1);
+    expect(item2a && item2a.key).toBe(3);
 
     const foo0 = collection.add({key: 0}, Foo);
     expect(view.length).toBe(3);
     view.add(foo0);
-    expect(view.list[0].key).toBe(0);
-    expect(view.list[2].key).toBe(2);
+    const item0b = view.list[0];
+    const item2b = view.list[2];
+    expect(item0b && item0b.key).toBe(0);
+    expect(item2b && item2b.key).toBe(2);
   });
 
   it('should be able to remove models', () => {
