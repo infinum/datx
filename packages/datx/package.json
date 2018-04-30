@@ -54,6 +54,11 @@
     "testRegex": "test/(.*).ts",
     "transform": {
       ".ts": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "enableTsDiagnostics": true
+      }
     }
   },
   "dependencies": {
