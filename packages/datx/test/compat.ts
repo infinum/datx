@@ -441,7 +441,7 @@ describe('Compat Model', () => {
       id: 4,
     }], CompatModel);
 
-    const first = models.shift() as CompatModel;
+    const first = models.shift();
 
     first.assignRef('bar', models);
     expect(first['bar']).toHaveLength(3);
@@ -756,7 +756,7 @@ describe('Compat Model', () => {
 
     expect(model.assign).toBeInstanceOf(Function);
     expect(model.id).toBe(1);
-    model.update({id: 2, assign: true, foo: 3} as object);
+    model.update({id: 2, assign: true, foo: 3});
     expect(model.assign).toBeInstanceOf(Function);
     expect(model.id).toBe(1);
     expect(model.foo).toBe(3);

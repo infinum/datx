@@ -6,7 +6,7 @@ import {IModelConstructor} from './IModelConstructor';
 import {IType} from './IType';
 
 export interface ICollectionConstructor<T = PureCollection> {
-  types: Array<typeof PureModel | IModelConstructor<PureModel>>;
+  types: Array<typeof PureModel | IModelConstructor>;
   views: IDictionary<{
     modelType: IType | PureModel;
     sortMethod?: string | ((PureModel) => any);

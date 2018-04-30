@@ -66,8 +66,9 @@ export default function mockApi({
   const apiUrl = nodeUrl.parse(config.baseUrl);
   const hostname = `${apiUrl.protocol}//${apiUrl.hostname}`;
   const nockScope = nock(hostname, {reqheaders}).replyContentLength();
+  const pathname = apiUrl.pathname || '';
 
-  let mock = nockScope.intercept(apiUrl.pathname + url, method, data) as nock.Interceptor;
+  let mock = nockScope.intercept(pathname + url, method, data);
 
   if (query) {
     mock = mock.query(query);
@@ -75,7 +76,9 @@ export default function mockApi({
 
   return mock.reply(status, () => {
     if (responseFn && isFunction(responseFn)) {
-      return responseFn();
+      responseFn();
+
+      return;
     }
 
     return [status, getMockStream(name || url)];

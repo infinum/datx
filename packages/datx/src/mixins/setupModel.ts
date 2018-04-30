@@ -57,11 +57,17 @@ export function setupModel<IModel extends PureModel>(
       const {model, property} = references[key];
       switch (references[key].type) {
         case ReferenceType.TO_ONE:
-          return prop.toOne(model)(ModelWithProps.prototype, key);
+          prop.toOne(model)(ModelWithProps.prototype, key);
+
+          return;
         case ReferenceType.TO_MANY:
-          return prop.toMany(model, property)(ModelWithProps.prototype, key);
+          prop.toMany(model, property)(ModelWithProps.prototype, key);
+
+          return;
         default:
-          return prop.toOneOrMany(model)(ModelWithProps.prototype, key);
+          prop.toOneOrMany(model)(ModelWithProps.prototype, key);
+
+          return;
       }
     });
   }

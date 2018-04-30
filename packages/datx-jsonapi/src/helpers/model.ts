@@ -214,7 +214,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
 }
 
 function getModelEndpointUrl(model: PureModel): string {
-  const staticModel = model.constructor as PureModel;
+  const staticModel = model.constructor;
   const links: IDictionary<ILink> = getModelLinks(model);
   if (links && links.self) {
     const self: ILink = links.self;

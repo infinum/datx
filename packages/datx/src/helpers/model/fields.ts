@@ -82,9 +82,13 @@ function partialRefUpdate(model: PureModel, key: string, change: TChange) {
 
 function backRefSplice(model: PureModel, key: string, change: IArraySplice<PureModel>, refOptions: IReferenceOptions) {
   const property = refOptions.property as string;
-  change.added.map((item) => modelAddReference(item, property, model));
-  const removed = model[key].slice(change.index, change.index + change.removedCount);
-  removed.map((item) => modelRemoveReference(item, property, model));
+  change.added.forEach((item) => {
+    modelAddReference(item, property, model);
+  });
+  const removed = model[key].slice(change.index, (change.index as number) + (change.removedCount as number));
+  removed.forEach((item) => {
+    modelRemoveReference(item, property, model);
+  });
 
   return null;
 }
@@ -319,8 +323,8 @@ export function getRefId(model: PureModel, key: string): IIdentifier|Array<IIden
  * @param {PureModel} model Source model
  * @param {string} key Referenced model property name
  * @param {IIdentifier} value The new value
- * @returns {IIdentifier} Referenced model id
+ * @returns {void} Referenced model id
  */
-export function setRefId(model: PureModel, key: string, value: IIdentifier|Array<IIdentifier>) {
-  return storage.setModelDataKey(model, key, value);
+export function setRefId(model: PureModel, key: string, value: IIdentifier|Array<IIdentifier>): void {
+  storage.setModelDataKey(model, key, value);
 }

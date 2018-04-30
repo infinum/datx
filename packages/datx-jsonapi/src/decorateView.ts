@@ -11,7 +11,6 @@ import {Response} from './Response';
 declare var window: object|undefined;
 
 export function decorateView<U>(BaseClass: typeof View) {
-
   class JsonapiView<M extends IJsonapiModel = IJsonapiModel> extends BaseClass {
     protected __collection: IJsonapiCollection;
 

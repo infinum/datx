@@ -91,7 +91,7 @@ export class View<T extends PureModel = PureModel> {
   @action public add(
     data: T|IRawModel|IDictionary<any>|Array<T>|Array<IRawModel|IDictionary<any>>,
   ): T|Array<T> {
-    const models = this.__collection.add(([] as Array<any>).concat(data), this.modelType) as Array<T>;
+    const models = this.__collection.add<T>([].concat(data), this.modelType);
 
     models.forEach((instance) => {
       const id = getModelId(instance);

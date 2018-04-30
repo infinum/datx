@@ -22,7 +22,6 @@ import {PureModel} from './PureModel';
 import {View} from './View';
 
 export class PureCollection {
-
   /**
    * List of models available in the collection
    *
@@ -30,7 +29,7 @@ export class PureCollection {
    * @type {Array<typeof PureModel>}
    * @memberof Collection
    */
-  public static types: Array<typeof PureModel | IModelConstructor<PureModel>> = [];
+  public static types: Array<typeof PureModel | IModelConstructor> = [];
 
   public static views: IDictionary<{
     modelType: IType | PureModel;
@@ -187,10 +186,10 @@ export class PureCollection {
         set(this.__dataList, {[type]: observable.array([])});
       }
 
-      return this.__dataList[type] as IObservableArray<T>;
+      return this.__dataList[type];
     }
 
-    return this.__data as IObservableArray<T>;
+    return this.__data;
   }
 
   /**
@@ -280,7 +279,9 @@ export class PureCollection {
    * @memberof Collection
    */
   @action public reset() {
-    this.__data.map((model) => setModelMetaKey(model, 'collection', undefined));
+    this.__data.forEach((model) => {
+      setModelMetaKey(model, 'collection', undefined);
+    });
     this.__data.replace([]);
     this.__dataList = observable({}) as IObservableObject & IDictionary<IObservableArray<PureModel>>;
     this.__dataMap = observable({}) as IObservableObject &IDictionary<IDictionary<PureModel>>;
@@ -365,7 +366,11 @@ export class PureCollection {
 
   private __insertModel(model: PureModel|Array<PureModel>, type?: IType, id?: IIdentifier) {
     if (model instanceof Array) {
-      return model.forEach((item) => this.__insertModel(item, type, id));
+      model.forEach((item) => {
+        this.__insertModel(item, type, id);
+      });
+
+      return;
     }
 
     const collection = getModelCollection(model);
@@ -401,7 +406,11 @@ export class PureCollection {
 
   private __removeModel(model: PureModel|Array<PureModel>, type?: IType, id?: IIdentifier) {
     if (model instanceof Array) {
-      return model.forEach((item) => this.__removeModel(item, type, id));
+      model.forEach((item) => {
+        this.__removeModel(item, type, id);
+      });
+
+      return;
     }
 
     const modelType = type || getModelType(model);

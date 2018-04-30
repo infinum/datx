@@ -620,7 +620,7 @@ describe('General', () => {
         },
         type: 'user',
       },
-    }) as GenericModel;
+    });
 
     expect(user['name']).toBe('John');
     expect(getModelId(user['self'])).toBe(1);

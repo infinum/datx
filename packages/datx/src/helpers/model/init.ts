@@ -36,7 +36,12 @@ export function initModelField<T extends PureModel>(
     fields.push(key);
   }
 
-  assignComputed(obj, key, () => getField(obj, key), (value) => updateField(obj, key, value, type));
+  assignComputed(obj, key,
+    () => getField(obj, key),
+    (value) => {
+      updateField(obj, key, value, type);
+    },
+  );
 }
 
 /**
@@ -57,7 +62,12 @@ export function initModelRef(obj: PureModel, key: string, options: IReferenceOpt
   const isArray = options.type === ReferenceType.TO_MANY;
   storage.setModelDataKey(obj, key, isArray ? [] : undefined);
 
-  assignComputed(obj, key, () => getRef(obj, key), (value) => updateRef(obj, key, value));
+  assignComputed(obj, key,
+    () => getRef(obj, key),
+    (value) => {
+      updateRef(obj, key, value);
+    },
+  );
 
   if (!options.property) {
     obj[key] = initialVal;
@@ -145,7 +155,7 @@ function initModelMeta(model: PureModel, data: IRawModel, collection?: PureColle
   let newMeta;
   const toInit: IMetaToInit = {fields: [], refs: {}};
   if (META_FIELD in data && data[META_FIELD]) {
-    const oldMeta = data[META_FIELD] as IDictionary<any>;
+    const oldMeta = data[META_FIELD];
     toInit.fields = oldMeta.fields;
     delete oldMeta.fields;
     toInit.refs = oldMeta.refs;

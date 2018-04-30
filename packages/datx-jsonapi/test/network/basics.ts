@@ -254,7 +254,7 @@ describe('Network basics', () => {
     if (event instanceof Event) {
       let hasThrown = false;
       try {
-        const foobar = await fetchModelLink(event as Event, 'foobar');
+        const foobar = await fetchModelLink(event, 'foobar');
         expect(foobar.data).toBeInstanceOf(Array);
         expect(foobar.data).toHaveLength(0);
       } catch (e) {

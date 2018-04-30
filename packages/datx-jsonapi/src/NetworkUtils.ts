@@ -356,7 +356,7 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
     if (response.status === 204) {
       setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
 
-      return record as T;
+      return record;
     } else if (response.status === 202) {
       const responseRecord = response.data as T;
       setModelMetaKey(responseRecord, MODEL_PROP_FIELD, prop);

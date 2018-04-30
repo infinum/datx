@@ -175,7 +175,7 @@ describe('updates', () => {
       });
 
       const queue2 = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
-      const queueRecord = queue2.data as GenericModel;
+      const queueRecord = queue2.data;
       expect(getModelType(queueRecord)).toBe('queue');
 
       mockApi({
@@ -223,7 +223,7 @@ describe('updates', () => {
       });
 
       const queue2 = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
-      const queueRecord = queue2.data as GenericModel;
+      const queueRecord = queue2.data;
       expect(getModelType(queueRecord)).toBe('queue');
 
       mockApi({
@@ -232,7 +232,7 @@ describe('updates', () => {
       });
 
       const updatedRes = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
-      const updated = updatedRes.data as GenericModel;
+      const updated = updatedRes.data;
       expect(getModelType(updated)).toBe('event');
 
       expect(updated['title']).toBe('Test 1');
@@ -376,7 +376,7 @@ describe('updates', () => {
       const store = new TestStore();
       const events = await store.fetch('event', 12345);
 
-      const record = events.data as GenericModel;
+      const record = events.data;
 
       mockApi({
         data: JSON.stringify({
