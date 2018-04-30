@@ -1,0 +1,11 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "packages/datx-utils/package.json",
+        "packages/datx/package.json",
+        "packages/datx-jsonapi/package.json"
+      ]
+    }
+  }
+}
