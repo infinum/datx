@@ -548,7 +548,6 @@ describe('Model', () => {
     });
 
     it('should work if an independent type is defined', () => {
-
       class Foo extends PureModel {
         public static type = 'foo';
 

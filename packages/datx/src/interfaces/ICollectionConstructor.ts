@@ -6,10 +6,10 @@ import {IModelConstructor} from './IModelConstructor';
 import {IType} from './IType';
 
 export interface ICollectionConstructor<T = PureCollection> {
-  types: Array<typeof PureModel|IModelConstructor<PureModel>>;
+  types: Array<typeof PureModel | IModelConstructor<PureModel>>;
   views: IDictionary<{
-    modelType: IType|PureModel,
-    sortMethod?: string|((PureModel) => any);
+    modelType: IType | PureModel;
+    sortMethod?: string | ((PureModel) => any);
     unique?: boolean;
     mixins?: Array<(view: any) => any>;
   }>;

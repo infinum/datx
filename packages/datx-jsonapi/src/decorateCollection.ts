@@ -24,23 +24,20 @@ import {IHeaders} from './interfaces/IHeaders';
 import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
 import {IRequestOptions} from './interfaces/IRequestOptions';
-import {IDefinition, IRelationship, IRequest} from './interfaces/JsonApi';
-import {IRecord, IResponse} from './interfaces/JsonApi';
+import {IDefinition, IRecord, IRelationship, IRequest, IResponse} from './interfaces/JsonApi';
 import {config, fetch, read} from './NetworkUtils';
 import {Response} from './Response';
 
 declare var window: object|undefined;
 
 export function decorateCollection(BaseClass: typeof PureCollection) {
-
   class JsonapiCollection extends BaseClass {
-
     public static types = (BaseClass.types && BaseClass.types.length)
       ? BaseClass.types.concat(GenericModel)
       : [GenericModel];
 
     public static cache: boolean = BaseClass['cache'] === undefined
-      ? typeof window !== 'undefined'
+      ? window !== undefined
       : BaseClass['cache'];
 
     public static defaultModel = BaseClass['defaultModel'] || GenericModel;
@@ -51,6 +48,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       }
       const data: T|Array<T>|null = this.__iterateEntries(body, (obj: IRecord) => this.__addRecord<T>(obj));
       this.__iterateEntries(body, this.__updateRelationships.bind(this));
+
       return data;
     }
 
@@ -69,6 +67,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, id, undefined, options);
+
       return read<T>(query.url, this, query.headers, options)
         .then((res) => this.__handleErrors<T>(res));
     }
@@ -86,6 +85,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, undefined, undefined, options);
+
       return read<T>(query.url, this, query.headers, options)
         .then((res) => this.__handleErrors<T>(res));
     }
@@ -97,6 +97,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       options?: IRequestOptions,
     ): Promise<Response<T>> {
       const query = this.__buildUrl(url, data, options);
+
       return fetch<T>({url: query.url, options, data, method, collection: this});
     }
 
@@ -120,6 +121,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
         super.remove(model);
       }
       clearCacheByType(type);
+
       return Promise.resolve();
     }
 
@@ -192,6 +194,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
     private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T) {
       mapItems((body && body.included) || [], fn);
+
       return mapItems((body && body.data) || [], fn);
     }
 
@@ -201,9 +204,9 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       data?: IRequest,
       options?: IRequestOptions,
     ): {
-      url: string,
-      data?: object,
-      headers: IHeaders,
+      url: string;
+      data?: object;
+      headers: IHeaders;
     } {
       const staticCollection = this.constructor as typeof PureCollection;
       const model: PureModel = staticCollection.types.filter((item) => item.type === type)[0];
@@ -212,6 +215,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
         : type;
 
       const url: string = id ? `${path}/${id}` : `${path}`;
+
       return this.__buildUrl(url, data, options);
     }
 
@@ -227,6 +231,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       ];
 
       const baseUrl: string = this.__appendParams(this.__prefixUrl(url), params);
+
       return {data, headers, url: baseUrl};
     }
 
@@ -252,11 +257,12 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return list;
     }
 
-    private __prepareRawParams(params: Array<{key: string, value: string}|string>): Array<string> {
+    private __prepareRawParams(params: Array<{key: string; value: string}|string>): Array<string> {
       return params.map((param) => {
         if (typeof param === 'string') {
           return param;
         }
+
         return `${param.key}=${param.value}`;
       });
     }
@@ -265,19 +271,22 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       if (URL_REGEX.test(url)) {
         return url;
       }
+
       return `${config.baseUrl}${url}`;
     }
 
     private __appendParams(url: string, params: Array<string>): string {
+      let newUrl = url;
       if (params.length) {
-        const separator = url.indexOf('?') === -1 ? '?' : '&';
-        url += separator + params.join('&');
+        const separator = newUrl.indexOf('?') === -1 ? '?' : '&';
+        newUrl += separator + params.join('&');
       }
-      return url;
+
+      return newUrl;
     }
 
     private __parametrize(params: object, scope: string = '') {
-      const list: Array<{key: string, value: string}> = [];
+      const list: Array<{key: string; value: string}> = [];
 
       Object.keys(params).forEach((key) => {
         if (params[key] instanceof Array) {

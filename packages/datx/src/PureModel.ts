@@ -6,8 +6,8 @@ import {IIdentifier} from './interfaces/IIdentifier';
 import {IType} from './interfaces/IType';
 import {PureCollection} from './PureCollection';
 
+// tslint:disable-next-line:no-unnecessary-class
 export class PureModel {
-
   /**
    * Model type used for serialization
    *

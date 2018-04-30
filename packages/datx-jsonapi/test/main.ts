@@ -1,3 +1,5 @@
+// tslint:disable:no-import-side-effect
+
 import './general';
 import './views';
 

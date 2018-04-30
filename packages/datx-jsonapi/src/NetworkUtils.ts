@@ -47,34 +47,33 @@ export interface IResponseObject {
 export interface IConfigType {
   baseFetch: FetchType;
   baseUrl: string;
-  cache: boolean,
+  cache: boolean;
   defaultFetchOptions: IDictionary<any>;
   fetchReference: fetch;
   paramArrayType: ParamArrayType;
-  onError: (IResponseObject) => IResponseObject;
-  transformRequest: (options: ICollectionFetchOpts) => ICollectionFetchOpts;
-  transformResponse: (response: IRawResponse) => IRawResponse;
+  onError(IResponseObject): IResponseObject;
+  transformRequest(options: ICollectionFetchOpts): ICollectionFetchOpts;
+  transformResponse(response: IRawResponse): IRawResponse;
 }
 
 export const config: IConfigType = {
-
-  /** Base URL for all API calls */
+  // Base URL for all API calls
   baseUrl: '/',
 
-  /** Enable caching by default in the browser */
+  // Enable caching by default in the browser
   cache: isBrowser,
 
-  /** Default options that will be passed to the fetch function */
+  // Default options that will be passed to the fetch function
   defaultFetchOptions: {
     headers: {
       'content-type': 'application/vnd.api+json',
     },
   },
 
-  /** Reference of the fetch method that should be used */
+  // Reference of the fetch method that should be used
   fetchReference: isBrowser && 'fetch' in window && window.fetch.bind(window),
 
-  /** Determines how will the request param arrays be stringified */
+  // Determines how will the request param arrays be stringified
   paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
 
   /**
@@ -110,11 +109,13 @@ export const config: IConfigType = {
           headers: reqHeaders,
           method,
         });
+
         return this.fetchReference(url, options);
       })
       .then((response: Response) => {
         status = response.status;
         headers = response.headers;
+
         return response.json();
       })
       .catch((error: Error) => {
@@ -189,6 +190,7 @@ function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOp
       if (config.cache && isCacheSupported) {
         saveCache(url, resp);
       }
+
       return resp;
     });
 }
@@ -338,6 +340,7 @@ export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
       return read<T>(href, collection, requestHeaders, options, views);
     }
   }
+
   return Promise.resolve(new LibResponse({data: undefined}, collection));
 }
 
@@ -346,22 +349,24 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
   prop?: string,
 ): (response: LibResponse<T>) => T {
   return (response: LibResponse<T>): T => {
-
     if (response.error) {
       throw response.error;
     }
 
     if (response.status === 204) {
       setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
+
       return record as T;
     } else if (response.status === 202) {
       const responseRecord = response.data as T;
       setModelMetaKey(responseRecord, MODEL_PROP_FIELD, prop);
       setModelMetaKey(responseRecord, MODEL_QUEUE_FIELD, true);
       setModelMetaKey(responseRecord, MODEL_RELATED_FIELD, record);
+
       return responseRecord;
     } else {
       setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
+
       return response.replaceData(record).data as T;
     }
   };

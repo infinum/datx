@@ -1,4 +1,6 @@
 {
   "extends": "@infinumjs/tslint-config",
-  "rules": {}
+  "rules": {
+    "no-redundant-jsdoc": false
+  }
 }

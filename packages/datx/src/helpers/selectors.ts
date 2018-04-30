@@ -15,12 +15,14 @@ import {getModelId, getModelType} from './model/utils';
  * @param {T} initialValue Initial reducer data
  * @returns {T} Collected data
  */
-export function reducePrototypeChain<T, U>(obj: U, reduceFn: (state: T, item: U) => T, initialValue: T) {
+// tslint:disable-next-line:export-name
+export function reducePrototypeChain<T, U>(obj: U, reduceFn: (state: T, item: U) => T, initialValue: T): T {
   let value = initialValue;
   let model = obj;
   while (model) {
     value = reduceFn(value, model);
     model = Object.getPrototypeOf(model);
   }
+
   return value;
 }

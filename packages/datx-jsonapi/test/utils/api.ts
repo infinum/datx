@@ -16,6 +16,7 @@ import {config} from '../../src/NetworkUtils';
  */
 function getMockStream(name: string): fs.ReadStream {
   const testPath = path.join(__dirname, `../mock/${name}.json`);
+
   return fs.createReadStream(testPath);
 }
 
@@ -25,11 +26,11 @@ export interface IMockArgs {
   hostname?: string;
   url?: string;
   data?: any;
-  query?: boolean|(() => boolean)|object;
-  responseFn?: () => void;
+  query?: boolean | (() => boolean) | object;
   headers?: nock.HttpHeaders;
   reqheaders?: IDictionary<any>;
   status?: number;
+  responseFn?(): void;
 }
 
 /**
@@ -50,6 +51,7 @@ export interface IMockArgs {
  * @param {Number} status - HTTP status code that should be returned
  * @return {undefined}
  */
+// tslint:disable-next-line:no-default-export
 export default function mockApi({
   name,
   method = 'GET',
@@ -75,6 +77,7 @@ export default function mockApi({
     if (responseFn && isFunction(responseFn)) {
       return responseFn();
     }
+
     return [status, getMockStream(name || url)];
   }, headers);
 }

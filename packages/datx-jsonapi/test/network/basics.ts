@@ -25,6 +25,7 @@ const baseTransformResponse = config.transformResponse;
 describe('Network basics', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
+    // tslint:disable-next-line:no-http-string
     config.baseUrl = 'http://example.com/';
     config.transformRequest = baseTransformRequest;
     config.transformResponse = baseTransformResponse;
@@ -89,6 +90,7 @@ describe('Network basics', () => {
     config.transformRequest = (opts) => {
       expect(opts.collection).toBe(store);
       hasTransformRequestHookBeenCalled = true;
+
       return {...opts, url: `${opts.url}/all`};
     };
 
@@ -110,6 +112,7 @@ describe('Network basics', () => {
     config.transformResponse = (opts) => {
       expect(opts.status).toBe(200);
       hasTransformResponseHookBeenCalled = true;
+
       return {...opts, status: 201};
     };
 
@@ -154,6 +157,7 @@ describe('Network basics', () => {
     if (record) {
       expect(record['title']).toBe('Test 1');
       expect(getModelLinks(record)).toBeInstanceOf(Object);
+      // tslint:disable-next-line:no-http-string
       expect(getModelLinks(record).self).toBe('http://example.com/event/1234');
     }
   });
@@ -173,6 +177,7 @@ describe('Network basics', () => {
       expect(events.data instanceof Array && events.data[0]['title']).toBe('Test 1');
       expect(events.links).toBeInstanceOf(Object);
       if (events.links instanceof Object && typeof events.links.next === 'object') {
+        // tslint:disable-next-line:no-http-string
         expect(events.links.next.href).toBe('http://example.com/event?page=2');
         expect(events.links.next.meta.foo).toBe('bar');
       }
@@ -230,6 +235,7 @@ describe('Network basics', () => {
       const imageData = image.data as Image;
       expect(imageData.meta.id).toBe(1);
       expect(imageData.meta.type).toBe('image');
+      // tslint:disable-next-line:no-http-string
       expect(imageData['url']).toBe('http://example.com/1.jpg');
     }
   });
@@ -280,6 +286,7 @@ describe('Network basics', () => {
       const imageData = image.data as Image;
       expect(imageData.meta.id).toBe(1);
       expect(imageData.meta.type).toBe('image');
+      // tslint:disable-next-line:no-http-string
       expect(imageData['url']).toBe('http://example.com/1.jpg');
     }
 

@@ -30,11 +30,11 @@ export class PureCollection {
    * @type {Array<typeof PureModel>}
    * @memberof Collection
    */
-  public static types: Array<typeof PureModel|IModelConstructor<PureModel>> = [];
+  public static types: Array<typeof PureModel | IModelConstructor<PureModel>> = [];
 
   public static views: IDictionary<{
-    modelType: IType|PureModel,
-    sortMethod?: string|((PureModel) => any);
+    modelType: IType | PureModel;
+    sortMethod?: string | ((PureModel) => any);
     unique?: boolean;
     mixins?: Array<(view: any) => any>;
   }> = {};
@@ -48,7 +48,7 @@ export class PureCollection {
   @observable private __dataMap: IDictionary<IDictionary<PureModel>> = {};
   @observable private __dataList: IDictionary<IObservableArray<PureModel>> = {};
 
-  constructor(data: Array<IRawModel>|IRawCollection = []) {
+  constructor(data: Array<IRawModel> | IRawCollection = []) {
     extendObservable(this, {});
     if (data instanceof Array) {
       this.insert(data);
@@ -80,6 +80,7 @@ export class PureCollection {
   @action public insert(data: Array<Partial<IRawModel>>): Array<PureModel> {
     const models = initModels(this, data);
     this.__insertModel(models);
+
     return models;
   }
 
@@ -185,8 +186,10 @@ export class PureCollection {
       if (!(type in this.__dataList)) {
         set(this.__dataList, {[type]: observable.array([])});
       }
+
       return this.__dataList[type] as IObservableArray<T>;
     }
+
     return this.__data as IObservableArray<T>;
   }
 
@@ -199,6 +202,7 @@ export class PureCollection {
    */
   public hasItem(model: PureModel): boolean {
     const id = getModelId(model);
+
     return Boolean(this.find(model, id));
   }
 
@@ -305,10 +309,10 @@ export class PureCollection {
     name: string,
     type: IModelConstructor<T>|IType,
     {sortMethod, models = [], unique, mixins}: {
-      sortMethod?: string|((item: T) => any),
-      models?: Array<IIdentifier|T>,
-      unique?: boolean,
-      mixins?: Array<(view: any) => any>,
+      sortMethod?: string|((item: T) => any);
+      models?: Array<IIdentifier|T>;
+      unique?: boolean;
+      mixins?: Array<(view: any) => any>;
     } = {},
   ) {
     if (name in this) {
@@ -376,6 +380,7 @@ export class PureCollection {
     const existingModel = this.find(modelType, modelId);
     if (existingModel) {
       updateModel(existingModel, model);
+
       return;
     }
 
@@ -417,11 +422,13 @@ export class PureCollection {
       } else if (!(id in this.__dataMap[type])) {
         set(this.__dataMap[type], id.toString(), undefined);
       }
+
       return this.__dataMap[type][id];
     } else {
       if (!(type in this.__dataList)) {
         set(this.__dataList, stringType, observable.array([], {deep: false}));
       }
+
       return this.__dataList[type].length ? this.__dataList[type][0] : null;
     }
   }

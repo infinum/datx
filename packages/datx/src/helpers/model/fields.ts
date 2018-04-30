@@ -58,6 +58,7 @@ function ensureModel(refOptions: IReferenceOptions, collection?: PureCollection)
       }
       model = collection.add(data, refOptions.model);
     }
+
     return getModelId(model);
   };
 }
@@ -70,10 +71,12 @@ function partialRefUpdate(model: PureModel, key: string, change: TChange) {
   if (change.type === 'splice') {
     const added = change.added.map(ensureModel(refOptions, collection));
     data.splice(change.index, change.removedCount, ...added);
+
     return null;
   }
 
   data[change.index] = ensureModel(refOptions, collection)(change.newValue);
+
   return null;
 }
 
@@ -82,6 +85,7 @@ function backRefSplice(model: PureModel, key: string, change: IArraySplice<PureM
   change.added.map((item) => modelAddReference(item, property, model));
   const removed = model[key].slice(change.index, change.index + change.removedCount);
   removed.map((item) => modelRemoveReference(item, property, model));
+
   return null;
 }
 
@@ -96,6 +100,7 @@ function backRefChange(model: PureModel, key: string, change: IArrayChange<PureM
   }
 
   warn(`This shouldn't have happened. Please open an issue: https://github.com/infinum/datx/issues/new`);
+
   return null;
 }
 
@@ -105,6 +110,7 @@ function partialBackRefUpdate(model: PureModel, key: string, change: TChange) {
   if (change.type === 'splice') {
     return backRefSplice(model, key, change, refOptions);
   }
+
   return backRefChange(model, key, change, refOptions);
 }
 
@@ -151,6 +157,7 @@ function getBackRef(model: PureModel, key: string, refOptions: IReferenceOptions
 
   const backData: IObservableArray<PureModel> = observable.array(backModels, {deep: false});
   intercept(backData, (change: TChange) => partialBackRefUpdate(model, key, change));
+
   return backData;
 }
 
@@ -168,8 +175,10 @@ function getNormalRef(model: PureModel, key: string, refOptions: IReferenceOptio
   if (dataModels instanceof Array) {
     const data: IObservableArray<PureModel> = observable.array(dataModels, {deep: false});
     intercept(data, (change: TChange) => partialRefUpdate(model, key, change));
+
     return data;
   }
+
   return dataModels;
 
 }
@@ -216,10 +225,12 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
       if (!instance && typeof ref === 'object') {
         instance = collection.add(ref, refOptions.model);
       }
+
       return getModelId(instance || ref);
     } else if (ref instanceof PureModel) {
       throw error(REF_NEEDS_COLLECTION);
     }
+
     return ref;
   });
 
@@ -230,13 +241,13 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
   if (!ids || (ids instanceof Array && ids.length === 0)) {
     storage.setModelDataKey(model, key, ids);
   } else {
-
     storage.setModelDataKey(model, key, ids);
   }
 }
 
 function getModelRefsByType(model: PureModel, type: IType) {
   const refs = getModelMetaKey(model, 'refs');
+
   return Object.keys(refs)
     .filter((key) => !refs[key].property)
     .filter((key) => getModelType(refs[key].model) === type);

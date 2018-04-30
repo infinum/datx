@@ -26,6 +26,7 @@ export class DataStorage {
   public initModel(model: PureModel) {
     const modelData = observable({data: {}, meta: {}});
     this.modelData.set(model, modelData);
+
     return modelData;
   }
 
@@ -35,6 +36,7 @@ export class DataStorage {
 
   public getModelDataKey(model: PureModel, key: string) {
     const modelData = this.__getModelData(model);
+
     return modelData.data[key];
   }
 
@@ -58,6 +60,7 @@ export class DataStorage {
   public setModelMeta(model: PureModel, meta: IDictionary<any>) {
     const modelData = this.__getModelData(model);
     set(modelData.meta, meta);
+
     return modelData.meta;
   }
 
@@ -93,6 +96,7 @@ export class DataStorage {
     const defaults = reducePrototypeChain(obj, (state, model) => {
       return state.concat((this.modelClassData.get(model) || {data: []}).data);
     }, [] as Array<IDictionary<any>>);
+
     return Object.assign({}, ...defaults.reverse());
   }
 
@@ -117,11 +121,13 @@ export class DataStorage {
     const defaults = reducePrototypeChain(obj, (state, model) => {
       return state.concat((this.modelClassData.get(model) || {references: {}}).references);
     }, [] as Array<IDictionary<any>>);
+
     return Object.assign({}, ...defaults.reverse());
   }
 
   public getModelReferenceOptions(model: PureModel, key: string): IReferenceOptions {
     const refs = this.getModelMetaKey(model, 'refs');
+
     return refs[key];
   }
 

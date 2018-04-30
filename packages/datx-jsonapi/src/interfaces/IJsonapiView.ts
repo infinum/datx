@@ -4,10 +4,10 @@ import {IRequestOptions} from './IRequestOptions';
 import {IResponse} from './JsonApi';
 
 export interface IJsonapiView {
-  sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T|Array<T>|null;
+  sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T | Array<T> | null;
 
   fetch<T extends IJsonapiModel = IJsonapiModel>(
-    id: number|string,
+    id: number | string,
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 

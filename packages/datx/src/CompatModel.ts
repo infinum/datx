@@ -61,11 +61,13 @@ export class CompatModel extends PureModel {
 
   public getRecordId() {
     deprecated('model.getRecordId is deprecated. Use getModelId() instead.');
+
     return getModelId(this);
   }
 
   public getRecordType() {
     deprecated('model.getRecordType is deprecated. Use getModelType() instead.');
+
     return getModelType(this);
   }
 
@@ -81,6 +83,7 @@ export class CompatModel extends PureModel {
     }
 
     updateField(this, key, value, type);
+
     return value;
   }
 
@@ -109,6 +112,7 @@ export class CompatModel extends PureModel {
       model,
       type: ReferenceType.TO_ONE_OR_MANY,
     }, value);
+
     return this[key];
   }
 
@@ -120,26 +124,31 @@ export class CompatModel extends PureModel {
         delete updateData[key];
       }
     });
+
     return updateModel(this, updateData);
   }
 
   public get static() {
     deprecated('model.static is deprecated.');
+
     return this.constructor as typeof CompatModel;
   }
 
   public toJS() {
     deprecated('model.toJS() is deprecated. Use modelToJSON() instead.');
+
     return modelToJSON(this);
   }
 
   public get snapshot() {
     deprecated('model.snapshot is deprecated. Use modelToJSON() instead.');
+
     return modelToJSON(this);
   }
 
   private get __collection() {
     deprecated('model.__collection is deprecated. Use getModelCollection() instead.');
+
     return getModelCollection(this);
   }
 }

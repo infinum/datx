@@ -10,7 +10,7 @@ import {IType} from '../interfaces/IType';
 import prop from '../prop';
 import {PureModel} from '../PureModel';
 
-export function setupModel<IModel extends PureModel, IFields extends IDictionary<any>>(
+export function setupModel<IModel extends PureModel>(
   Base: IModelConstructor<IModel>,
   {
     fields,
@@ -19,12 +19,12 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
     idAttribute,
     typeAttribute,
   }: {
-    fields: IFields;
+    fields: IDictionary<any>;
     references?: IDictionary<IReferenceOptions>;
     type?: IType;
     idAttribute?: string;
     typeAttribute?: string;
-  } = {fields: {} as IFields},
+  } = {fields: {}},
 ) {
   const BaseClass = Base as typeof PureModel;
 
@@ -66,5 +66,5 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
     });
   }
 
-  return ModelWithProps as IModelConstructor<IModel & IFields>;
+  return ModelWithProps as IModelConstructor<IModel>;
 }

@@ -1,6 +1,6 @@
 declare var window: object;
 
-export const isBrowser: boolean = (typeof window !== 'undefined');
+export const isBrowser: boolean = (window !== undefined);
 
 /**
  * Returns the value if it's not a function. If it's a function

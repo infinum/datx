@@ -25,6 +25,7 @@ export function getModelType(model: IType|typeof PureModel|PureModel): IType {
   } else if (typeof model === 'object') {
     return getModelMetaKey(model, 'type') || (model.constructor as typeof PureModel).type;
   }
+
   return model;
 }
 
@@ -39,6 +40,7 @@ export function getModelId(model: PureModel|IIdentifier): IIdentifier {
   if (model instanceof PureModel) {
     return getModelMetaKey(model, 'id');
   }
+
   return model;
 }
 
@@ -119,6 +121,7 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary<any
       assignModel(model, key, data[key]);
     }
   });
+
   return model;
 }
 
@@ -162,8 +165,10 @@ export function getMetaKeyFromRaw(data: IRawModel, key: string, model?: typeof P
   }
   if (model) {
     const modelId = storage.getModelClassMetaKey(model, key);
+
     return modelId && data[modelId];
   }
+
   return data && data[key];
 }
 

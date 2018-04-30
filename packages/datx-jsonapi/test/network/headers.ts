@@ -10,6 +10,7 @@ import {Event, Image, Organizer, Photo, TestStore, User} from '../utils/setup';
 describe('headers', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
+    // tslint:disable-next-line:no-http-string
     config.baseUrl = 'http://example.com/';
     config.defaultFetchOptions = {
       headers: {

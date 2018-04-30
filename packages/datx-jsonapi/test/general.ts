@@ -455,6 +455,7 @@ describe('General', () => {
         relationships: {
           images: {
             links: {
+              // tslint:disable-next-line:no-http-string
               self: 'http://example.com/events/1/relationships/images',
             },
           },
@@ -469,6 +470,7 @@ describe('General', () => {
     if (event) {
       expect(event.name).toBe('Demo');
       expect(getModelRefLinks(event).images)
+        // tslint:disable-next-line:no-http-string
         .toEqual({self: 'http://example.com/events/1/relationships/images'});
     }
   });
@@ -484,6 +486,7 @@ describe('General', () => {
         relationships: {
           images: {
             links: {
+              // tslint:disable-next-line:no-http-string
               self: 'http://example.com/events/1/relationships/images',
             },
           },
@@ -502,6 +505,7 @@ describe('General', () => {
     if (event) {
       expect(event.name).toBe('Demo');
       expect(getModelRefLinks(event).images)
+        // tslint:disable-next-line:no-http-string
         .toEqual({self: 'http://example.com/events/1/relationships/images'});
     }
   });

@@ -44,6 +44,7 @@ export class View<T extends PureModel = PureModel> {
       list.sort((a: T|null, b: T|null) => {
         const valA = a ? sortFn(a) : Infinity;
         const valB = b ? sortFn(b) : Infinity;
+
         return valA - valB;
       });
     }
@@ -51,6 +52,7 @@ export class View<T extends PureModel = PureModel> {
     const instances = observable.array(list, {deep: false});
 
     intercept(instances, this.__partialListUpdate.bind(this));
+
     return instances;
   }
 
@@ -110,6 +112,7 @@ export class View<T extends PureModel = PureModel> {
    */
   public hasItem(model: T|IIdentifier): boolean {
     const id = getModelId(model);
+
     return this.__models.indexOf(id) !== -1;
   }
 
@@ -145,6 +148,7 @@ export class View<T extends PureModel = PureModel> {
       }
 
       this.__models.splice(change.index, change.removedCount, ...added);
+
       return null;
     }
 
@@ -159,6 +163,7 @@ export class View<T extends PureModel = PureModel> {
     }
 
     this.__models[change.index] = newId;
+
     return null;
   }
 }

@@ -17,7 +17,9 @@ import {getModelMetaKey, getModelType, setModelMetaKey} from './utils';
 
 interface IMetaToInit extends IDictionary<any> {
   fields: Array<string>;
+  id?: IIdentifier;
   refs: IDictionary<IReferenceOptions>;
+  type?: IType;
 }
 
 export function initModelField<T extends PureModel>(
@@ -143,7 +145,6 @@ function initModelMeta(model: PureModel, data: IRawModel, collection?: PureColle
   let newMeta;
   const toInit: IMetaToInit = {fields: [], refs: {}};
   if (META_FIELD in data && data[META_FIELD]) {
-
     const oldMeta = data[META_FIELD] as IDictionary<any>;
     toInit.fields = oldMeta.fields;
     delete oldMeta.fields;
@@ -155,6 +156,7 @@ function initModelMeta(model: PureModel, data: IRawModel, collection?: PureColle
   } else {
     newMeta = storage.setModelMeta(model, meta);
   }
+
   return Object.assign({}, newMeta, toInit);
 }
 

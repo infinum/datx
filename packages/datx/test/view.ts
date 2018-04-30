@@ -103,7 +103,7 @@ describe('Model', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop public key: number;
+      @prop public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -128,7 +128,7 @@ describe('Model', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop public key: number;
+      @prop public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -165,7 +165,7 @@ describe('Model', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop public key: number;
+      @prop public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -235,7 +235,7 @@ describe('Model', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop.identifier public id: number;
+      @prop.identifier public id!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -264,7 +264,7 @@ describe('Model', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop.identifier public id: number;
+      @prop.identifier public id!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];

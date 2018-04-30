@@ -10,8 +10,8 @@ export interface IMetaMixin<T = PureModel> {
     collection?: PureCollection;
     id: IIdentifier;
     original?: T;
-    refs: IDictionary<IIdentifier|Array<IIdentifier>>;
-    snapshot: IRawModel,
+    refs: IDictionary<IIdentifier | Array<IIdentifier>>;
+    snapshot: IRawModel;
     type: IType;
   }>;
 }

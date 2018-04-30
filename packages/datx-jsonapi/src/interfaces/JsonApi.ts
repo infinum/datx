@@ -1,7 +1,7 @@
 import {IDictionary} from 'datx-utils';
 
 interface IDefinition {
-  id?: number|string;
+  id?: number | string;
   type: string;
 }
 
@@ -10,26 +10,26 @@ interface IJsonApiObject {
   meta?: IDictionary<any>;
 }
 
-type ILink = string | {href: string, meta: IDictionary<any>};
+type ILink = string | {href: string; meta: IDictionary<any>};
 
 interface IError {
-  id?: string|number;
+  id?: string | number;
   links?: {
-    about: ILink,
+    about: ILink;
   };
   status?: number;
   code?: string;
   title?: string;
   detail?: string;
   source?: {
-    pointer?: string,
-    parameter?: string,
+    pointer?: string;
+    parameter?: string;
   };
   meta?: IDictionary<any>;
 }
 
 interface IRelationship {
-  data?: IDefinition|Array<IDefinition>;
+  data?: IDefinition | Array<IDefinition>;
   links?: IDictionary<ILink>;
   meta?: IDictionary<any>;
 }
@@ -43,7 +43,7 @@ interface IRecord extends IDefinition {
 }
 
 interface IResponse {
-  data?: IRecord|Array<IRecord>;
+  data?: IRecord | Array<IRecord>;
   errors?: Array<IError>;
 
   included?: Array<IRecord>;

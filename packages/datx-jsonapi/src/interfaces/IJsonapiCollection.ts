@@ -6,7 +6,7 @@ import {IRequestOptions} from './IRequestOptions';
 import {IResponse} from './JsonApi';
 
 export interface IJsonapiCollection extends PureCollection {
-  sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T|Array<T>|null;
+  sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T | Array<T> | null;
 
   /**
    * Fetch the records with the given type and id
@@ -17,8 +17,8 @@ export interface IJsonapiCollection extends PureCollection {
    * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
    */
   fetch<T extends IJsonapiModel = IJsonapiModel>(
-    type: IType|IModelConstructor<T>,
-    id: number|string,
+    type: IType | IModelConstructor<T>,
+    id: number | string,
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
@@ -30,7 +30,7 @@ export interface IJsonapiCollection extends PureCollection {
    * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
    */
   fetchAll<T extends IJsonapiModel = IJsonapiModel>(
-    type: IType|IModelConstructor<T>,
+    type: IType | IModelConstructor<T>,
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
@@ -41,6 +41,6 @@ export interface IJsonapiCollection extends PureCollection {
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
-  remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequestOptions);
-  remove(model: PureModel, remote?: boolean|IRequestOptions);
+  remove(type: IType | typeof PureModel, id?: IIdentifier, remote?: boolean | IRequestOptions);
+  remove(model: PureModel, remote?: boolean | IRequestOptions);
 }
