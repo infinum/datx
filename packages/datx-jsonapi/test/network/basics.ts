@@ -71,12 +71,18 @@ describe('Network basics', () => {
     const store = new TestStore();
     const events = await store.fetchAll(Event);
 
-    const event = events.data[0];
-    const data = modelToJsonApi(event);
+    expect(events.data).toBeInstanceOf(Array);
+    if (events.data) {
+      const event = events.data[0];
+      const data = modelToJsonApi(event);
 
-    expect('id' in data.attributes).toBe(false);
-    expect(data.relationships.images.data).toHaveLength(1);
-    expect(data.relationships.image.data).toBeUndefined();
+      expect('id' in data.attributes).toBe(false);
+      expect(data.relationships).not.toBeUndefined();
+      if (data.relationships) {
+        expect(data.relationships.images.data).toHaveLength(1);
+        expect(data.relationships.image.data).toBeUndefined();
+      }
+    }
   });
 
   it('should support transformRequest hook', async () => {

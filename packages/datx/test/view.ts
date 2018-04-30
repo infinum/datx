@@ -142,11 +142,11 @@ describe('Model', () => {
     expect(view.list[0].key).toBe(1);
     expect(view.list[2].key).toBe(3);
 
-    let keyList = [];
+    let keyList: Array<number|null> = [];
     let autorunCount = 0;
 
     autorun(() => {
-      keyList = view.list.map((item) => item.key);
+      keyList = view.list.map((item) => item && item.key);
       autorunCount++;
     });
 
@@ -196,7 +196,7 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}, {}], Foo);
-    const view = new View(Foo, collection, null, foos);
+    const view = new View(Foo, collection, undefined, foos);
 
     expect(view.length).toBe(3);
     view.remove(foos[2]);
@@ -215,7 +215,7 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}, {}], Foo);
-    const view = new View(Foo, collection, null, foos);
+    const view = new View(Foo, collection, undefined, foos);
 
     const [foo1, foo2, foo3] = collection.add([{}, {}, {}], Foo);
 
@@ -272,7 +272,7 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}, {}], Foo);
-    const view = new View(Foo, collection, null, foos, true);
+    const view = new View(Foo, collection, undefined, foos, true);
 
     const [foo1, foo2, foo3] = foos;
 
@@ -301,7 +301,7 @@ describe('Model', () => {
 
     const snapshot = view.snapshot;
 
-    const view2 = new View(snapshot.modelType, collection, null, snapshot.models, snapshot.unique);
+    const view2 = new View(snapshot.modelType, collection, undefined, snapshot.models, snapshot.unique);
 
     expect(view2.length).toBe(2);
     expect(view2.list[0]).toBeInstanceOf(Foo);
@@ -317,7 +317,7 @@ describe('Model', () => {
       class AppCollection extends Collection {
         public static types = [Foo];
 
-        public test: View<Foo>;
+        public test!: View<Foo>;
       }
 
       const collection = new AppCollection();
@@ -342,7 +342,7 @@ describe('Model', () => {
           test: {modelType: Foo},
         };
 
-        public test: View<Foo>;
+        public test!: View<Foo>;
       }
 
       const collection = new AppCollection();

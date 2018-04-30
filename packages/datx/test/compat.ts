@@ -443,9 +443,12 @@ describe('Compat Model', () => {
 
     const first = models.shift();
 
-    first.assignRef('bar', models);
-    expect(first['bar']).toHaveLength(3);
-    expect(first['bar'][1].foo).toBe(3);
+    expect(first).not.toBeUndefined();
+    if (first) {
+      first.assignRef('bar', models);
+      expect(first['bar']).toHaveLength(3);
+      expect(first['bar'][1].foo).toBe(3);
+    }
   });
 
   it('should work with autoincrement', () => {

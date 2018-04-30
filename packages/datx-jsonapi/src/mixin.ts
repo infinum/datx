@@ -25,7 +25,7 @@ export function jsonapi<T extends PureCollection>(
   Base: ICollectionConstructor<T>,
 ): ICollectionConstructor<T & IJsonapiCollection>;
 
-export function jsonapi<T extends View>(
+export function jsonapi<T extends PureModel>(
   Base: IViewConstructor<T>,
 ): IViewConstructor<IJsonapiModel, T & IJsonapiView>;
 

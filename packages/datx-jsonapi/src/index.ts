@@ -23,4 +23,5 @@ export {
 
 export {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 export {IJsonapiModel} from './interfaces/IJsonapiModel';
+export {IJsonapiView} from './interfaces/IJsonapiView';
 export {IRequestOptions} from './interfaces/IRequestOptions';

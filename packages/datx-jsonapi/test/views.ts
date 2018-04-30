@@ -11,6 +11,7 @@ import {
   getModelLinks,
   getModelMeta,
   getModelRefMeta,
+  IJsonapiView,
   jsonapi,
   modelToJsonApi,
 } from '../src';
@@ -116,7 +117,7 @@ describe('Views', () => {
           },
         };
 
-        public test: View;
+        public test!: IJsonapiView;
       }
 
       const store = new NewStore();

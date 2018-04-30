@@ -176,7 +176,10 @@ describe('updates', () => {
 
       const queue2 = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
       const queueRecord = queue2.data;
-      expect(getModelType(queueRecord)).toBe('queue');
+      expect(queueRecord).not.toBeNull();
+      if (queueRecord) {
+        expect(getModelType(queueRecord)).toBe('queue');
+      }
 
       mockApi({
         name: 'event-1',
@@ -224,7 +227,10 @@ describe('updates', () => {
 
       const queue2 = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
       const queueRecord = queue2.data;
-      expect(getModelType(queueRecord)).toBe('queue');
+      expect(queueRecord).not.toBeNull();
+      if (queueRecord) {
+        expect(getModelType(queueRecord)).toBe('queue');
+      }
 
       mockApi({
         name: 'event-1',
@@ -233,11 +239,14 @@ describe('updates', () => {
 
       const updatedRes = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
       const updated = updatedRes.data;
-      expect(getModelType(updated)).toBe('event');
+      expect(updated).not.toBeNull();
+      if (updated) {
+        expect(getModelType(updated)).toBe('event');
 
-      expect(updated['title']).toBe('Test 1');
-      expect(getModelId(updated)).toBe(12345);
-      expect(updated).toBe(record);
+        expect(updated['title']).toBe('Test 1');
+        expect(getModelId(updated)).toBe(12345);
+        expect(updated).toBe(record);
+      }
     });
 
     it('should add a record with response 204', async () => {
@@ -378,18 +387,21 @@ describe('updates', () => {
 
       const record = events.data;
 
-      mockApi({
-        data: JSON.stringify({
-          data: modelToJsonApi(record),
-        }),
-        method: 'PATCH',
-        name: 'event-1b',
-        url: 'event/12345',
-      });
+      expect(record).toBeInstanceOf(Event);
+      if (record instanceof Event) {
+        mockApi({
+          data: JSON.stringify({
+            data: modelToJsonApi(record),
+          }),
+          method: 'PATCH',
+          name: 'event-1b',
+          url: 'event/12345',
+        });
 
-      const updated = await record.save();
-      expect(updated['title']).toBe('Test 1');
-      expect(updated).toBe(record);
+        const updated = await record.save();
+        expect(updated['title']).toBe('Test 1');
+        expect(updated).toBe(record);
+      }
     });
 
     it('should support updating relationships', async () => {

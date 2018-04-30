@@ -66,7 +66,7 @@ export function getModelCollection(model: PureModel): PureCollection|undefined {
 export function cloneModel<T extends PureModel>(model: T): T {
   const TypeModel = model.constructor as typeof PureModel;
   const rawData = modelToJSON(model);
-  const meta = rawData[META_FIELD];
+  const meta = rawData[META_FIELD] || {};
   meta.originalId = meta.id;
   delete meta.id;
 
@@ -161,7 +161,7 @@ function assignModelRef<T extends PureModel>(model: T, key: string, value: TRefV
 
 export function getMetaKeyFromRaw(data: IRawModel, key: string, model?: typeof PureModel): any {
   if (META_FIELD in data && typeof data[META_FIELD] === 'object' && data[META_FIELD] !== undefined) {
-    return data[META_FIELD][key];
+    return (data[META_FIELD] || {})[key];
   }
   if (model) {
     const modelId = storage.getModelClassMetaKey(model, key);

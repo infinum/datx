@@ -179,17 +179,17 @@ export class PureCollection {
    * @returns {Array<PureModel>} List of matching models
    * @memberof Collection
    */
-  public findAll<T extends PureModel>(model?: IType|IModelConstructor<T>): Array<T> {
+  public findAll<T extends PureModel>(model?: IType|IModelConstructor<T>): IObservableArray<T> {
     if (model) {
       const type = getModelType(model);
       if (!(type in this.__dataList)) {
         set(this.__dataList, {[type]: observable.array([])});
       }
 
-      return this.__dataList[type];
+      return this.__dataList[type] as IObservableArray<T>;
     }
 
-    return this.__data;
+    return this.__data as IObservableArray<T>;
   }
 
   /**
