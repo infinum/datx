@@ -1,5 +1,7 @@
 # datx
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/infinum/datx.svg)](https://greenkeeper.io/)
+
 DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
 
 The library is still work in progress, but it's feature complete. You can track the v1.0 status using the [v1.0 milestone](https://github.com/infinum/datx/milestone/1).
