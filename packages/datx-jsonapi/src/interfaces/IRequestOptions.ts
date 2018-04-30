@@ -5,10 +5,10 @@ import {IHeaders} from './IHeaders';
 
 export interface IRequestOptions {
   headers?: IHeaders;
-  include?: string|Array<string>;
+  include?: string | Array<string>;
   filter?: IFilters;
-  sort?: string|Array<string>;
-  fields?: IDictionary<string|Array<string>>;
-  params?: Array<{key: string, value: string}|string>;
+  sort?: string | Array<string>;
+  fields?: IDictionary<string | Array<string>>;
+  params?: Array<{key: string; value: string} | string>;
   skipCache?: boolean;
 }

@@ -455,6 +455,7 @@ describe('General', () => {
         relationships: {
           images: {
             links: {
+              // tslint:disable-next-line:no-http-string
               self: 'http://example.com/events/1/relationships/images',
             },
           },
@@ -469,6 +470,7 @@ describe('General', () => {
     if (event) {
       expect(event.name).toBe('Demo');
       expect(getModelRefLinks(event).images)
+        // tslint:disable-next-line:no-http-string
         .toEqual({self: 'http://example.com/events/1/relationships/images'});
     }
   });
@@ -484,6 +486,7 @@ describe('General', () => {
         relationships: {
           images: {
             links: {
+              // tslint:disable-next-line:no-http-string
               self: 'http://example.com/events/1/relationships/images',
             },
           },
@@ -502,6 +505,7 @@ describe('General', () => {
     if (event) {
       expect(event.name).toBe('Demo');
       expect(getModelRefLinks(event).images)
+        // tslint:disable-next-line:no-http-string
         .toEqual({self: 'http://example.com/events/1/relationships/images'});
     }
   });
@@ -616,12 +620,14 @@ describe('General', () => {
         },
         type: 'user',
       },
-    }) as GenericModel;
+    });
 
-    expect(user['name']).toBe('John');
-    expect(getModelId(user['self'])).toBe(1);
-    expect(getModelType(user)).toBe('user');
-    expect(store.findAll('user').length).toBe(1);
+    if (user instanceof Model) {
+      expect(user['name']).toBe('John');
+      expect(getModelId(user['self'])).toBe(1);
+      expect(getModelType(user)).toBe('user');
+      expect(store.findAll('user').length).toBe(1);
+    }
   });
 
   it('should serialize empty relationships', () => {
@@ -630,8 +636,11 @@ describe('General', () => {
     const data = modelToJsonApi(event);
 
     expect('id' in data.attributes).toBe(false);
-    expect(data.relationships.images.data).toHaveLength(0);
-    expect(data.relationships.image.data).toBeUndefined();
+    expect(data.relationships).not.toBeUndefined();
+    if (data.relationships) {
+      expect(data.relationships.images.data).toHaveLength(0);
+      expect(data.relationships.image.data).toBeUndefined();
+    }
   });
 
   it('should serialize model id correctly', () => {
@@ -640,7 +649,9 @@ describe('General', () => {
     const data = modelToJsonApi(event);
 
     expect('id' in data.attributes).toBe(false);
-    expect(data.relationships.images.data).toHaveLength(0);
-    expect(data.relationships.image.data).toBeUndefined();
+    if (data.relationships) {
+      expect(data.relationships.images.data).toHaveLength(0);
+      expect(data.relationships.image.data).toBeUndefined();
+    }
   });
 });

@@ -25,6 +25,7 @@ export function getModelType(model: IType|typeof PureModel|PureModel): IType {
   } else if (typeof model === 'object') {
     return getModelMetaKey(model, 'type') || (model.constructor as typeof PureModel).type;
   }
+
   return model;
 }
 
@@ -39,6 +40,7 @@ export function getModelId(model: PureModel|IIdentifier): IIdentifier {
   if (model instanceof PureModel) {
     return getModelMetaKey(model, 'id');
   }
+
   return model;
 }
 
@@ -64,7 +66,7 @@ export function getModelCollection(model: PureModel): PureCollection|undefined {
 export function cloneModel<T extends PureModel>(model: T): T {
   const TypeModel = model.constructor as typeof PureModel;
   const rawData = modelToJSON(model);
-  const meta = (rawData[META_FIELD] as IDictionary<any>);
+  const meta = rawData[META_FIELD] || {};
   meta.originalId = meta.id;
   delete meta.id;
 
@@ -119,6 +121,7 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary<any
       assignModel(model, key, data[key]);
     }
   });
+
   return model;
 }
 
@@ -158,12 +161,14 @@ function assignModelRef<T extends PureModel>(model: T, key: string, value: TRefV
 
 export function getMetaKeyFromRaw(data: IRawModel, key: string, model?: typeof PureModel): any {
   if (META_FIELD in data && typeof data[META_FIELD] === 'object' && data[META_FIELD] !== undefined) {
-    return (data[META_FIELD] as IDictionary<any>)[key];
+    return (data[META_FIELD] || {})[key];
   }
   if (model) {
     const modelId = storage.getModelClassMetaKey(model, key);
+
     return modelId && data[modelId];
   }
+
   return data && data[key];
 }
 
@@ -203,5 +208,7 @@ export function getModelMetaKey(model: PureModel, key: string) {
 }
 
 export function setModelMetaKey(model: PureModel, key: string, value: any) {
-  return storage.setModelMetaKey(model, key, value);
+  storage.setModelMetaKey(model, key, value);
+
+  return;
 }

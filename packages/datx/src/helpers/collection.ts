@@ -10,6 +10,7 @@ import {getMetaKeyFromRaw, updateModel} from './model/utils';
 
 function initCollectionModel(collection: PureCollection, data: IRawModel): PureModel {
   const type = getMetaKeyFromRaw(data, 'type');
+
   return upsertModel(data, type, collection);
 }
 

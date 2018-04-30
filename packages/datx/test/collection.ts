@@ -33,6 +33,7 @@ describe('Collection', () => {
         public static type = 'baz';
       }
 
+      // tslint:disable-next-line:no-unnecessary-class
       class FooBar {}
 
       class Store extends Collection {

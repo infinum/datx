@@ -15,7 +15,6 @@ import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 import {fetchLink} from './NetworkUtils';
 
 export class Response<T extends IJsonapiModel> {
-
   /**
    * API response data (synced with the store)
    *
@@ -255,7 +254,6 @@ export class Response<T extends IJsonapiModel> {
    */
   private __fetchLink(name) {
     if (!this.__cache[name]) {
-
       const link: ILink|null = (this.links && name in this.links) ? this.links[name] : null;
 
       if (link) {
@@ -264,6 +262,7 @@ export class Response<T extends IJsonapiModel> {
         );
       }
     }
+
     return this.__cache[name];
   }
 }

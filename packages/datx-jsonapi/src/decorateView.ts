@@ -5,14 +5,12 @@ import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
 import {IJsonapiView} from './interfaces/IJsonapiView';
 import {IRequestOptions} from './interfaces/IRequestOptions';
-import {IResponse} from './interfaces/JsonApi';
-import {IDefinition, IRelationship, IRequest} from './interfaces/JsonApi';
+import {IDefinition, IRelationship, IRequest, IResponse} from './interfaces/JsonApi';
 import {Response} from './Response';
 
 declare var window: object|undefined;
 
 export function decorateView<U>(BaseClass: typeof View) {
-
   class JsonapiView<M extends IJsonapiModel = IJsonapiModel> extends BaseClass {
     protected __collection: IJsonapiCollection;
 
@@ -32,6 +30,7 @@ export function decorateView<U>(BaseClass: typeof View) {
       if (data) {
         this.add(data);
       }
+
       return data as M|Array<M>|null;
     }
 
@@ -70,6 +69,7 @@ export function decorateView<U>(BaseClass: typeof View) {
         this.add(response.data);
       }
       response.views.push(this);
+
       return response;
     }
   }

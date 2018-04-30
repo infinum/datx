@@ -441,11 +441,14 @@ describe('Compat Model', () => {
       id: 4,
     }], CompatModel);
 
-    const first = models.shift() as CompatModel;
+    const first = models.shift();
 
-    first.assignRef('bar', models);
-    expect(first['bar']).toHaveLength(3);
-    expect(first['bar'][1].foo).toBe(3);
+    expect(first).not.toBeUndefined();
+    if (first) {
+      first.assignRef('bar', models);
+      expect(first['bar']).toHaveLength(3);
+      expect(first['bar'][1].foo).toBe(3);
+    }
   });
 
   it('should work with autoincrement', () => {
@@ -465,6 +468,7 @@ describe('Compat Model', () => {
     class Baz extends CompatModel {
       public static type = 'baz';
       public static autoIdFunction() {
+        // tslint:disable-next-line:insecure-random
         return Math.random();
       }
       public id!: number;
@@ -676,6 +680,7 @@ describe('Compat Model', () => {
       public static refs = {bar: 'bar'};
       public static preprocess(rawData, coll) {
         expect(coll).toBeInstanceOf(TestCollection);
+
         return Object.assign({newProp: 1}, rawData);
       }
       public bar!: Bar|Array<Bar>;
@@ -754,13 +759,13 @@ describe('Compat Model', () => {
 
     expect(model.assign).toBeInstanceOf(Function);
     expect(model.id).toBe(1);
-    model.update({id: 2, assign: true, foo: 3} as object);
+    model.update({id: 2, assign: true, foo: 3});
     expect(model.assign).toBeInstanceOf(Function);
     expect(model.id).toBe(1);
     expect(model.foo).toBe(3);
   });
 
-  it('should suport updating the array items in the reference', () => {
+  it('should support updating the array items in the reference', () => {
     class Foo extends CompatModel {
       public static type = 'foo';
       public static refs = {bar: 'foo'};
@@ -1070,6 +1075,7 @@ describe('Compat Model', () => {
 
       expect(foo.bar).toHaveLength(2);
 
+      // tslint:disable-next-line:no-object-literal-type-assertion
       foo.bar.push({} as Bar);
 
       expect(foo.bar).toHaveLength(3);

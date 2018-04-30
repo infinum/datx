@@ -1,4 +1,13 @@
 {
   "extends": "@infinumjs/tslint-config",
-  "rules": {}
+  "rules": {
+    "completed-docs": false,
+    "no-implicit-dependencies": [true, "dev"],
+    "no-redundant-jsdoc": false,
+    "no-reserved-keywords": false,
+    "no-unsafe-any": false,
+    "prefer-object-spread": false,
+    "promise-function-async": false,
+    "strict-boolean-expressions": false
+  }
 }

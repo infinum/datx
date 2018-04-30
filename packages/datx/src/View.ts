@@ -1,4 +1,4 @@
-import {IDictionary, IRawModel} from 'datx-utils';
+import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 import {action, computed, intercept, IObservableArray, observable} from 'mobx';
 
 import {SORTED_NO_WRITE, UNIQUE_MODEL} from './errors';
@@ -34,16 +34,17 @@ export class View<T extends PureModel = PureModel> {
     return this.__models.length;
   }
 
-  @computed public get list(): Array<T|null> {
+  @computed public get list(): Array<T | null> {
     const list = this.__models.map((id) => this.__collection.find(this.modelType, id));
 
     if (this.sortMethod) {
       const sortFn = typeof this.sortMethod === 'string'
         ? (item) => item[this.sortMethod as 'string']
         : this.sortMethod;
-      list.sort((a: T|null, b: T|null) => {
+      list.sort((a: T | null, b: T | null) => {
         const valA = a ? sortFn(a) : Infinity;
         const valB = b ? sortFn(b) : Infinity;
+
         return valA - valB;
       });
     }
@@ -51,6 +52,7 @@ export class View<T extends PureModel = PureModel> {
     const instances = observable.array(list, {deep: false});
 
     intercept(instances, this.__partialListUpdate.bind(this));
+
     return instances;
   }
 
@@ -70,28 +72,28 @@ export class View<T extends PureModel = PureModel> {
    * Add an existing or a new model to the collection
    *
    * @template T
-   * @param {T|IRawModel|IDictionary<any>} data Model to be added
+   * @param {T|IRawModel|IDictionary} data Model to be added
    * @returns {T} Added model
    * @memberof Collection
    */
-  public add(data: T|IRawModel|IDictionary<any>): T;
+  public add(data: T|IRawModel|IDictionary): T;
 
   /**
    * Add an array of existing or new models to the collection
    *
    * @template T
-   * @param {Array<T|IRawModel|IDictionary<any>>} data Array of models to be added
+   * @param {Array<T|IRawModel|IDictionary>} data Array of models to be added
    * @returns {Array<T>} Added models
    * @memberof Collection
    */
-  public add(data: Array<T|IRawModel|IDictionary<any>>): Array<T>;
+  public add(data: Array<T|IRawModel|IDictionary>): Array<T>;
 
   @action public add(
-    data: T|IRawModel|IDictionary<any>|Array<T>|Array<IRawModel|IDictionary<any>>,
+    data: T|IRawModel|IDictionary|Array<T|IRawModel|IDictionary>,
   ): T|Array<T> {
-    const models = this.__collection.add(([] as Array<any>).concat(data), this.modelType) as Array<T>;
+    const models = mapItems(data, (item) => this.__collection.add<T>(item, this.modelType)) as T | Array<T>;
 
-    models.forEach((instance) => {
+    mapItems(models, (instance) => {
       const id = getModelId(instance);
       if (!this.unique || this.__models.indexOf(id) === -1) {
         this.__models.push(id);
@@ -110,6 +112,7 @@ export class View<T extends PureModel = PureModel> {
    */
   public hasItem(model: T|IIdentifier): boolean {
     const id = getModelId(model);
+
     return this.__models.indexOf(id) !== -1;
   }
 
@@ -145,6 +148,7 @@ export class View<T extends PureModel = PureModel> {
       }
 
       this.__models.splice(change.index, change.removedCount, ...added);
+
       return null;
     }
 
@@ -159,6 +163,7 @@ export class View<T extends PureModel = PureModel> {
     }
 
     this.__models[change.index] = newId;
+
     return null;
   }
 }

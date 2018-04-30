@@ -33,7 +33,7 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}], Foo);
-    const view = new View(Foo, collection, null, [-1, -2]);
+    const view = new View(Foo, collection, undefined, [-1, -2]);
 
     expect(view.length).toBe(2);
     expect(view.list[0]).toBeInstanceOf(Foo);
@@ -103,7 +103,7 @@ describe('Model', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop public key: number;
+      @prop public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -114,21 +114,25 @@ describe('Model', () => {
     const view = new View(Foo, collection, (item: Foo) => item.key, foos);
 
     expect(view.length).toBe(3);
-    expect(view.list[0].key).toBe(1);
-    expect(view.list[2].key).toBe(3);
+    const item0a = view.list[0];
+    const item2a = view.list[2];
+    expect(item0a && item0a.key).toBe(1);
+    expect(item2a && item2a.key).toBe(3);
 
     const foo0 = collection.add({key: 0}, Foo);
     expect(view.length).toBe(3);
     view.add(foo0);
-    expect(view.list[0].key).toBe(0);
-    expect(view.list[2].key).toBe(2);
+    const item0b = view.list[0];
+    const item2b = view.list[2];
+    expect(item0b && item0b.key).toBe(0);
+    expect(item2b && item2b.key).toBe(2);
   });
 
   it('should be able to update sort method', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop public key: number;
+      @prop public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -139,14 +143,16 @@ describe('Model', () => {
     const view = new View(Foo, collection, (item: Foo) => item.key, foos);
 
     expect(view.length).toBe(3);
-    expect(view.list[0].key).toBe(1);
-    expect(view.list[2].key).toBe(3);
+    const item0a = view.list[0];
+    const item2a = view.list[2];
+    expect(item0a && item0a.key).toBe(1);
+    expect(item2a && item2a.key).toBe(3);
 
-    let keyList = [];
+    let keyList: Array<number|null> = [];
     let autorunCount = 0;
 
     autorun(() => {
-      keyList = view.list.map((item) => item.key);
+      keyList = view.list.map((item) => item && item.key);
       autorunCount++;
     });
 
@@ -154,8 +160,10 @@ describe('Model', () => {
 
     view.sortMethod = 'id';
 
-    expect(view.list[0].key).toBe(2);
-    expect(view.list[2].key).toBe(1);
+    const item0b = view.list[0];
+    const item2b = view.list[2];
+    expect(item0b && item0b.key).toBe(2);
+    expect(item2b && item2b.key).toBe(1);
     expect(keyList[2]).toBe(1);
 
     expect(autorunCount).toBe(2);
@@ -165,7 +173,7 @@ describe('Model', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop public key: number;
+      @prop public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -176,14 +184,18 @@ describe('Model', () => {
     const view = new View(Foo, collection, 'key', foos);
 
     expect(view.length).toBe(3);
-    expect(view.list[0].key).toBe(1);
-    expect(view.list[2].key).toBe(3);
+    const item0a = view.list[0];
+    const item2a = view.list[2];
+    expect(item0a && item0a.key).toBe(1);
+    expect(item2a && item2a.key).toBe(3);
 
     const foo0 = collection.add({key: 0}, Foo);
     expect(view.length).toBe(3);
     view.add(foo0);
-    expect(view.list[0].key).toBe(0);
-    expect(view.list[2].key).toBe(2);
+    const item0b = view.list[0];
+    const item2b = view.list[2];
+    expect(item0b && item0b.key).toBe(0);
+    expect(item2b && item2b.key).toBe(2);
   });
 
   it('should be able to remove models', () => {
@@ -196,7 +208,7 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}, {}], Foo);
-    const view = new View(Foo, collection, null, foos);
+    const view = new View(Foo, collection, undefined, foos);
 
     expect(view.length).toBe(3);
     view.remove(foos[2]);
@@ -215,7 +227,7 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}, {}], Foo);
-    const view = new View(Foo, collection, null, foos);
+    const view = new View(Foo, collection, undefined, foos);
 
     const [foo1, foo2, foo3] = collection.add([{}, {}, {}], Foo);
 
@@ -235,7 +247,7 @@ describe('Model', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop.identifier public id: number;
+      @prop.identifier public id!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -264,7 +276,7 @@ describe('Model', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop.identifier public id: number;
+      @prop.identifier public id!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -272,7 +284,7 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}, {}], Foo);
-    const view = new View(Foo, collection, null, foos, true);
+    const view = new View(Foo, collection, undefined, foos, true);
 
     const [foo1, foo2, foo3] = foos;
 
@@ -301,7 +313,7 @@ describe('Model', () => {
 
     const snapshot = view.snapshot;
 
-    const view2 = new View(snapshot.modelType, collection, null, snapshot.models, snapshot.unique);
+    const view2 = new View(snapshot.modelType, collection, undefined, snapshot.models, snapshot.unique);
 
     expect(view2.length).toBe(2);
     expect(view2.list[0]).toBeInstanceOf(Foo);
@@ -317,7 +329,7 @@ describe('Model', () => {
       class AppCollection extends Collection {
         public static types = [Foo];
 
-        public test: View<Foo>;
+        public test!: View<Foo>;
       }
 
       const collection = new AppCollection();
@@ -342,7 +354,7 @@ describe('Model', () => {
           test: {modelType: Foo},
         };
 
-        public test: View<Foo>;
+        public test!: View<Foo>;
       }
 
       const collection = new AppCollection();

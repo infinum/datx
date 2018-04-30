@@ -111,11 +111,14 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
       if (record && recordType !== getModelType(model) && recordType === getModelType(related)) {
         if (prop) {
           related[prop] = record;
+
           return response;
         }
         setModelMetaKey(related, MODEL_PERSISTED_FIELD, true);
+
         return response.replaceData(related);
       }
+
       return response;
     });
   }
@@ -136,6 +139,7 @@ function getLink(model: PureModel, ref: string, key: string) {
   if (!(key in refLinks)) {
     throw new Error(`Link ${key} doesn't exist on the model`);
   }
+
   return refLinks[key];
 }
 
@@ -148,6 +152,7 @@ export async function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>
 ): Promise<Response<T>> {
   const collection = getModelCollection(model);
   const link = getLink(model, ref, key);
+
   return fetchLink<T>(link, collection as IJsonapiCollection, requestHeaders, options);
 }
 
@@ -189,6 +194,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
     if (refIds instanceof Array || isObservableArray(refIds)) {
       rel = (refIds as Array<IIdentifier>).map((id, index) => {
         const type = model[key][index] ? getModelType(model[key][index]) : refs[key].model;
+
         return {id, type};
       });
     } else {
@@ -196,7 +202,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
       rel = refIds ? {id: refIds, type} : undefined;
     }
 
-    data.relationships[key] = {data: rel} as IRelationship;
+    data.relationships[key] = {data: rel};
     delete data.attributes[key];
   });
 
@@ -208,10 +214,11 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
 }
 
 function getModelEndpointUrl(model: PureModel): string {
-  const staticModel = model.constructor as PureModel;
+  const staticModel = model.constructor;
   const links: IDictionary<ILink> = getModelLinks(model);
   if (links && links.self) {
     const self: ILink = links.self;
+
     return typeof self === 'string' ? self : self.href;
   }
 
@@ -228,10 +235,12 @@ export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Prom
   const data: IRecord = modelToJsonApi(model);
   const requestMethod = isModelPersisted(model) ? update : create;
   const url = getModelEndpointUrl(model);
+
   return requestMethod(url, {data}, collection, options && options.headers)
     .then(handleResponse(model))
     .then((response) => {
       clearCacheByType(getModelType(model));
+
       return response;
     });
 }

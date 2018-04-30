@@ -237,6 +237,7 @@ describe('Model', () => {
         class Foo extends PureModel {
           public static type = 'foo';
 
+          // @ts-ignore - Failing on purpose
           @prop.toOne(undefined) public bar!: number;
         }
       }).toThrow('The model type is a required parameter. Do you maybe have a circular dependency?');
@@ -548,7 +549,6 @@ describe('Model', () => {
     });
 
     it('should work if an independent type is defined', () => {
-
       class Foo extends PureModel {
         public static type = 'foo';
 
@@ -610,11 +610,15 @@ describe('Model', () => {
 
       const foo5 = collection.find(Foo, 5);
       expect(foo5).toBeTruthy();
-      expect(foo5.key).toBe(5);
+      if (foo5) {
+        expect(foo5.key).toBe(5);
+      }
 
       const bar6 = collection.find(Bar, 6);
       expect(bar6).toBeTruthy();
-      expect(bar6.key).toBe(6);
+      if (bar6) {
+        expect(bar6.key).toBe(6);
+      }
     });
 
     describe('Back references', () => {

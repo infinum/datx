@@ -24,6 +24,7 @@ function isOfType<T>(obj: any, type: T) {
     }
     model = Object.getPrototypeOf(model);
   }
+
   return false;
 }
 

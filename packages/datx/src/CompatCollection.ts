@@ -24,11 +24,13 @@ export class CompatCollection extends Collection {
 
   public get static(): typeof CompatCollection {
     deprecated('collection.static is deprecated.');
+
     return this.constructor as typeof CompatCollection;
   }
 
   public toJS(): IRawCollection {
     deprecated('collection.toJS() is deprecated. Use collection.toJSON() instead');
+
     return this.toJSON();
   }
 }

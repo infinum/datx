@@ -10,7 +10,7 @@ import {IType} from '../interfaces/IType';
 import prop from '../prop';
 import {PureModel} from '../PureModel';
 
-export function setupModel<IModel extends PureModel, IFields extends IDictionary<any>>(
+export function setupModel<IModel extends PureModel, IFields extends IDictionary>(
   Base: IModelConstructor<IModel>,
   {
     fields,
@@ -24,6 +24,7 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
     type?: IType;
     idAttribute?: string;
     typeAttribute?: string;
+  // tslint:disable-next-line:no-object-literal-type-assertion
   } = {fields: {} as IFields},
 ) {
   const BaseClass = Base as typeof PureModel;
@@ -57,11 +58,17 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
       const {model, property} = references[key];
       switch (references[key].type) {
         case ReferenceType.TO_ONE:
-          return prop.toOne(model)(ModelWithProps.prototype, key);
+          prop.toOne(model)(ModelWithProps.prototype, key);
+
+          return;
         case ReferenceType.TO_MANY:
-          return prop.toMany(model, property)(ModelWithProps.prototype, key);
+          prop.toMany(model, property)(ModelWithProps.prototype, key);
+
+          return;
         default:
-          return prop.toOneOrMany(model)(ModelWithProps.prototype, key);
+          prop.toOneOrMany(model)(ModelWithProps.prototype, key);
+
+          return;
       }
     });
   }

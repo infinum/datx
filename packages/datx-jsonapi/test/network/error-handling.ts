@@ -11,6 +11,7 @@ import {Event, Image, Organizer, Photo, TestStore, User} from '../utils/setup';
 describe('error handling', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
+    // tslint:disable-next-line:no-http-string
     config.baseUrl = 'http://example.com/';
     clearAllCache();
   });

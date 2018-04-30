@@ -22,7 +22,6 @@ import {PureModel} from './PureModel';
 import {View} from './View';
 
 export class PureCollection {
-
   /**
    * List of models available in the collection
    *
@@ -30,11 +29,11 @@ export class PureCollection {
    * @type {Array<typeof PureModel>}
    * @memberof Collection
    */
-  public static types: Array<typeof PureModel|IModelConstructor<PureModel>> = [];
+  public static types: Array<typeof PureModel | IModelConstructor> = [];
 
   public static views: IDictionary<{
-    modelType: IType|PureModel,
-    sortMethod?: string|((PureModel) => any);
+    modelType: IType | PureModel;
+    sortMethod?: string | ((PureModel) => any);
     unique?: boolean;
     mixins?: Array<(view: any) => any>;
   }> = {};
@@ -48,7 +47,7 @@ export class PureCollection {
   @observable private __dataMap: IDictionary<IDictionary<PureModel>> = {};
   @observable private __dataList: IDictionary<IObservableArray<PureModel>> = {};
 
-  constructor(data: Array<IRawModel>|IRawCollection = []) {
+  constructor(data: Array<IRawModel> | IRawCollection = []) {
     extendObservable(this, {});
     if (data instanceof Array) {
       this.insert(data);
@@ -80,6 +79,7 @@ export class PureCollection {
   @action public insert(data: Array<Partial<IRawModel>>): Array<PureModel> {
     const models = initModels(this, data);
     this.__insertModel(models);
+
     return models;
   }
 
@@ -179,14 +179,16 @@ export class PureCollection {
    * @returns {Array<PureModel>} List of matching models
    * @memberof Collection
    */
-  public findAll<T extends PureModel>(model?: IType|IModelConstructor<T>): Array<T> {
+  public findAll<T extends PureModel>(model?: IType|IModelConstructor<T>): IObservableArray<T> {
     if (model) {
       const type = getModelType(model);
       if (!(type in this.__dataList)) {
         set(this.__dataList, {[type]: observable.array([])});
       }
+
       return this.__dataList[type] as IObservableArray<T>;
     }
+
     return this.__data as IObservableArray<T>;
   }
 
@@ -199,6 +201,7 @@ export class PureCollection {
    */
   public hasItem(model: PureModel): boolean {
     const id = getModelId(model);
+
     return Boolean(this.find(model, id));
   }
 
@@ -276,7 +279,9 @@ export class PureCollection {
    * @memberof Collection
    */
   @action public reset() {
-    this.__data.map((model) => setModelMetaKey(model, 'collection', undefined));
+    this.__data.forEach((model) => {
+      setModelMetaKey(model, 'collection', undefined);
+    });
     this.__data.replace([]);
     this.__dataList = observable({}) as IObservableObject & IDictionary<IObservableArray<PureModel>>;
     this.__dataMap = observable({}) as IObservableObject &IDictionary<IDictionary<PureModel>>;
@@ -305,10 +310,10 @@ export class PureCollection {
     name: string,
     type: IModelConstructor<T>|IType,
     {sortMethod, models = [], unique, mixins}: {
-      sortMethod?: string|((item: T) => any),
-      models?: Array<IIdentifier|T>,
-      unique?: boolean,
-      mixins?: Array<(view: any) => any>,
+      sortMethod?: string|((item: T) => any);
+      models?: Array<IIdentifier|T>;
+      unique?: boolean;
+      mixins?: Array<(view: any) => any>;
     } = {},
   ) {
     if (name in this) {
@@ -361,7 +366,11 @@ export class PureCollection {
 
   private __insertModel(model: PureModel|Array<PureModel>, type?: IType, id?: IIdentifier) {
     if (model instanceof Array) {
-      return model.forEach((item) => this.__insertModel(item, type, id));
+      model.forEach((item) => {
+        this.__insertModel(item, type, id);
+      });
+
+      return;
     }
 
     const collection = getModelCollection(model);
@@ -376,6 +385,7 @@ export class PureCollection {
     const existingModel = this.find(modelType, modelId);
     if (existingModel) {
       updateModel(existingModel, model);
+
       return;
     }
 
@@ -396,7 +406,11 @@ export class PureCollection {
 
   private __removeModel(model: PureModel|Array<PureModel>, type?: IType, id?: IIdentifier) {
     if (model instanceof Array) {
-      return model.forEach((item) => this.__removeModel(item, type, id));
+      model.forEach((item) => {
+        this.__removeModel(item, type, id);
+      });
+
+      return;
     }
 
     const modelType = type || getModelType(model);
@@ -417,11 +431,13 @@ export class PureCollection {
       } else if (!(id in this.__dataMap[type])) {
         set(this.__dataMap[type], id.toString(), undefined);
       }
+
       return this.__dataMap[type][id];
     } else {
       if (!(type in this.__dataList)) {
         set(this.__dataList, stringType, observable.array([], {deep: false}));
       }
+
       return this.__dataList[type].length ? this.__dataList[type][0] : null;
     }
   }

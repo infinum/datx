@@ -1,5 +1,5 @@
 import {IDictionary} from './IDictionary';
 
-export interface IRawModel extends IDictionary<any> {
-  __META__?: IDictionary<any>;
+export interface IRawModel extends IDictionary {
+  __META__?: IDictionary;
 }
