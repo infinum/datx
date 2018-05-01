@@ -44,8 +44,8 @@ export class PureCollection {
 
   private __views: Array<string> = [];
 
-  @observable private __dataMap: IDictionary<IDictionary<PureModel>> = {};
-  @observable private __dataList: IDictionary<IObservableArray<PureModel>> = {};
+  @observable.shallow private __dataMap: IDictionary<IDictionary<PureModel>> = {};
+  @observable.shallow private __dataList: IDictionary<IObservableArray<PureModel>> = {};
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
     extendObservable(this, {});
@@ -283,8 +283,8 @@ export class PureCollection {
       setModelMetaKey(model, 'collection', undefined);
     });
     this.__data.replace([]);
-    this.__dataList = observable({}) as IObservableObject & IDictionary<IObservableArray<PureModel>>;
-    this.__dataMap = observable({}) as IObservableObject &IDictionary<IDictionary<PureModel>>;
+    this.__dataList = observable({}, {deep: false}) as IObservableObject & IDictionary<IObservableArray<PureModel>>;
+    this.__dataMap = observable({}, {deep: false}) as IObservableObject &IDictionary<IDictionary<PureModel>>;
   }
 
   public getAllModels() {
@@ -399,7 +399,7 @@ export class PureCollection {
     if (modelType in this.__dataMap) {
       set(this.__dataMap[modelType], modelId.toString(), model);
     } else {
-      set(this.__dataMap, stringType, observable.shallowObject({[modelId]: model}));
+      set(this.__dataMap, stringType, observable.object({[modelId]: model}, {}, {deep: false}));
     }
     setModelMetaKey(model, 'collection', this);
   }
@@ -427,7 +427,7 @@ export class PureCollection {
 
     if (id) {
       if (!(type in this.__dataMap)) {
-        set(this.__dataMap, stringType, {[id]: undefined});
+        set(this.__dataMap, stringType, observable.object({[id]: undefined}, {}, {deep: false}));
       } else if (!(id in this.__dataMap[type])) {
         set(this.__dataMap[type], id.toString(), undefined);
       }

@@ -1,4 +1,4 @@
-import {extendObservable, IObservableObject} from 'mobx';
+import {computed, decorate, extendObservable, IObservableObject} from 'mobx';
 
 /**
  * Map a single item or an array of items
@@ -52,7 +52,7 @@ export function uniq<T>(data: Array<T>): Array<T> {
  * @param {any} value A variable to check
  * @returns {boolean} The given variable is an array with at least one falsy value
  */
-export function isFalsyArray(value): boolean {
+export function isFalsyArray(value: any): boolean {
   return value instanceof Array && !value.every(Boolean);
 }
 
@@ -63,21 +63,23 @@ export function isFalsyArray(value): boolean {
  * @param {object} obj Observable object
  * @param {string} key Property to add
  * @param {() => any} getter Getter function
- * @param {(name: string) => void} [setter] Setter function
+ * @param {(value: any) => void} [setter] Setter function
  */
-export function assignComputed(
+export function assignComputed<T = any>(
   obj: object,
   key: string,
-  getter: () => any,
-  setter?: (name: string) => void,
+  getter: () => T,
+  setter?: (value: T) => void,
 ) {
-  const newObj = {};
   Object.defineProperty(obj, key, {
     configurable: true,
     get: getter,
     set: setter,
   });
-  extendObservable(obj, newObj);
+
+  decorate(obj, {
+    [key]: computed,
+  });
 }
 
 export function error(...args) {

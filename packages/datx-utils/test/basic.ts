@@ -1,4 +1,6 @@
-import {flatten, isFalsyArray, mapItems, uniq} from '../src';
+import {isComputedProp, observable} from 'mobx';
+
+import {assignComputed, flatten, isFalsyArray, mapItems, uniq} from '../src';
 
 describe('datx-utils', () => {
   describe('mapUtils', () => {
@@ -50,6 +52,52 @@ describe('datx-utils', () => {
 
     it('should work for mixed arrays', () => {
       expect(isFalsyArray([0, null, 1, ''])).toBe(true);
+    });
+  });
+
+  describe('assignComputed', () => {
+    it('should set a computed prop', () => {
+      const obj1 = {};
+      const obj2 = {};
+
+      const data = observable({
+        data: 1,
+      });
+
+      assignComputed(obj1, 'foo', () => 1);
+      assignComputed(obj2, 'foo', () => 2);
+      // tslint:disable-next-line:no-empty
+      assignComputed(obj1, 'bar', () => obj2, () => {});
+      // tslint:disable-next-line:no-empty
+      assignComputed(obj2, 'bar', () => obj1, () => {});
+      assignComputed(obj1, 'baz', () => data.data, (a) => {
+        data.data = a;
+      });
+
+      expect(isComputedProp(obj1, 'foo')).toBe(true);
+      expect(isComputedProp(obj1, 'bar')).toBe(true);
+      expect(isComputedProp(obj1, 'baz')).toBe(true);
+      expect(isComputedProp(obj2, 'foo')).toBe(true);
+      expect(isComputedProp(obj2, 'bar')).toBe(true);
+
+      // @ts-ignore
+      expect(obj1.foo).toBe(1);
+
+      // @ts-ignore
+      expect(obj2.foo).toBe(2);
+
+      // @ts-ignore
+      expect(obj1.bar).toBe(obj2);
+
+      // @ts-ignore
+      expect(obj2.bar).toBe(obj1);
+
+      // @ts-ignore
+      expect(obj1.baz).toBe(1);
+      // @ts-ignore
+      obj1.baz = 6;
+      // @ts-ignore
+      expect(obj1.baz).toBe(6);
     });
   });
 });
