@@ -42,6 +42,4 @@ typings/
 # Build folder
 dist
 
-.vscode
-
 .rpt2_cache

@@ -184,7 +184,6 @@ function getNormalRef(model: PureModel, key: string, refOptions: IReferenceOptio
   }
 
   return dataModels;
-
 }
 
 export function getRef(model: PureModel, key: string): PureModel|Array<PureModel>|null {
