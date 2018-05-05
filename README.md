@@ -70,7 +70,7 @@ Models also include some useful [methods](https://github.com/infinum/datx/wiki/w
 Mixins are additional plugins that can enhance the regular models and collections. Available mixins:
 * [`withActions`](https://github.com/infinum/datx/wiki/withActions) (model) - Adds some helper methods to the model - already included in the `Model` class, but not in the `PureModel` class
 * [`withMeta`](https://github.com/infinum/datx/wiki/withMeta) (model) - Adds some helpful meta data to the model - already included in the `Model` class, but not in the `PureModel` class
-* [`datx-jsonapi`](https://github.com/infinum/datx/wiki/Mixin-JSONAPI) (model and collection) - Adds the [JSON API](http://jsonapi.org/) features to the model and collection
+* [`datx-jsonapi`](https://github.com/infinum/datx/wiki/Mixin-JSONAPI) (model, collection and view) - Adds the [JSON API](http://jsonapi.org/) features to the model, collection and view
 
 To check out what are the planed future mixins, check out [the issues](https://github.com/infinum/datx/labels/mixins).
 
