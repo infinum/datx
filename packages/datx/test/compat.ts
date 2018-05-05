@@ -883,10 +883,10 @@ describe('Compat Model', () => {
       Store.types = [Person];
 
       const collection = new Store();
-      const steve = collection.add({firstName: 'Steve'}, 'person') as Person;
-      const jane = collection.add({firstName: 'Jane'}, 'person') as Person;
-      const bob = collection.add({firstName: 'Bob'}, 'person') as Person;
-      const john = collection.add({firstName: 'John'}, 'person') as Person;
+      const steve = collection.add<Person>({firstName: 'Steve'}, 'person');
+      const jane = collection.add<Person>({firstName: 'Jane'}, 'person');
+      const bob = collection.add<Person>({firstName: 'Bob'}, 'person');
+      const john = collection.add<Person>({firstName: 'John'}, 'person');
 
       steve.spouse = jane;
 

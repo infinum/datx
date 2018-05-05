@@ -2,7 +2,7 @@ import {IDictionary} from 'datx-utils';
 
 const REGEX = /\$\{\s*([a-zA-Z0-9\-\_]+)\s*\}/g;
 
-function msg(str: string, keys: IDictionary<any>) {
+function msg(str: string, keys: IDictionary) {
   let msgStr = str;
   let match = REGEX.exec(msgStr);
   while (match) {
@@ -14,6 +14,6 @@ function msg(str: string, keys: IDictionary<any>) {
 }
 
 // tslint:disable-next-line:export-name
-export function error(str: string, keys: IDictionary<any> = {}): Error {
+export function error(str: string, keys: IDictionary = {}): Error {
   return new Error(`[datx exception] ${msg(str, keys)}`);
 }

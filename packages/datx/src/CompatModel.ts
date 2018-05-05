@@ -21,7 +21,7 @@ import {storage} from './services/storage';
 
 export class CompatModel extends PureModel {
   public static refs: IReferences = {};
-  public static defaults: IDictionary<any> = {};
+  public static defaults: IDictionary = {};
 
   constructor(initialData: object, collection?: Collection) {
     super(initialData, collection);
@@ -116,7 +116,7 @@ export class CompatModel extends PureModel {
     return this[key];
   }
 
-  public update(data: PureModel | IDictionary<any>): object {
+  public update(data: PureModel | IDictionary): object {
     deprecated('model.update is deprecated. Use updateModel() instead.');
     const updateData = Object.assign({}, data);
     Object.keys(updateData).forEach((key) => {

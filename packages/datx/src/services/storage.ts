@@ -13,8 +13,8 @@ import {PureCollection} from '../PureCollection';
 import {PureModel} from '../PureModel';
 
 interface IModelClassData {
-  data: IDictionary<any>;
-  meta: IDictionary<any>;
+  data: IDictionary;
+  meta: IDictionary;
   references: IDictionary<IReferenceOptions>;
 }
 
@@ -40,7 +40,7 @@ export class DataStorage {
     return modelData.data[key];
   }
 
-  public setModelData(model: PureModel, data: IDictionary<any>) {
+  public setModelData(model: PureModel, data: IDictionary) {
     const modelData = this.__getModelData(model);
     set(modelData.data, data);
   }
@@ -49,7 +49,7 @@ export class DataStorage {
     this.setModelData(model, {[key]: value});
   }
 
-  public getModelMeta(model: PureModel): IDictionary<any> {
+  public getModelMeta(model: PureModel): IDictionary {
     return (this.modelData.get(model) as IDataStorage).meta;
   }
 
@@ -57,7 +57,7 @@ export class DataStorage {
     return this.getModelMeta(model)[key];
   }
 
-  public setModelMeta(model: PureModel, meta: IDictionary<any>) {
+  public setModelMeta(model: PureModel, meta: IDictionary) {
     const modelData = this.__getModelData(model);
     set(modelData.meta, meta);
 
@@ -92,10 +92,10 @@ export class DataStorage {
     }
   }
 
-  public getModelDefaults(obj: typeof PureModel): IDictionary<any> {
+  public getModelDefaults(obj: typeof PureModel): IDictionary {
     const defaults = reducePrototypeChain(obj, (state, model) => {
       return state.concat((this.modelClassData.get(model) || {data: []}).data);
-    }, [] as Array<IDictionary<any>>);
+    }, [] as Array<IDictionary>);
 
     return Object.assign({}, ...defaults.reverse());
   }
@@ -120,7 +120,7 @@ export class DataStorage {
   public getModelClassReferences(obj: typeof PureModel): IDictionary<IReferenceOptions> {
     const defaults = reducePrototypeChain(obj, (state, model) => {
       return state.concat((this.modelClassData.get(model) || {references: {}}).references);
-    }, [] as Array<IDictionary<any>>);
+    }, [] as Array<IDictionary>);
 
     return Object.assign({}, ...defaults.reverse());
   }

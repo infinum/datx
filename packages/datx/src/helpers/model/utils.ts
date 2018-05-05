@@ -108,10 +108,10 @@ export function getOriginalModel(model: PureModel): PureModel {
  * @export
  * @template T
  * @param {T} model Model to be updated
- * @param {IDictionary<any>} data Data that should be assigned to the model
+ * @param {IDictionary} data Data that should be assigned to the model
  * @returns {T}
  */
-export function updateModel<T extends PureModel>(model: T, data: IDictionary<any>): T {
+export function updateModel<T extends PureModel>(model: T, data: IDictionary): T {
   const modelId = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'id') || 'id';
   const modelType = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type') || 'type';
 

@@ -14,7 +14,7 @@ import {error} from '../format';
 import {getField, getRef, updateField, updateRef} from './fields';
 import {getModelMetaKey, getModelType, setModelMetaKey} from './utils';
 
-interface IMetaToInit extends IDictionary<any> {
+interface IMetaToInit extends IDictionary {
   fields: Array<string>;
   id?: IIdentifier;
   refs: IDictionary<IReferenceOptions>;
@@ -130,7 +130,7 @@ function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, col
   });
 }
 
-function initModelMeta(model: PureModel, data: IRawModel, collection?: PureCollection): IDictionary<any> & IMetaToInit {
+function initModelMeta(model: PureModel, data: IRawModel, collection?: PureCollection): IDictionary & IMetaToInit {
   const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id') || 'id';
   const modelType = storage.getModelClassMetaKey(staticModel, 'type');

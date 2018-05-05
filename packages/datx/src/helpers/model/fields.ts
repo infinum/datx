@@ -85,7 +85,7 @@ function backRefSplice(model: PureModel, key: string, change: IArraySplice<PureM
   change.added.forEach((item) => {
     modelAddReference(item, property, model);
   });
-  const removed = model[key].slice(change.index, (change.index as number) + (change.removedCount as number));
+  const removed = model[key].slice(change.index, change.index + change.removedCount);
   removed.forEach((item) => {
     modelRemoveReference(item, property, model);
   });

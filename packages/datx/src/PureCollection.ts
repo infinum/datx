@@ -107,26 +107,26 @@ export class PureCollection {
    * Add an array of new models to the collection
    *
    * @template T
-   * @param {Array<IRawModel|IDictionary<any>>} data Array of new data to be added
+   * @param {Array<IRawModel|IDictionary>} data Array of new data to be added
    * @param {(IType|IModelConstructor<T>)} model Model type to be added
    * @returns {Array<T>} Added models
    * @memberof Collection
    */
-  public add<T extends PureModel>(data: Array<IRawModel|IDictionary<any>>, model: IType|IModelConstructor<T>): Array<T>;
+  public add<T extends PureModel>(data: Array<IRawModel|IDictionary>, model: IType|IModelConstructor<T>): Array<T>;
 
   /**
    * Add a new model to the collection
    *
    * @template T
-   * @param {(IRawModel|IDictionary<any>)} data New data to be added
+   * @param {(IRawModel|IDictionary)} data New data to be added
    * @param {(IType|IModelConstructor<T>)} model Model type to be added
    * @returns {T} Added model
    * @memberof Collection
    */
-  public add<T extends PureModel>(data: IRawModel|IDictionary<any>, model: IType|IModelConstructor<T>): T;
+  public add<T extends PureModel>(data: IRawModel|IDictionary, model: IType|IModelConstructor<T>): T;
 
   @action public add(
-    data: PureModel|IRawModel|IDictionary<any>|Array<PureModel>|Array<IRawModel|IDictionary<any>>,
+    data: PureModel|IRawModel|IDictionary|Array<PureModel>|Array<IRawModel|IDictionary>,
     model?: IType|IModelConstructor,
   ): PureModel|Array<PureModel> {
     return (data instanceof Array) ? this.__addArray(data, model) : this.__addSingle(data, model);
@@ -333,14 +333,14 @@ export class PureCollection {
   }
 
   private __addArray<T extends PureModel>(data: Array<T>): Array<T>;
-  private __addArray<T extends PureModel>(data: Array<IDictionary<any>>, model?: IType|IModelConstructor<T>): Array<T>;
-  private __addArray(data: Array<PureModel|IDictionary<any>>, model?: IType|IModelConstructor): Array<PureModel> {
+  private __addArray<T extends PureModel>(data: Array<IDictionary>, model?: IType|IModelConstructor<T>): Array<T>;
+  private __addArray(data: Array<PureModel|IDictionary>, model?: IType|IModelConstructor): Array<PureModel> {
     return data.filter(Boolean).map((item) => this.__addSingle(item, model));
   }
 
   private __addSingle<T extends PureModel>(data: T): T;
-  private __addSingle<T extends PureModel>(data: IDictionary<any>, model?: IType|IModelConstructor<T>): T;
-  private __addSingle(data: PureModel|IDictionary<any>|IIdentifier, model?: IType|IModelConstructor) {
+  private __addSingle<T extends PureModel>(data: IDictionary, model?: IType|IModelConstructor<T>): T;
+  private __addSingle(data: PureModel|IDictionary|IIdentifier, model?: IType|IModelConstructor) {
     if (!data || typeof data === 'number' || typeof data === 'string') {
       return data;
     }

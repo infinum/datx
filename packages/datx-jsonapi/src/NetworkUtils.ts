@@ -48,7 +48,7 @@ export interface IConfigType {
   baseFetch: FetchType;
   baseUrl: string;
   cache: boolean;
-  defaultFetchOptions: IDictionary<any>;
+  defaultFetchOptions: IDictionary;
   fetchReference: fetch;
   paramArrayType: ParamArrayType;
   onError(IResponseObject): IResponseObject;

@@ -56,7 +56,9 @@ describe('Model', () => {
 
       expect(autorunCount).toBe(2);
 
-      expect(() => assignModel(foo1, 'foo', foo2)).toThrowError('You should save this value as a reference.');
+      expect(() => {
+        assignModel(foo1, 'foo', foo2);
+      }).toThrowError('You should save this value as a reference.');
     });
 
     it('should work with initial data and no decorators', () => {

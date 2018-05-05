@@ -7,10 +7,10 @@ interface IDefinition {
 
 interface IJsonApiObject {
   version?: string;
-  meta?: IDictionary<any>;
+  meta?: IDictionary;
 }
 
-type ILink = string | {href: string; meta: IDictionary<any>};
+type ILink = string | {href: string; meta: IDictionary};
 
 interface IError {
   id?: string | number;
@@ -25,21 +25,21 @@ interface IError {
     pointer?: string;
     parameter?: string;
   };
-  meta?: IDictionary<any>;
+  meta?: IDictionary;
 }
 
 interface IRelationship {
   data?: IDefinition | Array<IDefinition>;
   links?: IDictionary<ILink>;
-  meta?: IDictionary<any>;
+  meta?: IDictionary;
 }
 
 interface IRecord extends IDefinition {
-  attributes: IDictionary<any>;
+  attributes: IDictionary;
 
   relationships?: IDictionary<IRelationship>;
   links?: IDictionary<ILink>;
-  meta?: IDictionary<any>;
+  meta?: IDictionary;
 }
 
 interface IResponse {
@@ -48,7 +48,7 @@ interface IResponse {
 
   included?: Array<IRecord>;
 
-  meta?: IDictionary<any>;
+  meta?: IDictionary;
   links?: IDictionary<ILink>;
   jsonapi?: IJsonApiObject;
 }

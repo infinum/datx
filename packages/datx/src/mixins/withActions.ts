@@ -27,7 +27,7 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
   }
 
   class WithActions extends BaseClass implements IActionsMixin<T> {
-    public update(data: IDictionary<any>) {
+    public update(data: IDictionary) {
       updateModel(this, data);
     }
 

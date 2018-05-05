@@ -159,7 +159,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       if (record) {
         updateModel(record, flattened);
       } else if (staticCollection.types.filter((item) => item.type === type).length) {
-        record = this.add(flattened, type) as T;
+        record = this.add<T>(flattened, type);
       } else {
         record = this.add(new GenericModel(flattened)) as T;
       }

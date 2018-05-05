@@ -120,7 +120,7 @@ describe('error handling', () => {
     if (event) {
       let hasFailed = false;
       try {
-        const res = await event.destroy();
+        await event.destroy();
       } catch (response) {
         hasFailed = true;
         expect(response.error[0]).toBeInstanceOf(Object);

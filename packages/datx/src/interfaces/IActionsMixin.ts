@@ -6,7 +6,7 @@ import {TRefValue} from './TRefValue';
 
 export interface IActionsMixin<T = PureModel> {
   assign(key: string, value: any): void;
-  update(data: IDictionary<any>): void;
+  update(data: IDictionary): void;
   clone(): IActionsMixin<T> & T;
   addReference<V extends PureModel, U extends typeof PureModel>(
     key: string,
