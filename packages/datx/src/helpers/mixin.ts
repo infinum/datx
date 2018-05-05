@@ -13,10 +13,7 @@ import {View} from '../View';
  * @param {Function} type Type to check
  * @returns {boolean} Class is of the given type
  */
-// tslint:disable-next-line:ban-types
-function isOfType<T>(obj: T, type: T): true;
-function isOfType<T>(obj: any, type: T): false;
-function isOfType<T>(obj: any, type: T) {
+function isOfType<T>(obj: any, type: T): obj is T {
   let model = obj;
   while (model) {
     if (model === type) {

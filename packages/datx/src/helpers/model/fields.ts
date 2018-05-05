@@ -206,9 +206,6 @@ function validateRef(refOptions: IReferenceOptions, isArray: boolean, key: strin
 
 export function updateRef(model: PureModel, key: string, value: TRefValue) {
   const refOptions = storage.getModelReferenceOptions(model, key);
-  const oldIds = refOptions.type === ReferenceType.TO_MANY
-    ? (mapItems(value, getModelId) || [])
-    : mapItems(value, getModelId);
 
   const check = refOptions.type === ReferenceType.TO_MANY ? value || [] : value;
   const isArray = check instanceof Array || isObservableArray(check);
@@ -224,6 +221,7 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
           throw new Error(WRONG_REF_TYPE);
         }
       }
+
       let instance = collection.find(refOptions.model, ref);
       if (!instance && typeof ref === 'object') {
         instance = collection.add(ref, refOptions.model);
@@ -241,11 +239,7 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
     ids = ids || [];
   }
 
-  if (!ids || (ids instanceof Array && ids.length === 0)) {
-    storage.setModelDataKey(model, key, ids);
-  } else {
-    storage.setModelDataKey(model, key, ids);
-  }
+  storage.setModelDataKey(model, key, ids);
 }
 
 function getModelRefsByType(model: PureModel, type: IType) {

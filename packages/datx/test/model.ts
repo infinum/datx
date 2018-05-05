@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import {autorun, isObservableArray} from 'mobx';
+import {autorun, isComputedProp, isObservableArray} from 'mobx';
 
 import {
   assignModel,
@@ -35,6 +35,8 @@ describe('Model', () => {
       }
 
       const foo1 = new Foo({foo: 1, bar: 2});
+
+      expect(isComputedProp(foo1, 'foo')).toBe(true);
 
       expect(foo1.foo).toBe(1);
       expect(foo1.bar).toBe(2);
@@ -261,6 +263,8 @@ describe('Model', () => {
       const foo1 = new Foo({foo: 2});
       collection.add(foo1);
 
+      expect(isComputedProp(foo1, 'parent')).toBe(true);
+
       const foo2 = collection.add({foo: 3, parent: foo1}, Foo);
 
       expect(foo2.parent).toBe(foo1);
@@ -478,11 +482,11 @@ describe('Model', () => {
       expect(foo3.parent && foo3.parent[0].foo).toBe(2);
 
       const foo4 = cloneModel(foo2);
-      // expect(foo4.parent.length).toBe(1);
-      // expect(foo4.parent && foo4.parent[0].foo).toBe(2);
+      expect(foo4.parent.length).toBe(1);
+      expect(foo4.parent && foo4.parent[0].foo).toBe(2);
 
-      // foo4.parent[0] = foo1;
-      // expect(foo4.parent).toContain(foo1);
+      foo4.parent[0] = foo1;
+      expect(foo4.parent).toContain(foo1);
     });
 
     it('should support custom reference serialization/deserialization', () => {
@@ -640,10 +644,13 @@ describe('Model', () => {
         }
         const collection = new TestCollection();
 
-        const foo1 = collection.add({foo: 2}, Foo);
-        const foo2 = collection.add({foo: 3, parent: foo1}, Foo);
+        const foo1 = collection.add({foo: 1}, Foo);
+        const foo2 = collection.add({foo: 2, parent: foo1}, Foo);
         const foo3 = collection.add({foo: 3, parent: foo1}, Foo);
-        const foo4 = collection.add({foo: 3, parent: foo2}, Foo);
+        const foo4 = collection.add({foo: 4, parent: foo2}, Foo);
+
+        expect(isComputedProp(foo1, 'backFoos')).toBe(true);
+        expect(isComputedProp(foo1, 'children')).toBe(true);
 
         expect(foo1.children).toHaveLength(2);
         expect(foo2.children).toHaveLength(1);

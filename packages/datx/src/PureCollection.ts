@@ -283,8 +283,8 @@ export class PureCollection {
       setModelMetaKey(model, 'collection', undefined);
     });
     this.__data.replace([]);
-    this.__dataList = observable({}, {deep: false}) as IObservableObject & IDictionary<IObservableArray<PureModel>>;
-    this.__dataMap = observable({}, {deep: false}) as IObservableObject &IDictionary<IDictionary<PureModel>>;
+    this.__dataList = observable({}, {}, {deep: false}) as IObservableObject & IDictionary<IObservableArray<PureModel>>;
+    this.__dataMap = observable({}, {}, {deep: false}) as IObservableObject &IDictionary<IDictionary<PureModel>>;
   }
 
   public getAllModels() {

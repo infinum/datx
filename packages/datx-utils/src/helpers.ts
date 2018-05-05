@@ -1,4 +1,4 @@
-import {computed, decorate, extendObservable, IObservableObject} from 'mobx';
+import {computed, decorate, extendObservable} from 'mobx';
 
 /**
  * Map a single item or an array of items
@@ -71,15 +71,34 @@ export function assignComputed<T = any>(
   getter: () => T,
   setter?: (value: T) => void,
 ) {
-  Object.defineProperty(obj, key, {
-    configurable: true,
-    get: getter,
-    set: setter,
-  });
+  let value;
+  if (key in obj) {
+    value = obj[key];
+    delete obj[key];
+  }
 
-  decorate(obj, {
-    [key]: computed,
-  });
+  if (setter) {
+    extendObservable(obj, {
+      get [key]() {
+        return getter();
+      },
+      set [key](val) {
+        if (setter) {
+          setter(val);
+        }
+      },
+    });
+  } else {
+    extendObservable(obj, {
+      get [key]() {
+        return getter();
+      },
+    });
+  }
+
+  if (value !== undefined) {
+    obj[key] = value;
+  }
 }
 
 export function error(...args) {

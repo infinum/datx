@@ -1,5 +1,4 @@
 import {assignComputed, IDictionary, IRawModel, META_FIELD} from 'datx-utils';
-import {computed, decorate, extendObservable, IObservableObject, isObservable, set} from 'mobx';
 
 import {FieldType} from '../../enums/FieldType';
 import {ReferenceType} from '../../enums/ReferenceType';
@@ -29,6 +28,10 @@ export function initModelField<T extends PureModel>(
   type: FieldType = FieldType.DATA,
 ) {
   const fields = getModelMetaKey(obj, 'fields') as Array<string>;
+
+  if (type === FieldType.ID && key in obj) {
+    delete obj[key];
+  }
 
   // Initialize the observable field to the default value
   storage.setModelDataKey(obj, key, defValue);
@@ -69,7 +72,7 @@ export function initModelRef(obj: PureModel, key: string, options: IReferenceOpt
     },
   );
 
-  if (!options.property) {
+  if (!options.property && initialVal !== undefined) {
     obj[key] = initialVal;
   }
 }
