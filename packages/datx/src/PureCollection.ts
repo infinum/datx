@@ -43,6 +43,7 @@ export class PureCollection {
   private __data: IObservableArray<PureModel> = observable.array([], {deep: false});
 
   private __views: Array<string> = [];
+  private __viewList: Array<View> = [];
 
   @observable.shallow private __dataMap: IDictionary<IDictionary<PureModel>> = {};
   @observable.shallow private __dataList: IDictionary<IObservableArray<PureModel>> = {};
@@ -445,5 +446,10 @@ export class PureCollection {
   private __changeModelId(oldId: IIdentifier, newId: IIdentifier, type: IType) {
     this.__dataMap[type][newId] = this.__dataMap[type][oldId];
     delete this.__dataMap[type][oldId];
+
+    this.__viewList
+      .filter((view) => view.modelType === type)
+      // @ts-ignore - I'm bad and I should feel bad...
+      .forEach((view) => view.__changeModelId(oldId, newId));
   }
 }

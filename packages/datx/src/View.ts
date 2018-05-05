@@ -28,6 +28,9 @@ export class View<T extends PureModel = PureModel> {
     this.__models.replace(models.map(getModelId));
     this.sortMethod = sortMethod;
     this.modelType = getModelType(modelType);
+
+    // @ts-ignore
+    this.__collection.__viewList.push(this);
   }
 
   @computed public get length() {
@@ -165,5 +168,12 @@ export class View<T extends PureModel = PureModel> {
     this.__models[change.index] = newId;
 
     return null;
+  }
+
+  private __changeModelId(oldId: IIdentifier, newId: IIdentifier) {
+    const oldIdIndex = this.__models.indexOf(oldId);
+    if (oldIdIndex !== -1) {
+      this.__models[oldIdIndex] = newId;
+    }
   }
 }

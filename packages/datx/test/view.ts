@@ -6,6 +6,7 @@ import {
   Collection,
   Model,
   prop,
+  updateModelId,
   View,
 } from '../src';
 import {storage} from '../src/services/storage';
@@ -371,5 +372,30 @@ describe('Model', () => {
       const collection2 = new AppCollection(snapshot);
       expect(collection2.test.length).toBe(2);
     });
+  });
+
+  it('should support changing ids', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+    }
+    class AppCollection extends Collection {
+      public static types = [Foo];
+    }
+
+    const collection = new AppCollection();
+    const foos = collection.add([{}, {}], Foo);
+    const view = new View(Foo, collection, undefined, [-1, -2]);
+
+    expect(view.length).toBe(2);
+    expect(view.list[0]).toBeInstanceOf(Foo);
+    expect(view.list[1]).toBeInstanceOf(Foo);
+    expect(view.list[0]).toBe(foos[0]);
+    expect(view.hasItem(foos[1])).toBe(true);
+
+    const foo1 = foos[1];
+    updateModelId(foo1, 123);
+    expect(view.list[1]).toBe(foo1);
+    expect(view.hasItem(foo1)).toBe(true);
+    expect(foo1.meta.id).toBe(123);
   });
 });
