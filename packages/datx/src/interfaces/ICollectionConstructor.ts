@@ -3,6 +3,7 @@ import {IDictionary, IRawModel} from 'datx-utils';
 import {PureCollection} from '../PureCollection';
 import {PureModel} from '../PureModel';
 import {IModelConstructor} from './IModelConstructor';
+import {IRawCollection} from './IRawCollection';
 import {IType} from './IType';
 
 export interface ICollectionConstructor<T = PureCollection> {
@@ -14,5 +15,5 @@ export interface ICollectionConstructor<T = PureCollection> {
     mixins?: Array<(view: any) => any>;
   }>;
 
-  new(data?: Array<IRawModel>): T;
+  new(data?: Array<IRawModel> | IRawCollection): T;
 }
