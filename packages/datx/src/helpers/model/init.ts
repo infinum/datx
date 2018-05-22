@@ -79,7 +79,7 @@ export function initModelRef(obj: PureModel, key: string, options: IReferenceOpt
 
 function prepareFields(data: IRawModel, meta: IMetaToInit, model: PureModel) {
   const staticModel = model.constructor as typeof PureModel;
-  const fields = meta.fields.slice();
+  const fields = meta.fields ? meta.fields.slice() : [];
   const classRefs = storage.getModelClassReferences(staticModel);
   const refs = Object.assign({}, classRefs, meta.refs);
 
