@@ -18,7 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "@infinumjs/tslint-config": "^2.0.0-beta.3",
-    "@types/jest": "^22.2.3",
+    "@types/jest": "^23.0.0",
     "@types/node": "^10.0.0",
     "jest": "^22.4.3",
     "mobx": "^4.2.0",
