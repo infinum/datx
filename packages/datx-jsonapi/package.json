@@ -40,7 +40,7 @@
     "typescript": "^2.8.3"
   },
   "peerDependencies": {
-    "mobx": "^4.1.0"
+    "mobx": "^5.0.0"
   },
   "scripts": {
     "test": "jest --coverage",
