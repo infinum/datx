@@ -1,7 +1,6 @@
 language: node_js
 node_js:
   - "8"
-  - "9"
   - "10"
 env:
   - MOBX_VERSION=4
@@ -10,6 +9,6 @@ install:
   - npm install -g lerna
   - yarn
   - lerna bootstrap
-  - lerna add mobx@${MOBX_VERSION}
+  - lerna add mobx@${MOBX_VERSION} --dev
   - lerna run build
 script: lerna run test
