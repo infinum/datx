@@ -7,7 +7,7 @@
     "declaration": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "inlineSourceMap": true,
+    "sourceMap": true,
     "inlineSources": true,
     "lib": [
       "es2015",
