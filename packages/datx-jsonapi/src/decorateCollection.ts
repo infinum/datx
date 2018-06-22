@@ -18,7 +18,7 @@ import {URL_REGEX} from './consts';
 import {ParamArrayType} from './enums/ParamArrayType';
 import {GenericModel} from './GenericModel';
 import {flattenModel, removeModel} from './helpers/model';
-import {getValue} from './helpers/utils';
+import {getValue, isBrowser} from './helpers/utils';
 import {IFilters} from './interfaces/IFilters';
 import {IHeaders} from './interfaces/IHeaders';
 import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
@@ -28,8 +28,6 @@ import {IDefinition, IRecord, IRelationship, IRequest, IResponse} from './interf
 import {config, fetch, read} from './NetworkUtils';
 import {Response} from './Response';
 
-declare var window: object|undefined;
-
 export function decorateCollection(BaseClass: typeof PureCollection) {
   class JsonapiCollection extends BaseClass {
     public static types = (BaseClass.types && BaseClass.types.length)
@@ -37,7 +35,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       : [GenericModel];
 
     public static cache: boolean = BaseClass['cache'] === undefined
-      ? window !== undefined
+      ? isBrowser
       : BaseClass['cache'];
 
     public static defaultModel = BaseClass['defaultModel'] || GenericModel;

@@ -449,7 +449,9 @@ export class PureCollection {
 
     this.__viewList
       .filter((view) => view.modelType === type)
-      // @ts-ignore - I'm bad and I should feel bad...
-      .forEach((view) => view.__changeModelId(oldId, newId));
+      .forEach((view) => {
+        // @ts-ignore - I'm bad and I should feel bad...
+        view.__changeModelId(oldId, newId);
+      });
   }
 }

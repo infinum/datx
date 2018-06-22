@@ -1,6 +1,6 @@
 {
   "name": "datx-jsonapi",
-  "version": "0.11.2",
+  "version": "0.11.4",
   "description": "DatX mixin for JSON API support",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -32,8 +32,8 @@
     "lodash": "^4.17.10",
     "mobx": "^4.2.0",
     "nock": "^9.2.5",
-    "rollup": "^0.60.0",
-    "rollup-plugin-typescript2": "^0.14.0",
+    "rollup": "^0.61.0",
+    "rollup-plugin-typescript2": "^0.15.0",
     "rollup-plugin-uglify": "^3.0.0",
     "ts-jest": "^22.4.4",
     "tslint": "^5.9.1",
@@ -71,7 +71,7 @@
     }
   },
   "dependencies": {
-    "datx": "^0.11.2",
-    "datx-utils": "^0.11.2"
+    "datx": "^0.11.4",
+    "datx-utils": "^0.11.3"
   }
 }
