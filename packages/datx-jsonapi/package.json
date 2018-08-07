@@ -32,7 +32,7 @@
     "lodash": "^4.17.10",
     "mobx": "^4.2.0",
     "nock": "^9.2.5",
-    "rollup": "^0.63.0",
+    "rollup": "^0.64.0",
     "rollup-plugin-typescript2": "^0.16.0",
     "rollup-plugin-uglify": "^3.0.0",
     "ts-jest": "^23.0.0",
