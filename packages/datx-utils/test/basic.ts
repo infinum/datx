@@ -1,6 +1,8 @@
-import {autorun, isComputedProp, isObservableProp, observable} from 'mobx';
+import {autorun, configure, isComputedProp, isObservableProp, observable} from 'mobx';
 
 import {assignComputed, flatten, isFalsyArray, mapItems, uniq} from '../src';
+
+configure({enforceActions: true});
 
 describe('datx-utils', () => {
   describe('mapUtils', () => {

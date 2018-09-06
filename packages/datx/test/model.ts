@@ -1,6 +1,8 @@
 // tslint:disable:max-classes-per-file
 
-import {autorun, isComputedProp, isObservableArray} from 'mobx';
+import {autorun, configure, isComputedProp, isObservableArray, runInAction} from 'mobx';
+
+configure({enforceActions: true});
 
 import {
   assignModel,
@@ -125,7 +127,9 @@ describe('Model', () => {
 
       // Trigger both autoruns
       foobarValue = 4;
-      foo.baz.foobar = 4;
+      runInAction(() => {
+        foo.baz.foobar = 4;
+      });
 
       // Trigger the snapshot autorun
       foo.bar++;

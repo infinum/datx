@@ -1,10 +1,12 @@
 // tslint:disable:max-classes-per-file
 
 import {META_FIELD} from 'datx-utils';
-import {autorun} from 'mobx';
+import {autorun, configure} from 'mobx';
 
 import {Collection, prop, PureModel, ReferenceType, withActions, withMeta} from '../../src';
 import {storage} from '../../src/services/storage';
+
+configure({enforceActions: true});
 
 describe('Collection', () => {
   beforeEach(() => {
