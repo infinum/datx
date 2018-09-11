@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import {autorun, configure, isComputedProp, isObservableArray, runInAction} from 'mobx';
+import {autorun, computed, configure, isComputedProp, isObservableArray, runInAction} from 'mobx';
 
 configure({enforceActions: true});
 
@@ -13,6 +13,7 @@ import {
   getModelType,
   getOriginalModel,
   initModelRef,
+  Model,
   modelToJSON,
   prop,
   PureModel,
@@ -100,6 +101,42 @@ describe('Model', () => {
       foo.baz = 3;
 
       expect(autorunCount).toBe(2);
+    });
+
+    it('should work with id getters', () => {
+      class Foo extends Model {
+        @prop public foo!: number;
+        @prop public bar!: number;
+        @prop public baz!: number;
+
+        @computed get id() {
+          return this.meta.id;
+        }
+
+        @computed get id2() {
+          return getModelId(this);
+        }
+      }
+
+      const foo1 = new Foo({foo: 1, bar: 2});
+      const foo2 = new Foo({foo: 2, bar: 4});
+      const foo3 = new Foo({foo: 3, bar: 3});
+
+      expect(foo1.meta.id).toBe(getModelId(foo1));
+      expect(foo1.id).toBe(getModelId(foo1));
+      expect(foo1.id2).toBe(getModelId(foo1));
+
+      expect(foo2.meta.id).toBe(getModelId(foo2));
+      expect(foo2.id).toBe(getModelId(foo2));
+      expect(foo2.id2).toBe(getModelId(foo2));
+
+      expect(foo3.meta.id).toBe(getModelId(foo3));
+      expect(foo3.id).toBe(getModelId(foo3));
+      expect(foo3.id2).toBe(getModelId(foo3));
+
+      expect(foo1.id).not.toBe(foo2.id);
+      expect(foo1.id).not.toBe(foo3.id);
+      expect(foo2.id).not.toBe(foo3.id);
     });
 
     it('should work with nested data', () => {
