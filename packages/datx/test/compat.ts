@@ -1,9 +1,11 @@
 // tslint:disable:max-classes-per-file
 
-import {autorun, computed} from 'mobx';
+import {autorun, computed, configure} from 'mobx';
 
 import {CompatCollection, CompatModel, getModelId, getRefId, IIdentifier, prop} from '../src';
 import {storage} from '../src/services/storage';
+
+configure({enforceActions: true});
 
 describe('Compat Model', () => {
   beforeEach(() => {
