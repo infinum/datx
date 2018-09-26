@@ -62,6 +62,32 @@ describe('Network basics', () => {
     }
   });
 
+  it('should handle id changes correctly', async () => {
+    const store = new TestStore();
+    const image1 = store.add({}, Image);
+    const image2 = new Image({});
+
+    mockApi({
+      method: 'POST',
+      name: 'image-1',
+      url: 'image',
+    });
+    expect(image1.id).toBeLessThan(0); // Temporary id, negative autoincrement
+    await image1.save(); // Load the image-1.json data
+    expect(image1.id).toBe(1);
+    expect(image1.id).toBe(image1.meta.id);
+
+    mockApi({
+      method: 'POST',
+      name: 'image-1',
+      url: 'image',
+    });
+    expect(image2.id).toBeLessThan(0); // Temporary id, negative autoincrement
+    await image2.save(); // Load the image-1.json data
+    expect(image2.id).toBe(1);
+    expect(image2.id).toBe(image2.meta.id);
+  });
+
   it('should serialize existing relationships', async () => {
     mockApi({
       name: 'events-1',

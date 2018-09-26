@@ -1,6 +1,8 @@
 // tslint:disable:max-classes-per-file
 
-import {autorun, isObservableArray} from 'mobx';
+import {autorun, configure, isObservableArray, runInAction} from 'mobx';
+
+configure({enforceActions: true});
 
 import {
   Collection,
@@ -159,7 +161,9 @@ describe('Model', () => {
 
     expect(keyList[2]).toBe(3);
 
-    view.sortMethod = 'id';
+    runInAction(() => {
+      view.sortMethod = 'id';
+    });
 
     const item0b = view.list[0];
     const item2b = view.list[2];

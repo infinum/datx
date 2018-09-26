@@ -1,6 +1,7 @@
 import {setModelMetaKey, View} from 'datx';
 import {IDictionary} from 'datx-utils';
 import {fetch, Response} from 'isomorphic-fetch';
+import {action} from 'mobx';
 
 import {getCache, saveCache} from './cache';
 import {MODEL_PERSISTED_FIELD, MODEL_PROP_FIELD, MODEL_QUEUE_FIELD, MODEL_RELATED_FIELD} from './consts';
@@ -348,7 +349,7 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
   record: T,
   prop?: string,
 ): (response: LibResponse<T>) => T {
-  return (response: LibResponse<T>): T => {
+  return action((response: LibResponse<T>): T => {
     if (response.error) {
       throw response.error;
     }
@@ -369,5 +370,5 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
 
       return response.replaceData(record).data as T;
     }
-  };
+  });
 }

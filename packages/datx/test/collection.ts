@@ -1,9 +1,11 @@
 // tslint:disable:max-classes-per-file
-import {autorun} from 'mobx';
+import {autorun, configure} from 'mobx';
 
 import {Collection, getModelCollection, getModelId, prop, PureModel} from '../src';
 import {isCollection, isModel} from '../src/helpers/mixin';
 import {storage} from '../src/services/storage';
+
+configure({enforceActions: true});
 
 describe('Collection', () => {
   beforeEach(() => {
