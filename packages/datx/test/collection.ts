@@ -5,7 +5,7 @@ import {Collection, getModelCollection, getModelId, prop, PureModel} from '../sr
 import {isCollection, isModel} from '../src/helpers/mixin';
 import {storage} from '../src/services/storage';
 
-configure({enforceActions: true});
+configure({enforceActions: 'observed'});
 
 describe('Collection', () => {
   beforeEach(() => {

@@ -24,30 +24,78 @@ import {PureModel} from '../PureModel';
  * @param {IModelConstructor<T>} Base Model to extend
  * @returns Extended model
  */
-export function withMeta<T extends PureModel>(Base: IModelConstructor<T>) {
+export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructor<T>) {
   const BaseClass = Base as typeof PureModel;
 
   if (!isModel(BaseClass)) {
     throw error(DECORATE_MODEL);
   }
 
-  class WithMeta extends BaseClass implements IMetaMixin {
-    @computed public get meta() {
-      const refDefs = getModelMetaKey(this, 'refs');
+  class MetaClass {
+    private __instance: T;
+    constructor(instance: T) {
+      this.__instance = instance;
+    }
+
+    @computed public get collection() {
+      return getModelCollection(this.__instance);
+    }
+
+    @computed public get id() {
+      return getModelId(this.__instance);
+    }
+
+    @computed public get original(): T | undefined {
+      return getModelMetaKey(this.__instance, 'originalId') ? getOriginalModel<T>(this.__instance) : undefined;
+    }
+
+    @computed public get refs() {
+      const refDefs = getModelMetaKey(this, 'refs') || {};
+
       const refs = {};
       Object.keys(refDefs).forEach((key) => {
         refs[key] = getRefId(this, key);
       });
 
-      return Object.freeze({
-        collection: getModelCollection(this),
-        id: getModelId(this),
-        original: getModelMetaKey(this, 'originalId') && getOriginalModel(this) || undefined,
-        refs,
-        snapshot: modelToJSON(this),
-        type: getModelType(this),
-      });
+      return refs;
     }
+
+    @computed public get snapshot() {
+      return modelToJSON(this.__instance);
+    }
+
+    @computed public get type() {
+      return getModelType(this.__instance);
+    }
+  }
+
+  // tslint:disable-next-line:max-classes-per-file
+  class WithMeta extends BaseClass implements IMetaMixin {
+    // @ts-ignore
+    public readonly meta = new MetaClass(this);
+
+    // constructor(...args) {
+    //   super(...args);
+    //   // @ts-ignore
+    //   this.meta = new MetaClass(this);
+    // }
+
+    // @computed get meta() {
+    //   const refDefs = getModelMetaKey(this, 'refs') || {};
+
+    //   const refs = {};
+    //   Object.keys(refDefs).forEach((key) => {
+    //     refs[key] = getRefId(this, key);
+    //   });
+
+    //   return {
+    //     id: getModelId(this),
+    //     original: getModelMetaKey(this, 'originalId') ? getOriginalModel<T>(this) : undefined,
+    //     refs,
+    //     snapshot: modelToJSON(this),
+    //     type: getModelType(this),
+    //   };
+    // }
   }
 
   return WithMeta as IModelConstructor<IMetaMixin<T> & T>;

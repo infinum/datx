@@ -2,7 +2,7 @@ import {autorun, configure, isComputedProp, isObservableProp, observable} from '
 
 import {assignComputed, flatten, isFalsyArray, mapItems, uniq} from '../src';
 
-configure({enforceActions: "observed"});
+configure({enforceActions: 'observed'});
 
 describe('datx-utils', () => {
   describe('mapUtils', () => {

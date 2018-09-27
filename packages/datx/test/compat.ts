@@ -5,7 +5,7 @@ import {autorun, computed, configure} from 'mobx';
 import {CompatCollection, CompatModel, getModelId, getRefId, IIdentifier, prop} from '../src';
 import {storage} from '../src/services/storage';
 
-configure({enforceActions: true});
+configure({enforceActions: 'observed'});
 
 describe('Compat Model', () => {
   beforeEach(() => {
@@ -226,6 +226,8 @@ describe('Compat Model', () => {
       spouse: 2,
     }, 'person');
 
+    expect(john.spouse).toBe(null);
+
     const fido = collection.add<Pet>({
       id: 1,
       name: 'Fido',
@@ -240,6 +242,7 @@ describe('Compat Model', () => {
     });
     collection.add(jane);
 
+    expect(john.spouse).not.toBe(null);
     expect(john.spouse.fullName).toBe('Jane Doe');
     expect(fido.owner.fullName).toBe('John Doe');
     expect(john.pets).toHaveLength(1);

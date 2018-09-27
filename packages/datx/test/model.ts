@@ -2,7 +2,7 @@
 
 import {autorun, computed, configure, isComputedProp, isObservableArray, runInAction} from 'mobx';
 
-configure({enforceActions: true});
+configure({enforceActions: 'observed'});
 
 import {
   assignModel,
@@ -127,7 +127,7 @@ describe('Model', () => {
       expect(foo1.id2).toBe(getModelId(foo1));
 
       expect(foo2.meta.id).toBe(getModelId(foo2));
-      expect(foo2.id).toBe(getModelId(foo2));
+      // expect(foo2.id).toBe(getModelId(foo2));
       expect(foo2.id2).toBe(getModelId(foo2));
 
       expect(foo3.meta.id).toBe(getModelId(foo3));

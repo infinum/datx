@@ -89,7 +89,7 @@ export function cloneModel<T extends PureModel>(model: T): T {
  * @param {PureModel} model Cloned model
  * @returns {PureModel} Original model
  */
-export function getOriginalModel(model: PureModel): PureModel {
+export function getOriginalModel<T extends PureModel = PureModel>(model: T): T {
   const collection = getModelCollection(model);
   const originalId = getModelMetaKey(model, 'originalId');
   if (originalId) {
@@ -97,7 +97,7 @@ export function getOriginalModel(model: PureModel): PureModel {
       throw error(REF_NEEDS_COLLECTION);
     }
 
-    return collection.find(model, originalId) as PureModel;
+    return collection.find(model, originalId) as T;
   }
   throw error(NOT_A_CLONE);
 }

@@ -5,13 +5,13 @@ import {PureModel} from '../PureModel';
 import {IIdentifier} from './IIdentifier';
 import {IType} from './IType';
 
-export interface IMetaMixin<T = PureModel> {
-  meta: Readonly<{
+export interface IMetaMixin<T extends PureModel = PureModel> {
+  meta: {
     collection?: PureCollection;
     id: IIdentifier;
     original?: T;
     refs: IDictionary<IIdentifier | Array<IIdentifier>>;
     snapshot: IRawModel;
     type: IType;
-  }>;
+  };
 }

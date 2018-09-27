@@ -166,7 +166,7 @@ function getBackRef(model: PureModel, key: string, refOptions: IReferenceOptions
 }
 
 function getNormalRef(model: PureModel, key: string, refOptions: IReferenceOptions): PureModel|Array<PureModel>|null {
-  const value = storage.getModelDataKey(model, key);
+  const value: IIdentifier | Array<IIdentifier> = storage.getModelDataKey(model, key);
   const collection = getModelCollection(model);
   if (!collection) {
     return null;

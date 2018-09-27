@@ -12,4 +12,4 @@ import './network/headers';
 import './network/params';
 import './network/updates';
 
-configure({enforceActions: true});
+configure({enforceActions: 'observed'});

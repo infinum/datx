@@ -21,7 +21,7 @@
     "@types/jest": "^23.3.2",
     "@types/node": "^10.11.0",
     "jest": "^23.6.0",
-    "mobx": "^4.2.0",
+    "mobx": "^5.1.2",
     "rollup": "^0.66.2",
     "rollup-plugin-typescript2": "^0.17.0",
     "rollup-plugin-uglify": "^6.0.0",
@@ -30,7 +30,7 @@
     "typescript": "^3.0.3"
   },
   "peerDependencies": {
-    "mobx": "^4.2.0|^5.0.0"
+    "mobx": "^4.2.0 || ^5.1.2"
   },
   "scripts": {
     "test": "jest --coverage",
@@ -44,22 +44,22 @@
   "jest": {
     "coveragePathIgnorePatterns": [
       "/test/",
-      "/node_modules/",
-      "../datx-utils/dist"
+      "/node_modules/"
     ],
     "moduleFileExtensions": [
       "ts",
       "js"
     ],
     "testRegex": "test/(.*).ts",
-    "transform": {
-      ".ts": "ts-jest"
-    },
     "globals": {
       "ts-jest": {
-        "enableTsDiagnostics": true
+        "diagnostics": {
+          "warnOnly": true
+        }
       }
-    }
+    },
+    "preset": "ts-jest",
+    "testMatch": null
   },
   "dependencies": {
     "datx-utils": "^0.11.5"

@@ -50,7 +50,13 @@ export class DataStorage {
   }
 
   public getModelMeta(model: PureModel): IDictionary {
-    return (this.modelData.get(model) as IDataStorage).meta;
+    const data: IDataStorage|undefined = this.modelData.get(model);
+
+    if (data) {
+      return data.meta;
+    }
+
+    return this.setModelMeta(model, {});
   }
 
   public getModelMetaKey(model: PureModel, key: string): any {

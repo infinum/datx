@@ -6,7 +6,7 @@ import {autorun, configure} from 'mobx';
 import {Collection, prop, PureModel, ReferenceType, withActions, withMeta} from '../../src';
 import {storage} from '../../src/services/storage';
 
-configure({enforceActions: true});
+configure({enforceActions: 'observed'});
 
 describe('Collection', () => {
   beforeEach(() => {

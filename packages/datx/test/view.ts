@@ -2,7 +2,7 @@
 
 import {autorun, configure, isObservableArray, runInAction} from 'mobx';
 
-configure({enforceActions: true});
+configure({enforceActions: 'observed'});
 
 import {
   Collection,
