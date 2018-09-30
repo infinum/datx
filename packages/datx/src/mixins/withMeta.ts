@@ -50,11 +50,11 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
     }
 
     @computed public get refs() {
-      const refDefs = getModelMetaKey(this, 'refs') || {};
+      const refDefs = getModelMetaKey(this.__instance, 'refs') || {};
 
       const refs = {};
       Object.keys(refDefs).forEach((key) => {
-        refs[key] = getRefId(this, key);
+        refs[key] = getRefId(this.__instance, key);
       });
 
       return refs;
@@ -73,29 +73,6 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
   class WithMeta extends BaseClass implements IMetaMixin {
     // @ts-ignore
     public readonly meta = new MetaClass(this);
-
-    // constructor(...args) {
-    //   super(...args);
-    //   // @ts-ignore
-    //   this.meta = new MetaClass(this);
-    // }
-
-    // @computed get meta() {
-    //   const refDefs = getModelMetaKey(this, 'refs') || {};
-
-    //   const refs = {};
-    //   Object.keys(refDefs).forEach((key) => {
-    //     refs[key] = getRefId(this, key);
-    //   });
-
-    //   return {
-    //     id: getModelId(this),
-    //     original: getModelMetaKey(this, 'originalId') ? getOriginalModel<T>(this) : undefined,
-    //     refs,
-    //     snapshot: modelToJSON(this),
-    //     type: getModelType(this),
-    //   };
-    // }
   }
 
   return WithMeta as IModelConstructor<IMetaMixin<T> & T>;
