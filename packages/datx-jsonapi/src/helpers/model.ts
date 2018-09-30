@@ -41,7 +41,7 @@ export function flattenModel(data?: IRecord): IRawModel|null {
 
   const rawData = {
     [META_FIELD]: {
-      fields: Object.keys(data.attributes),
+      fields: Object.keys(data.attributes || {}),
       id: data.id,
       [MODEL_LINKS_FIELD]: data.links,
       [MODEL_META_FIELD]: data.meta,
@@ -203,12 +203,15 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
     }
 
     data.relationships[key] = {data: rel};
-    delete data.attributes[key];
+    if (data.attributes) {
+      delete data.attributes[key];
+    }
   });
 
-  delete data.attributes.id;
-
-  delete data.attributes[META_FIELD];
+  if (data.attributes) {
+    delete data.attributes.id;
+    delete data.attributes[META_FIELD];
+  }
 
   return data;
 }

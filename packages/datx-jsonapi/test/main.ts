@@ -12,4 +12,6 @@ import './network/headers';
 import './network/params';
 import './network/updates';
 
+import './issues';
+
 configure({enforceActions: 'observed'});

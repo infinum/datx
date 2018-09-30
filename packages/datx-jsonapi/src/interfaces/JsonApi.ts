@@ -35,7 +35,7 @@ interface IRelationship {
 }
 
 interface IRecord extends IDefinition {
-  attributes: IDictionary;
+  attributes?: IDictionary;
 
   relationships?: IDictionary<IRelationship>;
   links?: IDictionary<ILink>;
