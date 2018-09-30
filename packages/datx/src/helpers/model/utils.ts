@@ -21,6 +21,7 @@ import {initModelField} from '../model/init';
  */
 export function getModelType(model: IType|typeof PureModel|PureModel): IType {
   if (typeof model === 'function') {
+    // @ts-ignore
     return model.type;
   } else if (typeof model === 'object') {
     return getModelMetaKey(model, 'type') || (model.constructor as typeof PureModel).type;

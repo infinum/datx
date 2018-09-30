@@ -14,6 +14,7 @@ export const isBrowser: boolean = typeof window !== 'undefined';
  */
 export function getValue<T>(target: T|(() => T)): T {
   if (typeof target === 'function') {
+    // @ts-ignore
     return target();
   }
 

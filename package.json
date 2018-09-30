@@ -1,9 +1,9 @@
 {
   "name": "datx",
   "devDependencies": {
-    "husky": "^1.0.0",
+    "husky": "^1.0.1",
     "lerna": "^3.4.0",
-    "typescript": "^3.0.3"
+    "typescript": "^3.1.1"
   },
   "scripts": {
     "precommit": "lerna run lint & lerna run test"
