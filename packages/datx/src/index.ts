@@ -19,6 +19,7 @@ export {
 export {
   assignModel,
   cloneModel,
+  getModelClassRefs,
   getModelCollection,
   getModelId,
   getModelMetaKey,
@@ -41,6 +42,7 @@ export {ICollectionConstructor} from './interfaces/ICollectionConstructor';
 export {IIdentifier} from './interfaces/IIdentifier';
 export {IModelConstructor} from './interfaces/IModelConstructor';
 export {IType} from './interfaces/IType';
+export {IReferenceOptions} from './interfaces/IReferenceOptions';
 export {IViewConstructor} from './interfaces/IViewConstructor';
 export {IActionsMixin} from './interfaces/IActionsMixin';
 export {IMetaMixin} from './interfaces/IMetaMixin';

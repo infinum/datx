@@ -37,7 +37,7 @@ describe('General', () => {
         },
         id: 1,
         relationships: {
-          image: {
+          images: {
             data: [],
           },
         },
@@ -405,7 +405,7 @@ describe('General', () => {
           images: {
             data: [{
               id: 2,
-              type: 'images',
+              type: 'image',
             }],
           },
         },
@@ -427,19 +427,19 @@ describe('General', () => {
             data: {type: 'event', id: 1},
           },
         },
-        type: 'images',
+        type: 'image',
       }],
     });
 
     const events = store.findAll(Event);
-    const images = store.findAll('images');
+    const images = store.findAll(Image);
     expect(events.length).toBe(2);
     expect(images.length).toBe(1);
 
     store.reset();
 
     const events2 = store.findAll(Event);
-    const images2 = store.findAll('images');
+    const images2 = store.findAll(Image);
     expect(events2).toHaveLength(0);
     expect(images2).toHaveLength(0);
   });
@@ -635,7 +635,7 @@ describe('General', () => {
 
     const data = modelToJsonApi(event);
 
-    expect('id' in data.attributes).toBe(false);
+    expect(data.attributes && 'id' in data.attributes).toBe(false);
     expect(data.relationships).not.toBeUndefined();
     if (data.relationships) {
       expect(data.relationships.images.data).toHaveLength(0);
@@ -648,7 +648,7 @@ describe('General', () => {
 
     const data = modelToJsonApi(event);
 
-    expect('id' in data.attributes).toBe(false);
+    expect(data.attributes && 'id' in data.attributes).toBe(false);
     if (data.relationships) {
       expect(data.relationships.images.data).toHaveLength(0);
       expect(data.relationships.image.data).toBeUndefined();

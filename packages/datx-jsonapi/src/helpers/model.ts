@@ -5,6 +5,7 @@ import {
   getModelType,
   getRefId,
   IIdentifier,
+  IReferenceOptions,
   modelToJSON,
   PureModel,
   ReferenceType,
@@ -32,9 +33,9 @@ import {config, create, fetchLink, handleResponse, remove, update} from '../Netw
 import {Response} from '../Response';
 import {getValue} from './utils';
 
-export function flattenModel(): null;
-export function flattenModel(data?: IRecord): IRawModel;
-export function flattenModel(data?: IRecord): IRawModel|null {
+export function flattenModel(classRefs): null;
+export function flattenModel(classRefs, data?: IRecord): IRawModel;
+export function flattenModel(classRefs: IDictionary<IReferenceOptions<PureModel>>, data?: IRecord): IRawModel|null {
   if (!data) {
     return null;
   }
@@ -57,17 +58,23 @@ export function flattenModel(data?: IRecord): IRawModel|null {
     const refs = {};
     Object.keys(data.relationships).forEach((key) => {
       const ref = (data.relationships as IDictionary<IRelationship>)[key];
-      if ('data' in ref && ref.data && (!(ref.data instanceof Array) || ref.data.length > 0)) {
-        rawData[key] = mapItems(ref.data, (item: IDefinition) => item.id);
-        refs[key] = {
-          model: ref.data instanceof Array ? ref.data[0].type : ref.data.type,
-          type: ref.data instanceof Array ? ReferenceType.TO_MANY : ReferenceType.TO_ONE,
-        };
+      if (ref && 'data' in ref && ref.data) {
+        if ((!(ref.data instanceof Array) || ref.data.length > 0)) {
+          rawData[key] = mapItems(ref.data, (item: IDefinition) => item.id);
+          if (!classRefs || !(key in classRefs)) {
+            refs[key] = {
+              model: ref.data instanceof Array ? ref.data[0].type : ref.data.type,
+              type: ref.data instanceof Array ? ReferenceType.TO_MANY : ReferenceType.TO_ONE,
+            };
+          }
+        } else {
+          rawData[key] = [];
+        }
       }
-      if ('links' in ref) {
+      if (ref && 'links' in ref) {
         refLinks[key] = ref.links;
       }
-      if ('meta' in ref) {
+      if (ref && 'meta' in ref) {
         refMeta[key] = ref.meta;
       }
     });
@@ -96,7 +103,7 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
 ): Promise<Response<T>> {
   const collection = getModelCollection(model);
   const links = getModelLinks(model);
-  if (!(key in links)) {
+  if (!links || !(key in links)) {
     throw new Error(`Link ${key} doesn't exist on the model`);
   }
   const link = links[key];
@@ -132,11 +139,11 @@ function getLink(model: PureModel, ref: string, key: string) {
     throw new Error('The model needs to be in a collection');
   }
   const links = getModelRefLinks(model);
-  if (!(ref in links)) {
+  if (!links || !(ref in links)) {
     throw new Error(`The reference ${ref} doesn't have any links`);
   }
   const refLinks = links[ref];
-  if (!(key in refLinks)) {
+  if (!refLinks || !(key in refLinks)) {
     throw new Error(`Link ${key} doesn't exist on the model`);
   }
 
@@ -193,7 +200,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
     let rel: IDefinition|Array<IDefinition>|undefined;
     if (refIds instanceof Array || isObservableArray(refIds)) {
       rel = (refIds as Array<IIdentifier>).map((id, index) => {
-        const type = model[key][index] ? getModelType(model[key][index]) : refs[key].model;
+        const type = getModelType(model[key][index] ? model[key][index] : refs[key].model).toString();
 
         return {id, type};
       });

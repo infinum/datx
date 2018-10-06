@@ -1,9 +1,12 @@
 import {
+  getModelClassRefs,
+  getModelMetaKey,
   getModelType,
   ICollectionConstructor,
   IIdentifier,
   IModelConstructor,
   initModelRef,
+  IReferenceOptions,
   IType,
   PureCollection,
   PureModel,
@@ -152,7 +155,9 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       const staticCollection = this.constructor as typeof PureCollection;
       const {type, id} = obj;
       let record: T|null = this.find(type, id) as T|null;
-      const flattened: IRawModel = flattenModel(obj);
+      const Type = staticCollection.types.find((item) => getModelType(item) === type) || GenericModel;
+      const classRefs = getModelClassRefs(Type);
+      const flattened: IRawModel = flattenModel(classRefs, obj);
 
       if (record) {
         updateModel(record, flattened);
@@ -169,22 +174,32 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       const record: PureModel|null = this.find(obj.type, obj.id);
       const refs: Array<string> = obj.relationships ? Object.keys(obj.relationships) : [];
       refs.forEach((ref: string) => {
-        const items = (obj.relationships as IDictionary<IRelationship>)[ref].data;
+        const refData = (obj.relationships as IDictionary<IRelationship>)[ref];
+        if (!refData || !('data' in refData)) {
+          return;
+        }
+        const items = refData.data;
         if (items instanceof Array && items.length < 1) {
           // it's only possible to update items with one ore more refs. Early exit
           return;
-        }
-        if (items && record) {
-          const models: PureModel|Array<PureModel>|IIdentifier|null = mapItems(
-            items,
-            (def: IDefinition) => this.find(def.type, def.id) || def.id,
-          ) || null;
+        } else if (record) {
+          if (items) {
+            const models: PureModel|Array<PureModel>|IIdentifier|null = mapItems(
+              items,
+              (def: IDefinition) => this.find(def.type, def.id) || def.id,
+            ) || null;
 
-          const itemType: string = items instanceof Array ? items[0].type : items.type;
-          if (ref in record) {
-            record[ref] = models;
+            const itemType: string = items instanceof Array ? items[0].type : items.type;
+            if (ref in record) {
+              record[ref] = models;
+            } else {
+              initModelRef(record, ref, {model: itemType, type: ReferenceType.TO_ONE_OR_MANY}, models);
+            }
           } else {
-            initModelRef(record, ref, {model: itemType, type: ReferenceType.TO_ONE_OR_MANY}, models);
+            const refsDef = getModelMetaKey(record, 'refs') as IDictionary<IReferenceOptions>;
+            if (refsDef && ref in refsDef) {
+              record[ref] = refsDef[ref].type === ReferenceType.TO_MANY ? [] : null;
+            }
           }
         }
       });

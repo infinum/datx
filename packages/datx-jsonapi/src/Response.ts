@@ -175,7 +175,7 @@ export class Response<T extends IJsonapiModel> {
           throw new Error('A save/remove operation should not return an array of results');
         }
 
-        this.data = overrideData || new GenericModel(flattenModel(resp.data)) as T;
+        this.data = overrideData || new GenericModel(flattenModel(undefined, resp.data)) as T;
       }
     }
 

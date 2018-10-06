@@ -49,8 +49,8 @@ describe('updates', () => {
       expect(record['title']).toBe('Example title');
       expect(data.id).toBeUndefined();
       expect(data.type).toBe('event');
-      expect(data.attributes.id).toBeUndefined();
-      expect(data.attributes.type).toBeUndefined();
+      expect(data.attributes && data.attributes.id).toBeUndefined();
+      expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
       expect(updated['title']).toBe('Test 1');
@@ -75,8 +75,8 @@ describe('updates', () => {
       expect(record['title']).toBe('Example title');
       expect(data.id).toBeUndefined();
       expect(data.type).toBe('event');
-      expect(data.attributes.id).toBeUndefined();
-      expect(data.attributes.type).toBeUndefined();
+      expect(data.attributes && data.attributes.id).toBeUndefined();
+      expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
       expect(updated['title']).toBe('Test 1');
@@ -127,8 +127,8 @@ describe('updates', () => {
       expect(foo['title']).toBe('Example title');
       expect(data.id).toBeUndefined();
       expect(data.type).toBe('event');
-      expect(data.attributes.id).toBeUndefined();
-      expect(data.attributes.type).toBeUndefined();
+      expect(data.attributes && data.attributes.id).toBeUndefined();
+      expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await foo.save();
       expect(updated['title']).toBe('Test 1');
@@ -163,8 +163,8 @@ describe('updates', () => {
       expect(record['title']).toBe('Example title');
       expect(data.id).toBeUndefined();
       expect(data.type).toBe('event');
-      expect(data.attributes.id).toBeUndefined();
-      expect(data.attributes.type).toBeUndefined();
+      expect(data.attributes && data.attributes.id).toBeUndefined();
+      expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const queue = await record.save();
       expect(getModelType(queue)).toBe('queue');
@@ -199,6 +199,8 @@ describe('updates', () => {
       const record = new Event({
         title: 'Example title',
       });
+      // const store = new TestStore();
+      // store.add(record);
 
       mockApi({
         data: JSON.stringify({
@@ -214,8 +216,8 @@ describe('updates', () => {
       expect(record['title']).toBe('Example title');
       expect(data.id).toBeUndefined();
       expect(data.type).toBe('event');
-      expect(data.attributes.id).toBeUndefined();
-      expect(data.attributes.type).toBeUndefined();
+      expect(data.attributes && data.attributes.id).toBeUndefined();
+      expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const queue = await record.save();
       expect(getModelType(queue)).toBe('queue');
@@ -270,8 +272,8 @@ describe('updates', () => {
       const data = modelToJsonApi(record);
       expect(record['title']).toBe('Example title');
       expect(data.type).toBe('event');
-      expect(data.attributes.id).toBeUndefined();
-      expect(data.attributes.type).toBeUndefined();
+      expect(data.attributes && data.attributes.id).toBeUndefined();
+      expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
       expect(updated['title']).toBe('Example title');
@@ -297,8 +299,8 @@ describe('updates', () => {
       const data = modelToJsonApi(record);
       expect(record['title']).toBe('Example title');
       expect(data.type).toBe('event');
-      expect(data.attributes.id).toBeUndefined();
-      expect(data.attributes.type).toBeUndefined();
+      expect(data.attributes && data.attributes.id).toBeUndefined();
+      expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
       expect(updated['title']).toBe('Example title');
@@ -333,8 +335,8 @@ describe('updates', () => {
       expect(typeof data.id).toBe('string');
       expect(data.id).toHaveLength(36);
       expect(data.type).toBe('event');
-      expect(data.attributes.id).toBeUndefined();
-      expect(data.attributes.type).toBeUndefined();
+      expect(data.attributes && data.attributes.id).toBeUndefined();
+      expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
       expect(updated['title']).toBe('Test 1');
@@ -366,8 +368,8 @@ describe('updates', () => {
       expect(typeof data.id).toBe('string');
       expect(data.id).toHaveLength(36);
       expect(data.type).toBe('event');
-      expect(data.attributes.id).toBeUndefined();
-      expect(data.attributes.type).toBeUndefined();
+      expect(data.attributes && data.attributes.id).toBeUndefined();
+      expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
       expect(updated['title']).toBe('Test 1');

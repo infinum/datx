@@ -1,4 +1,4 @@
-import {PureCollection, PureModel} from 'datx';
+import {getModelClassRefs, PureCollection, PureModel} from 'datx';
 import {IRawModel} from 'datx-utils';
 
 import {flattenModel, removeModel, saveModel} from './helpers/model';
@@ -27,8 +27,9 @@ export function decorateModel(BaseClass: typeof PureModel) {
 
     constructor(rawData: IRawModel|IRecord = {}, collection?: PureCollection) {
       let data = rawData;
-      if ('type' in rawData && ('attributes' in rawData || 'relationships' in rawData)) {
-        data = flattenModel(rawData as IRecord);
+      if ((rawData && 'type' in rawData) && ('attributes' in rawData || 'relationships' in rawData)) {
+        const classRefs = getModelClassRefs(BaseClass);
+        data = flattenModel(classRefs, rawData as IRecord);
       }
       super(data, collection);
     }

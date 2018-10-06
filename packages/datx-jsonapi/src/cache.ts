@@ -14,7 +14,7 @@ export interface ICache {
 let cacheStorage: Array<ICache> = [];
 
 export function saveCache(url: string, response: Response<IJsonapiModel>, modelType?: string) {
-  if ('data' in response && (!('error' in response) || !response.error) && response.data) {
+  if (response && 'data' in response && (!('error' in response) || !response.error) && response.data) {
     // The type might need to be 100% correct - used only to clear the cache
     const type = modelType || getModelType(response.data instanceof Array ? response.data[0] : response.data);
     cacheStorage.push({response, time: new Date(), type, url});

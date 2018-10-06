@@ -8,7 +8,7 @@ export class Image extends jsonapi(Model) {
   public static type: IType = 'image';
 
   @prop public name!: string;
-  @prop.toOne('events') public event!: Event;
+  @prop.toOne('event') public event!: Event;
 
   @computed get id() {
     return this.meta.id;

@@ -164,6 +164,10 @@ function initModelMeta(model: PureModel, data: IRawModel, collection?: PureColle
     toInit.refs = oldMeta.refs;
     delete oldMeta.refs;
 
+    if ('type' in oldMeta) {
+      meta.type = oldMeta.type;
+    }
+
     newMeta = storage.setModelMeta(model, Object.assign(meta, oldMeta));
     delete data[META_FIELD];
   } else {

@@ -54,11 +54,11 @@ describe('Network basics', () => {
       const data = modelToJsonApi(event);
       expect(data.id).toBe(1);
       expect(data.type).toBe('event');
-      expect(data.attributes.title).toBe('Test 1');
+      expect(data.attributes && data.attributes.title).toBe('Test 1');
       expect(
         data.relationships && data.relationships.images.data && data.relationships.images.data[0],
       ).toEqual({type: 'image', id: '1'});
-      expect('images' in data.attributes).toBe(false);
+      expect(data.attributes && 'images' in data.attributes).toBe(false);
     }
   });
 
@@ -102,7 +102,7 @@ describe('Network basics', () => {
       const event = events.data[0];
       const data = modelToJsonApi(event);
 
-      expect('id' in data.attributes).toBe(false);
+      expect(data.attributes && 'id' in data.attributes).toBe(false);
       expect(data.relationships).not.toBeUndefined();
       if (data.relationships) {
         expect(data.relationships.images.data).toHaveLength(1);

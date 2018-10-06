@@ -156,7 +156,7 @@ function assignModelField<T extends PureModel>(model: T, key: string, value: any
 }
 
 function assignModelRef<T extends PureModel>(model: T, key: string, value: TRefValue): void {
-  const refs = getModelMetaKey(model, 'refs');
+  // const refs = getModelMetaKey(model, 'refs');
   model[key] = value;
 }
 
@@ -212,4 +212,8 @@ export function setModelMetaKey(model: PureModel, key: string, value: any) {
   storage.setModelMetaKey(model, key, value);
 
   return;
+}
+
+export function getModelClassRefs(type: typeof PureModel) {
+  return storage.getModelClassReferences(type);
 }

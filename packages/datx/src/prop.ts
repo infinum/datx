@@ -9,9 +9,9 @@ import {storage} from './services/storage';
  * @template T
  * @param {T} obj Target model
  * @param {string} key Property name
- * @returns {undefined}
+ * @returns {void}
  */
-function propFn<T extends PureModel>(obj: T, key: string) {
+function propFn<T extends PureModel>(obj: T, key: string): void {
   storage.addModelDefaultField(obj.constructor as typeof PureModel, key);
 }
 
@@ -21,9 +21,9 @@ export default Object.assign(propFn, {
    * Set the default value for the model property
    *
    * @param {any} value The default property value
-   * @returns {undefined}
+   * @returns {(obj: PureModel, key: string) => void}
    */
-  defaultValue(value: any) {
+  defaultValue(value: any): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string) => {
       storage.addModelDefaultField(obj.constructor as typeof PureModel, key, value);
     };
@@ -33,9 +33,9 @@ export default Object.assign(propFn, {
    * Add a reference to a single other model
    *
    * @param {typeof PureModel} refModel Model type the reference will point to
-   * @returns {undefined}
+   * @returns {(obj: PureModel, key: string) => void}
    */
-  toOne(refModel: typeof PureModel|IType) {
+  toOne(refModel: typeof PureModel|IType): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string) => {
       storage.addModelClassReference(obj.constructor as typeof PureModel, key, {
         model: refModel,
@@ -49,9 +49,9 @@ export default Object.assign(propFn, {
    *
    * @param {typeof PureModel} refModel Model type the reference will point to
    * @param {string} [property] Use a foreign key from the other model to get this reference (computed back reference)
-   * @returns {undefined}
+   * @returns {(obj: PureModel, key: string) => void}
    */
-  toMany(refModel: typeof PureModel|IType, property?: string) {
+  toMany(refModel: typeof PureModel|IType, property?: string): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string) => {
       storage.addModelClassReference(obj.constructor as typeof PureModel, key, {
         model: refModel,
@@ -65,9 +65,9 @@ export default Object.assign(propFn, {
    * Add a reference to a single or multiple other models
    *
    * @param {typeof PureModel} refModel Model type the reference will point to
-   * @returns {undefined}
+   * @returns {(obj: PureModel, key: string) => void}
    */
-  toOneOrMany(refModel: typeof PureModel|IType) {
+  toOneOrMany(refModel: typeof PureModel|IType): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string) => {
       storage.addModelClassReference(obj.constructor as typeof PureModel, key, {
         model: refModel,
@@ -81,9 +81,9 @@ export default Object.assign(propFn, {
    *
    * @param {T} obj Target model
    * @param {string} key Identifier property name
-   * @returns {undefined}
+   * @returns {void}
    */
-  identifier<T extends PureModel>(obj: T, key: string) {
+  identifier<T extends PureModel>(obj: T, key: string): void {
     storage.addModelDefaultField(obj.constructor as typeof PureModel, key);
     storage.setModelClassMetaKey(obj.constructor as typeof PureModel, 'id', key);
   },
@@ -93,9 +93,9 @@ export default Object.assign(propFn, {
    *
    * @param {T} obj Target model
    * @param {string} key Type property name
-   * @returns {undefined}
+   * @returns {void}
    */
-  type<T extends PureModel>(obj: T, key: string) {
+  type<T extends PureModel>(obj: T, key: string): void {
     storage.addModelDefaultField(obj.constructor as typeof PureModel, key);
     storage.setModelClassMetaKey(obj.constructor as typeof PureModel, 'type', key);
   },
