@@ -35,7 +35,7 @@ const jane = store.add({name: 'Jane', surname: 'Smith', spouse: john}, Person); 
 
 ## Getting started
 
-Note: `datx` has a peer dependency to `mobx@^4.2.0` or `mobx@5.5.0`, so don't forget to install the latest MobX version:
+Note: `datx` has a peer dependency to `mobx@^4.2.0` or `mobx@^5.5.0`, so don't forget to install the latest MobX version:
 
 ```bash
 npm install --save datx mobx
@@ -67,6 +67,7 @@ Models also include some useful [methods](https://github.com/infinum/datx/wiki/w
 Mixins are additional plugins that can enhance the regular models and collections. Available mixins:
 * [`withActions`](https://github.com/infinum/datx/wiki/withActions) (model) - Adds some helper methods to the model - already included in the `Model` class, but not in the `PureModel` class
 * [`withMeta`](https://github.com/infinum/datx/wiki/withMeta) (model) - Adds some helpful meta data to the model - already included in the `Model` class, but not in the `PureModel` class
+* [`withPatches`](https://github.com/infinum/datx/wiki/withPatches) (model, collection) - Adds patch support to models and collections
 * [`datx-jsonapi`](https://github.com/infinum/datx/wiki/Mixin-JSONAPI) (model, collection and view) - Adds the [JSON API](http://jsonapi.org/) features to the model, collection and view
 
 To check out what are the planed future mixins, check out [the issues](https://github.com/infinum/datx/labels/mixins).
