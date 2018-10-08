@@ -1,7 +1,9 @@
-import {DEFAULT_TYPE, IDictionary, IRawModel} from 'datx-utils';
+import {DEFAULT_TYPE, IRawModel} from 'datx-utils';
 import {extendObservable} from 'mobx';
 
+import {PatchType} from './enums/PatchType';
 import {initModel} from './helpers/model/init';
+import {endAction, startAction} from './helpers/patch';
 import {IIdentifier} from './interfaces/IIdentifier';
 import {IType} from './interfaces/IType';
 import {PureCollection} from './PureCollection';
@@ -57,7 +59,9 @@ export class PureModel {
   }
 
   constructor(rawData: IRawModel = {}, collection?: PureCollection) {
+    startAction(this);
     extendObservable(this, {});
     initModel(this, rawData, collection);
+    endAction(this, PatchType.CRATE);
   }
 }

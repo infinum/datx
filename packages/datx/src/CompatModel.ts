@@ -1,5 +1,5 @@
-import {deprecated, IDictionary, IRawModel, mapItems} from 'datx-utils';
-import {isObservableArray, set} from 'mobx';
+import {deprecated, IDictionary, mapItems} from 'datx-utils';
+import {isObservableArray} from 'mobx';
 
 import {Collection} from './Collection';
 import {FieldType} from './enums/FieldType';

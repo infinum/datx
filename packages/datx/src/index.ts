@@ -41,12 +41,14 @@ export {IRawModel} from 'datx-utils';
 export {ICollectionConstructor} from './interfaces/ICollectionConstructor';
 export {IIdentifier} from './interfaces/IIdentifier';
 export {IModelConstructor} from './interfaces/IModelConstructor';
+export {IPatch} from './interfaces/IPatch';
 export {IType} from './interfaces/IType';
 export {IReferenceOptions} from './interfaces/IReferenceOptions';
 export {IViewConstructor} from './interfaces/IViewConstructor';
 export {IActionsMixin} from './interfaces/IActionsMixin';
 export {IMetaMixin} from './interfaces/IMetaMixin';
 
+export {PatchType} from './enums/PatchType';
 export {ReferenceType} from './enums/ReferenceType';
 
 export {setupModel} from './mixins/setupModel';

@@ -1,10 +1,9 @@
-import {IRawModel} from 'datx-utils';
+import {IRawModel, META_FIELD} from 'datx-utils';
 
 import {UNDEFINED_MODEL, UNDEFINED_TYPE} from '../errors';
 import {IType} from '../interfaces/IType';
 import {PureCollection} from '../PureCollection';
 import {PureModel} from '../PureModel';
-import {storage} from '../services/storage';
 import {error} from './format';
 import {getMetaKeyFromRaw, updateModel} from './model/utils';
 
@@ -20,8 +19,18 @@ export function upsertModel(data: IRawModel, type: IType|typeof PureModel, colle
   }
 
   const staticCollection = collection.constructor as typeof PureCollection;
-  const TypeModel = staticCollection.types.find((item) => item.type === type) || staticCollection.defaultModel;
+  const TypeModel = staticCollection.types.find((item) => item.type === type);
   if (!TypeModel) {
+    const DefaultModel = staticCollection.defaultModel;
+    if (DefaultModel) {
+      return new DefaultModel({
+        ...data,
+        [META_FIELD]: {
+          ...data[META_FIELD] || {},
+          type,
+        },
+      }, collection);
+    }
     throw error(UNDEFINED_MODEL, {type});
   }
 

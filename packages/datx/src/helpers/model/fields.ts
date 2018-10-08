@@ -21,6 +21,7 @@ import {PureCollection} from '../../PureCollection';
 import {PureModel} from '../../PureModel';
 import {storage} from '../../services/storage';
 import {error} from '../format';
+import {endAction, startAction, updateAction} from '../patch';
 import {getModelCollection, getModelId, getModelMetaKey, getModelType, setModelMetaKey} from './utils';
 
 function modelAddReference(model: PureModel, key: string, newReference: PureModel) {
@@ -54,7 +55,7 @@ function ensureModel(refOptions: IReferenceOptions, collection?: PureCollection)
     let model = data;
     if (!(data instanceof PureModel) && typeof data === 'object') {
       if (!collection) {
-        throw new Error(REF_NEEDS_COLLECTION);
+        throw error(REF_NEEDS_COLLECTION);
       }
       model = collection.add(data, refOptions.model);
     }
@@ -129,12 +130,16 @@ export function updateField(model: PureModel, key: string, value: any, type: Fie
     throw error(ID_READONLY);
   }
 
+  startAction(model);
   const refs = getModelMetaKey(model, 'refs');
   if (key in refs) {
     updateRef(model, key, value);
   } else {
+    updateAction(model, key, value);
     storage.setModelDataKey(model, key, value);
   }
+
+  endAction(model);
 }
 
 function hasBackRef(item: PureModel, property: string, target: PureModel): boolean {
@@ -212,13 +217,15 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
   validateRef(refOptions, isArray, key);
 
   const collection = getModelCollection(model);
+  startAction(model);
 
   let ids: IIdentifier|Array<IIdentifier>|null = mapItems(value, (ref: IIdentifier|PureModel) => {
     if (ref && collection) {
       if (ref instanceof PureModel) {
         const refType = getModelType(ref);
         if (refType !== getModelType(refOptions.model)) {
-          throw new Error(WRONG_REF_TYPE);
+          endAction(model);
+          throw error(WRONG_REF_TYPE);
         }
       }
 
@@ -226,9 +233,11 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
       if (!instance && typeof ref === 'object') {
         instance = collection.add(ref, refOptions.model);
       }
+      endAction(model);
 
       return getModelId(instance || ref);
     } else if (ref instanceof PureModel) {
+      endAction(model);
       throw error(REF_NEEDS_COLLECTION);
     }
 
@@ -239,7 +248,10 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
     ids = ids || [];
   }
 
+  updateAction(model, key, ids);
   storage.setModelDataKey(model, key, ids);
+
+  endAction(model);
 }
 
 function getModelRefsByType(model: PureModel, type: IType) {

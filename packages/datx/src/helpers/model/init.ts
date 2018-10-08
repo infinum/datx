@@ -2,7 +2,7 @@ import {assignComputed, IDictionary, IRawModel, META_FIELD} from 'datx-utils';
 
 import {FieldType} from '../../enums/FieldType';
 import {ReferenceType} from '../../enums/ReferenceType';
-import {ID_REQUIRED, MODEL_EXISTS} from '../../errors';
+import {ID_REQUIRED} from '../../errors';
 import {IIdentifier} from '../../interfaces/IIdentifier';
 import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
 import {IType} from '../../interfaces/IType';
@@ -10,7 +10,7 @@ import {TRefValue} from '../../interfaces/TRefValue';
 import {PureCollection} from '../../PureCollection';
 import {PureModel} from '../../PureModel';
 import {storage} from '../../services/storage';
-import {error} from '../format';
+import {updateAction} from '../patch';
 import {getField, getRef, updateField, updateRef} from './fields';
 import {getModelMetaKey, getModelType, setModelMetaKey} from './utils';
 
@@ -35,6 +35,7 @@ export function initModelField<T extends PureModel>(
 
   // Initialize the observable field to the default value
   storage.setModelDataKey(obj, key, defValue);
+  updateAction(obj, key, defValue);
   if (fields.indexOf(key) === -1) {
     fields.push(key);
   }
@@ -64,6 +65,7 @@ export function initModelRef(obj: PureModel, key: string, options: IReferenceOpt
 
   const isArray = options.type === ReferenceType.TO_MANY;
   storage.setModelDataKey(obj, key, isArray ? [] : undefined);
+  updateAction(obj, key, isArray ? [] : undefined);
 
   assignComputed(obj, key,
     () => getRef(obj, key),

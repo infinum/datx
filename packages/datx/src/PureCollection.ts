@@ -1,7 +1,8 @@
 import {IDictionary, IRawModel} from 'datx-utils';
-import {action, computed, decorate, extendObservable, IObservableArray, IObservableObject, observable, set} from 'mobx';
+import {action, computed, extendObservable, IObservableArray, IObservableObject, observable, set, toJS} from 'mobx';
 
-import {MODEL_SINGLE_COLLECTION, UNDEFINED_MODEL, UNDEFINED_TYPE, VIEW_NAME_TAKEN} from './errors';
+import {PatchType} from './enums/PatchType';
+import {MODEL_SINGLE_COLLECTION, UNDEFINED_TYPE, VIEW_NAME_TAKEN} from './errors';
 import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
 import {
@@ -12,6 +13,7 @@ import {
   setModelMetaKey,
   updateModel,
 } from './helpers/model/utils';
+import {triggerAction} from './helpers/patch';
 import {IIdentifier} from './interfaces/IIdentifier';
 import {IModelConstructor} from './interfaces/IModelConstructor';
 import {IRawCollection} from './interfaces/IRawCollection';
@@ -38,7 +40,7 @@ export class PureCollection {
     mixins?: Array<(view: any) => any>;
   }> = {};
 
-  public static defaultModel?: typeof PureModel;
+  public static defaultModel?: typeof PureModel = PureModel;
 
   private __data: IObservableArray<PureModel> = observable.array([], {deep: false});
 
@@ -282,6 +284,11 @@ export class PureCollection {
   @action public reset() {
     this.__data.forEach((model) => {
       setModelMetaKey(model, 'collection', undefined);
+
+      triggerAction({
+        oldValue: modelToJSON(model),
+        patchType: PatchType.REMOVE,
+      }, model);
     });
     this.__data.replace([]);
     this.__dataList = observable({}, {}, {deep: false}) as IObservableObject & IDictionary<IObservableArray<PureModel>>;
@@ -403,6 +410,11 @@ export class PureCollection {
       set(this.__dataMap, stringType, observable.object({[modelId]: model}, {}, {deep: false}));
     }
     setModelMetaKey(model, 'collection', this);
+
+    triggerAction({
+      newValue: modelToJSON(model),
+      patchType: PatchType.CRATE,
+    }, model);
   }
 
   private __removeModel(model: PureModel|Array<PureModel>, type?: IType, id?: IIdentifier) {
@@ -416,6 +428,12 @@ export class PureCollection {
 
     const modelType = type || getModelType(model);
     const modelId = id || getModelId(model);
+
+    triggerAction({
+      oldValue: toJS(modelToJSON(model)),
+      patchType: PatchType.REMOVE,
+    }, model);
+
     this.__data.remove(model);
     this.__dataList[modelType].remove(model);
     set(this.__dataMap[modelType], modelId.toString(), undefined);
