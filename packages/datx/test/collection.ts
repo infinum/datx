@@ -40,6 +40,8 @@ describe('Collection', () => {
 
       class Store extends Collection {
         public static types = [Foo];
+        // tslint:disable-next-line:no-unnecessary-field-initialization
+        public static defaultModel = undefined;
       }
 
       const store = new Store();

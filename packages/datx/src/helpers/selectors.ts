@@ -1,9 +1,3 @@
-import {IDictionary} from 'datx-utils';
-
-import {PureCollection} from '../PureCollection';
-import {PureModel} from '../PureModel';
-import {getModelId, getModelType} from './model/utils';
-
 /**
  * Helper function used to iterate trough models prototype chain and collect data for all parents
  *

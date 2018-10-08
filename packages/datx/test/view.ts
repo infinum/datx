@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import {autorun, configure, isObservableArray, runInAction} from 'mobx';
+import {autorun, configure, runInAction} from 'mobx';
 
 configure({enforceActions: 'observed'});
 

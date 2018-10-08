@@ -52,7 +52,7 @@
       "ts",
       "js"
     ],
-    "testRegex": "test/(.*).ts",
+    "testRegex": "test/(.*).ts$",
     "globals": {
       "ts-jest": {
         "diagnostics": {

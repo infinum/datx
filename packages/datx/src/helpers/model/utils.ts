@@ -11,6 +11,7 @@ import {PureModel} from '../../PureModel';
 import {storage} from '../../services/storage';
 import {error} from '../format';
 import {initModelField} from '../model/init';
+import {endAction, startAction} from '../patch';
 
 /**
  * Get the model type
@@ -117,11 +118,13 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary): T
   const modelType = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type') || 'type';
 
   const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
+  startAction(model);
   keys.forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
       assignModel(model, key, data[key]);
     }
   });
+  endAction(model);
 
   return model;
 }
@@ -137,13 +140,16 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary): T
  */
 export function assignModel<T extends PureModel>(model: T, key: string, value: any): void {
   const refs = getModelMetaKey(model, 'refs') as IDictionary<IReferenceOptions>;
+  startAction(model);
   if (key in refs) {
     assignModelRef(model, key, value);
   } else if (value instanceof PureModel) {
+    endAction(model);
     throw error(NO_REFS, {key});
   } else {
     assignModelField(model, key, value);
   }
+  endAction(model);
 }
 
 function assignModelField<T extends PureModel>(model: T, key: string, value: any): void {
@@ -185,7 +191,14 @@ export function modelToJSON(model: PureModel): IRawModel {
 
   const rawMeta = Object.assign({}, storage.getModelMeta(model));
   delete rawMeta.collection;
+  delete rawMeta.patch;
   const meta = toJS(rawMeta);
+  const refs = {};
+  Object.keys(meta.refs).forEach((key) => {
+    refs[key] = {model: getModelType(meta.refs[key].model), type: meta.refs[key].type};
+  });
+  // console.log(meta.refs, Object.keys(meta.refs), refs)
+  meta.refs = refs;
 
   delete meta.collection;
 

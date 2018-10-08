@@ -1,5 +1,4 @@
-import {assignComputed, deprecated, IRawModel} from 'datx-utils';
-import {computed, decorate, extendObservable} from 'mobx';
+import {assignComputed, deprecated} from 'datx-utils';
 
 import {Collection} from './Collection';
 import {CompatModel} from './CompatModel';

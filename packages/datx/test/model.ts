@@ -13,6 +13,7 @@ import {
   getModelType,
   getOriginalModel,
   initModelRef,
+  IRawModel,
   Model,
   modelToJSON,
   prop,
@@ -553,7 +554,7 @@ describe('Model', () => {
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
 
-      const raw2 = modelToJSON(foo2);
+      const raw2: IRawModel = JSON.parse(JSON.stringify(modelToJSON(foo2)));
       expect(raw2.parent[0]).toBe(getModelId(foo1));
 
       // @ts-ignore
