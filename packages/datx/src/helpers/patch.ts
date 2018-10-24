@@ -6,6 +6,10 @@ import {PureModel} from '../PureModel';
 import {storage} from '../services/storage';
 import {getModelCollection, getModelId, getModelType} from './model/utils';
 
+function isEmptyObject(data: object) {
+  return Object.keys(data).length === 0;
+}
+
 export function reverseAction(type: PatchType): PatchType {
   switch (type) {
     case PatchType.CRATE:
@@ -56,6 +60,9 @@ export function startAction(model: PureModel) {
 
 export function updateAction(model: PureModel, key: string, value: any) {
   const patchData = storage.getModelMetaKey(model, 'patch') || {count: 0, oldValue: {}, newValue: {}};
+  if (model[key] === value) {
+    return;
+  }
   if (!(key in patchData.oldValue)) {
     patchData.oldValue[key] = model[key];
   }
@@ -67,11 +74,11 @@ export function endAction(model: PureModel, patchType: PatchType = PatchType.UPD
   const patchData = storage.getModelMetaKey(model, 'patch') || {count: 0, oldValue: {}, newValue: {}};
   patchData.count--;
   if (patchData.count === 0) {
-    triggerAction({
-      newValue: toJS(patchData.newValue),
-      oldValue: toJS(patchData.oldValue),
-      patchType,
-    }, model);
+    const newValue = toJS(patchData.newValue);
+    const oldValue = toJS(patchData.oldValue);
+    if (!isEmptyObject(newValue) || !isEmptyObject(oldValue)) {
+      triggerAction({newValue, oldValue, patchType}, model);
+    }
     storage.setModelMetaKey(model, 'patch', {count: 0, oldValue: {}, newValue: {}});
   } else {
     storage.setModelMetaKey(model, 'patch', patchData);

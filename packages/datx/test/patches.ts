@@ -111,6 +111,26 @@ describe('patch', () => {
       expect(model['name']).toBe('Foo');
       expect(model['nick']).toBe('Bar');
     });
+
+    it('should ignore noop changes', () => {
+      const patches: Array<IPatch> = [];
+      const model = new Model({
+        name: 'Foo',
+        nick: 'Bar',
+      });
+
+      const modelMeta = {type: model.meta.type, id: model.meta.id};
+      const unregister = model.onPatch((patch) => patches.push(patch));
+
+      model['name'] = 'Foo';
+      model.assign('age', 42);
+      model.assign('nick', 'Bar');
+
+      unregister();
+      model['height'] = 200;
+
+      expect(patches).toMatchSnapshot();
+    });
   });
 
   describe('collection', () => {
