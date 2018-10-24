@@ -65,6 +65,19 @@ describe('Model', () => {
       }).toThrowError('You should save this value as a reference.');
     });
 
+    it('should work with valueOf and toString', () => {
+      class Foo extends Model {
+        @prop public foo!: number;
+        @prop public bar!: number;
+        @prop public baz!: number;
+      }
+
+      const foo1 = new Foo({foo: 1, bar: 2});
+
+      expect(foo1.valueOf()).toMatchSnapshot();
+      expect(foo1.toString()).toMatchSnapshot();
+    });
+
     it('should work with initial data and no decorators', () => {
       // @ts-ignore - Avoiding the TypeScript features on purpose
       const Foo = setupModel(PureModel, {

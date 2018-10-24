@@ -58,7 +58,14 @@ export class PureModel {
     return this.type;
   }
 
+  protected static __datxInitProps?: () => void;
+
   constructor(rawData: IRawModel = {}, collection?: PureCollection) {
+    const staticClass = this.constructor as typeof PureModel;
+    if (staticClass.__datxInitProps) {
+      staticClass.__datxInitProps();
+    }
+
     startAction(this);
     extendObservable(this, {});
     initModel(this, rawData, collection);

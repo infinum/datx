@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Model Basic features should work with valueOf and toString 1`] = `
+Object {
+  "bar": 2,
+  "baz": undefined,
+  "foo": 1,
+  "meta": Object {
+    "id": -1,
+    "type": "__DEFAULT_TYPE__",
+  },
+}
+`;
+
+exports[`Model Basic features should work with valueOf and toString 2`] = `
+"{
+  \\"foo\\": 1,
+  \\"bar\\": 2,
+  \\"meta\\": {
+    \\"id\\": -1,
+    \\"type\\": \\"__DEFAULT_TYPE__\\"
+  }
+}"
+`;
