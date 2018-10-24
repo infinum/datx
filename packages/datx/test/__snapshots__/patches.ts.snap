@@ -129,6 +129,24 @@ Array [
 ]
 `;
 
+exports[`patch model should ignore noop changes 1`] = `
+Array [
+  Object {
+    "model": Object {
+      "id": -4,
+      "type": "__DEFAULT_TYPE__",
+    },
+    "newValue": Object {
+      "age": 42,
+    },
+    "oldValue": Object {
+      "age": undefined,
+    },
+    "patchType": 1,
+  },
+]
+`;
+
 exports[`patch model should trigger on add, replace and remove 1`] = `
 Array [
   Object {
