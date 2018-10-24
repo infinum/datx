@@ -48,7 +48,7 @@ describe('Compat Model', () => {
     });
 
     expect(model2.bar).toBe(1);
-    expect(model2.id).toBeUndefined();
+    expect(model2.foo).toBeUndefined();
   });
 
   it('should support enums for types', () => {
@@ -87,7 +87,6 @@ describe('Compat Model', () => {
     class FooModel extends CompatModel {
       public static type = 'foo';
 
-      @prop.identifier
       public id!: number;
 
       public foo!: number;
@@ -127,7 +126,6 @@ describe('Compat Model', () => {
       public static type = 'foo';
       public static refs = {bar: 'foo', fooBar: 'foo'};
 
-      @prop.identifier
       public id!: number;
 
       public foo!: number;
@@ -163,6 +161,7 @@ describe('Compat Model', () => {
     expect(collection2.length).toBe(1);
     expect(collection2.find('foo', 1)).toBe(model2);
     expect(model2).toBeInstanceOf(CompatModel);
+
     if (model2) {
       expect(model2.foo).toBe(0);
       expect(model2.bar).toBe(model2);
@@ -459,8 +458,8 @@ describe('Compat Model', () => {
   it('should work with autoincrement', () => {
     class Foo extends CompatModel {
       public static type = 'foo';
+      public static idAttribute = 'myID';
 
-      @prop.identifier
       public myID!: number;
     }
 
@@ -505,11 +504,13 @@ describe('Compat Model', () => {
 
     const baz1 = collection.add<Baz>({}, 'baz');
     expect(baz1.getRecordId()).toBe(-1);
+    expect(baz1.getRecordType()).toBe('baz');
   });
 
   it('should support typeAttribute', () => {
     class TestModel extends CompatModel {
-      @prop.type
+      public static typeAttribute = 'foo';
+
       public foo!: string;
     }
 
@@ -547,6 +548,29 @@ describe('Compat Model', () => {
 
     expect(model['self']).toBe(model);
     expect(model['self2']).toBe(model);
+  });
+
+  it('should handle id and type changes', () => {
+    class Foo extends CompatModel {
+      public static type = 'foo';
+      public static typeAttribute = 'type';
+    }
+
+    class TestCollection extends CompatCollection {
+      public static types = [Foo];
+    }
+
+    const collection = new TestCollection();
+    const model = collection.add<Foo>({}, 'foo');
+
+    expect(() => {
+      model.assign('id', 1);
+    // tslint:disable-next-line:max-line-length
+    }).toThrow('[datx exception] Model ID can\'t be updated directly. Use the `updateModelId` helper function instead.');
+
+    expect(() => {
+      model.assign('type', 'bar');
+    }).toThrow('[datx exception] Model type can\'t be changed after initialization.');
   });
 
   it('should support references during collection add', () => {
@@ -750,7 +774,6 @@ describe('Compat Model', () => {
     class Foo extends CompatModel {
       public static type = 'foo';
 
-      @prop.identifier
       public id!: number;
       public foo!: number;
     }
@@ -1037,7 +1060,6 @@ describe('Compat Model', () => {
       class Bar extends CompatModel {
         public static type = 'bar';
 
-        @prop.identifier
         public id!: number;
       }
 

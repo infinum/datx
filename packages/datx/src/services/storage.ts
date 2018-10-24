@@ -72,7 +72,15 @@ export class DataStorage {
   }
 
   public setModelClassMetaKey(model: typeof PureModel, key: string, value?: any) {
-    const data = this.modelClassData.get(model) as IModelClassData;
+    let data = this.modelClassData.get(model) as IModelClassData;
+    if (!data) {
+      data = {
+        data: {},
+        meta: {},
+        references: {},
+      };
+      this.modelClassData.set(model, data);
+    }
     Object.assign(data.meta, {[key]: value});
   }
 

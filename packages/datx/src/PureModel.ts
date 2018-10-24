@@ -58,7 +58,17 @@ export class PureModel {
     return this.type;
   }
 
+  protected static __datxCompatMode = false;
+
+  // tslint:disable-next-line:no-empty
+  protected static __datxInitProps() {}
+
   constructor(rawData: IRawModel = {}, collection?: PureCollection) {
+    const staticClass = this.constructor as typeof PureModel;
+    if (staticClass.__datxCompatMode) {
+      staticClass.__datxInitProps();
+    }
+
     startAction(this);
     extendObservable(this, {});
     initModel(this, rawData, collection);

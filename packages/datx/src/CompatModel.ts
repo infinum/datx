@@ -23,6 +23,21 @@ export class CompatModel extends PureModel {
   public static refs: IReferences = {};
   public static defaults: IDictionary = {};
 
+  public static idAttribute?: string = 'id';
+  public static typeAttribute?: string = '__type__';
+
+  protected static __datxCompatMode = true;
+
+  protected static __datxInitProps() {
+    if (this.idAttribute) {
+      storage.setModelClassMetaKey(this, 'id', this.idAttribute);
+    }
+
+    if (this.typeAttribute) {
+      storage.setModelClassMetaKey(this, 'type', this.typeAttribute);
+    }
+  }
+
   constructor(initialData: object, collection?: Collection) {
     super(initialData, collection);
 
