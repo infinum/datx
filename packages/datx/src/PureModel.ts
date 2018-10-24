@@ -58,14 +58,11 @@ export class PureModel {
     return this.type;
   }
 
-  protected static __datxCompatMode = false;
-
-  // tslint:disable-next-line:no-empty
-  protected static __datxInitProps() {}
+  protected static __datxInitProps?: () => void;
 
   constructor(rawData: IRawModel = {}, collection?: PureCollection) {
     const staticClass = this.constructor as typeof PureModel;
-    if (staticClass.__datxCompatMode) {
+    if (staticClass.__datxInitProps) {
       staticClass.__datxInitProps();
     }
 

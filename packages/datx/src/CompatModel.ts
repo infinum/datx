@@ -26,8 +26,6 @@ export class CompatModel extends PureModel {
   public static idAttribute?: string = 'id';
   public static typeAttribute?: string = '__type__';
 
-  protected static __datxCompatMode = true;
-
   protected static __datxInitProps() {
     if (this.idAttribute) {
       storage.setModelClassMetaKey(this, 'id', this.idAttribute);
