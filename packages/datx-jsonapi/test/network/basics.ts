@@ -77,6 +77,9 @@ describe('Network basics', () => {
     expect(image1.id).toBe(1);
     expect(image1.id).toBe(image1.meta.id);
 
+    const images = store.findAll(Image);
+    expect(store.findAll(Image)).toHaveLength(1);
+
     mockApi({
       method: 'POST',
       name: 'image-1',
