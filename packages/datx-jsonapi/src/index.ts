@@ -21,7 +21,9 @@ export {
   clearCacheByType,
 } from './cache';
 
+export {ICollectionFetchOpts} from './interfaces/ICollectionFetchOpts';
 export {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 export {IJsonapiModel} from './interfaces/IJsonapiModel';
 export {IJsonapiView} from './interfaces/IJsonapiView';
+export {IRawResponse} from './interfaces/IRawResponse';
 export {IRequestOptions} from './interfaces/IRequestOptions';

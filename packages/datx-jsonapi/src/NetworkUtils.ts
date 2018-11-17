@@ -1,12 +1,12 @@
 import {setModelMetaKey, View} from 'datx';
 import {IDictionary} from 'datx-utils';
-import {fetch, Response} from 'isomorphic-fetch';
 import {action} from 'mobx';
 
 import {getCache, saveCache} from './cache';
 import {MODEL_PERSISTED_FIELD, MODEL_PROP_FIELD, MODEL_QUEUE_FIELD, MODEL_RELATED_FIELD} from './consts';
 import {ParamArrayType} from './enums/ParamArrayType';
 import {isBrowser} from './helpers/utils';
+import {ICollectionFetchOpts} from './interfaces/ICollectionFetchOpts';
 import {IHeaders} from './interfaces/IHeaders';
 import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
@@ -16,24 +16,12 @@ import {IResponseHeaders} from './interfaces/IResponseHeaders';
 import {ILink, IResponse} from './interfaces/JsonApi';
 import {Response as LibResponse} from './Response';
 
-declare var window: {fetch?: fetch};
-
 export type FetchType = (
   method: string,
   url: string,
   body?: object,
   requestHeaders?: IHeaders,
 ) => Promise<IRawResponse>;
-
-export interface ICollectionFetchOpts {
-  url: string;
-  options?: IRequestOptions&{headers?: IHeaders};
-  data?: object;
-  method: string;
-  collection?: IJsonapiCollection;
-  skipCache?: boolean;
-  views?: Array<View>;
-}
 
 export type CollectionFetchType = <T extends IJsonapiModel>(options: ICollectionFetchOpts) => Promise<LibResponse<T>>;
 
@@ -50,7 +38,7 @@ export interface IConfigType {
   baseUrl: string;
   cache: boolean;
   defaultFetchOptions: IDictionary;
-  fetchReference: fetch;
+  fetchReference: typeof fetch;
   paramArrayType: ParamArrayType;
   onError(IResponseObject): IResponseObject;
   transformRequest(options: ICollectionFetchOpts): ICollectionFetchOpts;
@@ -72,7 +60,7 @@ export const config: IConfigType = {
   },
 
   // Reference of the fetch method that should be used
-  fetchReference: isBrowser && 'fetch' in window && window.fetch.bind(window),
+  fetchReference: isBrowser && 'fetch' in window && typeof window.fetch === 'function' && window.fetch.bind(window),
 
   // Determines how will the request param arrays be stringified
   paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
@@ -196,7 +184,7 @@ function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOp
     });
 }
 
-export function fetch<T extends IJsonapiModel = IJsonapiModel>(options: ICollectionFetchOpts) {
+export function libFetch<T extends IJsonapiModel = IJsonapiModel>(options: ICollectionFetchOpts) {
   return collectionFetch<T>(options);
 }
 

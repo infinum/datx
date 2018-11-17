@@ -28,7 +28,7 @@ import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
 import {IRequestOptions} from './interfaces/IRequestOptions';
 import {IDefinition, IRecord, IRelationship, IRequest, IResponse} from './interfaces/JsonApi';
-import {config, fetch, read} from './NetworkUtils';
+import {config, libFetch, read} from './NetworkUtils';
 import {Response} from './Response';
 
 export function decorateCollection(BaseClass: typeof PureCollection) {
@@ -99,7 +99,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     ): Promise<Response<T>> {
       const query = this.__buildUrl(url, data, options);
 
-      return fetch<T>({url: query.url, options, data, method, collection: this});
+      return libFetch<T>({url: query.url, options, data, method, collection: this});
     }
 
     public remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequestOptions);
