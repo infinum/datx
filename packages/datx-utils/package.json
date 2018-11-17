@@ -1,6 +1,6 @@
 {
   "name": "datx-utils",
-  "version": "0.13.0",
+  "version": "0.14.2",
   "description": "DatX lib utils for mixins",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -26,8 +26,8 @@
     "@types/node": "^10.11.3",
     "jest": "^23.6.0",
     "mobx": "^5.5.0",
-    "rollup-plugin-typescript2": "^0.18.0",
     "rollup": "^0.67.0",
+    "rollup-plugin-typescript2": "^0.18.0",
     "rollup-plugin-uglify": "^6.0.0",
     "ts-jest": "^23.10.2",
     "tslint": "^5.11.0",
