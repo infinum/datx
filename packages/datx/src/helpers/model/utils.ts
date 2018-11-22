@@ -194,7 +194,7 @@ export function modelToJSON(model: PureModel): IRawModel {
   delete rawMeta.patch;
   const meta = toJS(rawMeta);
   const refs = {};
-  Object.keys(meta.refs).forEach((key) => {
+  Object.keys(meta.refs || {}).forEach((key) => {
     refs[key] = {model: getModelType(meta.refs[key].model), type: meta.refs[key].type};
   });
   // console.log(meta.refs, Object.keys(meta.refs), refs)
