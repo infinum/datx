@@ -37,19 +37,16 @@ export class View<T extends PureModel = PureModel> {
     return this.__models.length;
   }
 
-  @computed public get list(): Array<T | null> {
-    const list = this.__models.map((id) => this.__collection.find(this.modelType, id));
+  @computed public get list(): Array<T> {
+    const list: Array<T> = this.__models
+      .map((id) => this.__collection.find(this.modelType, id))
+      .filter(Boolean) as any;
 
     if (this.sortMethod) {
       const sortFn = typeof this.sortMethod === 'string'
         ? (item) => item[this.sortMethod as 'string']
         : this.sortMethod;
-      list.sort((a: T | null, b: T | null) => {
-        const valA = a ? sortFn(a) : Infinity;
-        const valB = b ? sortFn(b) : Infinity;
-
-        return valA - valB;
-      });
+      list.sort((a: T, b: T) => sortFn(a) - sortFn(b));
     }
 
     const instances = observable.array(list, {deep: false});
