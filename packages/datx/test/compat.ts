@@ -8,11 +8,6 @@ import {storage} from '../src/services/storage';
 configure({enforceActions: 'observed'});
 
 describe('Compat Model', () => {
-  beforeEach(() => {
-    // @ts-ignore
-    storage.clear();
-  });
-
   it('should use basic models', () => {
     class FooModel extends CompatModel {
       public static type = 'foo';

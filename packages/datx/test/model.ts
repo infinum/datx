@@ -25,11 +25,6 @@ import {
 import {storage} from '../src/services/storage';
 
 describe('Model', () => {
-  beforeEach(() => {
-    // @ts-ignore
-    storage.clear();
-  });
-
   describe('Basic features', () => {
     it('should work with initial data', () => {
       class Foo extends PureModel {

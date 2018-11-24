@@ -8,11 +8,6 @@ import {storage} from '../src/services/storage';
 configure({enforceActions: 'observed'});
 
 describe('Collection', () => {
-  beforeEach(() => {
-    // @ts-ignore
-    storage.clear();
-  });
-
   describe('Basic features', () => {
     it('should initialize', () => {
       const collection = new Collection();

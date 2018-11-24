@@ -14,11 +14,6 @@ import {
 import {storage} from '../src/services/storage';
 
 describe('Model', () => {
-  beforeEach(() => {
-    // @ts-ignore
-    storage.clear();
-  });
-
   it('should init a view', () => {
     const collection = new Collection();
     const view = new View('foo', collection);

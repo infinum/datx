@@ -8,11 +8,6 @@ import {storage} from '../../src/services/storage';
 configure({enforceActions: 'observed'});
 
 describe('Collection', () => {
-  beforeEach(() => {
-    // @ts-ignore
-    storage.clear();
-  });
-
   it('should work with initial data', () => {
     class Foo extends PureModel {
       public static type = 'foo';

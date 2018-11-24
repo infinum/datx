@@ -15,14 +15,12 @@ interface IModelClassData {
   references: IDictionary<IReferenceOptions>;
 }
 
+const DATX_KEY = Symbol.for('datx metadata');
+
 export class DataStorage {
-  private modelData = new WeakMap<PureModel, IDataStorage>();
-
-  private modelClassData = new WeakMap<typeof PureModel|{type: IType}, IModelClassData>();
-
   public initModel(model: PureModel) {
     const modelData = observable({data: {}, meta: {}});
-    this.modelData.set(model, modelData);
+    model[DATX_KEY] = modelData;
 
     return modelData;
   }
@@ -47,7 +45,7 @@ export class DataStorage {
   }
 
   public getModelMeta(model: PureModel): IDictionary {
-    const data: IDataStorage|undefined = this.modelData.get(model);
+    const data: IDataStorage|undefined = model[DATX_KEY];
 
     if (data) {
       return data.meta;
@@ -72,40 +70,40 @@ export class DataStorage {
   }
 
   public setModelClassMetaKey(model: typeof PureModel, key: string, value?: any) {
-    let data = this.modelClassData.get(model) as IModelClassData;
+    let data = model[DATX_KEY] as IModelClassData;
     if (!data) {
       data = {
         data: {},
         meta: {},
         references: {},
       };
-      this.modelClassData.set(model, data);
+      model[DATX_KEY] = data;
     }
     Object.assign(data.meta, {[key]: value});
   }
 
   public getModelClassMetaKey(obj: typeof PureModel, key: string): any {
     return reducePrototypeChain(obj, (value, model) => {
-      return value || (this.modelClassData.get(model) || {meta: {}}).meta[key] || null;
+      return value || (model[DATX_KEY] || {meta: {}}).meta[key] || null;
     }, null);
   }
 
   public addModelDefaultField(model: typeof PureModel, key: string, value?: any) {
-    const data = this.modelClassData.get(model);
+    const data = model[DATX_KEY];
     if (data) {
       Object.assign(data.data, {[key]: value});
     } else {
-      this.modelClassData.set(model, {
+      model[DATX_KEY] = {
         data: {[key]: value},
         meta: {},
         references: {},
-      });
+      };
     }
   }
 
   public getModelDefaults(obj: typeof PureModel): IDictionary {
     const defaults = reducePrototypeChain(obj, (state, model) => {
-      return state.concat((this.modelClassData.get(model) || {data: []}).data);
+      return state.concat((model[DATX_KEY] || {data: []}).data);
     }, [] as Array<IDictionary>);
 
     return Object.assign({}, ...defaults.reverse());
@@ -116,21 +114,21 @@ export class DataStorage {
       throw error(MODEL_REQUIRED);
     }
 
-    const data = this.modelClassData.get(model);
+    const data = model[DATX_KEY];
     if (data) {
       Object.assign(data.references, {[key]: options});
     } else {
-      this.modelClassData.set(model, {
+      model[DATX_KEY] = {
         data: {},
         meta: {},
         references: {[key]: options},
-      });
+      };
     }
   }
 
   public getModelClassReferences(obj: typeof PureModel): IDictionary<IReferenceOptions> {
     const defaults = reducePrototypeChain(obj, (state, model) => {
-      return state.concat((this.modelClassData.get(model) || {references: {}}).references);
+      return state.concat((model[DATX_KEY] || {references: {}}).references);
     }, [] as Array<IDictionary>);
 
     return Object.assign({}, ...defaults.reverse());
@@ -143,13 +141,7 @@ export class DataStorage {
   }
 
   private __getModelData(model: PureModel): IDataStorage {
-    return this.modelData.get(model) || this.initModel(model);
-  }
-
-  // For testing purposes only
-  private clear() {
-    this.modelData = new WeakMap<PureModel, IDataStorage>();
-    this.modelClassData = new WeakMap<typeof PureModel, IModelClassData>();
+    return model[DATX_KEY] || this.initModel(model);
   }
 }
 
