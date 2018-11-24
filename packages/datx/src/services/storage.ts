@@ -6,7 +6,6 @@ import {error} from '../helpers/format';
 import {reducePrototypeChain} from '../helpers/selectors';
 import {IDataStorage} from '../interfaces/IDataStorage';
 import {IReferenceOptions} from '../interfaces/IReferenceOptions';
-import {IType} from '../interfaces/IType';
 import {PureModel} from '../PureModel';
 
 interface IModelClassData {
@@ -17,10 +16,18 @@ interface IModelClassData {
 
 const DATX_KEY = Symbol.for('datx metadata');
 
+function setMeta(model, value) {
+  Object.defineProperty(model, DATX_KEY, {
+    enumerable: false,
+    value,
+    writable: false,
+  });
+}
+
 export class DataStorage {
   public initModel(model: PureModel) {
     const modelData = observable({data: {}, meta: {}});
-    model[DATX_KEY] = modelData;
+    setMeta(model, modelData);
 
     return modelData;
   }
@@ -77,7 +84,7 @@ export class DataStorage {
         meta: {},
         references: {},
       };
-      model[DATX_KEY] = data;
+      setMeta(model, data);
     }
     Object.assign(data.meta, {[key]: value});
   }
@@ -93,11 +100,11 @@ export class DataStorage {
     if (data) {
       Object.assign(data.data, {[key]: value});
     } else {
-      model[DATX_KEY] = {
+      setMeta(model, {
         data: {[key]: value},
         meta: {},
         references: {},
-      };
+      });
     }
   }
 
@@ -118,11 +125,11 @@ export class DataStorage {
     if (data) {
       Object.assign(data.references, {[key]: options});
     } else {
-      model[DATX_KEY] = {
+      setMeta(model, {
         data: {},
         meta: {},
         references: {[key]: options},
-      };
+      });
     }
   }
 

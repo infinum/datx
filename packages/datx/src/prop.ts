@@ -3,6 +3,10 @@ import {IType} from './interfaces/IType';
 import {PureModel} from './PureModel';
 import {storage} from './services/storage';
 
+function getClass<T extends PureModel>(obj: T): typeof PureModel {
+  return (typeof obj === 'function' ? obj : obj.constructor) as typeof PureModel;
+}
+
 /**
  * Set a model property as tracked
  *
@@ -12,7 +16,7 @@ import {storage} from './services/storage';
  * @returns {void}
  */
 function propFn<T extends PureModel>(obj: T, key: string): void {
-  storage.addModelDefaultField(obj.constructor as typeof PureModel, key);
+  storage.addModelDefaultField(getClass(obj), key);
 }
 
 // tslint:disable-next-line:no-default-export
@@ -25,7 +29,7 @@ export default Object.assign(propFn, {
    */
   defaultValue(value: any): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string) => {
-      storage.addModelDefaultField(obj.constructor as typeof PureModel, key, value);
+      storage.addModelDefaultField(getClass(obj), key, value);
     };
   },
 
@@ -37,7 +41,7 @@ export default Object.assign(propFn, {
    */
   toOne(refModel: typeof PureModel|IType): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string) => {
-      storage.addModelClassReference(obj.constructor as typeof PureModel, key, {
+      storage.addModelClassReference(getClass(obj), key, {
         model: refModel,
         type: ReferenceType.TO_ONE,
       });
@@ -53,7 +57,7 @@ export default Object.assign(propFn, {
    */
   toMany(refModel: typeof PureModel|IType, property?: string): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string) => {
-      storage.addModelClassReference(obj.constructor as typeof PureModel, key, {
+      storage.addModelClassReference(getClass(obj), key, {
         model: refModel,
         property,
         type: ReferenceType.TO_MANY,
@@ -69,7 +73,7 @@ export default Object.assign(propFn, {
    */
   toOneOrMany(refModel: typeof PureModel|IType): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string) => {
-      storage.addModelClassReference(obj.constructor as typeof PureModel, key, {
+      storage.addModelClassReference(getClass(obj), key, {
         model: refModel,
         type: ReferenceType.TO_ONE_OR_MANY,
       });
@@ -84,8 +88,8 @@ export default Object.assign(propFn, {
    * @returns {void}
    */
   identifier<T extends PureModel>(obj: T, key: string): void {
-    storage.addModelDefaultField(obj.constructor as typeof PureModel, key);
-    storage.setModelClassMetaKey(obj.constructor as typeof PureModel, 'id', key);
+    storage.addModelDefaultField(getClass(obj), key);
+    storage.setModelClassMetaKey(getClass(obj), 'id', key);
   },
 
   /**
@@ -96,7 +100,7 @@ export default Object.assign(propFn, {
    * @returns {void}
    */
   type<T extends PureModel>(obj: T, key: string): void {
-    storage.addModelDefaultField(obj.constructor as typeof PureModel, key);
-    storage.setModelClassMetaKey(obj.constructor as typeof PureModel, 'type', key);
+    storage.addModelDefaultField(getClass(obj), key);
+    storage.setModelClassMetaKey(getClass(obj), 'type', key);
   },
 });

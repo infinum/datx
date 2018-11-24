@@ -30,12 +30,15 @@ describe('Model', () => {
       class Foo extends PureModel {
         @prop public foo!: number;
         @prop public bar!: number;
-        @prop public baz!: number;
+        public baz!: number;
       }
+
+      prop(Foo, 'baz');
 
       const foo1 = new Foo({foo: 1, bar: 2});
 
       expect(isComputedProp(foo1, 'foo')).toBe(true);
+      expect(isComputedProp(foo1, 'baz')).toBe(true);
 
       expect(foo1.foo).toBe(1);
       expect(foo1.bar).toBe(2);
