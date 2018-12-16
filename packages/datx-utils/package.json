@@ -26,7 +26,7 @@
     "@types/node": "^10.11.3",
     "jest": "^23.6.0",
     "mobx": "^5.5.0",
-    "rollup": "^0.67.0",
+    "rollup": "^0.68.0",
     "rollup-plugin-typescript2": "^0.18.0",
     "rollup-plugin-uglify": "^6.0.0",
     "ts-jest": "^23.10.2",
