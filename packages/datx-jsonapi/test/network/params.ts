@@ -12,6 +12,8 @@ describe('params', () => {
     config.fetchReference = fetch;
     // tslint:disable-next-line:no-http-string
     config.baseUrl = 'http://example.com/';
+    config.getPaginationParams = undefined;
+    config.pageInfoParser = undefined;
     clearAllCache();
   });
 

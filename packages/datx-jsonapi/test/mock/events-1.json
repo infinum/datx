@@ -52,6 +52,12 @@
       "meta": {
         "foo": "bar"
       }
+    },
+    "last": {
+      "href": "http://example.com/event?page[number]=2&page[size]=4",
+      "meta": {
+        "foo": "bar"
+      }
     }
   }
 }

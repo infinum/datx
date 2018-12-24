@@ -1,9 +1,10 @@
 import {getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId, View} from 'datx';
 import {assignComputed, IDictionary} from 'datx-utils';
-import {action, extendObservable, IComputedValue} from 'mobx';
+import {action, computed, IComputedValue, isObservableArray} from 'mobx';
 
 import {IHeaders} from './interfaces/IHeaders';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
+import {IPageInfo} from './interfaces/IPageInfo';
 import {IRawResponse} from './interfaces/IRawResponse';
 import {IRequestOptions} from './interfaces/IRequestOptions';
 import {IResponseHeaders} from './interfaces/IResponseHeaders';
@@ -12,7 +13,7 @@ import {IError, IJsonApiObject, ILink} from './interfaces/JsonApi';
 import {GenericModel} from './GenericModel';
 import {flattenModel} from './helpers/model';
 import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
-import {fetchLink} from './NetworkUtils';
+import {config, fetchLink} from './NetworkUtils';
 
 export class Response<T extends IJsonapiModel> {
   /**
@@ -197,6 +198,14 @@ export class Response<T extends IJsonapiModel> {
       Object.keys(this.links).forEach((link: string) => {
         assignComputed(this, link, () => this.__fetchLink(link));
       });
+
+      if (this.pageInfo) {
+        ['first', 'last', 'prev', 'next'].forEach((link: string) => {
+          if (!(link in this)) {
+            assignComputed(this, link, () => this.__fetchLink(link));
+          }
+        });
+      }
     }
 
     Object.freeze(this);
@@ -243,6 +252,10 @@ export class Response<T extends IJsonapiModel> {
     return new Response(this.__response, this.__collection, this.__options, data);
   }
 
+  @computed public get pageInfo(): IPageInfo | null {
+    return config.pageInfoParser ? config.pageInfoParser(this) : null;
+  }
+
   /**
    * Function called when a link is being fetched. The returned value is cached
    *
@@ -252,7 +265,7 @@ export class Response<T extends IJsonapiModel> {
    *
    * @memberOf Response
    */
-  private __fetchLink(name) {
+  private __fetchLink(name: string): Promise<Response<T>> {
     if (!this.__cache[name]) {
       const link: ILink|null = (this.links && name in this.links) ? this.links[name] : null;
 
@@ -260,6 +273,33 @@ export class Response<T extends IJsonapiModel> {
         this.__cache[name] = fetchLink<T>(
           link, this.__collection, this.requestHeaders, this.__options, this.views,
         );
+      } else if (this.__collection && this.pageInfo) {
+        if ((this.data instanceof Array || isObservableArray(this.data)) && this.data.length) {
+          const type = getModelType(this.data[0]);
+          const info = this.pageInfo;
+          if (info.currentPage === undefined || info.totalPages === undefined) {
+            throw new Error('Not enough info in `pageInfo`');
+          }
+          let getPage = info.currentPage;
+          if (name === 'first') {
+            getPage = 1;
+          } else if (name === 'last') {
+            getPage = info.totalPages;
+          } else if (name === 'prev') {
+            getPage--;
+            if (getPage < 1) {
+              return fetchLink();
+            }
+          } else if (name === 'next') {
+            getPage++;
+            if (getPage > info.totalPages) {
+              return fetchLink();
+            }
+          }
+          this.__cache[name] = this.__collection.fetchPage(type, getPage, info.pageSize, this.__options);
+        } else {
+          throw new Error('Can\'t determine the response type');
+        }
       }
     }
 

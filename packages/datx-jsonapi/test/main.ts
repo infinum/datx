@@ -9,6 +9,7 @@ import './network/basics';
 import './network/caching';
 import './network/error-handling';
 import './network/headers';
+import './network/pagination';
 import './network/params';
 import './network/updates';
 

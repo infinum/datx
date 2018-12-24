@@ -25,5 +25,6 @@ export {ICollectionFetchOpts} from './interfaces/ICollectionFetchOpts';
 export {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 export {IJsonapiModel} from './interfaces/IJsonapiModel';
 export {IJsonapiView} from './interfaces/IJsonapiView';
+export {IPageInfo} from './interfaces/IPageInfo';
 export {IRawResponse} from './interfaces/IRawResponse';
 export {IRequestOptions} from './interfaces/IRequestOptions';

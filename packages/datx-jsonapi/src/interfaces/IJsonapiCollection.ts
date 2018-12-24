@@ -34,6 +34,13 @@ export interface IJsonapiCollection extends PureCollection {
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
+  fetchPage<T extends IJsonapiModel = IJsonapiModel>(
+    type: IType|IModelConstructor<T>,
+    pageNumber?: number,
+    pageSize?: number,
+    options?: IRequestOptions,
+  ): Promise<Response<T>>;
+
   request<T extends IJsonapiModel = IJsonapiModel>(
     url: string,
     method?: string,

@@ -18,6 +18,8 @@ describe('headers', () => {
         'content-type': 'application/vnd.api+json',
       },
     };
+    config.getPaginationParams = undefined;
+    config.pageInfoParser = undefined;
     clearAllCache();
   });
 

@@ -10,6 +10,7 @@ import {ICollectionFetchOpts} from './interfaces/ICollectionFetchOpts';
 import {IHeaders} from './interfaces/IHeaders';
 import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
+import {IPageInfo} from './interfaces/IPageInfo';
 import {IRawResponse} from './interfaces/IRawResponse';
 import {IRequestOptions} from './interfaces/IRequestOptions';
 import {IResponseHeaders} from './interfaces/IResponseHeaders';
@@ -40,9 +41,12 @@ export interface IConfigType {
   defaultFetchOptions: IDictionary;
   fetchReference: typeof fetch;
   paramArrayType: ParamArrayType;
+  defaultPerPage: number;
   onError(IResponseObject): IResponseObject;
   transformRequest(options: ICollectionFetchOpts): ICollectionFetchOpts;
   transformResponse(response: IRawResponse): IRawResponse;
+  pageInfoParser?<T extends IJsonapiModel>(response?: LibResponse<T>): IPageInfo | null;
+  getPaginationParams?(pageNumber: number, pageSize: number): Array<{key: string; value: string} | string>;
 }
 
 export const config: IConfigType = {
@@ -59,7 +63,10 @@ export const config: IConfigType = {
     },
   },
 
+  defaultPerPage: 10,
+
   // Reference of the fetch method that should be used
+  // @ts-ignore
   fetchReference: isBrowser && 'fetch' in window && typeof window.fetch === 'function' && window.fetch.bind(window),
 
   // Determines how will the request param arrays be stringified
@@ -316,7 +323,7 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
  * @returns {Promise<LibResponse>} Response promise
  */
 export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
-  link: ILink,
+  link?: ILink,
   collection?: IJsonapiCollection,
   requestHeaders?: IDictionary<string>,
   options?: IRequestOptions,

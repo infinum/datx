@@ -29,6 +29,8 @@ describe('Network basics', () => {
     config.baseUrl = 'http://example.com/';
     config.transformRequest = baseTransformRequest;
     config.transformResponse = baseTransformResponse;
+    config.getPaginationParams = undefined;
+    config.pageInfoParser = undefined;
     clearAllCache();
   });
 

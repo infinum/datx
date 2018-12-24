@@ -91,6 +91,28 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
         .then((res) => this.__handleErrors<T>(res));
     }
 
+    public fetchPage<T extends IJsonapiModel = IJsonapiModel>(
+      type: IType|IModelConstructor<T>,
+      pageNumber: number = 1,
+      pageSize: number = config.defaultPerPage,
+      options?: IRequestOptions,
+    ): Promise<Response<T>> {
+      const modelType = getModelType(type);
+      if (!config.getPaginationParams) {
+        throw new Error('Implement `config.getPaginationParams` before using `fetchPage`');
+      }
+      const pagination = config.getPaginationParams(pageNumber, pageSize);
+
+      const query = this.__prepareQuery(modelType, undefined, undefined, {
+        ...options,
+        params: ([] as Array<string | {key: string; value: string}>)
+          .concat((options && options.params) || [], pagination),
+      });
+
+      return read<T>(query.url, this, query.headers, options)
+        .then((res) => this.__handleErrors<T>(res));
+    }
+
     public request<T extends IJsonapiModel = IJsonapiModel>(
       url: string,
       method: string = 'GET',
@@ -205,18 +227,15 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       });
     }
 
-    private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T) {
+    private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T): Array<T>;
+    private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => void): void;
+    private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T | void) {
       mapItems((body && body.included) || [], fn);
 
       return mapItems((body && body.data) || [], fn);
     }
 
-    private __prepareQuery(
-      type: IType,
-      id?: number|string,
-      data?: IRequest,
-      options?: IRequestOptions,
-    ): {
+    private __prepareQuery(type: IType, id?: number|string, data?: IRequest, options?: IRequestOptions): {
       url: string;
       data?: object;
       headers: IHeaders;
@@ -280,7 +299,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       });
     }
 
-    private __prefixUrl(url) {
+    private __prefixUrl(url: string) {
       if (URL_REGEX.test(url)) {
         return url;
       }
