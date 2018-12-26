@@ -200,7 +200,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
     let rel: IDefinition|Array<IDefinition>|undefined;
     if (refIds instanceof Array || isObservableArray(refIds)) {
       rel = (refIds as Array<IIdentifier>).map((id, index) => {
-        const type = getModelType(model[key][index] ? model[key][index] : refs[key].model).toString();
+        const type = getModelType(model[key] && model[key][index] || refs[key].model).toString();
 
         return {id, type};
       });
