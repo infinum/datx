@@ -16,4 +16,10 @@ export interface IJsonapiView extends View {
   fetchAll<T extends IJsonapiModel = IJsonapiModel>(
     options?: IRequestOptions,
   ): Promise<Response<T>>;
+
+  fetchPage<T extends IJsonapiModel = IJsonapiModel>(
+    pageNumber?: number,
+    pageSize?: number,
+    options?: IRequestOptions,
+  ): Promise<Response<T>>;
 }

@@ -64,6 +64,16 @@ export function decorateView<U>(BaseClass: typeof View) {
         .then(this.__addFromResponse.bind(this)) as Promise<Response<M>>;
     }
 
+    public fetchPage(
+      pageNumber?: number,
+      pageSize?: number,
+      options?: IRequestOptions,
+    ): Promise<Response<M>> {
+      return this.__collection
+        .fetchPage(this.modelType, pageNumber, pageSize, options)
+        .then(this.__addFromResponse.bind(this)) as Promise<Response<M>>;
+    }
+
     private __addFromResponse(response: Response<M>) {
       if (response.data) {
         this.add(response.data);
