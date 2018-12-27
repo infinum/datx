@@ -6,6 +6,8 @@ import {IRequestOptions} from './IRequestOptions';
 import {IResponse} from './JsonApi';
 
 export interface IJsonapiView extends View {
+  latestResponse?: Response<IJsonapiModel>;
+
   sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T | Array<T> | null;
 
   fetch<T extends IJsonapiModel = IJsonapiModel>(

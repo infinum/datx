@@ -12,6 +12,7 @@ import {
   PureModel,
   ReferenceType,
   updateModel,
+  View,
 } from 'datx';
 import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 import {action} from 'mobx';
@@ -65,11 +66,12 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       type: IType|IModelConstructor<T>,
       id: number|string,
       options?: IRequestOptions,
+      view?: View,
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, id, undefined, options);
 
-      return read<T>(query.url, this, query.headers, options)
+      return read<T>(query.url, this, query.headers, options, view)
         .then((res) => this.__handleErrors<T>(res));
     }
 
@@ -83,11 +85,12 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     public fetchAll<T extends IJsonapiModel = IJsonapiModel>(
       type: IType|IModelConstructor<T>,
       options?: IRequestOptions,
+      view?: View,
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, undefined, undefined, options);
 
-      return read<T>(query.url, this, query.headers, options)
+      return read<T>(query.url, this, query.headers, options, view)
         .then((res) => this.__handleErrors<T>(res));
     }
 
@@ -96,6 +99,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       pageNumber: number = 1,
       pageSize: number = config.defaultPerPage,
       options?: IRequestOptions,
+      view?: View,
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       if (!config.getPaginationParams) {
@@ -109,7 +113,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
           .concat((options && options.params) || [], pagination),
       });
 
-      return read<T>(query.url, this, query.headers, options)
+      return read<T>(query.url, this, query.headers, options, view)
         .then((res) => this.__handleErrors<T>(res));
     }
 
@@ -118,10 +122,11 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       method: string = 'GET',
       data?: object,
       options?: IRequestOptions,
+      view?: View,
     ): Promise<Response<T>> {
       const query = this.__buildUrl(url, data, options);
 
-      return libFetch<T>({url: query.url, options, data, method, collection: this});
+      return libFetch<T>({url: query.url, options, data, method, collection: this, view});
     }
 
     public remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequestOptions);

@@ -1,17 +1,16 @@
 import {IIdentifier, IModelConstructor, IType, IViewConstructor, PureModel, View} from 'datx';
-import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 
 import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
 import {IJsonapiView} from './interfaces/IJsonapiView';
 import {IRequestOptions} from './interfaces/IRequestOptions';
-import {IDefinition, IRelationship, IRequest, IResponse} from './interfaces/JsonApi';
+import {IResponse} from './interfaces/JsonApi';
 import {Response} from './Response';
-
-declare var window: object|undefined;
 
 export function decorateView<U>(BaseClass: typeof View) {
   class JsonapiView<M extends IJsonapiModel = IJsonapiModel> extends BaseClass {
+    public latestResponse?: Response<IJsonapiModel>;
+
     protected __collection: IJsonapiCollection;
 
     constructor(
@@ -41,13 +40,8 @@ export function decorateView<U>(BaseClass: typeof View) {
      * @param {IRequestOptions} [options] Server options
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
-    public fetch(
-      id: number|string,
-      options?: IRequestOptions,
-    ): Promise<Response<M>> {
-      return this.__collection
-        .fetch(this.modelType, id, options)
-        .then(this.__addFromResponse.bind(this)) as Promise<Response<M>>;
+    public fetch(id: number|string, options?: IRequestOptions): Promise<Response<M>> {
+      return this.__collection.fetch(this.modelType, id, options, this);
     }
 
     /**
@@ -56,31 +50,12 @@ export function decorateView<U>(BaseClass: typeof View) {
      * @param {IRequestOptions} [options] Server options
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
-    public fetchAll(
-      options?: IRequestOptions,
-    ): Promise<Response<M>> {
-      return this.__collection
-        .fetchAll(this.modelType, options)
-        .then(this.__addFromResponse.bind(this)) as Promise<Response<M>>;
+    public fetchAll(options?: IRequestOptions): Promise<Response<M>> {
+      return this.__collection.fetchAll(this.modelType, options, this);
     }
 
-    public fetchPage(
-      pageNumber?: number,
-      pageSize?: number,
-      options?: IRequestOptions,
-    ): Promise<Response<M>> {
-      return this.__collection
-        .fetchPage(this.modelType, pageNumber, pageSize, options)
-        .then(this.__addFromResponse.bind(this)) as Promise<Response<M>>;
-    }
-
-    private __addFromResponse(response: Response<M>) {
-      if (response.data) {
-        this.add(response.data);
-      }
-      response.views.push(this);
-
-      return response;
+    public fetchPage(pageNumber?: number, pageSize?: number, options?: IRequestOptions): Promise<Response<M>> {
+      return this.__collection.fetchPage(this.modelType, pageNumber, pageSize, options, this);
     }
   }
 

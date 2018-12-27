@@ -4,6 +4,7 @@ import {action, computed, IComputedValue, isObservableArray} from 'mobx';
 
 import {IHeaders} from './interfaces/IHeaders';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
+import {IJsonapiView} from './interfaces/IJsonapiView';
 import {IPageInfo} from './interfaces/IPageInfo';
 import {IRawResponse} from './interfaces/IRawResponse';
 import {IRequestOptions} from './interfaces/IRequestOptions';
@@ -112,7 +113,7 @@ export class Response<T extends IJsonapiModel> {
    */
   public status?: number;
 
-  public views: Array<View> = [];
+  public view?: View;
 
   /**
    * Related Store
@@ -155,14 +156,14 @@ export class Response<T extends IJsonapiModel> {
     collection?: IJsonapiCollection,
     options?: IRequestOptions,
     overrideData?: T|Array<T>,
-    views?: Array<View>,
+    view?: View,
   ) {
     this.__collection = collection;
     this.__options = options;
     this.__response = response;
     this.status = response.status;
-    if (views) {
-      this.views = views;
+    if (view) {
+      this.view = view;
     }
 
     if (collection) {
@@ -180,11 +181,10 @@ export class Response<T extends IJsonapiModel> {
       }
     }
 
-    this.views.forEach((view) => {
-      if (this.data) {
-        view.add(this.data);
-      }
-    });
+    if (this.view && this.data) {
+      (this.view as IJsonapiView).latestResponse = this;
+      this.view.add(this.data);
+    }
 
     this.meta = (response.data && response.data.meta) || {};
     this.links = (response.data && response.data.links) || {};
@@ -233,7 +233,7 @@ export class Response<T extends IJsonapiModel> {
     const newId = getModelId(record);
     const type = getModelType(record);
 
-    const viewIndexes = this.views.map((view) => view.list.indexOf(record));
+    const viewIndex = this.view ? this.view.list.indexOf(record) : -1;
 
     if (this.__collection) {
       this.__collection.remove(type, newId);
@@ -243,13 +243,11 @@ export class Response<T extends IJsonapiModel> {
     updateModel(data, modelToJSON(record));
     updateModelId(data, newId);
 
-    this.views.forEach((view, index) => {
-      if (viewIndexes[index] !== -1) {
-        view.list[viewIndexes[index]] = data;
-      }
-    });
+    if (this.view && viewIndex !== -1) {
+      this.view.list[viewIndex] = data;
+    }
 
-    return new Response(this.__response, this.__collection, this.__options, data);
+    return new Response(this.__response, this.__collection, this.__options, data, this.view);
   }
 
   @computed public get pageInfo(): IPageInfo | null {
@@ -271,9 +269,9 @@ export class Response<T extends IJsonapiModel> {
 
       if (link) {
         this.__cache[name] = fetchLink<T>(
-          link, this.__collection, this.requestHeaders, this.__options, this.views,
+          link, this.__collection, this.requestHeaders, this.__options, this.view,
         );
-      } else if (this.__collection && this.pageInfo) {
+      } else if (((this.view && 'fetchPage' in this.view) || this.__collection) && this.pageInfo) {
         if ((this.data instanceof Array || isObservableArray(this.data)) && this.data.length) {
           const type = getModelType(this.data[0]);
           const info = this.pageInfo;
@@ -296,7 +294,11 @@ export class Response<T extends IJsonapiModel> {
               return fetchLink();
             }
           }
-          this.__cache[name] = this.__collection.fetchPage(type, getPage, info.pageSize, this.__options);
+          if (this.view && 'fetchPage' in this.view) {
+            this.__cache[name] = (this.view as IJsonapiView).fetchPage(getPage, info.pageSize, this.__options);
+          } else if (this.__collection) {
+            this.__cache[name] = this.__collection.fetchPage(type, getPage, info.pageSize, this.__options);
+          }
         } else {
           throw new Error('Can\'t determine the response type');
         }

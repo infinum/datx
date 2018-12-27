@@ -11,5 +11,5 @@ export interface ICollectionFetchOpts {
   method: string;
   collection?: IJsonapiCollection;
   skipCache?: boolean;
-  views?: Array<View>;
+  view?: View;
 }

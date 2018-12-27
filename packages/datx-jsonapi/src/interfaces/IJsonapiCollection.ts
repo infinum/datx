@@ -1,4 +1,4 @@
-import {IIdentifier, IModelConstructor, IType, PureCollection, PureModel} from 'datx';
+import {IIdentifier, IModelConstructor, IType, PureCollection, PureModel, View} from 'datx';
 
 import {Response} from '../Response';
 import {IJsonapiModel} from './IJsonapiModel';
@@ -20,6 +20,7 @@ export interface IJsonapiCollection extends PureCollection {
     type: IType | IModelConstructor<T>,
     id: number | string,
     options?: IRequestOptions,
+    view?: View,
   ): Promise<Response<T>>;
 
   /**
@@ -32,6 +33,7 @@ export interface IJsonapiCollection extends PureCollection {
   fetchAll<T extends IJsonapiModel = IJsonapiModel>(
     type: IType | IModelConstructor<T>,
     options?: IRequestOptions,
+    view?: View,
   ): Promise<Response<T>>;
 
   fetchPage<T extends IJsonapiModel = IJsonapiModel>(
@@ -39,6 +41,7 @@ export interface IJsonapiCollection extends PureCollection {
     pageNumber?: number,
     pageSize?: number,
     options?: IRequestOptions,
+    view?: View,
   ): Promise<Response<T>>;
 
   request<T extends IJsonapiModel = IJsonapiModel>(
@@ -46,6 +49,7 @@ export interface IJsonapiCollection extends PureCollection {
     method?: string,
     data?: object,
     options?: IRequestOptions,
+    view?: View,
   ): Promise<Response<T>>;
 
   remove(type: IType | typeof PureModel, id?: IIdentifier, remote?: boolean | IRequestOptions);

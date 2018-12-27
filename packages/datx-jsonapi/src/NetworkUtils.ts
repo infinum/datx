@@ -162,7 +162,7 @@ function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOp
     data,
     method = 'GET',
     collection,
-    views,
+    view,
   } = config.transformRequest(reqOptions);
 
   const staticCollection = collection && collection.constructor as {cache?: boolean};
@@ -181,7 +181,7 @@ function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOp
     .then((response: IRawResponse) => {
       const collectionResponse = Object.assign(response, {collection});
       const resp = new LibResponse<T>(
-        config.transformResponse(collectionResponse), collection, options, undefined, views,
+        config.transformResponse(collectionResponse), collection, options, undefined, view,
       );
       if (config.cache && isCacheSupported) {
         saveCache(url, resp);
@@ -211,7 +211,7 @@ export function read<T extends IJsonapiModel = IJsonapiModel>(
   collection?: IJsonapiCollection,
   headers?: IHeaders,
   options?: IRequestOptions,
-  views?: Array<View>,
+  view?: View,
 ): Promise<LibResponse<T>> {
   return collectionFetch<T>({
     collection,
@@ -219,7 +219,7 @@ export function read<T extends IJsonapiModel = IJsonapiModel>(
     method: 'GET',
     options: {...options, headers},
     url,
-    views,
+    view,
   });
 }
 
@@ -241,7 +241,7 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
   collection?: IJsonapiCollection,
   headers?: IHeaders,
   options?: IRequestOptions,
-  views?: Array<View>,
+  view?: View,
 ): Promise<LibResponse<T>> {
   return collectionFetch<T>({
     collection,
@@ -249,7 +249,7 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
     method: 'POST',
     options: {...options, headers},
     url,
-    views,
+    view,
   });
 }
 
@@ -271,7 +271,7 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
   collection?: IJsonapiCollection,
   headers?: IHeaders,
   options?: IRequestOptions,
-  views?: Array<View>,
+  view?: View,
 ): Promise<LibResponse<T>> {
   return collectionFetch<T>({
     collection,
@@ -279,7 +279,7 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
     method: 'PATCH',
     options: {...options, headers},
     url,
-    views,
+    view,
   });
 }
 
@@ -299,7 +299,7 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
   collection?: IJsonapiCollection,
   headers?: IHeaders,
   options?: IRequestOptions,
-  views?: Array<View>,
+  view?: View,
 ): Promise<LibResponse<T>> {
   return collectionFetch<T>({
     collection,
@@ -307,7 +307,7 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
     method: 'DELETE',
     options: {...options, headers},
     url,
-    views,
+    view,
   });
 }
 
@@ -327,13 +327,13 @@ export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
   collection?: IJsonapiCollection,
   requestHeaders?: IDictionary<string>,
   options?: IRequestOptions,
-  views?: Array<View>,
+  view?: View,
 ): Promise<LibResponse<T>> {
   if (link) {
     const href: string = typeof link === 'object' ? link.href : link;
 
     if (href) {
-      return read<T>(href, collection, requestHeaders, options, views);
+      return read<T>(href, collection, requestHeaders, options, view);
     }
   }
 

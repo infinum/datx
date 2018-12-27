@@ -1,5 +1,4 @@
 import {getModelType, IType} from 'datx';
-import {IDictionary} from 'datx-utils';
 
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
 import {Response} from './Response';
