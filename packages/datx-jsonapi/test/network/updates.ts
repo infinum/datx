@@ -454,7 +454,9 @@ describe('updates', () => {
       });
 
       const store = new TestStore();
+      store.add({id: '1'}, Event);
       const events = await store.fetch('event', 12345);
+      store.add({id: '2'}, Event);
 
       const record = events.data as Event;
 
@@ -464,9 +466,12 @@ describe('updates', () => {
         url: 'event/12345',
       });
 
-      expect(store.findAll('event').length).toBe(1);
+      expect(store.findAll('event').length).toBe(3);
       await record.destroy();
-      expect(store.findAll('event').length).toBe(0);
+      expect(store.findAll('event').length).toBe(2);
+      const remainingEvents = store.findAll(Event);
+      expect(remainingEvents[0] && remainingEvents[0].meta.id).toBe('1');
+      expect(remainingEvents[1] && remainingEvents[1].meta.id).toBe('2');
     });
 
     it('should remove a record if not in store', async () => {

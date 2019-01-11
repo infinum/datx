@@ -12,6 +12,7 @@ import {
   PureModel,
   ReferenceType,
   updateModel,
+  getModelId,
 } from 'datx';
 import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 import {action} from 'mobx';
@@ -110,9 +111,20 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       remote?: boolean|IRequestOptions,
     ) {
       const remove = (typeof id === 'boolean' || typeof id === 'object') ? id : remote;
-      const modelId = (typeof id !== 'boolean' && typeof id !== 'object') ? id : undefined;
+      let modelId: number | string | undefined;
+      if (typeof id === 'string' || typeof id === 'number') {
+        modelId = id;
+      } else if (typeof id === 'boolean' || obj instanceof PureModel) {
+        modelId = getModelId(obj);
+      }
+
       const type = getModelType(obj);
       const model = this.find(type, modelId);
+
+      if (model && modelId !== undefined && getModelId(model) !== modelId) {
+        // The model is not in the collection and we shouldn't remove a random one
+        return Promise.resolve();
+      }
 
       if (model && remove) {
         return removeModel(model, typeof remove === 'object' ? remove : undefined);
