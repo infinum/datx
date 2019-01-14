@@ -18,18 +18,16 @@ import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 import {action} from 'mobx';
 
 import {clearAllCache, clearCacheByType} from './cache';
-import {URL_REGEX} from './consts';
-import {ParamArrayType} from './enums/ParamArrayType';
 import {GenericModel} from './GenericModel';
 import {flattenModel, removeModel} from './helpers/model';
-import {getValue, isBrowser} from './helpers/utils';
-import {IFilters} from './interfaces/IFilters';
+import {buildUrl, prepareQuery} from './helpers/url';
+import {isBrowser} from './helpers/utils';
 import {IHeaders} from './interfaces/IHeaders';
 import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
 import {IJsonapiModel} from './interfaces/IJsonapiModel';
 import {IRequestOptions} from './interfaces/IRequestOptions';
 import {IDefinition, IRecord, IRelationship, IRequest, IResponse} from './interfaces/JsonApi';
-import {config, libFetch, read} from './NetworkUtils';
+import {libFetch, read} from './NetworkUtils';
 import {Response} from './Response';
 
 export function decorateCollection(BaseClass: typeof PureCollection) {
@@ -98,7 +96,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       data?: object,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
-      const query = this.__buildUrl(url, data, options);
+      const query = buildUrl(url, data, options);
 
       return libFetch<T>({url: query.url, options, data, method, collection: this});
     }
@@ -217,6 +215,8 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       });
     }
 
+    private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T): T | Array<T>;
+    private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => void): void;
     private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T) {
       mapItems((body && body.included) || [], fn);
 
@@ -233,105 +233,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       data?: object;
       headers: IHeaders;
     } {
-      const staticCollection = this.constructor as typeof PureCollection;
-      const model: PureModel = staticCollection.types.filter((item) => item.type === type)[0];
-      const path: string = model
-        ? (getValue<string>(model['endpoint']) || model['baseUrl'] || getModelType(model))
-        : type;
-
-      const url: string = id ? `${path}/${id}` : `${path}`;
-
-      return this.__buildUrl(url, data, options);
-    }
-
-    private __buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
-      const headers: IDictionary<string> = (options && options.headers) || {};
-
-      const params: Array<string> = [
-        ...this.__prepareFilters((options && options.filter) || {}),
-        ...this.__prepareSort(options && options.sort),
-        ...this.__prepareIncludes(options && options.include),
-        ...this.__prepareFields((options && options.fields) || {}),
-        ...this.__prepareRawParams((options && options.params) || []),
-      ];
-
-      const baseUrl: string = this.__appendParams(this.__prefixUrl(url), params);
-
-      return {data, headers, url: baseUrl};
-    }
-
-    private __prepareFilters(filters: IFilters): Array<string> {
-      return this.__parametrize(filters).map((item) => `filter[${item.key}]=${item.value}`);
-    }
-
-    private __prepareSort(sort?: string|Array<string>): Array<string> {
-      return sort ? [`sort=${sort}`] : [];
-    }
-
-    private __prepareIncludes(include?: string|Array<string>): Array<string> {
-      return include ? [`include=${include}`] : [];
-    }
-
-    private __prepareFields(fields: IDictionary<string|Array<string>>): Array<string> {
-      const list: Array<string> = [];
-
-      Object.keys(fields).forEach((key) => {
-        list.push(`fields[${key}]=${fields[key]}`);
-      });
-
-      return list;
-    }
-
-    private __prepareRawParams(params: Array<{key: string; value: string}|string>): Array<string> {
-      return params.map((param) => {
-        if (typeof param === 'string') {
-          return param;
-        }
-
-        return `${param.key}=${param.value}`;
-      });
-    }
-
-    private __prefixUrl(url) {
-      if (URL_REGEX.test(url)) {
-        return url;
-      }
-
-      return `${config.baseUrl}${url}`;
-    }
-
-    private __appendParams(url: string, params: Array<string>): string {
-      let newUrl = url;
-      if (params.length) {
-        const separator = newUrl.indexOf('?') === -1 ? '?' : '&';
-        newUrl += separator + params.join('&');
-      }
-
-      return newUrl;
-    }
-
-    private __parametrize(params: object, scope: string = '') {
-      const list: Array<{key: string; value: string}> = [];
-
-      Object.keys(params).forEach((key) => {
-        if (params[key] instanceof Array) {
-          if (config.paramArrayType === ParamArrayType.OBJECT_PATH) {
-            list.push(...this.__parametrize(params[key], `${key}.`));
-          } else if (config.paramArrayType === ParamArrayType.COMMA_SEPARATED) {
-            list.push({key: `${scope}${key}`, value: params[key].join(',')});
-          } else if (config.paramArrayType === ParamArrayType.MULTIPLE_PARAMS) {
-            list.push(...params[key].map((param) => ({key: `${scope}${key}`, value: param})));
-          } else if (config.paramArrayType === ParamArrayType.PARAM_ARRAY) {
-            list.push(...params[key].map((param) => ({key: `${scope}${key}][`, value: param})));
-          }
-        } else if (typeof params[key] === 'object') {
-          list.push(...this.__parametrize(params[key], `${key}.`));
-        } else {
-          list.push({key: `${scope}${key}`, value: params[key]});
-        }
-      });
-
-      return list;
+      return prepareQuery(type, id, data, options, this);
     }
   }
 

@@ -99,6 +99,19 @@ describe('params', () => {
     expect(events.data).toHaveLength(4);
   });
 
+  it('should support inclusion of related resources on save', async () => {
+    mockApi({
+      method: 'POST',
+      name: 'event-1',
+      query: {include: 'bar'},
+      url: 'event',
+    });
+
+    const store = new TestStore();
+    const event = store.add({}, Event);
+    await event.save({include: 'bar'});
+  });
+
   it('should support sparse fields', async () => {
     mockApi({
       name: 'events-1',

@@ -38,7 +38,7 @@ export interface IConfigType {
   baseUrl: string;
   cache: boolean;
   defaultFetchOptions: IDictionary;
-  fetchReference: typeof fetch;
+  fetchReference?: typeof fetch;
   paramArrayType: ParamArrayType;
   onError(IResponseObject): IResponseObject;
   transformRequest(options: ICollectionFetchOpts): ICollectionFetchOpts;
@@ -60,7 +60,8 @@ export const config: IConfigType = {
   },
 
   // Reference of the fetch method that should be used
-  fetchReference: isBrowser && 'fetch' in window && typeof window.fetch === 'function' && window.fetch.bind(window),
+  fetchReference: isBrowser && 'fetch' in window && typeof window.fetch === 'function' && window.fetch.bind(window)
+    || undefined,
 
   // Determines how will the request param arrays be stringified
   paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
@@ -99,7 +100,10 @@ export const config: IConfigType = {
           method,
         });
 
-        return this.fetchReference(url, options);
+        if (this.fetchReference) {
+          return this.fetchReference(url, options);
+        }
+        throw new Error('Fetch reference needs to be defined before using the network');
       })
       .then((response: Response) => {
         status = response.status;

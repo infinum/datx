@@ -29,9 +29,9 @@ import {IJsonapiCollection} from '../interfaces/IJsonapiCollection';
 import {IJsonapiModel} from '../interfaces/IJsonapiModel';
 import {IRequestOptions} from '../interfaces/IRequestOptions';
 import {IDefinition, ILink, IRecord, IRelationship} from '../interfaces/JsonApi';
-import {config, create, fetchLink, handleResponse, remove, update} from '../NetworkUtils';
+import {create, fetchLink, handleResponse, remove, update} from '../NetworkUtils';
 import {Response} from '../Response';
-import {getValue} from './utils';
+import {prepareQuery} from './url';
 
 export function flattenModel(classRefs): null;
 export function flattenModel(classRefs, data?: IRecord): IRawModel;
@@ -223,20 +223,30 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
   return data;
 }
 
-function getModelEndpointUrl(model: PureModel): string {
-  const staticModel = model.constructor;
-  const links: IDictionary<ILink> = getModelLinks(model);
-  if (links && links.self) {
-    const self: ILink = links.self;
+function getModelEndpointUrl(model: IJsonapiModel, options?: IRequestOptions): string {
+  // const staticModel = model.constructor;
+  // const links: IDictionary<ILink> = getModelLinks(model);
+  // if (links && links.self) {
+  //   const self: ILink = links.self;
 
-    return typeof self === 'string' ? self : self.href;
-  }
+  //   return typeof self === 'string' ? self : self.href;
+  // }
 
-  const url = getValue<string>(staticModel['endpoint']) || getModelType(model);
+  // const url = getValue<string>(staticModel['endpoint']) || getModelType(model);
 
-  return isModelPersisted(model)
-    ? `${config.baseUrl}${url}/${getModelId(model)}`
-    : `${config.baseUrl}${url}`;
+  // return isModelPersisted(model)
+  //   ? `${config.baseUrl}${url}/${getModelId(model)}`
+  //   : `${config.baseUrl}${url}`;
+  const queryData = prepareQuery(
+    getModelType(model),
+    isModelPersisted(model) ? getModelId(model) : undefined,
+    undefined,
+    options,
+    undefined,
+    model,
+  );
+
+  return queryData.url;
 }
 
 export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Promise<IJsonapiModel> {
@@ -244,7 +254,7 @@ export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Prom
 
   const data: IRecord = modelToJsonApi(model);
   const requestMethod = isModelPersisted(model) ? update : create;
-  const url = getModelEndpointUrl(model);
+  const url = getModelEndpointUrl(model, options);
 
   return requestMethod(url, {data}, collection, options && options.headers)
     .then(handleResponse(model))
