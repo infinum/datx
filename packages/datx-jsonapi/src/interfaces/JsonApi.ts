@@ -29,7 +29,7 @@ interface IError {
 }
 
 interface IRelationship {
-  data?: IDefinition | Array<IDefinition>;
+  data?: IDefinition | Array<IDefinition> | null;
   links?: IDictionary<ILink>;
   meta?: IDictionary;
 }

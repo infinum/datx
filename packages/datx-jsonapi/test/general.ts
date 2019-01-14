@@ -639,7 +639,7 @@ describe('General', () => {
     expect(data.relationships).not.toBeUndefined();
     if (data.relationships) {
       expect(data.relationships.images.data).toHaveLength(0);
-      expect(data.relationships.image.data).toBeUndefined();
+      expect(data.relationships.image.data).toBeNull();
     }
   });
 
@@ -651,7 +651,7 @@ describe('General', () => {
     expect(data.attributes && 'id' in data.attributes).toBe(false);
     if (data.relationships) {
       expect(data.relationships.images.data).toHaveLength(0);
-      expect(data.relationships.image.data).toBeUndefined();
+      expect(data.relationships.image.data).toBeNull();
     }
   });
 });

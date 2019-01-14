@@ -30,7 +30,7 @@ export interface IMockArgs {
   headers?: nock.HttpHeaders;
   reqheaders?: IDictionary;
   status?: number;
-  responseFn?(): void;
+  responseFn?(...args: Array<any>): void;
 }
 
 /**
@@ -74,11 +74,11 @@ export default function mockApi({
     mock = mock.query(query);
   }
 
-  return mock.reply(status, () => {
+  return mock.reply(status, (...args: Array<any>) => {
     if (responseFn && isFunction(responseFn)) {
-      responseFn();
-
-      return;
+      if (responseFn(...args) !== undefined) {
+        return;
+      }
     }
 
     return [status, getMockStream(name || url)];

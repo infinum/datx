@@ -209,7 +209,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
       rel = refIds ? {id: refIds, type} : undefined;
     }
 
-    data.relationships[key] = {data: rel};
+    data.relationships[key] = {data: rel || null};
     if (data.attributes) {
       delete data.attributes[key];
     }

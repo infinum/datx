@@ -1,5 +1,6 @@
 import {
   getModelClassRefs,
+  getModelId,
   getModelMetaKey,
   getModelType,
   ICollectionConstructor,
@@ -12,7 +13,6 @@ import {
   PureModel,
   ReferenceType,
   updateModel,
-  getModelId,
 } from 'datx';
 import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 import {action} from 'mobx';

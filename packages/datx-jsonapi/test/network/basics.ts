@@ -71,6 +71,10 @@ describe('Network basics', () => {
       method: 'POST',
       name: 'image-1',
       url: 'image',
+      responseFn(_path: string, req: string) {
+        const request = JSON.parse(req);
+        expect(request['data'].relationships.event.data).toBeNull();
+      },
     });
     expect(image1.id).toBeLessThan(0); // Temporary id, negative autoincrement
     await image1.save(); // Load the image-1.json data
@@ -109,7 +113,7 @@ describe('Network basics', () => {
       expect(data.relationships).not.toBeUndefined();
       if (data.relationships) {
         expect(data.relationships.images.data).toHaveLength(1);
-        expect(data.relationships.image.data).toBeUndefined();
+        expect(data.relationships.image.data).toBeNull();
       }
     }
   });
