@@ -104,6 +104,8 @@ export function getOriginalModel<T extends PureModel = PureModel>(model: T): T {
   throw error(NOT_A_CLONE);
 }
 
+const READ_ONLY_META = ['fields', 'id', 'refs', 'type'];
+
 /**
  * Bulk update the model data
  *
@@ -122,6 +124,13 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary): T
   keys.forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
       assignModel(model, key, data[key]);
+    } else if (key === META_FIELD) {
+      const metaKeys = Object.keys(data[key] || {});
+      metaKeys.forEach((metaKey) => {
+        if (!READ_ONLY_META.includes(metaKey)) {
+          setModelMetaKey(model, metaKey, data[key][metaKey]);
+        }
+      });
     }
   });
   endAction(model);
