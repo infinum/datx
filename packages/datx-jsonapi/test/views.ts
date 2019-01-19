@@ -22,8 +22,6 @@ import { Event, Image, Photo, TestStore, User } from './utils/setup';
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;
 
-// tslint:disable:no-string-literal
-
 describe('Views', () => {
   it('should sync an event', () => {
     const store = new TestStore();
@@ -47,8 +45,7 @@ describe('Views', () => {
   describe('Network basics', () => {
     beforeEach(() => {
       config.fetchReference = fetch;
-      // tslint:disable-next-line:no-http-string
-      config.baseUrl = 'http://example.com/';
+      config.baseUrl = 'https://example.com/';
       config.transformRequest = baseTransformRequest;
       config.transformResponse = baseTransformResponse;
       clearAllCache();

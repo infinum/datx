@@ -10,7 +10,7 @@
     }
   },
   "links":{
-    "self":"http://localhost:5000/organizations?include=units"
+    "self":"https://localhost:5000/organizations?include=units"
   },
   "data":[
     {
@@ -20,7 +20,7 @@
         "name":"Organization A"
       },
       "links":{
-        "self":"http://localhost:5000/organizations/ORG-A"
+        "self":"https://localhost:5000/organizations/ORG-A"
       },
       "relationships":{
         "units":{
@@ -32,8 +32,8 @@
             "readOnly":true
           },
           "links":{
-            "self":"http://localhost:5000/units/relationships/?organization=ORG-A",
-            "related":"http://localhost:5000/units/?filter[organization]=ORG-A"
+            "self":"https://localhost:5000/units/relationships/?organization=ORG-A",
+            "related":"https://localhost:5000/units/?filter[organization]=ORG-A"
           },
           "data": []
         }
@@ -48,7 +48,7 @@
         "name":"Unit 01"
       },
       "links":{
-        "self":"http://localhost:5000/units/ORG-A-01"
+        "self":"https://localhost:5000/units/ORG-A-01"
       },
       "relationships":{
         "organization":{
@@ -57,8 +57,8 @@
             "readOnly":false
           },
           "links":{
-            "self":"http://localhost:5000/units/ORG-A-01/relationships/organization",
-            "related":"http://localhost:5000/units/ORG-A-01/organization"
+            "self":"https://localhost:5000/units/ORG-A-01/relationships/organization",
+            "related":"https://localhost:5000/units/ORG-A-01/organization"
           },
           "data":{
             "type":"organizations",
@@ -74,8 +74,8 @@
             "readOnly":true
           },
           "links":{
-            "self":"http://localhost:5000/orders/relationships/?unit=ORG-A-01",
-            "related":"http://localhost:5000/orders/?filter[unit]=ORG-A-01"
+            "self":"https://localhost:5000/orders/relationships/?unit=ORG-A-01",
+            "related":"https://localhost:5000/orders/?filter[unit]=ORG-A-01"
           }
         }
       }
@@ -87,7 +87,7 @@
         "name":"Unit 02"
       },
       "links":{
-        "self":"http://localhost:5000/units/ORG-A-02"
+        "self":"https://localhost:5000/units/ORG-A-02"
       },
       "relationships":{
         "organization":{
@@ -96,8 +96,8 @@
             "readOnly":false
           },
           "links":{
-            "self":"http://localhost:5000/units/ORG-A-02/relationships/organization",
-            "related":"http://localhost:5000/units/ORG-A-02/organization"
+            "self":"https://localhost:5000/units/ORG-A-02/relationships/organization",
+            "related":"https://localhost:5000/units/ORG-A-02/organization"
           },
           "data":{
             "type":"organizations",
@@ -113,8 +113,8 @@
             "readOnly":true
           },
           "links":{
-            "self":"http://localhost:5000/orders/relationships/?unit=ORG-A-02",
-            "related":"http://localhost:5000/orders/?filter[unit]=ORG-A-02"
+            "self":"https://localhost:5000/orders/relationships/?unit=ORG-A-02",
+            "related":"https://localhost:5000/orders/?filter[unit]=ORG-A-02"
           }
         }
       }

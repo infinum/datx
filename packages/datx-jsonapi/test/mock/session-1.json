@@ -6,7 +6,7 @@
       "token": "test123"
     },
     "links": {
-      "image": "http://example.com/user/1"
+      "image": "https://example.com/user/1"
     }
   }
 }

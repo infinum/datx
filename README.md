@@ -72,7 +72,7 @@ Mixins are additional plugins that can enhance the regular models and collection
 * [`withActions`](https://github.com/infinum/datx/wiki/withActions) (model) - Adds some helper methods to the model - already included in the `Model` class, but not in the `PureModel` class
 * [`withMeta`](https://github.com/infinum/datx/wiki/withMeta) (model) - Adds some helpful meta data to the model - already included in the `Model` class, but not in the `PureModel` class
 * [`withPatches`](https://github.com/infinum/datx/wiki/withPatches) (model, collection) - Adds patch support to models and collections
-* [`datx-jsonapi`](https://github.com/infinum/datx/wiki/Mixin-JSONAPI) (model, collection and view) - Adds the [JSON API](http://jsonapi.org/) features to the model, collection and view
+* [`datx-jsonapi`](https://github.com/infinum/datx/wiki/Mixin-JSONAPI) (model, collection and view) - Adds the [JSON API](https://jsonapi.org/) features to the model, collection and view
 
 To check out what are the planed future mixins, check out [the issues](https://github.com/infinum/datx/labels/mixins).
 
@@ -108,6 +108,6 @@ The [MIT License](LICENSE)
 ## Credits
 
 datx is maintained and sponsored by
-[Infinum](http://www.infinum.co).
+[Infinum](https://www.infinum.co).
 
 <img src="https://infinum.co/infinum.png" width="264">

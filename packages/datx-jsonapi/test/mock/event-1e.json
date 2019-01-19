@@ -20,7 +20,7 @@
           "id": "2"
         }],
         "links": {
-          "self": "http://example.com/images/1"
+          "self": "https://example.com/images/1"
         },
         "meta": {
           "foo": "baz"

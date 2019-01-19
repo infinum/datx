@@ -22,7 +22,7 @@
     "id": 2,
     "type": "image",
     "attributes": {
-      "url": "http://example.com/3.jpg"
+      "url": "https://example.com/3.jpg"
     }
   }]
 }

@@ -5,8 +5,6 @@ import { autorun, extendObservable, observable } from 'mobx';
 import { config, GenericModel, getModelRefLinks, jsonapi, modelToJsonApi } from '../src';
 import { Event, Image, Photo, TestStore, User } from './utils/setup';
 
-// tslint:disable:no-string-literal
-
 describe('General', () => {
   it('should initialize', () => {
     const store = new TestStore();
@@ -455,8 +453,7 @@ describe('General', () => {
         relationships: {
           images: {
             links: {
-              // tslint:disable-next-line:no-http-string
-              self: 'http://example.com/events/1/relationships/images',
+              self: 'https://example.com/events/1/relationships/images',
             },
           },
         },
@@ -470,8 +467,7 @@ describe('General', () => {
     if (event) {
       expect(event.name).toBe('Demo');
       expect(getModelRefLinks(event).images)
-        // tslint:disable-next-line:no-http-string
-        .toEqual({self: 'http://example.com/events/1/relationships/images'});
+        .toEqual({self: 'https://example.com/events/1/relationships/images'});
     }
   });
 
@@ -486,8 +482,7 @@ describe('General', () => {
         relationships: {
           images: {
             links: {
-              // tslint:disable-next-line:no-http-string
-              self: 'http://example.com/events/1/relationships/images',
+              self: 'https://example.com/events/1/relationships/images',
             },
           },
         },
@@ -505,8 +500,7 @@ describe('General', () => {
     if (event) {
       expect(event.name).toBe('Demo');
       expect(getModelRefLinks(event).images)
-        // tslint:disable-next-line:no-http-string
-        .toEqual({self: 'http://example.com/events/1/relationships/images'});
+        .toEqual({self: 'https://example.com/events/1/relationships/images'});
     }
   });
 

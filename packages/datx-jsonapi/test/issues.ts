@@ -14,8 +14,7 @@ const baseTransformResponse = config.transformResponse;
 describe('Issues', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
-    // tslint:disable-next-line:no-http-string
-    config.baseUrl = 'http://example.com/';
+    config.baseUrl = 'https://example.com/';
     config.transformRequest = baseTransformRequest;
     config.transformResponse = baseTransformResponse;
     clearAllCache();

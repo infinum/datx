@@ -12,8 +12,6 @@ import {
 } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
-// tslint:disable:no-string-literal
-
 import { config, fetchModelLink, GenericModel, jsonapi, modelToJsonApi, saveRelationship } from '../../src';
 
 import { clearAllCache } from '../../src/cache';
@@ -23,8 +21,7 @@ import { Event, Image, Organizer, Photo, TestStore, User } from '../utils/setup'
 describe('updates', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
-    // tslint:disable-next-line:no-http-string
-    config.baseUrl = 'http://example.com/';
+    config.baseUrl = 'https://example.com/';
     clearAllCache();
   });
 

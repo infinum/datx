@@ -38,7 +38,7 @@
     }
   }],
   "links": {
-    "self": "http://example.com/event",
-    "next": "http://example.com/event?page=2"
+    "self": "https://example.com/event",
+    "next": "https://example.com/event?page=2"
   }
 }

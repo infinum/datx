@@ -18,6 +18,6 @@ The [MIT License](LICENSE)
 ## Credits
 
 datx-utils is maintained and sponsored by
-[Infinum](http://www.infinum.co).
+[Infinum](https://www.infinum.co).
 
 <img src="https://infinum.co/infinum.png" width="264">

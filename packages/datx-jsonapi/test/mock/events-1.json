@@ -16,7 +16,7 @@
           "id": "1"
         }],
         "links": {
-          "self": "http://example.com/event/1/images"
+          "self": "https://example.com/event/1/images"
         },
         "meta": {
           "foo": "bar"
@@ -46,9 +46,9 @@
     }
   }],
   "links": {
-    "self": "http://example.com/event",
+    "self": "https://example.com/event",
     "next": {
-      "href": "http://example.com/event?page=2",
+      "href": "https://example.com/event?page=2",
       "meta": {
         "foo": "bar"
       }

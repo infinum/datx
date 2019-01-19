@@ -7,7 +7,7 @@
       "date": "2017-03-19"
     },
     "links": {
-      "self": "http://example.com/event/1234"
+      "self": "https://example.com/event/1234"
     }
   }
 }

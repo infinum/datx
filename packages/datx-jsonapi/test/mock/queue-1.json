@@ -6,7 +6,7 @@
       "status": "Pending request, waiting other process"
     },
     "links": {
-      "self": "http://example.com/events/queue-jobs/123"
+      "self": "https://example.com/events/queue-jobs/123"
     }
   }
 }

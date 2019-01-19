@@ -2,7 +2,7 @@
 
 DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
 
-`datx-jsonapi` is a datx mixin that adds [JSON API](http://jsonapi.org/) support.
+`datx-jsonapi` is a datx mixin that adds [JSON API](https://jsonapi.org/) support.
 
 ***
 
@@ -84,6 +84,6 @@ The [MIT License](LICENSE)
 ## Credits
 
 datx-jsonapi is maintained and sponsored by
-[Infinum](http://www.infinum.co).
+[Infinum](https://www.infinum.co).
 
 <img src="https://infinum.co/infinum.png" width="264">

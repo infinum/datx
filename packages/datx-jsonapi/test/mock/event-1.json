@@ -7,7 +7,7 @@
       "date": "2017-03-19"
     },
     "links": {
-      "image": "http://example.com/images/1"
+      "image": "https://example.com/images/1"
     },
     "meta": {
       "name": "event-1"

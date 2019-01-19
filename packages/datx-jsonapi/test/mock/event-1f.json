@@ -22,13 +22,13 @@
     "id": "1",
     "type": "image",
     "attributes": {
-      "url": "http://example.com/1.jpg"
+      "url": "https://example.com/1.jpg"
     }
   }, {
     "id": "2",
     "type": "image",
     "attributes": {
-      "url": "http://example.com/2.jpg"
+      "url": "https://example.com/2.jpg"
     }
   }]
 }
