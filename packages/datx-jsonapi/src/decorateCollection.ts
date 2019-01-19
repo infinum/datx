@@ -12,12 +12,14 @@ import {
   PureCollection,
   PureModel,
   ReferenceType,
+  setModelMetaKey,
   updateModel,
 } from 'datx';
 import {IDictionary, IRawModel, mapItems} from 'datx-utils';
 import {action} from 'mobx';
 
 import {clearAllCache, clearCacheByType} from './cache';
+import { MODEL_META_FIELD } from './consts';
 import {GenericModel} from './GenericModel';
 import {flattenModel, removeModel} from './helpers/model';
 import {buildUrl, prepareQuery} from './helpers/url';
@@ -171,6 +173,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
       if (record) {
         updateModel(record, flattened);
+        setModelMetaKey(record, MODEL_META_FIELD, obj && obj.meta);
       } else if (staticCollection.types.filter((item) => item.type === type).length) {
         record = this.add<T>(flattened, type);
       } else {

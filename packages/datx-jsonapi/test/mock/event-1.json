@@ -8,6 +8,9 @@
     },
     "links": {
       "image": "http://example.com/images/1"
+    },
+    "meta": {
+      "name": "event-1"
     }
   }
 }

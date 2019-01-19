@@ -2,7 +2,7 @@
 import {Collection, Model, prop} from 'datx';
 import * as fetch from 'isomorphic-fetch';
 import {computed} from 'mobx';
-import {config, jsonapi} from '../src';
+import {config, getModelMeta, jsonapi} from '../src';
 import {clearAllCache} from '../src/cache';
 
 import mockApi from './utils/api';
@@ -142,5 +142,30 @@ describe('Issues', () => {
       await store.fetch('event', 1, {skipCache: true});
       expect(event.image).toBe(store.image[0]);
     });
+  });
+
+  it('should update the meta on model update', async () => {
+    const store = new TestStore();
+
+    mockApi({
+      name: 'event-1',
+      url: 'event/1',
+    });
+    const response1 = await store.fetch('event', 1);
+    const event1 = response1.data as Event;
+    const meta1 = getModelMeta(event1);
+    expect(meta1.name).toBe('event-1');
+
+    mockApi({
+      name: 'event-1d',
+      url: 'event/1',
+    });
+
+    const response2 = await store.fetch('event', 1, { skipCache: true });
+    const event2 = response2.data as Event;
+    const meta2 = getModelMeta(event2);
+    expect(meta2.name).toBe('event-1d');
+
+    expect(event1).toBe(event2);
   });
 });
