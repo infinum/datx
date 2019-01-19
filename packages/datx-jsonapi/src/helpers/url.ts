@@ -37,21 +37,20 @@ export function prepareQuery(
   return buildUrl(url, data, options);
 }
 
-// tslint:disable-next-line:export-name
 export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
-  const headers: IDictionary<string> = (options && options.headers) || {};
+  const headers: IDictionary<string> = (options && options.headers) || { };
 
   const params: Array<string> = [
-    ...prepareFilters((options && options.filter) || {}),
+    ...prepareFilters((options && options.filter) || { }),
     ...prepareSort(options && options.sort),
     ...prepareIncludes(options && options.include),
-    ...prepareFields((options && options.fields) || {}),
+    ...prepareFields((options && options.fields) || { }),
     ...prepareRawParams((options && options.params) || []),
   ];
 
   const baseUrl: string = appendParams(prefixUrl(url), params);
 
-  return {data, headers, url: baseUrl};
+  return { data, headers, url: baseUrl };
 }
 
 function prepareFilters(filters: IFilters): Array<string> {
@@ -76,7 +75,7 @@ function prepareFields(fields: IDictionary<string|Array<string>>): Array<string>
   return list;
 }
 
-function prepareRawParams(params: Array<{key: string; value: string}|string>): Array<string> {
+function prepareRawParams(params: Array<{ key: string; value: string }|string>): Array<string> {
   return params.map((param) => {
     if (typeof param === 'string') {
       return param;
@@ -105,23 +104,23 @@ function appendParams(url: string, params: Array<string>): string {
 }
 
 function parametrize(params: object, scope: string = '') {
-  const list: Array<{key: string; value: string}> = [];
+  const list: Array<{ key: string; value: string }> = [];
 
   Object.keys(params).forEach((key) => {
     if (params[key] instanceof Array) {
       if (config.paramArrayType === ParamArrayType.OBJECT_PATH) {
         list.push(...parametrize(params[key], `${key}.`));
       } else if (config.paramArrayType === ParamArrayType.COMMA_SEPARATED) {
-        list.push({key: `${scope}${key}`, value: params[key].join(',')});
+        list.push({ key: `${scope}${key}`, value: params[key].join(',') });
       } else if (config.paramArrayType === ParamArrayType.MULTIPLE_PARAMS) {
-        list.push(...params[key].map((param) => ({key: `${scope}${key}`, value: param})));
+        list.push(...params[key].map((param) => ({ key: `${scope}${key}`, value: param })));
       } else if (config.paramArrayType === ParamArrayType.PARAM_ARRAY) {
-        list.push(...params[key].map((param) => ({key: `${scope}${key}][`, value: param})));
+        list.push(...params[key].map((param) => ({ key: `${scope}${key}][`, value: param })));
       }
     } else if (typeof params[key] === 'object') {
       list.push(...parametrize(params[key], `${key}.`));
     } else {
-      list.push({key: `${scope}${key}`, value: params[key]});
+      list.push({ key: `${scope}${key}`, value: params[key] });
     }
   });
 

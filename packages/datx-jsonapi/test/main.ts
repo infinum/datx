@@ -14,4 +14,4 @@ import './network/updates';
 
 import './issues';
 
-configure({enforceActions: 'observed'});
+configure({ enforceActions: 'observed' });

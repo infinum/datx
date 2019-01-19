@@ -40,20 +40,20 @@ export class PureCollection {
     sortMethod?: string | ((PureModel) => any);
     unique?: boolean;
     mixins?: Array<(view: any) => any>;
-  }> = {};
+  }> = { };
 
   public static defaultModel?: typeof PureModel = PureModel;
 
-  private __data: IObservableArray<PureModel> = observable.array([], {deep: false});
+  private readonly __data: IObservableArray<PureModel> = observable.array([], { deep: false });
 
-  private __views: Array<string> = [];
-  private __viewList: Array<View> = [];
+  private readonly __views: Array<string> = [];
+  private readonly __viewList: Array<View> = [];
 
-  @observable.shallow private __dataMap: IDictionary<IDictionary<PureModel>> = {};
-  @observable.shallow private __dataList: IDictionary<IObservableArray<PureModel>> = {};
+  @observable.shallow private __dataMap: IDictionary<IDictionary<PureModel>> = { };
+  @observable.shallow private __dataList: IDictionary<IObservableArray<PureModel>> = { };
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
-    extendObservable(this, {});
+    extendObservable(this, { });
     if (data instanceof Array) {
       this.insert(data);
     } else if (data && 'models' in data) {
@@ -61,7 +61,7 @@ export class PureCollection {
     }
 
     const staticCollection = this.constructor as typeof PureCollection;
-    const initViews = (data && 'views' in data) ? data.views : {};
+    const initViews = (data && 'views' in data) ? data.views : { };
     Object.keys(staticCollection.views).forEach((key) => {
       const view = staticCollection.views[key];
       const init = initViews[key] || view;
@@ -188,7 +188,7 @@ export class PureCollection {
     if (model) {
       const type = getModelType(model);
       if (!(type in this.__dataList)) {
-        set(this.__dataList, {[type]: observable.array([])});
+        set(this.__dataList, { [type]: observable.array([]) });
       }
 
       return this.__dataList[type] as IObservableArray<T>;
@@ -262,7 +262,7 @@ export class PureCollection {
    * @memberof Collection
    */
   public toJSON(): IRawCollection {
-    const views: IDictionary<IRawView> = {};
+    const views: IDictionary<IRawView> = { };
 
     this.__views.forEach((key) => {
       views[key] = this[key].toJSON();
@@ -293,8 +293,9 @@ export class PureCollection {
       }, model);
     });
     this.__data.replace([]);
-    this.__dataList = observable({}, {}, {deep: false}) as IObservableObject & IDictionary<IObservableArray<PureModel>>;
-    this.__dataMap = observable({}, {}, {deep: false}) as IObservableObject &IDictionary<IDictionary<PureModel>>;
+    // tslint:disable-next-line:max-line-length
+    this.__dataList = observable({ }, { }, { deep: false }) as IObservableObject & IDictionary<IObservableArray<PureModel>>;
+    this.__dataMap = observable({ }, { }, { deep: false }) as IObservableObject &IDictionary<IDictionary<PureModel>>;
   }
 
   public getAllModels() {
@@ -319,12 +320,12 @@ export class PureCollection {
   public addView<T extends PureModel = PureModel>(
     name: string,
     type: IModelConstructor<T>|IType,
-    {sortMethod, models = [], unique, mixins}: {
+    { sortMethod, models = [], unique, mixins }: {
       sortMethod?: string|((item: T) => any);
       models?: Array<IIdentifier|T>;
       unique?: boolean;
       mixins?: Array<(view: any) => any>;
-    } = {},
+    } = { },
   ) {
     if (name in this) {
       throw error(VIEW_NAME_TAKEN);
@@ -403,13 +404,13 @@ export class PureCollection {
     if (modelType in this.__dataList) {
       this.__dataList[modelType].push(model);
     } else {
-      set(this.__dataList, stringType, observable.array([model], {deep: false}));
+      set(this.__dataList, stringType, observable.array([model], { deep: false }));
     }
 
     if (modelType in this.__dataMap) {
       set(this.__dataMap[modelType], modelId.toString(), model);
     } else {
-      set(this.__dataMap, stringType, observable.object({[modelId]: model}, {}, {deep: false}));
+      set(this.__dataMap, stringType, observable.object({ [modelId]: model }, { }, { deep: false }));
     }
     setModelMetaKey(model, 'collection', this);
 
@@ -442,7 +443,7 @@ export class PureCollection {
 
     this.__data.forEach((item) => {
       const refs = getModelMetaKey(item, 'refs');
-      const refKeys = Object.keys(refs || {});
+      const refKeys = Object.keys(refs || { });
       refKeys.forEach((key) => {
         const refType = getModelType(refs[key].model);
         if (refType === modelType) {
@@ -467,7 +468,7 @@ export class PureCollection {
 
     if (id) {
       if (!(type in this.__dataMap)) {
-        set(this.__dataMap, stringType, observable.object({[id]: undefined}, {}, {deep: false}));
+        set(this.__dataMap, stringType, observable.object({ [id]: undefined }, { }, { deep: false }));
       } else if (!(id in this.__dataMap[type])) {
         set(this.__dataMap[type], id.toString(), undefined);
       }
@@ -475,7 +476,7 @@ export class PureCollection {
       return this.__dataMap[type][id];
     } else {
       if (!(type in this.__dataList)) {
-        set(this.__dataList, stringType, observable.array([], {deep: false}));
+        set(this.__dataList, stringType, observable.array([], { deep: false }));
       }
 
       return this.__dataList[type].length ? this.__dataList[type][0] : null;
@@ -484,6 +485,7 @@ export class PureCollection {
 
   private __changeModelId(oldId: IIdentifier, newId: IIdentifier, type: IType) {
     this.__dataMap[type][newId] = this.__dataMap[type][oldId];
+    // tslint:disable-next-line:no-dynamic-delete
     delete this.__dataMap[type][oldId];
 
     this.__viewList

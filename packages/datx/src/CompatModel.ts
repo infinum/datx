@@ -20,8 +20,8 @@ import { PureModel } from './PureModel';
 import { storage } from './services/storage';
 
 export class CompatModel extends PureModel {
-  public static refs: IReferences = {};
-  public static defaults: IDictionary = {};
+  public static refs: IReferences = { };
+  public static defaults: IDictionary = { };
 
   public static idAttribute?: string = 'id';
   public static typeAttribute?: string = '__type__';
@@ -48,6 +48,7 @@ export class CompatModel extends PureModel {
       }
       const ref = this.static.refs[prop];
       const data = mapItems(this[prop] || this.static.defaults[prop], getModelId);
+      // tslint:disable-next-line:no-dynamic-delete
       delete this[prop];
       if (typeof ref === 'object') {
         // Back reference
@@ -131,9 +132,10 @@ export class CompatModel extends PureModel {
 
   public update(data: PureModel | IDictionary): object {
     deprecated('model.update is deprecated. Use updateModel() instead.');
-    const updateData = Object.assign({}, data);
+    const updateData = Object.assign({ }, data);
     Object.keys(updateData).forEach((key) => {
       if (typeof this[key] === 'function') {
+        // tslint:disable-next-line:no-dynamic-delete
         delete updateData[key];
       }
     });
@@ -159,6 +161,7 @@ export class CompatModel extends PureModel {
     return modelToJSON(this);
   }
 
+  // tslint:disable-next-line no-unused-variable
   private get __collection() {
     deprecated('model.__collection is deprecated. Use getModelCollection() instead.');
 

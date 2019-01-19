@@ -14,7 +14,7 @@ import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { ILink, IResponse } from './interfaces/JsonApi';
-import {Response as LibResponse } from './Response';
+import { Response as LibResponse } from './Response';
 
 export type FetchType = (
   method: string,
@@ -92,9 +92,9 @@ export const config: IConfigType = {
 
     return request
       .then(() => {
-        const defaultHeaders = config.defaultFetchOptions.headers || {};
-        const reqHeaders: IHeaders = Object.assign({}, defaultHeaders, requestHeaders) as IHeaders;
-        const options = Object.assign({}, config.defaultFetchOptions, {
+        const defaultHeaders = config.defaultFetchOptions.headers || { };
+        const reqHeaders: IHeaders = Object.assign({ }, defaultHeaders, requestHeaders) as IHeaders;
+        const options = Object.assign({ }, config.defaultFetchOptions, {
           body: isBodySupported && JSON.stringify(body) || undefined,
           headers: reqHeaders,
           method,
@@ -126,10 +126,10 @@ export const config: IConfigType = {
           };
         }
 
-        return {data, headers, requestHeaders, status};
+        return { data, headers, requestHeaders, status };
       })
       .catch((error) => {
-        return this.onError({data, error, headers, requestHeaders, status});
+        return this.onError({ data, error, headers, requestHeaders, status });
       });
   },
 
@@ -162,7 +162,7 @@ function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOp
     views,
   } = config.transformRequest(reqOptions);
 
-  const staticCollection = collection && collection.constructor as {cache?: boolean};
+  const staticCollection = collection && collection.constructor as { cache?: boolean };
   const collectionCache = staticCollection && staticCollection.cache;
   const isCacheSupported = method.toUpperCase() === 'GET';
   const skipCache = reqOptions.options && reqOptions.options.skipCache;
@@ -176,7 +176,7 @@ function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOp
 
   return config.baseFetch(method, url, data, options && options.headers)
     .then((response: IRawResponse) => {
-      const collectionResponse = Object.assign(response, {collection});
+      const collectionResponse = Object.assign(response, { collection });
       const resp = new LibResponse<T>(
         config.transformResponse(collectionResponse), collection, options, undefined, views,
       );
@@ -214,7 +214,7 @@ export function read<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data: undefined,
     method: 'GET',
-    options: {...options, headers},
+    options: { ...options, headers },
     url,
     views,
   });
@@ -244,7 +244,7 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data,
     method: 'POST',
-    options: {...options, headers},
+    options: { ...options, headers },
     url,
     views,
   });
@@ -274,7 +274,7 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data,
     method: 'PATCH',
-    options: {...options, headers},
+    options: { ...options, headers },
     url,
     views,
   });
@@ -302,7 +302,7 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data: undefined,
     method: 'DELETE',
-    options: {...options, headers},
+    options: { ...options, headers },
     url,
     views,
   });
@@ -334,7 +334,7 @@ export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
     }
   }
 
-  return Promise.resolve(new LibResponse({data: undefined}, collection));
+  return Promise.resolve(new LibResponse({ data: undefined }, collection));
 }
 
 export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(

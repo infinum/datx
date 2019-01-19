@@ -42,20 +42,20 @@ export function flattenModel(classRefs: IDictionary<IReferenceOptions<PureModel>
 
   const rawData = {
     [META_FIELD]: {
-      fields: Object.keys(data.attributes || {}),
+      fields: Object.keys(data.attributes || { }),
       id: data.id,
       [MODEL_LINKS_FIELD]: data.links,
       [MODEL_META_FIELD]: data.meta,
       [MODEL_PERSISTED_FIELD]: Boolean(data.id),
-      refs: {},
+      refs: { },
       type: data.type,
     },
   };
 
   if (data.relationships) {
-    const refLinks = {};
-    const refMeta = {};
-    const refs = {};
+    const refLinks = { };
+    const refMeta = { };
+    const refs = { };
     Object.keys(data.relationships).forEach((key) => {
       const ref = (data.relationships as IDictionary<IRelationship>)[key];
       if (ref && 'data' in ref && ref.data) {
@@ -195,28 +195,30 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
   const refs = getModelMetaKey(model, 'refs');
 
   Object.keys(refs).forEach((key) => {
-    data.relationships = data.relationships || {};
+    data.relationships = data.relationships || { };
     const refIds = getRefId(model, key);
     let rel: IDefinition|Array<IDefinition>|undefined;
     if (refIds instanceof Array || isObservableArray(refIds)) {
       rel = (refIds as Array<IIdentifier>).map((id, index) => {
         const type = getModelType(model[key][index] ? model[key][index] : refs[key].model).toString();
 
-        return {id, type};
+        return { id, type };
       });
     } else {
       const type: string = model[key] ? getModelType(model[key]) : refs[key].model;
-      rel = refIds ? {id: refIds, type} : undefined;
+      rel = refIds ? { id: refIds, type } : undefined;
     }
 
-    data.relationships[key] = {data: rel || null};
+    data.relationships[key] = { data: rel || null };
     if (data.attributes) {
+      // tslint:disable-next-line:no-dynamic-delete
       delete data.attributes[key];
     }
   });
 
   if (data.attributes) {
     delete data.attributes.id;
+    // tslint:disable-next-line:no-dynamic-delete
     delete data.attributes[META_FIELD];
   }
 
@@ -256,7 +258,7 @@ export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Prom
   const requestMethod = isModelPersisted(model) ? update : create;
   const url = getModelEndpointUrl(model, options);
 
-  return requestMethod(url, {data}, collection, options && options.headers)
+  return requestMethod(url, { data }, collection, options && options.headers)
     .then(handleResponse(model))
     .then((response) => {
       clearCacheByType(getModelType(model));
@@ -303,8 +305,8 @@ export function saveRelationship<T extends IJsonapiModel>(
   const ids = getRefId(model, ref);
   const type = getModelType(getModelMetaKey(model, 'refs')[ref].model);
   type ID = IDefinition|Array<IDefinition>;
-  const data: ID = mapItems(ids, (id) => ({id, type})) as ID;
+  const data: ID = mapItems(ids, (id) => ({ id, type })) as ID;
 
-  return update(href, {data}, collection, options && options.headers)
+  return update(href, { data }, collection, options && options.headers)
     .then(handleResponse(model, ref));
 }

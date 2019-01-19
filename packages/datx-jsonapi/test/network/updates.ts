@@ -1,6 +1,5 @@
 import {
   Collection,
-  getModelCollection,
   getModelId,
   getModelType,
   getRefId,
@@ -12,11 +11,11 @@ import {
 } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
-import { config, fetchModelLink, GenericModel, jsonapi, modelToJsonApi, saveRelationship } from '../../src';
+import { config, fetchModelLink, jsonapi, modelToJsonApi, saveRelationship } from '../../src';
 
 import { clearAllCache } from '../../src/cache';
 import mockApi from '../utils/api';
-import { Event, Image, Organizer, Photo, TestStore, User } from '../utils/setup';
+import { Event, TestStore } from '../utils/setup';
 
 describe('updates', () => {
   beforeEach(() => {
@@ -102,12 +101,12 @@ describe('updates', () => {
         title: 'Example title',
       });
       store.add(foo);
-      const bar = store.add<Bar>({foo}, Bar);
-      const baz = store.add({}, 'baz');
+      const bar = store.add<Bar>({ foo }, Bar);
+      const baz = store.add({ }, 'baz');
       expect(bar.foo).toBe(foo);
       expect(getRefId(bar, 'foo')).toBe(foo.meta.id);
 
-      initModelRef(baz, 'foo', {model: Foo, type: ReferenceType.TO_ONE}, foo);
+      initModelRef(baz, 'foo', { model: Foo, type: ReferenceType.TO_ONE }, foo);
       expect(baz['foo']).toBe(foo);
       expect(getRefId(baz, 'foo')).toBe(foo.meta.id);
 
@@ -171,7 +170,7 @@ describe('updates', () => {
         url: 'events/queue-jobs/123',
       });
 
-      const queue2 = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
+      const queue2 = await fetchModelLink(queue, 'self', undefined, { skipCache: true });
       const queueRecord = queue2.data;
       expect(queueRecord).not.toBeNull();
       if (queueRecord) {
@@ -183,7 +182,7 @@ describe('updates', () => {
         url: 'events/queue-jobs/123',
       });
 
-      const updatedRes = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
+      const updatedRes = await fetchModelLink(queue, 'self', undefined, { skipCache: true });
       const updated = updatedRes.data as Event;
       expect(updated.meta.type).toBe('event');
 
@@ -224,7 +223,7 @@ describe('updates', () => {
         url: 'events/queue-jobs/123',
       });
 
-      const queue2 = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
+      const queue2 = await fetchModelLink(queue, 'self', undefined, { skipCache: true });
       const queueRecord = queue2.data;
       expect(queueRecord).not.toBeNull();
       if (queueRecord) {
@@ -236,7 +235,7 @@ describe('updates', () => {
         url: 'events/queue-jobs/123',
       });
 
-      const updatedRes = await fetchModelLink(queue, 'self', undefined, {skipCache: true});
+      const updatedRes = await fetchModelLink(queue, 'self', undefined, { skipCache: true });
       const updated = updatedRes.data;
       expect(updated).not.toBeNull();
       if (updated) {
@@ -251,7 +250,7 @@ describe('updates', () => {
     it('should add a record with response 204', async () => {
       const store = new TestStore();
       const record = new Event({
-        __meta__: {id: 123},
+        __meta__: { id: 123 },
         title: 'Example title',
       });
       store.add(record);
@@ -279,7 +278,7 @@ describe('updates', () => {
 
     it('should add a record with response 204 if not in store', async () => {
       const record = new Event({
-        __meta__: {id: 123},
+        __meta__: { id: 123 },
         title: 'Example title',
       });
 
@@ -451,9 +450,9 @@ describe('updates', () => {
       });
 
       const store = new TestStore();
-      store.add({id: '1'}, Event);
+      store.add({ id: '1' }, Event);
       const events = await store.fetch('event', 12345);
-      store.add({id: '2'}, Event);
+      store.add({ id: '2' }, Event);
 
       const record = events.data as Event;
 

@@ -54,15 +54,15 @@ describe('Network basics', () => {
       expect(data.attributes && data.attributes.title).toBe('Test 1');
       expect(
         data.relationships && data.relationships.images.data && data.relationships.images.data[0],
-      ).toEqual({type: 'image', id: '1'});
+      ).toEqual({ type: 'image', id: '1' });
       expect(data.attributes && 'images' in data.attributes).toBe(false);
     }
   });
 
   it('should handle id changes correctly', async () => {
     const store = new TestStore();
-    const image1 = store.add({}, Image);
-    const image2 = new Image({});
+    const image1 = store.add({ }, Image);
+    const image2 = new Image({ });
 
     mockApi({
       method: 'POST',
@@ -127,7 +127,7 @@ describe('Network basics', () => {
       expect(opts.collection).toBe(store);
       hasTransformRequestHookBeenCalled = true;
 
-      return {...opts, url: `${opts.url}/all`};
+      return { ...opts, url: `${opts.url}/all` };
     };
 
     const store = new TestStore();
@@ -149,7 +149,7 @@ describe('Network basics', () => {
       expect(opts.status).toBe(200);
       hasTransformResponseHookBeenCalled = true;
 
-      return {...opts, status: 201};
+      return { ...opts, status: 201 };
     };
 
     const store = new TestStore();

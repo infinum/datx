@@ -3,9 +3,8 @@ import { autorun, configure } from 'mobx';
 
 import { Collection, getModelCollection, getModelId, prop, PureModel } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
-import { storage } from '../src/services/storage';
 
-configure({enforceActions: 'observed'});
+configure({ enforceActions: 'observed' });
 
 describe('Collection', () => {
   describe('Basic features', () => {
@@ -31,7 +30,7 @@ describe('Collection', () => {
       }
 
       // tslint:disable-next-line:no-unnecessary-class
-      class FooBar {}
+      class FooBar { }
 
       class Store extends Collection {
         public static types = [Foo];
@@ -41,10 +40,10 @@ describe('Collection', () => {
 
       const store = new Store();
       const store2 = new Store();
-      const foo1 = store.add({foo: 1}, Foo);
-      const foo2 = store.add<Foo>({foo: 2}, 'foo');
-      const foo3 = store.add(new Foo({foo: 3}));
-      const foo4 = new Foo({foo: 4});
+      const foo1 = store.add({ foo: 1 }, Foo);
+      const foo2 = store.add<Foo>({ foo: 2 }, 'foo');
+      const foo3 = store.add(new Foo({ foo: 3 }));
+      const foo4 = new Foo({ foo: 4 });
 
       expect(store.length).toBe(3);
       expect(foo1.foo).toBe(1);
@@ -57,21 +56,21 @@ describe('Collection', () => {
       expect(() => store2.add(foo1)).toThrowError('A model can be in a single collection at once');
 
       // @ts-ignore - TS won't allow this mistake
-      expect(() => store.add({foo: 4}))
+      expect(() => store.add({ foo: 4 }))
         .toThrowError('The type needs to be defined if the object is not an instance of the model.');
 
-      expect(() => store.add({foo: 4}, 'bar'))
+      expect(() => store.add({ foo: 4 }, 'bar'))
         .toThrowError('No model is defined for the type bar.');
 
-      expect(() => store.add({foo: 4}, Baz))
+      expect(() => store.add({ foo: 4 }, Baz))
         .toThrowError('No model is defined for the type baz.');
 
       // @ts-ignore - TS won't allow this mistake
-      expect(() => store.add({foo: 4}, FooBar))
+      expect(() => store.add({ foo: 4 }, FooBar))
         .toThrowError('The type needs to be defined if the object is not an instance of the model.');
 
       // @ts-ignore - TS won't allow this mistake
-      expect(() => store.add([{foo: 4}, {foo: 5}]))
+      expect(() => store.add([{ foo: 4 }, { foo: 5 }]))
         .toThrowError('The type needs to be defined if the object is not an instance of the model.');
 
       expect(store.hasItem(foo1)).toBe(true);
@@ -116,9 +115,9 @@ describe('Collection', () => {
 
       const store = new Store();
 
-      store.add([{}, {}, {}], Foo);
-      store.add([{}, {}], Baz);
-      store.add({}, Foo);
+      store.add([{ }, { }, { }], Foo);
+      store.add([{ }, { }], Baz);
+      store.add({ }, Foo);
       store.removeAll(Foo);
       expect(store.length).toBe(2);
     });
@@ -134,8 +133,8 @@ describe('Collection', () => {
       }
 
       const store = new Store();
-      const foo1 = store.add({foo: 1}, Foo);
-      const foo2 = store.add<Foo>({foo: 2}, 'foo');
+      const foo1 = store.add({ foo: 1 }, Foo);
+      const foo2 = store.add<Foo>({ foo: 2 }, 'foo');
 
       expect(store.find('foo', getModelId(foo2))).toBeTruthy();
       expect(getModelCollection(foo1)).toBe(store);
@@ -163,9 +162,9 @@ describe('Collection', () => {
       }
 
       const store = new Store();
-      const foo1 = store.add({foo: 1}, Foo);
-      const foo2 = store.add<Foo>({foo: 2}, 'foo');
-      const foo3 = store.add(new Foo({foo: 3}));
+      const foo1 = store.add({ foo: 1 }, Foo);
+      const foo2 = store.add<Foo>({ foo: 2 }, 'foo');
+      const foo3 = store.add(new Foo({ foo: 3 }));
 
       const raw = store.toJSON();
 
@@ -194,9 +193,9 @@ describe('Collection', () => {
       }
 
       const store = new Store();
-      const foo1 = store.add({foo: 1}, Foo);
-      const foo2 = store.add<Foo>({foo: 2}, 'foo');
-      const foo3 = store.add(new Foo({foo: 3}));
+      const foo1 = store.add({ foo: 1 }, Foo);
+      const foo2 = store.add<Foo>({ foo: 2 }, 'foo');
+      const foo3 = store.add(new Foo({ foo: 3 }));
       expect(foo1.foo).toBe(1);
 
       const raw = store.toJSON();
@@ -241,7 +240,7 @@ describe('Collection', () => {
         foo = store.find(Foo, '123');
       });
 
-      const foo2 = store.add({id: '123'}, Foo);
+      const foo2 = store.add({ id: '123' }, Foo);
 
       expect(autorunModelCount).toBe(2);
       expect(foo).toBe(foo2);

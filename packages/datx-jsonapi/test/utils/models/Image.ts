@@ -1,7 +1,7 @@
-import { IActionsMixin, IMetaMixin, IModelConstructor, IType, Model, prop, PureModel } from 'datx';
+import { IType, Model, prop } from 'datx';
 import { computed } from 'mobx';
 
-import { IJsonapiModel, jsonapi } from '../../../src';
+import { jsonapi } from '../../../src';
 import { Event } from './Event';
 
 export class Image extends jsonapi(Model) {

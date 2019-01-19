@@ -71,9 +71,10 @@ export function assignComputed<T = any>(
   getter: () => T,
   setter?: (value: T) => void,
 ) {
-  let value;
+  let value: any;
   if (key in obj) {
     value = obj[key];
+    // tslint:disable-next-line:no-dynamic-delete
     delete obj[key];
   }
 
@@ -101,12 +102,12 @@ export function assignComputed<T = any>(
   }
 }
 
-export function error(...args) {
+export function error(...args: Array<any>) {
   // tslint:disable-next-line:no-console
   console.error(`[datx error]`, ...args);
 }
 
-export function warn(...args) {
+export function warn(...args: Array<any>) {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }
@@ -115,7 +116,7 @@ export function warn(...args) {
   console.warn(`[datx warning]`, ...args);
 }
 
-export function deprecated(...args) {
+export function deprecated(...args: Array<any>) {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }
@@ -124,7 +125,7 @@ export function deprecated(...args) {
   console.warn(`[datx deprecated]`, ...args);
 }
 
-export function info(...args) {
+export function info(...args: Array<any>) {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }

@@ -1,8 +1,8 @@
-export {jsonapi} from './mixin';
-export {Response} from './Response';
-export {config} from './NetworkUtils';
-export {ParamArrayType} from './enums/ParamArrayType';
-export {GenericModel} from './GenericModel';
+export { jsonapi } from './mixin';
+export { Response } from './Response';
+export { config } from './NetworkUtils';
+export { ParamArrayType } from './enums/ParamArrayType';
+export { GenericModel } from './GenericModel';
 
 export {
   fetchModelLink,
@@ -21,9 +21,9 @@ export {
   clearCacheByType,
 } from './cache';
 
-export {ICollectionFetchOpts} from './interfaces/ICollectionFetchOpts';
-export {IJsonapiCollection} from './interfaces/IJsonapiCollection';
-export {IJsonapiModel} from './interfaces/IJsonapiModel';
-export {IJsonapiView} from './interfaces/IJsonapiView';
-export {IRawResponse} from './interfaces/IRawResponse';
-export {IRequestOptions} from './interfaces/IRequestOptions';
+export { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
+export { IJsonapiCollection } from './interfaces/IJsonapiCollection';
+export { IJsonapiModel } from './interfaces/IJsonapiModel';
+export { IJsonapiView } from './interfaces/IJsonapiView';
+export { IRawResponse } from './interfaces/IRawResponse';
+export { IRequestOptions } from './interfaces/IRequestOptions';

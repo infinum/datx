@@ -8,8 +8,9 @@ import { withPatches } from './mixins/withPatches';
 import { PureModel } from './PureModel';
 
 export class Model extends withPatches(withActions(withMeta(PureModel))) {
-  public valueOf(): IDictionary & {meta: {id: IIdentifier; type: IType}} {
+  public valueOf(): IDictionary & { meta: { id: IIdentifier; type: IType } } {
     const raw: IDictionary = this.meta.snapshot;
+    // tslint:disable-next-line:no-dynamic-delete
     delete raw[META_FIELD];
 
     return {

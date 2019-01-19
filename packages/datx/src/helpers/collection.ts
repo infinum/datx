@@ -26,12 +26,12 @@ export function upsertModel(data: IRawModel, type: IType|typeof PureModel, colle
       return new DefaultModel({
         ...data,
         [META_FIELD]: {
-          ...data[META_FIELD] || {},
+          ...data[META_FIELD] || { },
           type,
         },
       }, collection);
     }
-    throw error(UNDEFINED_MODEL, {type});
+    throw error(UNDEFINED_MODEL, { type });
   }
 
   const id = getMetaKeyFromRaw(data, 'id', TypeModel as typeof PureModel|undefined);

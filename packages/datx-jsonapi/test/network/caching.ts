@@ -5,7 +5,7 @@ import { config, jsonapi } from '../../src';
 
 import { clearAllCache } from '../../src/cache';
 import mockApi from '../utils/api';
-import { Event, Image, Organizer, Photo, TestStore, User } from '../utils/setup';
+import { Event, TestStore } from '../utils/setup';
 
 describe('caching', () => {
   beforeEach(() => {
@@ -78,7 +78,7 @@ describe('caching', () => {
         url: 'event/12345',
       });
 
-      const events2 = await store.fetch(Event, 12345, {skipCache: true});
+      const events2 = await store.fetch(Event, 12345, { skipCache: true });
       const event2 = events2.data as Event;
 
       expect(events2).not.toEqual(events);
@@ -241,7 +241,7 @@ describe('caching', () => {
         url: 'event',
       });
 
-      const events2 = await store.fetchAll('event', {skipCache: true});
+      const events2 = await store.fetchAll('event', { skipCache: true });
 
       expect(events2).not.toEqual(events);
       expect(events2.data).toBeInstanceOf(Array);
@@ -336,12 +336,12 @@ describe('caching', () => {
     it('should reset cache when resetting the store', async () => {
       const store = new TestStore();
 
-      mockApi({name: 'event-1', url: 'event'});
+      mockApi({ name: 'event-1', url: 'event' });
       await store.fetchAll('event');
 
       store.reset();
 
-      const mockedApi = mockApi({name: 'event-1', url: 'event'});
+      const mockedApi = mockApi({ name: 'event-1', url: 'event' });
       await store.fetchAll('event');
 
       expect(mockedApi.isDone()).toBe(true);

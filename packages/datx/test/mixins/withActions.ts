@@ -6,7 +6,7 @@ import { autorun, configure } from 'mobx';
 import { Collection, prop, PureModel, ReferenceType, withActions, withMeta } from '../../src';
 import { storage } from '../../src/services/storage';
 
-configure({enforceActions: 'observed'});
+configure({ enforceActions: 'observed' });
 
 describe('Collection', () => {
   it('should work with initial data', () => {
@@ -20,7 +20,7 @@ describe('Collection', () => {
     const FooMeta = withMeta(Foo);
     const FooActions = withActions(FooMeta);
 
-    const foo = new FooActions({foo: 1, bar: 2});
+    const foo = new FooActions({ foo: 1, bar: 2 });
     expect(foo.meta.type).toBe('foo');
     expect(foo.foo).toBe(1);
 
@@ -36,7 +36,7 @@ describe('Collection', () => {
     expect(foo2.meta.original).toBe(foo);
     expect(foo2.foo).toBe(1);
 
-    foo2.update({foo: 3, baz: 4});
+    foo2.update({ foo: 3, baz: 4 });
     expect(foo2.foo).toBe(3);
     expect(foo.foo).toBe(1);
     expect(foo2.baz).toBe(4);
@@ -61,7 +61,7 @@ describe('Collection', () => {
 
   it('should fail for other classes', () => {
     // tslint:disable-next-line:no-unnecessary-class
-    class A {}
+    class A { }
 
     // @ts-ignore - TS won't allow this mistake
     expect(() => withActions(A)).toThrowError('This mixin can only decorate models');

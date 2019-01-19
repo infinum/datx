@@ -1,16 +1,11 @@
 // tslint:disable:max-classes-per-file
 
-import { META_FIELD } from 'datx-utils';
 import { configure } from 'mobx';
 
-configure({enforceActions: 'observed'});
+configure({ enforceActions: 'observed' });
 
 import {
   Collection,
-  IPatch,
-  Model,
-  modelToJSON,
-  PatchType,
   prop,
   PureModel,
 } from '../src';
@@ -32,7 +27,7 @@ describe('issues', () => {
     }
 
     const store = new Store();
-    const foo = store.add({bar: [{}, {}]}, Foo);
+    const foo = store.add({ bar: [{ }, { }] }, Foo);
     expect(foo.bar).toHaveLength(2);
 
     const toRemove = foo.bar[0];

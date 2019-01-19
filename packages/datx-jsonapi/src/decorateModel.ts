@@ -25,7 +25,7 @@ export function decorateModel(BaseClass: typeof PureModel) {
      */
     public static endpoint: string|(() => string);
 
-    constructor(rawData: IRawModel|IRecord = {}, collection?: PureCollection) {
+    constructor(rawData: IRawModel|IRecord = { }, collection?: PureCollection) {
       let data = rawData;
       if ((rawData && 'type' in rawData) && ('attributes' in rawData || 'relationships' in rawData)) {
         const classRefs = getModelClassRefs(BaseClass);

@@ -86,7 +86,7 @@ export function withPatches<T extends PureCollection>(Base: ICollectionConstruct
 
       public applyPatch(patch: IPatch) {
         if (patch.model.type === getModelType(this) && patch.model.id === getModelId(this)) {
-          updateModel(this, patch.newValue || {});
+          updateModel(this, patch.newValue || { });
         } else {
           // console.log('Wrong match model');
         }

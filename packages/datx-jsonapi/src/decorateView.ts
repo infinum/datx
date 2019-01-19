@@ -47,7 +47,7 @@ export function decorateView<U>(BaseClass: typeof View) {
     ): Promise<Response<M>> {
       return this.__collection
         .fetch(this.modelType, id, options)
-        .then(this.__addFromResponse.bind(this)) as Promise<Response<M>>;
+        .then(this.__addFromResponse.bind(this));
     }
 
     /**
@@ -61,7 +61,7 @@ export function decorateView<U>(BaseClass: typeof View) {
     ): Promise<Response<M>> {
       return this.__collection
         .fetchAll(this.modelType, options)
-        .then(this.__addFromResponse.bind(this)) as Promise<Response<M>>;
+        .then(this.__addFromResponse.bind(this));
     }
 
     private __addFromResponse(response: Response<M>) {

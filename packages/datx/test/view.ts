@@ -2,7 +2,7 @@
 
 import { autorun, configure, runInAction } from 'mobx';
 
-configure({enforceActions: 'observed'});
+configure({ enforceActions: 'observed' });
 
 import {
   Collection,
@@ -30,7 +30,7 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{}, {}], Foo);
+    const foos = collection.add([{ }, { }], Foo);
     const view = new View(Foo, collection, undefined, [-1, -2]);
 
     expect(view.length).toBe(2);
@@ -49,7 +49,7 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{}, {}], Foo);
+    const foos = collection.add([{ }, { }], Foo);
     const view = new View(Foo, collection);
 
     view.add(foos);
@@ -69,7 +69,7 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{}, {}], Foo);
+    const foos = collection.add([{ }, { }], Foo);
     const view = new View(Foo, collection);
 
     let expectedLength = 0;
@@ -108,7 +108,7 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{key: 2}, {key: 3}, {key: 1}], Foo);
+    const foos = collection.add([{ key: 2 }, { key: 3 }, { key: 1 }], Foo);
     const view = new View(Foo, collection, (item: Foo) => item.key, foos);
 
     expect(view.length).toBe(3);
@@ -117,7 +117,7 @@ describe('Model', () => {
     expect(item0a && item0a.key).toBe(1);
     expect(item2a && item2a.key).toBe(3);
 
-    const foo0 = collection.add({key: 0}, Foo);
+    const foo0 = collection.add({ key: 0 }, Foo);
     expect(view.length).toBe(3);
     view.add(foo0);
     const item0b = view.list[0];
@@ -137,7 +137,7 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{key: 2}, {key: 3}, {key: 1}], Foo);
+    const foos = collection.add([{ key: 2 }, { key: 3 }, { key: 1 }], Foo);
     const view = new View(Foo, collection, (item: Foo) => item.key, foos);
 
     expect(view.length).toBe(3);
@@ -180,7 +180,7 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{key: 2}, {key: 3}, {key: 1}], Foo);
+    const foos = collection.add([{ key: 2 }, { key: 3 }, { key: 1 }], Foo);
     const view = new View(Foo, collection, 'key', foos);
 
     expect(view.length).toBe(3);
@@ -189,7 +189,7 @@ describe('Model', () => {
     expect(item0a && item0a.key).toBe(1);
     expect(item2a && item2a.key).toBe(3);
 
-    const foo0 = collection.add({key: 0}, Foo);
+    const foo0 = collection.add({ key: 0 }, Foo);
     expect(view.length).toBe(3);
     view.add(foo0);
     const item0b = view.list[0];
@@ -207,7 +207,7 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{}, {}, {}], Foo);
+    const foos = collection.add([{ }, { }, { }], Foo);
     const view = new View(Foo, collection, undefined, foos);
 
     expect(view.length).toBe(3);
@@ -226,10 +226,10 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{}, {}, {}], Foo);
+    const foos = collection.add([{ }, { }, { }], Foo);
     const view = new View(Foo, collection, undefined, foos);
 
-    const [foo1, foo2, foo3] = collection.add([{}, {}, {}], Foo);
+    const [foo1, foo2, foo3] = collection.add([{ }, { }, { }], Foo);
 
     expect(view.length).toBe(3);
 
@@ -254,10 +254,10 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{}, {}, {}], Foo);
+    const foos = collection.add([{ }, { }, { }], Foo);
     const view = new View(Foo, collection, (item) => item.id, foos);
 
-    const [foo1, foo2, foo3] = collection.add([{}, {}, {}], Foo);
+    const [foo1, foo2, foo3] = collection.add([{ }, { }, { }], Foo);
 
     expect(view.length).toBe(3);
 
@@ -283,7 +283,7 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{}, {}, {}], Foo);
+    const foos = collection.add([{ }, { }, { }], Foo);
     const view = new View(Foo, collection, undefined, foos, true);
 
     const [foo1, foo2, foo3] = foos;
@@ -306,7 +306,7 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{}, {}], Foo);
+    const foos = collection.add([{ }, { }], Foo);
     const view = new View(Foo, collection);
 
     view.add(foos);
@@ -333,9 +333,9 @@ describe('Model', () => {
       }
 
       const collection = new AppCollection();
-      const foos = collection.add([{}, {}], Foo);
+      const foos = collection.add([{ }, { }], Foo);
 
-      collection.addView('test', Foo, {models: foos});
+      collection.addView('test', Foo, { models: foos });
 
       expect(collection.test.length).toBe(2);
       expect(collection.test.list[0]).toBeInstanceOf(Foo);
@@ -351,7 +351,7 @@ describe('Model', () => {
         public static types = [Foo];
 
         public static views = {
-          test: {modelType: Foo},
+          test: { modelType: Foo },
         };
 
         public test!: View<Foo>;
@@ -359,7 +359,7 @@ describe('Model', () => {
 
       const collection = new AppCollection();
       expect(collection.test.modelType).toBe('foo');
-      const foos = collection.test.add([{}, {}]);
+      const foos = collection.test.add([{ }, { }]);
 
       expect(collection.test.length).toBe(2);
       expect(collection.test.list[0]).toBeInstanceOf(Foo);
@@ -382,7 +382,7 @@ describe('Model', () => {
     }
 
     const collection = new AppCollection();
-    const foos = collection.add([{}, {}], Foo);
+    const foos = collection.add([{ }, { }], Foo);
     const view = new View(Foo, collection, undefined, [-1, -2]);
 
     expect(view.length).toBe(2);

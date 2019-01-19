@@ -1,6 +1,5 @@
-import { IModelConstructor, IType, Model, prop } from 'datx';
+import { IType, prop } from 'datx';
 
-import { IJsonapiModel, jsonapi } from '../../../src';
 import { Image } from './Image';
 import { User } from './User';
 

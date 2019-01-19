@@ -14,7 +14,7 @@ import { initModelField } from '../model/init';
 import { endAction, startAction } from '../patch';
 
 /**
- * Get the model type
+ * Get the type of the given model
  *
  * @export
  * @param {(IType|typeof PureModel|PureModel)} model Model to be checked
@@ -68,7 +68,7 @@ export function getModelCollection(model: PureModel): PureCollection|undefined {
 export function cloneModel<T extends PureModel>(model: T): T {
   const TypeModel = model.constructor as typeof PureModel;
   const rawData = modelToJSON(model);
-  const meta = rawData[META_FIELD] || {};
+  const meta = rawData[META_FIELD] || { };
   meta.originalId = meta.id;
   delete meta.id;
 
@@ -125,7 +125,7 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary): T
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
       assignModel(model, key, data[key]);
     } else if (key === META_FIELD) {
-      const metaKeys = Object.keys(data[key] || {});
+      const metaKeys = Object.keys(data[key] || { });
       metaKeys.forEach((metaKey) => {
         if (!READ_ONLY_META.includes(metaKey)) {
           setModelMetaKey(model, metaKey, data[key][metaKey]);
@@ -154,7 +154,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
     assignModelRef(model, key, value);
   } else if (value instanceof PureModel) {
     endAction(model);
-    throw error(NO_REFS, {key});
+    throw error(NO_REFS, { key });
   } else {
     assignModelField(model, key, value);
   }
@@ -177,7 +177,7 @@ function assignModelRef<T extends PureModel>(model: T, key: string, value: TRefV
 
 export function getMetaKeyFromRaw(data: IRawModel, key: string, model?: typeof PureModel): any {
   if (META_FIELD in data && typeof data[META_FIELD] === 'object' && data[META_FIELD] !== undefined) {
-    return (data[META_FIELD] || {})[key];
+    return (data[META_FIELD] || { })[key];
   }
   if (model) {
     const modelId = storage.getModelClassMetaKey(model, key);
@@ -198,20 +198,20 @@ export function getMetaKeyFromRaw(data: IRawModel, key: string, model?: typeof P
 export function modelToJSON(model: PureModel): IRawModel {
   const data = toJS(storage.getModelData(model));
 
-  const rawMeta = Object.assign({}, storage.getModelMeta(model));
+  const rawMeta = Object.assign({ }, storage.getModelMeta(model));
   delete rawMeta.collection;
   delete rawMeta.patch;
   const meta = toJS(rawMeta);
-  const refs = {};
-  Object.keys(meta.refs || {}).forEach((key) => {
-    refs[key] = {model: getModelType(meta.refs[key].model), type: meta.refs[key].type};
+  const refs = { };
+  Object.keys(meta.refs || { }).forEach((key) => {
+    refs[key] = { model: getModelType(meta.refs[key].model), type: meta.refs[key].type };
   });
   // console.log(meta.refs, Object.keys(meta.refs), refs)
   meta.refs = refs;
 
   delete meta.collection;
 
-  const raw = Object.assign(data, {[META_FIELD]: meta});
+  const raw = Object.assign(data, { [META_FIELD]: meta });
 
   const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id');

@@ -10,7 +10,7 @@ interface IJsonApiObject {
   meta?: IDictionary;
 }
 
-type ILink = string | {href: string; meta: IDictionary};
+type ILink = string | { href: string; meta: IDictionary };
 
 interface IError {
   id?: string | number;

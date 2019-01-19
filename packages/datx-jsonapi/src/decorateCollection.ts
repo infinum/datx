@@ -100,7 +100,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     ): Promise<Response<T>> {
       const query = buildUrl(url, data, options);
 
-      return libFetch<T>({url: query.url, options, data, method, collection: this});
+      return libFetch<T>({ url: query.url, options, data, method, collection: this });
     }
 
     public remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequestOptions);
@@ -165,7 +165,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
     private __addRecord<T extends IJsonapiModel = IJsonapiModel>(obj: IRecord): T {
       const staticCollection = this.constructor as typeof PureCollection;
-      const {type, id} = obj;
+      const { type, id } = obj;
       let record: T|null = this.find(type, id) as T|null;
       const Type = staticCollection.types.find((item) => getModelType(item) === type) || GenericModel;
       const classRefs = getModelClassRefs(Type);
@@ -205,7 +205,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
             if (ref in record) {
               record[ref] = models;
             } else {
-              initModelRef(record, ref, {model: itemType, type: ReferenceType.TO_ONE_OR_MANY}, models);
+              initModelRef(record, ref, { model: itemType, type: ReferenceType.TO_ONE_OR_MANY }, models);
             }
           } else {
             const refsDef = getModelMetaKey(record, 'refs') as IDictionary<IReferenceOptions>;

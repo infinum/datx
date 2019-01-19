@@ -2,7 +2,7 @@ import { autorun, configure, isComputedProp, isObservableProp, observable } from
 
 import { assignComputed, flatten, isFalsyArray, mapItems, uniq } from '../src';
 
-configure({enforceActions: 'observed'});
+configure({ enforceActions: 'observed' });
 
 describe('datx-utils', () => {
   describe('mapUtils', () => {
@@ -49,7 +49,7 @@ describe('datx-utils', () => {
     });
 
     it('should work for truthy arrays', () => {
-      expect(isFalsyArray([1, 2, 3, {}, [], '123'])).toBe(false);
+      expect(isFalsyArray([1, 2, 3, { }, [], '123'])).toBe(false);
     });
 
     it('should work for mixed arrays', () => {
@@ -59,8 +59,8 @@ describe('datx-utils', () => {
 
   describe('assignComputed', () => {
     it('should set a computed prop', () => {
-      const obj1 = observable({});
-      const obj2 = observable.object({});
+      const obj1 = observable({ });
+      const obj2 = observable.object({ });
 
       const data = observable({
         data: 1,
@@ -69,9 +69,9 @@ describe('datx-utils', () => {
       assignComputed(obj1, 'foo', () => 1);
       assignComputed(obj2, 'foo', () => 2);
       // tslint:disable-next-line:no-empty
-      assignComputed(obj1, 'bar', () => obj2, () => {});
+      assignComputed(obj1, 'bar', () => obj2, () => { });
       // tslint:disable-next-line:no-empty
-      assignComputed(obj2, 'bar', () => obj1, () => {});
+      assignComputed(obj2, 'bar', () => obj1, () => { });
       assignComputed(obj1, 'baz', () => data.data, (a) => {
         data.data = a;
       });
@@ -131,6 +131,7 @@ describe('datx-utils', () => {
       const data = new Data();
 
       autorun(() => {
+        // tslint:disable-next-line no-unused-variable
         const tmp = data.foo;
       });
 

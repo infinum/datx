@@ -30,6 +30,7 @@ export function initModelField<T extends PureModel>(
   const fields = getModelMetaKey(obj, 'fields') as Array<string>;
 
   if (type === FieldType.ID && key in obj) {
+    // tslint:disable-next-line:no-dynamic-delete
     delete obj[key];
   }
 
@@ -83,7 +84,7 @@ function prepareFields(data: IRawModel, meta: IMetaToInit, model: PureModel) {
   const staticModel = model.constructor as typeof PureModel;
   const fields = meta.fields ? meta.fields.slice() : [];
   const classRefs = storage.getModelClassReferences(staticModel);
-  const refs = Object.assign({}, classRefs, meta.refs);
+  const refs = Object.assign({ }, classRefs, meta.refs);
 
   const defaults = storage.getModelDefaults(staticModel);
 
@@ -94,11 +95,11 @@ function prepareFields(data: IRawModel, meta: IMetaToInit, model: PureModel) {
       }
     });
 
-  return {defaults, fields, refs};
+  return { defaults, fields, refs };
 }
 
 function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, collection?: PureCollection) {
-  const {defaults, fields, refs} = prepareFields(data, meta, model);
+  const { defaults, fields, refs } = prepareFields(data, meta, model);
 
   const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id');
@@ -153,14 +154,14 @@ function initModelMeta(model: PureModel, data: IRawModel, collection?: PureColle
   const meta = {
     fields: [],
     id,
-    refs: {},
+    refs: { },
     type,
   };
 
   let newMeta;
-  const toInit: IMetaToInit = {fields: [], refs: {}};
+  const toInit: IMetaToInit = { fields: [], refs: { } };
   if (META_FIELD in data && data[META_FIELD]) {
-    const oldMeta = data[META_FIELD] || {};
+    const oldMeta = data[META_FIELD] || { };
     toInit.fields = oldMeta.fields;
     delete oldMeta.fields;
     toInit.refs = oldMeta.refs;
@@ -171,17 +172,18 @@ function initModelMeta(model: PureModel, data: IRawModel, collection?: PureColle
     }
 
     newMeta = storage.setModelMeta(model, Object.assign(meta, oldMeta));
+    // tslint:disable-next-line:no-dynamic-delete
     delete data[META_FIELD];
   } else {
     newMeta = storage.setModelMeta(model, meta);
   }
 
-  return Object.assign({}, newMeta, toInit);
+  return Object.assign({ }, newMeta, toInit);
 }
 
 export function initModel(model: PureModel, rawData: IRawModel, collection?: PureCollection) {
   const staticModel = model.constructor as typeof PureModel;
-  const data = Object.assign({}, staticModel.preprocess(rawData, collection));
+  const data = Object.assign({ }, staticModel.preprocess(rawData, collection));
   setModelMetaKey(model, 'collection', collection);
   const meta = initModelMeta(model, data, collection);
   initModelData(model, data, meta, collection);

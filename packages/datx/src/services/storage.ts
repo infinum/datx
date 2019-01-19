@@ -26,7 +26,7 @@ function setMeta(model, value) {
 
 export class DataStorage {
   public initModel(model: PureModel) {
-    const modelData = observable({data: {}, meta: {}});
+    const modelData = observable({ data: { }, meta: { } });
     setMeta(model, modelData);
 
     return modelData;
@@ -48,7 +48,7 @@ export class DataStorage {
   }
 
   public setModelDataKey(model: PureModel, key: string, value?: any) {
-    this.setModelData(model, {[key]: value});
+    this.setModelData(model, { [key]: value });
   }
 
   public getModelMeta(model: PureModel): IDictionary {
@@ -58,7 +58,7 @@ export class DataStorage {
       return data.meta;
     }
 
-    return this.setModelMeta(model, {});
+    return this.setModelMeta(model, { });
   }
 
   public getModelMetaKey(model: PureModel, key: string): any {
@@ -73,47 +73,47 @@ export class DataStorage {
   }
 
   public setModelMetaKey(model: PureModel, key: string, value?: any) {
-    this.setModelMeta(model, {[key]: value});
+    this.setModelMeta(model, { [key]: value });
   }
 
   public setModelClassMetaKey(model: typeof PureModel, key: string, value?: any) {
     let data = model[DATX_KEY] as IModelClassData;
     if (!data) {
       data = {
-        data: {},
-        meta: {},
-        references: {},
+        data: { },
+        meta: { },
+        references: { },
       };
       setMeta(model, data);
     }
-    Object.assign(data.meta, {[key]: value});
+    Object.assign(data.meta, { [key]: value });
   }
 
   public getModelClassMetaKey(obj: typeof PureModel, key: string): any {
     return reducePrototypeChain(obj, (value, model) => {
-      return value || (model[DATX_KEY] || {meta: {}}).meta[key] || null;
+      return value || (model[DATX_KEY] || { meta: { } }).meta[key] || null;
     }, null);
   }
 
   public addModelDefaultField(model: typeof PureModel, key: string, value?: any) {
     const data = model[DATX_KEY];
     if (data) {
-      Object.assign(data.data, {[key]: value});
+      Object.assign(data.data, { [key]: value });
     } else {
       setMeta(model, {
-        data: {[key]: value},
-        meta: {},
-        references: {},
+        data: { [key]: value },
+        meta: { },
+        references: { },
       });
     }
   }
 
   public getModelDefaults(obj: typeof PureModel): IDictionary {
     const defaults = reducePrototypeChain(obj, (state, model) => {
-      return state.concat((model[DATX_KEY] || {data: []}).data);
+      return state.concat((model[DATX_KEY] || { data: [] }).data);
     }, [] as Array<IDictionary>);
 
-    return Object.assign({}, ...defaults.reverse());
+    return Object.assign({ }, ...defaults.reverse());
   }
 
   public addModelClassReference(model: typeof PureModel, key: string, options: IReferenceOptions) {
@@ -123,22 +123,22 @@ export class DataStorage {
 
     const data = model[DATX_KEY];
     if (data) {
-      Object.assign(data.references, {[key]: options});
+      Object.assign(data.references, { [key]: options });
     } else {
       setMeta(model, {
-        data: {},
-        meta: {},
-        references: {[key]: options},
+        data: { },
+        meta: { },
+        references: { [key]: options },
       });
     }
   }
 
   public getModelClassReferences(obj: typeof PureModel): IDictionary<IReferenceOptions> {
     const defaults = reducePrototypeChain(obj, (state, model) => {
-      return state.concat((model[DATX_KEY] || {references: {}}).references);
+      return state.concat((model[DATX_KEY] || { references: { } }).references);
     }, [] as Array<IDictionary>);
 
-    return Object.assign({}, ...defaults.reverse());
+    return Object.assign({ }, ...defaults.reverse());
   }
 
   public getModelReferenceOptions(model: PureModel, key: string): IReferenceOptions {

@@ -13,8 +13,6 @@ export class CompatCollection extends Collection {
 
     deprecated('CompatCollection is just a migration tool. Please move to Collection as soon as possible.');
 
-    const getters = {};
-
     this.static.types.forEach((model) => {
       const type = getModelType(model);
       assignComputed(this, type.toString(), () => this.findAll(type));

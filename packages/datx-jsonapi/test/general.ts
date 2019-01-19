@@ -1,8 +1,7 @@
 import { Collection, getModelId, getModelType, Model } from 'datx';
-import { IDictionary } from 'datx-utils';
-import { autorun, extendObservable, observable } from 'mobx';
+import { autorun } from 'mobx';
 
-import { config, GenericModel, getModelRefLinks, jsonapi, modelToJsonApi } from '../src';
+import { getModelRefLinks, jsonapi, modelToJsonApi } from '../src';
 import { Event, Image, Photo, TestStore, User } from './utils/setup';
 
 describe('General', () => {
@@ -55,7 +54,7 @@ describe('General', () => {
         },
         id: 1,
         relationships: {
-          image: {},
+          image: { },
         },
         type: 'event',
       },
@@ -270,15 +269,15 @@ describe('General', () => {
         relationships: {
           images: {
             data: [
-              {type: 'image', id: 1},
-              {type: 'image', id: 2},
-              {type: 'image', id: 3},
+              { type: 'image', id: 1 },
+              { type: 'image', id: 2 },
+              { type: 'image', id: 3 },
             ],
           },
           organizers: {
             data: [
-              {type: 'organizers', id: 1},
-              {type: 'organizers', id: 2},
+              { type: 'organizers', id: 1 },
+              { type: 'organizers', id: 2 },
             ],
           },
         },
@@ -290,10 +289,10 @@ describe('General', () => {
         id: 1,
         relationships: {
           event: {
-            data: {type: 'event', id: 1},
+            data: { type: 'event', id: 1 },
           },
           image: {
-            data: {type: 'image', id: 2},
+            data: { type: 'image', id: 2 },
           },
         },
         type: 'organizers',
@@ -304,10 +303,10 @@ describe('General', () => {
         id: 2,
         relationships: {
           event: {
-            data: {type: 'event', id: 1},
+            data: { type: 'event', id: 1 },
           },
           image: {
-            data: {type: 'image', id: 3},
+            data: { type: 'image', id: 3 },
           },
         },
         type: 'organizers',
@@ -318,7 +317,7 @@ describe('General', () => {
         id: 1,
         relationships: {
           event: {
-            data: {type: 'event', id: 1},
+            data: { type: 'event', id: 1 },
           },
         },
         type: 'image',
@@ -329,7 +328,7 @@ describe('General', () => {
         id: 2,
         relationships: {
           event: {
-            data: {type: 'event', id: 1},
+            data: { type: 'event', id: 1 },
           },
         },
         type: 'image',
@@ -340,7 +339,7 @@ describe('General', () => {
         id: 3,
         relationships: {
           event: {
-            data: {type: 'event', id: 1},
+            data: { type: 'event', id: 1 },
           },
         },
         type: 'image',
@@ -360,8 +359,8 @@ describe('General', () => {
     const store = new TestStore();
     store.sync({
       data: [
-        {id: 1, type: 'event', attributes: {}},
-        {id: 2, type: 'event', attributes: {}},
+        { id: 1, type: 'event', attributes: { } },
+        { id: 2, type: 'event', attributes: { } },
       ],
     });
 
@@ -379,8 +378,8 @@ describe('General', () => {
     const store = new TestStore();
     store.sync({
       data: [
-        {id: 1, type: 'event', attributes: {}},
-        {id: 2, type: 'event', attributes: {}},
+        { id: 1, type: 'event', attributes: { } },
+        { id: 2, type: 'event', attributes: { } },
       ],
     });
 
@@ -422,7 +421,7 @@ describe('General', () => {
         id: 2,
         relationships: {
           event: {
-            data: {type: 'event', id: 1},
+            data: { type: 'event', id: 1 },
           },
         },
         type: 'image',
@@ -467,7 +466,7 @@ describe('General', () => {
     if (event) {
       expect(event.name).toBe('Demo');
       expect(getModelRefLinks(event).images)
-        .toEqual({self: 'https://example.com/events/1/relationships/images'});
+        .toEqual({ self: 'https://example.com/events/1/relationships/images' });
     }
   });
 
@@ -500,7 +499,7 @@ describe('General', () => {
     if (event) {
       expect(event.name).toBe('Demo');
       expect(getModelRefLinks(event).images)
-        .toEqual({self: 'https://example.com/events/1/relationships/images'});
+        .toEqual({ self: 'https://example.com/events/1/relationships/images' });
     }
   });
 
@@ -625,7 +624,7 @@ describe('General', () => {
   });
 
   it('should serialize empty relationships', () => {
-    const event = new Event({name: 'Foo'});
+    const event = new Event({ name: 'Foo' });
 
     const data = modelToJsonApi(event);
 
@@ -638,7 +637,7 @@ describe('General', () => {
   });
 
   it('should serialize model id correctly', () => {
-    const event = new Event({id: '1234', name: 'Foo'});
+    const event = new Event({ id: '1234', name: 'Foo' });
 
     const data = modelToJsonApi(event);
 

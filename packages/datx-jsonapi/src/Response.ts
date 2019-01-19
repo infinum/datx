@@ -1,6 +1,6 @@
 import { getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId, View } from 'datx';
 import { assignComputed, IDictionary } from 'datx-utils';
-import { action, extendObservable, IComputedValue } from 'mobx';
+import { action, IComputedValue } from 'mobx';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -120,7 +120,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {IJsonapiCollection}
    * @memberOf Response
    */
-  private __collection?: IJsonapiCollection;
+  private readonly __collection?: IJsonapiCollection;
 
   /**
    * Server options
@@ -129,7 +129,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {IRequestOptions}
    * @memberOf Response
    */
-  private __options?: IRequestOptions;
+  private readonly __options?: IRequestOptions;
 
   /**
    * Original server response
@@ -138,7 +138,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {IRawResponse}
    * @memberOf Response
    */
-  private __response: IRawResponse;
+  private readonly __response: IRawResponse;
 
   /**
    * Cache used for the link requests
@@ -147,7 +147,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {IDictionary<Promise<Response>>}
    * @memberOf Response
    */
-  private __cache: IDictionary<Promise<Response<T>>> = {};
+  private readonly __cache: IDictionary<Promise<Response<T>>> = { };
 
   constructor(
     response: IRawResponse,
@@ -185,14 +185,14 @@ export class Response<T extends IJsonapiModel> {
       }
     });
 
-    this.meta = (response.data && response.data.meta) || {};
-    this.links = (response.data && response.data.links) || {};
-    this.jsonapi = (response.data && response.data.jsonapi) || {};
+    this.meta = (response.data && response.data.meta) || { };
+    this.links = (response.data && response.data.links) || { };
+    this.jsonapi = (response.data && response.data.jsonapi) || { };
     this.headers = response.headers;
     this.requestHeaders = response.requestHeaders;
     this.error = (response.data && response.data.errors) || response.error;
 
-    const linkGetter: IDictionary<IComputedValue<Promise<Response<T>>>> = {};
+    const linkGetter: IDictionary<IComputedValue<Promise<Response<T>>>> = { };
     if (this.links) {
       Object.keys(this.links).forEach((link: string) => {
         assignComputed(this, link, () => this.__fetchLink(link));

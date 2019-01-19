@@ -2,7 +2,7 @@
 
 import { autorun, computed, configure, isComputedProp, isObservableArray, runInAction } from 'mobx';
 
-configure({enforceActions: 'observed'});
+configure({ enforceActions: 'observed' });
 
 import {
   assignModel,
@@ -35,7 +35,7 @@ describe('Model', () => {
 
       prop(Foo, 'baz');
 
-      const foo1 = new Foo({foo: 1, bar: 2});
+      const foo1 = new Foo({ foo: 1, bar: 2 });
 
       expect(isComputedProp(foo1, 'foo')).toBe(true);
       expect(isComputedProp(foo1, 'baz')).toBe(true);
@@ -70,7 +70,7 @@ describe('Model', () => {
         @prop public baz!: number;
       }
 
-      const foo1 = new Foo({foo: 1, bar: 2});
+      const foo1 = new Foo({ foo: 1, bar: 2 });
 
       expect(foo1.valueOf()).toMatchSnapshot();
       expect(foo1.toString()).toMatchSnapshot();
@@ -94,7 +94,7 @@ describe('Model', () => {
       // @ts-ignore - Avoiding the TypeScript features on purpose
       expect(() => setupModel(Collection)).toThrowError('This mixin can only decorate models');
 
-      const foo = new Foo({foo: 1, bar: 2});
+      const foo = new Foo({ foo: 1, bar: 2 });
 
       expect(foo.foo).toBe(1);
       expect(foo.bar).toBe(2);
@@ -130,9 +130,9 @@ describe('Model', () => {
         }
       }
 
-      const foo1 = new Foo({foo: 1, bar: 2});
-      const foo2 = new Foo({foo: 2, bar: 4});
-      const foo3 = new Foo({foo: 3, bar: 3});
+      const foo1 = new Foo({ foo: 1, bar: 2 });
+      const foo2 = new Foo({ foo: 2, bar: 4 });
+      const foo3 = new Foo({ foo: 3, bar: 3 });
 
       expect(foo1.meta.id).toBe(getModelId(foo1));
       expect(foo1.id).toBe(getModelId(foo1));
@@ -155,10 +155,10 @@ describe('Model', () => {
       class Foo extends PureModel {
         @prop public foo!: number;
         @prop public bar!: number;
-        @prop public baz!: {foobar: number};
+        @prop public baz!: { foobar: number };
       }
 
-      const foo = new Foo({foo: 1, bar: 2, baz: {foobar: 3}});
+      const foo = new Foo({ foo: 1, bar: 2, baz: { foobar: 3 } });
 
       let foobarValue: number = 3;
       let autorunCount = 0;
@@ -193,7 +193,7 @@ describe('Model', () => {
         @prop.defaultValue(5) public bar!: number;
       }
 
-      const foo = new Foo({bar: 2});
+      const foo = new Foo({ bar: 2 });
 
       expect(foo.foo).toBe(4);
       expect(foo.bar).toBe(2);
@@ -223,7 +223,7 @@ describe('Model', () => {
         public bar!: number;
       }
 
-      const bar = new Bar({bar: 2});
+      const bar = new Bar({ bar: 2 });
 
       expect(bar.foo).toBe(undefined);
       expect(bar.bar).toBe(2);
@@ -239,7 +239,7 @@ describe('Model', () => {
         @prop.defaultValue(9) public baz!: number;
       }
 
-      const bar = new Bar({bar: 2});
+      const bar = new Bar({ bar: 2 });
 
       expect(bar.foo).toBe(4);
       expect(bar.bar).toBe(2);
@@ -251,7 +251,7 @@ describe('Model', () => {
         @prop public foo!: number;
       }
 
-      const foo = new Foo({foo: 1});
+      const foo = new Foo({ foo: 1 });
       expect(foo.foo).toBe(1);
 
       const collection = new Collection();
@@ -273,7 +273,7 @@ describe('Model', () => {
         public bar!: number; // Not observable
       }
 
-      const foo = new Foo({foo: 1});
+      const foo = new Foo({ foo: 1 });
       assignModel(foo, 'bar', 2);
       expect(foo.foo).toBe(1);
       expect(foo.bar).toBe(2);
@@ -315,19 +315,19 @@ describe('Model', () => {
       const collection = new TestCollection();
       expect(Foo.toJSON()).toBe('foo');
 
-      const foo1 = new Foo({foo: 2});
+      const foo1 = new Foo({ foo: 2 });
       collection.add(foo1);
 
       expect(isComputedProp(foo1, 'parent')).toBe(true);
 
-      const foo2 = collection.add({foo: 3, parent: foo1}, Foo);
+      const foo2 = collection.add({ foo: 3, parent: foo1 }, Foo);
 
       expect(foo2.parent).toBe(foo1);
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2 = modelToJSON(foo2);
       expect(raw2.parent).toBe(getModelId(foo1));
 
-      const foo3 = collection.add({foo: 4, parent: {foo: 5}}, Foo);
+      const foo3 = collection.add({ foo: 4, parent: { foo: 5 } }, Foo);
       expect(foo3.parent).toBeInstanceOf(Foo);
       expect(foo3.parent && foo3.parent.foo).toBe(5);
     });
@@ -344,17 +344,17 @@ describe('Model', () => {
       }
       const collection = new TestCollection();
 
-      const foo1 = new Foo({foo: 2});
+      const foo1 = new Foo({ foo: 2 });
       collection.add(foo1);
 
-      const foo2 = collection.add({foo: 3, parent: foo1}, Foo);
+      const foo2 = collection.add({ foo: 3, parent: foo1 }, Foo);
 
       expect(foo2.parent).toBe(foo1);
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2 = modelToJSON(foo2);
       expect(raw2.parent).toBe(getModelId(foo1));
 
-      const foo3 = collection.add({foo: 4, parent: {foo: 5}}, Foo);
+      const foo3 = collection.add({ foo: 4, parent: { foo: 5 } }, Foo);
       expect(foo3.parent).toBeInstanceOf(Foo);
       expect(foo3.parent && foo3.parent.foo).toBe(5);
     });
@@ -365,10 +365,10 @@ describe('Model', () => {
         @prop.defaultValue(1) public foo!: number;
       }
 
-      const foo1 = new Foo({foo: 2});
+      const foo1 = new Foo({ foo: 2 });
 
       expect(() => {
-        const foo2 = new Foo({foo: 3, parent: foo1});
+        const foo2 = new Foo({ foo: 3, parent: foo1 });
       }).toThrowError('The model needs to be in a collection to be referenceable');
 
       expect(() => {
@@ -388,13 +388,13 @@ describe('Model', () => {
       }
       const collection = new TestCollection();
 
-      const foo1 = new Foo({foo: 2});
+      const foo1 = new Foo({ foo: 2 });
       collection.add(foo1);
 
-      expect(() => collection.add({foo: 3, parent: [foo1]}, Foo))
+      expect(() => collection.add({ foo: 3, parent: [foo1] }, Foo))
         .toThrowError('The reference parent can\'t be an array of values.');
 
-      expect(() => new Foo({foo: 3, parent: [foo1]}))
+      expect(() => new Foo({ foo: 3, parent: [foo1] }))
         .toThrowError('The reference parent can\'t be an array of values.');
     });
 
@@ -410,8 +410,8 @@ describe('Model', () => {
       }
       const collection = new TestCollection();
 
-      const foo1 = collection.add(new Foo({foo: 2}));
-      const foo2 = collection.add({foo: 3, parent: [foo1]}, Foo);
+      const foo1 = collection.add(new Foo({ foo: 2 }));
+      const foo2 = collection.add({ foo: 3, parent: [foo1] }, Foo);
 
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
@@ -430,9 +430,9 @@ describe('Model', () => {
       }
       const collection = new TestCollection();
 
-      const foo1 = collection.add({foo: 2}, Foo);
-      const foo2 = collection.add({foo: 3, parent: [foo1]}, Foo);
-      const foo3 = collection.add({foo: 4}, Foo);
+      const foo1 = collection.add({ foo: 2 }, Foo);
+      const foo2 = collection.add({ foo: 3, parent: [foo1] }, Foo);
+      const foo3 = collection.add({ foo: 4 }, Foo);
 
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
@@ -464,15 +464,15 @@ describe('Model', () => {
 
       const store = new TestCollection();
 
-      const foo1 = store.add({foo: 2}, Foo);
-      expect(() => store.add({foo: 3, parent: foo1}, Foo))
+      const foo1 = store.add({ foo: 2 }, Foo);
+      expect(() => store.add({ foo: 3, parent: foo1 }, Foo))
         .toThrowError('The reference parent must be an array of values.');
 
-      const foo2 = store.add({foo: 3, parent: null}, Foo);
+      const foo2 = store.add({ foo: 3, parent: null }, Foo);
       expect(isObservableArray(foo2.parent)).toBe(true);
       expect(foo2.parent).toHaveLength(0);
 
-      const foo3 = store.add({foo: 3, parent: undefined}, Foo);
+      const foo3 = store.add({ foo: 3, parent: undefined }, Foo);
       expect(isObservableArray(foo3.parent)).toBe(true);
       expect(foo3.parent).toHaveLength(0);
     });
@@ -488,8 +488,8 @@ describe('Model', () => {
       }
       const collection = new TestCollection();
 
-      const foo1 = collection.add({foo: 2}, Foo);
-      const foo2 = collection.add({foo: 3, parent: [foo1]}, Foo);
+      const foo1 = collection.add({ foo: 2 }, Foo);
+      const foo2 = collection.add({ foo: 3, parent: [foo1] }, Foo);
 
       expect(isObservableArray(foo2.parent)).toBe(true);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
@@ -521,8 +521,8 @@ describe('Model', () => {
       }
       const collection = new TestCollection();
 
-      const foo1 = collection.add(new Foo({foo: 2}));
-      const foo2 = collection.add({foo: 3, parent: [foo1]}, Foo);
+      const foo1 = collection.add(new Foo({ foo: 2 }));
+      const foo2 = collection.add({ foo: 3, parent: [foo1] }, Foo);
 
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
@@ -556,12 +556,12 @@ describe('Model', () => {
       }
       const collection = new TestCollection();
 
-      const foo1 = new Foo({foo: 2});
-      const foo2 = new Foo({foo: 3});
+      const foo1 = new Foo({ foo: 2 });
+      const foo2 = new Foo({ foo: 3 });
 
       collection.add([foo1, foo2]);
 
-      initModelRef(foo2, 'parent', {model: Foo, type: ReferenceType.TO_MANY}, [foo1]);
+      initModelRef(foo2, 'parent', { model: Foo, type: ReferenceType.TO_MANY }, [foo1]);
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
 
@@ -584,7 +584,7 @@ describe('Model', () => {
         public static type = 'bar';
       }
 
-      const bar = new Bar({});
+      const bar = new Bar({ });
 
       class Foo extends PureModel {
         public static type = 'foo';
@@ -604,7 +604,7 @@ describe('Model', () => {
       const collection = new TestCollection();
       collection.add(bar);
 
-      const foo1 = collection.add({foo: 2}, Foo);
+      const foo1 = collection.add({ foo: 2 }, Foo);
     });
 
     it('should work if an independent type is defined', () => {
@@ -619,7 +619,7 @@ describe('Model', () => {
       }
 
       const collection = new TestCollection();
-      const foo = collection.add({type: 'foobar'}, Foo);
+      const foo = collection.add({ type: 'foobar' }, Foo);
       expect(getModelType(foo)).toBe('foo');
       expect(foo.type).toBe('foobar');
     });
@@ -655,7 +655,7 @@ describe('Model', () => {
           key: 2,
         }, {
           foo: {
-            bars: [{id: 6, key: 6}],
+            bars: [{ id: 6, key: 6 }],
             id: 5,
             key: 5,
           },
@@ -699,10 +699,10 @@ describe('Model', () => {
         }
         const collection = new TestCollection();
 
-        const foo1 = collection.add({foo: 1}, Foo);
-        const foo2 = collection.add({foo: 2, parent: foo1}, Foo);
-        const foo3 = collection.add({foo: 3, parent: foo1}, Foo);
-        const foo4 = collection.add({foo: 4, parent: foo2}, Foo);
+        const foo1 = collection.add({ foo: 1 }, Foo);
+        const foo2 = collection.add({ foo: 2, parent: foo1 }, Foo);
+        const foo3 = collection.add({ foo: 3, parent: foo1 }, Foo);
+        const foo4 = collection.add({ foo: 4, parent: foo2 }, Foo);
 
         expect(isComputedProp(foo1, 'backFoos')).toBe(true);
         expect(isComputedProp(foo1, 'children')).toBe(true);
@@ -793,7 +793,7 @@ describe('Model', () => {
 
         const store = new TestCollection();
 
-        const foo = new Foo({id: '123', type: '456'});
+        const foo = new Foo({ id: '123', type: '456' });
         expect(foo.id).toBe('123');
         expect(getModelId(foo)).toBe(foo.id);
         expect(foo.type).toBe('456');
@@ -803,12 +803,12 @@ describe('Model', () => {
         expect(() => foo.id = '789')
           .toThrowError('Model ID can\'t be updated directly. Use the `updateModelId` helper function instead.');
 
-        const foo1 = store.add(new Foo({id: '234'}));
+        const foo1 = store.add(new Foo({ id: '234' }));
         expect(store.length).toBe(1);
         expect(foo1.id).toBe('234');
         expect(getModelCollection(foo1)).toBe(store);
 
-        const foo2 = store.add({parent: foo1, foos: [foo1]}, Foo);
+        const foo2 = store.add({ parent: foo1, foos: [foo1] }, Foo);
         expect(store.length).toBe(2);
         expect(getModelCollection(foo2)).toBe(store);
         expect(foo2.id).toBeLessThan(0);
@@ -837,17 +837,17 @@ describe('Model', () => {
       });
 
       it('should work without decorators', () => {
-        class FooModel extends PureModel {}
+        class FooModel extends PureModel { }
         FooModel.type = 'foo';
 
         // @ts-ignore - Avoiding the TypeScript features on purpose
         const Foo = setupModel(FooModel, {
           idAttribute: 'id',
           references: {
-            bars: {model: 'bar', type: ReferenceType.TO_ONE_OR_MANY},
-            children: {model: FooModel, type: ReferenceType.TO_MANY, property: 'parent'},
-            foos: {model: FooModel, type: ReferenceType.TO_MANY},
-            parent: {model: FooModel, type: ReferenceType.TO_ONE},
+            bars: { model: 'bar', type: ReferenceType.TO_ONE_OR_MANY },
+            children: { model: FooModel, type: ReferenceType.TO_MANY, property: 'parent' },
+            foos: { model: FooModel, type: ReferenceType.TO_MANY },
+            parent: { model: FooModel, type: ReferenceType.TO_ONE },
           },
           typeAttribute: 'type',
         });
@@ -858,7 +858,7 @@ describe('Model', () => {
 
         const store = new TestCollection();
 
-        const foo = new Foo({id: '123', type: '456'});
+        const foo = new Foo({ id: '123', type: '456' });
         expect(foo.id).toBe('123');
         expect(getModelId(foo)).toBe(foo.id);
         expect(foo.type).toBe('456');
@@ -868,10 +868,10 @@ describe('Model', () => {
         expect(() => foo.id = '789')
           .toThrowError('Model ID can\'t be updated directly. Use the `updateModelId` helper function instead.');
 
-        const foo1 = store.add(new Foo({id: '234'}));
+        const foo1 = store.add(new Foo({ id: '234' }));
         expect(foo1.id).toBe('234');
 
-        const foo2 = store.add({parent: foo1, foos: [foo1]}, Foo);
+        const foo2 = store.add({ parent: foo1, foos: [foo1] }, Foo);
         // @ts-ignore - Avoiding the TypeScript features on purpose
         expect(foo2.id).toBeLessThan(0);
         // @ts-ignore - Avoiding the TypeScript features on purpose

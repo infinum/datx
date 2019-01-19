@@ -32,7 +32,7 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
   }
 
   class MetaClass {
-    private __instance: T;
+    private readonly __instance: T;
     constructor(instance: T) {
       this.__instance = instance;
     }
@@ -50,9 +50,9 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
     }
 
     @computed public get refs() {
-      const refDefs = getModelMetaKey(this.__instance, 'refs') || {};
+      const refDefs = getModelMetaKey(this.__instance, 'refs') || { };
 
-      const refs = {};
+      const refs = { };
       Object.keys(refDefs).forEach((key) => {
         refs[key] = getRefId(this.__instance, key);
       });

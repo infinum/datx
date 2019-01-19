@@ -164,7 +164,7 @@ function getBackRef(model: PureModel, key: string, refOptions: IReferenceOptions
     .findAll(type)
     .filter((item) => hasBackRef(item, refOptions.property as string, model));
 
-  const backData: IObservableArray<PureModel> = observable.array(backModels, {deep: false});
+  const backData: IObservableArray<PureModel> = observable.array(backModels, { deep: false });
   intercept(backData, (change: TChange) => partialBackRefUpdate(model, key, change));
 
   return backData;
@@ -182,7 +182,7 @@ function getNormalRef(model: PureModel, key: string, refOptions: IReferenceOptio
     dataModels = [dataModels];
   }
   if (dataModels instanceof Array) {
-    const data: IObservableArray<PureModel> = observable.array(dataModels, {deep: false});
+    const data: IObservableArray<PureModel> = observable.array(dataModels, { deep: false });
     intercept(data, (change: TChange) => partialRefUpdate(model, key, change));
 
     return data;
@@ -201,9 +201,9 @@ export function getRef(model: PureModel, key: string): PureModel|Array<PureModel
 
 function validateRef(refOptions: IReferenceOptions, isArray: boolean, key: string) {
   if (refOptions.type === ReferenceType.TO_ONE && isArray) {
-    throw error(REF_SINGLE, {key});
+    throw error(REF_SINGLE, { key });
   } else if (refOptions.type === ReferenceType.TO_MANY && !isArray) {
-    throw error(REF_ARRAY, {key});
+    throw error(REF_ARRAY, { key });
   } else if (refOptions.property) {
     throw error(BACK_REF_READ_ONLY);
   }

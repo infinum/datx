@@ -16,7 +16,7 @@ export class View<T extends PureModel = PureModel> {
   public readonly modelType: IType;
   @observable public sortMethod?: string|((item: T) => any);
 
-  private __models: IObservableArray<IIdentifier> = observable.array([]);
+  private readonly __models: IObservableArray<IIdentifier> = observable.array([]);
 
   constructor(
     modelType: IModelConstructor<T>|IType,
@@ -49,7 +49,7 @@ export class View<T extends PureModel = PureModel> {
       list.sort((a: T, b: T) => sortFn(a) - sortFn(b));
     }
 
-    const instances = observable.array(list, {deep: false});
+    const instances = observable.array(list, { deep: false });
 
     intercept(instances, this.__partialListUpdate.bind(this));
 
@@ -167,6 +167,7 @@ export class View<T extends PureModel = PureModel> {
     return null;
   }
 
+  // tslint:disable-next-line no-unused-variables
   private __changeModelId(oldId: IIdentifier, newId: IIdentifier) {
     const oldIdIndex = this.__models.indexOf(oldId);
     if (oldIdIndex !== -1) {

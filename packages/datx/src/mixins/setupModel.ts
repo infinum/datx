@@ -25,7 +25,7 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
     idAttribute?: string;
     typeAttribute?: string;
   // tslint:disable-next-line:no-object-literal-type-assertion
-  } = {fields: {} as IFields},
+  } = { fields: { } as IFields },
 ) {
   const BaseClass = Base as typeof PureModel;
 
@@ -33,7 +33,7 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
     throw error(DECORATE_MODEL);
   }
 
-  class ModelWithProps extends BaseClass {}
+  class ModelWithProps extends BaseClass { }
 
   if (type) {
     ModelWithProps.type = type;
@@ -55,7 +55,7 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
 
   if (references) {
     Object.keys(references).forEach((key) => {
-      const {model, property} = references[key];
+      const { model, property } = references[key];
       switch (references[key].type) {
         case ReferenceType.TO_ONE:
           prop.toOne(model)(ModelWithProps.prototype, key);

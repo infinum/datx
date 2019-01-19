@@ -3,9 +3,8 @@
 import { autorun, computed, configure } from 'mobx';
 
 import { CompatCollection, CompatModel, getRefId, IIdentifier, prop } from '../src';
-import { storage } from '../src/services/storage';
 
-configure({enforceActions: 'observed'});
+configure({ enforceActions: 'observed' });
 
 describe('Compat Model', () => {
   it('should use basic models', () => {
@@ -119,7 +118,7 @@ describe('Compat Model', () => {
   it('should support basic relations and serializing', () => {
     class FooModel extends CompatModel {
       public static type = 'foo';
-      public static refs = {bar: 'foo', fooBar: 'foo'};
+      public static refs = { bar: 'foo', fooBar: 'foo' };
 
       public id!: number;
 
@@ -185,7 +184,7 @@ describe('Compat Model', () => {
   it('should work for the readme example', () => {
     class Person extends CompatModel {
       public static type = 'person';
-      public static refs = {spouse: 'person', pets: {model: 'pet', property: 'owner'}};
+      public static refs = { spouse: 'person', pets: { model: 'pet', property: 'owner' } };
 
       public firstName!: string;
       public lastName!: string;
@@ -199,7 +198,7 @@ describe('Compat Model', () => {
 
     class Pet extends CompatModel {
       public static type = 'pet';
-      public static refs = {owner: 'person'};
+      public static refs = { owner: 'person' };
 
       public owner!: Person;
       public ownerId!: number;
@@ -303,7 +302,7 @@ describe('Compat Model', () => {
     class FooModel extends CompatModel {
       public static type = 'foo';
 
-      public static refs = {fooBar: 'foo'};
+      public static refs = { fooBar: 'foo' };
 
       public id!: number;
       public foo!: number;
@@ -480,12 +479,12 @@ describe('Compat Model', () => {
 
     const collection = new TestCollection();
 
-    const foo1 = collection.add<Foo>({bar: 1}, 'foo');
-    const foo2 = collection.add<Foo>({bar: 1}, 'foo');
-    const foo10 = collection.add<Foo>({myID: 10, bar: 1}, 'foo');
-    const foo3 = collection.add<Foo>({bar: 1}, 'foo');
-    const foo4 = collection.add<Foo>({myID: -4, bar: 1}, 'foo');
-    const foo5 = collection.add<Foo>({bar: 1}, 'foo');
+    const foo1 = collection.add<Foo>({ bar: 1 }, 'foo');
+    const foo2 = collection.add<Foo>({ bar: 1 }, 'foo');
+    const foo10 = collection.add<Foo>({ myID: 10, bar: 1 }, 'foo');
+    const foo3 = collection.add<Foo>({ bar: 1 }, 'foo');
+    const foo4 = collection.add<Foo>({ myID: -4, bar: 1 }, 'foo');
+    const foo5 = collection.add<Foo>({ bar: 1 }, 'foo');
 
     expect(foo1.myID).toBe(-1);
     expect(foo5.myID).toBe(-5);
@@ -493,11 +492,11 @@ describe('Compat Model', () => {
     expect(foo10.myID).toBe(10);
     expect(collection.foo.length).toBe(6);
 
-    const bar5 = collection.add<Bar>({id: 5}, 'bar');
+    const bar5 = collection.add<Bar>({ id: 5 }, 'bar');
     expect(bar5.getRecordId()).toBe(5);
-    expect(() => collection.add<Bar>({foo: 1}, 'bar')).toThrow('Model id is required (autoincrement is disabled)');
+    expect(() => collection.add<Bar>({ foo: 1 }, 'bar')).toThrow('Model id is required (autoincrement is disabled)');
 
-    const baz1 = collection.add<Baz>({}, 'baz');
+    const baz1 = collection.add<Baz>({ }, 'baz');
     expect(baz1.getRecordId()).toBe(-1);
     expect(baz1.getRecordType()).toBe('baz');
   });
@@ -515,7 +514,7 @@ describe('Compat Model', () => {
 
     const collection = new TestCollection();
 
-    const model = new TestModel({id: 1, foo: 'bar'});
+    const model = new TestModel({ id: 1, foo: 'bar' });
     collection.add(model);
 
     const bar = collection.findAll('bar');
@@ -535,7 +534,7 @@ describe('Compat Model', () => {
     }
 
     const collection = new TestCollection();
-    const model = collection.add<Foo>({}, 'foo');
+    const model = collection.add<Foo>({ }, 'foo');
     model.assign('foo', 1);
     model.assignRef('self', model, 'foo');
     model.assignRef('self2', model);
@@ -556,7 +555,7 @@ describe('Compat Model', () => {
     }
 
     const collection = new TestCollection();
-    const model = collection.add<Foo>({}, 'foo');
+    const model = collection.add<Foo>({ }, 'foo');
 
     expect(() => {
       model.assign('id', 1);
@@ -572,7 +571,7 @@ describe('Compat Model', () => {
     class Foo extends CompatModel {
       public static type = 'foo';
 
-      public static refs = {bar: 'bar'};
+      public static refs = { bar: 'bar' };
 
       public foo!: number;
       public bar!: Bar|Array<Bar>;
@@ -631,7 +630,7 @@ describe('Compat Model', () => {
 
     class Cart extends CompatModel {
       public static type = 'cart';
-      public static refs = {user: 'user', products: 'cartItem'};
+      public static refs = { user: 'user', products: 'cartItem' };
       public user!: User|Array<User>;
       public products!: CartItem|Array<CartItem>;
       public id!: number;
@@ -639,7 +638,7 @@ describe('Compat Model', () => {
 
     class CartItem extends CompatModel {
       public static type = 'cartItem';
-      public static refs = {product: 'products'};
+      public static refs = { product: 'products' };
       public product!: Product|Array<Product>;
       public quantity!: number;
       public id!: number;
@@ -701,11 +700,11 @@ describe('Compat Model', () => {
   it('should work with preprocess', () => {
     class Foo extends CompatModel {
       public static type = 'foo';
-      public static refs = {bar: 'bar'};
+      public static refs = { bar: 'bar' };
       public static preprocess(rawData, coll) {
         expect(coll).toBeInstanceOf(TestCollection);
 
-        return Object.assign({newProp: 1}, rawData);
+        return Object.assign({ newProp: 1 }, rawData);
       }
       public bar!: Bar|Array<Bar>;
     }
@@ -713,7 +712,7 @@ describe('Compat Model', () => {
     class Bar extends CompatModel {
       public static type = 'bar';
       public static preprocess(rawData) {
-        return Object.assign({barProp: 2}, rawData);
+        return Object.assign({ barProp: 2 }, rawData);
       }
     }
 
@@ -743,7 +742,7 @@ describe('Compat Model', () => {
   it('should update an exiting reference', () => {
     class Foo extends CompatModel {
       public static type = 'foo';
-      public static refs = {self: 'foo'};
+      public static refs = { self: 'foo' };
 
       public self!: Foo|Array<Foo>;
       public id!: number;
@@ -756,7 +755,7 @@ describe('Compat Model', () => {
 
     const collection = new TestCollection();
 
-    const model = collection.add<Foo>({id: 1, foo: 2, self: 1}, 'foo');
+    const model = collection.add<Foo>({ id: 1, foo: 2, self: 1 }, 'foo');
 
     expect(model.self).toBe(model);
 
@@ -778,11 +777,11 @@ describe('Compat Model', () => {
     }
 
     const collection = new TestCollection();
-    const model = collection.add<Foo>({id: 1, foo: 2}, 'foo');
+    const model = collection.add<Foo>({ id: 1, foo: 2 }, 'foo');
 
     expect(model.assign).toBeInstanceOf(Function);
     expect(model.id).toBe(1);
-    model.update({id: 2, assign: true, foo: 3});
+    model.update({ id: 2, assign: true, foo: 3 });
     expect(model.assign).toBeInstanceOf(Function);
     expect(model.id).toBe(1);
     expect(model.foo).toBe(3);
@@ -791,7 +790,7 @@ describe('Compat Model', () => {
   it('should support updating the array items in the reference', () => {
     class Foo extends CompatModel {
       public static type = 'foo';
-      public static refs = {bar: 'foo'};
+      public static refs = { bar: 'foo' };
       public id!: number;
       public foo!: number;
       public bar!: Foo|Array<Foo>;
@@ -802,8 +801,8 @@ describe('Compat Model', () => {
     }
 
     const collection = new TestCollection();
-    const model1 = collection.add<Foo>({id: 1, foo: 2, bar: [1]}, 'foo');
-    const model2 = collection.add<Foo>({id: 2, foo: 4, bar: [1, 1, 2]}, 'foo');
+    const model1 = collection.add<Foo>({ id: 1, foo: 2, bar: [1] }, 'foo');
+    const model2 = collection.add<Foo>({ id: 2, foo: 4, bar: [1, 1, 2] }, 'foo');
 
     expect(model2.bar[0]).toBe(model1);
     expect(model2.bar).toHaveLength(3);
@@ -816,7 +815,7 @@ describe('Compat Model', () => {
   it('should validate the reference types', () => {
     class Foo extends CompatModel {
       public static type = 'foo';
-      public static refs = {foo: 'foo'};
+      public static refs = { foo: 'foo' };
       public foo: any; // This would usually be Foo|Array<Foo>, but we need to test the other cases
     }
 
@@ -829,8 +828,8 @@ describe('Compat Model', () => {
     }
 
     const collection = new TestCollection();
-    const foo = collection.add<Foo>({id: 1, foo: 1}, 'foo');
-    const bar = collection.add<Bar>({id: 2, bar: 3}, 'bar');
+    const foo = collection.add<Foo>({ id: 1, foo: 1 }, 'foo');
+    const bar = collection.add<Bar>({ id: 2, bar: 3 }, 'bar');
 
     expect(foo.foo).toBe(foo);
 
@@ -845,14 +844,14 @@ describe('Compat Model', () => {
     it('should support many to one/many relationships', () => {
       class Foo extends CompatModel {
         public static type = 'foo';
-        public static refs = {bars: {model: 'bar', property: 'fooBar'}};
+        public static refs = { bars: { model: 'bar', property: 'fooBar' } };
 
         public bars!: Bar|Array<Bar>;
       }
 
       class Bar extends CompatModel {
         public static type = 'bar';
-        public static refs = {fooBar: 'foo'};
+        public static refs = { fooBar: 'foo' };
 
         public fooBar!: Foo|Array<Foo>;
       }
@@ -863,7 +862,7 @@ describe('Compat Model', () => {
 
       const store = new TestStore();
 
-      const foo = store.add<Foo>({id: 1, type: 'foo'}, 'foo');
+      const foo = store.add<Foo>({ id: 1, type: 'foo' }, 'foo');
       const bars = store.add<Bar>([{
         fooBar: 1,
         id: 2,
@@ -902,14 +901,14 @@ describe('Compat Model', () => {
         public parents!: Person|Array<Person>;
       }
 
-      class Store extends CompatCollection {}
+      class Store extends CompatCollection { }
       Store.types = [Person];
 
       const collection = new Store();
-      const steve = collection.add<Person>({firstName: 'Steve'}, 'person');
-      const jane = collection.add<Person>({firstName: 'Jane'}, 'person');
-      const bob = collection.add<Person>({firstName: 'Bob'}, 'person');
-      const john = collection.add<Person>({firstName: 'John'}, 'person');
+      const steve = collection.add<Person>({ firstName: 'Steve' }, 'person');
+      const jane = collection.add<Person>({ firstName: 'Jane' }, 'person');
+      const bob = collection.add<Person>({ firstName: 'Bob' }, 'person');
+      const john = collection.add<Person>({ firstName: 'John' }, 'person');
 
       steve.spouse = jane;
 
@@ -975,7 +974,7 @@ describe('Compat Model', () => {
         public foo!: Array<FooModel>;
       }
 
-      const model = new FooModel({id: 123});
+      const model = new FooModel({ id: 123 });
       const raw = model.toJS();
 
       const store = new TestCollection();
@@ -996,8 +995,8 @@ describe('Compat Model', () => {
         public foo!: Array<FooModel>;
       }
 
-      const model1 = new FooModel({id: 123});
-      const model2 = new FooModel({id: 456});
+      const model1 = new FooModel({ id: 123 });
+      const model2 = new FooModel({ id: 456 });
       const raw = [model1.toJS(), model2.toJS()];
 
       const store = new TestCollection();
@@ -1009,14 +1008,14 @@ describe('Compat Model', () => {
     it('should throw if the data is invalid for a single object', () => {
       const store = new CompatCollection();
 
-      expect(() => store.insert([{id: 123}]))
+      expect(() => store.insert([{ id: 123 }]))
         .toThrow('The type needs to be defined if the object is not an instance of the model.');
     });
 
     it('should throw if the data is invalid for multiple objects', () => {
       const store = new CompatCollection();
 
-      expect(() => store.insert([{id: 123}, {id: 345}]))
+      expect(() => store.insert([{ id: 123 }, { id: 345 }]))
         .toThrow('The type needs to be defined if the object is not an instance of the model.');
     });
 
@@ -1033,11 +1032,11 @@ describe('Compat Model', () => {
         public foo!: Array<FooModel>;
       }
 
-      const model = new FooModel({id: 123});
+      const model = new FooModel({ id: 123 });
       const raw = model.toJS();
 
       const store = new TestCollection();
-      expect(() => store.insert([raw, {id: 456}]))
+      expect(() => store.insert([raw, { id: 456 }]))
         .toThrow('The type needs to be defined if the object is not an instance of the model.');
       expect(store.length).toBe(0);
     });
@@ -1047,7 +1046,7 @@ describe('Compat Model', () => {
     it('should be possible to push to a ref array', () => {
       class Foo extends CompatModel {
         public static type = 'foo';
-        public static refs = {bar: 'bar'};
+        public static refs = { bar: 'bar' };
         public id!: number;
         public bar!: Array<Bar>;
       }
@@ -1064,11 +1063,11 @@ describe('Compat Model', () => {
 
       const store = new Store();
 
-      const foo = store.add<Foo>({id: 1, bar: [{id: 1}, {id: 2}]}, 'foo');
+      const foo = store.add<Foo>({ id: 1, bar: [{ id: 1 }, { id: 2 }] }, 'foo');
 
       expect(foo.bar).toHaveLength(2);
 
-      const bar3 = store.add<Bar>({id: 3}, 'bar');
+      const bar3 = store.add<Bar>({ id: 3 }, 'bar');
 
       foo.bar.push(bar3);
 
@@ -1077,7 +1076,7 @@ describe('Compat Model', () => {
       expect(getRefId(foo, 'bar')[2]).toBe(3);
       expect(foo.bar[2].id).toBe(3);
 
-      const bar4 = store.add<Bar>({id: 4}, 'bar');
+      const bar4 = store.add<Bar>({ id: 4 }, 'bar');
 
       const fooBar = getRefId(foo, 'bar') as Array<IIdentifier>;
       fooBar.push(4);
@@ -1098,7 +1097,7 @@ describe('Compat Model', () => {
       expect(foo.bar).toHaveLength(2);
 
       // tslint:disable-next-line:no-object-literal-type-assertion
-      foo.bar.push({} as Bar);
+      foo.bar.push({ } as Bar);
 
       expect(foo.bar).toHaveLength(3);
       expect(getRefId(foo, 'bar')).toHaveLength(3);

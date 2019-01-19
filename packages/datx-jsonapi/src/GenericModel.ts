@@ -5,4 +5,4 @@ import { IJsonapiModel } from './interfaces/IJsonapiModel';
 
 export const DecoratedModel = decorateModel(PureModel);
 
-export class GenericModel extends DecoratedModel {}
+export class GenericModel extends DecoratedModel { }

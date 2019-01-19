@@ -53,13 +53,13 @@ export function triggerAction(patchMeta: IPatchMeta, model: PureModel) {
 }
 
 export function startAction(model: PureModel) {
-  const patchData = storage.getModelMetaKey(model, 'patch') || {count: 0, oldValue: {}, newValue: {}};
+  const patchData = storage.getModelMetaKey(model, 'patch') || { count: 0, oldValue: { }, newValue: { } };
   patchData.count++;
   storage.setModelMetaKey(model, 'patch', patchData);
 }
 
 export function updateAction(model: PureModel, key: string, value: any) {
-  const patchData = storage.getModelMetaKey(model, 'patch') || {count: 0, oldValue: {}, newValue: {}};
+  const patchData = storage.getModelMetaKey(model, 'patch') || { count: 0, oldValue: { }, newValue: { } };
   if (model[key] === value) {
     return;
   }
@@ -71,15 +71,15 @@ export function updateAction(model: PureModel, key: string, value: any) {
 }
 
 export function endAction(model: PureModel, patchType: PatchType = PatchType.UPDATE) {
-  const patchData = storage.getModelMetaKey(model, 'patch') || {count: 0, oldValue: {}, newValue: {}};
+  const patchData = storage.getModelMetaKey(model, 'patch') || { count: 0, oldValue: { }, newValue: { } };
   patchData.count--;
   if (patchData.count === 0) {
     const newValue = toJS(patchData.newValue);
     const oldValue = toJS(patchData.oldValue);
     if (!isEmptyObject(newValue) || !isEmptyObject(oldValue)) {
-      triggerAction({newValue, oldValue, patchType}, model);
+      triggerAction({ newValue, oldValue, patchType }, model);
     }
-    storage.setModelMetaKey(model, 'patch', {count: 0, oldValue: {}, newValue: {}});
+    storage.setModelMetaKey(model, 'patch', { count: 0, oldValue: { }, newValue: { } });
   } else {
     storage.setModelMetaKey(model, 'patch', patchData);
   }

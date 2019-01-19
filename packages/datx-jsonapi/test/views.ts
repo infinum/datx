@@ -1,23 +1,14 @@
-import { Collection, getModelId, getModelType, Model, View } from 'datx';
-import { IDictionary } from 'datx-utils';
+import { View } from 'datx';
 import * as fetch from 'isomorphic-fetch';
-import { autorun, extendObservable, observable } from 'mobx';
 
 import {
   config,
-  fetchModelLink,
-  fetchModelRefLink,
-  GenericModel,
-  getModelLinks,
-  getModelMeta,
-  getModelRefMeta,
   IJsonapiView,
   jsonapi,
-  modelToJsonApi,
 } from '../src';
 import { clearAllCache } from '../src/cache';
 import mockApi from './utils/api';
-import { Event, Image, Photo, TestStore, User } from './utils/setup';
+import { Event, TestStore } from './utils/setup';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;

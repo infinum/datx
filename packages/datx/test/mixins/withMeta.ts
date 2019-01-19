@@ -3,9 +3,8 @@
 import { autorun, configure } from 'mobx';
 
 import { cloneModel, Collection, getModelId, prop, PureModel, withMeta } from '../../src';
-import { storage } from '../../src/services/storage';
 
-configure({enforceActions: 'observed'});
+configure({ enforceActions: 'observed' });
 
 describe('Collection', () => {
   it('should work with initial data', () => {
@@ -18,7 +17,7 @@ describe('Collection', () => {
 
     const FooMeta = withMeta(Foo);
 
-    const foo = new FooMeta({foo: 1, bar: 2});
+    const foo = new FooMeta({ foo: 1, bar: 2 });
 
     expect(foo.foo).toBe(1);
     expect(foo.bar).toBe(2);
@@ -61,7 +60,7 @@ describe('Collection', () => {
 
   it('should fail for other classes', () => {
     // tslint:disable-next-line:no-unnecessary-class
-    class A {}
+    class A { }
 
     // @ts-ignore - TS won't allow this mistake
     expect(() => withMeta(A)).toThrowError('This mixin can only decorate models');
@@ -81,10 +80,10 @@ describe('Collection', () => {
     }
     const collection = new TestCollection();
 
-    const foo1 = new FooMeta({foo: 2});
+    const foo1 = new FooMeta({ foo: 2 });
     collection.add(foo1);
 
-    const foo2 = collection.add({foo: 3, parent: foo1}, FooMeta);
+    const foo2 = collection.add({ foo: 3, parent: foo1 }, FooMeta);
 
     expect(foo2.meta.refs.parent).toBe(getModelId(foo1));
   });

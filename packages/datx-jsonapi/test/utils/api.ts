@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as nodeUrl from 'url';
 
 import { IDictionary } from 'datx-utils';
-import { constant, isFunction } from 'lodash';
+import { isFunction } from 'lodash';
 import * as nock from 'nock';
 
 import { config } from '../../src/NetworkUtils';
@@ -17,6 +17,7 @@ import { config } from '../../src/NetworkUtils';
 function getMockStream(name: string): fs.ReadStream {
   const testPath = path.join(__dirname, `../mock/${name}.json`);
 
+  // tslint:disable-next-line:non-literal-fs-path
   return fs.createReadStream(testPath);
 }
 
@@ -59,13 +60,13 @@ export default function mockApi({
   data,
   query = true,
   responseFn,
-  headers = {'content-type': 'application/vnd.api+json'},
-  reqheaders = {'content-type': 'application/vnd.api+json'},
+  headers = { 'content-type': 'application/vnd.api+json' },
+  reqheaders = { 'content-type': 'application/vnd.api+json' },
   status = 200,
 }: IMockArgs): nock.Scope {
   const apiUrl = nodeUrl.parse(config.baseUrl);
   const hostname = `${apiUrl.protocol}//${apiUrl.hostname}`;
-  const nockScope = nock(hostname, {reqheaders}).replyContentLength();
+  const nockScope = nock(hostname, { reqheaders }).replyContentLength();
   const pathname = apiUrl.pathname || '';
 
   let mock = nockScope.intercept(pathname + url, method, data);

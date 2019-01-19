@@ -70,21 +70,21 @@ describe('Issues', () => {
         name: 'issue-47b',
         url: 'event/1',
       });
-      await store.fetch('event', 1, {skipCache: true});
+      await store.fetch('event', 1, { skipCache: true });
       expect(event.image).toBe(null);
 
       mockApi({
         name: 'issue-47a',
         url: 'event/1',
       });
-      await store.fetch('event', 1, {skipCache: true});
+      await store.fetch('event', 1, { skipCache: true });
       expect(event.image).toBe(store.image[0]);
 
       mockApi({
         name: 'issue-47d',
         url: 'event/1',
       });
-      await store.fetch('event', 1, {skipCache: true});
+      await store.fetch('event', 1, { skipCache: true });
       expect(event.image['length']).toBe(1);
       expect(event.image[0]).toBe(store.image[1]);
 
@@ -92,7 +92,7 @@ describe('Issues', () => {
         name: 'issue-47e',
         url: 'event/1',
       });
-      await store.fetch('event', 1, {skipCache: true});
+      await store.fetch('event', 1, { skipCache: true });
       expect(event.image['length']).toBe(0);
     });
 
@@ -131,14 +131,14 @@ describe('Issues', () => {
         name: 'issue-47c',
         url: 'event/1',
       });
-      await store.fetch('event', 1, {skipCache: true});
+      await store.fetch('event', 1, { skipCache: true });
       expect(event.image).toBe(store.image[1]);
 
       mockApi({
         name: 'issue-47a',
         url: 'event/1',
       });
-      await store.fetch('event', 1, {skipCache: true});
+      await store.fetch('event', 1, { skipCache: true });
       expect(event.image).toBe(store.image[0]);
     });
   });
