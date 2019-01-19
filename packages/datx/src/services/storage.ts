@@ -1,12 +1,12 @@
-import {IDictionary} from 'datx-utils';
-import {observable, set} from 'mobx';
+import { IDictionary } from 'datx-utils';
+import { observable, set } from 'mobx';
 
-import {MODEL_REQUIRED} from '../errors';
-import {error} from '../helpers/format';
-import {reducePrototypeChain} from '../helpers/selectors';
-import {IDataStorage} from '../interfaces/IDataStorage';
-import {IReferenceOptions} from '../interfaces/IReferenceOptions';
-import {PureModel} from '../PureModel';
+import { MODEL_REQUIRED } from '../errors';
+import { error } from '../helpers/format';
+import { reducePrototypeChain } from '../helpers/selectors';
+import { IDataStorage } from '../interfaces/IDataStorage';
+import { IReferenceOptions } from '../interfaces/IReferenceOptions';
+import { PureModel } from '../PureModel';
 
 interface IModelClassData {
   data: IDictionary;

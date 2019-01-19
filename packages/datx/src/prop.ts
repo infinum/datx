@@ -1,7 +1,7 @@
-import {ReferenceType} from './enums/ReferenceType';
-import {IType} from './interfaces/IType';
-import {PureModel} from './PureModel';
-import {storage} from './services/storage';
+import { ReferenceType } from './enums/ReferenceType';
+import { IType } from './interfaces/IType';
+import { PureModel } from './PureModel';
+import { storage } from './services/storage';
 
 function getClass<T extends PureModel>(obj: T): typeof PureModel {
   return (typeof obj === 'function' ? obj : obj.constructor) as typeof PureModel;

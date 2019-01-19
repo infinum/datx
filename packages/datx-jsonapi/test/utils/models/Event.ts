@@ -1,9 +1,9 @@
-import {IActionsMixin, IMetaMixin, IModelConstructor, IType, Model, prop, PureModel} from 'datx';
-import {IDictionary} from 'datx-utils';
+import { IActionsMixin, IMetaMixin, IModelConstructor, IType, Model, prop, PureModel } from 'datx';
+import { IDictionary } from 'datx-utils';
 
-import {IJsonapiModel, jsonapi} from '../../../src';
-import {Image} from './Image';
-import {Organizer} from './Organizer';
+import { IJsonapiModel, jsonapi } from '../../../src';
+import { Image } from './Image';
+import { Organizer } from './Organizer';
 
 export class Event extends jsonapi(Model) {
   public static type: IType = 'event';

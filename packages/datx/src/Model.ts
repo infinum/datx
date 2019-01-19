@@ -1,11 +1,11 @@
-import {IDictionary, META_FIELD} from 'datx-utils';
+import { IDictionary, META_FIELD } from 'datx-utils';
 
-import {IIdentifier} from './interfaces/IIdentifier';
-import {IType} from './interfaces/IType';
-import {withActions} from './mixins/withActions';
-import {withMeta} from './mixins/withMeta';
-import {withPatches} from './mixins/withPatches';
-import {PureModel} from './PureModel';
+import { IIdentifier } from './interfaces/IIdentifier';
+import { IType } from './interfaces/IType';
+import { withActions } from './mixins/withActions';
+import { withMeta } from './mixins/withMeta';
+import { withPatches } from './mixins/withPatches';
+import { PureModel } from './PureModel';
 
 export class Model extends withPatches(withActions(withMeta(PureModel))) {
   public valueOf(): IDictionary & {meta: {id: IIdentifier; type: IType}} {

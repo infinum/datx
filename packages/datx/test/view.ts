@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import {autorun, configure, runInAction} from 'mobx';
+import { autorun, configure, runInAction } from 'mobx';
 
 configure({enforceActions: 'observed'});
 
@@ -11,7 +11,7 @@ import {
   updateModelId,
   View,
 } from '../src';
-import {storage} from '../src/services/storage';
+import { storage } from '../src/services/storage';
 
 describe('Model', () => {
   it('should init a view', () => {

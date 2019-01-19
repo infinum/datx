@@ -14,11 +14,11 @@ import * as fetch from 'isomorphic-fetch';
 
 // tslint:disable:no-string-literal
 
-import {config, fetchModelLink, GenericModel, jsonapi, modelToJsonApi, saveRelationship} from '../../src';
+import { config, fetchModelLink, GenericModel, jsonapi, modelToJsonApi, saveRelationship } from '../../src';
 
-import {clearAllCache} from '../../src/cache';
+import { clearAllCache } from '../../src/cache';
 import mockApi from '../utils/api';
-import {Event, Image, Organizer, Photo, TestStore, User} from '../utils/setup';
+import { Event, Image, Organizer, Photo, TestStore, User } from '../utils/setup';
 
 describe('updates', () => {
   beforeEach(() => {

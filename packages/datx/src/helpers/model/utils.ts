@@ -1,17 +1,17 @@
-import {IDictionary, IRawModel, META_FIELD, warn} from 'datx-utils';
-import {toJS} from 'mobx';
+import { IDictionary, IRawModel, META_FIELD, warn } from 'datx-utils';
+import { toJS } from 'mobx';
 
-import {NO_REFS, NOT_A_CLONE, REF_NEEDS_COLLECTION} from '../../errors';
-import {IIdentifier} from '../../interfaces/IIdentifier';
-import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
-import {IType} from '../../interfaces/IType';
-import {TRefValue} from '../../interfaces/TRefValue';
-import {PureCollection} from '../../PureCollection';
-import {PureModel} from '../../PureModel';
-import {storage} from '../../services/storage';
-import {error} from '../format';
-import {initModelField} from '../model/init';
-import {endAction, startAction} from '../patch';
+import { NO_REFS, NOT_A_CLONE, REF_NEEDS_COLLECTION } from '../../errors';
+import { IIdentifier } from '../../interfaces/IIdentifier';
+import { IReferenceOptions } from '../../interfaces/IReferenceOptions';
+import { IType } from '../../interfaces/IType';
+import { TRefValue } from '../../interfaces/TRefValue';
+import { PureCollection } from '../../PureCollection';
+import { PureModel } from '../../PureModel';
+import { storage } from '../../services/storage';
+import { error } from '../format';
+import { initModelField } from '../model/init';
+import { endAction, startAction } from '../patch';
 
 /**
  * Get the model type

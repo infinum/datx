@@ -1,7 +1,7 @@
-import {PatchType} from '../enums/PatchType';
-import {PureModel} from '../PureModel';
-import {IIdentifier} from './IIdentifier';
-import {IType} from './IType';
+import { PatchType } from '../enums/PatchType';
+import { PureModel } from '../PureModel';
+import { IIdentifier } from './IIdentifier';
+import { IType } from './IType';
 
 export interface IPatch<T = PureModel> {
   patchType: PatchType;

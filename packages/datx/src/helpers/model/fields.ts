@@ -1,8 +1,8 @@
-import {mapItems, warn} from 'datx-utils';
-import {IArrayChange, IArraySplice, intercept, IObservableArray, isObservableArray, observable} from 'mobx';
+import { mapItems, warn } from 'datx-utils';
+import { IArrayChange, IArraySplice, intercept, IObservableArray, isObservableArray, observable } from 'mobx';
 
-import {FieldType} from '../../enums/FieldType';
-import {ReferenceType} from '../../enums/ReferenceType';
+import { FieldType } from '../../enums/FieldType';
+import { ReferenceType } from '../../enums/ReferenceType';
 import {
   BACK_REF_READ_ONLY,
   ID_READONLY,
@@ -12,17 +12,17 @@ import {
   TYPE_READONLY,
   WRONG_REF_TYPE,
 } from '../../errors';
-import {IIdentifier} from '../../interfaces/IIdentifier';
-import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
-import {IType} from '../../interfaces/IType';
-import {TChange} from '../../interfaces/TChange';
-import {TRefValue} from '../../interfaces/TRefValue';
-import {PureCollection} from '../../PureCollection';
-import {PureModel} from '../../PureModel';
-import {storage} from '../../services/storage';
-import {error} from '../format';
-import {endAction, startAction, updateAction} from '../patch';
-import {getModelCollection, getModelId, getModelMetaKey, getModelType, setModelMetaKey} from './utils';
+import { IIdentifier } from '../../interfaces/IIdentifier';
+import { IReferenceOptions } from '../../interfaces/IReferenceOptions';
+import { IType } from '../../interfaces/IType';
+import { TChange } from '../../interfaces/TChange';
+import { TRefValue } from '../../interfaces/TRefValue';
+import { PureCollection } from '../../PureCollection';
+import { PureModel } from '../../PureModel';
+import { storage } from '../../services/storage';
+import { error } from '../format';
+import { endAction, startAction, updateAction } from '../patch';
+import { getModelCollection, getModelId, getModelMetaKey, getModelType, setModelMetaKey } from './utils';
 
 function modelAddReference(model: PureModel, key: string, newReference: PureModel) {
   const refOptions = storage.getModelReferenceOptions(model, key);

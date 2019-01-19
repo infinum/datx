@@ -1,7 +1,7 @@
-import {IActionsMixin, IMetaMixin, IModelConstructor, IType, Model, prop, PureModel} from 'datx';
-import {computed} from 'mobx';
+import { IActionsMixin, IMetaMixin, IModelConstructor, IType, Model, prop, PureModel } from 'datx';
+import { computed } from 'mobx';
 
-import {IJsonapiModel, jsonapi} from '../../../src';
+import { IJsonapiModel, jsonapi } from '../../../src';
 
 export class User extends jsonapi(Model) {
   public static type: IType = 'user';

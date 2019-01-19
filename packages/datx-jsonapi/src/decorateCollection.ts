@@ -15,22 +15,22 @@ import {
   setModelMetaKey,
   updateModel,
 } from 'datx';
-import {IDictionary, IRawModel, mapItems} from 'datx-utils';
-import {action} from 'mobx';
+import { IDictionary, IRawModel, mapItems } from 'datx-utils';
+import { action } from 'mobx';
 
-import {clearAllCache, clearCacheByType} from './cache';
+import { clearAllCache, clearCacheByType } from './cache';
 import { MODEL_META_FIELD, MODEL_REF_META_FIELD } from './consts';
-import {GenericModel} from './GenericModel';
-import {flattenModel, removeModel} from './helpers/model';
-import {buildUrl, prepareQuery} from './helpers/url';
-import {isBrowser} from './helpers/utils';
-import {IHeaders} from './interfaces/IHeaders';
-import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
-import {IJsonapiModel} from './interfaces/IJsonapiModel';
-import {IRequestOptions} from './interfaces/IRequestOptions';
-import {IDefinition, IRecord, IRelationship, IRequest, IResponse} from './interfaces/JsonApi';
-import {libFetch, read} from './NetworkUtils';
-import {Response} from './Response';
+import { GenericModel } from './GenericModel';
+import { flattenModel, removeModel } from './helpers/model';
+import { buildUrl, prepareQuery } from './helpers/url';
+import { isBrowser } from './helpers/utils';
+import { IHeaders } from './interfaces/IHeaders';
+import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
+import { IJsonapiModel } from './interfaces/IJsonapiModel';
+import { IRequestOptions } from './interfaces/IRequestOptions';
+import { IDefinition, IRecord, IRelationship, IRequest, IResponse } from './interfaces/JsonApi';
+import { libFetch, read } from './NetworkUtils';
+import { Response } from './Response';
 
 export function decorateCollection(BaseClass: typeof PureCollection) {
   class JsonapiCollection extends BaseClass {

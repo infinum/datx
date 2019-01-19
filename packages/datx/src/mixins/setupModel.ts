@@ -1,14 +1,14 @@
-import {IDictionary} from 'datx-utils';
+import { IDictionary } from 'datx-utils';
 
-import {ReferenceType} from '../enums/ReferenceType';
-import {DECORATE_MODEL} from '../errors';
-import {error} from '../helpers/format';
-import {isModel} from '../helpers/mixin';
-import {IModelConstructor} from '../interfaces/IModelConstructor';
-import {IReferenceOptions} from '../interfaces/IReferenceOptions';
-import {IType} from '../interfaces/IType';
+import { ReferenceType } from '../enums/ReferenceType';
+import { DECORATE_MODEL } from '../errors';
+import { error } from '../helpers/format';
+import { isModel } from '../helpers/mixin';
+import { IModelConstructor } from '../interfaces/IModelConstructor';
+import { IReferenceOptions } from '../interfaces/IReferenceOptions';
+import { IType } from '../interfaces/IType';
 import prop from '../prop';
-import {PureModel} from '../PureModel';
+import { PureModel } from '../PureModel';
 
 export function setupModel<IModel extends PureModel, IFields extends IDictionary>(
   Base: IModelConstructor<IModel>,

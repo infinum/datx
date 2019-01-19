@@ -1,8 +1,8 @@
-import {View} from 'datx';
+import { View } from 'datx';
 
-import {IHeaders} from './IHeaders';
-import {IJsonapiCollection} from './IJsonapiCollection';
-import {IRequestOptions} from './IRequestOptions';
+import { IHeaders } from './IHeaders';
+import { IJsonapiCollection } from './IJsonapiCollection';
+import { IRequestOptions } from './IRequestOptions';
 
 export interface ICollectionFetchOpts {
   url: string;

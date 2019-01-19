@@ -1,10 +1,10 @@
-import {IDictionary, IRawModel} from 'datx-utils';
-import {action, computed, extendObservable, IObservableArray, IObservableObject, observable, set, toJS} from 'mobx';
+import { IDictionary, IRawModel } from 'datx-utils';
+import { action, computed, extendObservable, IObservableArray, IObservableObject, observable, set, toJS } from 'mobx';
 
-import {PatchType} from './enums/PatchType';
-import {MODEL_SINGLE_COLLECTION, UNDEFINED_TYPE, VIEW_NAME_TAKEN} from './errors';
-import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
-import {error} from './helpers/format';
+import { PatchType } from './enums/PatchType';
+import { MODEL_SINGLE_COLLECTION, UNDEFINED_TYPE, VIEW_NAME_TAKEN } from './errors';
+import { initModels, isSelectorFunction, upsertModel } from './helpers/collection';
+import { error } from './helpers/format';
 import { getRefId, setRefId } from './helpers/model/fields';
 import {
   getModelCollection,
@@ -15,15 +15,15 @@ import {
   setModelMetaKey,
   updateModel,
 } from './helpers/model/utils';
-import {triggerAction} from './helpers/patch';
-import {IIdentifier} from './interfaces/IIdentifier';
-import {IModelConstructor} from './interfaces/IModelConstructor';
-import {IRawCollection} from './interfaces/IRawCollection';
-import {IRawView} from './interfaces/IRawView';
-import {IType} from './interfaces/IType';
-import {TFilterFn} from './interfaces/TFilterFn';
-import {PureModel} from './PureModel';
-import {View} from './View';
+import { triggerAction } from './helpers/patch';
+import { IIdentifier } from './interfaces/IIdentifier';
+import { IModelConstructor } from './interfaces/IModelConstructor';
+import { IRawCollection } from './interfaces/IRawCollection';
+import { IRawView } from './interfaces/IRawView';
+import { IType } from './interfaces/IType';
+import { TFilterFn } from './interfaces/TFilterFn';
+import { PureModel } from './PureModel';
+import { View } from './View';
 
 export class PureCollection {
   /**

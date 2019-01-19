@@ -1,5 +1,5 @@
-import {PureModel} from '../PureModel';
-import {IPatch} from './IPatch';
+import { PureModel } from '../PureModel';
+import { IPatch } from './IPatch';
 
 export interface IMetaPatchesModel<T = PureModel> {
   applyPatch(patch: IPatch<T>): void;

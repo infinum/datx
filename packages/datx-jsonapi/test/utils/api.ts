@@ -2,11 +2,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as nodeUrl from 'url';
 
-import {IDictionary} from 'datx-utils';
-import {constant, isFunction} from 'lodash';
+import { IDictionary } from 'datx-utils';
+import { constant, isFunction } from 'lodash';
 import * as nock from 'nock';
 
-import {config} from '../../src/NetworkUtils';
+import { config } from '../../src/NetworkUtils';
 
 /**
  * Create a stream from a mock file

@@ -1,18 +1,18 @@
-import {getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId, View} from 'datx';
-import {assignComputed, IDictionary} from 'datx-utils';
-import {action, extendObservable, IComputedValue} from 'mobx';
+import { getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId, View } from 'datx';
+import { assignComputed, IDictionary } from 'datx-utils';
+import { action, extendObservable, IComputedValue } from 'mobx';
 
-import {IHeaders} from './interfaces/IHeaders';
-import {IJsonapiModel} from './interfaces/IJsonapiModel';
-import {IRawResponse} from './interfaces/IRawResponse';
-import {IRequestOptions} from './interfaces/IRequestOptions';
-import {IResponseHeaders} from './interfaces/IResponseHeaders';
-import {IError, IJsonApiObject, ILink} from './interfaces/JsonApi';
+import { IHeaders } from './interfaces/IHeaders';
+import { IJsonapiModel } from './interfaces/IJsonapiModel';
+import { IRawResponse } from './interfaces/IRawResponse';
+import { IRequestOptions } from './interfaces/IRequestOptions';
+import { IResponseHeaders } from './interfaces/IResponseHeaders';
+import { IError, IJsonApiObject, ILink } from './interfaces/JsonApi';
 
-import {GenericModel} from './GenericModel';
-import {flattenModel} from './helpers/model';
-import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
-import {fetchLink} from './NetworkUtils';
+import { GenericModel } from './GenericModel';
+import { flattenModel } from './helpers/model';
+import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
+import { fetchLink } from './NetworkUtils';
 
 export class Response<T extends IJsonapiModel> {
   /**

@@ -1,9 +1,9 @@
 // tslint:disable:max-classes-per-file
 
-import {autorun, computed, configure} from 'mobx';
+import { autorun, computed, configure } from 'mobx';
 
-import {CompatCollection, CompatModel, getRefId, IIdentifier, prop} from '../src';
-import {storage} from '../src/services/storage';
+import { CompatCollection, CompatModel, getRefId, IIdentifier, prop } from '../src';
+import { storage } from '../src/services/storage';
 
 configure({enforceActions: 'observed'});
 

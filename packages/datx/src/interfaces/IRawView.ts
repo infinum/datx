@@ -1,5 +1,5 @@
-import {IIdentifier} from './IIdentifier';
-import {IType} from './IType';
+import { IIdentifier } from './IIdentifier';
+import { IType } from './IType';
 
 export interface IRawView {
   modelType: IType;

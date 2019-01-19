@@ -1,12 +1,12 @@
-import {DEFAULT_TYPE, IRawModel} from 'datx-utils';
-import {extendObservable} from 'mobx';
+import { DEFAULT_TYPE, IRawModel } from 'datx-utils';
+import { extendObservable } from 'mobx';
 
-import {PatchType} from './enums/PatchType';
-import {initModel} from './helpers/model/init';
-import {endAction, startAction} from './helpers/patch';
-import {IIdentifier} from './interfaces/IIdentifier';
-import {IType} from './interfaces/IType';
-import {PureCollection} from './PureCollection';
+import { PatchType } from './enums/PatchType';
+import { initModel } from './helpers/model/init';
+import { endAction, startAction } from './helpers/patch';
+import { IIdentifier } from './interfaces/IIdentifier';
+import { IType } from './interfaces/IType';
+import { PureCollection } from './PureCollection';
 
 // tslint:disable-next-line:no-unnecessary-class
 export class PureModel {

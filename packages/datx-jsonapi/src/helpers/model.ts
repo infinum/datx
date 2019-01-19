@@ -11,10 +11,10 @@ import {
   ReferenceType,
   setModelMetaKey,
 } from 'datx';
-import {IDictionary, IRawModel, mapItems, META_FIELD} from 'datx-utils';
-import {isObservableArray} from 'mobx';
+import { IDictionary, IRawModel, mapItems, META_FIELD } from 'datx-utils';
+import { isObservableArray } from 'mobx';
 
-import {clearCacheByType} from '../cache';
+import { clearCacheByType } from '../cache';
 import {
   MODEL_LINKS_FIELD,
   MODEL_META_FIELD,
@@ -25,13 +25,13 @@ import {
   MODEL_REF_META_FIELD,
   MODEL_RELATED_FIELD,
 } from '../consts';
-import {IJsonapiCollection} from '../interfaces/IJsonapiCollection';
-import {IJsonapiModel} from '../interfaces/IJsonapiModel';
-import {IRequestOptions} from '../interfaces/IRequestOptions';
-import {IDefinition, ILink, IRecord, IRelationship} from '../interfaces/JsonApi';
-import {create, fetchLink, handleResponse, remove, update} from '../NetworkUtils';
-import {Response} from '../Response';
-import {prepareQuery} from './url';
+import { IJsonapiCollection } from '../interfaces/IJsonapiCollection';
+import { IJsonapiModel } from '../interfaces/IJsonapiModel';
+import { IRequestOptions } from '../interfaces/IRequestOptions';
+import { IDefinition, ILink, IRecord, IRelationship } from '../interfaces/JsonApi';
+import { create, fetchLink, handleResponse, remove, update } from '../NetworkUtils';
+import { Response } from '../Response';
+import { prepareQuery } from './url';
 
 export function flattenModel(classRefs): null;
 export function flattenModel(classRefs, data?: IRecord): IRawModel;

@@ -1,7 +1,7 @@
 // tslint:disable:max-classes-per-file
 
-import {META_FIELD} from 'datx-utils';
-import {configure} from 'mobx';
+import { META_FIELD } from 'datx-utils';
+import { configure } from 'mobx';
 
 configure({enforceActions: 'observed'});
 

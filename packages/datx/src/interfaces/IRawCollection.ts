@@ -1,6 +1,6 @@
-import {IDictionary, IRawModel} from 'datx-utils';
+import { IDictionary, IRawModel } from 'datx-utils';
 
-import {IRawView} from './IRawView';
+import { IRawView } from './IRawView';
 
 export interface IRawCollection {
   models: Array<IRawModel>;

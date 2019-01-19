@@ -1,6 +1,6 @@
-import {PureModel} from 'datx';
+import { PureModel } from 'datx';
 
-import {IRequestOptions} from './IRequestOptions';
+import { IRequestOptions } from './IRequestOptions';
 
 export interface IJsonapiModel extends PureModel {
   save(options?: IRequestOptions): Promise<IJsonapiModel>;

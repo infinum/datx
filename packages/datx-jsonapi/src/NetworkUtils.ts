@@ -1,20 +1,20 @@
-import {setModelMetaKey, View} from 'datx';
-import {IDictionary} from 'datx-utils';
-import {action} from 'mobx';
+import { setModelMetaKey, View } from 'datx';
+import { IDictionary } from 'datx-utils';
+import { action } from 'mobx';
 
-import {getCache, saveCache} from './cache';
-import {MODEL_PERSISTED_FIELD, MODEL_PROP_FIELD, MODEL_QUEUE_FIELD, MODEL_RELATED_FIELD} from './consts';
-import {ParamArrayType} from './enums/ParamArrayType';
-import {isBrowser} from './helpers/utils';
-import {ICollectionFetchOpts} from './interfaces/ICollectionFetchOpts';
-import {IHeaders} from './interfaces/IHeaders';
-import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
-import {IJsonapiModel} from './interfaces/IJsonapiModel';
-import {IRawResponse} from './interfaces/IRawResponse';
-import {IRequestOptions} from './interfaces/IRequestOptions';
-import {IResponseHeaders} from './interfaces/IResponseHeaders';
-import {ILink, IResponse} from './interfaces/JsonApi';
-import {Response as LibResponse} from './Response';
+import { getCache, saveCache } from './cache';
+import { MODEL_PERSISTED_FIELD, MODEL_PROP_FIELD, MODEL_QUEUE_FIELD, MODEL_RELATED_FIELD } from './consts';
+import { ParamArrayType } from './enums/ParamArrayType';
+import { isBrowser } from './helpers/utils';
+import { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
+import { IHeaders } from './interfaces/IHeaders';
+import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
+import { IJsonapiModel } from './interfaces/IJsonapiModel';
+import { IRawResponse } from './interfaces/IRawResponse';
+import { IRequestOptions } from './interfaces/IRequestOptions';
+import { IResponseHeaders } from './interfaces/IResponseHeaders';
+import { ILink, IResponse } from './interfaces/JsonApi';
+import {Response as LibResponse } from './Response';
 
 export type FetchType = (
   method: string,

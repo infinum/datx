@@ -1,4 +1,4 @@
-import {computed, decorate, extendObservable} from 'mobx';
+import { extendObservable } from 'mobx';
 
 /**
  * Map a single item or an array of items

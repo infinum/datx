@@ -1,8 +1,8 @@
-import {IDictionary, IRawModel} from 'datx-utils';
+import { IDictionary, IRawModel } from 'datx-utils';
 
-import {PureModel} from '../PureModel';
-import {IReferenceOptions} from './IReferenceOptions';
-import {TRefValue} from './TRefValue';
+import { PureModel } from '../PureModel';
+import { IReferenceOptions } from './IReferenceOptions';
+import { TRefValue } from './TRefValue';
 
 export interface IActionsMixin<T = PureModel> {
   assign(key: string, value: any): void;

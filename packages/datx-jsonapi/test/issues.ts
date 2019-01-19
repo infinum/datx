@@ -1,12 +1,12 @@
 // tslint:disable:max-classes-per-file
-import {Collection, Model, prop} from 'datx';
+import { Collection, Model, prop } from 'datx';
 import * as fetch from 'isomorphic-fetch';
-import {computed} from 'mobx';
-import {config, getModelMeta, getModelRefMeta, jsonapi} from '../src';
-import {clearAllCache} from '../src/cache';
+import { computed } from 'mobx';
+import { config, getModelMeta, getModelRefMeta, jsonapi } from '../src';
+import { clearAllCache } from '../src/cache';
 
 import mockApi from './utils/api';
-import {Event, TestStore} from './utils/setup';
+import { Event, TestStore } from './utils/setup';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;

@@ -1,16 +1,16 @@
-import {IDictionary, IRawModel, mapItems} from 'datx-utils';
-import {action, computed, intercept, IObservableArray, observable} from 'mobx';
+import { IDictionary, IRawModel, mapItems } from 'datx-utils';
+import { action, computed, intercept, IObservableArray, observable } from 'mobx';
 
-import {SORTED_NO_WRITE, UNIQUE_MODEL} from './errors';
-import {error} from './helpers/format';
-import {getModelId, getModelType} from './helpers/model/utils';
-import {IIdentifier} from './interfaces/IIdentifier';
-import {IModelConstructor} from './interfaces/IModelConstructor';
-import {IRawView} from './interfaces/IRawView';
-import {IType} from './interfaces/IType';
-import {TChange} from './interfaces/TChange';
-import {PureCollection} from './PureCollection';
-import {PureModel} from './PureModel';
+import { SORTED_NO_WRITE, UNIQUE_MODEL } from './errors';
+import { error } from './helpers/format';
+import { getModelId, getModelType } from './helpers/model/utils';
+import { IIdentifier } from './interfaces/IIdentifier';
+import { IModelConstructor } from './interfaces/IModelConstructor';
+import { IRawView } from './interfaces/IRawView';
+import { IType } from './interfaces/IType';
+import { TChange } from './interfaces/TChange';
+import { PureCollection } from './PureCollection';
+import { PureModel } from './PureModel';
 
 export class View<T extends PureModel = PureModel> {
   public readonly modelType: IType;

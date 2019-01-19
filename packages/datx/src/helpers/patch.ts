@@ -1,10 +1,10 @@
-import {toJS} from 'mobx';
+import { toJS } from 'mobx';
 
-import {PatchType} from '../enums/PatchType';
-import {IPatch} from '../interfaces/IPatch';
-import {PureModel} from '../PureModel';
-import {storage} from '../services/storage';
-import {getModelCollection, getModelId, getModelType} from './model/utils';
+import { PatchType } from '../enums/PatchType';
+import { IPatch } from '../interfaces/IPatch';
+import { PureModel } from '../PureModel';
+import { storage } from '../services/storage';
+import { getModelCollection, getModelId, getModelType } from './model/utils';
 
 function isEmptyObject(data: object) {
   return Object.keys(data).length === 0;

@@ -10,12 +10,12 @@ import {
   View,
 } from 'datx';
 
-import {decorateCollection} from './decorateCollection';
-import {decorateModel} from './decorateModel';
-import {decorateView} from './decorateView';
-import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
-import {IJsonapiModel} from './interfaces/IJsonapiModel';
-import {IJsonapiView} from './interfaces/IJsonapiView';
+import { decorateCollection } from './decorateCollection';
+import { decorateModel } from './decorateModel';
+import { decorateView } from './decorateView';
+import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
+import { IJsonapiModel } from './interfaces/IJsonapiModel';
+import { IJsonapiView } from './interfaces/IJsonapiView';
 
 export function jsonapi<T extends PureModel>(
   Base: IModelConstructor<T>,

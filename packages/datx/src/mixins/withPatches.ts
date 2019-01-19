@@ -1,15 +1,15 @@
-import {PatchType} from '../enums/PatchType';
-import {error} from '../helpers/format';
-import {isCollection, isModel} from '../helpers/mixin';
-import {getModelId, getModelType, updateModel} from '../helpers/model/utils';
-import {reverseAction} from '../helpers/patch';
-import {ICollectionConstructor} from '../interfaces/ICollectionConstructor';
-import {IMetaPatchesCollection} from '../interfaces/IMetaPatchesCollection';
-import {IMetaPatchesModel} from '../interfaces/IMetaPatchesModel';
-import {IModelConstructor} from '../interfaces/IModelConstructor';
-import {IPatch} from '../interfaces/IPatch';
-import {PureCollection} from '../PureCollection';
-import {PureModel} from '../PureModel';
+import { PatchType } from '../enums/PatchType';
+import { error } from '../helpers/format';
+import { isCollection, isModel } from '../helpers/mixin';
+import { getModelId, getModelType, updateModel } from '../helpers/model/utils';
+import { reverseAction } from '../helpers/patch';
+import { ICollectionConstructor } from '../interfaces/ICollectionConstructor';
+import { IMetaPatchesCollection } from '../interfaces/IMetaPatchesCollection';
+import { IMetaPatchesModel } from '../interfaces/IMetaPatchesModel';
+import { IModelConstructor } from '../interfaces/IModelConstructor';
+import { IPatch } from '../interfaces/IPatch';
+import { PureCollection } from '../PureCollection';
+import { PureModel } from '../PureModel';
 
 function inversePatch<T = PureModel>(patch: IPatch<T>): IPatch<T> {
   const patchType: PatchType = reverseAction(patch.patchType);

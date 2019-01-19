@@ -1,4 +1,4 @@
-import {Collection, Model} from 'datx';
+import { Collection, Model } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
 // tslint:disable:no-string-literal
@@ -15,9 +15,9 @@ import {
   modelToJsonApi,
 } from '../../src';
 
-import {clearAllCache} from '../../src/cache';
+import { clearAllCache } from '../../src/cache';
 import mockApi from '../utils/api';
-import {Event, Image, Organizer, Photo, TestStore, User} from '../utils/setup';
+import { Event, Image, Organizer, Photo, TestStore, User } from '../utils/setup';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;

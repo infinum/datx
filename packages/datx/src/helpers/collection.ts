@@ -1,11 +1,11 @@
-import {IRawModel, META_FIELD} from 'datx-utils';
+import { IRawModel, META_FIELD } from 'datx-utils';
 
-import {UNDEFINED_MODEL, UNDEFINED_TYPE} from '../errors';
-import {IType} from '../interfaces/IType';
-import {PureCollection} from '../PureCollection';
-import {PureModel} from '../PureModel';
-import {error} from './format';
-import {getMetaKeyFromRaw, updateModel} from './model/utils';
+import { UNDEFINED_MODEL, UNDEFINED_TYPE } from '../errors';
+import { IType } from '../interfaces/IType';
+import { PureCollection } from '../PureCollection';
+import { PureModel } from '../PureModel';
+import { error } from './format';
+import { getMetaKeyFromRaw, updateModel } from './model/utils';
 
 function initCollectionModel(collection: PureCollection, data: IRawModel): PureModel {
   const type = getMetaKeyFromRaw(data, 'type');

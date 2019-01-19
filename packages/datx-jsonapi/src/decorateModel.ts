@@ -1,9 +1,9 @@
-import {getModelClassRefs, PureCollection, PureModel} from 'datx';
-import {IRawModel} from 'datx-utils';
+import { getModelClassRefs, PureCollection, PureModel } from 'datx';
+import { IRawModel } from 'datx-utils';
 
-import {flattenModel, removeModel, saveModel} from './helpers/model';
-import {IRequestOptions} from './interfaces/IRequestOptions';
-import {IRecord} from './interfaces/JsonApi';
+import { flattenModel, removeModel, saveModel } from './helpers/model';
+import { IRequestOptions } from './interfaces/IRequestOptions';
+import { IRecord } from './interfaces/JsonApi';
 
 export function decorateModel(BaseClass: typeof PureModel) {
   class JsonapiModel extends BaseClass {

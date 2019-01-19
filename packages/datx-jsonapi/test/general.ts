@@ -1,9 +1,9 @@
-import {Collection, getModelId, getModelType, Model} from 'datx';
-import {IDictionary} from 'datx-utils';
-import {autorun, extendObservable, observable} from 'mobx';
+import { Collection, getModelId, getModelType, Model } from 'datx';
+import { IDictionary } from 'datx-utils';
+import { autorun, extendObservable, observable } from 'mobx';
 
-import {config, GenericModel, getModelRefLinks, jsonapi, modelToJsonApi} from '../src';
-import {Event, Image, Photo, TestStore, User} from './utils/setup';
+import { config, GenericModel, getModelRefLinks, jsonapi, modelToJsonApi } from '../src';
+import { Event, Image, Photo, TestStore, User } from './utils/setup';
 
 // tslint:disable:no-string-literal
 

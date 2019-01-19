@@ -1,13 +1,13 @@
-import {Collection} from 'datx';
+import { Collection } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
 // tslint:disable:no-string-literal
 
-import {config, jsonapi} from '../../src';
+import { config, jsonapi } from '../../src';
 
-import {clearAllCache} from '../../src/cache';
+import { clearAllCache } from '../../src/cache';
 import mockApi from '../utils/api';
-import {Event, Image, Organizer, Photo, TestStore, User} from '../utils/setup';
+import { Event, Image, Organizer, Photo, TestStore, User } from '../utils/setup';
 
 describe('caching', () => {
   beforeEach(() => {

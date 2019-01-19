@@ -1,9 +1,9 @@
-import {ICollectionConstructor} from '../interfaces/ICollectionConstructor';
-import {IModelConstructor} from '../interfaces/IModelConstructor';
-import {IViewConstructor} from '../interfaces/IViewConstructor';
-import {PureCollection} from '../PureCollection';
-import {PureModel} from '../PureModel';
-import {View} from '../View';
+import { ICollectionConstructor } from '../interfaces/ICollectionConstructor';
+import { IModelConstructor } from '../interfaces/IModelConstructor';
+import { IViewConstructor } from '../interfaces/IViewConstructor';
+import { PureCollection } from '../PureCollection';
+import { PureModel } from '../PureModel';
+import { View } from '../View';
 
 /**
  * Check if a class is of a certain type

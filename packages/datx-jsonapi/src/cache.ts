@@ -1,8 +1,8 @@
-import {getModelType, IType} from 'datx';
-import {IDictionary} from 'datx-utils';
+import { getModelType, IType } from 'datx';
+import { IDictionary } from 'datx-utils';
 
-import {IJsonapiModel} from './interfaces/IJsonapiModel';
-import {Response} from './Response';
+import { IJsonapiModel } from './interfaces/IJsonapiModel';
+import { Response } from './Response';
 
 export interface ICache {
   response: Response<IJsonapiModel>;

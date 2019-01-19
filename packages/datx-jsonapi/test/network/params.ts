@@ -1,11 +1,11 @@
 import * as fetch from 'isomorphic-fetch';
 
 // tslint:disable:no-string-literal
-import {config, ParamArrayType} from '../../src';
+import { config, ParamArrayType } from '../../src';
 
-import {clearAllCache} from '../../src/cache';
+import { clearAllCache } from '../../src/cache';
 import mockApi from '../utils/api';
-import {Event, Image, Organizer, Photo, TestStore, User} from '../utils/setup';
+import { Event, Image, Organizer, Photo, TestStore, User } from '../utils/setup';
 
 describe('params', () => {
   beforeEach(() => {

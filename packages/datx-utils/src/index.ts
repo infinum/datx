@@ -1,7 +1,7 @@
-export {DEFAULT_TYPE, META_FIELD} from './consts';
+export { DEFAULT_TYPE, META_FIELD } from './consts';
 
-export {IDictionary} from './interfaces/IDictionary';
-export {IRawModel} from './interfaces/IRawModel';
+export { IDictionary } from './interfaces/IDictionary';
+export { IRawModel } from './interfaces/IRawModel';
 
 export {
   assignComputed,

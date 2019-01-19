@@ -1,9 +1,9 @@
-import {assignComputed, deprecated} from 'datx-utils';
+import { assignComputed, deprecated } from 'datx-utils';
 
-import {Collection} from './Collection';
-import {CompatModel} from './CompatModel';
-import {getModelType} from './helpers/model/utils';
-import {IRawCollection} from './interfaces/IRawCollection';
+import { Collection } from './Collection';
+import { CompatModel } from './CompatModel';
+import { getModelType } from './helpers/model/utils';
+import { IRawCollection } from './interfaces/IRawCollection';
 
 export class CompatCollection extends Collection {
   public static types = [CompatModel];

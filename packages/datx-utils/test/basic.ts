@@ -1,6 +1,6 @@
-import {autorun, configure, isComputedProp, isObservableProp, observable} from 'mobx';
+import { autorun, configure, isComputedProp, isObservableProp, observable } from 'mobx';
 
-import {assignComputed, flatten, isFalsyArray, mapItems, uniq} from '../src';
+import { assignComputed, flatten, isFalsyArray, mapItems, uniq } from '../src';
 
 configure({enforceActions: 'observed'});
 

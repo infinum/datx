@@ -1,7 +1,7 @@
-import {IDictionary} from 'datx-utils';
+import { IDictionary } from 'datx-utils';
 
-import {IFilters} from './IFilters';
-import {IHeaders} from './IHeaders';
+import { IFilters } from './IFilters';
+import { IHeaders } from './IHeaders';
 
 export interface IRequestOptions {
   headers?: IHeaders;

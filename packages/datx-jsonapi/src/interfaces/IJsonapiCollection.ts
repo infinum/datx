@@ -1,9 +1,9 @@
-import {IIdentifier, IModelConstructor, IType, PureCollection, PureModel} from 'datx';
+import { IIdentifier, IModelConstructor, IType, PureCollection, PureModel } from 'datx';
 
-import {Response} from '../Response';
-import {IJsonapiModel} from './IJsonapiModel';
-import {IRequestOptions} from './IRequestOptions';
-import {IResponse} from './JsonApi';
+import { Response } from '../Response';
+import { IJsonapiModel } from './IJsonapiModel';
+import { IRequestOptions } from './IRequestOptions';
+import { IResponse } from './JsonApi';
 
 export interface IJsonapiCollection extends PureCollection {
   sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T | Array<T> | null;

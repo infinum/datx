@@ -1,6 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import {autorun, computed, configure, isComputedProp, isObservableArray, runInAction} from 'mobx';
+import { autorun, computed, configure, isComputedProp, isObservableArray, runInAction } from 'mobx';
 
 configure({enforceActions: 'observed'});
 
@@ -22,7 +22,7 @@ import {
   setupModel,
   updateModelId,
 } from '../src';
-import {storage} from '../src/services/storage';
+import { storage } from '../src/services/storage';
 
 describe('Model', () => {
   describe('Basic features', () => {

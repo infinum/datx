@@ -1,7 +1,7 @@
-import {Collection, getModelId, getModelType, Model, View} from 'datx';
-import {IDictionary} from 'datx-utils';
+import { Collection, getModelId, getModelType, Model, View } from 'datx';
+import { IDictionary } from 'datx-utils';
 import * as fetch from 'isomorphic-fetch';
-import {autorun, extendObservable, observable} from 'mobx';
+import { autorun, extendObservable, observable } from 'mobx';
 
 import {
   config,
@@ -15,9 +15,9 @@ import {
   jsonapi,
   modelToJsonApi,
 } from '../src';
-import {clearAllCache} from '../src/cache';
+import { clearAllCache } from '../src/cache';
 import mockApi from './utils/api';
-import {Event, Image, Photo, TestStore, User} from './utils/setup';
+import { Event, Image, Photo, TestStore, User } from './utils/setup';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;

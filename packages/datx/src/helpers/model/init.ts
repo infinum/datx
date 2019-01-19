@@ -1,18 +1,18 @@
-import {assignComputed, IDictionary, IRawModel, META_FIELD} from 'datx-utils';
+import { assignComputed, IDictionary, IRawModel, META_FIELD } from 'datx-utils';
 
-import {FieldType} from '../../enums/FieldType';
-import {ReferenceType} from '../../enums/ReferenceType';
-import {ID_REQUIRED} from '../../errors';
-import {IIdentifier} from '../../interfaces/IIdentifier';
-import {IReferenceOptions} from '../../interfaces/IReferenceOptions';
-import {IType} from '../../interfaces/IType';
-import {TRefValue} from '../../interfaces/TRefValue';
-import {PureCollection} from '../../PureCollection';
-import {PureModel} from '../../PureModel';
-import {storage} from '../../services/storage';
-import {updateAction} from '../patch';
-import {getField, getRef, updateField, updateRef} from './fields';
-import {getModelMetaKey, getModelType, setModelMetaKey} from './utils';
+import { FieldType } from '../../enums/FieldType';
+import { ReferenceType } from '../../enums/ReferenceType';
+import { ID_REQUIRED } from '../../errors';
+import { IIdentifier } from '../../interfaces/IIdentifier';
+import { IReferenceOptions } from '../../interfaces/IReferenceOptions';
+import { IType } from '../../interfaces/IType';
+import { TRefValue } from '../../interfaces/TRefValue';
+import { PureCollection } from '../../PureCollection';
+import { PureModel } from '../../PureModel';
+import { storage } from '../../services/storage';
+import { updateAction } from '../patch';
+import { getField, getRef, updateField, updateRef } from './fields';
+import { getModelMetaKey, getModelType, setModelMetaKey } from './utils';
 
 interface IMetaToInit extends IDictionary {
   fields: Array<string>;

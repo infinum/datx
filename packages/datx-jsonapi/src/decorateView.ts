@@ -1,12 +1,12 @@
-import {IIdentifier, IModelConstructor, IType, IViewConstructor, PureModel, View} from 'datx';
-import {IDictionary, IRawModel, mapItems} from 'datx-utils';
+import { IIdentifier, IModelConstructor, IType, IViewConstructor, PureModel, View } from 'datx';
+import { IDictionary, IRawModel, mapItems } from 'datx-utils';
 
-import {IJsonapiCollection} from './interfaces/IJsonapiCollection';
-import {IJsonapiModel} from './interfaces/IJsonapiModel';
-import {IJsonapiView} from './interfaces/IJsonapiView';
-import {IRequestOptions} from './interfaces/IRequestOptions';
-import {IDefinition, IRelationship, IRequest, IResponse} from './interfaces/JsonApi';
-import {Response} from './Response';
+import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
+import { IJsonapiModel } from './interfaces/IJsonapiModel';
+import { IJsonapiView } from './interfaces/IJsonapiView';
+import { IRequestOptions } from './interfaces/IRequestOptions';
+import { IDefinition, IRelationship, IRequest, IResponse } from './interfaces/JsonApi';
+import { Response } from './Response';
 
 declare var window: object|undefined;
 

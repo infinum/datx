@@ -1,8 +1,8 @@
-import {Collection} from 'datx';
+import { Collection } from 'datx';
 
-import {IHeaders} from './IHeaders';
-import {IResponseHeaders} from './IResponseHeaders';
-import {IJsonApiObject, IResponse} from './JsonApi';
+import { IHeaders } from './IHeaders';
+import { IResponseHeaders } from './IResponseHeaders';
+import { IJsonApiObject, IResponse } from './JsonApi';
 
 export interface IRawResponse {
   data?: IResponse;

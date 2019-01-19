@@ -1,11 +1,11 @@
-import {deprecated, IDictionary, mapItems} from 'datx-utils';
-import {isObservableArray} from 'mobx';
+import { deprecated, IDictionary, mapItems } from 'datx-utils';
+import { isObservableArray } from 'mobx';
 
-import {Collection} from './Collection';
-import {FieldType} from './enums/FieldType';
-import {ReferenceType} from './enums/ReferenceType';
-import {updateField} from './helpers/model/fields';
-import {initModelField, initModelRef} from './helpers/model/init';
+import { Collection } from './Collection';
+import { FieldType } from './enums/FieldType';
+import { ReferenceType } from './enums/ReferenceType';
+import { updateField } from './helpers/model/fields';
+import { initModelField, initModelRef } from './helpers/model/init';
 import {
   getModelCollection,
   getModelId,
@@ -14,10 +14,10 @@ import {
   modelToJSON,
   updateModel,
 } from './helpers/model/utils';
-import {IReferences} from './interfaces/IReferences';
-import {IType} from './interfaces/IType';
-import {PureModel} from './PureModel';
-import {storage} from './services/storage';
+import { IReferences } from './interfaces/IReferences';
+import { IType } from './interfaces/IType';
+import { PureModel } from './PureModel';
+import { storage } from './services/storage';
 
 export class CompatModel extends PureModel {
   public static refs: IReferences = {};
