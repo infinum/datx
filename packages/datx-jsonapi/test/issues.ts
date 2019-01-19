@@ -172,4 +172,30 @@ describe('Issues', () => {
 
     expect(event1).toBe(event2);
   });
+
+  it('should remove a reference when the model is destroyed', async () => {
+    const store = new TestStore();
+
+    mockApi({
+      name: 'event-1f',
+      url: 'event/1',
+    });
+
+    const eventResp = await store.fetch(Event, 1);
+    const event = eventResp.data as Event;
+
+    expect(event.images).toHaveLength(2);
+
+    const toRemove = event.images[0];
+
+    mockApi({
+      method: 'DELETE',
+      responseFn: () => null,
+      status: 204,
+      url: 'image/1',
+    });
+
+    await toRemove.destroy();
+    expect(event.images).toHaveLength(1);
+  });
 });

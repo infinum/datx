@@ -1,0 +1,34 @@
+{
+  "data": {
+    "id": 12345,
+    "type": "event",
+    "attributes": {
+      "title": "Test 1",
+      "date": "2017-03-19"
+    },
+    "relationships": {
+      "images": {
+        "data": [{
+          "type": "image",
+          "id": "1"
+        }, {
+          "type": "image",
+          "id": "2"
+        }]
+      }
+    }
+  },
+  "included": [{
+    "id": "1",
+    "type": "image",
+    "attributes": {
+      "url": "http://example.com/1.jpg"
+    }
+  }, {
+    "id": "2",
+    "type": "image",
+    "attributes": {
+      "url": "http://example.com/2.jpg"
+    }
+  }]
+}

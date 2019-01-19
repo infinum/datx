@@ -330,6 +330,6 @@ export function getRefId(model: PureModel, key: string): IIdentifier|Array<IIden
  * @param {IIdentifier} value The new value
  * @returns {void} Referenced model id
  */
-export function setRefId(model: PureModel, key: string, value: IIdentifier|Array<IIdentifier>): void {
+export function setRefId(model: PureModel, key: string, value?: IIdentifier|Array<IIdentifier>): void {
   storage.setModelDataKey(model, key, value);
 }

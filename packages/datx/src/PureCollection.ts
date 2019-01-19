@@ -5,9 +5,11 @@ import {PatchType} from './enums/PatchType';
 import {MODEL_SINGLE_COLLECTION, UNDEFINED_TYPE, VIEW_NAME_TAKEN} from './errors';
 import {initModels, isSelectorFunction, upsertModel} from './helpers/collection';
 import {error} from './helpers/format';
+import { getRefId, setRefId } from './helpers/model/fields';
 import {
   getModelCollection,
   getModelId,
+  getModelMetaKey,
   getModelType,
   modelToJSON,
   setModelMetaKey,
@@ -437,6 +439,25 @@ export class PureCollection {
     this.__data.remove(model);
     this.__dataList[modelType].remove(model);
     set(this.__dataMap[modelType], modelId.toString(), undefined);
+
+    this.__data.forEach((item) => {
+      const refs = getModelMetaKey(item, 'refs');
+      const refKeys = Object.keys(refs || {});
+      refKeys.forEach((key) => {
+        const refType = getModelType(refs[key].model);
+        if (refType === modelType) {
+          const refIds = getRefId(item, key);
+          if (refIds instanceof Array) {
+            if (refIds.includes(modelId)) {
+              setRefId(item, key, refIds.filter((itemId) => itemId !== modelId));
+            }
+          } else if (refIds === modelId) {
+            setRefId(item, key, undefined);
+          }
+        }
+      });
+    });
+
     setModelMetaKey(model, 'collection', undefined);
   }
 
