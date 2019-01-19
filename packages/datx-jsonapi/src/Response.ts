@@ -1,6 +1,6 @@
 import { getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId, View } from 'datx';
 import { assignComputed, IDictionary } from 'datx-utils';
-import { action, IComputedValue } from 'mobx';
+import { action } from 'mobx';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -192,7 +192,6 @@ export class Response<T extends IJsonapiModel> {
     this.requestHeaders = response.requestHeaders;
     this.error = (response.data && response.data.errors) || response.error;
 
-    const linkGetter: IDictionary<IComputedValue<Promise<Response<T>>>> = { };
     if (this.links) {
       Object.keys(this.links).forEach((link: string) => {
         assignComputed(this, link, () => this.__fetchLink(link));
@@ -220,7 +219,6 @@ export class Response<T extends IJsonapiModel> {
       return this;
     }
 
-    const oldId = getModelId(data);
     const newId = getModelId(record);
     const type = getModelType(record);
 

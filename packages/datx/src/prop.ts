@@ -19,8 +19,7 @@ function propFn<T extends PureModel>(obj: T, key: string): void {
   storage.addModelDefaultField(getClass(obj), key);
 }
 
-// tslint:disable-next-line:no-default-export
-export default Object.assign(propFn, {
+export const prop = Object.assign(propFn, {
   /**
    * Set the default value for the model property
    *

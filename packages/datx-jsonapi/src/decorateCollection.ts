@@ -12,14 +12,12 @@ import {
   PureCollection,
   PureModel,
   ReferenceType,
-  setModelMetaKey,
   updateModel,
 } from 'datx';
 import { IDictionary, IRawModel, mapItems } from 'datx-utils';
 import { action } from 'mobx';
 
 import { clearAllCache, clearCacheByType } from './cache';
-import { MODEL_META_FIELD, MODEL_REF_META_FIELD } from './consts';
 import { GenericModel } from './GenericModel';
 import { flattenModel, removeModel } from './helpers/model';
 import { buildUrl, prepareQuery } from './helpers/url';

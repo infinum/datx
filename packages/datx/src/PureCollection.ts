@@ -483,6 +483,7 @@ export class PureCollection {
     }
   }
 
+  // @ts-ignore - Used outside of the class, but marked as private to avoid undocumented use
   private __changeModelId(oldId: IIdentifier, newId: IIdentifier, type: IType) {
     this.__dataMap[type][newId] = this.__dataMap[type][oldId];
     // tslint:disable-next-line:no-dynamic-delete

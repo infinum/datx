@@ -90,7 +90,7 @@ describe('General', () => {
 
   it('should find an event', () => {
     const store = new TestStore();
-    const ev = store.sync({
+    store.sync({
       data: {
         attributes: {
           name: 'Demo',
@@ -98,7 +98,7 @@ describe('General', () => {
         id: 1,
         type: 'event',
       },
-    }) as Event;
+    });
 
     const event = store.find(Event , 1);
     expect(event).not.toBeNull();

@@ -7,7 +7,7 @@ import { isModel } from '../helpers/mixin';
 import { IModelConstructor } from '../interfaces/IModelConstructor';
 import { IReferenceOptions } from '../interfaces/IReferenceOptions';
 import { IType } from '../interfaces/IType';
-import prop from '../prop';
+import { prop } from '../prop';
 import { PureModel } from '../PureModel';
 
 export function setupModel<IModel extends PureModel, IFields extends IDictionary>(

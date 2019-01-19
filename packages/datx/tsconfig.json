@@ -5,6 +5,7 @@
     "test/**/*"
   ],
   "compilerOptions": {
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "noUnusedLocals": true
   }
 }

@@ -131,7 +131,7 @@ describe('caching', () => {
       const store = new TestStore();
       let hasFailed = false;
       try {
-        const events = await store.fetch(Event, 12345);
+        await store.fetch(Event, 12345);
       } catch (resp) {
         expect(resp.error).toBeInstanceOf(Array);
         hasFailed = true;
@@ -160,7 +160,7 @@ describe('caching', () => {
       const store = new TestStore();
       let hasFailed = false;
       try {
-        const events = await store.fetch('event', 12345);
+        await store.fetch('event', 12345);
       } catch (e) {
         hasFailed = true;
         expect(e).toBeInstanceOf(Object);
@@ -287,7 +287,7 @@ describe('caching', () => {
       const store = new TestStore();
       let hasFailed = false;
       try {
-        const events = await store.fetchAll('event');
+        await store.fetchAll('event');
       } catch (resp) {
         hasFailed = true;
         expect(resp.error).toBeInstanceOf(Array);
@@ -315,7 +315,7 @@ describe('caching', () => {
       const store = new TestStore();
       let hasFailed = false;
       try {
-        const events = await store.fetchAll('event');
+        await store.fetchAll('event');
       } catch (e) {
         hasFailed = true;
         expect(e).toBeInstanceOf(Object);

@@ -22,7 +22,6 @@ import {
   setupModel,
   updateModelId,
 } from '../src';
-import { storage } from '../src/services/storage';
 
 describe('Model', () => {
   describe('Basic features', () => {
@@ -213,11 +212,6 @@ describe('Model', () => {
     });
 
     it('should work with two models', () => {
-      class Foo extends PureModel {
-        @prop.defaultValue(4) public foo!: number;
-        @prop.defaultValue(5) public bar!: number;
-      }
-
       class Bar extends PureModel {
         public foo!: number;
         public bar!: number;
@@ -291,6 +285,7 @@ describe('Model', () => {
 
     it('should throw if missing ref models', () => {
       expect(() => {
+        // @ts-ignore
         class Foo extends PureModel {
           public static type = 'foo';
 
@@ -368,7 +363,8 @@ describe('Model', () => {
       const foo1 = new Foo({ foo: 2 });
 
       expect(() => {
-        const foo2 = new Foo({ foo: 3, parent: foo1 });
+        // @ts-ignore
+        const _foo2 = new Foo({ foo: 3, parent: foo1 });
       }).toThrowError('The model needs to be in a collection to be referenceable');
 
       expect(() => {
@@ -604,7 +600,7 @@ describe('Model', () => {
       const collection = new TestCollection();
       collection.add(bar);
 
-      const foo1 = collection.add({ foo: 2 }, Foo);
+      collection.add({ foo: 2 }, Foo);
     });
 
     it('should work if an independent type is defined', () => {

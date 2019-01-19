@@ -8,7 +8,6 @@
     "no-redundant-jsdoc": false,
     "no-reserved-keywords": false,
     "no-unsafe-any": false,
-    "no-unused-variable": [true, "check-parameters"],
     "prefer-object-spread": false,
     "promise-function-async": false,
     "strict-boolean-expressions": false,

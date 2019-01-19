@@ -5,7 +5,6 @@ import {
   config,
   fetchModelLink,
   fetchModelRefLink,
-  GenericModel,
   getModelLinks,
   getModelMeta,
   getModelRefMeta,
@@ -15,7 +14,7 @@ import {
 
 import { clearAllCache } from '../../src/cache';
 import mockApi from '../utils/api';
-import { Event, Image, Organizer, Photo, TestStore, User } from '../utils/setup';
+import { Event, Image, TestStore } from '../utils/setup';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;
@@ -79,7 +78,7 @@ describe('Network basics', () => {
     expect(image1.id).toBe(image1.meta.id);
 
     const images = store.findAll(Image);
-    expect(store.findAll(Image)).toHaveLength(1);
+    expect(images).toHaveLength(1);
 
     mockApi({
       method: 'POST',

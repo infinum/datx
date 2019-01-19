@@ -131,7 +131,7 @@ describe('datx-utils', () => {
       const data = new Data();
 
       autorun(() => {
-        // tslint:disable-next-line no-unused-variable
+        // @ts-ignore
         const tmp = data.foo;
       });
 
