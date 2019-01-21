@@ -34,7 +34,7 @@
     "typescript": "^3.2.4"
   },
   "peerDependencies": {
-    "mobx": "^4.2.0 || ^5.5.0"
+    "mobx": "^5.9.0"
   },
   "scripts": {
     "test": "jest --coverage",
