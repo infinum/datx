@@ -2,7 +2,7 @@
 
 import { autorun, computed, configure } from 'mobx';
 
-import { CompatCollection, CompatModel, getRefId, IIdentifier, prop } from '../src';
+import { CompatCollection, CompatModel, getRefId, IIdentifier } from '../src';
 
 configure({ enforceActions: 'observed' });
 
@@ -102,7 +102,7 @@ describe('Compat Model', () => {
       id: 1,
     }, 'foo');
 
-    const model2 = collection.add<FooModel>({
+    collection.add<FooModel>({
       bar: 1,
       foo: 2,
       fooBar: 1.5,
@@ -480,9 +480,9 @@ describe('Compat Model', () => {
     const collection = new TestCollection();
 
     const foo1 = collection.add<Foo>({ bar: 1 }, 'foo');
-    const foo2 = collection.add<Foo>({ bar: 1 }, 'foo');
+    collection.add<Foo>({ bar: 1 }, 'foo');
     const foo10 = collection.add<Foo>({ myID: 10, bar: 1 }, 'foo');
-    const foo3 = collection.add<Foo>({ bar: 1 }, 'foo');
+    collection.add<Foo>({ bar: 1 }, 'foo');
     const foo4 = collection.add<Foo>({ myID: -4, bar: 1 }, 'foo');
     const foo5 = collection.add<Foo>({ bar: 1 }, 'foo');
 

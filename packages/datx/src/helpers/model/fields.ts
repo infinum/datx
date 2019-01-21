@@ -265,7 +265,7 @@ function getModelRefsByType(model: PureModel, type: IType) {
 function updateModelReferences(model: PureModel, newId: IIdentifier, oldId: IIdentifier, type: IType) {
   const collection = getModelCollection(model);
   if (collection) {
-    const allModels = collection.getAllModels().map((item) => {
+    collection.getAllModels().map((item) => {
       getModelRefsByType(item, type).forEach((ref) => {
         const data = storage.getModelDataKey(item, ref);
         if (data instanceof Array || isObservableArray(data)) {

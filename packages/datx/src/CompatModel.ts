@@ -161,6 +161,7 @@ export class CompatModel extends PureModel {
     return modelToJSON(this);
   }
 
+  // @ts-ignore
   // tslint:disable-next-line no-unused-variable
   private get __collection() {
     deprecated('model.__collection is deprecated. Use getModelCollection() instead.');
