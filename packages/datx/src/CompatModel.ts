@@ -1,4 +1,4 @@
-import { deprecated, IDictionary, mapItems } from 'datx-utils';
+import { assignComputed, deprecated, IDictionary, mapItems } from 'datx-utils';
 import { isObservableArray } from 'mobx';
 
 import { Collection } from './Collection';
@@ -48,8 +48,7 @@ export class CompatModel extends PureModel {
       }
       const ref = this.static.refs[prop];
       const data = mapItems(this[prop] || this.static.defaults[prop], getModelId);
-      // tslint:disable-next-line:no-dynamic-delete
-      delete this[prop];
+      assignComputed(this, prop);
       if (typeof ref === 'object') {
         // Back reference
         initModelRef(this, prop, {

@@ -152,5 +152,13 @@ describe('datx-utils', () => {
 
       expect(counter).toBe(2);
     });
+
+    it('should handle computed reassignment', () => {
+      const obj = observable({ });
+      assignComputed(obj, 'foo', () => 1);
+      assignComputed(obj, 'foo', () => 2);
+
+      expect(obj['foo']).toBe(2);
+    });
   });
 });

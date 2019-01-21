@@ -56,6 +56,14 @@ export function isFalsyArray(value: any): boolean {
   return value instanceof Array && !value.every(Boolean);
 }
 
+function undefinedGetter(): any {
+  return undefined;
+}
+
+function defaultSetter() {
+  throw new Error('The setter is not defined for this property');
+}
+
 /**
  * Add a computed property to an observable object
  *
@@ -68,37 +76,36 @@ export function isFalsyArray(value: any): boolean {
 export function assignComputed<T = any>(
   obj: object,
   key: string,
-  getter: () => T,
-  setter?: (value: T) => void,
+  getter: () => T = undefinedGetter,
+  setter: (value: T) => void = defaultSetter,
 ) {
-  let value: any;
-  if (key in obj) {
-    value = obj[key];
-    // tslint:disable-next-line:no-dynamic-delete
-    delete obj[key];
-  }
+  const getterKey = Symbol.for(`$datx__get__${key}`);
+  Object.defineProperty(obj, getterKey, {
+    configurable: true,
+    enumerable: false,
+    value: getter,
+    writable: true,
+  });
 
-  if (setter) {
+  const setterKey = Symbol.for(`$datx__set__${key}`);
+  Object.defineProperty(obj, setterKey, {
+    configurable: true,
+    enumerable: false,
+    value: setter,
+    writable: true,
+  });
+
+  if (!obj.hasOwnProperty(key)) {
     extendObservable(obj, {
       get [key]() {
-        return getter();
+        return obj[getterKey]();
       },
       set [key](val) {
         if (setter) {
-          setter(val);
+          obj[setterKey](val);
         }
       },
     });
-  } else {
-    extendObservable(obj, {
-      get [key]() {
-        return getter();
-      },
-    });
-  }
-
-  if (value !== undefined) {
-    obj[key] = value;
   }
 }
 

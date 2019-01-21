@@ -30,8 +30,7 @@ export function initModelField<T extends PureModel>(
   const fields = getModelMetaKey(obj, 'fields') as Array<string>;
 
   if (type === FieldType.ID && key in obj) {
-    // tslint:disable-next-line:no-dynamic-delete
-    delete obj[key];
+    storage.setModelDataKey(obj, key, undefined);
   }
 
   // Initialize the observable field to the default value
