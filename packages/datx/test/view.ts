@@ -11,7 +11,6 @@ import {
   updateModelId,
   View,
 } from '../src';
-import { storage } from '../src/services/storage';
 
 describe('Model', () => {
   it('should init a view', () => {
@@ -229,7 +228,7 @@ describe('Model', () => {
     const foos = collection.add([{ }, { }, { }], Foo);
     const view = new View(Foo, collection, undefined, foos);
 
-    const [foo1, foo2, foo3] = collection.add([{ }, { }, { }], Foo);
+    const [foo1, foo2] = collection.add([{ }, { }, { }], Foo);
 
     expect(view.length).toBe(3);
 
@@ -257,7 +256,7 @@ describe('Model', () => {
     const foos = collection.add([{ }, { }, { }], Foo);
     const view = new View(Foo, collection, (item) => item.id, foos);
 
-    const [foo1, foo2, foo3] = collection.add([{ }, { }, { }], Foo);
+    const [foo1, foo2] = collection.add([{ }, { }, { }], Foo);
 
     expect(view.length).toBe(3);
 
@@ -286,7 +285,7 @@ describe('Model', () => {
     const foos = collection.add([{ }, { }, { }], Foo);
     const view = new View(Foo, collection, undefined, foos, true);
 
-    const [foo1, foo2, foo3] = foos;
+    const [foo1] = foos;
 
     view.list[0] = foo1;
 

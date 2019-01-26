@@ -163,8 +163,8 @@ describe('Collection', () => {
 
       const store = new Store();
       const foo1 = store.add({ foo: 1 }, Foo);
-      const foo2 = store.add<Foo>({ foo: 2 }, 'foo');
-      const foo3 = store.add(new Foo({ foo: 3 }));
+      store.add<Foo>({ foo: 2 }, 'foo');
+      store.add(new Foo({ foo: 3 }));
 
       const raw = store.toJSON();
 
@@ -194,8 +194,8 @@ describe('Collection', () => {
 
       const store = new Store();
       const foo1 = store.add({ foo: 1 }, Foo);
-      const foo2 = store.add<Foo>({ foo: 2 }, 'foo');
-      const foo3 = store.add(new Foo({ foo: 3 }));
+      store.add<Foo>({ foo: 2 }, 'foo');
+      store.add(new Foo({ foo: 3 }));
       expect(foo1.foo).toBe(1);
 
       const raw = store.toJSON();

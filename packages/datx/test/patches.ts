@@ -9,7 +9,6 @@ import {
   Collection,
   IPatch,
   Model,
-  modelToJSON,
   PatchType,
   prop,
 } from '../src';
@@ -23,7 +22,6 @@ describe('patch', () => {
         nick: 'Bar',
       });
 
-      const modelMeta = { type: model.meta.type, id: model.meta.id };
       const unregister = model.onPatch((patch) => patches.push(patch));
 
       model['name'] = 'FooBar';
@@ -119,7 +117,6 @@ describe('patch', () => {
         nick: 'Bar',
       });
 
-      const modelMeta = { type: model.meta.type, id: model.meta.id };
       const unregister = model.onPatch((patch) => patches.push(patch));
 
       model['name'] = 'Foo';
@@ -259,7 +256,6 @@ describe('patch', () => {
 
       expect(model).not.toBe(null);
       if (model) {
-        const modelMeta = { id: model.meta.id, type: model.meta.type };
         model['name'] = 'FooBar';
         model.assign('age', 42);
         model.assign('nick', undefined);
@@ -268,7 +264,6 @@ describe('patch', () => {
           name: 'Bar',
         });
 
-        const removeSnapshot = model.meta.snapshot;
         store.remove('foo', 1);
 
         model['height'] = 200;
@@ -353,26 +348,20 @@ describe('patch', () => {
       }
 
       const bar2 = new BarModel({ id: 2 });
-      const bar2meta = { id: bar2.meta.id, type: bar2.meta.type };
       const bar3 = new BarModel({ id: 3 });
-      const bar3meta = { id: bar3.meta.id, type: bar3.meta.type };
 
       const patches: Array<IPatch> = [];
       const collection = new TestCollection();
       collection.onPatch((patch) => patches.push(patch));
-      const bar2addSnaphost = bar2.meta.snapshot;
-      const bar3addSnaphost = bar3.meta.snapshot;
 
       const model = collection.add<FooModel>({
         bar: bar2,
         id: 1,
       }, 'foo');
-      const modelMeta = { id: model.meta.id, type: model.meta.type };
 
       model.bar = bar3;
       model.meta.refs.bar = 2;
       model.bar = null;
-      // model.assignRef('bar', bar3);
       model.bar = bar3;
 
       expect(patches).toMatchSnapshot();
