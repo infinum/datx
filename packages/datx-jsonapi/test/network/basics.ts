@@ -345,6 +345,15 @@ describe('Network basics', () => {
     const response = await store.fetchAll(TestEvent);
     const event = response.data as TestEvent;
     expect(event.meta.type).toBe('event');
+
+    const req = mockApi({
+      method: 'PATCH',
+      name: 'event-1',
+      url: 'foo/event/12345',
+    });
+
+    await event.save();
+    expect(req.isDone()).toBe(true);
   });
 
   it('should support functional endpoint', async () => {

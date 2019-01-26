@@ -226,19 +226,6 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
 }
 
 function getModelEndpointUrl(model: IJsonapiModel, options?: IRequestOptions): string {
-  // const staticModel = model.constructor;
-  // const links: IDictionary<ILink> = getModelLinks(model);
-  // if (links && links.self) {
-  //   const self: ILink = links.self;
-
-  //   return typeof self === 'string' ? self : self.href;
-  // }
-
-  // const url = getValue<string>(staticModel['endpoint']) || getModelType(model);
-
-  // return isModelPersisted(model)
-  //   ? `${config.baseUrl}${url}/${getModelId(model)}`
-  //   : `${config.baseUrl}${url}`;
   const queryData = prepareQuery(
     getModelType(model),
     isModelPersisted(model) ? getModelId(model) : undefined,

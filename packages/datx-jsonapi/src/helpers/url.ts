@@ -23,11 +23,12 @@ export function prepareQuery(
   data?: object;
   headers: IHeaders;
 } {
-  let queryModel: typeof PureModel | IJsonapiModel | undefined = model;
+  let queryModel: typeof PureModel | IJsonapiModel | undefined = model && model.constructor as typeof PureModel;
   if (!queryModel && collection) {
     const staticCollection = collection.constructor as typeof PureCollection;
     queryModel = staticCollection.types.filter((item) => item.type === type)[0];
   }
+
   const path: string = queryModel
     ? (getValue<string>(queryModel['endpoint']) || queryModel['baseUrl'] || getModelType(queryModel))
     : type;
