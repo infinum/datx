@@ -7,7 +7,6 @@ export {
   assignComputed,
   mapItems,
   flatten,
-  uniq,
   isFalsyArray,
   error,
   warn,

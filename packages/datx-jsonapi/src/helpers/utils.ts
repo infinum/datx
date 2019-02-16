@@ -1,3 +1,5 @@
+import { IDictionary } from 'datx-utils';
+
 declare var window: object;
 
 // tslint:disable-next-line:no-typeof-undefined - The alternative breaks on node
@@ -19,4 +21,8 @@ export function getValue<T>(target: T|(() => T)): T {
   }
 
   return target;
+}
+
+export function error(message: string): Error {
+  return new Error(`[datx exception] ${message}`);
 }

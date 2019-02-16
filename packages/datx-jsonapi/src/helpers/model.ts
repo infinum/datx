@@ -32,6 +32,7 @@ import { IDefinition, ILink, IRecord, IRelationship } from '../interfaces/JsonAp
 import { create, fetchLink, handleResponse, remove, update } from '../NetworkUtils';
 import { Response } from '../Response';
 import { prepareQuery } from './url';
+import { error } from './utils';
 
 export function flattenModel(classRefs): null;
 export function flattenModel(classRefs, data?: IRecord): IRawModel;
@@ -104,7 +105,7 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
   const collection = getModelCollection(model);
   const links = getModelLinks(model);
   if (!links || !(key in links)) {
-    throw new Error(`Link ${key} doesn't exist on the model`);
+    throw error(`Link ${key} doesn't exist on the model`);
   }
   const link = links[key];
   const responseObj = fetchLink<T>(link, collection as IJsonapiCollection, requestHeaders, options);
@@ -136,15 +137,15 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
 function getLink(model: PureModel, ref: string, key: string) {
   const collection = getModelCollection(model);
   if (!collection) {
-    throw new Error('The model needs to be in a collection');
+    throw error('The model needs to be in a collection');
   }
   const links = getModelRefLinks(model);
   if (!links || !(ref in links)) {
-    throw new Error(`The reference ${ref} doesn't have any links`);
+    throw error(`The reference ${ref} doesn't have any links`);
   }
   const refLinks = links[ref];
   if (!refLinks || !(key in refLinks)) {
-    throw new Error(`Link ${key} doesn't exist on the model`);
+    throw error(`Link ${key} doesn't exist on the model`);
   }
 
   return refLinks[key];
@@ -202,10 +203,19 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
       rel = (refIds as Array<IIdentifier>).map((id, index) => {
         const type = getModelType(model[key][index] ? model[key][index] : refs[key].model).toString();
 
+        if (!type) {
+          throw error(`The model type can't be retrieved for the reference ${key}`);
+        }
+
         return { id, type };
       });
     } else {
-      const type: string = model[key] ? getModelType(model[key]) : refs[key].model;
+      const type: string = getModelType(model[key] ? model[key] : refs[key].model).toString();
+
+      if (!type) {
+        throw error(`The model type can't be retrieved for the reference ${key}`);
+      }
+
       rel = refIds ? { id: refIds, type } : undefined;
     }
 

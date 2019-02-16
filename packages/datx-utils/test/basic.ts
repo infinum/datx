@@ -1,6 +1,6 @@
 import { autorun, configure, isComputedProp, isObservableProp, observable } from 'mobx';
 
-import { assignComputed, flatten, isFalsyArray, mapItems, uniq } from '../src';
+import { assignComputed, flatten, isFalsyArray, mapItems } from '../src';
 
 configure({ enforceActions: 'observed' });
 
@@ -26,20 +26,6 @@ describe('datx-utils', () => {
 
     it('should work with a complex array', () => {
       expect(flatten([[1], [2, 3], [4, 5], [6]])).toEqual([1, 2, 3, 4, 5, 6]);
-    });
-  });
-
-  describe('uniq', () => {
-    it('should work if no duplicates', () => {
-      expect(uniq([1, 2, 3])).toEqual([1, 2, 3]);
-    });
-
-    it('should remove duplicate values', () => {
-      expect(uniq([1, 2, 3, 1])).toEqual([1, 2, 3]);
-    });
-
-    it('should remove multiple duplicate values', () => {
-      expect(uniq([1, 2, 3, 1, 1, 2, 1, 1, 2, 3, 3, 2, 1])).toEqual([1, 2, 3]);
     });
   });
 
@@ -75,12 +61,6 @@ describe('datx-utils', () => {
       assignComputed(obj1, 'baz', () => data.data, (a) => {
         data.data = a;
       });
-
-      // expect(isComputedProp(obj1, 'foo')).toBe(true);
-      // expect(isComputedProp(obj1, 'bar')).toBe(true);
-      // expect(isComputedProp(obj1, 'baz')).toBe(true);
-      // expect(isComputedProp(obj2, 'foo')).toBe(true);
-      // expect(isComputedProp(obj2, 'bar')).toBe(true);
 
       // @ts-ignore
       expect(obj1.foo).toBe(1);

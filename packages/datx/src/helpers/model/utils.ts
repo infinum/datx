@@ -148,7 +148,13 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary): T
  * @param {*} value Property value
  */
 export function assignModel<T extends PureModel>(model: T, key: string, value: any): void {
+  if (!(model instanceof PureModel)) {
+    throw error('The given parameter is not a valid model');
+  }
   const refs = getModelMetaKey(model, 'refs') as IDictionary<IReferenceOptions>;
+  if (!refs) {
+    throw error('The given models is not initialized correctly');
+  }
   startAction(model);
   if (key in refs) {
     assignModelRef(model, key, value);

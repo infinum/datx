@@ -34,18 +34,6 @@ export function flatten<T>(data: Array<Array<T>>): Array<T> {
 }
 
 /**
- * Return a unique set of items in an array
- *
- * @export
- * @template T
- * @param {Array<T>} data Array to filter
- * @returns {Array<T>} Filtered array
- */
-export function uniq<T>(data: Array<T>): Array<T> {
-  return Array.from(new Set(data));
-}
-
-/**
  * Check if the given variable is an array with at least one falsy value
  *
  * @export
