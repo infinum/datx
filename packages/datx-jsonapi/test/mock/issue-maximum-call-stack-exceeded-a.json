@@ -1,0 +1,50 @@
+{
+  "data": {
+    "id": "9019",
+    "type": "multitracks",
+    "attributes": {
+      "name": "test"
+    },
+    "relationships": {
+      "product_variants": {
+        "data": [{
+          "type": "product_variants",
+          "id": "19074"
+        }, {
+          "type": "product_variants",
+          "id": "19073"
+        }]
+      }
+    }
+  },
+  "included": [{
+    "id": "19074",
+    "type": "product_variants",
+    "attributes": {
+      "name": "test"
+    },
+    "relationships": {
+      "product": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  }, {
+    "id": "19073",
+    "type": "product_variants",
+    "attributes": {
+      "name": "test"
+    },
+    "relationships": {
+      "product": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  }],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

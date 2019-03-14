@@ -197,4 +197,33 @@ describe('Issues', () => {
     await toRemove.destroy();
     expect(event.images).toHaveLength(1);
   });
+
+  it('should not exceed maximum call stack', async () => {
+    const store = new TestStore();
+
+    mockApi({
+      name: 'issue-maximum-call-stack-exceeded-a',
+      url: 'multitracks/9019',
+    });
+
+    const response1 = await store.fetch('multitracks', 9019);
+    // const multitrack = response1.data as Multitrack;
+
+    mockApi({
+      name: 'issue-maximum-call-stack-exceeded-b',
+      url: 'line_items/606208',
+    });
+
+    const response2 = await store.fetch('line_items', 606208);
+    // const lineItem1 = response2.data as LineItem;
+
+    mockApi({
+      name: 'issue-maximum-call-stack-exceeded-c',
+      url: 'line_items/606209',
+    });
+
+    const response3 = await store.fetch('line_items', 606209);
+    // const lineItem2 = response3.data as LineItem;
+
+  });
 });

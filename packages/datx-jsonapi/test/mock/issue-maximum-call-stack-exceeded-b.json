@@ -1,0 +1,116 @@
+{
+  "data": {
+    "id": "606208",
+    "type": "line_items",
+    "attributes": {
+      "name": "test"
+    },
+    "relationships": {
+      "product_variant": {
+        "meta": {
+          "included": false
+        }
+      },
+      "cart": {
+        "data": {
+          "type": "carts",
+          "id": "9943644"
+        }
+      },
+      "multitrack_product_variant": {
+        "data": {
+          "type": "product_variants",
+          "id": "19073"
+        }
+      }
+    }
+  },
+  "included": [{
+    "id": "9943644",
+    "type": "carts",
+    "attributes": {
+      "name": "test"
+    },
+    "relationships": {
+      "user": {
+        "meta": {
+          "included": false
+        }
+      },
+      "billing_address": {
+        "data": null
+      },
+      "shipping_address": {
+        "data": null
+      },
+      "line_items": {
+        "meta": {
+          "included": false
+        }
+      }
+    },
+    "links": {
+      "self": "/api/v1/carts/9943644"
+    },
+    "meta": {
+      "products_count": 1
+    }
+  }, {
+    "id": "19073",
+    "type": "product_variants",
+    "attributes": {
+      "name": "test"
+    },
+    "relationships": {
+      "product": {
+        "data": {
+          "type": "products",
+          "id": "10063"
+        }
+      }
+    }
+  }, {
+    "id": "10063",
+    "type": "products",
+    "attributes": {
+      "name": "test"
+    },
+    "relationships": {
+      "cover_image": {
+        "meta": {
+          "included": false
+        }
+      },
+      "variants": {
+        "meta": {
+          "included": false
+        }
+      },
+      "multitrack_variants": {
+        "data": [{
+          "type": "product_variants",
+          "id": "19074"
+        }, {
+          "type": "product_variants",
+          "id": "19073"
+        }]
+      }
+    }
+  }, {
+    "id": "19074",
+    "type": "product_variants",
+    "attributes": {
+      "name": "test"
+    },
+    "relationships": {
+      "product": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  }],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
