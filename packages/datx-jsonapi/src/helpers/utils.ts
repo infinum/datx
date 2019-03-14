@@ -1,5 +1,3 @@
-import { IDictionary } from 'datx-utils';
-
 declare var window: object;
 
 // tslint:disable-next-line:no-typeof-undefined - The alternative breaks on node
