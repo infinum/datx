@@ -7,5 +7,9 @@ export class ProductVariant extends jsonapi(Model) {
   public static type: IType = 'product_variants';
 
   @prop public title!: string;
-  @prop.toOne(Product) public product!: Product;
+
+  @prop.toOne('products')
+  public product!: Product;
+
+  @prop public multitrackProductType!: string;
 }

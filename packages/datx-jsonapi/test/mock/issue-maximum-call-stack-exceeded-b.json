@@ -1,9 +1,38 @@
 {
   "data": {
-    "id": "606208",
+    "id": "606213",
     "type": "line_items",
     "attributes": {
-      "name": "test"
+      "quantity": 1,
+      "currency": "USD",
+      "item_price_cents": 499,
+      "item_price": "$4.99",
+      "total_price": "$4.99",
+      "total_price_cents": 499,
+      "item_credit_price": 5,
+      "total_credit_price": 5,
+      "image": {
+        "large_url": "https://s3.us-east-2.amazonaws.com/web.loop.data-demo/store/4a9075c5e7225898f1417af26336390a.png",
+        "small_url": "https://s3.us-east-2.amazonaws.com/web.loop.data-demo/store/8a7fad8101bda4b5217410951f9f0a43.png",
+        "medium_url": "https://s3.us-east-2.amazonaws.com/web.loop.data-demo/store/914591fd83a08a711e170d40bf918896.png",
+        "twitter_url": "https://s3.us-east-2.amazonaws.com/web.loop.data-demo/store/94713d0294598d50573e29d95820bfd7.png",
+        "facebook_url": "https://s3.us-east-2.amazonaws.com/web.loop.data-demo/store/3e46436e016b6d7a109e005623590435.png",
+        "original_url": "https://s3.us-east-2.amazonaws.com/web.loop.data-demo/store/0c2c18d26e27fc44d424d16004c737f7.png",
+        "preloader_url": "https://s3.us-east-2.amazonaws.com/web.loop.data-demo/store/f1d2b6a7258862745f2e3a8e2da41d0b.png",
+        "thumbnail_url": "https://s3.us-east-2.amazonaws.com/web.loop.data-demo/store/fadf434368e703166f680577a178ed33.png"
+      },
+      "product_title": "Prime Pads Vol. 1 - 4/4, 53-63 BPM by Loop Community",
+      "short_description": "Prime only | A",
+      "quantity_changable": false,
+      "sku": "LCPPV1A_APP",
+      "created_at": "2019-03-14T03:47:40.747-05:00",
+      "updated_at": "2019-03-14T03:47:40.757-05:00",
+      "ships_to_given_address": null,
+      "stock_error_message": null,
+      "unpublished_product_error_message": null,
+      "coupon_error_message": null,
+      "already_bought_error_message": null,
+      "stock_quantity": null
     },
     "relationships": {
       "product_variant": {
@@ -29,7 +58,33 @@
     "id": "9943644",
     "type": "carts",
     "attributes": {
-      "name": "test"
+      "status": "cart",
+      "available_payment_methods": ["no_payment"],
+      "payment_method": null,
+      "coupon_code": null,
+      "coupon_error_message": null,
+      "shipping_required": null,
+      "currency": "USD",
+      "total_base_price_cents": 0,
+      "total_base_price": "$0.00",
+      "total_base_credit_price": 0,
+      "total_tax_amount_cents": 0,
+      "total_tax_amount": "$0.00",
+      "total_tax_credit_amount": 0,
+      "discount_amount_cents": 0,
+      "discount_amount": "$0.00",
+      "discount_credit_amount": 0,
+      "shipping_price_cents": 0,
+      "shipping_price": "$0.00",
+      "shipping_credit_price": 0,
+      "total_price_before_discount_cents": 0,
+      "total_price_before_discount": "$0.00",
+      "total_price_before_discount_credits": 0,
+      "total_price_cents": 0,
+      "total_price": "$0.00",
+      "total_credit_price": 0,
+      "created_at": "2019-01-31T08:35:16.167-06:00",
+      "updated_at": "2019-03-13T17:05:19.234-05:00"
     },
     "relationships": {
       "user": {
@@ -50,7 +105,7 @@
       }
     },
     "links": {
-      "self": "/api/v1/carts/9943644"
+      "self": "https://loop-data-demo.byinfinum.co/api/v1/carts/9943644"
     },
     "meta": {
       "products_count": 1
@@ -59,7 +114,16 @@
     "id": "19073",
     "type": "product_variants",
     "attributes": {
-      "name": "test"
+      "multitrack_product_type": "prime_only",
+      "upgrade_available": false,
+      "price_cents": 499,
+      "price": "$4.99",
+      "credit_price": 5,
+      "currency": "USD",
+      "action_type": "in_cart",
+      "purchased_file": null,
+      "created_at": "2017-08-09T15:00:18.000-05:00",
+      "updated_at": "2018-03-07T10:39:49.000-06:00"
     },
     "relationships": {
       "product": {
@@ -73,7 +137,22 @@
     "id": "10063",
     "type": "products",
     "attributes": {
-      "name": "test"
+      "title": "Prime Pads Vol. 1 - 4/4, 53-63 BPM by Loop Community",
+      "description": null,
+      "lowest_price": "$4.99",
+      "lowest_price_cents": 499,
+      "currency": "USD",
+      "lowest_credit_price": 5,
+      "product_category": "multitrack",
+      "shop_product_category": null,
+      "ships_internationally": false,
+      "domestic_shipping_price": "$0.00",
+      "international_shipping_price": "$0.00",
+      "domestic_shipping_credit_price": 0,
+      "international_shipping_credit_price": 0,
+      "note": null,
+      "created_at": "2017-08-09T15:00:18.000-05:00",
+      "updated_at": "2018-03-07T10:39:49.000-06:00"
     },
     "relationships": {
       "cover_image": {
@@ -100,7 +179,16 @@
     "id": "19074",
     "type": "product_variants",
     "attributes": {
-      "name": "test"
+      "multitrack_product_type": "prime_and_zip",
+      "upgrade_available": false,
+      "price_cents": 999,
+      "price": "$9.99",
+      "credit_price": 10,
+      "currency": "USD",
+      "action_type": "replace_multitrack",
+      "purchased_file": null,
+      "created_at": "2018-07-18T06:04:22.000-05:00",
+      "updated_at": "2018-07-18T06:04:22.000-05:00"
     },
     "relationships": {
       "product": {

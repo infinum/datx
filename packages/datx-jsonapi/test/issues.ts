@@ -6,7 +6,7 @@ import { config, getModelMeta, getModelRefMeta, jsonapi } from '../src';
 import { clearAllCache } from '../src/cache';
 
 import mockApi from './utils/api';
-import { Event, TestStore } from './utils/setup';
+import { Event, LineItem, Multitrack, TestStore } from './utils/setup';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;
@@ -207,23 +207,33 @@ describe('Issues', () => {
     });
 
     const response1 = await store.fetch('multitracks', 9019);
-    // const multitrack = response1.data as Multitrack;
+    const multitrack = response1.data as Multitrack;
+    console.log(response1.data);
 
     mockApi({
+      method: 'POST',
       name: 'issue-maximum-call-stack-exceeded-b',
-      url: 'line_items/606208',
+      url: 'line_items',
     });
 
-    const response2 = await store.fetch('line_items', 606208);
-    // const lineItem1 = response2.data as LineItem;
+    const lineItem1 = new LineItem({
+      quantity: 1,
+    }, store);
+    await lineItem1.save();
+    console.log(multitrack.typeSortedVariants);
 
     mockApi({
+      method: 'POST',
       name: 'issue-maximum-call-stack-exceeded-c',
-      url: 'line_items/606209',
+      url: 'line_items',
     });
 
-    const response3 = await store.fetch('line_items', 606209);
-    // const lineItem2 = response3.data as LineItem;
+    const lineItem2 = new LineItem({
+      quantity: 1,
+    }, store);
+    await lineItem2.save();
+    console.log(lineItem2);
+    console.log(multitrack.typeSortedVariants);
 
   });
 });

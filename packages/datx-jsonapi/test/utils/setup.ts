@@ -26,7 +26,17 @@ export {
 };
 
 export class TestStoreCollection extends Collection {
-  public static types = [User, Event, Image, Organizer, Photo];
+  public static types = [
+    User,
+    Event,
+    Image,
+    Organizer,
+    Photo,
+    Multitrack,
+    ProductVariant,
+    LineItem,
+    Cart,
+  ];
 }
 
 export const TestStore = jsonapi(TestStoreCollection);
