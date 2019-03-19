@@ -1,14 +1,11 @@
 import { Collection } from 'datx';
 
 import { jsonapi } from '../../src';
-import { Cart } from './models/Cart';
 import { Event } from './models/Event';
 import { Image } from './models/Image';
 import { LineItem } from './models/LineItem';
-import { Multitrack } from './models/Multitrack';
 import { Organizer } from './models/Organizer';
 import { Photo } from './models/Photo';
-import { Product } from './models/Product';
 import { ProductVariant } from './models/ProductVariant';
 import { User } from './models/User';
 
@@ -18,11 +15,8 @@ export {
   Organizer,
   Photo,
   User,
-  Multitrack,
-  Product,
   ProductVariant,
   LineItem,
-  Cart,
 };
 
 export class TestStoreCollection extends Collection {
@@ -32,10 +26,8 @@ export class TestStoreCollection extends Collection {
     Image,
     Organizer,
     Photo,
-    Multitrack,
     ProductVariant,
     LineItem,
-    Cart,
   ];
 }
 
