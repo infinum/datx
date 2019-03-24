@@ -218,6 +218,5 @@ describe('Issues', () => {
 
     const lineItem2 = new LineItem({ }, store);
     await lineItem2.save();
-
   });
 });
