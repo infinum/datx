@@ -2,8 +2,6 @@
 
 DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
 
-The library is still work in progress, but it's feature complete. You can track the v1.0 status using the [v1.0 milestone](https://github.com/infinum/datx/milestone/1).
-
 ***
 
 ## Basic usage
@@ -51,9 +49,11 @@ npm install --save datx mobx
 
 The lib makes use of the following features that are not yet available everywhere. Based on your browser support, you might want to polyfill them:
 
-  * [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
   * [Symbol.for](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol)
   * [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
+  * [Array.prototype.find](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)
+
+[How to add the polyfills](https://github.com/infinum/datx/wiki/Troubleshooting#the-library-doesnt-work-in-internet-explorer-11).
 
 ## Concepts
 
@@ -87,6 +87,10 @@ Want to make your own mixin? Check out [the guide](https://github.com/infinum/da
   * [Model utils](https://github.com/infinum/datx/wiki/Model-utils)
   * [Lib utils](https://github.com/infinum/datx/wiki/Lib-utils)
   * [TypeScript interfaces](https://github.com/infinum/datx/wiki/Interfaces)
+
+## Troubleshooting
+
+Having issues with the library? Check out the [troubleshooting](https://github.com/infinum/datx/wiki/Troubleshooting) page or [open](https://github.com/infinum/datx/issues/new) an issue.
 
 ***
 

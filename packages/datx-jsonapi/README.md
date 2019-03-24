@@ -54,11 +54,14 @@ npm install --save datx-jsonapi mobx
 
 The lib makes use of the following features that are not yet available everywhere. Based on your browser support, you might want to polyfill them:
 
-* [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
 * [Symbol.for](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol)
 * [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
-* [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+* [Array.prototype.find](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)
 * [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+* [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+
+[How to add the polyfills](https://github.com/infinum/datx/wiki/Troubleshooting#the-library-doesnt-work-in-internet-explorer-11).
+Note: Fetch API is not included in the polyfills mentioned in the Troubleshooting page. Instead, you need to add it as a separate library. If you don't have any special requirements (like server-side rendering), you can use the [window.fetch polyfill](https://github.com/github/fetch#installation).
 
 ## API reference
   
@@ -69,6 +72,10 @@ The lib makes use of the following features that are not yet available everywher
   * [Config](https://github.com/infinum/datx/wiki/JSONAPI-Config)
   * [Utils](https://github.com/infinum/datx/wiki/JSONAPI-Utils)
   * [TypeScript Interfaces](https://github.com/infinum/datx/wiki/JSONAPI-Interfaces)
+
+## Troubleshooting
+
+Having issues with the library? Check out the [troubleshooting](https://github.com/infinum/datx/wiki/Troubleshooting) page or [open](https://github.com/infinum/datx/issues/new) an issue.
 
 ***
 
