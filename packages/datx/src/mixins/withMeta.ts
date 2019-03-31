@@ -73,6 +73,13 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
   class WithMeta extends BaseClass implements IMetaMixin {
     // @ts-ignore
     public readonly meta = new MetaClass(this);
+
+    constructor(...args: Array<any>) {
+      super(...args);
+      Object.defineProperty(this, 'meta', {
+        enumerable: false,
+      });
+    }
   }
 
   return WithMeta as IModelConstructor<IMetaMixin<T> & T>;

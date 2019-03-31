@@ -53,6 +53,8 @@ describe('datx-utils', () => {
       });
 
       assignComputed(obj1, 'foo', () => 1);
+      // expect(obj1.propertyIsEnumerable('foo')).toBe(true);
+
       assignComputed(obj2, 'foo', () => 2);
       // tslint:disable-next-line:no-empty
       assignComputed(obj1, 'bar', () => obj2, () => { });

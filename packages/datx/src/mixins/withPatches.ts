@@ -37,6 +37,13 @@ export function withPatches<T extends PureCollection>(Base: ICollectionConstruct
     class WithPatches extends BaseClass implements IMetaPatchesCollection {
       private __patchListeners: Array<(patch: IPatch) => void> = [];
 
+      constructor(...args: Array<any>) {
+        super(...args);
+        Object.defineProperty(this, '__patchListeners', {
+          enumerable: false,
+        });
+      }
+
       public applyPatch(patch: IPatch) {
         const model = this.find(patch.model.type, patch.model.id);
         if (patch.patchType === PatchType.REMOVE) {
@@ -83,6 +90,13 @@ export function withPatches<T extends PureCollection>(Base: ICollectionConstruct
     // tslint:disable-next-line:max-classes-per-file
     class WithPatches extends BaseClass {
       private __patchListeners: Array<(patch: IPatch) => void> = [];
+
+      constructor(...args: Array<any>) {
+        super(...args);
+        Object.defineProperty(this, '__patchListeners', {
+          enumerable: false,
+        });
+      }
 
       public applyPatch(patch: IPatch) {
         if (patch.model.type === getModelType(this) && patch.model.id === getModelId(this)) {

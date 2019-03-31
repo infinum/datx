@@ -36,6 +36,8 @@ describe('patch', () => {
       model['height'] = 200;
 
       expect(patches).toMatchSnapshot();
+
+      expect(model.propertyIsEnumerable('__patchListeners')).toBe(false);
     });
 
     it('should be able to apply patches', () => {

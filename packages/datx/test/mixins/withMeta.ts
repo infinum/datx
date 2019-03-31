@@ -51,6 +51,8 @@ describe('Collection', () => {
 
     // @ts-ignore - TS won't allow this mistake
     expect(() => foo2.meta.type = 'bar').toThrowError();
+
+    expect(foo2.propertyIsEnumerable('meta')).toBe(false);
   });
 
   it('should fail for collections', () => {

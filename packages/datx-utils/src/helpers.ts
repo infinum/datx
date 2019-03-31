@@ -67,30 +67,26 @@ export function assignComputed<T = any>(
   getter: () => T = undefinedGetter,
   setter: (value: T) => void = defaultSetter,
 ) {
-  const getterKey = Symbol.for(`$datx__get__${key}`);
-  Object.defineProperty(obj, getterKey, {
-    configurable: true,
-    enumerable: false,
-    value: getter,
-    writable: true,
-  });
+  const admin = Symbol.for('datx administration');
+  if (!obj.hasOwnProperty(admin)) {
+    Object.defineProperty(obj, admin, {
+      configurable: false,
+      enumerable: false,
+      value: { },
+    });
+  }
 
-  const setterKey = Symbol.for(`$datx__set__${key}`);
-  Object.defineProperty(obj, setterKey, {
-    configurable: true,
-    enumerable: false,
-    value: setter,
-    writable: true,
-  });
+  obj[admin][`get__${key}`] = getter;
+  obj[admin][`set__${key}`] = setter;
 
   if (!obj.hasOwnProperty(key)) {
     extendObservable(obj, {
       get [key]() {
-        return obj[getterKey]();
+        return obj[admin][`get__${key}`]();
       },
-      set [key](val) {
+      set [key](val: any) {
         if (setter) {
-          obj[setterKey](val);
+          obj[admin][`set__${key}`](val);
         }
       },
     });

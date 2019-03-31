@@ -39,6 +39,9 @@ describe('Model', () => {
       expect(isComputedProp(foo1, 'foo')).toBe(true);
       expect(isComputedProp(foo1, 'baz')).toBe(true);
 
+      // expect(foo1.propertyIsEnumerable('foo')).toBe(true);
+      // expect(Object.keys(foo1)).toContainEqual(['foo', 'bar', 'baz']);
+
       expect(foo1.foo).toBe(1);
       expect(foo1.bar).toBe(2);
       expect(foo1.baz).toBe(undefined);
