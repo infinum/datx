@@ -1,5 +1,8 @@
 import { ReferenceType } from './enums/ReferenceType';
+import { IIdentifier } from './interfaces/IIdentifier';
+import { IModelConstructor } from './interfaces/IModelConstructor';
 import { IType } from './interfaces/IType';
+import { PureCollection } from './PureCollection';
 import { PureModel } from './PureModel';
 import { storage } from './services/storage';
 
@@ -124,3 +127,24 @@ export const prop = Object.assign(propFn, {
     storage.setModelClassMetaKey(getClass(obj), 'type', key);
   },
 });
+
+export function view<TCollection extends PureCollection, TModel extends PureModel>(
+  modelType: IModelConstructor<TModel>|IType,
+  options: {
+    sortMethod?: string|((item: TModel) => any);
+    models?: Array<IIdentifier|TModel>;
+    unique?: boolean;
+    mixins?: Array<(view: any) => any>;
+  } = { },
+) {
+  return (obj: TCollection, key: string, opts?: object): void => {
+    prepareDecorator(obj, key, opts);
+    if (!Object.hasOwnProperty.call(obj.constructor, 'views')) {
+      obj.constructor['views'] = { };
+    }
+    obj.constructor['views'][key] = {
+      modelType,
+      ...options,
+    };
+  };
+}

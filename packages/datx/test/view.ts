@@ -10,14 +10,15 @@ import {
   prop,
   updateModelId,
   View,
+  view,
 } from '../src';
 
 describe('Model', () => {
   it('should init a view', () => {
     const collection = new Collection();
-    const view = new View('foo', collection);
+    const viewInstance = new View('foo', collection);
 
-    expect(view).toBeInstanceOf(View);
+    expect(viewInstance).toBeInstanceOf(View);
   });
 
   it('should be able to get initial models', () => {
@@ -30,13 +31,13 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ }, { }], Foo);
-    const view = new View(Foo, collection, undefined, [-1, -2]);
+    const viewInstance = new View(Foo, collection, undefined, [-1, -2]);
 
-    expect(view.length).toBe(2);
-    expect(view.list[0]).toBeInstanceOf(Foo);
-    expect(view.list[1]).toBeInstanceOf(Foo);
-    expect(view.list[0]).toBe(foos[0]);
-    expect(view.hasItem(foos[1])).toBe(true);
+    expect(viewInstance.length).toBe(2);
+    expect(viewInstance.list[0]).toBeInstanceOf(Foo);
+    expect(viewInstance.list[1]).toBeInstanceOf(Foo);
+    expect(viewInstance.list[0]).toBe(foos[0]);
+    expect(viewInstance.hasItem(foos[1])).toBe(true);
   });
 
   it('should be able to receive models', () => {
@@ -49,14 +50,14 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ }, { }], Foo);
-    const view = new View(Foo, collection);
+    const viewInstance = new View(Foo, collection);
 
-    view.add(foos);
+    viewInstance.add(foos);
 
-    expect(view.length).toBe(2);
-    expect(view.list[0]).toBeInstanceOf(Foo);
-    expect(view.list[1]).toBeInstanceOf(Foo);
-    expect(view.list[0]).toBe(foos[0]);
+    expect(viewInstance.length).toBe(2);
+    expect(viewInstance.list[0]).toBeInstanceOf(Foo);
+    expect(viewInstance.list[1]).toBeInstanceOf(Foo);
+    expect(viewInstance.list[0]).toBe(foos[0]);
   });
 
   it('should be a dynamic list', () => {
@@ -69,29 +70,29 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ }, { }], Foo);
-    const view = new View(Foo, collection);
+    const viewInstance = new View(Foo, collection);
 
     let expectedLength = 0;
     let lengthAutorunCount = 0;
     let listAutorunCount = 0;
 
     autorun(() => {
-      expect(view.length).toBe(expectedLength);
+      expect(viewInstance.length).toBe(expectedLength);
       lengthAutorunCount++;
     });
 
     autorun(() => {
-      expect(view.list.length).toBe(expectedLength);
+      expect(viewInstance.list.length).toBe(expectedLength);
       listAutorunCount++;
     });
 
     expectedLength = foos.length;
-    view.add(foos);
+    viewInstance.add(foos);
 
-    expect(view.length).toBe(2);
-    expect(view.list[0]).toBeInstanceOf(Foo);
-    expect(view.list[1]).toBeInstanceOf(Foo);
-    expect(view.list[0]).toBe(foos[0]);
+    expect(viewInstance.length).toBe(2);
+    expect(viewInstance.list[0]).toBeInstanceOf(Foo);
+    expect(viewInstance.list[1]).toBeInstanceOf(Foo);
+    expect(viewInstance.list[0]).toBe(foos[0]);
     expect(listAutorunCount).toBe(2);
     expect(lengthAutorunCount).toBe(2);
   });
@@ -108,19 +109,19 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ key: 2 }, { key: 3 }, { key: 1 }], Foo);
-    const view = new View(Foo, collection, (item: Foo) => item.key, foos);
+    const viewInstance = new View(Foo, collection, (item: Foo) => item.key, foos);
 
-    expect(view.length).toBe(3);
-    const item0a = view.list[0];
-    const item2a = view.list[2];
+    expect(viewInstance.length).toBe(3);
+    const item0a = viewInstance.list[0];
+    const item2a = viewInstance.list[2];
     expect(item0a && item0a.key).toBe(1);
     expect(item2a && item2a.key).toBe(3);
 
     const foo0 = collection.add({ key: 0 }, Foo);
-    expect(view.length).toBe(3);
-    view.add(foo0);
-    const item0b = view.list[0];
-    const item2b = view.list[2];
+    expect(viewInstance.length).toBe(3);
+    viewInstance.add(foo0);
+    const item0b = viewInstance.list[0];
+    const item2b = viewInstance.list[2];
     expect(item0b && item0b.key).toBe(0);
     expect(item2b && item2b.key).toBe(2);
   });
@@ -137,11 +138,11 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ key: 2 }, { key: 3 }, { key: 1 }], Foo);
-    const view = new View(Foo, collection, (item: Foo) => item.key, foos);
+    const viewInstance = new View(Foo, collection, (item: Foo) => item.key, foos);
 
-    expect(view.length).toBe(3);
-    const item0a = view.list[0];
-    const item2a = view.list[2];
+    expect(viewInstance.length).toBe(3);
+    const item0a = viewInstance.list[0];
+    const item2a = viewInstance.list[2];
     expect(item0a && item0a.key).toBe(1);
     expect(item2a && item2a.key).toBe(3);
 
@@ -149,18 +150,18 @@ describe('Model', () => {
     let autorunCount = 0;
 
     autorun(() => {
-      keyList = view.list.map((item) => item && item.key);
+      keyList = viewInstance.list.map((item) => item && item.key);
       autorunCount++;
     });
 
     expect(keyList[2]).toBe(3);
 
     runInAction(() => {
-      view.sortMethod = 'id';
+      viewInstance.sortMethod = 'id';
     });
 
-    const item0b = view.list[0];
-    const item2b = view.list[2];
+    const item0b = viewInstance.list[0];
+    const item2b = viewInstance.list[2];
     expect(item0b && item0b.key).toBe(2);
     expect(item2b && item2b.key).toBe(1);
     expect(keyList[2]).toBe(1);
@@ -180,19 +181,19 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ key: 2 }, { key: 3 }, { key: 1 }], Foo);
-    const view = new View(Foo, collection, 'key', foos);
+    const viewInstance = new View(Foo, collection, 'key', foos);
 
-    expect(view.length).toBe(3);
-    const item0a = view.list[0];
-    const item2a = view.list[2];
+    expect(viewInstance.length).toBe(3);
+    const item0a = viewInstance.list[0];
+    const item2a = viewInstance.list[2];
     expect(item0a && item0a.key).toBe(1);
     expect(item2a && item2a.key).toBe(3);
 
     const foo0 = collection.add({ key: 0 }, Foo);
-    expect(view.length).toBe(3);
-    view.add(foo0);
-    const item0b = view.list[0];
-    const item2b = view.list[2];
+    expect(viewInstance.length).toBe(3);
+    viewInstance.add(foo0);
+    const item0b = viewInstance.list[0];
+    const item2b = viewInstance.list[2];
     expect(item0b && item0b.key).toBe(0);
     expect(item2b && item2b.key).toBe(2);
   });
@@ -207,13 +208,13 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ }, { }, { }], Foo);
-    const view = new View(Foo, collection, undefined, foos);
+    const viewInstance = new View(Foo, collection, undefined, foos);
 
-    expect(view.length).toBe(3);
-    view.remove(foos[2]);
-    expect(view.length).toBe(2);
-    view.removeAll();
-    expect(view.length).toBe(0);
+    expect(viewInstance.length).toBe(3);
+    viewInstance.remove(foos[2]);
+    expect(viewInstance.length).toBe(2);
+    viewInstance.removeAll();
+    expect(viewInstance.length).toBe(0);
   });
 
   it('should work with updating the list', () => {
@@ -226,20 +227,20 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ }, { }, { }], Foo);
-    const view = new View(Foo, collection, undefined, foos);
+    const viewInstance = new View(Foo, collection, undefined, foos);
 
     const [foo1, foo2] = collection.add([{ }, { }, { }], Foo);
 
-    expect(view.length).toBe(3);
+    expect(viewInstance.length).toBe(3);
 
-    view.list.push(foo1);
-    expect(view.length).toBe(4);
+    viewInstance.list.push(foo1);
+    expect(viewInstance.length).toBe(4);
 
-    view.list.unshift(foo2);
-    expect(view.length).toBe(5);
+    viewInstance.list.unshift(foo2);
+    expect(viewInstance.length).toBe(5);
 
-    view.list.splice(2, 2);
-    expect(view.length).toBe(3);
+    viewInstance.list.splice(2, 2);
+    expect(viewInstance.length).toBe(3);
   });
 
   it('should work with sorted list', () => {
@@ -254,21 +255,25 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ }, { }, { }], Foo);
-    const view = new View(Foo, collection, (item) => item.id, foos);
+    const viewInstance = new View(Foo, collection, (item) => item.id, foos);
 
     const [foo1, foo2] = collection.add([{ }, { }, { }], Foo);
 
-    expect(view.length).toBe(3);
+    expect(viewInstance.length).toBe(3);
 
-    expect(() => view.list.push(foo1)).toThrowError('New models can\'t be added directly to a sorted view list');
+    expect(() => viewInstance.list.push(foo1))
+      .toThrowError('New models can\'t be added directly to a sorted view list');
 
-    expect(() => view.list.unshift(foo2)).toThrowError('New models can\'t be added directly to a sorted view list');
+    expect(() => viewInstance.list.unshift(foo2))
+      .toThrowError('New models can\'t be added directly to a sorted view list');
 
-    expect(() => view.list[1] = foo1).toThrowError('New models can\'t be added directly to a sorted view list');
-    expect(() => view.list[3] = foo1).toThrowError('New models can\'t be added directly to a sorted view list');
+    expect(() => viewInstance.list[1] = foo1)
+      .toThrowError('New models can\'t be added directly to a sorted view list');
+    expect(() => viewInstance.list[3] = foo1)
+      .toThrowError('New models can\'t be added directly to a sorted view list');
 
-    view.list.splice(1, 2);
-    expect(view.length).toBe(1);
+    viewInstance.list.splice(1, 2);
+    expect(viewInstance.length).toBe(1);
   });
 
   it('should work with unique list', () => {
@@ -283,17 +288,17 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ }, { }, { }], Foo);
-    const view = new View(Foo, collection, undefined, foos, true);
+    const viewInstance = new View(Foo, collection, undefined, foos, true);
 
     const [foo1] = foos;
 
-    view.list[0] = foo1;
+    viewInstance.list[0] = foo1;
 
-    expect(() => view.list[1] = foo1).toThrowError('The models in this view need to be unique');
+    expect(() => viewInstance.list[1] = foo1).toThrowError('The models in this view need to be unique');
 
-    expect(() => view.list.push(foo1)).toThrowError('The models in this view need to be unique');
+    expect(() => viewInstance.list.push(foo1)).toThrowError('The models in this view need to be unique');
 
-    expect(() => view.list.splice(0, 0, foo1)).toThrowError('The models in this view need to be unique');
+    expect(() => viewInstance.list.splice(0, 0, foo1)).toThrowError('The models in this view need to be unique');
   });
 
   it('should be able to deserialize the view', () => {
@@ -306,11 +311,11 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ }, { }], Foo);
-    const view = new View(Foo, collection);
+    const viewInstance = new View(Foo, collection);
 
-    view.add(foos);
+    viewInstance.add(foos);
 
-    const snapshot = view.snapshot;
+    const snapshot = viewInstance.snapshot;
 
     const view2 = new View(snapshot.modelType, collection, undefined, snapshot.models, snapshot.unique);
 
@@ -370,6 +375,32 @@ describe('Model', () => {
       const collection2 = new AppCollection(snapshot);
       expect(collection2.test.length).toBe(2);
     });
+
+    it('should be possible to define views upfront with a decorator', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+      }
+      class AppCollection extends Collection {
+        public static types = [Foo];
+
+        @view(Foo)
+        public test!: View<Foo>;
+      }
+
+      const collection = new AppCollection();
+      expect(collection.test.modelType).toBe('foo');
+      const foos = collection.test.add([{ }, { }]);
+
+      expect(collection.test.length).toBe(2);
+      expect(collection.test.list[0]).toBeInstanceOf(Foo);
+      expect(collection.test.list[1]).toBeInstanceOf(Foo);
+      expect(collection.test.list[0]).toBe(foos[0]);
+
+      const snapshot = collection.snapshot;
+
+      const collection2 = new AppCollection(snapshot);
+      expect(collection2.test.length).toBe(2);
+    });
   });
 
   it('should support changing ids', () => {
@@ -382,18 +413,18 @@ describe('Model', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{ }, { }], Foo);
-    const view = new View(Foo, collection, undefined, [-1, -2]);
+    const viewInstance = new View(Foo, collection, undefined, [-1, -2]);
 
-    expect(view.length).toBe(2);
-    expect(view.list[0]).toBeInstanceOf(Foo);
-    expect(view.list[1]).toBeInstanceOf(Foo);
-    expect(view.list[0]).toBe(foos[0]);
-    expect(view.hasItem(foos[1])).toBe(true);
+    expect(viewInstance.length).toBe(2);
+    expect(viewInstance.list[0]).toBeInstanceOf(Foo);
+    expect(viewInstance.list[1]).toBeInstanceOf(Foo);
+    expect(viewInstance.list[0]).toBe(foos[0]);
+    expect(viewInstance.hasItem(foos[1])).toBe(true);
 
     const foo1 = foos[1];
     updateModelId(foo1, 123);
-    expect(view.list[1]).toBe(foo1);
-    expect(view.hasItem(foo1)).toBe(true);
+    expect(viewInstance.list[1]).toBe(foo1);
+    expect(viewInstance.hasItem(foo1)).toBe(true);
     expect(foo1.meta.id).toBe(123);
   });
 });

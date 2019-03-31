@@ -56,4 +56,4 @@ export { withActions } from './mixins/withActions';
 export { withMeta } from './mixins/withMeta';
 export { withPatches } from './mixins/withPatches';
 
-export { prop } from './prop';
+export { prop, view } from './prop';

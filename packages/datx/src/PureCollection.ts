@@ -327,7 +327,7 @@ export class PureCollection {
       mixins?: Array<(view: any) => any>;
     } = { },
   ) {
-    if (name in this) {
+    if (name in this && this[name]) {
       throw error(VIEW_NAME_TAKEN);
     }
 
