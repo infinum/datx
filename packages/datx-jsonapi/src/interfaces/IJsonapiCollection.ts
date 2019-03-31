@@ -41,6 +41,9 @@ export interface IJsonapiCollection extends PureCollection {
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
-  remove(type: IType | typeof PureModel, id?: IIdentifier, remote?: boolean | IRequestOptions);
-  remove(model: PureModel, remote?: boolean | IRequestOptions);
+  removeOne(type: IType | typeof PureModel, id: IIdentifier, remote?: boolean | IRequestOptions);
+  removeOne(model: PureModel, remote?: boolean | IRequestOptions);
+
+  // remove(type: IType | typeof PureModel, id?: IIdentifier, remote?: boolean | IRequestOptions);
+  // remove(model: PureModel, remote?: boolean | IRequestOptions);
 }

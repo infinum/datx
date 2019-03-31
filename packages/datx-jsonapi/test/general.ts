@@ -100,7 +100,7 @@ describe('General', () => {
       },
     });
 
-    const event = store.find(Event , 1);
+    const event = store.findOne(Event , 1);
     expect(event).not.toBeNull();
     if (event) {
       expect(event.meta.id).toBe(1);
@@ -121,7 +121,7 @@ describe('General', () => {
       },
     });
 
-    const event = store.find(Event, 1);
+    const event = store.findOne(Event, 1);
 
     expect(event).toBeInstanceOf(Event);
     if (event) {
@@ -171,7 +171,7 @@ describe('General', () => {
       }],
     });
 
-    const event = store.find(Event, 1);
+    const event = store.findOne(Event, 1);
     expect(event).not.toBeNull();
     if (event) {
       expect(event.name).toBe('Demo');
@@ -205,7 +205,7 @@ describe('General', () => {
       },
     });
 
-    const event = store.find(Event, 1);
+    const event = store.findOne(Event, 1);
     expect(event).not.toBeNull();
     if (event) {
       expect(event.name).toBe('Demo');
@@ -248,7 +248,7 @@ describe('General', () => {
       }],
     });
 
-    const event = store.find(Event, 1);
+    const event = store.findOne(Event, 1);
     expect(event).not.toBeNull();
     if (event) {
       expect(event.name).toBe('Demo');
@@ -346,7 +346,7 @@ describe('General', () => {
       }],
     });
 
-    const event = store.find(Event, 1);
+    const event = store.findOne(Event, 1);
     expect(event).not.toBeNull();
     if (event) {
       expect(event.organizers.length).toBe(2);
@@ -364,13 +364,13 @@ describe('General', () => {
       ],
     });
 
-    const event = store.find(Event, 1);
+    const event = store.findOne(Event, 1);
     expect(event).not.toBeNull();
     if (event) {
       expect(event.meta.id).toBe(1);
     }
-    store.remove(Event, 1);
-    const event2 = store.find(Event, 1);
+    store.removeOne(Event, 1);
+    const event2 = store.findOne(Event, 1);
     expect(event2).toBe(null);
   });
 
@@ -460,7 +460,7 @@ describe('General', () => {
       },
     });
 
-    const event = store.find(Event, 1);
+    const event = store.findOne(Event, 1);
     expect(event).not.toBeNull();
 
     if (event) {
@@ -493,7 +493,7 @@ describe('General', () => {
 
     const newStore = new TestStore(JSON.parse(data));
 
-    const event = newStore.find(Event, 1);
+    const event = newStore.findOne(Event, 1);
     expect(event).not.toBeNull();
 
     if (event) {
@@ -517,7 +517,7 @@ describe('General', () => {
       },
     });
 
-    const user = store.find(User, 1);
+    const user = store.findOne(User, 1);
     expect(user).not.toBeNull();
 
     if (user) {
@@ -561,14 +561,14 @@ describe('General', () => {
       ],
     });
 
-    const user = store.find(User, 1);
+    const user = store.findOne(User, 1);
     expect(user).not.toBeNull();
 
     if (user) {
       expect(user['selected']).toBeUndefined();
     }
 
-    const photo1 = store.find(Photo, 1);
+    const photo1 = store.findOne(Photo, 1);
     expect(photo1).not.toBeNull();
     if (photo1) {
       expect(photo1.selected).toBe(false);
@@ -576,13 +576,13 @@ describe('General', () => {
       expect(photo1['foo']).toBeUndefined();
     }
 
-    const photo2 = store.find(Photo, 2);
+    const photo2 = store.findOne(Photo, 2);
     expect(photo2).not.toBeNull();
     if (photo2) {
       expect(photo2.selected).toBe(true);
     }
 
-    const photo3 = store.find(Photo, 3);
+    const photo3 = store.findOne(Photo, 3);
     expect(photo3).not.toBeNull();
     if (photo3) {
       expect(photo3.selected).toBe(false);

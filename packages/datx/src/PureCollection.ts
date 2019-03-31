@@ -522,7 +522,7 @@ export class PureCollection {
       set(this.__dataMap[type], id.toString(), null);
     }
 
-    return this.__dataMap[type][id];
+    return this.__dataMap[type][id] || null;
   }
 
   private __findByType(model: IType|typeof PureModel|PureModel, id?: IIdentifier) {

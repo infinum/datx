@@ -225,7 +225,7 @@ export class Response<T extends IJsonapiModel> {
     const viewIndexes = this.views.map((view) => view.list.indexOf(record));
 
     if (this.__collection) {
-      this.__collection.remove(type, newId);
+      this.__collection.removeOne(type, newId);
       this.__collection.add(data);
     }
 

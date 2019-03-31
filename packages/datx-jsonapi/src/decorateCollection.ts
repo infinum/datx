@@ -101,6 +101,41 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return libFetch<T>({ url: query.url, options, data, method, collection: this });
     }
 
+    public removeOne(type: IType|typeof PureModel, id: IIdentifier, remote?: boolean|IRequestOptions);
+    public removeOne(model: PureModel, remote?: boolean|IRequestOptions);
+    @action public removeOne(
+      obj: IType|typeof PureModel|PureModel,
+      id?: IIdentifier|boolean|IRequestOptions,
+      remote?: boolean|IRequestOptions,
+    ) {
+      const remove = (typeof id === 'boolean' || typeof id === 'object') ? id : remote;
+      let modelId: number | string | undefined;
+      if (typeof id === 'string' || typeof id === 'number') {
+        modelId = id;
+      } else if (typeof id === 'boolean' || obj instanceof PureModel) {
+        modelId = getModelId(obj);
+      }
+
+      const type = getModelType(obj);
+      const model = modelId !== undefined && this.findOne(type, modelId);
+
+      if (model && modelId !== undefined && getModelId(model) !== modelId) {
+        // The model is not in the collection and we shouldn't remove a random one
+        return Promise.resolve();
+      }
+
+      if (model && remove) {
+        return removeModel(model, typeof remove === 'object' ? remove : undefined);
+      }
+
+      if (model) {
+        super.removeOne(model);
+      }
+      clearCacheByType(type);
+
+      return Promise.resolve();
+    }
+
     public remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequestOptions);
     public remove(model: PureModel, remote?: boolean|IRequestOptions);
     @action public remove(
@@ -129,7 +164,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       }
 
       if (model) {
-        super.remove(model);
+        super.removeOne(model);
       }
       clearCacheByType(type);
 
@@ -164,7 +199,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     private __addRecord<T extends IJsonapiModel = IJsonapiModel>(obj: IRecord): T {
       const staticCollection = this.constructor as typeof PureCollection;
       const { type, id } = obj;
-      let record: T|null = this.find(type, id) as T|null;
+      let record: T|null = id === undefined ? null : this.findOne(type, id) as T|null;
       const Type = staticCollection.types.find((item) => getModelType(item) === type) || GenericModel;
       const classRefs = getModelClassRefs(Type);
       const flattened: IRawModel = flattenModel(classRefs, obj);
@@ -181,7 +216,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     }
 
     private __updateRelationships(obj: IRecord): void {
-      const record: PureModel|null = this.find(obj.type, obj.id);
+      const record: PureModel|null = obj.id === undefined ? null : this.findOne(obj.type, obj.id);
       const refs: Array<string> = obj.relationships ? Object.keys(obj.relationships) : [];
       refs.forEach((ref: string) => {
         const refData = (obj.relationships as IDictionary<IRelationship>)[ref];
@@ -196,7 +231,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
           if (items) {
             const models: PureModel|Array<PureModel>|IIdentifier|null = mapItems(
               items,
-              (def: IDefinition) => this.find(def.type, def.id) || def.id,
+              (def: IDefinition) => (def.id === undefined ? null : this.findOne(def.type, def.id)) || def.id,
             ) || null;
 
             const itemType: string = items instanceof Array ? items[0].type : items.type;

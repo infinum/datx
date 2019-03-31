@@ -482,7 +482,7 @@ describe('updates', () => {
       const record = events.data as Event;
 
       expect(store.findAll('event').length).toBe(1);
-      store.remove(record.meta.type, record.meta.id);
+      store.removeOne(record.meta.type, record.meta.id);
       expect(store.findAll('event').length).toBe(0);
 
       mockApi({
@@ -527,7 +527,7 @@ describe('updates', () => {
       });
 
       expect(store.findAll('event').length).toBe(1);
-      await store.remove(record.meta.type as string, record.meta.id, true);
+      await store.removeOne(record.meta.type as string, record.meta.id, true);
       expect(store.findAll('event').length).toBe(0);
       expect(req.isDone()).toBe(true);
     });
@@ -542,7 +542,7 @@ describe('updates', () => {
       expect(record['title']).toBe('Example title');
 
       expect(store.findAll('event').length).toBe(1);
-      await store.remove(record.meta.type as string, record.meta.id, true);
+      await store.removeOne(record.meta.type as string, record.meta.id, true);
       expect(store.findAll('event').length).toBe(0);
     });
 
@@ -550,7 +550,7 @@ describe('updates', () => {
       const store = new TestStore();
 
       expect(store.findAll('event').length).toBe(0);
-      await store.remove('event', 1, true);
+      await store.removeOne('event', 1, true);
       expect(store.findAll('event').length).toBe(0);
     });
   });
