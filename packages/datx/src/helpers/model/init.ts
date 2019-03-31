@@ -150,7 +150,7 @@ export function initModelMeta(
       throw new Error(ID_REQUIRED);
     }
     id = staticModel.getAutoId();
-    while (collection && collection.find(type, id)) {
+    while (collection && collection.findOne(type, id)) {
       id = staticModel.getAutoId();
     }
   }

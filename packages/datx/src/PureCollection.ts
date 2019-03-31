@@ -1,4 +1,4 @@
-import { IDictionary, IRawModel } from 'datx-utils';
+import { deprecated, IDictionary, IRawModel } from 'datx-utils';
 import { action, computed, extendObservable, IObservableArray, IObservableObject, observable, set, toJS } from 'mobx';
 
 import { PatchType } from './enums/PatchType';
@@ -138,8 +138,27 @@ export class PureCollection {
   }
 
   /**
+   * Find a model based on the defined type and identifier
+   *
+   * @param {(IType|typeof PureModel|PureModel)} type Model type
+   * @param {IIdentifier} id Model identifier
+   * @returns {(PureModel|null)} The first matching model
+   * @memberof Collection
+   */
+  public findOne<T extends PureModel>(type: IType|T|IModelConstructor<T>, id: IIdentifier|PureModel): T|null;
+
+  public findOne(model: IType|typeof PureModel, id: IIdentifier|PureModel) {
+    if (id instanceof PureModel) {
+      return id;
+    }
+
+    return this.__findOneByType(model as typeof PureModel, id);
+  }
+
+  /**
    * Find a model based on the defined type and (optional) identifier
    *
+   * @deprecated Use `findOne` instead
    * @param {(IType|typeof PureModel|PureModel)} type Model type
    * @param {IIdentifier} [id] Model identifier
    * @returns {(PureModel|null)} The first matching model
@@ -207,12 +226,42 @@ export class PureCollection {
   public hasItem(model: PureModel): boolean {
     const id = getModelId(model);
 
-    return Boolean(this.find(model, id));
+    return Boolean(this.findOne(model, id));
+  }
+
+  /**
+   * Remove the model based on the type and identifier
+   *
+   * @param {(IType|typeof PureModel)} type Model type
+   * @param {IIdentifier} id Model identifier
+   * @memberof Collection
+   */
+  public removeOne(type: IType|typeof PureModel, id: IIdentifier);
+
+  /**
+   * Remove the given model from the collection
+   *
+   * @param {PureModel} model Model to be removed from the collection
+   * @memberof Collection
+   */
+  public removeOne(model: PureModel);
+
+  @action public removeOne(obj: IType|typeof PureModel|PureModel, id?: IIdentifier) {
+    let model: PureModel | null = null;
+    if (typeof obj === 'object') {
+      model = obj;
+    } else if (id) {
+      model = this.findOne(obj, id);
+    }
+    if (model) {
+      this.__removeModel(model);
+    }
   }
 
   /**
    * Remove the first model based on the type and (optional) identifier
    *
+   * @deprecated Use `removeOne` instead
    * @param {(IType|typeof PureModel)} type Model type
    * @param {IIdentifier} [id] Model identifier
    * @memberof Collection
@@ -222,6 +271,7 @@ export class PureCollection {
   /**
    * Remove the given model from the collection
    *
+   * @deprecated Use `removeOne` instead
    * @param {PureModel} model Model to be removed from the collection
    * @memberof Collection
    */
@@ -393,7 +443,7 @@ export class PureCollection {
     const modelId = id || getModelId(model);
     const stringType = modelType.toString();
 
-    const existingModel = this.find(modelType, modelId);
+    const existingModel = this.findOne(modelType, modelId);
     if (existingModel) {
       updateModel(existingModel, model);
 
@@ -462,7 +512,25 @@ export class PureCollection {
     setModelMetaKey(model, 'collection', undefined);
   }
 
+  private __findOneByType(model: IType|typeof PureModel|PureModel, id: IIdentifier) {
+    const type = getModelType(model);
+    const stringType = type.toString();
+
+    if (!(type in this.__dataMap)) {
+      set(this.__dataMap, stringType, observable.object({ [id]: null }, { }, { deep: false }));
+    } else if (!(id in this.__dataMap[type])) {
+      set(this.__dataMap[type], id.toString(), null);
+    }
+
+    return this.__dataMap[type][id];
+  }
+
   private __findByType(model: IType|typeof PureModel|PureModel, id?: IIdentifier) {
+    deprecated(`
+      'find' method with the type/id combo and the 'remove' function are deprecated.
+      Please use 'findOne' and 'removeOne' instead.
+      They will always return the exact model or null if there is no match.
+    `);
     const type = getModelType(model);
     const stringType = type.toString();
 

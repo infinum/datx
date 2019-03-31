@@ -35,7 +35,7 @@ export function upsertModel(data: IRawModel, type: IType|typeof PureModel, colle
   }
 
   const id = getMetaKeyFromRaw(data, 'id', TypeModel as typeof PureModel|undefined);
-  const existingModel = id && collection.find(type, id);
+  const existingModel = id && collection.findOne(type, id);
   if (existingModel) {
     return updateModel(existingModel, data);
   }

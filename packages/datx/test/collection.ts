@@ -77,21 +77,22 @@ describe('Collection', () => {
       expect(store.hasItem(foo4)).toBe(false);
 
       expect(getModelCollection(foo1)).toBe(store);
-      store.remove(foo1);
+      store.removeOne(foo1);
       expect(getModelCollection(foo1)).toBe(undefined);
-      expect(store.find(Foo, 'unexisting')).toBeNull();
-      expect(store.find('unexisting')).toBeNull();
+      expect(store.findOne(Foo, 'unexisting')).toBeNull();
+      // @ts-ignore
+      expect(store.findOne('unexisting')).toBeNull();
 
       expect(getModelCollection(foo2)).toBe(store);
-      store.remove(Foo, getModelId(foo2));
+      store.removeOne(Foo, getModelId(foo2));
       expect(getModelCollection(foo2)).toBe(undefined);
-      store.remove(Foo, 'unexisting'); // Should not do anything
+      store.removeOne(Foo, 'unexisting'); // Should not do anything
 
       expect(store.filter((item: Foo) => item.foo > 2).length).toBe(1);
       expect(store.length).toBe(store.findAll().length);
       expect(store.findAll('unexisting').length).toBe(0);
 
-      store.remove([foo3, foo4]); // Remove foo3, ignore foo4
+      store.removeOne([foo3, foo4]); // Remove foo3, ignore foo4
       expect(store.length).toBe(0);
 
     });
@@ -136,12 +137,12 @@ describe('Collection', () => {
       const foo1 = store.add({ foo: 1 }, Foo);
       const foo2 = store.add<Foo>({ foo: 2 }, 'foo');
 
-      expect(store.find('foo', getModelId(foo2))).toBeTruthy();
+      expect(store.findOne('foo', getModelId(foo2))).toBeTruthy();
       expect(getModelCollection(foo1)).toBe(store);
 
       store.reset();
 
-      expect(store.find('foo', getModelId(foo2))).toBeFalsy();
+      expect(store.findOne('foo', getModelId(foo2))).toBeFalsy();
       expect(getModelCollection(foo1)).toBe(undefined);
 
       store.add(foo1);
@@ -175,7 +176,7 @@ describe('Collection', () => {
       expect(foo1b && getModelId(foo1b)).toBe(getModelId(foo1));
       expect(foo1b).not.toBe(foo1);
 
-      const fooB = store2.find(Foo);
+      const fooB = store2.findAll(Foo)[0];
       expect(fooB).toBeInstanceOf(Foo);
     });
 
@@ -237,7 +238,7 @@ describe('Collection', () => {
       let foo;
       autorun(() => {
         autorunModelCount++;
-        foo = store.find(Foo, '123');
+        foo = store.findOne(Foo, '123');
       });
 
       const foo2 = store.add({ id: '123' }, Foo);

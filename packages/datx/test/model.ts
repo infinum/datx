@@ -260,7 +260,7 @@ describe('Model', () => {
       expect(getModelId(foo)).not.toBe(getModelId(foo2));
       expect(getOriginalModel(foo2)).toBe(foo);
       expect(() => getOriginalModel(foo)).toThrowError('The given model is not a clone.');
-      collection.remove(foo2);
+      collection.removeOne(foo2);
       expect(() => getOriginalModel(foo2)).toThrowError('The model needs to be in a collection to be referenceable');
     });
 
@@ -666,13 +666,13 @@ describe('Model', () => {
 
       expect(collection.length).toBe(6);
 
-      const foo5 = collection.find(Foo, 5);
+      const foo5 = collection.findOne(Foo, 5);
       expect(foo5).toBeTruthy();
       if (foo5) {
         expect(foo5.key).toBe(5);
       }
 
-      const bar6 = collection.find(Bar, 6);
+      const bar6 = collection.findOne(Bar, 6);
       expect(bar6).toBeTruthy();
       if (bar6) {
         expect(bar6.key).toBe(6);
@@ -824,7 +824,7 @@ describe('Model', () => {
         updateModelId(foo1, '345');
         expect(foo1.id).toBe('345');
         expect(getModelId(foo1)).toBe(foo1.id);
-        expect(store.find(Foo, foo1.id)).toBe(foo1);
+        expect(store.findOne(Foo, foo1.id)).toBe(foo1);
         expect(foo2.parent).toBe(foo1);
         expect(foo2.foos).toContain(foo1);
         expect(modelToJSON(foo2).parent).toBe(foo1.id);

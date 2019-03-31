@@ -39,7 +39,7 @@ export class View<T extends PureModel = PureModel> {
 
   @computed public get list(): Array<T> {
     const list: Array<T> = this.__models
-      .map((id) => this.__collection.find(this.modelType, id))
+      .map((id) => this.__collection.findOne(this.modelType, id))
       .filter(Boolean) as any;
 
     if (this.sortMethod) {

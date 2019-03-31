@@ -157,7 +157,7 @@ describe('patch', () => {
       });
 
       const removeSnapshot = model.meta.snapshot;
-      store.remove('foo', 1);
+      store.removeOne('foo', 1);
 
       model['height'] = 200;
 
@@ -254,7 +254,7 @@ describe('patch', () => {
         nick: 'Bar',
       }]);
       store.onPatch((patch) => patches.push(patch));
-      const model = store.find<Model>('foo');
+      const model = store.findAll<Model>('foo')[0];
 
       expect(model).not.toBe(null);
       if (model) {
@@ -266,7 +266,7 @@ describe('patch', () => {
           name: 'Bar',
         });
 
-        store.remove('foo', 1);
+        store.removeOne('foo', 1);
 
         model['height'] = 200;
 
@@ -282,7 +282,7 @@ describe('patch', () => {
         nick: 'Bar',
       }]);
 
-      const model = store.find<Model>('foo');
+      const model = store.findAll<Model>('foo')[0];
 
       expect(model).not.toBe(null);
       if (model) {

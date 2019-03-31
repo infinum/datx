@@ -32,7 +32,7 @@ describe('issues', () => {
 
     const toRemove = foo.bar[0];
 
-    store.remove(toRemove);
+    store.removeOne(toRemove);
     expect(foo.bar).toHaveLength(1);
   });
 });

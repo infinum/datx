@@ -177,7 +177,7 @@ function getNormalRef(model: PureModel, key: string, refOptions: IReferenceOptio
     return null;
   }
 
-  let dataModels = mapItems(value, (id) => id ? collection.find(refOptions.model, id) : id);
+  let dataModels = mapItems(value, (id) => id ? collection.findOne(refOptions.model, id) : id);
   if (refOptions.type === ReferenceType.TO_MANY && !(dataModels instanceof Array)) {
     dataModels = [dataModels];
   }
@@ -229,7 +229,7 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
         }
       }
 
-      let instance = collection.find(refOptions.model, ref);
+      let instance = collection.findOne(refOptions.model, ref);
       if (!instance && typeof ref === 'object') {
         instance = collection.add(ref, refOptions.model);
       }

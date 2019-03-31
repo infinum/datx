@@ -99,7 +99,7 @@ export function getOriginalModel<T extends PureModel = PureModel>(model: T): T {
       throw error(REF_NEEDS_COLLECTION);
     }
 
-    return collection.find(model, originalId) as T;
+    return collection.findOne(model, originalId) as T;
   }
   throw error(NOT_A_CLONE);
 }

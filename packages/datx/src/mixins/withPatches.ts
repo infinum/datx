@@ -45,10 +45,10 @@ export function withPatches<T extends PureCollection>(Base: ICollectionConstruct
       }
 
       public applyPatch(patch: IPatch) {
-        const model = this.find(patch.model.type, patch.model.id);
+        const model = this.findOne(patch.model.type, patch.model.id);
         if (patch.patchType === PatchType.REMOVE) {
           if (model) {
-            this.remove(model);
+            this.removeOne(model);
           } else {
             // console.log('The model should already exist for a remove patch. Ignoring...');
           }
