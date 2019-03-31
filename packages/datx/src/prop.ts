@@ -7,6 +7,20 @@ function getClass<T extends PureModel>(obj: T): typeof PureModel {
   return (typeof obj === 'function' ? obj : obj.constructor) as typeof PureModel;
 }
 
+function prepareDecorator<T extends PureModel>(_obj: T, _key: string, opts?: object): void {
+  if (opts && 'initializer' in opts) {
+    opts['initializer'] = undefined;
+
+    // Babel 7 + Decorators fix
+    // Required to prevent the initializerDefineProperty call in babel-runtime
+    // If initializer is undefined, the descriptor will be null and therefore
+    // the initializerDefineProperty will be skipped
+
+    // tslint:disable-next-line:max-line-length
+    // https://github.com/babel/babel/blob/3aaafae053fa75febb3aa45d45b6f00646e30ba4/packages/babel-helpers/src/helpers.js#L1019
+  }
+}
+
 /**
  * Set a model property as tracked
  *
@@ -15,7 +29,8 @@ function getClass<T extends PureModel>(obj: T): typeof PureModel {
  * @param {string} key Property name
  * @returns {void}
  */
-function propFn<T extends PureModel>(obj: T, key: string): void {
+function propFn<T extends PureModel>(obj: T, key: string, opts?: object): void {
+  prepareDecorator(obj, key, opts);
   storage.addModelDefaultField(getClass(obj), key);
 }
 
@@ -27,7 +42,8 @@ export const prop = Object.assign(propFn, {
    * @returns {(obj: PureModel, key: string) => void}
    */
   defaultValue(value: any): (obj: PureModel, key: string) => void {
-    return <T extends PureModel>(obj: T, key: string) => {
+    return <T extends PureModel>(obj: T, key: string, opts?: object) => {
+      prepareDecorator(obj, key, opts);
       storage.addModelDefaultField(getClass(obj), key, value);
     };
   },
@@ -39,7 +55,8 @@ export const prop = Object.assign(propFn, {
    * @returns {(obj: PureModel, key: string) => void}
    */
   toOne(refModel: typeof PureModel|IType): (obj: PureModel, key: string) => void {
-    return <T extends PureModel>(obj: T, key: string) => {
+    return <T extends PureModel>(obj: T, key: string, opts?: object) => {
+      prepareDecorator(obj, key, opts);
       storage.addModelClassReference(getClass(obj), key, {
         model: refModel,
         type: ReferenceType.TO_ONE,
@@ -55,7 +72,8 @@ export const prop = Object.assign(propFn, {
    * @returns {(obj: PureModel, key: string) => void}
    */
   toMany(refModel: typeof PureModel|IType, property?: string): (obj: PureModel, key: string) => void {
-    return <T extends PureModel>(obj: T, key: string) => {
+    return <T extends PureModel>(obj: T, key: string, opts?: object) => {
+      prepareDecorator(obj, key, opts);
       storage.addModelClassReference(getClass(obj), key, {
         model: refModel,
         property,
@@ -71,7 +89,8 @@ export const prop = Object.assign(propFn, {
    * @returns {(obj: PureModel, key: string) => void}
    */
   toOneOrMany(refModel: typeof PureModel|IType): (obj: PureModel, key: string) => void {
-    return <T extends PureModel>(obj: T, key: string) => {
+    return <T extends PureModel>(obj: T, key: string, opts?: object) => {
+      prepareDecorator(obj, key, opts);
       storage.addModelClassReference(getClass(obj), key, {
         model: refModel,
         type: ReferenceType.TO_ONE_OR_MANY,
@@ -86,7 +105,8 @@ export const prop = Object.assign(propFn, {
    * @param {string} key Identifier property name
    * @returns {void}
    */
-  identifier<T extends PureModel>(obj: T, key: string): void {
+  identifier<T extends PureModel>(obj: T, key: string, opts?: object): void {
+    prepareDecorator(obj, key, opts);
     storage.addModelDefaultField(getClass(obj), key);
     storage.setModelClassMetaKey(getClass(obj), 'id', key);
   },
@@ -98,7 +118,8 @@ export const prop = Object.assign(propFn, {
    * @param {string} key Type property name
    * @returns {void}
    */
-  type<T extends PureModel>(obj: T, key: string): void {
+  type<T extends PureModel>(obj: T, key: string, opts?: object): void {
+    prepareDecorator(obj, key, opts);
     storage.addModelDefaultField(getClass(obj), key);
     storage.setModelClassMetaKey(getClass(obj), 'type', key);
   },
