@@ -78,6 +78,8 @@ export function flattenModel(classRefs: IDictionary<IReferenceOptions<PureModel>
       if (ref && 'meta' in ref) {
         refMeta[key] = ref.meta;
       }
+
+      rawData[META_FIELD].fields.push(...Object.keys(refs));
     });
 
     rawData[META_FIELD].refs = refs;

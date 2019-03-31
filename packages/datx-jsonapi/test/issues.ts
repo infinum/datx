@@ -6,7 +6,7 @@ import { config, getModelMeta, getModelRefMeta, jsonapi } from '../src';
 import { clearAllCache } from '../src/cache';
 
 import mockApi from './utils/api';
-import { Event, TestStore } from './utils/setup';
+import { Event, LineItem, TestStore } from './utils/setup';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;
@@ -196,5 +196,27 @@ describe('Issues', () => {
 
     await toRemove.destroy();
     expect(event.images).toHaveLength(1);
+  });
+
+  it('should not exceed maximum call stack', async () => {
+    const store = new TestStore();
+
+    mockApi({
+      method: 'POST',
+      name: 'issue-maximum-call-stack-exceeded-b',
+      url: 'line_items',
+    });
+
+    const lineItem1 = new LineItem({ }, store);
+    await lineItem1.save();
+
+    mockApi({
+      method: 'POST',
+      name: 'issue-maximum-call-stack-exceeded-c',
+      url: 'line_items',
+    });
+
+    const lineItem2 = new LineItem({ }, store);
+    await lineItem2.save();
   });
 });

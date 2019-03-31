@@ -1,0 +1,20 @@
+{
+  "data": {
+    "id": "606213",
+    "type": "line_items",
+    "attributes": {},
+    "relationships": {
+      "multitrack_product_variant": {
+        "data": {
+          "type": "product_variants",
+          "id": "19074"
+        }
+      }
+    }
+  },
+  "included": [{
+    "id": "19074",
+    "type": "product_variants",
+    "attributes": {}
+  }]
+}

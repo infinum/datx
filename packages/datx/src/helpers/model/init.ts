@@ -132,13 +132,18 @@ function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, col
   });
 }
 
-function initModelMeta(model: PureModel, data: IRawModel, collection?: PureCollection): IDictionary & IMetaToInit {
+export function initModelMeta(
+  model: PureModel,
+  data: IRawModel,
+  collection?: PureCollection,
+): IDictionary & IMetaToInit {
   const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id') || 'id';
   const modelType = storage.getModelClassMetaKey(staticModel, 'type');
 
-  const type = (modelType && data[modelType]) || getModelType(model);
-  let id = (modelId && data[modelId]);
+  const dataMeta = META_FIELD in data && data[META_FIELD] || { };
+  const type = (modelType && data[modelType]) || (dataMeta !== undefined && dataMeta.type) || getModelType(model);
+  let id = (modelId && data[modelId]) || (dataMeta !== undefined && dataMeta.id);
 
   if (!id) {
     if (!staticModel.enableAutoId) {
@@ -157,25 +162,32 @@ function initModelMeta(model: PureModel, data: IRawModel, collection?: PureColle
     type,
   };
 
-  let newMeta;
+  const newMeta = META_FIELD in data && data[META_FIELD]
+    ? mergeMeta(model, meta, data[META_FIELD])
+    : storage.setModelMeta(model, meta) as IMetaToInit;
+
+  // tslint:disable-next-line:no-dynamic-delete
+  delete data[META_FIELD];
+
+  return Object.assign({ }, newMeta);
+}
+
+export function mergeMeta(model: PureModel, meta: IDictionary<any>, metaField: IDictionary<any> = { }): IMetaToInit {
   const toInit: IMetaToInit = { fields: [], refs: { } };
-  if (META_FIELD in data && data[META_FIELD]) {
-    const oldMeta = data[META_FIELD] || { };
-    toInit.fields = oldMeta.fields;
-    delete oldMeta.fields;
-    toInit.refs = oldMeta.refs;
-    delete oldMeta.refs;
+  toInit.fields = metaField.fields;
+  meta.fields.push(...(metaField.fields || []));
+  toInit.refs = metaField.refs;
+  Object.assign(meta.refs, metaField.refs || { });
 
-    if ('type' in oldMeta) {
-      meta.type = oldMeta.type;
+  const exceptions = ['fields', 'refs', 'type', 'id'];
+
+  Object.keys(metaField).forEach((field: string) => {
+    if (exceptions.indexOf(field) === -1) {
+      meta[field] = metaField[field];
     }
+  });
 
-    newMeta = storage.setModelMeta(model, Object.assign(meta, oldMeta));
-    // tslint:disable-next-line:no-dynamic-delete
-    delete data[META_FIELD];
-  } else {
-    newMeta = storage.setModelMeta(model, meta);
-  }
+  const newMeta = storage.setModelMeta(model, meta);
 
   return Object.assign({ }, newMeta, toInit);
 }

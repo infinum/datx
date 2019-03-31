@@ -10,7 +10,7 @@ import { PureCollection } from '../../PureCollection';
 import { PureModel } from '../../PureModel';
 import { storage } from '../../services/storage';
 import { error } from '../format';
-import { initModelField } from '../model/init';
+import { initModelField, mergeMeta } from '../model/init';
 import { endAction, startAction } from '../patch';
 
 /**
@@ -120,7 +120,9 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary): T
   const modelType = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type') || 'type';
 
   const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
+  mergeMeta(model, storage.getModelMeta(model), data[META_FIELD]);
   startAction(model);
+
   keys.forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
       assignModel(model, key, data[key]);

@@ -1,10 +1,9 @@
 // tslint:disable:max-classes-per-file
 
 import { META_FIELD } from 'datx-utils';
-import { autorun, configure } from 'mobx';
+import { configure } from 'mobx';
 
 import { Collection, prop, PureModel, ReferenceType, withActions, withMeta } from '../../src';
-import { storage } from '../../src/services/storage';
 
 configure({ enforceActions: 'observed' });
 
