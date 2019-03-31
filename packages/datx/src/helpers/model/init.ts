@@ -172,7 +172,7 @@ export function initModelMeta(
   return Object.assign({ }, newMeta);
 }
 
-export function mergeMeta(model: PureModel, meta: IDictionary<any>, metaField: IDictionary<any> = { }): IMetaToInit {
+export function mergeMeta(model: PureModel, meta: IDictionary, metaField: IDictionary = { }): IMetaToInit {
   const toInit: IMetaToInit = { fields: [], refs: { } };
   toInit.fields = metaField.fields;
   meta.fields.push(...(metaField.fields || []));
