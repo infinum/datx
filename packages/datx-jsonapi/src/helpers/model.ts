@@ -237,7 +237,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
   return data;
 }
 
-function getModelEndpointUrl(model: IJsonapiModel, options?: IRequestOptions): string {
+export function getModelEndpointUrl(model: IJsonapiModel, options?: IRequestOptions): string {
   const queryData = prepareQuery(
     getModelType(model),
     isModelPersisted(model) ? getModelId(model) : undefined,
