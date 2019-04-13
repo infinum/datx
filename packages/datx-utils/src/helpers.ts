@@ -26,10 +26,10 @@ export function mapItems<T, U>(data: T|Array<T>, fn: (item: T) => U): U|Array<U>
  *
  * @export
  * @template T
- * @param {Array<Array<T>>} data Arrays to flatten
+ * @param {Array<Array<T>|T>} data Arrays to flatten
  * @returns {Array<T>} Flattened array
  */
-export function flatten<T>(data: Array<Array<T>>): Array<T> {
+export function flatten<T>(data: Array<Array<T>|T>): Array<T> {
   return ([] as Array<T>).concat(...data);
 }
 
