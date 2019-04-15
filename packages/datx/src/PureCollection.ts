@@ -45,9 +45,7 @@ export class PureCollection {
   public static defaultModel?: typeof PureModel = PureModel;
 
   private readonly __data: IObservableArray<PureModel> = observable.array([], { deep: false });
-
   private readonly __views: Array<string> = [];
-  private readonly __viewList: Array<View> = [];
 
   @observable.shallow private __dataMap: IDictionary<IDictionary<PureModel>> = { };
   @observable.shallow private __dataList: IDictionary<IObservableArray<PureModel>> = { };
@@ -556,12 +554,5 @@ export class PureCollection {
     this.__dataMap[type][newId] = this.__dataMap[type][oldId];
     // tslint:disable-next-line:no-dynamic-delete
     delete this.__dataMap[type][oldId];
-
-    this.__viewList
-      .filter((view) => view.modelType === type)
-      .forEach((view) => {
-        // @ts-ignore - I'm bad and I should feel bad...
-        view.__changeModelId(oldId, newId);
-      });
   }
 }

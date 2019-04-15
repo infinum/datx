@@ -1,6 +1,6 @@
 {
   "name": "datx",
-  "version": "0.15.11",
+  "version": "0.16.0",
   "description": "A MobX data store",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -19,15 +19,15 @@
   "devDependencies": {
     "@infinumjs/tslint-config": "^2.0.0-beta.6",
     "@types/jest": "^24.0.11",
-    "@types/node": "^11.11.3",
-    "jest": "^24.5.0",
-    "mobx": "^5.9.0",
-    "rollup": "^1.6.0",
+    "@types/node": "^11.13.4",
+    "jest": "^24.7.1",
+    "mobx": "^5.9.4",
+    "rollup": "^1.10.0",
     "rollup-plugin-typescript2": "^0.20.1",
     "rollup-plugin-uglify": "^6.0.2",
-    "ts-jest": "^24.0.0",
-    "tslint": "^5.14.0",
-    "typescript": "^3.3.3333"
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.3"
   },
   "peerDependencies": {
     "mobx": "^4.2.0 || ^5.5.0"
@@ -62,6 +62,6 @@
     "testMatch": null
   },
   "dependencies": {
-    "datx-utils": "^0.15.11"
+    "datx-utils": "^0.16.0"
   }
 }

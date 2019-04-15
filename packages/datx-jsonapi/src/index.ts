@@ -11,6 +11,7 @@ export {
   getModelMeta,
   getModelRefLinks,
   getModelRefMeta,
+  getModelEndpointUrl,
   modelToJsonApi,
   saveModel,
   saveRelationship,

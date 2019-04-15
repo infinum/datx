@@ -16,7 +16,7 @@ export class View<T extends PureModel = PureModel> {
   public readonly modelType: IType;
   @observable public sortMethod?: string|((item: T) => any);
 
-  private readonly __models: IObservableArray<IIdentifier> = observable.array([]);
+  private readonly __models: IObservableArray<T> = observable.array([]);
 
   constructor(
     modelType: IModelConstructor<T>|IType,
@@ -25,12 +25,12 @@ export class View<T extends PureModel = PureModel> {
     models: Array<IIdentifier|T> = [],
     public unique: boolean = false,
   ) {
-    this.__models.replace(models.map(getModelId));
-    this.sortMethod = sortMethod;
     this.modelType = getModelType(modelType);
+    const items: Array<T> = mapItems(models, this.__getModel.bind(this))
+      .filter(Boolean) as Array<T>;
 
-    // @ts-ignore
-    this.__collection.__viewList.push(this);
+    this.__models.replace(items);
+    this.sortMethod = sortMethod;
   }
 
   @computed public get length() {
@@ -38,9 +38,7 @@ export class View<T extends PureModel = PureModel> {
   }
 
   @computed public get list(): Array<T> {
-    const list: Array<T> = this.__models
-      .map((id) => this.__collection.findOne(this.modelType, id))
-      .filter(Boolean) as any;
+    const list: Array<T> = this.__models.filter(Boolean);
 
     if (this.sortMethod) {
       const sortFn = typeof this.sortMethod === 'string'
@@ -59,7 +57,7 @@ export class View<T extends PureModel = PureModel> {
   public toJSON(): IRawView {
     return {
       modelType: this.modelType,
-      models: this.__models.slice(),
+      models: this.__models.map(getModelId).slice(),
       unique: this.unique,
     };
   }
@@ -93,10 +91,9 @@ export class View<T extends PureModel = PureModel> {
   ): T|Array<T> {
     const models = mapItems(data, (item) => this.__collection.add<T>(item, this.modelType)) as T | Array<T>;
 
-    mapItems(models, (instance) => {
-      const id = getModelId(instance);
-      if (!this.unique || this.__models.indexOf(id) === -1) {
-        this.__models.push(id);
+    mapItems(models, (instance: T) => {
+      if (!this.unique || this.__models.indexOf(instance) === -1) {
+        this.__models.push(instance);
       }
     });
 
@@ -113,7 +110,7 @@ export class View<T extends PureModel = PureModel> {
   public hasItem(model: T|IIdentifier): boolean {
     const id = getModelId(model);
 
-    return this.__models.indexOf(id) !== -1;
+    return Boolean(this.__models.find((item) => getModelId(item) === id));
   }
 
   /**
@@ -123,12 +120,22 @@ export class View<T extends PureModel = PureModel> {
    * @memberof Collection
    */
   @action public remove(model: IIdentifier|T) {
-    const id = getModelId(model);
-    this.__models.remove(id);
+    const item = this.__getModel(model);
+    if (item) {
+      this.__models.remove(item);
+    }
   }
 
   @action public removeAll() {
     this.__models.replace([]);
+  }
+
+  private __getModel(model: T | IIdentifier): T | null {
+    if (model instanceof PureModel) {
+      return model;
+    }
+
+    return this.__collection.findOne(this.modelType, getModelId(model));
   }
 
   private __partialListUpdate(change: TChange) {
@@ -136,12 +143,12 @@ export class View<T extends PureModel = PureModel> {
       if (this.sortMethod && change.added.length > 0) {
         throw error(SORTED_NO_WRITE);
       }
-      const added = change.added.map(getModelId);
+      const added = change.added as Array<T>;
 
       const toRemove = this.__models.slice(change.index, change.removedCount);
       if (this.unique) {
-        added.forEach((newItemId) => {
-          if (this.__models.indexOf(newItemId) !== -1 && toRemove.indexOf(newItemId) === -1) {
+        added.forEach((newItem) => {
+          if (this.__models.indexOf(newItem) !== -1 && toRemove.indexOf(newItem) === -1) {
             throw error(UNIQUE_MODEL);
           }
         });
@@ -156,22 +163,16 @@ export class View<T extends PureModel = PureModel> {
       throw error(SORTED_NO_WRITE);
     }
 
-    const newId = getModelId(change.newValue);
-    const idIndex = this.__models.indexOf(newId);
-    if (this.unique && idIndex !== -1 && idIndex !== change.index) {
-      throw error(UNIQUE_MODEL);
-    }
+    const newModel = this.__getModel(change.newValue as T);
+    if (newModel) {
+      const idIndex = this.__models.indexOf(newModel);
+      if (this.unique && idIndex !== -1 && idIndex !== change.index) {
+        throw error(UNIQUE_MODEL);
+      }
 
-    this.__models[change.index] = newId;
+      this.__models[change.index] = newModel;
+    }
 
     return null;
-  }
-
-  // tslint:disable-next-line no-unused-variables
-  private __changeModelId(oldId: IIdentifier, newId: IIdentifier) {
-    const oldIdIndex = this.__models.indexOf(oldId);
-    if (oldIdIndex !== -1) {
-      this.__models[oldIdIndex] = newId;
-    }
   }
 }
