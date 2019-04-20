@@ -1,7 +1,7 @@
 import { IDictionary } from 'datx-utils';
 
 interface IDefinition {
-  id?: number | string;
+  id?: string;
   type: string;
 }
 

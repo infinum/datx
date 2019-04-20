@@ -1,13 +1,13 @@
 {
   "data": [{
-    "id": 5,
+    "id": "5",
     "type": "event",
     "attributes": {
       "title": "Test 5",
       "date": "2017-03-23"
     }
   }, {
-    "id": 6,
+    "id": "6",
     "type": "event",
     "attributes": {
       "title": "Test 6",

@@ -1,4 +1,4 @@
-import { IIdentifier, IModelConstructor, IType, PureCollection, PureModel } from 'datx';
+import { IModelConstructor, IType, PureCollection, PureModel } from 'datx';
 
 import { Response } from '../Response';
 import { IJsonapiModel } from './IJsonapiModel';
@@ -12,13 +12,13 @@ export interface IJsonapiCollection extends PureCollection {
    * Fetch the records with the given type and id
    *
    * @param {string} type Record type
-   * @param {number|string} type Record id
+   * @param {string} type Record id
    * @param {IRequestOptions} [options] Server options
    * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
    */
   fetch<T extends IJsonapiModel = IJsonapiModel>(
     type: IType | IModelConstructor<T>,
-    id: number | string,
+    id: string,
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
@@ -41,9 +41,8 @@ export interface IJsonapiCollection extends PureCollection {
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
-  removeOne(type: IType | typeof PureModel, id: IIdentifier, remote?: boolean | IRequestOptions);
-  removeOne(model: PureModel, remote?: boolean | IRequestOptions);
+  removeOne(type: IType | typeof PureModel, id: string, remote?: boolean | IRequestOptions): void;
+  removeOne(model: IJsonapiModel, remote?: boolean | IRequestOptions): void;
 
-  // remove(type: IType | typeof PureModel, id?: IIdentifier, remote?: boolean | IRequestOptions);
-  // remove(model: PureModel, remote?: boolean | IRequestOptions);
+  findOne<T extends PureModel>(type: IType | T | IModelConstructor<T>, id: string | IJsonapiModel): T | null;
 }

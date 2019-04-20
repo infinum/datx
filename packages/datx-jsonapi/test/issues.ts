@@ -24,13 +24,13 @@ describe('Issues', () => {
     const store = new TestStore();
     const event = store.sync({
       data: {
-        id: 1,
+        id: '1',
         type: 'event',
       },
     }) as Event;
 
     expect(event.name).toBe(undefined);
-    expect(event.meta.id).toBe(1);
+    expect(event.meta.id).toBe('1');
   });
 
   describe('should handle server response with null reference (#47)', () => {
@@ -62,7 +62,7 @@ describe('Issues', () => {
         url: 'event/1',
       });
 
-      const response = await store.fetch('event', 1);
+      const response = await store.fetch('event', '1');
       const event = response.data as EventRecord;
       expect(event.image).toBe(store.image[0]);
 
@@ -70,21 +70,21 @@ describe('Issues', () => {
         name: 'issue-47b',
         url: 'event/1',
       });
-      await store.fetch('event', 1, { skipCache: true });
+      await store.fetch('event', '1', { skipCache: true });
       expect(event.image).toBe(null);
 
       mockApi({
         name: 'issue-47a',
         url: 'event/1',
       });
-      await store.fetch('event', 1, { skipCache: true });
+      await store.fetch('event', '1', { skipCache: true });
       expect(event.image).toBe(store.image[0]);
 
       mockApi({
         name: 'issue-47d',
         url: 'event/1',
       });
-      await store.fetch('event', 1, { skipCache: true });
+      await store.fetch('event', '1', { skipCache: true });
       expect(event.image['length']).toBe(1);
       expect(event.image[0]).toBe(store.image[1]);
 
@@ -92,7 +92,7 @@ describe('Issues', () => {
         name: 'issue-47e',
         url: 'event/1',
       });
-      await store.fetch('event', 1, { skipCache: true });
+      await store.fetch('event', '1', { skipCache: true });
       expect(event.image['length']).toBe(0);
     });
 
@@ -123,7 +123,7 @@ describe('Issues', () => {
         name: 'issue-47a',
         url: 'event/1',
       });
-      const response = await store.fetch('event', 1);
+      const response = await store.fetch('event', '1');
       const event = response.data as EventRecord;
       expect(event.image).toBe(store.image[0]);
 
@@ -131,14 +131,14 @@ describe('Issues', () => {
         name: 'issue-47c',
         url: 'event/1',
       });
-      await store.fetch('event', 1, { skipCache: true });
+      await store.fetch('event', '1', { skipCache: true });
       expect(event.image).toBe(store.image[1]);
 
       mockApi({
         name: 'issue-47a',
         url: 'event/1',
       });
-      await store.fetch('event', 1, { skipCache: true });
+      await store.fetch('event', '1', { skipCache: true });
       expect(event.image).toBe(store.image[0]);
     });
   });
@@ -150,7 +150,7 @@ describe('Issues', () => {
       name: 'event-1d',
       url: 'event/1',
     });
-    const response1 = await store.fetch('event', 1);
+    const response1 = await store.fetch('event', '1');
     const event1 = response1.data as Event;
     const meta1 = getModelMeta(event1);
     const refMeta1 = getModelRefMeta(event1);
@@ -162,7 +162,7 @@ describe('Issues', () => {
       url: 'event/1',
     });
 
-    const response2 = await store.fetch('event', 1, { skipCache: true });
+    const response2 = await store.fetch('event', '1', { skipCache: true });
     const event2 = response2.data as Event;
     const meta2 = getModelMeta(event2);
     const refMeta2 = getModelRefMeta(event2);
@@ -180,7 +180,7 @@ describe('Issues', () => {
       url: 'event/1',
     });
 
-    const eventResp = await store.fetch(Event, 1);
+    const eventResp = await store.fetch(Event, '1');
     const event = eventResp.data as Event;
 
     expect(event.images).toHaveLength(2);

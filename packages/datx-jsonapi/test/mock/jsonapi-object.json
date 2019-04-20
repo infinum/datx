@@ -6,7 +6,7 @@
     }
   },
   "data": [{
-    "id": 1,
+    "id": "1",
     "type": "event",
     "attributes": {
       "title": "Test 1",
@@ -16,21 +16,21 @@
       "createdAt": "2017-03-19T16:00:00.000Z"
     }
   }, {
-    "id": 2,
+    "id": "2",
     "type": "event",
     "attributes": {
       "title": "Test 2",
       "date": "2017-03-20"
     }
   }, {
-    "id": 3,
+    "id": "3",
     "type": "event",
     "attributes": {
       "title": "Test 3",
       "date": "2017-03-21"
     }
   }, {
-    "id": 4,
+    "id": "4",
     "type": "event",
     "attributes": {
       "title": "Test 4",

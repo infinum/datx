@@ -219,7 +219,7 @@ export class Response<T extends IJsonapiModel> {
       return this;
     }
 
-    const newId = getModelId(record);
+    const newId = getModelId(record).toString();
     const type = getModelType(record);
 
     const viewIndexes = this.views.map((view) => view.list.indexOf(record));
@@ -245,12 +245,12 @@ export class Response<T extends IJsonapiModel> {
    * Function called when a link is being fetched. The returned value is cached
    *
    * @private
-   * @param {any} name Link name
+   * @param {string} name Link name
    * @returns Promise that resolves with a Response object
    *
    * @memberOf Response
    */
-  private __fetchLink(name) {
+  private __fetchLink(name: string) {
     if (!this.__cache[name]) {
       const link: ILink|null = (this.links && name in this.links) ? this.links[name] : null;
 

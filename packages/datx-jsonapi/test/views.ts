@@ -24,7 +24,7 @@ describe('Views', () => {
         attributes: {
           name: 'Demo',
         },
-        id: 1,
+        id: '1',
         type: 'event',
       },
     }) as Event;

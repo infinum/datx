@@ -10,7 +10,7 @@ export class Image extends jsonapi(Model) {
   @prop public name!: string;
   @prop.toOne('event') public event!: Event;
 
-  @computed get id() {
-    return this.meta.id;
+  @computed get id(): string {
+    return this.meta.id.toString();
   }
 }

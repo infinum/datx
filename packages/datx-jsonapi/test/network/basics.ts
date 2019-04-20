@@ -48,7 +48,7 @@ describe('Network basics', () => {
       expect(getModelRefMeta(event).images.foo).toBe('bar');
 
       const data = modelToJsonApi(event);
-      expect(data.id).toBe(1);
+      expect(data.id).toBe('1');
       expect(data.type).toBe('event');
       expect(data.attributes && data.attributes.title).toBe('Test 1');
       expect(
@@ -72,9 +72,9 @@ describe('Network basics', () => {
         expect(request['data'].relationships.event.data).toBeNull();
       },
     });
-    expect(image1.id).toBeLessThan(0); // Temporary id, negative autoincrement
+    expect(parseInt(image1.id, 10)).toBeLessThan(0); // Temporary id, negative autoincrement
     await image1.save(); // Load the image-1.json data
-    expect(image1.id).toBe(1);
+    expect(image1.id).toBe('1');
     expect(image1.id).toBe(image1.meta.id);
 
     const images = store.findAll(Image);
@@ -85,9 +85,9 @@ describe('Network basics', () => {
       name: 'image-1',
       url: 'image',
     });
-    expect(image2.id).toBeLessThan(0); // Temporary id, negative autoincrement
+    expect(parseInt(image2.id, 10)).toBeLessThan(0); // Temporary id, negative autoincrement
     await image2.save(); // Load the image-1.json data
-    expect(image2.id).toBe(1);
+    expect(image2.id).toBe('1');
     expect(image2.id).toBe(image2.meta.id);
   });
 
@@ -184,7 +184,7 @@ describe('Network basics', () => {
     });
 
     const store = new TestStore();
-    const events = await store.fetch(Event, 1);
+    const events = await store.fetch(Event, '1');
 
     const record = events.data;
 
@@ -266,7 +266,7 @@ describe('Network basics', () => {
       const image = await fetchModelLink<Image>(event, 'image');
 
       const imageData = image.data as Image;
-      expect(imageData.meta.id).toBe(1);
+      expect(imageData.meta.id).toBe('1');
       expect(imageData.meta.type).toBe('image');
       expect(imageData['url']).toBe('https://example.com/1.jpg');
     }
@@ -316,7 +316,7 @@ describe('Network basics', () => {
     if (event) {
       const image = await fetchModelRefLink(event, 'images', 'self');
       const imageData = image.data as Image;
-      expect(imageData.meta.id).toBe(1);
+      expect(imageData.meta.id).toBe('1');
       expect(imageData.meta.type).toBe('image');
       expect(imageData['url']).toBe('https://example.com/1.jpg');
     }

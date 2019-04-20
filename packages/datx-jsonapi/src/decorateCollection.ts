@@ -4,7 +4,6 @@ import {
   getModelMetaKey,
   getModelType,
   ICollectionConstructor,
-  IIdentifier,
   IModelConstructor,
   initModelRef,
   IReferenceOptions,
@@ -56,13 +55,13 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
      * Fetch the records with the given type and id
      *
      * @param {string} type Record type
-     * @param {number|string} type Record id
+     * @param {string} type Record id
      * @param {IRequestOptions} [options] Server options
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
     public fetch<T extends IJsonapiModel = IJsonapiModel>(
       type: IType|IModelConstructor<T>,
-      id: number|string,
+      id: string,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
@@ -101,31 +100,29 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return libFetch<T>({ url: query.url, options, data, method, collection: this });
     }
 
-    public removeOne(type: IType|typeof PureModel, id: IIdentifier, remote?: boolean|IRequestOptions);
+    public removeOne(type: IType|typeof PureModel, id: string, remote?: boolean|IRequestOptions);
     public removeOne(model: PureModel, remote?: boolean|IRequestOptions);
     @action public removeOne(
       obj: IType|typeof PureModel|PureModel,
-      id?: IIdentifier|boolean|IRequestOptions,
+      id?: string|boolean|IRequestOptions,
       remote?: boolean|IRequestOptions,
     ) {
-      const remove = (typeof id === 'boolean' || typeof id === 'object') ? id : remote;
-      let modelId: number | string | undefined;
-      if (typeof id === 'string' || typeof id === 'number') {
-        modelId = id;
-      } else if (typeof id === 'boolean' || obj instanceof PureModel) {
-        modelId = getModelId(obj);
-      }
-
+      let remoteOp: boolean | IRequestOptions | undefined;
+      let modelId: string;
+      let model: IJsonapiModel | null;
       const type = getModelType(obj);
-      const model = modelId !== undefined && this.findOne(type, modelId);
-
-      if (model && modelId !== undefined && getModelId(model) !== modelId) {
-        // The model is not in the collection and we shouldn't remove a random one
-        return Promise.resolve();
+      if (typeof id === 'boolean' || typeof id === 'object' || id === undefined) {
+        remoteOp = id;
+        modelId = getModelId(obj).toString();
+        model = obj as IJsonapiModel;
+      } else {
+        remoteOp = remote;
+        modelId = getModelId(id).toString();
+        model = modelId ? (this.findOne(type, modelId) as IJsonapiModel | null) : null;
       }
 
-      if (model && remove) {
-        return removeModel(model, typeof remove === 'object' ? remove : undefined);
+      if (model && remoteOp) {
+        return removeModel(model, typeof remoteOp === 'object' ? remoteOp : undefined);
       }
 
       if (model) {
@@ -194,7 +191,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
           return;
         } else if (record) {
           if (items) {
-            const models: PureModel|Array<PureModel>|IIdentifier|null = mapItems(
+            const models: PureModel|Array<PureModel>|string|null = mapItems(
               items,
               (def: IDefinition) => (def.id === undefined ? null : this.findOne(def.type, def.id)) || def.id,
             ) || null;

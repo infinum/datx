@@ -23,11 +23,15 @@ export function decorateModel(BaseClass: typeof PureModel) {
      * @type {string|() => string}
      * @memberOf Record
      */
-    public static endpoint: string|(() => string);
+    public static endpoint: string | (() => string);
 
-    constructor(rawData: IRawModel|IRecord = { }, collection?: PureCollection) {
+    public static getAutoId(): string {
+      return super.getAutoId().toString();
+    }
+
+    constructor(rawData: IRawModel | IRecord = { }, collection?: PureCollection) {
       let data = rawData;
-      if ((rawData && 'type' in rawData) && ('attributes' in rawData || 'relationships' in rawData)) {
+      if (rawData && 'type' in rawData && ('attributes' in rawData || 'relationships' in rawData)) {
         const classRefs = getModelClassRefs(BaseClass);
         data = flattenModel(classRefs, rawData as IRecord);
       }

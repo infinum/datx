@@ -35,7 +35,7 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.fetchAll('event', { filter: { name: 'foo', bar: { id: 2 } } });
+    const events = await store.fetchAll('event', { filter: { name: 'foo', bar: { id: '2' } } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
@@ -173,7 +173,7 @@ describe('params', () => {
 
       config.paramArrayType = ParamArrayType.COMMA_SEPARATED;
       const store = new TestStore();
-      const events = await store.fetchAll('event', { filter: { a: [1, 2], b: 3 } });
+      const events = await store.fetchAll('event', { filter: { a: ['1', '2'], b: '3' } });
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
@@ -188,7 +188,7 @@ describe('params', () => {
 
       config.paramArrayType = ParamArrayType.MULTIPLE_PARAMS;
       const store = new TestStore();
-      const events = await store.fetchAll('event', { filter: { a: [1, 2], b: 3 } });
+      const events = await store.fetchAll('event', { filter: { a: ['1', '2'], b: '3' } });
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
@@ -203,7 +203,7 @@ describe('params', () => {
 
       config.paramArrayType = ParamArrayType.OBJECT_PATH;
       const store = new TestStore();
-      const events = await store.fetchAll('event', { filter: { a: [1, 2], b: 3 } });
+      const events = await store.fetchAll('event', { filter: { a: ['1', '2'], b: '3' } });
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
@@ -218,7 +218,7 @@ describe('params', () => {
 
       config.paramArrayType = ParamArrayType.PARAM_ARRAY;
       const store = new TestStore();
-      const events = await store.fetchAll('event', { filter: { a: [1, 2], b: 3 } });
+      const events = await store.fetchAll('event', { filter: { a: ['1', '2'], b: '3' } });
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);

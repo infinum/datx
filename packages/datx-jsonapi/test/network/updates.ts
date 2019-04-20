@@ -129,7 +129,7 @@ describe('updates', () => {
       const updated = await foo.save();
       expect(updated['title']).toBe('Test 1');
       expect(updated).toBe(foo);
-      expect(foo.meta.id).toBe(12345);
+      expect(foo.meta.id).toBe('12345');
 
       expect(getRefId(bar, 'foo')).toBe(foo.meta.id);
       expect(bar.foo).toBe(foo);
@@ -187,7 +187,7 @@ describe('updates', () => {
       expect(updated.meta.type).toBe('event');
 
       expect(updated['title']).toBe('Test 1');
-      expect(updated.meta.id).toBe(12345);
+      expect(updated.meta.id).toBe('12345');
       expect(updated).toBe(record);
     });
 
@@ -242,7 +242,7 @@ describe('updates', () => {
         expect(getModelType(updated)).toBe('event');
 
         expect(updated['title']).toBe('Test 1');
-        expect(getModelId(updated)).toBe(12345);
+        expect(getModelId(updated)).toBe('12345');
         expect(updated).toBe(record);
       }
     });
@@ -381,7 +381,7 @@ describe('updates', () => {
       });
 
       const store = new TestStore();
-      const events = await store.fetch('event', 12345);
+      const events = await store.fetch('event', '12345');
 
       const record = events.data;
 
@@ -432,7 +432,7 @@ describe('updates', () => {
         });
 
         const event2 = await saveRelationship(event, 'images');
-        expect(event2.meta.id).toBe(12345);
+        expect(event2.meta.id).toBe('12345');
         expect(event2.meta.type).toBe('event');
         expect(getRefId(event2, 'images')).toHaveLength(2);
         expect(getRefId(event2, 'images')).toContain('1');
@@ -451,7 +451,7 @@ describe('updates', () => {
 
       const store = new TestStore();
       store.add({ id: '1' }, Event);
-      const events = await store.fetch('event', 12345);
+      const events = await store.fetch('event', '12345');
       store.add({ id: '2' }, Event);
 
       const record = events.data as Event;
@@ -477,7 +477,7 @@ describe('updates', () => {
       });
 
       const store = new TestStore();
-      const events = await store.fetch('event', 12345);
+      const events = await store.fetch('event', '12345');
 
       const record = events.data as Event;
 
@@ -516,7 +516,7 @@ describe('updates', () => {
       });
 
       const store = new TestStore();
-      const events = await store.fetch('event', 12345);
+      const events = await store.fetch('event', '12345');
 
       const record = events.data as Event;
 
@@ -527,7 +527,7 @@ describe('updates', () => {
       });
 
       expect(store.findAll('event').length).toBe(1);
-      await store.removeOne(record.meta.type as string, record.meta.id, true);
+      await store.removeOne(record.meta.type as string, record.meta.id as string, true);
       expect(store.findAll('event').length).toBe(0);
       expect(req.isDone()).toBe(true);
     });
@@ -542,7 +542,7 @@ describe('updates', () => {
       expect(record['title']).toBe('Example title');
 
       expect(store.findAll('event').length).toBe(1);
-      await store.removeOne(record.meta.type as string, record.meta.id, true);
+      await store.removeOne(record.meta.type as string, record.meta.id as string, true);
       expect(store.findAll('event').length).toBe(0);
     });
 
@@ -550,7 +550,7 @@ describe('updates', () => {
       const store = new TestStore();
 
       expect(store.findAll('event').length).toBe(0);
-      await store.removeOne('event', 1, true);
+      await store.removeOne('event', '1', true);
       expect(store.findAll('event').length).toBe(0);
     });
   });

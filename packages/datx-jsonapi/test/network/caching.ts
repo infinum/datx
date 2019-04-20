@@ -24,13 +24,13 @@ describe('caching', () => {
       });
 
       const store = new TestStore();
-      const events = await store.fetch(Event, 12345);
+      const events = await store.fetch(Event, '12345');
       const event = events.data as Event;
 
       expect(event).toBeInstanceOf(Object);
-      expect(event.meta.id).toBe(12345);
+      expect(event.meta.id).toBe('12345');
 
-      const events2 = await store.fetch(Event, 12345);
+      const events2 = await store.fetch(Event, '12345');
 
       expect(events2).toBe(events);
     });
@@ -42,10 +42,10 @@ describe('caching', () => {
       });
 
       const store = new TestStore();
-      const events = await store.fetch('event', 12345);
+      const events = await store.fetch('event', '12345');
       const event = events.data as Event;
 
-      expect(event.meta.id).toBe(12345);
+      expect(event.meta.id).toBe('12345');
 
       store.removeAll(Event);
 
@@ -54,9 +54,9 @@ describe('caching', () => {
         url: 'event/12345',
       });
 
-      const events2 = await store.fetch(Event, 12345);
+      const events2 = await store.fetch(Event, '12345');
       const event2 = events2.data as Event;
-      expect(event2.meta.id).toBe(12345);
+      expect(event2.meta.id).toBe('12345');
       expect(req2.isDone()).toBe(true);
     });
 
@@ -67,23 +67,23 @@ describe('caching', () => {
       });
 
       const store = new TestStore();
-      const events = await store.fetch('event', 12345);
+      const events = await store.fetch('event', '12345');
       const event = events.data as Event;
 
       expect(event).toBeInstanceOf(Object);
-      expect(event.meta.id).toBe(12345);
+      expect(event.meta.id).toBe('12345');
 
       const req = mockApi({
         name: 'event-1',
         url: 'event/12345',
       });
 
-      const events2 = await store.fetch(Event, 12345, { skipCache: true });
+      const events2 = await store.fetch(Event, '12345', { skipCache: true });
       const event2 = events2.data as Event;
 
       expect(events2).not.toEqual(events);
       expect(event2).toBeInstanceOf(Object);
-      expect(event2.meta.id).toBe(12345);
+      expect(event2.meta.id).toBe('12345');
       expect(req.isDone()).toBe(true);
     });
 
@@ -102,23 +102,23 @@ describe('caching', () => {
 
       const store = new (jsonapi(TestCollection))();
 
-      const events = await store.fetch('event', 12345);
+      const events = await store.fetch('event', '12345');
       const event = events.data as Event;
 
       expect(event).toBeInstanceOf(Object);
-      expect(event.meta.id).toBe(12345);
+      expect(event.meta.id).toBe('12345');
 
       const req = mockApi({
         name: 'event-1',
         url: 'event/12345',
       });
 
-      const events2 = await store.fetch('event', 12345);
+      const events2 = await store.fetch('event', '12345');
       const event2 = events2.data as Event;
 
       expect(events2).not.toBe(events);
       expect(event2).toBeInstanceOf(Object);
-      expect(event2.meta.id).toBe(12345);
+      expect(event2.meta.id).toBe('12345');
       expect(req.isDone()).toBe(true);
     });
 
@@ -131,7 +131,7 @@ describe('caching', () => {
       const store = new TestStore();
       let hasFailed = false;
       try {
-        await store.fetch(Event, 12345);
+        await store.fetch(Event, '12345');
       } catch (resp) {
         expect(resp.error).toBeInstanceOf(Array);
         hasFailed = true;
@@ -143,11 +143,11 @@ describe('caching', () => {
         url: 'event/12345',
       });
 
-      const events2 = await store.fetch(Event, 12345);
+      const events2 = await store.fetch(Event, '12345');
       const event2 = events2.data as Event;
 
       expect(event2).toBeInstanceOf(Object);
-      expect(event2.meta.id).toBe(12345);
+      expect(event2.meta.id).toBe('12345');
     });
 
     it('should not cache fetch if the response was an http error', async () => {
@@ -160,7 +160,7 @@ describe('caching', () => {
       const store = new TestStore();
       let hasFailed = false;
       try {
-        await store.fetch('event', 12345);
+        await store.fetch('event', '12345');
       } catch (e) {
         hasFailed = true;
         expect(e).toBeInstanceOf(Object);
@@ -172,11 +172,11 @@ describe('caching', () => {
         url: 'event/12345',
       });
 
-      const events2 = await store.fetch(Event, 12345);
+      const events2 = await store.fetch(Event, '12345');
       const event2 = events2.data as Event;
 
       expect(event2).toBeInstanceOf(Object);
-      expect(event2.meta.id).toBe(12345);
+      expect(event2.meta.id).toBe('12345');
     });
   });
 

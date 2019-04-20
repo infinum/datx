@@ -1,4 +1,4 @@
-import { IIdentifier, IModelConstructor, IType, IViewConstructor, PureModel, View } from 'datx';
+import { IModelConstructor, IType, IViewConstructor, PureModel, View } from 'datx';
 
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -15,7 +15,7 @@ export function decorateView<U>(BaseClass: typeof View) {
       modelType: IModelConstructor<M>|IType,
       collection: IJsonapiCollection,
       sortMethod?: string|((item: M) => any),
-      models: Array<IIdentifier|PureModel> = [],
+      models: Array<string|PureModel> = [],
       unique: boolean = false,
     ) {
       super(modelType, collection, sortMethod, models, unique);
@@ -34,12 +34,12 @@ export function decorateView<U>(BaseClass: typeof View) {
     /**
      * Fetch the records with the given type and id
      *
-     * @param {number|string} type Record id
+     * @param {string} type Record id
      * @param {IRequestOptions} [options] Server options
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
     public fetch(
-      id: number|string,
+      id: string,
       options?: IRequestOptions,
     ): Promise<Response<M>> {
       return this.__collection
