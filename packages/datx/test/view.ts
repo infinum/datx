@@ -427,4 +427,43 @@ describe('Model', () => {
     expect(viewInstance.hasItem(foo1)).toBe(true);
     expect(foo1.meta.id).toBe(123);
   });
+
+  it('should support ids before models', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+
+      @prop.identifier
+      public id!: number;
+    }
+    class AppCollection extends Collection {
+      public static types = [Foo];
+    }
+
+    const collection = new AppCollection();
+    const viewInstance = new View(Foo, collection, undefined, [987, 123, 234]);
+    const foos = collection.add([{ id: 123 }, { id: 234 }], Foo);
+
+    // @ts-ignore Valid, but typings don't allow it
+    viewInstance.list.push(876);
+
+    expect(collection.length).toBe(2);
+    expect(viewInstance.length).toBe(2);
+    expect(viewInstance.snapshot.models.length).toBe(4);
+    expect(viewInstance.list[0]).toBeInstanceOf(Foo);
+    expect(viewInstance.list[1]).toBeInstanceOf(Foo);
+    expect(viewInstance.list[0]).toBe(foos[0]);
+    expect(viewInstance.hasItem(foos[1])).toBe(true);
+
+    const foo987 = collection.add({ id: 987 }, Foo);
+    expect(collection.length).toBe(3);
+    expect(viewInstance.length).toBe(3);
+    expect(viewInstance.hasItem(foo987)).toBe(true);
+
+    // viewInstance.add({ id: 876 });
+    const foo876 = collection.add({ id: 876 }, Foo);
+    collection.add({ id: 765 }, Foo);
+    expect(collection.length).toBe(5);
+    expect(viewInstance.length).toBe(4);
+    expect(viewInstance.hasItem(foo876)).toBe(true);
+  });
 });

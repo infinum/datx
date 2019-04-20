@@ -16,7 +16,7 @@ export class View<T extends PureModel = PureModel> {
   public readonly modelType: IType;
   @observable public sortMethod?: string|((item: T) => any);
 
-  private readonly __models: IObservableArray<T> = observable.array([]);
+  private readonly __models: IObservableArray<T | IIdentifier> = observable.array([]);
 
   constructor(
     modelType: IModelConstructor<T>|IType,
@@ -26,19 +26,23 @@ export class View<T extends PureModel = PureModel> {
     public unique: boolean = false,
   ) {
     this.modelType = getModelType(modelType);
-    const items: Array<T> = mapItems(models, this.__getModel.bind(this))
-      .filter(Boolean) as Array<T>;
+    const items: Array<T> = mapItems(models, (item) => {
+      return this.__getModel(item) || item;
+    }).filter(Boolean) as Array<T>;
 
     this.__models.replace(items);
     this.sortMethod = sortMethod;
   }
 
   @computed public get length() {
-    return this.__models.length;
+    return this.list.length;
   }
 
   @computed public get list(): Array<T> {
-    const list: Array<T> = this.__models.filter(Boolean);
+    this.__reMap();
+    const list: Array<T> = this.__models
+      .filter((item: T | IIdentifier) => !this.__isIdentifier(item))
+      .filter(Boolean) as Array<T>;
 
     if (this.sortMethod) {
       const sortFn = typeof this.sortMethod === 'string'
@@ -136,6 +140,21 @@ export class View<T extends PureModel = PureModel> {
     }
 
     return this.__collection.findOne(this.modelType, getModelId(model));
+  }
+
+  private __isIdentifier(item: T | IIdentifier): boolean {
+    return typeof item === 'string' || typeof item === 'number';
+  }
+
+  private __reMap() {
+    for (let i = 0; i < this.__models.length; i++) {
+      if (this.__isIdentifier(this.__models[i])) {
+        const model = this.__getModel(this.__models[i]);
+        if (model) {
+          this.__models[i] = model;
+        }
+      }
+    }
   }
 
   private __partialListUpdate(change: TChange) {
