@@ -136,41 +136,6 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return Promise.resolve();
     }
 
-    public remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequestOptions);
-    public remove(model: PureModel, remote?: boolean|IRequestOptions);
-    @action public remove(
-      obj: IType|typeof PureModel|PureModel,
-      id?: IIdentifier|boolean|IRequestOptions,
-      remote?: boolean|IRequestOptions,
-    ) {
-      const remove = (typeof id === 'boolean' || typeof id === 'object') ? id : remote;
-      let modelId: number | string | undefined;
-      if (typeof id === 'string' || typeof id === 'number') {
-        modelId = id;
-      } else if (typeof id === 'boolean' || obj instanceof PureModel) {
-        modelId = getModelId(obj);
-      }
-
-      const type = getModelType(obj);
-      const model = this.find(type, modelId);
-
-      if (model && modelId !== undefined && getModelId(model) !== modelId) {
-        // The model is not in the collection and we shouldn't remove a random one
-        return Promise.resolve();
-      }
-
-      if (model && remove) {
-        return removeModel(model, typeof remove === 'object' ? remove : undefined);
-      }
-
-      if (model) {
-        super.removeOne(model);
-      }
-      clearCacheByType(type);
-
-      return Promise.resolve();
-    }
-
     @action public removeAll(type: string | number | typeof PureModel) {
       super.removeAll(type);
       clearCacheByType(getModelType(type));

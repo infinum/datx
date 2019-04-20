@@ -154,33 +154,14 @@ export class PureCollection {
   }
 
   /**
-   * Find a model based on the defined type and (optional) identifier
-   *
-   * @deprecated Use `findOne` instead
-   * @param {(IType|typeof PureModel|PureModel)} type Model type
-   * @param {IIdentifier} [id] Model identifier
-   * @returns {(PureModel|null)} The first matching model
-   * @memberof Collection
-   */
-  public find<T extends PureModel>(type: IType|T|IModelConstructor<T>, id?: IIdentifier|PureModel): T|null;
-
-  /**
    * Find a model based on a matching function
    *
    * @param {TFilterFn} test Function used to match the model
    * @returns {(PureModel|null)} The first matching model
    * @memberof Collection
    */
-  public find<T extends PureModel>(test: TFilterFn): T|null;
-
-  public find(model: IType|typeof PureModel|(TFilterFn), id?: IIdentifier|PureModel) {
-    if (id instanceof PureModel) {
-      return id;
-    }
-
-    return isSelectorFunction(model)
-      ? (this.__data.find(model as TFilterFn) || null)
-      : (this.__findByType(model as typeof PureModel, id) || null);
+  public find(test: TFilterFn): PureModel | null {
+    return this.__data.find(test) || null;
   }
 
   /**
@@ -234,7 +215,7 @@ export class PureCollection {
    * @param {IIdentifier} id Model identifier
    * @memberof Collection
    */
-  public removeOne(type: IType|typeof PureModel, id: IIdentifier);
+  public removeOne(type: IType|typeof PureModel, id: IIdentifier): void;
 
   /**
    * Remove the given model from the collection
@@ -242,7 +223,7 @@ export class PureCollection {
    * @param {PureModel} model Model to be removed from the collection
    * @memberof Collection
    */
-  public removeOne(model: PureModel);
+  public removeOne(model: PureModel): void;
 
   @action public removeOne(obj: IType|typeof PureModel|PureModel, id?: IIdentifier) {
     let model: PureModel | null = null;
@@ -251,32 +232,6 @@ export class PureCollection {
     } else if (id) {
       model = this.findOne(obj, id);
     }
-    if (model) {
-      this.__removeModel(model);
-    }
-  }
-
-  /**
-   * Remove the first model based on the type and (optional) identifier
-   *
-   * @deprecated Use `removeOne` instead
-   * @param {(IType|typeof PureModel)} type Model type
-   * @param {IIdentifier} [id] Model identifier
-   * @memberof Collection
-   */
-  public remove(type: IType|typeof PureModel, id?: IIdentifier);
-
-  /**
-   * Remove the given model from the collection
-   *
-   * @deprecated Use `removeOne` instead
-   * @param {PureModel} model Model to be removed from the collection
-   * @memberof Collection
-   */
-  public remove(model: PureModel);
-
-  @action public remove(obj: IType|typeof PureModel|PureModel, id?: IIdentifier) {
-    const model = typeof obj === 'object' ? obj : this.find(obj, id);
     if (model) {
       this.__removeModel(model);
     }
@@ -521,32 +476,6 @@ export class PureCollection {
     }
 
     return this.__dataMap[type][id] || null;
-  }
-
-  private __findByType(model: IType|typeof PureModel|PureModel, id?: IIdentifier) {
-    deprecated(`
-      'find' method with the type/id combo and the 'remove' function are deprecated.
-      Please use 'findOne' and 'removeOne' instead.
-      They will always return the exact model or null if there is no match.
-    `);
-    const type = getModelType(model);
-    const stringType = type.toString();
-
-    if (id) {
-      if (!(type in this.__dataMap)) {
-        set(this.__dataMap, stringType, observable.object({ [id]: undefined }, { }, { deep: false }));
-      } else if (!(id in this.__dataMap[type])) {
-        set(this.__dataMap[type], id.toString(), undefined);
-      }
-
-      return this.__dataMap[type][id];
-    } else {
-      if (!(type in this.__dataList)) {
-        set(this.__dataList, stringType, observable.array([], { deep: false }));
-      }
-
-      return this.__dataList[type].length ? this.__dataList[type][0] : null;
-    }
   }
 
   // @ts-ignore - Used outside of the class, but marked as private to avoid undocumented use

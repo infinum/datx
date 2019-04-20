@@ -3,8 +3,6 @@ export { Model } from './Model';
 export { View } from './View';
 export { PureCollection } from './PureCollection';
 export { PureModel } from './PureModel';
-export { CompatCollection } from './CompatCollection';
-export { CompatModel } from './CompatModel';
 
 export {
   getRefId,
