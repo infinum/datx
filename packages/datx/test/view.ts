@@ -443,8 +443,16 @@ describe('Model', () => {
     const viewInstance = new View(Foo, collection, undefined, [987, 123, 234]);
     const foos = collection.add([{ id: 123 }, { id: 234 }], Foo);
 
-    // @ts-ignore Valid, but typings don't allow it
-    viewInstance.list.push(876);
+    const lengths: Array<number> = [];
+
+    autorun(() => {
+      lengths.push(viewInstance.length);
+    });
+
+    runInAction(() => {
+      // @ts-ignore Valid, but typings don't allow it
+      viewInstance.list.push(876);
+    });
 
     expect(collection.length).toBe(2);
     expect(viewInstance.length).toBe(2);
