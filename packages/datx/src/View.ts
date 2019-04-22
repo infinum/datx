@@ -1,5 +1,5 @@
 import { IDictionary, IRawModel, mapItems } from 'datx-utils';
-import { action, computed, intercept, IObservableArray, observable } from 'mobx';
+import { action, computed, intercept, IObservableArray, observable, reaction } from 'mobx';
 
 import { SORTED_NO_WRITE, UNIQUE_MODEL } from './errors';
 import { error } from './helpers/format';
@@ -16,7 +16,7 @@ export class View<T extends PureModel = PureModel> {
   public readonly modelType: IType;
   @observable public sortMethod?: string|((item: T) => any);
 
-  private readonly __models: IObservableArray<T> = observable.array([]);
+  private readonly __models: IObservableArray<T | IIdentifier> = observable.array([]);
 
   constructor(
     modelType: IModelConstructor<T>|IType,
@@ -26,19 +26,33 @@ export class View<T extends PureModel = PureModel> {
     public unique: boolean = false,
   ) {
     this.modelType = getModelType(modelType);
-    const items: Array<T> = mapItems(models, this.__getModel.bind(this))
-      .filter(Boolean) as Array<T>;
+    const items: Array<T> = mapItems(models, (item) => {
+      return this.__getModel(item) || item;
+    }).filter(Boolean) as Array<T>;
 
     this.__models.replace(items);
     this.sortMethod = sortMethod;
+
+    reaction(
+      () => {
+        const identifiers = this.__models.filter((item) => this.__isIdentifier(item));
+        const check = identifiers.filter((model: IIdentifier) => this.__collection.findOne(this.modelType, model));
+
+        return check.length > 0;
+      },
+      this.__reMap.bind(this),
+    );
   }
 
   @computed public get length() {
-    return this.__models.length;
+    return this.list.length;
   }
 
   @computed public get list(): Array<T> {
-    const list: Array<T> = this.__models.filter(Boolean);
+    // this.__reMap();
+    const list: Array<T> = this.__models
+      .filter((item: T | IIdentifier) => !this.__isIdentifier(item))
+      .filter(Boolean) as Array<T>;
 
     if (this.sortMethod) {
       const sortFn = typeof this.sortMethod === 'string'
@@ -138,7 +152,22 @@ export class View<T extends PureModel = PureModel> {
     return this.__collection.findOne(this.modelType, getModelId(model));
   }
 
-  private __partialListUpdate(change: TChange) {
+  private __isIdentifier(item: T | IIdentifier): boolean {
+    return typeof item === 'string' || typeof item === 'number';
+  }
+
+  @action private __reMap() {
+    for (let i = 0; i < this.__models.length; i++) {
+      if (this.__isIdentifier(this.__models[i])) {
+        const model = this.__getModel(this.__models[i]);
+        if (model) {
+          this.__models[i] = model;
+        }
+      }
+    }
+  }
+
+  @action private __partialListUpdate(change: TChange) {
     if (change.type === 'splice') {
       if (this.sortMethod && change.added.length > 0) {
         throw error(SORTED_NO_WRITE);
