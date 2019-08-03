@@ -1,5 +1,5 @@
 import { IDictionary, IRawModel, mapItems } from 'datx-utils';
-import { action, computed, intercept, IObservableArray, observable } from 'mobx';
+import { action, computed, intercept, IObservableArray, observable, reaction } from 'mobx';
 
 import { SORTED_NO_WRITE, UNIQUE_MODEL } from './errors';
 import { error } from './helpers/format';
@@ -32,6 +32,16 @@ export class View<T extends PureModel = PureModel> {
 
     this.__models.replace(items);
     this.sortMethod = sortMethod;
+
+    reaction(
+      () => {
+        const identifiers = this.__models.filter((item) => this.__isIdentifier(item));
+        const check = identifiers.filter((model: IIdentifier) => this.__collection.findOne(this.modelType, model));
+
+        return check.length > 0;
+      },
+      this.__reMap.bind(this),
+    );
   }
 
   @computed public get length() {
@@ -39,7 +49,7 @@ export class View<T extends PureModel = PureModel> {
   }
 
   @computed public get list(): Array<T> {
-    this.__reMap();
+    // this.__reMap();
     const list: Array<T> = this.__models
       .filter((item: T | IIdentifier) => !this.__isIdentifier(item))
       .filter(Boolean) as Array<T>;
@@ -146,7 +156,7 @@ export class View<T extends PureModel = PureModel> {
     return typeof item === 'string' || typeof item === 'number';
   }
 
-  private __reMap() {
+  @action private __reMap() {
     for (let i = 0; i < this.__models.length; i++) {
       if (this.__isIdentifier(this.__models[i])) {
         const model = this.__getModel(this.__models[i]);
@@ -157,7 +167,7 @@ export class View<T extends PureModel = PureModel> {
     }
   }
 
-  private __partialListUpdate(change: TChange) {
+  @action private __partialListUpdate(change: TChange) {
     if (change.type === 'splice') {
       if (this.sortMethod && change.added.length > 0) {
         throw error(SORTED_NO_WRITE);
