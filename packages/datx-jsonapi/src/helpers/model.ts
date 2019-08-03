@@ -101,7 +101,6 @@ export function getModelLinks(model: PureModel): IDictionary<ILink> {
 export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
   model: PureModel,
   key: string,
-  requestHeaders?: IDictionary<string>,
   options?: IRequestOptions,
 ): Promise<Response<T>> {
   const collection = getModelCollection(model);
@@ -110,7 +109,7 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
     throw error(`Link ${key} doesn't exist on the model`);
   }
   const link = links[key];
-  const responseObj = fetchLink<T>(link, collection as IJsonapiCollection, requestHeaders, options);
+  const responseObj = fetchLink<T>(link, collection as IJsonapiCollection, options);
 
   if (getModelMetaKey(model, MODEL_QUEUE_FIELD)) {
     return responseObj.then((response) => {
@@ -157,13 +156,12 @@ export async function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>
   model: PureModel,
   ref: string,
   key: string,
-  requestHeaders?: IDictionary<string>,
   options?: IRequestOptions,
 ): Promise<Response<T>> {
   const collection = getModelCollection(model);
   const link = getLink(model, ref, key);
 
-  return fetchLink<T>(link, collection as IJsonapiCollection, requestHeaders, options);
+  return fetchLink<T>(link, collection as IJsonapiCollection, options);
 }
 
 export function getModelRefLinks(model: PureModel): IDictionary<IDictionary<ILink>> {
@@ -260,7 +258,7 @@ export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Prom
   const requestMethod = isModelPersisted(model) ? update : create;
   const url = getModelEndpointUrl(model, options);
 
-  return requestMethod(url, { data }, collection, options && options.headers)
+  return requestMethod(url, { data }, collection, options && options.networkConfig && options.networkConfig.headers)
     .then(handleResponse(model))
     .then((response) => {
       clearCacheByType(getModelType(model));
@@ -276,7 +274,7 @@ export function removeModel<T extends IJsonapiModel>(model: T, options?: IReques
   const url = getModelEndpointUrl(model);
 
   if (isPersisted) {
-    return remove(url, collection, options && options.headers)
+    return remove(url, collection, options && options.networkConfig && options.networkConfig.headers)
       .then((response: Response<T>) => {
         if (response.error) {
           throw response.error;
@@ -309,6 +307,6 @@ export function saveRelationship<T extends IJsonapiModel>(
   type ID = IDefinition|Array<IDefinition>;
   const data: ID = mapItems(ids, (id) => ({ id, type })) as ID;
 
-  return update(href, { data }, collection, options && options.headers)
+  return update(href, { data }, collection, options && options.networkConfig && options.networkConfig.headers)
     .then(handleResponse(model, ref));
 }

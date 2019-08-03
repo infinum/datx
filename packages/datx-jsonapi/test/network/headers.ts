@@ -45,8 +45,10 @@ describe('headers', () => {
 
     const store = new TestStore();
     const events = await store.fetchAll('event', {
-      headers: {
-        'X-Auth': '54321',
+      networkConfig: {
+        headers: {
+          'X-Auth': '54321',
+        },
       },
     });
 

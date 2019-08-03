@@ -21,7 +21,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {(PureModel|Array<PureModel>)}
    * @memberOf Response
    */
-  public data: T|Array<T>|null = null;
+  public data: T | Array<T> | null = null;
 
   /**
    * API response metadata
@@ -69,7 +69,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {(Array<JsonApi.IError>|Error)}
    * @memberOf Response
    */
-  public error?: Array<IError>|Error;
+  public error?: Array<IError> | Error;
 
   /**
    * First data page
@@ -153,7 +153,7 @@ export class Response<T extends IJsonapiModel> {
     response: IRawResponse,
     collection?: IJsonapiCollection,
     options?: IRequestOptions,
-    overrideData?: T|Array<T>,
+    overrideData?: T | Array<T>,
     views?: Array<View>,
   ) {
     this.__collection = collection;
@@ -175,7 +175,7 @@ export class Response<T extends IJsonapiModel> {
           throw new Error('A save/remove operation should not return an array of results');
         }
 
-        this.data = overrideData || new GenericModel(flattenModel(undefined, resp.data)) as T;
+        this.data = overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T);
       }
     }
 
@@ -252,12 +252,13 @@ export class Response<T extends IJsonapiModel> {
    */
   private __fetchLink(name: string) {
     if (!this.__cache[name]) {
-      const link: ILink|null = (this.links && name in this.links) ? this.links[name] : null;
+      const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 
       if (link) {
-        this.__cache[name] = fetchLink<T>(
-          link, this.__collection, this.requestHeaders, this.__options, this.views,
-        );
+        const options = Object.assign({ }, this.__options);
+        options.networkConfig = options.networkConfig || { };
+        options.networkConfig.headers = this.requestHeaders;
+        this.__cache[name] = fetchLink<T>(link, this.__collection, options, this.views);
       }
     }
 

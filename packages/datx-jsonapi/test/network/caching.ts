@@ -78,7 +78,7 @@ describe('caching', () => {
         url: 'event/12345',
       });
 
-      const events2 = await store.fetch(Event, '12345', { skipCache: true });
+      const events2 = await store.fetch(Event, '12345', { cacheOptions: { skipCache: true } });
       const event2 = events2.data as Event;
 
       expect(events2).not.toEqual(events);
@@ -241,7 +241,7 @@ describe('caching', () => {
         url: 'event',
       });
 
-      const events2 = await store.fetchAll('event', { skipCache: true });
+      const events2 = await store.fetchAll('event', { cacheOptions: { skipCache: true } });
 
       expect(events2).not.toEqual(events);
       expect(events2.data).toBeInstanceOf(Array);

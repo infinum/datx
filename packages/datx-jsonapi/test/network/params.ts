@@ -21,7 +21,7 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.fetchAll('event', { filter: { name: 'foo' } });
+    const events = await store.fetchAll('event', { queryParams: { filter: { name: 'foo' } } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
@@ -35,7 +35,7 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.fetchAll('event', { filter: { name: 'foo', bar: { id: '2' } } });
+    const events = await store.fetchAll('event', { queryParams: { filter: { name: 'foo', bar: { id: '2' } } } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
@@ -49,7 +49,7 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.fetchAll('event', { sort: 'name' });
+    const events = await store.fetchAll('event', { queryParams: { sort: 'name' } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
@@ -63,7 +63,7 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.fetchAll('event', { sort: ['-name', 'bar.id'] });
+    const events = await store.fetchAll('event', { queryParams: { sort: ['-name', 'bar.id'] } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
@@ -77,7 +77,7 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.fetchAll('event', { include: 'bar' });
+    const events = await store.fetchAll('event', { queryParams: { include: 'bar' } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
@@ -91,7 +91,7 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.fetchAll('event', { include: ['bar', 'bar.baz'] });
+    const events = await store.fetchAll('event', { queryParams: { include: ['bar', 'bar.baz'] } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
@@ -107,7 +107,7 @@ describe('params', () => {
 
     const store = new TestStore();
     const event = store.add({ }, Event);
-    await event.save({ include: 'bar' });
+    await event.save({ queryParams: { include: 'bar' } });
   });
 
   it('should support sparse fields', async () => {
@@ -118,7 +118,7 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.fetchAll('event', { fields: { foo: 'name', bar: 'name' } });
+    const events = await store.fetchAll('event', { queryParams: { fields: { foo: 'name', bar: 'name' } } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
@@ -132,11 +132,11 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.fetchAll('event', { fields: {
+    const events = await store.fetchAll('event', { queryParams: { fields: {
       'bar': 'name',
       'bar.baz': ['foo', 'bar'],
       'foo': 'name',
-    } });
+    } } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
@@ -151,8 +151,10 @@ describe('params', () => {
 
     const store = new TestStore();
     const events = await store.fetchAll('event', {
-      params: ['a=1', 'b=2', { key: 'c', value: '3' }],
-      sort: 'name',
+      queryParams: {
+        custom: ['a=1', 'b=2', { key: 'c', value: '3' }],
+        sort: 'name',
+      },
     });
 
     expect(events.data).toBeInstanceOf(Array);
@@ -173,7 +175,7 @@ describe('params', () => {
 
       config.paramArrayType = ParamArrayType.COMMA_SEPARATED;
       const store = new TestStore();
-      const events = await store.fetchAll('event', { filter: { a: ['1', '2'], b: '3' } });
+      const events = await store.fetchAll('event', { queryParams: { filter: { a: ['1', '2'], b: '3' } } });
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
@@ -188,7 +190,7 @@ describe('params', () => {
 
       config.paramArrayType = ParamArrayType.MULTIPLE_PARAMS;
       const store = new TestStore();
-      const events = await store.fetchAll('event', { filter: { a: ['1', '2'], b: '3' } });
+      const events = await store.fetchAll('event', { queryParams: { filter: { a: ['1', '2'], b: '3' } } });
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
@@ -203,7 +205,7 @@ describe('params', () => {
 
       config.paramArrayType = ParamArrayType.OBJECT_PATH;
       const store = new TestStore();
-      const events = await store.fetchAll('event', { filter: { a: ['1', '2'], b: '3' } });
+      const events = await store.fetchAll('event', { queryParams: { filter: { a: ['1', '2'], b: '3' } } });
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
@@ -218,7 +220,7 @@ describe('params', () => {
 
       config.paramArrayType = ParamArrayType.PARAM_ARRAY;
       const store = new TestStore();
-      const events = await store.fetchAll('event', { filter: { a: ['1', '2'], b: '3' } });
+      const events = await store.fetchAll('event', { queryParams: { filter: { a: ['1', '2'], b: '3' } } });
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
@@ -233,7 +235,7 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.request('event', 'GET', undefined, { filter: { name: 'foo' } });
+    const events = await store.request('event', 'GET', undefined, { queryParams: { filter: { name: 'foo' } } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
@@ -247,7 +249,7 @@ describe('params', () => {
     });
 
     const store = new TestStore();
-    const events = await store.request('event?foo=1', 'GET', undefined, { filter: { name: 'foo' } });
+    const events = await store.request('event?foo=1', 'GET', undefined, { queryParams: { filter: { name: 'foo' } } });
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);

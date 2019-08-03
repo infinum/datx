@@ -66,8 +66,11 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, id, undefined, options);
+      const reqOptions = options || { };
+      reqOptions.networkConfig = reqOptions.networkConfig || { };
+      reqOptions.networkConfig.headers = query.headers;
 
-      return read<T>(query.url, this, query.headers, options)
+      return read<T>(query.url, this, reqOptions)
         .then((res) => this.__handleErrors<T>(res));
     }
 
@@ -84,8 +87,11 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, undefined, undefined, options);
+      const reqOptions = options || { };
+      reqOptions.networkConfig = reqOptions.networkConfig || { };
+      reqOptions.networkConfig.headers = query.headers;
 
-      return read<T>(query.url, this, query.headers, options)
+      return read<T>(query.url, this, reqOptions)
         .then((res) => this.__handleErrors<T>(res));
     }
 

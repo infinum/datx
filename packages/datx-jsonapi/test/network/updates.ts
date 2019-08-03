@@ -170,7 +170,7 @@ describe('updates', () => {
         url: 'events/queue-jobs/123',
       });
 
-      const queue2 = await fetchModelLink(queue, 'self', undefined, { skipCache: true });
+      const queue2 = await fetchModelLink(queue, 'self', { cacheOptions: { skipCache: true } });
       const queueRecord = queue2.data;
       expect(queueRecord).not.toBeNull();
       if (queueRecord) {
@@ -182,7 +182,7 @@ describe('updates', () => {
         url: 'events/queue-jobs/123',
       });
 
-      const updatedRes = await fetchModelLink(queue, 'self', undefined, { skipCache: true });
+      const updatedRes = await fetchModelLink(queue, 'self', { cacheOptions: { skipCache: true } });
       const updated = updatedRes.data as Event;
       expect(updated.meta.type).toBe('event');
 
@@ -223,7 +223,7 @@ describe('updates', () => {
         url: 'events/queue-jobs/123',
       });
 
-      const queue2 = await fetchModelLink(queue, 'self', undefined, { skipCache: true });
+      const queue2 = await fetchModelLink(queue, 'self', { cacheOptions: { skipCache: true } });
       const queueRecord = queue2.data;
       expect(queueRecord).not.toBeNull();
       if (queueRecord) {
@@ -235,7 +235,7 @@ describe('updates', () => {
         url: 'events/queue-jobs/123',
       });
 
-      const updatedRes = await fetchModelLink(queue, 'self', undefined, { skipCache: true });
+      const updatedRes = await fetchModelLink(queue, 'self', { cacheOptions: { skipCache: true } });
       const updated = updatedRes.data;
       expect(updated).not.toBeNull();
       if (updated) {

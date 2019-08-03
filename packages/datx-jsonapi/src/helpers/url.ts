@@ -39,14 +39,14 @@ export function prepareQuery(
 }
 
 export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
-  const headers: IDictionary<string> = (options && options.headers) || { };
+  const headers: IDictionary<string> = (options && options.networkConfig && options.networkConfig.headers) || { };
 
   const params: Array<string> = [
-    ...prepareFilters((options && options.filter) || { }),
-    ...prepareSort(options && options.sort),
-    ...prepareIncludes(options && options.include),
-    ...prepareFields((options && options.fields) || { }),
-    ...prepareRawParams((options && options.params) || []),
+    ...prepareFilters((options && options.queryParams && options.queryParams.filter) || { }),
+    ...prepareSort(options && options.queryParams && options.queryParams.sort),
+    ...prepareIncludes(options && options.queryParams && options.queryParams.include),
+    ...prepareFields((options && options.queryParams && options.queryParams.fields) || { }),
+    ...prepareRawParams((options && options.queryParams && options.queryParams.custom) || []),
   ];
 
   const baseUrl: string = appendParams(prefixUrl(url), params);

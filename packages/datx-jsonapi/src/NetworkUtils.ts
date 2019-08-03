@@ -60,8 +60,8 @@ export const config: IConfigType = {
   },
 
   // Reference of the fetch method that should be used
-  fetchReference: isBrowser && 'fetch' in window && typeof window.fetch === 'function' && window.fetch.bind(window)
-    || undefined,
+  fetchReference:
+    (isBrowser && 'fetch' in window && typeof window.fetch === 'function' && window.fetch.bind(window)) || undefined,
 
   // Determines how will the request param arrays be stringified
   paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
@@ -75,12 +75,7 @@ export const config: IConfigType = {
    * @param {IHeaders} [requestHeaders] Headers that will be sent
    * @returns {Promise<IRawResponse>} Resolves with a raw response object
    */
-  baseFetch(
-    method: string,
-    url: string,
-    body?: object,
-    requestHeaders?: IHeaders,
-  ): Promise<IRawResponse> {
+  baseFetch(method: string, url: string, body?: object, requestHeaders?: IHeaders): Promise<IRawResponse> {
     let data: IResponse;
     let status: number;
     let headers: IResponseHeaders;
@@ -95,7 +90,7 @@ export const config: IConfigType = {
         const defaultHeaders = config.defaultFetchOptions.headers || { };
         const reqHeaders: IHeaders = Object.assign({ }, defaultHeaders, requestHeaders) as IHeaders;
         const options = Object.assign({ }, config.defaultFetchOptions, {
-          body: isBodySupported && JSON.stringify(body) || undefined,
+          body: (isBodySupported && JSON.stringify(body)) || undefined,
           headers: reqHeaders,
           method,
         });
@@ -153,19 +148,12 @@ export const config: IConfigType = {
  * @returns {Promise<Response>} Resolves with a response object
  */
 function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOpts): Promise<LibResponse<T>> {
-  const {
-    url,
-    options,
-    data,
-    method = 'GET',
-    collection,
-    views,
-  } = config.transformRequest(reqOptions);
+  const { url, options, data, method = 'GET', collection, views } = config.transformRequest(reqOptions);
 
-  const staticCollection = collection && collection.constructor as { cache?: boolean };
+  const staticCollection = collection && (collection.constructor as { cache?: boolean });
   const collectionCache = staticCollection && staticCollection.cache;
   const isCacheSupported = method.toUpperCase() === 'GET';
-  const skipCache = reqOptions.options && reqOptions.options.skipCache;
+  const skipCache = reqOptions.options && reqOptions.options.cacheOptions && reqOptions.options.cacheOptions.skipCache;
 
   if (config.cache && isCacheSupported && collectionCache && !skipCache) {
     const cache = getCache(url);
@@ -174,11 +162,16 @@ function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOp
     }
   }
 
-  return config.baseFetch(method, url, data, options && options.headers)
+  return config
+    .baseFetch(method, url, data, options && options.networkConfig && options.networkConfig.headers)
     .then((response: IRawResponse) => {
       const collectionResponse = Object.assign(response, { collection });
       const resp = new LibResponse<T>(
-        config.transformResponse(collectionResponse), collection, options, undefined, views,
+        config.transformResponse(collectionResponse),
+        collection,
+        options,
+        undefined,
+        views,
       );
       if (config.cache && isCacheSupported) {
         saveCache(url, resp);
@@ -198,7 +191,6 @@ export function libFetch<T extends IJsonapiModel = IJsonapiModel>(options: IColl
  * @export
  * @param {IJsonapiCollection} collection Related collection
  * @param {string} url API call URL
- * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @param {Array<View>} [views] Request view
  * @returns {Promise<Response>} Resolves with a Response object
@@ -206,7 +198,6 @@ export function libFetch<T extends IJsonapiModel = IJsonapiModel>(options: IColl
 export function read<T extends IJsonapiModel = IJsonapiModel>(
   url: string,
   collection?: IJsonapiCollection,
-  headers?: IHeaders,
   options?: IRequestOptions,
   views?: Array<View>,
 ): Promise<LibResponse<T>> {
@@ -214,7 +205,7 @@ export function read<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data: undefined,
     method: 'GET',
-    options: { ...options, headers },
+    options,
     url,
     views,
   });
@@ -227,7 +218,6 @@ export function read<T extends IJsonapiModel = IJsonapiModel>(
  * @param {IJsonapiCollection} collection Related collection
  * @param {string} url API call URL
  * @param {object} [data] Request body
- * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @param {Array<View>} [views] Request view
  * @returns {Promise<Response>} Resolves with a Response object
@@ -236,7 +226,6 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
   url: string,
   data?: object,
   collection?: IJsonapiCollection,
-  headers?: IHeaders,
   options?: IRequestOptions,
   views?: Array<View>,
 ): Promise<LibResponse<T>> {
@@ -244,7 +233,7 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data,
     method: 'POST',
-    options: { ...options, headers },
+    options,
     url,
     views,
   });
@@ -257,7 +246,6 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
  * @param {IJsonapiCollection} collection Related collection
  * @param {string} url API call URL
  * @param {object} [data] Request body
- * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @param {Array<View>} [views] Request view
  * @returns {Promise<Response>} Resolves with a Response object
@@ -266,7 +254,6 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
   url: string,
   data?: object,
   collection?: IJsonapiCollection,
-  headers?: IHeaders,
   options?: IRequestOptions,
   views?: Array<View>,
 ): Promise<LibResponse<T>> {
@@ -274,7 +261,7 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data,
     method: 'PATCH',
-    options: { ...options, headers },
+    options,
     url,
     views,
   });
@@ -286,7 +273,6 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
  * @export
  * @param {IJsonapiCollection} collection Related collection
  * @param {string} url API call URL
- * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @param {Array<View>} [views] Request view
  * @returns {Promise<Response>} Resolves with a Response object
@@ -294,7 +280,6 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
 export function remove<T extends IJsonapiModel = IJsonapiModel>(
   url: string,
   collection?: IJsonapiCollection,
-  headers?: IHeaders,
   options?: IRequestOptions,
   views?: Array<View>,
 ): Promise<LibResponse<T>> {
@@ -302,7 +287,7 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data: undefined,
     method: 'DELETE',
-    options: { ...options, headers },
+    options,
     url,
     views,
   });
@@ -314,7 +299,6 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
  * @export
  * @param {JsonApi.ILink} link Link URL or a link object
  * @param {IJsonapiCollection} collection Store that will be used to save the response
- * @param {IDictionary<string>} [requestHeaders] Request headers
  * @param {IRequestOptions} [options] Server options
  * @param {Array<View>} [views] Request view
  * @returns {Promise<LibResponse>} Response promise
@@ -322,7 +306,6 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
 export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
   link: ILink,
   collection?: IJsonapiCollection,
-  requestHeaders?: IDictionary<string>,
   options?: IRequestOptions,
   views?: Array<View>,
 ): Promise<LibResponse<T>> {
@@ -330,7 +313,7 @@ export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
     const href: string = typeof link === 'object' ? link.href : link;
 
     if (href) {
-      return read<T>(href, collection, requestHeaders, options, views);
+      return read<T>(href, collection, options, views);
     }
   }
 
@@ -341,26 +324,28 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
   record: T,
   prop?: string,
 ): (response: LibResponse<T>) => T {
-  return action((response: LibResponse<T>): T => {
-    if (response.error) {
-      throw response.error;
-    }
+  return action(
+    (response: LibResponse<T>): T => {
+      if (response.error) {
+        throw response.error;
+      }
 
-    if (response.status === 204) {
-      setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
+      if (response.status === 204) {
+        setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
 
-      return record;
-    } else if (response.status === 202) {
-      const responseRecord = response.data as T;
-      setModelMetaKey(responseRecord, MODEL_PROP_FIELD, prop);
-      setModelMetaKey(responseRecord, MODEL_QUEUE_FIELD, true);
-      setModelMetaKey(responseRecord, MODEL_RELATED_FIELD, record);
+        return record;
+      } else if (response.status === 202) {
+        const responseRecord = response.data as T;
+        setModelMetaKey(responseRecord, MODEL_PROP_FIELD, prop);
+        setModelMetaKey(responseRecord, MODEL_QUEUE_FIELD, true);
+        setModelMetaKey(responseRecord, MODEL_RELATED_FIELD, record);
 
-      return responseRecord;
-    } else {
-      setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
+        return responseRecord;
+      } else {
+        setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
 
-      return response.replaceData(record).data as T;
-    }
-  });
+        return response.replaceData(record).data as T;
+      }
+    },
+  );
 }
