@@ -1,6 +1,7 @@
 export { Collection } from './Collection';
 export { Model } from './Model';
 export { View } from './View';
+export { Bucket } from './Bucket';
 export { PureCollection } from './PureCollection';
 export { PureModel } from './PureModel';
 

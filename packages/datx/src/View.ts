@@ -1,22 +1,22 @@
 import { IDictionary, IRawModel, mapItems } from 'datx-utils';
-import { action, computed, intercept, IObservableArray, observable, reaction } from 'mobx';
+import { action, computed, intercept, observable } from 'mobx';
 
+import { Bucket } from './Bucket';
 import { SORTED_NO_WRITE, UNIQUE_MODEL } from './errors';
 import { error } from './helpers/format';
 import { getModelId, getModelType } from './helpers/model/utils';
 import { IIdentifier } from './interfaces/IIdentifier';
 import { IModelConstructor } from './interfaces/IModelConstructor';
+import { IModelRef } from './interfaces/IModelRef';
 import { IRawView } from './interfaces/IRawView';
 import { IType } from './interfaces/IType';
 import { TChange } from './interfaces/TChange';
 import { PureCollection } from './PureCollection';
 import { PureModel } from './PureModel';
 
-export class View<T extends PureModel = PureModel> {
+export class View<T extends PureModel = PureModel> extends Bucket<T> {
   public readonly modelType: IType;
   @observable public sortMethod?: string | ((item: T) => any);
-
-  private readonly __models: IObservableArray<T | IIdentifier> = observable.array([]);
 
   constructor(
     modelType: IModelConstructor<T> | IType,
@@ -25,22 +25,14 @@ export class View<T extends PureModel = PureModel> {
     models: Array<IIdentifier | T> = [],
     public unique: boolean = false,
   ) {
+    super(
+      models.map((model) => {
+        return model instanceof PureModel ? model : { id: model, type: getModelType(modelType) };
+      }),
+      __collection,
+    );
     this.modelType = getModelType(modelType);
-    const items: Array<T> = mapItems(models, (item) => {
-      return this.__getModel(item) || item;
-    }).filter(Boolean) as Array<T>;
-
-    this.__models.replace(items);
     this.sortMethod = sortMethod;
-
-    reaction(() => {
-      const identifiers = this.__models.filter((item) => this.__isIdentifier(item));
-      const check = identifiers.filter((model: IIdentifier) =>
-        this.__collection.findOne(this.modelType, model),
-      );
-
-      return check.length > 0;
-    }, this.__reMap.bind(this));
   }
 
   @computed public get length() {
@@ -48,10 +40,7 @@ export class View<T extends PureModel = PureModel> {
   }
 
   @computed public get list(): Array<T> {
-    // this.__reMap();
-    const list: Array<T> = this.__models
-      .filter((item: T | IIdentifier) => !this.__isIdentifier(item))
-      .filter(Boolean) as Array<T>;
+    const list: Array<T> = super.__getList();
 
     if (this.sortMethod) {
       const sortFn =
@@ -71,13 +60,9 @@ export class View<T extends PureModel = PureModel> {
   public toJSON(): IRawView {
     return {
       modelType: this.modelType,
-      models: this.__models.map(getModelId).slice(),
+      models: this.__rawList.map(getModelId).slice(),
       unique: this.unique,
     };
-  }
-
-  @computed public get snapshot() {
-    return this.toJSON();
   }
 
   /**
@@ -108,8 +93,8 @@ export class View<T extends PureModel = PureModel> {
       | Array<T>;
 
     mapItems(models, (instance: T) => {
-      if (!this.unique || this.__models.indexOf(instance) === -1) {
-        this.__models.push(instance);
+      if (!this.unique || this.__indexOf(instance) === -1) {
+        this.__rawList.push(instance);
       }
     });
 
@@ -126,7 +111,7 @@ export class View<T extends PureModel = PureModel> {
   public hasItem(model: T | IIdentifier): boolean {
     const id = getModelId(model);
 
-    return Boolean(this.__models.find((item) => getModelId(item) === id));
+    return Boolean(this.__rawList.find((item) => getModelId(item) === id));
   }
 
   /**
@@ -136,37 +121,14 @@ export class View<T extends PureModel = PureModel> {
    * @memberof Collection
    */
   @action public remove(model: IIdentifier | T) {
-    const item = this.__getModel(model);
+    const item = this.__getModel(this.__normalizeModel(model));
     if (item) {
-      this.__models.remove(item);
+      this.__rawList.remove(item);
     }
   }
 
   @action public removeAll() {
-    this.__models.replace([]);
-  }
-
-  private __getModel(model: T | IIdentifier): T | null {
-    if (model instanceof PureModel) {
-      return model;
-    }
-
-    return this.__collection.findOne(this.modelType, getModelId(model));
-  }
-
-  private __isIdentifier(item: T | IIdentifier): boolean {
-    return typeof item === 'string' || typeof item === 'number';
-  }
-
-  @action private __reMap() {
-    for (let i = 0; i < this.__models.length; i++) {
-      if (this.__isIdentifier(this.__models[i])) {
-        const model = this.__getModel(this.__models[i]);
-        if (model) {
-          this.__models[i] = model;
-        }
-      }
-    }
+    this.__rawList.replace([]);
   }
 
   @action private __partialListUpdate(change: TChange) {
@@ -174,18 +136,18 @@ export class View<T extends PureModel = PureModel> {
       if (this.sortMethod && change.added.length > 0) {
         throw error(SORTED_NO_WRITE);
       }
-      const added = change.added as Array<T>;
+      const added = (change.added as Array<T>).map(this.__normalizeModel.bind(this));
 
-      const toRemove = this.__models.slice(change.index, change.removedCount);
+      const toRemove = this.__rawList.slice(change.index, change.removedCount);
       if (this.unique) {
         added.forEach((newItem) => {
-          if (this.__models.indexOf(newItem) !== -1 && toRemove.indexOf(newItem) === -1) {
+          if (this.__indexOf(newItem) !== -1 && this.__indexOf(newItem, toRemove) === -1) {
             throw error(UNIQUE_MODEL);
           }
         });
       }
 
-      this.__models.splice(change.index, change.removedCount, ...added);
+      this.__rawList.splice(change.index, change.removedCount, ...added);
 
       return null;
     }
@@ -194,16 +156,32 @@ export class View<T extends PureModel = PureModel> {
       throw error(SORTED_NO_WRITE);
     }
 
-    const newModel = this.__getModel(change.newValue as T);
+    const newModel = this.__getModel(this.__normalizeModel(change.newValue as any));
     if (newModel) {
-      const idIndex = this.__models.indexOf(newModel);
+      const idIndex = this.__indexOf(newModel);
       if (this.unique && idIndex !== -1 && idIndex !== change.index) {
         throw error(UNIQUE_MODEL);
       }
 
-      this.__models[change.index] = newModel;
+      this.__rawList[change.index] = newModel;
     }
 
     return null;
+  }
+
+  private __normalizeModel(model: T | IIdentifier): T | IModelRef {
+    return model instanceof PureModel ? model : { id: model, type: this.modelType };
+  }
+
+  private __indexOf(model: T | IModelRef, target: Array<IModelRef | T> = this.__rawList): number {
+    return target.findIndex((item) => {
+      if (item instanceof PureModel && model instanceof PureModel) {
+        return item === model;
+      } else if (this.__isReference(item) && !(model instanceof PureModel)) {
+        return (item as IModelRef).id === model.id && (item as IModelRef).type === model.type;
+      }
+
+      return false;
+    });
   }
 }
