@@ -1,19 +1,22 @@
 {
-  "data": [{
-    "id": "5",
-    "type": "event",
-    "attributes": {
-      "title": "Test 5",
-      "date": "2017-03-23"
+  "data": [
+    {
+      "id": "5",
+      "type": "event",
+      "attributes": {
+        "title": "Test 5",
+        "date": "2017-03-23"
+      }
+    },
+    {
+      "id": "6",
+      "type": "event",
+      "attributes": {
+        "title": "Test 6",
+        "date": "2017-03-24"
+      }
     }
-  }, {
-    "id": "6",
-    "type": "event",
-    "attributes": {
-      "title": "Test 6",
-      "date": "2017-03-24"
-    }
-  }],
+  ],
   "links": {
     "prev": "https://example.com/event"
   }

@@ -29,7 +29,7 @@ export function jsonapi<T extends PureModel>(
 ): IViewConstructor<IJsonapiModel, T & IJsonapiView>;
 
 export function jsonapi<T>(
-  Base: IModelConstructor<T>|ICollectionConstructor<T>|IViewConstructor<T>,
+  Base: IModelConstructor<T> | ICollectionConstructor<T> | IViewConstructor<T>,
 ) {
   if (isModel(Base)) {
     // @ts-ignore

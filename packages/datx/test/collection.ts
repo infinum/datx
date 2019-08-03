@@ -30,7 +30,7 @@ describe('Collection', () => {
       }
 
       // tslint:disable-next-line:no-unnecessary-class
-      class FooBar { }
+      class FooBar {}
 
       class Store extends Collection {
         public static types = [Foo];
@@ -56,22 +56,27 @@ describe('Collection', () => {
       expect(() => store2.add(foo1)).toThrowError('A model can be in a single collection at once');
 
       // @ts-ignore - TS won't allow this mistake
-      expect(() => store.add({ foo: 4 }))
-        .toThrowError('The type needs to be defined if the object is not an instance of the model.');
+      expect(() => store.add({ foo: 4 })).toThrowError(
+        'The type needs to be defined if the object is not an instance of the model.',
+      );
 
-      expect(() => store.add({ foo: 4 }, 'bar'))
-        .toThrowError('No model is defined for the type bar.');
+      expect(() => store.add({ foo: 4 }, 'bar')).toThrowError(
+        'No model is defined for the type bar.',
+      );
 
-      expect(() => store.add({ foo: 4 }, Baz))
-        .toThrowError('No model is defined for the type baz.');
+      expect(() => store.add({ foo: 4 }, Baz)).toThrowError(
+        'No model is defined for the type baz.',
+      );
 
       // @ts-ignore - TS won't allow this mistake
-      expect(() => store.add({ foo: 4 }, FooBar))
-        .toThrowError('The type needs to be defined if the object is not an instance of the model.');
+      expect(() => store.add({ foo: 4 }, FooBar)).toThrowError(
+        'The type needs to be defined if the object is not an instance of the model.',
+      );
 
       // @ts-ignore - TS won't allow this mistake
-      expect(() => store.add([{ foo: 4 }, { foo: 5 }]))
-        .toThrowError('The type needs to be defined if the object is not an instance of the model.');
+      expect(() => store.add([{ foo: 4 }, { foo: 5 }])).toThrowError(
+        'The type needs to be defined if the object is not an instance of the model.',
+      );
 
       expect(store.hasItem(foo1)).toBe(true);
       expect(store.hasItem(foo4)).toBe(false);
@@ -94,7 +99,6 @@ describe('Collection', () => {
 
       store.removeOne([foo3, foo4]); // Remove foo3, ignore foo4
       expect(store.length).toBe(0);
-
     });
 
     it('should work with removing all models of a certain type', () => {
@@ -116,9 +120,9 @@ describe('Collection', () => {
 
       const store = new Store();
 
-      store.add([{ }, { }, { }], Foo);
-      store.add([{ }, { }], Baz);
-      store.add({ }, Foo);
+      store.add([{}, {}, {}], Foo);
+      store.add([{}, {}], Baz);
+      store.add({}, Foo);
       store.removeAll(Foo);
       expect(store.length).toBe(2);
     });

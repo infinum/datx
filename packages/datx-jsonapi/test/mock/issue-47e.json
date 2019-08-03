@@ -15,11 +15,13 @@
       }
     }
   },
-  "included": [{
-    "id": "4",
-    "type": "image",
-    "attributes": {
-      "url": "https://example.com/5.jpg"
+  "included": [
+    {
+      "id": "4",
+      "type": "image",
+      "attributes": {
+        "url": "https://example.com/5.jpg"
+      }
     }
-  }]
+  ]
 }

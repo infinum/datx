@@ -25,5 +25,4 @@ export class Model extends withPatches(withActions(withMeta(PureModel))) {
   public toString() {
     return JSON.stringify(this.valueOf(), null, 2);
   }
-
 }

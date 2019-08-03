@@ -60,8 +60,8 @@ describe('Network basics', () => {
 
   it('should handle id changes correctly', async () => {
     const store = new TestStore();
-    const image1 = store.add({ }, Image);
-    const image2 = new Image({ });
+    const image1 = store.add({}, Image);
+    const image2 = new Image({});
 
     mockApi({
       method: 'POST',
@@ -291,7 +291,7 @@ describe('Network basics', () => {
         expect(foobar.data).toHaveLength(0);
       } catch (e) {
         hasThrown = true;
-        expect(e.message).toBe('[datx exception] Link foobar doesn\'t exist on the model');
+        expect(e.message).toBe("[datx exception] Link foobar doesn't exist on the model");
       }
       expect(hasThrown).toBe(true);
     }
@@ -320,7 +320,6 @@ describe('Network basics', () => {
       expect(imageData.meta.type).toBe('image');
       expect(imageData['url']).toBe('https://example.com/1.jpg');
     }
-
   });
 
   it('should support endpoint', async () => {

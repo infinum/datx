@@ -57,7 +57,7 @@ export const prop = Object.assign(propFn, {
    * @param {typeof PureModel} refModel Model type the reference will point to
    * @returns {(obj: PureModel, key: string) => void}
    */
-  toOne(refModel: typeof PureModel|IType): (obj: PureModel, key: string) => void {
+  toOne(refModel: typeof PureModel | IType): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string, opts?: object) => {
       prepareDecorator(obj, key, opts);
       storage.addModelClassReference(getClass(obj), key, {
@@ -74,7 +74,10 @@ export const prop = Object.assign(propFn, {
    * @param {string} [property] Use a foreign key from the other model to get this reference (computed back reference)
    * @returns {(obj: PureModel, key: string) => void}
    */
-  toMany(refModel: typeof PureModel|IType, property?: string): (obj: PureModel, key: string) => void {
+  toMany(
+    refModel: typeof PureModel | IType,
+    property?: string,
+  ): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string, opts?: object) => {
       prepareDecorator(obj, key, opts);
       storage.addModelClassReference(getClass(obj), key, {
@@ -91,7 +94,7 @@ export const prop = Object.assign(propFn, {
    * @param {typeof PureModel} refModel Model type the reference will point to
    * @returns {(obj: PureModel, key: string) => void}
    */
-  toOneOrMany(refModel: typeof PureModel|IType): (obj: PureModel, key: string) => void {
+  toOneOrMany(refModel: typeof PureModel | IType): (obj: PureModel, key: string) => void {
     return <T extends PureModel>(obj: T, key: string, opts?: object) => {
       prepareDecorator(obj, key, opts);
       storage.addModelClassReference(getClass(obj), key, {
@@ -129,18 +132,18 @@ export const prop = Object.assign(propFn, {
 });
 
 export function view<TCollection extends PureCollection, TModel extends PureModel>(
-  modelType: IModelConstructor<TModel>|IType,
+  modelType: IModelConstructor<TModel> | IType,
   options: {
-    sortMethod?: string|((item: TModel) => any);
-    models?: Array<IIdentifier|TModel>;
+    sortMethod?: string | ((item: TModel) => any);
+    models?: Array<IIdentifier | TModel>;
     unique?: boolean;
     mixins?: Array<(view: any) => any>;
-  } = { },
+  } = {},
 ) {
   return (obj: TCollection, key: string, opts?: object): void => {
     prepareDecorator(obj, key, opts);
     if (!Object.hasOwnProperty.call(obj.constructor, 'views')) {
-      obj.constructor['views'] = { };
+      obj.constructor['views'] = {};
     }
     obj.constructor['views'][key] = {
       modelType,

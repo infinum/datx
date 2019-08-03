@@ -30,7 +30,9 @@ export function withPatches<T extends PureCollection>(
   Base: ICollectionConstructor<T>,
 ): ICollectionConstructor<IMetaPatchesCollection & T>;
 
-export function withPatches<T extends PureCollection>(Base: ICollectionConstructor<T>|IModelConstructor<T>) {
+export function withPatches<T extends PureCollection>(
+  Base: ICollectionConstructor<T> | IModelConstructor<T>,
+) {
   if (isCollection(Base)) {
     const BaseClass = Base as typeof PureCollection;
 
@@ -58,13 +60,13 @@ export function withPatches<T extends PureCollection>(Base: ICollectionConstruct
           } else if (!model) {
             throw error('The model should already exist for an update patch');
           } else {
-            throw error('New patch value isn\'t set for an update patch');
+            throw error("New patch value isn't set for an update patch");
           }
         } else {
           if (model) {
-            throw error('The model shouldn\'t exist before a create patch');
+            throw error("The model shouldn't exist before a create patch");
           } else if (!patch.newValue) {
-            throw error('New patch value isn\'t set for a create patch');
+            throw error("New patch value isn't set for a create patch");
           } else {
             this.add(patch.newValue, patch.model.type);
           }
@@ -100,7 +102,7 @@ export function withPatches<T extends PureCollection>(Base: ICollectionConstruct
 
       public applyPatch(patch: IPatch) {
         if (patch.model.type === getModelType(this) && patch.model.id === getModelId(this)) {
-          updateModel(this, patch.newValue || { });
+          updateModel(this, patch.newValue || {});
         } else {
           // console.log('Wrong match model');
         }

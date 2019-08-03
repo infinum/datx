@@ -29,7 +29,7 @@ export function decorateModel(BaseClass: typeof PureModel) {
       return super.getAutoId().toString();
     }
 
-    constructor(rawData: IRawModel | IRecord = { }, collection?: PureCollection) {
+    constructor(rawData: IRawModel | IRecord = {}, collection?: PureCollection) {
       let data = rawData;
       if (rawData && 'type' in rawData && ('attributes' in rawData || 'relationships' in rawData)) {
         const classRefs = getModelClassRefs(BaseClass);

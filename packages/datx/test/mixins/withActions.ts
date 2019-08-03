@@ -60,7 +60,7 @@ describe('Collection', () => {
 
   it('should fail for other classes', () => {
     // tslint:disable-next-line:no-unnecessary-class
-    class A { }
+    class A {}
 
     // @ts-ignore - TS won't allow this mistake
     expect(() => withActions(A)).toThrowError('This mixin can only decorate models');

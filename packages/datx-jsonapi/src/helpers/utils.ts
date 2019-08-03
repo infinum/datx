@@ -12,7 +12,7 @@ export const isBrowser: boolean = typeof window !== 'undefined';
  * @param {(T|(() => T))} target can be  anything or function
  * @returns {T} value
  */
-export function getValue<T>(target: T|(() => T)): T {
+export function getValue<T>(target: T | (() => T)): T {
   if (typeof target === 'function') {
     // @ts-ignore
     return target();

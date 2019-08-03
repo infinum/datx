@@ -4,11 +4,7 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import {
-  Collection,
-  prop,
-  PureModel,
-} from '../src';
+import { Collection, prop, PureModel } from '../src';
 
 describe('issues', () => {
   it('should remove references on collection remove', () => {
@@ -27,7 +23,7 @@ describe('issues', () => {
     }
 
     const store = new Store();
-    const foo = store.add({ bar: [{ }, { }] }, Foo);
+    const foo = store.add({ bar: [{}, {}] }, Foo);
     expect(foo.bar).toHaveLength(2);
 
     const toRemove = foo.bar[0];

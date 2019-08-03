@@ -1,5 +1,12 @@
 import { mapItems, warn } from 'datx-utils';
-import { IArrayChange, IArraySplice, intercept, IObservableArray, isObservableArray, observable } from 'mobx';
+import {
+  IArrayChange,
+  IArraySplice,
+  intercept,
+  IObservableArray,
+  isObservableArray,
+  observable,
+} from 'mobx';
 
 import { FieldType } from '../../enums/FieldType';
 import { ReferenceType } from '../../enums/ReferenceType';
@@ -22,7 +29,13 @@ import { PureModel } from '../../PureModel';
 import { storage } from '../../services/storage';
 import { error } from '../format';
 import { endAction, startAction, updateAction } from '../patch';
-import { getModelCollection, getModelId, getModelMetaKey, getModelType, setModelMetaKey } from './utils';
+import {
+  getModelCollection,
+  getModelId,
+  getModelMetaKey,
+  getModelType,
+  setModelMetaKey,
+} from './utils';
 
 function modelAddReference(model: PureModel, key: string, newReference: PureModel) {
   const refOptions = storage.getModelReferenceOptions(model, key);
@@ -81,7 +94,12 @@ function partialRefUpdate(model: PureModel, key: string, change: TChange) {
   return null;
 }
 
-function backRefSplice(model: PureModel, key: string, change: IArraySplice<PureModel>, refOptions: IReferenceOptions) {
+function backRefSplice(
+  model: PureModel,
+  key: string,
+  change: IArraySplice<PureModel>,
+  refOptions: IReferenceOptions,
+) {
   const property = refOptions.property as string;
   change.added.forEach((item) => {
     modelAddReference(item, property, model);
@@ -94,7 +112,12 @@ function backRefSplice(model: PureModel, key: string, change: IArraySplice<PureM
   return null;
 }
 
-function backRefChange(model: PureModel, key: string, change: IArrayChange<PureModel>, refOptions: IReferenceOptions) {
+function backRefChange(
+  model: PureModel,
+  key: string,
+  change: IArrayChange<PureModel>,
+  refOptions: IReferenceOptions,
+) {
   const property = refOptions.property as string;
   const oldValue = model[key].length > change.index ? model[key][change.index] : null;
   if (change.newValue) {
@@ -104,7 +127,9 @@ function backRefChange(model: PureModel, key: string, change: IArrayChange<PureM
     modelRemoveReference(oldValue, property, model);
   }
 
-  warn(`This shouldn't have happened. Please open an issue: https://github.com/infinum/datx/issues/new`);
+  warn(
+    `This shouldn't have happened. Please open an issue: https://github.com/infinum/datx/issues/new`,
+  );
 
   return null;
 }
@@ -152,7 +177,11 @@ function hasBackRef(item: PureModel, property: string, target: PureModel): boole
   }
 }
 
-function getBackRef(model: PureModel, key: string, refOptions: IReferenceOptions): PureModel|Array<PureModel>|null {
+function getBackRef(
+  model: PureModel,
+  key: string,
+  refOptions: IReferenceOptions,
+): PureModel | Array<PureModel> | null {
   const type = getModelType(refOptions.model);
 
   const collection = getModelCollection(model);
@@ -170,14 +199,18 @@ function getBackRef(model: PureModel, key: string, refOptions: IReferenceOptions
   return backData;
 }
 
-function getNormalRef(model: PureModel, key: string, refOptions: IReferenceOptions): PureModel|Array<PureModel>|null {
+function getNormalRef(
+  model: PureModel,
+  key: string,
+  refOptions: IReferenceOptions,
+): PureModel | Array<PureModel> | null {
   const value: IIdentifier | Array<IIdentifier> = storage.getModelDataKey(model, key);
   const collection = getModelCollection(model);
   if (!collection) {
     return null;
   }
 
-  let dataModels = mapItems(value, (id) => id ? collection.findOne(refOptions.model, id) : id);
+  let dataModels = mapItems(value, (id) => (id ? collection.findOne(refOptions.model, id) : id));
   if (refOptions.type === ReferenceType.TO_MANY && !(dataModels instanceof Array)) {
     dataModels = [dataModels];
   }
@@ -191,10 +224,10 @@ function getNormalRef(model: PureModel, key: string, refOptions: IReferenceOptio
   return dataModels;
 }
 
-export function getRef(model: PureModel, key: string): PureModel|Array<PureModel>|null {
+export function getRef(model: PureModel, key: string): PureModel | Array<PureModel> | null {
   const refOptions = storage.getModelReferenceOptions(model, key);
 
-  return (typeof refOptions.property === 'string')
+  return typeof refOptions.property === 'string'
     ? getBackRef(model, key, refOptions)
     : getNormalRef(model, key, refOptions);
 }
@@ -219,30 +252,33 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
   const collection = getModelCollection(model);
   startAction(model);
 
-  let ids: IIdentifier|Array<IIdentifier>|null = mapItems(value, (ref: IIdentifier|PureModel) => {
-    if (ref && collection) {
-      if (ref instanceof PureModel) {
-        const refType = getModelType(ref);
-        if (refType !== getModelType(refOptions.model)) {
-          endAction(model);
-          throw error(WRONG_REF_TYPE);
+  let ids: IIdentifier | Array<IIdentifier> | null = mapItems(
+    value,
+    (ref: IIdentifier | PureModel) => {
+      if (ref && collection) {
+        if (ref instanceof PureModel) {
+          const refType = getModelType(ref);
+          if (refType !== getModelType(refOptions.model)) {
+            endAction(model);
+            throw error(WRONG_REF_TYPE);
+          }
         }
+
+        let instance = collection.findOne(refOptions.model, ref);
+        if (!instance && typeof ref === 'object') {
+          instance = collection.add(ref, refOptions.model);
+        }
+        endAction(model);
+
+        return getModelId(instance || ref);
+      } else if (ref instanceof PureModel) {
+        endAction(model);
+        throw error(REF_NEEDS_COLLECTION);
       }
 
-      let instance = collection.findOne(refOptions.model, ref);
-      if (!instance && typeof ref === 'object') {
-        instance = collection.add(ref, refOptions.model);
-      }
-      endAction(model);
-
-      return getModelId(instance || ref);
-    } else if (ref instanceof PureModel) {
-      endAction(model);
-      throw error(REF_NEEDS_COLLECTION);
-    }
-
-    return ref;
-  });
+      return ref;
+    },
+  );
 
   if (refOptions.type === ReferenceType.TO_MANY) {
     ids = ids || [];
@@ -262,7 +298,12 @@ function getModelRefsByType(model: PureModel, type: IType) {
     .filter((key) => getModelType(refs[key].model) === type);
 }
 
-function updateModelReferences(model: PureModel, newId: IIdentifier, oldId: IIdentifier, type: IType) {
+function updateModelReferences(
+  model: PureModel,
+  newId: IIdentifier,
+  oldId: IIdentifier,
+  type: IType,
+) {
   const collection = getModelCollection(model);
   if (collection) {
     collection.getAllModels().map((item) => {
@@ -317,7 +358,7 @@ export function updateModelId(model: PureModel, newId: IIdentifier): void {
  * @param {string} key Referenced model property name
  * @returns {IIdentifier} Referenced model id
  */
-export function getRefId(model: PureModel, key: string): IIdentifier|Array<IIdentifier> {
+export function getRefId(model: PureModel, key: string): IIdentifier | Array<IIdentifier> {
   return storage.getModelDataKey(model, key);
 }
 
@@ -330,6 +371,10 @@ export function getRefId(model: PureModel, key: string): IIdentifier|Array<IIden
  * @param {IIdentifier} value The new value
  * @returns {void} Referenced model id
  */
-export function setRefId(model: PureModel, key: string, value?: IIdentifier|Array<IIdentifier>): void {
+export function setRefId(
+  model: PureModel,
+  key: string,
+  value?: IIdentifier | Array<IIdentifier>,
+): void {
   storage.setModelDataKey(model, key, value);
 }

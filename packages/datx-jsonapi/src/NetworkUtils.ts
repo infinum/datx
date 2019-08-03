@@ -3,7 +3,12 @@ import { IDictionary } from 'datx-utils';
 import { action } from 'mobx';
 
 import { getCache, saveCache } from './cache';
-import { MODEL_PERSISTED_FIELD, MODEL_PROP_FIELD, MODEL_QUEUE_FIELD, MODEL_RELATED_FIELD } from './consts';
+import {
+  MODEL_PERSISTED_FIELD,
+  MODEL_PROP_FIELD,
+  MODEL_QUEUE_FIELD,
+  MODEL_RELATED_FIELD,
+} from './consts';
 import { ParamArrayType } from './enums/ParamArrayType';
 import { isBrowser } from './helpers/utils';
 import { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
@@ -23,7 +28,9 @@ export type FetchType = (
   requestHeaders?: IHeaders,
 ) => Promise<IRawResponse>;
 
-export type CollectionFetchType = <T extends IJsonapiModel>(options: ICollectionFetchOpts) => Promise<LibResponse<T>>;
+export type CollectionFetchType = <T extends IJsonapiModel>(
+  options: ICollectionFetchOpts,
+) => Promise<LibResponse<T>>;
 
 export interface IResponseObject {
   data: IResponse;
@@ -61,7 +68,11 @@ export const config: IConfigType = {
 
   // Reference of the fetch method that should be used
   fetchReference:
-    (isBrowser && 'fetch' in window && typeof window.fetch === 'function' && window.fetch.bind(window)) || undefined,
+    (isBrowser &&
+      'fetch' in window &&
+      typeof window.fetch === 'function' &&
+      window.fetch.bind(window)) ||
+    undefined,
 
   // Determines how will the request param arrays be stringified
   paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
@@ -75,7 +86,12 @@ export const config: IConfigType = {
    * @param {IHeaders} [requestHeaders] Headers that will be sent
    * @returns {Promise<IRawResponse>} Resolves with a raw response object
    */
-  baseFetch(method: string, url: string, body?: object, requestHeaders?: IHeaders): Promise<IRawResponse> {
+  baseFetch(
+    method: string,
+    url: string,
+    body?: object,
+    requestHeaders?: IHeaders,
+  ): Promise<IRawResponse> {
     let data: IResponse;
     let status: number;
     let headers: IResponseHeaders;
@@ -87,9 +103,9 @@ export const config: IConfigType = {
 
     return request
       .then(() => {
-        const defaultHeaders = config.defaultFetchOptions.headers || { };
-        const reqHeaders: IHeaders = Object.assign({ }, defaultHeaders, requestHeaders) as IHeaders;
-        const options = Object.assign({ }, config.defaultFetchOptions, {
+        const defaultHeaders = config.defaultFetchOptions.headers || {};
+        const reqHeaders: IHeaders = Object.assign({}, defaultHeaders, requestHeaders) as IHeaders;
+        const options = Object.assign({}, config.defaultFetchOptions, {
           body: (isBodySupported && JSON.stringify(body)) || undefined,
           headers: reqHeaders,
           method,
@@ -147,13 +163,20 @@ export const config: IConfigType = {
  * @param {ICollectionFetchOpts} reqOptions API request options
  * @returns {Promise<Response>} Resolves with a response object
  */
-function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOpts): Promise<LibResponse<T>> {
-  const { url, options, data, method = 'GET', collection, views } = config.transformRequest(reqOptions);
+function collectionFetch<T extends IJsonapiModel>(
+  reqOptions: ICollectionFetchOpts,
+): Promise<LibResponse<T>> {
+  const { url, options, data, method = 'GET', collection, views } = config.transformRequest(
+    reqOptions,
+  );
 
   const staticCollection = collection && (collection.constructor as { cache?: boolean });
   const collectionCache = staticCollection && staticCollection.cache;
   const isCacheSupported = method.toUpperCase() === 'GET';
-  const skipCache = reqOptions.options && reqOptions.options.cacheOptions && reqOptions.options.cacheOptions.skipCache;
+  const skipCache =
+    reqOptions.options &&
+    reqOptions.options.cacheOptions &&
+    reqOptions.options.cacheOptions.skipCache;
 
   if (config.cache && isCacheSupported && collectionCache && !skipCache) {
     const cache = getCache(url);

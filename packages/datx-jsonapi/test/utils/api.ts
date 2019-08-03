@@ -75,13 +75,17 @@ export default function mockApi({
     mock = mock.query(query);
   }
 
-  return mock.reply(status, (...args: Array<any>) => {
-    if (responseFn && isFunction(responseFn)) {
-      if (responseFn(...args) !== undefined) {
-        return;
+  return mock.reply(
+    status,
+    (...args: Array<any>) => {
+      if (responseFn && isFunction(responseFn)) {
+        if (responseFn(...args) !== undefined) {
+          return;
+        }
       }
-    }
 
-    return [status, getMockStream(name || url)];
-  }, headers);
+      return [status, getMockStream(name || url)];
+    },
+    headers,
+  );
 }

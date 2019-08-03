@@ -4,15 +4,9 @@ export { View } from './View';
 export { PureCollection } from './PureCollection';
 export { PureModel } from './PureModel';
 
-export {
-  getRefId,
-  setRefId,
-  updateModelId,
-} from './helpers/model/fields';
+export { getRefId, setRefId, updateModelId } from './helpers/model/fields';
 
-export {
-  initModelRef,
-} from './helpers/model/init';
+export { initModelRef } from './helpers/model/init';
 
 export {
   assignModel,
@@ -28,11 +22,7 @@ export {
   updateModel,
 } from './helpers/model/utils';
 
-export {
-  isCollection,
-  isModel,
-  isView,
-} from './helpers/mixin';
+export { isCollection, isModel, isView } from './helpers/mixin';
 
 export { IRawModel } from 'datx-utils';
 

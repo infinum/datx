@@ -11,8 +11,8 @@ import { extendObservable } from 'mobx';
  * @returns {(U|Array<U>|null)} Return value of the callback function
  */
 export function mapItems<T, U>(data: Array<T>, fn: (item: T) => U): Array<U>;
-export function mapItems<T, U>(data: T, fn: (item: T) => U): U|null;
-export function mapItems<T, U>(data: T|Array<T>, fn: (item: T) => U): U|Array<U>|null {
+export function mapItems<T, U>(data: T, fn: (item: T) => U): U | null;
+export function mapItems<T, U>(data: T | Array<T>, fn: (item: T) => U): U | Array<U> | null {
   if (data instanceof Array) {
     // tslint:disable-next-line:no-unnecessary-callback-wrapper
     return data.map((item) => fn(item));
@@ -29,7 +29,7 @@ export function mapItems<T, U>(data: T|Array<T>, fn: (item: T) => U): U|Array<U>
  * @param {Array<Array<T>|T>} data Arrays to flatten
  * @returns {Array<T>} Flattened array
  */
-export function flatten<T>(data: Array<Array<T>|T>): Array<T> {
+export function flatten<T>(data: Array<Array<T> | T>): Array<T> {
   return ([] as Array<T>).concat(...data);
 }
 
@@ -72,7 +72,7 @@ export function assignComputed<T = any>(
     Object.defineProperty(obj, admin, {
       configurable: false,
       enumerable: false,
-      value: { },
+      value: {},
     });
   }
 

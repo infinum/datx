@@ -24,8 +24,8 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
     type?: IType;
     idAttribute?: string;
     typeAttribute?: string;
-  // tslint:disable-next-line:no-object-literal-type-assertion
-  } = { fields: { } as IFields },
+    // tslint:disable-next-line:no-object-literal-type-assertion
+  } = { fields: {} as IFields },
 ) {
   const BaseClass = Base as typeof PureModel;
 
@@ -33,7 +33,7 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
     throw error(DECORATE_MODEL);
   }
 
-  class ModelWithProps extends BaseClass { }
+  class ModelWithProps extends BaseClass {}
 
   if (type) {
     ModelWithProps.type = type;

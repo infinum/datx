@@ -46,13 +46,15 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
     }
 
     @computed public get original(): T | undefined {
-      return getModelMetaKey(this.__instance, 'originalId') ? getOriginalModel<T>(this.__instance) : undefined;
+      return getModelMetaKey(this.__instance, 'originalId')
+        ? getOriginalModel<T>(this.__instance)
+        : undefined;
     }
 
     @computed public get refs() {
-      const refDefs = getModelMetaKey(this.__instance, 'refs') || { };
+      const refDefs = getModelMetaKey(this.__instance, 'refs') || {};
 
-      const refs = { };
+      const refs = {};
       Object.keys(refDefs).forEach((key) => {
         refs[key] = getRefId(this.__instance, key);
       });

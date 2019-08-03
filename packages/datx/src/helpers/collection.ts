@@ -13,7 +13,11 @@ function initCollectionModel(collection: PureCollection, data: IRawModel): PureM
   return upsertModel(data, type, collection);
 }
 
-export function upsertModel(data: IRawModel, type: IType|typeof PureModel, collection: PureCollection): PureModel {
+export function upsertModel(
+  data: IRawModel,
+  type: IType | typeof PureModel,
+  collection: PureCollection,
+): PureModel {
   if (!type && type !== 0) {
     throw error(UNDEFINED_TYPE);
   }
@@ -23,18 +27,21 @@ export function upsertModel(data: IRawModel, type: IType|typeof PureModel, colle
   if (!TypeModel) {
     const DefaultModel = staticCollection.defaultModel;
     if (DefaultModel) {
-      return new DefaultModel({
-        ...data,
-        [META_FIELD]: {
-          ...data[META_FIELD] || { },
-          type,
+      return new DefaultModel(
+        {
+          ...data,
+          [META_FIELD]: {
+            ...(data[META_FIELD] || {}),
+            type,
+          },
         },
-      }, collection);
+        collection,
+      );
     }
     throw error(UNDEFINED_MODEL, { type });
   }
 
-  const id = getMetaKeyFromRaw(data, 'id', TypeModel as typeof PureModel|undefined);
+  const id = getMetaKeyFromRaw(data, 'id', TypeModel as typeof PureModel | undefined);
   const existingModel = id && collection.findOne(type, id);
   if (existingModel) {
     return updateModel(existingModel, data);
@@ -44,7 +51,7 @@ export function upsertModel(data: IRawModel, type: IType|typeof PureModel, colle
 }
 
 export function isSelectorFunction(fn: any) {
-  return (typeof fn === 'function') && (fn !== PureModel && !(fn.prototype instanceof PureModel));
+  return typeof fn === 'function' && (fn !== PureModel && !(fn.prototype instanceof PureModel));
 }
 
 export function initModels(collection: PureCollection, data: Array<IRawModel>) {

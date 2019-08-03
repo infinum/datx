@@ -12,23 +12,23 @@ export function decorateView<U>(BaseClass: typeof View) {
     protected __collection: IJsonapiCollection;
 
     constructor(
-      modelType: IModelConstructor<M>|IType,
+      modelType: IModelConstructor<M> | IType,
       collection: IJsonapiCollection,
-      sortMethod?: string|((item: M) => any),
-      models: Array<string|PureModel> = [],
+      sortMethod?: string | ((item: M) => any),
+      models: Array<string | PureModel> = [],
       unique: boolean = false,
     ) {
       super(modelType, collection, sortMethod, models, unique);
       this.__collection = collection;
     }
 
-    public sync(body?: IResponse): M|Array<M>|null {
+    public sync(body?: IResponse): M | Array<M> | null {
       const data = this.__collection.sync(body);
       if (data) {
         this.add(data);
       }
 
-      return data as M|Array<M>|null;
+      return data as M | Array<M> | null;
     }
 
     /**
@@ -38,10 +38,7 @@ export function decorateView<U>(BaseClass: typeof View) {
      * @param {IRequestOptions} [options] Server options
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
-    public fetch(
-      id: string,
-      options?: IRequestOptions,
-    ): Promise<Response<M>> {
+    public fetch(id: string, options?: IRequestOptions): Promise<Response<M>> {
       return this.__collection
         .fetch(this.modelType, id, options)
         .then(this.__addFromResponse.bind(this));
@@ -53,9 +50,7 @@ export function decorateView<U>(BaseClass: typeof View) {
      * @param {IRequestOptions} [options] Server options
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
-    public fetchAll(
-      options?: IRequestOptions,
-    ): Promise<Response<M>> {
+    public fetchAll(options?: IRequestOptions): Promise<Response<M>> {
       return this.__collection
         .fetchAll(this.modelType, options)
         .then(this.__addFromResponse.bind(this));

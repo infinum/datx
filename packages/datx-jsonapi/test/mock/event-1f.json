@@ -8,27 +8,33 @@
     },
     "relationships": {
       "images": {
-        "data": [{
-          "type": "image",
-          "id": "1"
-        }, {
-          "type": "image",
-          "id": "2"
-        }]
+        "data": [
+          {
+            "type": "image",
+            "id": "1"
+          },
+          {
+            "type": "image",
+            "id": "2"
+          }
+        ]
       }
     }
   },
-  "included": [{
-    "id": "1",
-    "type": "image",
-    "attributes": {
-      "url": "https://example.com/1.jpg"
+  "included": [
+    {
+      "id": "1",
+      "type": "image",
+      "attributes": {
+        "url": "https://example.com/1.jpg"
+      }
+    },
+    {
+      "id": "2",
+      "type": "image",
+      "attributes": {
+        "url": "https://example.com/2.jpg"
+      }
     }
-  }, {
-    "id": "2",
-    "type": "image",
-    "attributes": {
-      "url": "https://example.com/2.jpg"
-    }
-  }]
+  ]
 }

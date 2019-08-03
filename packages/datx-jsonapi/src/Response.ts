@@ -1,4 +1,12 @@
-import { getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId, View } from 'datx';
+import {
+  getModelId,
+  getModelType,
+  modelToJSON,
+  PureModel,
+  updateModel,
+  updateModelId,
+  View,
+} from 'datx';
 import { assignComputed, IDictionary } from 'datx-utils';
 import { action } from 'mobx';
 
@@ -147,7 +155,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {IDictionary<Promise<Response>>}
    * @memberOf Response
    */
-  private readonly __cache: IDictionary<Promise<Response<T>>> = { };
+  private readonly __cache: IDictionary<Promise<Response<T>>> = {};
 
   constructor(
     response: IRawResponse,
@@ -165,7 +173,9 @@ export class Response<T extends IJsonapiModel> {
     }
 
     if (collection) {
-      this.data = overrideData ? collection.add<T>(overrideData as T) : collection.sync<T>(response.data);
+      this.data = overrideData
+        ? collection.add<T>(overrideData as T)
+        : collection.sync<T>(response.data);
     } else if (response.data) {
       // The case when a record is not in a store and save/remove are used
       const resp = response.data;
@@ -185,9 +195,9 @@ export class Response<T extends IJsonapiModel> {
       }
     });
 
-    this.meta = (response.data && response.data.meta) || { };
-    this.links = (response.data && response.data.links) || { };
-    this.jsonapi = (response.data && response.data.jsonapi) || { };
+    this.meta = (response.data && response.data.meta) || {};
+    this.links = (response.data && response.data.links) || {};
+    this.jsonapi = (response.data && response.data.jsonapi) || {};
     this.headers = response.headers;
     this.requestHeaders = response.requestHeaders;
     this.error = (response.data && response.data.errors) || response.error;
@@ -255,8 +265,8 @@ export class Response<T extends IJsonapiModel> {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 
       if (link) {
-        const options = Object.assign({ }, this.__options);
-        options.networkConfig = options.networkConfig || { };
+        const options = Object.assign({}, this.__options);
+        options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
         this.__cache[name] = fetchLink<T>(link, this.__collection, options, this.views);
       }

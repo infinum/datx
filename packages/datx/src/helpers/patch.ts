@@ -39,12 +39,12 @@ export function triggerAction(patchMeta: IPatchMeta, model: PureModel) {
   const listeners: Array<(patch: IPatch) => void> = [];
 
   if ('__patchListeners' in model) {
-    listeners.push(...model['__patchListeners'] || []);
+    listeners.push(...(model['__patchListeners'] || []));
   }
 
   const collection = getModelCollection(model);
   if (collection && '__patchListeners' in collection) {
-    listeners.push(...collection['__patchListeners'] || []);
+    listeners.push(...(collection['__patchListeners'] || []));
   }
 
   listeners.forEach((listener) => {
@@ -53,13 +53,21 @@ export function triggerAction(patchMeta: IPatchMeta, model: PureModel) {
 }
 
 export function startAction(model: PureModel) {
-  const patchData = storage.getModelMetaKey(model, 'patch') || { count: 0, oldValue: { }, newValue: { } };
+  const patchData = storage.getModelMetaKey(model, 'patch') || {
+    count: 0,
+    newValue: {},
+    oldValue: {},
+  };
   patchData.count++;
   storage.setModelMetaKey(model, 'patch', patchData);
 }
 
 export function updateAction(model: PureModel, key: string, value: any) {
-  const patchData = storage.getModelMetaKey(model, 'patch') || { count: 0, oldValue: { }, newValue: { } };
+  const patchData = storage.getModelMetaKey(model, 'patch') || {
+    count: 0,
+    newValue: {},
+    oldValue: {},
+  };
   if (model[key] === value) {
     return;
   }
@@ -71,7 +79,11 @@ export function updateAction(model: PureModel, key: string, value: any) {
 }
 
 export function endAction(model: PureModel, patchType: PatchType = PatchType.UPDATE) {
-  const patchData = storage.getModelMetaKey(model, 'patch') || { count: 0, oldValue: { }, newValue: { } };
+  const patchData = storage.getModelMetaKey(model, 'patch') || {
+    count: 0,
+    newValue: {},
+    oldValue: {},
+  };
   patchData.count--;
   if (patchData.count === 0) {
     const newValue = toJS(patchData.newValue);
@@ -79,7 +91,7 @@ export function endAction(model: PureModel, patchType: PatchType = PatchType.UPD
     if (!isEmptyObject(newValue) || !isEmptyObject(oldValue)) {
       triggerAction({ newValue, oldValue, patchType }, model);
     }
-    storage.setModelMetaKey(model, 'patch', { count: 0, oldValue: { }, newValue: { } });
+    storage.setModelMetaKey(model, 'patch', { count: 0, oldValue: {}, newValue: {} });
   } else {
     storage.setModelMetaKey(model, 'patch', patchData);
   }

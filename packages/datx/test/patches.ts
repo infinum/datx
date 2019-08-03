@@ -5,13 +5,7 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import {
-  Collection,
-  IPatch,
-  Model,
-  PatchType,
-  prop,
-} from '../src';
+import { Collection, IPatch, Model, PatchType, prop } from '../src';
 
 describe('patch', () => {
   describe('model', () => {
@@ -48,27 +42,33 @@ describe('patch', () => {
 
       const modelMeta = { id: model.meta.id, type: model.meta.type };
 
-      const patches: Array<IPatch> = [{
-        model: modelMeta,
-        newValue: { name: 'FooBar' },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { age: 42 },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { nick: undefined },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { height: 180 },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { name: 'Bar' },
-        patchType: PatchType.UPDATE,
-      }] as Array<IPatch>;
+      const patches: Array<IPatch> = [
+        {
+          model: modelMeta,
+          newValue: { name: 'FooBar' },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { age: 42 },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { nick: undefined },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { height: 180 },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { name: 'Bar' },
+          patchType: PatchType.UPDATE,
+        },
+      ] as Array<IPatch>;
 
       patches.map((patch: IPatch) => {
         model.applyPatch(patch);
@@ -161,35 +161,42 @@ describe('patch', () => {
 
       model['height'] = 200;
 
-      expect(patches).toEqual([{
-        model: modelMeta,
-        newValue: addSnapshot,
-        patchType: PatchType.CRATE,
-      }, {
-        model: modelMeta,
-        newValue: { name: 'FooBar' },
-        oldValue: { name: 'Foo' },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { age: 42 },
-        oldValue: { age: undefined },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { nick: undefined },
-        oldValue: { nick: 'Bar' },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { height: 180, name: 'Bar' },
-        oldValue: { height: undefined, name: 'FooBar' },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        oldValue: removeSnapshot,
-        patchType: PatchType.REMOVE,
-      }]);
+      expect(patches).toEqual([
+        {
+          model: modelMeta,
+          newValue: addSnapshot,
+          patchType: PatchType.CRATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { name: 'FooBar' },
+          oldValue: { name: 'Foo' },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { age: 42 },
+          oldValue: { age: undefined },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { nick: undefined },
+          oldValue: { nick: 'Bar' },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { height: 180, name: 'Bar' },
+          oldValue: { height: undefined, name: 'FooBar' },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          oldValue: removeSnapshot,
+          patchType: PatchType.REMOVE,
+        },
+      ]);
     });
 
     it('should be able to apply patches', () => {
@@ -203,34 +210,42 @@ describe('patch', () => {
 
       const store = new Collection();
 
-      const patches: Array<IPatch> = [{
-        model: modelMeta,
-        newValue: model,
-        patchType: PatchType.CRATE,
-      }, {
-        model: modelMeta,
-        newValue: { name: 'FooBar' },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { age: 42 },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { nick: undefined },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { height: 180 },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { name: 'Bar' },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        patchType: PatchType.REMOVE,
-      }] as Array<IPatch>;
+      const patches: Array<IPatch> = [
+        {
+          model: modelMeta,
+          newValue: model,
+          patchType: PatchType.CRATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { name: 'FooBar' },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { age: 42 },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { nick: undefined },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { height: 180 },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { name: 'Bar' },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          patchType: PatchType.REMOVE,
+        },
+      ] as Array<IPatch>;
 
       patches.map((patch: IPatch) => {
         store.applyPatch(patch);
@@ -248,11 +263,13 @@ describe('patch', () => {
     it('should trigger on add, replace and remove', () => {
       const patches: Array<IPatch> = [];
 
-      const store = new Collection([{
-        [META_FIELD]: { type: 'foo', id: 1 },
-        name: 'Foo',
-        nick: 'Bar',
-      }]);
+      const store = new Collection([
+        {
+          [META_FIELD]: { type: 'foo', id: 1 },
+          name: 'Foo',
+          nick: 'Bar',
+        },
+      ]);
       store.onPatch((patch) => patches.push(patch));
       const model = store.findAll<Model>('foo')[0];
 
@@ -275,12 +292,14 @@ describe('patch', () => {
     });
 
     it('should be able to apply patches', () => {
-      const store = new Collection([{
-        [META_FIELD]: { type: 'foo' },
-        id: 1,
-        name: 'Foo',
-        nick: 'Bar',
-      }]);
+      const store = new Collection([
+        {
+          [META_FIELD]: { type: 'foo' },
+          id: 1,
+          name: 'Foo',
+          nick: 'Bar',
+        },
+      ]);
 
       const model = store.findAll<Model>('foo')[0];
 
@@ -288,30 +307,37 @@ describe('patch', () => {
       if (model) {
         const modelMeta = { id: model.meta.id, type: model.meta.type };
 
-        const patches: Array<IPatch> = [{
-          model: modelMeta,
-          newValue: { name: 'FooBar' },
-          patchType: PatchType.UPDATE,
-        }, {
-          model: modelMeta,
-          newValue: { age: 42 },
-          patchType: PatchType.UPDATE,
-        }, {
-          model: modelMeta,
-          newValue: { nick: undefined },
-          patchType: PatchType.UPDATE,
-        }, {
-          model: modelMeta,
-          newValue: { height: 180 },
-          patchType: PatchType.UPDATE,
-        }, {
-          model: modelMeta,
-          newValue: { name: 'Bar' },
-          patchType: PatchType.UPDATE,
-        }, {
-          model: modelMeta,
-          patchType: PatchType.REMOVE,
-        }] as Array<IPatch>;
+        const patches: Array<IPatch> = [
+          {
+            model: modelMeta,
+            newValue: { name: 'FooBar' },
+            patchType: PatchType.UPDATE,
+          },
+          {
+            model: modelMeta,
+            newValue: { age: 42 },
+            patchType: PatchType.UPDATE,
+          },
+          {
+            model: modelMeta,
+            newValue: { nick: undefined },
+            patchType: PatchType.UPDATE,
+          },
+          {
+            model: modelMeta,
+            newValue: { height: 180 },
+            patchType: PatchType.UPDATE,
+          },
+          {
+            model: modelMeta,
+            newValue: { name: 'Bar' },
+            patchType: PatchType.UPDATE,
+          },
+          {
+            model: modelMeta,
+            patchType: PatchType.REMOVE,
+          },
+        ] as Array<IPatch>;
 
         patches.map((patch: IPatch) => {
           store.applyPatch(patch);
@@ -332,15 +358,15 @@ describe('patch', () => {
         public static type = 'foo';
 
         @prop.identifier
-        public id!: number|string;
+        public id!: number | string;
         @prop.toOne('bar')
-        public bar!: BarModel|null;
+        public bar!: BarModel | null;
       }
 
       class BarModel extends Model {
         public static type = 'bar';
 
-        public id!: number|string;
+        public id!: number | string;
       }
 
       class TestCollection extends Collection {
@@ -356,10 +382,13 @@ describe('patch', () => {
       const collection = new TestCollection();
       collection.onPatch((patch) => patches.push(patch));
 
-      const model = collection.add<FooModel>({
-        bar: bar2,
-        id: 1,
-      }, 'foo');
+      const model = collection.add<FooModel>(
+        {
+          bar: bar2,
+          id: 1,
+        },
+        'foo',
+      );
 
       model.bar = bar3;
       model.meta.refs.bar = 2;
@@ -374,14 +403,14 @@ describe('patch', () => {
         public static type = 'bar';
 
         @prop.identifier
-        public id!: number|string;
+        public id!: number | string;
       }
 
       class FooModel extends Model {
         public static type = 'foo';
 
         @prop.identifier
-        public id!: number|string;
+        public id!: number | string;
         @prop.toOne(BarModel)
         public bar!: BarModel;
       }
@@ -399,29 +428,35 @@ describe('patch', () => {
       const model = new FooModel({ id: 1 });
       const modelMeta = { type: model.meta.type, id: model.meta.id };
 
-      const patches: Array<IPatch> = [{
-        model: bar2meta,
-        newValue: bar2,
-        patchType: PatchType.CRATE,
-      }, {
-        model: modelMeta,
-        newValue: model,
-        patchType: PatchType.CRATE,
-      }, {
-        model: bar3meta,
-        newValue: bar3,
-        patchType: PatchType.CRATE,
-      }, {
-        model: modelMeta,
-        newValue: { bar: bar3.meta.id },
-        oldValue: { bar: undefined },
-        patchType: PatchType.UPDATE,
-      }, {
-        model: modelMeta,
-        newValue: { bar: bar2.meta.id },
-        oldValue: { bar: bar3.meta.id },
-        patchType: PatchType.UPDATE,
-      }] as Array<IPatch>;
+      const patches: Array<IPatch> = [
+        {
+          model: bar2meta,
+          newValue: bar2,
+          patchType: PatchType.CRATE,
+        },
+        {
+          model: modelMeta,
+          newValue: model,
+          patchType: PatchType.CRATE,
+        },
+        {
+          model: bar3meta,
+          newValue: bar3,
+          patchType: PatchType.CRATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { bar: bar3.meta.id },
+          oldValue: { bar: undefined },
+          patchType: PatchType.UPDATE,
+        },
+        {
+          model: modelMeta,
+          newValue: { bar: bar2.meta.id },
+          oldValue: { bar: bar3.meta.id },
+          patchType: PatchType.UPDATE,
+        },
+      ] as Array<IPatch>;
 
       const collection = new TestCollection();
       patches.map((patch: IPatch) => {

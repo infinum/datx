@@ -20,7 +20,7 @@ import { endAction, startAction } from '../patch';
  * @param {(IType|typeof PureModel|PureModel)} model Model to be checked
  * @returns {IType} Model type
  */
-export function getModelType(model: IType|typeof PureModel|PureModel): IType {
+export function getModelType(model: IType | typeof PureModel | PureModel): IType {
   if (typeof model === 'function') {
     // @ts-ignore
     return model.type;
@@ -38,7 +38,7 @@ export function getModelType(model: IType|typeof PureModel|PureModel): IType {
  * @param {(PureModel|IIdentifier)} model Model to be checked
  * @returns {IIdentifier} Model identifier
  */
-export function getModelId(model: PureModel|IIdentifier): IIdentifier {
+export function getModelId(model: PureModel | IIdentifier): IIdentifier {
   if (model instanceof PureModel) {
     return getModelMetaKey(model, 'id');
   }
@@ -53,7 +53,7 @@ export function getModelId(model: PureModel|IIdentifier): IIdentifier {
  * @param {PureModel} model Model to be checked
  * @returns {PureCollection} A collection the given model belongs to
  */
-export function getModelCollection(model: PureModel): PureCollection|undefined {
+export function getModelCollection(model: PureModel): PureCollection | undefined {
   return getModelMetaKey(model, 'collection');
 }
 
@@ -68,7 +68,7 @@ export function getModelCollection(model: PureModel): PureCollection|undefined {
 export function cloneModel<T extends PureModel>(model: T): T {
   const TypeModel = model.constructor as typeof PureModel;
   const rawData = modelToJSON(model);
-  const meta = rawData[META_FIELD] || { };
+  const meta = rawData[META_FIELD] || {};
   meta.originalId = meta.id;
   delete meta.id;
 
@@ -117,7 +117,8 @@ const READ_ONLY_META = ['fields', 'id', 'refs', 'type'];
  */
 export function updateModel<T extends PureModel>(model: T, data: IDictionary): T {
   const modelId = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'id') || 'id';
-  const modelType = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type') || 'type';
+  const modelType =
+    storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type') || 'type';
 
   const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
   mergeMeta(model, storage.getModelMeta(model), data[META_FIELD]);
@@ -127,7 +128,7 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary): T
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
       assignModel(model, key, data[key]);
     } else if (key === META_FIELD) {
-      const metaKeys = Object.keys(data[key] || { });
+      const metaKeys = Object.keys(data[key] || {});
       metaKeys.forEach((metaKey) => {
         if (!READ_ONLY_META.includes(metaKey)) {
           setModelMetaKey(model, metaKey, data[key][metaKey]);
@@ -184,8 +185,12 @@ function assignModelRef<T extends PureModel>(model: T, key: string, value: TRefV
 }
 
 export function getMetaKeyFromRaw(data: IRawModel, key: string, model?: typeof PureModel): any {
-  if (META_FIELD in data && typeof data[META_FIELD] === 'object' && data[META_FIELD] !== undefined) {
-    return (data[META_FIELD] || { })[key];
+  if (
+    META_FIELD in data &&
+    typeof data[META_FIELD] === 'object' &&
+    data[META_FIELD] !== undefined
+  ) {
+    return (data[META_FIELD] || {})[key];
   }
   if (model) {
     const modelId = storage.getModelClassMetaKey(model, key);
@@ -206,12 +211,12 @@ export function getMetaKeyFromRaw(data: IRawModel, key: string, model?: typeof P
 export function modelToJSON(model: PureModel): IRawModel {
   const data = toJS(storage.getModelData(model));
 
-  const rawMeta = Object.assign({ }, storage.getModelMeta(model));
+  const rawMeta = Object.assign({}, storage.getModelMeta(model));
   delete rawMeta.collection;
   delete rawMeta.patch;
   const meta = toJS(rawMeta);
-  const refs = { };
-  Object.keys(meta.refs || { }).forEach((key) => {
+  const refs = {};
+  Object.keys(meta.refs || {}).forEach((key) => {
     refs[key] = { model: getModelType(meta.refs[key].model), type: meta.refs[key].type };
   });
   // console.log(meta.refs, Object.keys(meta.refs), refs)

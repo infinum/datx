@@ -261,7 +261,9 @@ describe('Model', () => {
       expect(getOriginalModel(foo2)).toBe(foo);
       expect(() => getOriginalModel(foo)).toThrowError('The given model is not a clone.');
       collection.removeOne(foo2);
-      expect(() => getOriginalModel(foo2)).toThrowError('The model needs to be in a collection to be referenceable');
+      expect(() => getOriginalModel(foo2)).toThrowError(
+        'The model needs to be in a collection to be referenceable',
+      );
     });
 
     it('should support cloning with additional fields', () => {
@@ -295,7 +297,9 @@ describe('Model', () => {
           // @ts-ignore - Failing on purpose
           @prop.toOne(undefined) public bar!: number;
         }
-      }).toThrow('The model type is a required parameter. Do you maybe have a circular dependency?');
+      }).toThrow(
+        'The model type is a required parameter. Do you maybe have a circular dependency?',
+      );
     });
   });
 
@@ -390,11 +394,13 @@ describe('Model', () => {
       const foo1 = new Foo({ foo: 2 });
       collection.add(foo1);
 
-      expect(() => collection.add({ foo: 3, parent: [foo1] }, Foo))
-        .toThrowError('The reference parent can\'t be an array of values.');
+      expect(() => collection.add({ foo: 3, parent: [foo1] }, Foo)).toThrowError(
+        "The reference parent can't be an array of values.",
+      );
 
-      expect(() => new Foo({ foo: 3, parent: [foo1] }))
-        .toThrowError('The reference parent can\'t be an array of values.');
+      expect(() => new Foo({ foo: 3, parent: [foo1] })).toThrowError(
+        "The reference parent can't be an array of values.",
+      );
     });
 
     it('should support array references', () => {
@@ -464,8 +470,9 @@ describe('Model', () => {
       const store = new TestCollection();
 
       const foo1 = store.add({ foo: 2 }, Foo);
-      expect(() => store.add({ foo: 3, parent: foo1 }, Foo))
-        .toThrowError('The reference parent must be an array of values.');
+      expect(() => store.add({ foo: 3, parent: foo1 }, Foo)).toThrowError(
+        'The reference parent must be an array of values.',
+      );
 
       const foo2 = store.add({ foo: 3, parent: null }, Foo);
       expect(isObservableArray(foo2.parent)).toBe(true);
@@ -479,7 +486,7 @@ describe('Model', () => {
     it('should support single/array references', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toOneOrMany(Foo) public parent!: Foo|Array<Foo>;
+        @prop.toOneOrMany(Foo) public parent!: Foo | Array<Foo>;
         @prop.defaultValue(1) public foo!: number;
       }
       class TestCollection extends Collection {
@@ -583,7 +590,7 @@ describe('Model', () => {
         public static type = 'bar';
       }
 
-      const bar = new Bar({ });
+      const bar = new Bar({});
 
       class Foo extends PureModel {
         public static type = 'foo';
@@ -645,24 +652,30 @@ describe('Model', () => {
       }
 
       const collection = new TestCollection();
-      collection.add({
-        bars: [{
-          foo: {
-            id: 4,
-            key: 4,
-          },
-          key: 2,
-        }, {
-          foo: {
-            bars: [{ id: 6, key: 6 }],
-            id: 5,
-            key: 5,
-          },
-          key: 3,
-        }],
-        id: 1,
-        key: 1,
-      }, Foo);
+      collection.add(
+        {
+          bars: [
+            {
+              foo: {
+                id: 4,
+                key: 4,
+              },
+              key: 2,
+            },
+            {
+              foo: {
+                bars: [{ id: 6, key: 6 }],
+                id: 5,
+                key: 5,
+              },
+              key: 3,
+            },
+          ],
+          id: 1,
+          key: 1,
+        },
+        Foo,
+      );
 
       expect(collection.length).toBe(6);
 
@@ -689,7 +702,7 @@ describe('Model', () => {
 
           @prop.toMany(Foo) public foos!: Array<Foo>;
           @prop.toMany(Foo, 'foos') public backFoos!: Array<Foo>;
-          @prop.toOneOrMany(Foo) public fooRef!: Foo|Array<Foo>;
+          @prop.toOneOrMany(Foo) public fooRef!: Foo | Array<Foo>;
           @prop.toMany(Foo, 'fooRef') public fooBackRef!: Array<Foo>;
         }
 
@@ -727,7 +740,7 @@ describe('Model', () => {
         updateModelId(foo1, '123');
         expect(modelToJSON(foo3).parent).toBe('123');
 
-        expect(() => foo4.children = [foo1]).toThrowError('Back references are read only');
+        expect(() => (foo4.children = [foo1])).toThrowError('Back references are read only');
 
         foo1.foos = [foo2, foo3];
         foo2.foos = [foo1, foo3, foo4];
@@ -798,9 +811,12 @@ describe('Model', () => {
         expect(foo.type).toBe('456');
         expect(getModelType(foo)).toBe(foo.type);
 
-        expect(() => foo.type = 'bar').toThrowError('Model type can\'t be changed after initialization.');
-        expect(() => foo.id = '789')
-          .toThrowError('Model ID can\'t be updated directly. Use the `updateModelId` helper function instead.');
+        expect(() => (foo.type = 'bar')).toThrowError(
+          "Model type can't be changed after initialization.",
+        );
+        expect(() => (foo.id = '789')).toThrowError(
+          "Model ID can't be updated directly. Use the `updateModelId` helper function instead.",
+        );
 
         const foo1 = store.add(new Foo({ id: '234' }));
         expect(store.length).toBe(1);
@@ -836,7 +852,7 @@ describe('Model', () => {
       });
 
       it('should work without decorators', () => {
-        class FooModel extends PureModel { }
+        class FooModel extends PureModel {}
         FooModel.type = 'foo';
 
         // @ts-ignore - Avoiding the TypeScript features on purpose
@@ -863,9 +879,12 @@ describe('Model', () => {
         expect(foo.type).toBe('456');
         expect(getModelType(foo)).toBe(foo.type);
 
-        expect(() => foo.type = 'bar').toThrowError('Model type can\'t be changed after initialization.');
-        expect(() => foo.id = '789')
-          .toThrowError('Model ID can\'t be updated directly. Use the `updateModelId` helper function instead.');
+        expect(() => (foo.type = 'bar')).toThrowError(
+          "Model type can't be changed after initialization.",
+        );
+        expect(() => (foo.id = '789')).toThrowError(
+          "Model ID can't be updated directly. Use the `updateModelId` helper function instead.",
+        );
 
         const foo1 = store.add(new Foo({ id: '234' }));
         expect(foo1.id).toBe('234');

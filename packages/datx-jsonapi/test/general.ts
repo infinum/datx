@@ -54,7 +54,7 @@ describe('General', () => {
         },
         id: '1',
         relationships: {
-          image: { },
+          image: {},
         },
         type: 'event',
       },
@@ -100,7 +100,7 @@ describe('General', () => {
       },
     });
 
-    const event = store.findOne(Event , '1');
+    const event = store.findOne(Event, '1');
     expect(event).not.toBeNull();
     if (event) {
       expect(event.meta.id).toBe('1');
@@ -148,27 +148,32 @@ describe('General', () => {
         id: '1',
         relationships: {
           images: {
-            data: [{
-              id: '2',
-              type: 'image',
-            }],
+            data: [
+              {
+                id: '2',
+                type: 'image',
+              },
+            ],
           },
         },
         type: 'event',
       },
-      included: [{
-        attributes: {
-          name: 'Header',
+      included: [
+        {
+          attributes: {
+            name: 'Header',
+          },
+          id: '2',
+          type: 'image',
         },
-        id: '2',
-        type: 'image',
-      }, {
-        attributes: {
-          name: 'Header',
+        {
+          attributes: {
+            name: 'Header',
+          },
+          id: '2',
+          type: 'image',
         },
-        id: '2',
-        type: 'image',
-      }],
+      ],
     });
 
     const event = store.findOne(Event, '1');
@@ -223,29 +228,33 @@ describe('General', () => {
         id: '1',
         relationships: {
           images: {
-            data: [{
-              id: '2',
-              type: 'image',
-            }],
+            data: [
+              {
+                id: '2',
+                type: 'image',
+              },
+            ],
           },
         },
         type: 'event',
       },
-      included: [{
-        attributes: {
-          name: 'Header',
-        },
-        id: '2',
-        relationships: {
-          event: {
-            data: {
-              id: '1',
-              type: 'event',
+      included: [
+        {
+          attributes: {
+            name: 'Header',
+          },
+          id: '2',
+          relationships: {
+            event: {
+              data: {
+                id: '1',
+                type: 'event',
+              },
             },
           },
+          type: 'image',
         },
-        type: 'image',
-      }],
+      ],
     });
 
     const event = store.findOne(Event, '1');
@@ -275,75 +284,79 @@ describe('General', () => {
             ],
           },
           organizers: {
-            data: [
-              { type: 'organizers', id: '1' },
-              { type: 'organizers', id: '2' },
-            ],
+            data: [{ type: 'organizers', id: '1' }, { type: 'organizers', id: '2' }],
           },
         },
         type: 'event',
-      }, included: [{
-        attributes: {
-          firstName: 'John',
-        },
-        id: '1',
-        relationships: {
-          event: {
-            data: { type: 'event', id: '1' },
+      },
+      included: [
+        {
+          attributes: {
+            firstName: 'John',
           },
-          image: {
-            data: { type: 'image', id: '2' },
+          id: '1',
+          relationships: {
+            event: {
+              data: { type: 'event', id: '1' },
+            },
+            image: {
+              data: { type: 'image', id: '2' },
+            },
           },
+          type: 'organizers',
         },
-        type: 'organizers',
-      }, {
-        attributes: {
-          firstName: 'Jane',
-        },
-        id: '2',
-        relationships: {
-          event: {
-            data: { type: 'event', id: '1' },
+        {
+          attributes: {
+            firstName: 'Jane',
           },
-          image: {
-            data: { type: 'image', id: '3' },
+          id: '2',
+          relationships: {
+            event: {
+              data: { type: 'event', id: '1' },
+            },
+            image: {
+              data: { type: 'image', id: '3' },
+            },
           },
+          type: 'organizers',
         },
-        type: 'organizers',
-      }, {
-        attributes: {
-          name: 'Sam',
-        },
-        id: '1',
-        relationships: {
-          event: {
-            data: { type: 'event', id: '1' },
+        {
+          attributes: {
+            name: 'Sam',
           },
-        },
-        type: 'image',
-      }, {
-        attributes: {
-          name: 'Organizer Sam',
-        },
-        id: '2',
-        relationships: {
-          event: {
-            data: { type: 'event', id: '1' },
+          id: '1',
+          relationships: {
+            event: {
+              data: { type: 'event', id: '1' },
+            },
           },
+          type: 'image',
         },
-        type: 'image',
-      }, {
-        attributes: {
-          name: 'Organizer Jane',
-        },
-        id: '3',
-        relationships: {
-          event: {
-            data: { type: 'event', id: '1' },
+        {
+          attributes: {
+            name: 'Organizer Sam',
           },
+          id: '2',
+          relationships: {
+            event: {
+              data: { type: 'event', id: '1' },
+            },
+          },
+          type: 'image',
         },
-        type: 'image',
-      }],
+        {
+          attributes: {
+            name: 'Organizer Jane',
+          },
+          id: '3',
+          relationships: {
+            event: {
+              data: { type: 'event', id: '1' },
+            },
+          },
+          type: 'image',
+        },
+      ],
     });
 
     const event = store.findOne(Event, '1');
@@ -359,8 +372,8 @@ describe('General', () => {
     const store = new TestStore();
     store.sync({
       data: [
-        { id: '1', type: 'event', attributes: { } },
-        { id: '2', type: 'event', attributes: { } },
+        { id: '1', type: 'event', attributes: {} },
+        { id: '2', type: 'event', attributes: {} },
       ],
     });
 
@@ -378,8 +391,8 @@ describe('General', () => {
     const store = new TestStore();
     store.sync({
       data: [
-        { id: '1', type: 'event', attributes: { } },
-        { id: '2', type: 'event', attributes: { } },
+        { id: '1', type: 'event', attributes: {} },
+        { id: '2', type: 'event', attributes: {} },
       ],
     });
 
@@ -393,39 +406,46 @@ describe('General', () => {
   it('should reset', () => {
     const store = new TestStore();
     store.sync({
-      data: [{
-        attributes: {
-          name: 'Demo',
-        },
-        id: '1',
-        relationships: {
-          images: {
-            data: [{
-              id: '2',
-              type: 'image',
-            }],
+      data: [
+        {
+          attributes: {
+            name: 'Demo',
           },
-        },
-        type: 'event',
-      }, {
-        attributes: {
-          name: 'Demo 2',
-        },
-        id: '2',
-        type: 'event',
-      }],
-      included: [{
-        attributes: {
-          name: 'Header',
-        },
-        id: '2',
-        relationships: {
-          event: {
-            data: { type: 'event', id: '1' },
+          id: '1',
+          relationships: {
+            images: {
+              data: [
+                {
+                  id: '2',
+                  type: 'image',
+                },
+              ],
+            },
           },
+          type: 'event',
         },
-        type: 'image',
-      }],
+        {
+          attributes: {
+            name: 'Demo 2',
+          },
+          id: '2',
+          type: 'event',
+        },
+      ],
+      included: [
+        {
+          attributes: {
+            name: 'Header',
+          },
+          id: '2',
+          relationships: {
+            event: {
+              data: { type: 'event', id: '1' },
+            },
+          },
+          type: 'image',
+        },
+      ],
     });
 
     const events = store.findAll(Event);
@@ -465,8 +485,9 @@ describe('General', () => {
 
     if (event) {
       expect(event.name).toBe('Demo');
-      expect(getModelRefLinks(event).images)
-        .toEqual({ self: 'https://example.com/events/1/relationships/images' });
+      expect(getModelRefLinks(event).images).toEqual({
+        self: 'https://example.com/events/1/relationships/images',
+      });
     }
   });
 
@@ -498,8 +519,9 @@ describe('General', () => {
 
     if (event) {
       expect(event.name).toBe('Demo');
-      expect(getModelRefLinks(event).images)
-        .toEqual({ self: 'https://example.com/events/1/relationships/images' });
+      expect(getModelRefLinks(event).images).toEqual({
+        self: 'https://example.com/events/1/relationships/images',
+      });
     }
   });
 
@@ -537,20 +559,23 @@ describe('General', () => {
           },
           id: '1',
           type: 'user',
-        }, {
+        },
+        {
           attributes: {
             filename: 'foo.jpg',
           },
           id: '1',
           type: 'photo',
-        }, {
+        },
+        {
           attributes: {
             filename: 'bar.png',
             selected: true,
           },
           id: '2',
           type: 'photo',
-        }, {
+        },
+        {
           attributes: {
             filename: 'baz.png',
             selected: false,

@@ -17,10 +17,7 @@ export {
   saveRelationship,
 } from './helpers/model';
 
-export {
-  clearAllCache,
-  clearCacheByType,
-} from './cache';
+export { clearAllCache, clearCacheByType } from './cache';
 
 export { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
 export { IJsonapiCollection } from './interfaces/IJsonapiCollection';

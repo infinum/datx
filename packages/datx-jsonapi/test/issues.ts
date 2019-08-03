@@ -44,7 +44,7 @@ describe('Issues', () => {
       class EventRecord extends jsonapi(Model) {
         public static type = 'event';
         @prop.toOneOrMany(ImageRecord)
-        public image!: ImageRecord|Array<ImageRecord>;
+        public image!: ImageRecord | Array<ImageRecord>;
       }
 
       class ApiStore extends jsonapi(Collection) {
@@ -106,7 +106,7 @@ describe('Issues', () => {
       class EventRecord extends jsonapi(Model) {
         public static type = 'event';
         @prop.toOneOrMany(ImageRecord)
-        public image!: ImageRecord|Array<ImageRecord>;
+        public image!: ImageRecord | Array<ImageRecord>;
       }
 
       class ApiStore extends jsonapi(Collection) {
@@ -207,7 +207,7 @@ describe('Issues', () => {
       url: 'line_items',
     });
 
-    const lineItem1 = new LineItem({ }, store);
+    const lineItem1 = new LineItem({}, store);
     await lineItem1.save();
 
     mockApi({
@@ -216,7 +216,7 @@ describe('Issues', () => {
       url: 'line_items',
     });
 
-    const lineItem2 = new LineItem({ }, store);
+    const lineItem2 = new LineItem({}, store);
     await lineItem2.save();
   });
 });

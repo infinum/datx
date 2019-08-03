@@ -50,7 +50,7 @@ describe('Collection', () => {
     expect(foo2.meta.original).toBe(foo);
 
     // @ts-ignore - TS won't allow this mistake
-    expect(() => foo2.meta.type = 'bar').toThrowError();
+    expect(() => (foo2.meta.type = 'bar')).toThrowError();
 
     expect(foo2.propertyIsEnumerable('meta')).toBe(false);
   });
@@ -62,7 +62,7 @@ describe('Collection', () => {
 
   it('should fail for other classes', () => {
     // tslint:disable-next-line:no-unnecessary-class
-    class A { }
+    class A {}
 
     // @ts-ignore - TS won't allow this mistake
     expect(() => withMeta(A)).toThrowError('This mixin can only decorate models');

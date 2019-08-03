@@ -12,13 +12,16 @@
     },
     "relationships": {
       "images": {
-        "data": [{
-          "type": "image",
-          "id": "1"
-        }, {
-          "type": "image",
-          "id": "2"
-        }],
+        "data": [
+          {
+            "type": "image",
+            "id": "1"
+          },
+          {
+            "type": "image",
+            "id": "2"
+          }
+        ],
         "links": {
           "self": "https://example.com/images/1"
         },

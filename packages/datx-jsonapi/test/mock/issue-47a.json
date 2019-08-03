@@ -18,11 +18,13 @@
       }
     }
   },
-  "included": [{
-    "id": "1",
-    "type": "image",
-    "attributes": {
-      "url": "https://example.com/1.jpg"
+  "included": [
+    {
+      "id": "1",
+      "type": "image",
+      "attributes": {
+        "url": "https://example.com/1.jpg"
+      }
     }
-  }]
+  ]
 }

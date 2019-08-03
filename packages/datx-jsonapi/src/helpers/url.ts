@@ -13,7 +13,7 @@ import { getValue } from './utils';
 
 export function prepareQuery(
   type: IType,
-  id?: number|string,
+  id?: number | string,
   data?: IRequest,
   options?: IRequestOptions,
   collection?: PureCollection,
@@ -23,14 +23,15 @@ export function prepareQuery(
   data?: object;
   headers: IHeaders;
 } {
-  let queryModel: typeof PureModel | IJsonapiModel | undefined = model && model.constructor as typeof PureModel;
+  let queryModel: typeof PureModel | IJsonapiModel | undefined =
+    model && (model.constructor as typeof PureModel);
   if (!queryModel && collection) {
     const staticCollection = collection.constructor as typeof PureCollection;
     queryModel = staticCollection.types.filter((item) => item.type === type)[0];
   }
 
   const path: string = queryModel
-    ? (getValue<string>(queryModel['endpoint']) || queryModel['baseUrl'] || getModelType(queryModel))
+    ? getValue<string>(queryModel['endpoint']) || queryModel['baseUrl'] || getModelType(queryModel)
     : type;
 
   const url: string = id ? `${path}/${id}` : `${path}`;
@@ -39,13 +40,14 @@ export function prepareQuery(
 }
 
 export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
-  const headers: IDictionary<string> = (options && options.networkConfig && options.networkConfig.headers) || { };
+  const headers: IDictionary<string> =
+    (options && options.networkConfig && options.networkConfig.headers) || {};
 
   const params: Array<string> = [
-    ...prepareFilters((options && options.queryParams && options.queryParams.filter) || { }),
+    ...prepareFilters((options && options.queryParams && options.queryParams.filter) || {}),
     ...prepareSort(options && options.queryParams && options.queryParams.sort),
     ...prepareIncludes(options && options.queryParams && options.queryParams.include),
-    ...prepareFields((options && options.queryParams && options.queryParams.fields) || { }),
+    ...prepareFields((options && options.queryParams && options.queryParams.fields) || {}),
     ...prepareRawParams((options && options.queryParams && options.queryParams.custom) || []),
   ];
 
@@ -58,15 +60,15 @@ function prepareFilters(filters: IFilters): Array<string> {
   return parametrize(filters).map((item) => `filter[${item.key}]=${item.value}`);
 }
 
-function prepareSort(sort?: string|Array<string>): Array<string> {
+function prepareSort(sort?: string | Array<string>): Array<string> {
   return sort ? [`sort=${sort}`] : [];
 }
 
-function prepareIncludes(include?: string|Array<string>): Array<string> {
+function prepareIncludes(include?: string | Array<string>): Array<string> {
   return include ? [`include=${include}`] : [];
 }
 
-function prepareFields(fields: IDictionary<string|Array<string>>): Array<string> {
+function prepareFields(fields: IDictionary<string | Array<string>>): Array<string> {
   const list: Array<string> = [];
 
   Object.keys(fields).forEach((key) => {
@@ -76,7 +78,7 @@ function prepareFields(fields: IDictionary<string|Array<string>>): Array<string>
   return list;
 }
 
-function prepareRawParams(params: Array<{ key: string; value: string }|string>): Array<string> {
+function prepareRawParams(params: Array<{ key: string; value: string } | string>): Array<string> {
   return params.map((param) => {
     if (typeof param === 'string') {
       return param;

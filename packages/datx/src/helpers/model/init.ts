@@ -40,7 +40,9 @@ export function initModelField<T extends PureModel>(
     fields.push(key);
   }
 
-  assignComputed(obj, key,
+  assignComputed(
+    obj,
+    key,
     () => getField(obj, key),
     (value) => {
       updateField(obj, key, value, type);
@@ -57,7 +59,12 @@ export function initModelField<T extends PureModel>(
  * @param {IReferenceOptions} options Reference options
  * @param {TRefValue} initialVal Initial reference value
  */
-export function initModelRef(obj: PureModel, key: string, options: IReferenceOptions, initialVal: TRefValue) {
+export function initModelRef(
+  obj: PureModel,
+  key: string,
+  options: IReferenceOptions,
+  initialVal: TRefValue,
+) {
   const refs = getModelMetaKey(obj, 'refs');
 
   // Initialize the observable field to the given value
@@ -67,7 +74,9 @@ export function initModelRef(obj: PureModel, key: string, options: IReferenceOpt
   storage.setModelDataKey(obj, key, isArray ? [] : undefined);
   updateAction(obj, key, isArray ? [] : undefined);
 
-  assignComputed(obj, key,
+  assignComputed(
+    obj,
+    key,
     () => getRef(obj, key),
     (value) => {
       updateRef(obj, key, value);
@@ -83,11 +92,12 @@ function prepareFields(data: IRawModel, meta: IMetaToInit, model: PureModel) {
   const staticModel = model.constructor as typeof PureModel;
   const fields = meta.fields ? meta.fields.slice() : [];
   const classRefs = storage.getModelClassReferences(staticModel);
-  const refs = Object.assign({ }, classRefs, meta.refs);
+  const refs = Object.assign({}, classRefs, meta.refs);
 
   const defaults = storage.getModelDefaults(staticModel);
 
-  Object.keys(data).concat(Object.keys(defaults))
+  Object.keys(data)
+    .concat(Object.keys(defaults))
     .forEach((key) => {
       if (!(key in refs) && fields.indexOf(key) === -1) {
         fields.push(key);
@@ -97,7 +107,12 @@ function prepareFields(data: IRawModel, meta: IMetaToInit, model: PureModel) {
   return { defaults, fields, refs };
 }
 
-function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, collection?: PureCollection) {
+function initModelData(
+  model: PureModel,
+  data: IRawModel,
+  meta: IMetaToInit,
+  collection?: PureCollection,
+) {
   const { defaults, fields, refs } = prepareFields(data, meta, model);
 
   const staticModel = model.constructor as typeof PureModel;
@@ -141,8 +156,11 @@ export function initModelMeta(
   const modelId = storage.getModelClassMetaKey(staticModel, 'id') || 'id';
   const modelType = storage.getModelClassMetaKey(staticModel, 'type');
 
-  const dataMeta = META_FIELD in data && data[META_FIELD] || { };
-  const type = (modelType && data[modelType]) || (dataMeta !== undefined && dataMeta.type) || getModelType(model);
+  const dataMeta = (META_FIELD in data && data[META_FIELD]) || {};
+  const type =
+    (modelType && data[modelType]) ||
+    (dataMeta !== undefined && dataMeta.type) ||
+    getModelType(model);
   let id = (modelId && data[modelId]) || (dataMeta !== undefined && dataMeta.id);
 
   if (!id) {
@@ -158,26 +176,31 @@ export function initModelMeta(
   const meta = {
     fields: [],
     id,
-    refs: { },
+    refs: {},
     type,
   };
 
-  const newMeta = META_FIELD in data && data[META_FIELD]
-    ? mergeMeta(model, meta, data[META_FIELD])
-    : storage.setModelMeta(model, meta) as IMetaToInit;
+  const newMeta =
+    META_FIELD in data && data[META_FIELD]
+      ? mergeMeta(model, meta, data[META_FIELD])
+      : (storage.setModelMeta(model, meta) as IMetaToInit);
 
   // tslint:disable-next-line:no-dynamic-delete
   delete data[META_FIELD];
 
-  return Object.assign({ }, newMeta);
+  return Object.assign({}, newMeta);
 }
 
-export function mergeMeta(model: PureModel, meta: IDictionary, metaField: IDictionary = { }): IMetaToInit {
-  const toInit: IMetaToInit = { fields: [], refs: { } };
+export function mergeMeta(
+  model: PureModel,
+  meta: IDictionary,
+  metaField: IDictionary = {},
+): IMetaToInit {
+  const toInit: IMetaToInit = { fields: [], refs: {} };
   toInit.fields = metaField.fields;
   meta.fields.push(...(metaField.fields || []));
   toInit.refs = metaField.refs;
-  Object.assign(meta.refs, metaField.refs || { });
+  Object.assign(meta.refs, metaField.refs || {});
 
   const exceptions = ['fields', 'refs', 'type', 'id'];
 
@@ -189,12 +212,12 @@ export function mergeMeta(model: PureModel, meta: IDictionary, metaField: IDicti
 
   const newMeta = storage.setModelMeta(model, meta);
 
-  return Object.assign({ }, newMeta, toInit);
+  return Object.assign({}, newMeta, toInit);
 }
 
 export function initModel(model: PureModel, rawData: IRawModel, collection?: PureCollection) {
   const staticModel = model.constructor as typeof PureModel;
-  const data = Object.assign({ }, staticModel.preprocess(rawData, collection));
+  const data = Object.assign({}, staticModel.preprocess(rawData, collection));
   setModelMetaKey(model, 'collection', collection);
   const meta = initModelMeta(model, data, collection);
   initModelData(model, data, meta, collection);

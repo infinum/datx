@@ -11,13 +11,6 @@
     "prefer-object-spread": false,
     "promise-function-async": false,
     "strict-boolean-expressions": false,
-    "whitespace": [
-      true,
-      "check-branch",
-      "check-operator",
-      "check-typecast",
-      "check-postbrace",
-      "check-module"
-    ]
+    "object-literal-key-quotes": false
   }
 }

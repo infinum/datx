@@ -31,21 +31,25 @@ import { Response } from './Response';
 
 export function decorateCollection(BaseClass: typeof PureCollection) {
   class JsonapiCollection extends BaseClass {
-    public static types = (BaseClass.types && BaseClass.types.length)
-      ? BaseClass.types.concat(GenericModel)
-      : [GenericModel];
+    public static types =
+      BaseClass.types && BaseClass.types.length
+        ? BaseClass.types.concat(GenericModel)
+        : [GenericModel];
 
-    public static cache: boolean = BaseClass['cache'] === undefined
-      ? isBrowser
-      : BaseClass['cache'];
+    public static cache: boolean =
+      BaseClass['cache'] === undefined ? isBrowser : BaseClass['cache'];
 
     public static defaultModel = BaseClass['defaultModel'] || GenericModel;
 
-    @action public sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T|Array<T>|null {
+    @action public sync<T extends IJsonapiModel = IJsonapiModel>(
+      body?: IResponse,
+    ): T | Array<T> | null {
       if (!body) {
         return null;
       }
-      const data: T|Array<T>|null = this.__iterateEntries(body, (obj: IRecord) => this.__addRecord<T>(obj));
+      const data: T | Array<T> | null = this.__iterateEntries(body, (obj: IRecord) =>
+        this.__addRecord<T>(obj),
+      );
       this.__iterateEntries(body, this.__updateRelationships.bind(this));
 
       return data;
@@ -60,18 +64,17 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
     public fetch<T extends IJsonapiModel = IJsonapiModel>(
-      type: IType|IModelConstructor<T>,
+      type: IType | IModelConstructor<T>,
       id: string,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, id, undefined, options);
-      const reqOptions = options || { };
-      reqOptions.networkConfig = reqOptions.networkConfig || { };
+      const reqOptions = options || {};
+      reqOptions.networkConfig = reqOptions.networkConfig || {};
       reqOptions.networkConfig.headers = query.headers;
 
-      return read<T>(query.url, this, reqOptions)
-        .then((res) => this.__handleErrors<T>(res));
+      return read<T>(query.url, this, reqOptions).then((res) => this.__handleErrors<T>(res));
     }
 
     /**
@@ -82,17 +85,16 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
     public fetchAll<T extends IJsonapiModel = IJsonapiModel>(
-      type: IType|IModelConstructor<T>,
+      type: IType | IModelConstructor<T>,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, undefined, undefined, options);
-      const reqOptions = options || { };
-      reqOptions.networkConfig = reqOptions.networkConfig || { };
+      const reqOptions = options || {};
+      reqOptions.networkConfig = reqOptions.networkConfig || {};
       reqOptions.networkConfig.headers = query.headers;
 
-      return read<T>(query.url, this, reqOptions)
-        .then((res) => this.__handleErrors<T>(res));
+      return read<T>(query.url, this, reqOptions).then((res) => this.__handleErrors<T>(res));
     }
 
     public request<T extends IJsonapiModel = IJsonapiModel>(
@@ -106,12 +108,16 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return libFetch<T>({ url: query.url, options, data, method, collection: this });
     }
 
-    public removeOne(type: IType|typeof PureModel, id: string, remote?: boolean|IRequestOptions);
-    public removeOne(model: PureModel, remote?: boolean|IRequestOptions);
+    public removeOne(
+      type: IType | typeof PureModel,
+      id: string,
+      remote?: boolean | IRequestOptions,
+    );
+    public removeOne(model: PureModel, remote?: boolean | IRequestOptions);
     @action public removeOne(
-      obj: IType|typeof PureModel|PureModel,
-      id?: string|boolean|IRequestOptions,
-      remote?: boolean|IRequestOptions,
+      obj: IType | typeof PureModel | PureModel,
+      id?: string | boolean | IRequestOptions,
+      remote?: boolean | IRequestOptions,
     ) {
       let remoteOp: boolean | IRequestOptions | undefined;
       let modelId: string;
@@ -167,8 +173,9 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     private __addRecord<T extends IJsonapiModel = IJsonapiModel>(obj: IRecord): T {
       const staticCollection = this.constructor as typeof PureCollection;
       const { type, id } = obj;
-      let record: T|null = id === undefined ? null : this.findOne(type, id) as T|null;
-      const Type = staticCollection.types.find((item) => getModelType(item) === type) || GenericModel;
+      let record: T | null = id === undefined ? null : (this.findOne(type, id) as T | null);
+      const Type =
+        staticCollection.types.find((item) => getModelType(item) === type) || GenericModel;
       const classRefs = getModelClassRefs(Type);
       const flattened: IRawModel = flattenModel(classRefs, obj);
 
@@ -184,7 +191,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     }
 
     private __updateRelationships(obj: IRecord): void {
-      const record: PureModel|null = obj.id === undefined ? null : this.findOne(obj.type, obj.id);
+      const record: PureModel | null = obj.id === undefined ? null : this.findOne(obj.type, obj.id);
       const refs: Array<string> = obj.relationships ? Object.keys(obj.relationships) : [];
       refs.forEach((ref: string) => {
         const refData = (obj.relationships as IDictionary<IRelationship>)[ref];
@@ -197,16 +204,23 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
           return;
         } else if (record) {
           if (items) {
-            const models: PureModel|Array<PureModel>|string|null = mapItems(
-              items,
-              (def: IDefinition) => (def.id === undefined ? null : this.findOne(def.type, def.id)) || def.id,
-            ) || null;
+            const models: PureModel | Array<PureModel> | string | null =
+              mapItems(
+                items,
+                (def: IDefinition) =>
+                  (def.id === undefined ? null : this.findOne(def.type, def.id)) || def.id,
+              ) || null;
 
             const itemType: string = items instanceof Array ? items[0].type : items.type;
             if (ref in record) {
               record[ref] = models;
             } else {
-              initModelRef(record, ref, { model: itemType, type: ReferenceType.TO_ONE_OR_MANY }, models);
+              initModelRef(
+                record,
+                ref,
+                { model: itemType, type: ReferenceType.TO_ONE_OR_MANY },
+                models,
+              );
             }
           } else {
             const refsDef = getModelMetaKey(record, 'refs') as IDictionary<IReferenceOptions>;
@@ -218,8 +232,14 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       });
     }
 
-    private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T): T | Array<T>;
-    private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => void): void;
+    private __iterateEntries<T extends IJsonapiModel>(
+      body: IResponse,
+      fn: (item: IRecord) => T,
+    ): T | Array<T>;
+    private __iterateEntries<T extends IJsonapiModel>(
+      body: IResponse,
+      fn: (item: IRecord) => void,
+    ): void;
     private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T) {
       mapItems((body && body.included) || [], fn);
 
@@ -228,7 +248,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
     private __prepareQuery(
       type: IType,
-      id?: number|string,
+      id?: number | string,
       data?: IRequest,
       options?: IRequestOptions,
     ): {

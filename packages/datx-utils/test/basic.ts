@@ -35,7 +35,7 @@ describe('datx-utils', () => {
     });
 
     it('should work for truthy arrays', () => {
-      expect(isFalsyArray([1, 2, 3, { }, [], '123'])).toBe(false);
+      expect(isFalsyArray([1, 2, 3, {}, [], '123'])).toBe(false);
     });
 
     it('should work for mixed arrays', () => {
@@ -45,8 +45,8 @@ describe('datx-utils', () => {
 
   describe('assignComputed', () => {
     it('should set a computed prop', () => {
-      const obj1 = observable({ });
-      const obj2 = observable.object({ });
+      const obj1 = observable({});
+      const obj2 = observable.object({});
 
       const data = observable({
         data: 1,
@@ -57,12 +57,17 @@ describe('datx-utils', () => {
 
       assignComputed(obj2, 'foo', () => 2);
       // tslint:disable-next-line:no-empty
-      assignComputed(obj1, 'bar', () => obj2, () => { });
+      assignComputed(obj1, 'bar', () => obj2, () => {});
       // tslint:disable-next-line:no-empty
-      assignComputed(obj2, 'bar', () => obj1, () => { });
-      assignComputed(obj1, 'baz', () => data.data, (a) => {
-        data.data = a;
-      });
+      assignComputed(obj2, 'bar', () => obj1, () => {});
+      assignComputed(
+        obj1,
+        'baz',
+        () => data.data,
+        (a) => {
+          data.data = a;
+        },
+      );
 
       // @ts-ignore
       expect(obj1.foo).toBe(1);
@@ -100,14 +105,9 @@ describe('datx-utils', () => {
 
               return this.data;
             },
-            (val) => this.data = val,
+            (val) => (this.data = val),
           );
-          assignComputed(
-            this,
-            'bar',
-            () => -this.foo,
-            (val) => this.foo = -val,
-          );
+          assignComputed(this, 'bar', () => -this.foo, (val) => (this.foo = -val));
         }
       }
       const data = new Data();
@@ -136,7 +136,7 @@ describe('datx-utils', () => {
     });
 
     it('should handle computed reassignment', () => {
-      const obj = observable({ });
+      const obj = observable({});
       assignComputed(obj, 'foo', () => 1);
       assignComputed(obj, 'foo', () => 2);
 

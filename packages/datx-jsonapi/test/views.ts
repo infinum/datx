@@ -1,11 +1,7 @@
 import { View } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
-import {
-  config,
-  IJsonapiView,
-  jsonapi,
-} from '../src';
+import { config, IJsonapiView, jsonapi } from '../src';
 import { clearAllCache } from '../src/cache';
 import mockApi from './utils/api';
 import { Event, TestStore } from './utils/setup';

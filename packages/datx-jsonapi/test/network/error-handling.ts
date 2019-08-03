@@ -111,7 +111,7 @@ describe('error handling', () => {
       url: 'event/1',
     });
 
-    const event = response.data && response.data[0] as Event;
+    const event = response.data && (response.data[0] as Event);
 
     expect(event).toBeInstanceOf(Event);
     if (event) {

@@ -15,5 +15,5 @@ export interface ICollectionConstructor<T = PureCollection> {
     mixins?: Array<(view: any) => any>;
   }>;
 
-  new(data?: Array<IRawModel> | IRawCollection): T;
+  new (data?: Array<IRawModel> | IRawCollection): T;
 }

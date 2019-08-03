@@ -10,7 +10,11 @@
  * @returns {T} Collected data
  */
 // tslint:disable-next-line:export-name
-export function reducePrototypeChain<T, U>(obj: U, reduceFn: (state: T, item: U) => T, initialValue: T): T {
+export function reducePrototypeChain<T, U>(
+  obj: U,
+  reduceFn: (state: T, item: U) => T,
+  initialValue: T,
+): T {
   let value = initialValue;
   let model = obj;
   while (model) {
