@@ -1,7 +1,7 @@
+export { ToMany, ToOne, ToOneOrMany } from './buckets';
 export { Collection } from './Collection';
 export { Model } from './Model';
 export { View } from './View';
-export { Bucket } from './Bucket';
 export { PureCollection } from './PureCollection';
 export { PureModel } from './PureModel';
 
@@ -16,6 +16,7 @@ export {
   getModelCollection,
   getModelId,
   getModelMetaKey,
+  getModelRef,
   getModelType,
   getOriginalModel,
   modelToJSON,

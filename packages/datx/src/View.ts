@@ -1,10 +1,10 @@
 import { IDictionary, IRawModel, mapItems } from 'datx-utils';
 import { action, computed, intercept, observable } from 'mobx';
 
-import { Bucket } from './Bucket';
+import { ToMany } from './buckets/ToMany';
 import { SORTED_NO_WRITE, UNIQUE_MODEL } from './errors';
 import { error } from './helpers/format';
-import { getModelId, getModelType } from './helpers/model/utils';
+import { getModelId, getModelType, isReference } from './helpers/model/utils';
 import { IIdentifier } from './interfaces/IIdentifier';
 import { IModelConstructor } from './interfaces/IModelConstructor';
 import { IModelRef } from './interfaces/IModelRef';
@@ -14,7 +14,7 @@ import { TChange } from './interfaces/TChange';
 import { PureCollection } from './PureCollection';
 import { PureModel } from './PureModel';
 
-export class View<T extends PureModel = PureModel> extends Bucket<T> {
+export class View<T extends PureModel = PureModel> extends ToMany<T> {
   public readonly modelType: IType;
   @observable public sortMethod?: string | ((item: T) => any);
 
@@ -40,7 +40,7 @@ export class View<T extends PureModel = PureModel> extends Bucket<T> {
   }
 
   @computed public get list(): Array<T> {
-    const list: Array<T> = super.__getList();
+    const list: Array<T> = super.__getList().slice();
 
     if (this.sortMethod) {
       const sortFn =
@@ -177,7 +177,7 @@ export class View<T extends PureModel = PureModel> extends Bucket<T> {
     return target.findIndex((item) => {
       if (item instanceof PureModel && model instanceof PureModel) {
         return item === model;
-      } else if (this.__isReference(item) && !(model instanceof PureModel)) {
+      } else if (isReference(item) && !(model instanceof PureModel)) {
         return (item as IModelRef).id === model.id && (item as IModelRef).type === model.type;
       }
 

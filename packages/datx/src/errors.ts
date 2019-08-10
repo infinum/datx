@@ -21,6 +21,7 @@ export const MODEL_REQUIRED =
 export const SORTED_NO_WRITE = "New models can't be added directly to a sorted view list";
 export const UNIQUE_MODEL = 'The models in this view need to be unique';
 export const VIEW_NAME_TAKEN = 'The name is already taken';
+export const READ_ONLY = 'This is a read-only bucket';
 
 export const DECORATE_MODEL = 'This mixin can only decorate models';
 export const DECORATE_COLLECTION = 'This mixin can only decorate collections';

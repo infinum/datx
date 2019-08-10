@@ -3,6 +3,7 @@ import { toJS } from 'mobx';
 
 import { NO_REFS, NOT_A_CLONE, REF_NEEDS_COLLECTION } from '../../errors';
 import { IIdentifier } from '../../interfaces/IIdentifier';
+import { IModelRef } from '../../interfaces/IModelRef';
 import { IReferenceOptions } from '../../interfaces/IReferenceOptions';
 import { IType } from '../../interfaces/IType';
 import { TRefValue } from '../../interfaces/TRefValue';
@@ -44,6 +45,21 @@ export function getModelId(model: PureModel | IIdentifier): IIdentifier {
   }
 
   return model;
+}
+
+export function getModelRef(model: PureModel | IModelRef): IModelRef {
+  if (model instanceof PureModel) {
+    return {
+      id: getModelId(model),
+      type: getModelType(model),
+    };
+  }
+
+  return model;
+}
+
+export function isReference(model: PureModel | IModelRef): boolean {
+  return !(model instanceof PureModel);
 }
 
 /**
