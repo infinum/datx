@@ -40,6 +40,7 @@ export interface IConfigType {
   defaultFetchOptions: IDictionary;
   fetchReference?: typeof fetch;
   paramArrayType: ParamArrayType;
+  encodeQueryString?: boolean;
   onError(IResponseObject): IResponseObject;
   transformRequest(options: ICollectionFetchOpts): ICollectionFetchOpts;
   transformResponse(response: IRawResponse): IRawResponse;
@@ -58,6 +59,8 @@ export const config: IConfigType = {
       'content-type': 'application/vnd.api+json',
     },
   },
+
+  encodeQueryString: false,
 
   // Reference of the fetch method that should be used
   fetchReference: isBrowser && 'fetch' in window && typeof window.fetch === 'function' && window.fetch.bind(window)
