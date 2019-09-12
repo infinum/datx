@@ -252,4 +252,35 @@ describe('params', () => {
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
   });
+
+  describe('query string encoding', () => {
+    afterEach(() => {
+      config.encodeQueryString = false;
+    });
+
+    it("shouldn't encode params by default", async () => {
+      mockApi({
+        name: 'events-1',
+        query: false,
+        url: 'event?filter[name]=ć',
+      });
+
+      const store = new TestStore();
+      await store.request('event', 'GET', undefined, { filter: { name: 'ć' } });
+    });
+
+    it('should encode params when enabled', async () => {
+      config.encodeQueryString = true;
+
+      mockApi({
+        name: 'events-1',
+        query: false,
+        url: 'event?filter%5Bname%5D=%C4%87%3D',
+      });
+
+      const store = new TestStore();
+      await store.request('event', 'GET', undefined, { filter: { name: 'ć=' } });
+    });
+
+  });
 });
