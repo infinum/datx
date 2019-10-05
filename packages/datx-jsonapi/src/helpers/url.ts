@@ -42,7 +42,7 @@ export function prepareQuery(
 export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
   const headers: IDictionary<string> =
     (options && options.networkConfig && options.networkConfig.headers) || {};
-  const params: Array<string> = [
+  let params: Array<string> = [
     ...prepareFilters((options && options.queryParams && options.queryParams.filter) || {}),
     ...prepareSort(options && options.queryParams && options.queryParams.sort),
     ...prepareIncludes(options && options.queryParams && options.queryParams.include),

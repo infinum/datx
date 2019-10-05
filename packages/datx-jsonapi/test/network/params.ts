@@ -288,7 +288,7 @@ describe('params', () => {
       });
 
       const store = new TestStore();
-      await store.request('event', 'GET', undefined, { filter: { name: 'ć' } });
+      await store.request('event', 'GET', undefined, { queryParams: { filter: { name: 'ć' } } });
     });
 
     it('should encode params when enabled', async () => {
@@ -301,8 +301,7 @@ describe('params', () => {
       });
 
       const store = new TestStore();
-      await store.request('event', 'GET', undefined, { filter: { name: 'ć=' } });
+      await store.request('event', 'GET', undefined, { queryParams: { filter: { name: 'ć=' } } });
     });
-
   });
 });
