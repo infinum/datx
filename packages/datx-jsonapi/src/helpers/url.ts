@@ -42,7 +42,6 @@ export function prepareQuery(
 export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
   const headers: IDictionary<string> =
     (options && options.networkConfig && options.networkConfig.headers) || {};
-
   const params: Array<string> = [
     ...prepareFilters((options && options.queryParams && options.queryParams.filter) || {}),
     ...prepareSort(options && options.queryParams && options.queryParams.sort),
@@ -50,6 +49,10 @@ export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions
     ...prepareFields((options && options.queryParams && options.queryParams.fields) || {}),
     ...prepareRawParams((options && options.queryParams && options.queryParams.custom) || []),
   ];
+
+  if (config.encodeQueryString) {
+    params = params.map(encodeParam);
+  }
 
   const baseUrl: string = appendParams(prefixUrl(url), params);
 
@@ -128,4 +131,9 @@ function parametrize(params: object, scope: string = '') {
   });
 
   return list;
+}
+
+function encodeParam(param: string) {
+  // Manually decode field-value separator (=)
+  return encodeURIComponent(param).replace('%3D', '=');
 }
