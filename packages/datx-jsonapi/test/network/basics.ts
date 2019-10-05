@@ -43,7 +43,10 @@ describe('Network basics', () => {
       const event = events.data[0];
       expect(event['title']).toBe('Test 1');
       expect(getModelMeta(event).createdAt).toBe('2017-03-19T16:00:00.000Z');
-      expect(event.meta.refs.images).toContain('1');
+      expect(event.meta.refs.images).toBeInstanceOf(Array);
+      if (event.meta.refs.images instanceof Array) {
+        expect(event.meta.refs.images.map((image) => image.id)).toContain('1');
+      }
       expect(event.meta.refs.images).toHaveLength(1);
       expect(getModelRefMeta(event).images.foo).toBe('bar');
 

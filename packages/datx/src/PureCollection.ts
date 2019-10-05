@@ -20,6 +20,7 @@ import {
   getModelId,
   getModelMetaKey,
   getModelType,
+  isModelReference,
   modelToJSON,
   setModelMetaKey,
   updateModel,
@@ -28,6 +29,7 @@ import {
 import { triggerAction } from './helpers/patch';
 import { IIdentifier } from './interfaces/IIdentifier';
 import { IModelConstructor } from './interfaces/IModelConstructor';
+import { IModelRef } from './interfaces/IModelRef';
 import { IRawCollection } from './interfaces/IRawCollection';
 import { IRawView } from './interfaces/IRawView';
 import { IType } from './interfaces/IType';
@@ -163,10 +165,15 @@ export class PureCollection {
     type: IType | T | IModelConstructor<T>,
     id: IIdentifier | PureModel,
   ): T | null;
+  public findOne<T extends PureModel>(ref: IModelRef): T | null;
 
-  public findOne(model: IType | typeof PureModel, id: IIdentifier | PureModel) {
+  public findOne(model: IType | typeof PureModel | IModelRef, id?: IIdentifier | PureModel) {
     if (id instanceof PureModel) {
       return id;
+    } else if (isModelReference(model)) {
+      return this.__findOneByType((model as IModelRef).type, (model as IModelRef).id);
+    } else if (!id) {
+      throw new Error('The identifier is missing');
     }
 
     return this.__findOneByType(model as typeof PureModel, id);
@@ -239,12 +246,15 @@ export class PureCollection {
   /**
    * Remove the given model from the collection
    *
-   * @param {PureModel} model Model to be removed from the collection
+   * @param {PureModel|IModelRef} model Model to be removed from the collection
    * @memberof Collection
    */
-  public removeOne(model: PureModel): void;
+  public removeOne(model: PureModel | IModelRef): void;
 
-  @action public removeOne(obj: IType | typeof PureModel | PureModel, id?: IIdentifier) {
+  @action public removeOne(
+    obj: IType | typeof PureModel | PureModel | IModelRef,
+    id?: IIdentifier,
+  ) {
     let model: PureModel | null = null;
     if (typeof obj === 'object') {
       model = obj;
@@ -393,10 +403,10 @@ export class PureCollection {
     model?: IType | IModelConstructor<T>,
   ): T;
   private __addSingle(
-    data: PureModel | IDictionary | IIdentifier,
+    data: PureModel | IDictionary | IIdentifier | IModelRef,
     model?: IType | IModelConstructor,
   ) {
-    if (!data || typeof data === 'number' || typeof data === 'string') {
+    if (!data || typeof data === 'number' || typeof data === 'string' || isModelReference(data)) {
       return data;
     }
 
@@ -499,16 +509,17 @@ export class PureCollection {
         if (refType === modelType) {
           const refIds = getRefId(item, key);
           if (refIds instanceof Array) {
-            if (refIds.includes(modelId)) {
+            if (refIds.map((ref) => ref.id).includes(modelId)) {
               setRefId(
                 item,
                 key,
                 refIds
-                  .filter((itemId) => itemId !== modelId)
-                  .map((itemId) => ({ id: itemId, type: refType })),
+                  .filter((refItem: IModelRef | null) => refItem)
+                  .filter((refItem: IModelRef) => refItem.id !== modelId)
+                  .map((refItem: IModelRef) => ({ id: refItem.id, type: refItem.type || refType })),
               );
             }
-          } else if (refIds === modelId) {
+          } else if (!refIds || refIds.id === modelId) {
             setRefId(item, key, undefined);
           }
         }
@@ -520,6 +531,9 @@ export class PureCollection {
 
   private __findOneByType(model: IType | typeof PureModel | PureModel, id: IIdentifier) {
     const type = getModelType(model);
+    if (!type) {
+      return null;
+    }
     const stringType = type.toString();
 
     if (!(type in this.__dataMap)) {

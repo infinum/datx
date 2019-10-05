@@ -102,13 +102,24 @@ describe('updates', () => {
       });
       store.add(foo);
       const bar = store.add<Bar>({ foo }, Bar);
-      const baz = store.add({ }, 'baz');
+      const baz = store.add({}, 'baz');
       expect(bar.foo).toBe(foo);
-      expect(getRefId(bar, 'foo')).toBe(foo.meta.id);
+      const barRef = getRefId(bar, 'foo');
+      if (barRef && 'id' in barRef) {
+        expect(barRef.id).toBe(foo.meta.id);
+      } else {
+        expect(true).toBe(false);
+      }
 
       initModelRef(baz, 'foo', { model: Foo, type: ReferenceType.TO_ONE }, foo);
       expect(baz['foo']).toBe(foo);
-      expect(getRefId(baz, 'foo')).toBe(foo.meta.id);
+
+      const bazRef = getRefId(baz, 'foo');
+      if (bazRef && 'id' in bazRef) {
+        expect(bazRef.id).toBe(foo.meta.id);
+      } else {
+        expect(true).toBe(false);
+      }
 
       mockApi({
         data: JSON.stringify({
@@ -131,11 +142,21 @@ describe('updates', () => {
       expect(updated).toBe(foo);
       expect(foo.meta.id).toBe('12345');
 
-      expect(getRefId(bar, 'foo')).toBe(foo.meta.id);
+      const barRef2 = getRefId(bar, 'foo');
+      if (barRef2 && 'id' in barRef2) {
+        expect(barRef2.id).toBe(foo.meta.id);
+      } else {
+        expect(true).toBe(false);
+      }
       expect(bar.foo).toBe(foo);
 
       expect(baz['foo']).toBe(foo);
-      expect(getRefId(baz, 'foo')).toBe(foo.meta.id);
+      const bazRef2 = getRefId(baz, 'foo');
+      if (bazRef2 && 'id' in bazRef2) {
+        expect(bazRef2.id).toBe(foo.meta.id);
+      } else {
+        expect(true).toBe(false);
+      }
     });
 
     it('should add a record with queue (202)', async () => {
@@ -410,21 +431,24 @@ describe('updates', () => {
 
       const store = new TestStore();
       const events = await store.fetchAll('event');
-      const event = events.data && events.data[0] as Event;
+      const event = events.data && (events.data[0] as Event);
 
       expect(event).toBeInstanceOf(Event);
       if (event) {
-        setRefId(event, 'images', ['1', '2']);
+        setRefId(event, 'images', [{ type: 'image', id: '1' }, { type: 'image', id: '2' }]);
 
         mockApi({
           data: {
-            data: [{
-              id: '1',
-              type: 'image',
-            }, {
-              id: '2',
-              type: 'image',
-            }],
+            data: [
+              {
+                id: '1',
+                type: 'image',
+              },
+              {
+                id: '2',
+                type: 'image',
+              },
+            ],
           },
           method: 'PATCH',
           name: 'event-1d',
@@ -434,9 +458,12 @@ describe('updates', () => {
         const event2 = await saveRelationship(event, 'images');
         expect(event2.meta.id).toBe('12345');
         expect(event2.meta.type).toBe('event');
-        expect(getRefId(event2, 'images')).toHaveLength(2);
-        expect(getRefId(event2, 'images')).toContain('1');
-        expect(getRefId(event2, 'images')).toContain('2');
+        const images = getRefId(event2, 'images');
+        expect(images).toHaveLength(2);
+        if (images instanceof Array) {
+          expect(images.map((image) => image.id)).toContain('1');
+          expect(images.map((image) => image.id)).toContain('2');
+        }
         expect(event).toBe(event2);
       }
     });
@@ -527,7 +554,7 @@ describe('updates', () => {
       });
 
       expect(store.findAll('event').length).toBe(1);
-      await store.removeOne(record.meta.type as string, record.meta.id as string, true);
+      await store.removeOneRemote(record.meta.type as string, record.meta.id as string);
       expect(store.findAll('event').length).toBe(0);
       expect(req.isDone()).toBe(true);
     });
@@ -542,7 +569,7 @@ describe('updates', () => {
       expect(record['title']).toBe('Example title');
 
       expect(store.findAll('event').length).toBe(1);
-      await store.removeOne(record.meta.type as string, record.meta.id as string, true);
+      await store.removeOneRemote(record.meta.type as string, record.meta.id as string);
       expect(store.findAll('event').length).toBe(0);
     });
 
@@ -550,7 +577,7 @@ describe('updates', () => {
       const store = new TestStore();
 
       expect(store.findAll('event').length).toBe(0);
-      await store.removeOne('event', '1', true);
+      await store.removeOneRemote('event', '1');
       expect(store.findAll('event').length).toBe(0);
     });
   });

@@ -34,6 +34,7 @@ export { IRawModel } from 'datx-utils';
 export { ICollectionConstructor } from './interfaces/ICollectionConstructor';
 export { IIdentifier } from './interfaces/IIdentifier';
 export { IModelConstructor } from './interfaces/IModelConstructor';
+export { IModelRef } from './interfaces/IModelRef';
 export { IPatch } from './interfaces/IPatch';
 export { IType } from './interfaces/IType';
 export { IReferenceOptions } from './interfaces/IReferenceOptions';

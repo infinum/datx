@@ -4,7 +4,7 @@ import {
   getModelMetaKey,
   getModelType,
   getRefId,
-  IIdentifier,
+  IModelRef,
   IReferenceOptions,
   modelToJSON,
   PureModel,
@@ -12,7 +12,6 @@ import {
   setModelMetaKey,
 } from 'datx';
 import { IDictionary, IRawModel, mapItems, META_FIELD } from 'datx-utils';
-import { isObservableArray } from 'mobx';
 
 import { clearCacheByType } from '../cache';
 import {
@@ -112,7 +111,7 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
     throw error(`Link ${key} doesn't exist on the model`);
   }
   const link = links[key];
-  const responseObj = fetchLink<T>(link, collection as IJsonapiCollection, options);
+  const responseObj = fetchLink<T>(link, (collection as unknown) as IJsonapiCollection, options);
 
   if (getModelMetaKey(model, MODEL_QUEUE_FIELD)) {
     return responseObj.then((response) => {
@@ -164,7 +163,7 @@ export async function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>
   const collection = getModelCollection(model);
   const link = getLink(model, ref, key);
 
-  return fetchLink<T>(link, collection as IJsonapiCollection, options);
+  return fetchLink<T>(link, (collection as unknown) as IJsonapiCollection, options);
 }
 
 export function getModelRefLinks(model: PureModel): IDictionary<IDictionary<ILink>> {
@@ -200,34 +199,14 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
 
   Object.keys(refs).forEach((key) => {
     data.relationships = data.relationships || {};
-    const refIds = mapItems(getRefId(model, key), (refId: IIdentifier) =>
-      (refId || '').toString(),
-    ) as string | Array<string> | null;
+    const refsList: IModelRef | Array<IModelRef> | null = getRefId(model, key);
 
-    let rel: IDefinition | Array<IDefinition> | undefined;
-    if (refIds instanceof Array || isObservableArray(refIds)) {
-      rel = (refIds as Array<string>).map((id, index) => {
-        const type = getModelType(
-          model[key][index] ? model[key][index] : refs[key].model,
-        ).toString();
-
-        if (!type) {
-          throw error(`The model type can't be retrieved for the reference ${key}`);
-        }
-
-        return { id, type };
-      });
-    } else {
-      const type: string = getModelType(model[key] ? model[key] : refs[key].model).toString();
-
-      if (!type) {
-        throw error(`The model type can't be retrieved for the reference ${key}`);
-      }
-
-      rel = refIds ? { id: refIds, type } : undefined;
-    }
-
-    data.relationships[key] = { data: rel || null };
+    data.relationships[key] = {
+      data: mapItems(refsList, (refItem: IModelRef) => ({
+        id: refItem.id.toString(),
+        type: refItem.type,
+      })) as IDefinition | Array<IDefinition>,
+    };
     if (data.attributes) {
       // tslint:disable-next-line:no-dynamic-delete
       delete data.attributes[key];
@@ -257,7 +236,7 @@ export function getModelEndpointUrl(model: IJsonapiModel, options?: IRequestOpti
 }
 
 export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Promise<IJsonapiModel> {
-  const collection = getModelCollection(model) as IJsonapiCollection;
+  const collection = (getModelCollection(model) as unknown) as IJsonapiCollection;
 
   const data: IRecord = modelToJsonApi(model);
   const requestMethod = isModelPersisted(model) ? update : create;
@@ -281,7 +260,7 @@ export function removeModel<T extends IJsonapiModel>(
   model: T,
   options?: IRequestOptions,
 ): Promise<void> {
-  const collection = getModelCollection(model) as IJsonapiCollection;
+  const collection = (getModelCollection(model) as unknown) as IJsonapiCollection;
 
   const isPersisted = isModelPersisted(model);
   const url = getModelEndpointUrl(model);
@@ -314,14 +293,17 @@ export function saveRelationship<T extends IJsonapiModel>(
   ref: string,
   options?: IRequestOptions,
 ): Promise<T> {
-  const collection = getModelCollection(model) as IJsonapiCollection;
+  const collection = (getModelCollection(model) as unknown) as IJsonapiCollection;
   const link = getLink(model, ref, 'self');
   const href: string = typeof link === 'object' ? link.href : link;
 
   const ids = getRefId(model, ref);
   const type = getModelType(getModelMetaKey(model, 'refs')[ref].model);
   type ID = IDefinition | Array<IDefinition>;
-  const data: ID = mapItems(ids, (id) => ({ id, type })) as ID;
+  const data: ID = mapItems(ids, (refItem: IModelRef) => ({
+    id: refItem.id,
+    type: refItem.type || type,
+  })) as ID;
 
   return update(
     href,

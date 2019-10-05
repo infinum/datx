@@ -33,12 +33,13 @@ import { PureModel } from '../../PureModel';
 import { storage } from '../../services/storage';
 import { error } from '../format';
 import { endAction, startAction, updateAction } from '../patch';
-import { initBucket } from './init';
+import { initBucket, initModelRef } from './init';
 import {
   getModelCollection,
   getModelId,
   getModelMetaKey,
   getModelType,
+  isModelReference,
   setModelMetaKey,
 } from './utils';
 
@@ -62,7 +63,7 @@ function modelAddReference(model: PureModel, key: string, newReference: PureMode
 function modelRemoveReference(model: PureModel, key: string, oldReference: PureModel) {
   const bucket: IBucket<PureModel> = storage.getModelDataKey(model, key);
   if (isObservableArray(bucket.value)) {
-    (bucket.value as IObservableArray).remove(oldReference);
+    bucket.value.remove(oldReference);
   } else {
     bucket.value = null;
   }
@@ -200,6 +201,22 @@ function validateRef(refOptions: IReferenceOptions, isArray: boolean, key: strin
 export function updateRef(model: PureModel, key: string, value: TRefValue) {
   const refOptions = storage.getModelReferenceOptions(model, key);
 
+  if (!refOptions) {
+    if (!value || (value instanceof Array && value.length < 1)) {
+      return;
+    }
+
+    initModelRef(
+      model,
+      key,
+      {
+        model: getModelType(value),
+        type: ReferenceType.TO_ONE_OR_MANY,
+      },
+      value,
+    );
+  }
+
   const check = refOptions.type === ReferenceType.TO_MANY ? value || [] : value;
   const isArray = check instanceof Array || isObservableArray(check);
   validateRef(refOptions, isArray, key);
@@ -209,7 +226,11 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
 
   let refs: IModelRef | Array<IModelRef> | null = mapItems(
     value,
-    (ref: IIdentifier | PureModel) => {
+    (ref: IIdentifier | IModelRef | PureModel) => {
+      if (isModelReference(ref)) {
+        return ref as IModelRef;
+      }
+
       if (ref && collection) {
         if (ref instanceof PureModel) {
           const refType = getModelType(ref);
@@ -219,8 +240,10 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
           }
         }
 
-        let instance = collection.findOne(refOptions.model, ref);
-        if (!instance && typeof ref === 'object') {
+        let instance = isModelReference(ref)
+          ? collection.findOne(ref as IModelRef)
+          : collection.findOne(refOptions.model, ref);
+        if (!instance && typeof ref === 'object' && !isModelReference(ref)) {
           instance = collection.add(ref, refOptions.model);
         }
         endAction(model);
@@ -235,7 +258,7 @@ export function updateRef(model: PureModel, key: string, value: TRefValue) {
       }
 
       return {
-        id: ref,
+        id: ref as IIdentifier,
         type: getModelType(refOptions.model),
       };
     },
@@ -256,6 +279,7 @@ function getModelRefsByType(model: PureModel, type: IType) {
   const refs = getModelMetaKey(model, 'refs');
 
   return Object.keys(refs)
+    .filter((key) => refs[key])
     .filter((key) => !refs[key].property)
     .filter((key) => getModelType(refs[key].model) === type);
 }
@@ -333,10 +357,10 @@ export function updateModelId(model: PureModel, newId: IIdentifier): void {
  * @export
  * @param {PureModel} model Source model
  * @param {string} key Referenced model property name
- * @returns {IIdentifier} Referenced model id
+ * @returns {IModelRef} Referenced model
  */
-export function getRefId(model: PureModel, key: string): IIdentifier | Array<IIdentifier> {
-  return storage.getModelDataKey(model, key);
+export function getRefId(model: PureModel, key: string): IModelRef | Array<IModelRef> | null {
+  return storage.getModelDataKey(model, key).refValue;
 }
 
 /**

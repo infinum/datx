@@ -86,7 +86,7 @@ describe('Collection', () => {
       expect(getModelCollection(foo1)).toBe(undefined);
       expect(store.findOne(Foo, 'unexisting')).toBeNull();
       // @ts-ignore
-      expect(store.findOne('unexisting')).toBeNull();
+      expect(store.findOne('unexisting', 1)).toBeNull();
 
       expect(getModelCollection(foo2)).toBe(store);
       store.removeOne(Foo, getModelId(foo2));

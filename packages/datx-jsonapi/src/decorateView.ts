@@ -1,4 +1,4 @@
-import { IModelConstructor, IType, IViewConstructor, PureModel, View } from 'datx';
+import { IModelConstructor, IType, IViewConstructor, PureCollection, PureModel, View } from 'datx';
 
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -9,11 +9,11 @@ import { Response } from './Response';
 
 export function decorateView<U>(BaseClass: typeof View) {
   class JsonapiView<M extends IJsonapiModel = IJsonapiModel> extends BaseClass {
-    protected __collection: IJsonapiCollection;
+    protected __collection: IJsonapiCollection & PureCollection;
 
     constructor(
       modelType: IModelConstructor<M> | IType,
-      collection: IJsonapiCollection,
+      collection: IJsonapiCollection & PureCollection,
       sortMethod?: string | ((item: M) => any),
       models: Array<string | PureModel> = [],
       unique: boolean = false,

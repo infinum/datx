@@ -41,8 +41,12 @@ export interface IJsonapiCollection extends PureCollection {
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
-  removeOne(type: IType | typeof PureModel, id: string, remote?: boolean | IRequestOptions): void;
-  removeOne(model: IJsonapiModel, remote?: boolean | IRequestOptions): void;
+  removeOneRemote(
+    type: IType | typeof PureModel,
+    id: string,
+    options?: IRequestOptions,
+  ): Promise<void>;
+  removeOneRemote(model: PureModel, options?: IRequestOptions): Promise<void>;
 
   findOne<T extends PureModel>(
     type: IType | T | IModelConstructor<T>,

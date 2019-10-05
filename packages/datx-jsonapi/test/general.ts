@@ -84,7 +84,11 @@ describe('General', () => {
     }) as Event;
 
     expect(event.name).toBe('Demo');
-    expect(event.meta.refs.image).toBe('1');
+    if (event.meta.refs.image instanceof Array) {
+      expect(event.meta.refs.image).not.toBeInstanceOf(Array);
+    } else {
+      expect(event.meta.refs.image.id).toBe('1');
+    }
     expect(event.image).toBeNull();
   });
 

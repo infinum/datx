@@ -6,7 +6,6 @@ import { ReferenceType } from '../../enums/ReferenceType';
 import { ID_REQUIRED } from '../../errors';
 import { IBucket } from '../../interfaces/IBucket';
 import { IIdentifier } from '../../interfaces/IIdentifier';
-import { IModelRef } from '../../interfaces/IModelRef';
 import { IReferenceOptions } from '../../interfaces/IReferenceOptions';
 import { IType } from '../../interfaces/IType';
 import { TRefValue } from '../../interfaces/TRefValue';
@@ -15,23 +14,13 @@ import { PureModel } from '../../PureModel';
 import { storage } from '../../services/storage';
 import { updateAction } from '../patch';
 import { getField, getRef, updateField, updateRef } from './fields';
-import { getModelCollection, getModelMetaKey, getModelType, setModelMetaKey } from './utils';
-
-function isModelReference(value: IModelRef | Array<IModelRef>): true;
-function isModelReference(value: unknown): false;
-function isModelReference(value: unknown): boolean {
-  if (value instanceof Array) {
-    return value.every(isModelReference);
-  }
-
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'type' in value &&
-    'id' in value &&
-    Object.keys(value).length === 2
-  );
-}
+import {
+  getModelCollection,
+  getModelMetaKey,
+  getModelType,
+  isModelReference,
+  setModelMetaKey,
+} from './utils';
 
 interface IMetaToInit extends IDictionary {
   fields: Array<string>;

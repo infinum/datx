@@ -391,7 +391,7 @@ describe('patch', () => {
       );
 
       model.bar = bar3;
-      model.meta.refs.bar = 2;
+      model.meta.refs.bar = { id: 2, type: 'bar' };
       model.bar = null;
       model.bar = bar3;
 

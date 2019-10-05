@@ -108,32 +108,32 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return libFetch<T>({ url: query.url, options, data, method, collection: this });
     }
 
-    public removeOne(
+    public removeOneRemote(
       type: IType | typeof PureModel,
       id: string,
-      remote?: boolean | IRequestOptions,
-    );
-    public removeOne(model: PureModel, remote?: boolean | IRequestOptions);
-    @action public removeOne(
+      options?: IRequestOptions,
+    ): Promise<void>;
+    public removeOneRemote(model: PureModel, options?: IRequestOptions): Promise<void>;
+    @action public removeOneRemote(
       obj: IType | typeof PureModel | PureModel,
       id?: string | boolean | IRequestOptions,
-      remote?: boolean | IRequestOptions,
+      options?: boolean | IRequestOptions,
     ) {
       let remoteOp: boolean | IRequestOptions | undefined;
       let modelId: string;
       let model: IJsonapiModel | null;
       const type = getModelType(obj);
-      if (typeof id === 'boolean' || typeof id === 'object' || id === undefined) {
+      if (typeof id === 'object' || id === undefined) {
         remoteOp = id;
         modelId = getModelId(obj).toString();
         model = obj as IJsonapiModel;
       } else {
-        remoteOp = remote;
+        remoteOp = options;
         modelId = getModelId(id).toString();
         model = modelId ? (this.findOne(type, modelId) as IJsonapiModel | null) : null;
       }
 
-      if (model && remoteOp) {
+      if (model) {
         return removeModel(model, typeof remoteOp === 'object' ? remoteOp : undefined);
       }
 
@@ -184,7 +184,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       } else if (staticCollection.types.filter((item) => item.type === type).length) {
         record = this.add<T>(flattened, type);
       } else {
-        record = this.add(new GenericModel(flattened)) as T;
+        record = this.add(new GenericModel(flattened, this)) as T;
       }
 
       return record;

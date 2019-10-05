@@ -15,6 +15,22 @@ import { error } from '../format';
 import { initModelField, mergeMeta } from '../model/init';
 import { endAction, startAction } from '../patch';
 
+export function isModelReference(value: IModelRef | Array<IModelRef>): true;
+export function isModelReference(value: unknown): false;
+export function isModelReference(value: unknown): boolean {
+  if (value instanceof Array) {
+    return value.every(isModelReference);
+  }
+
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'type' in value &&
+    'id' in value &&
+    Object.keys(value).length === 2
+  );
+}
+
 /**
  * Get the type of the given model
  *
@@ -22,10 +38,12 @@ import { endAction, startAction } from '../patch';
  * @param {(IType|typeof PureModel|PureModel)} model Model to be checked
  * @returns {IType} Model type
  */
-export function getModelType(model: IType | typeof PureModel | PureModel): IType {
+export function getModelType(model: IType | IModelRef | typeof PureModel | PureModel): IType {
   if (typeof model === 'function') {
     // @ts-ignore
     return model.type;
+  } else if (isModelReference(model)) {
+    return (model as IModelRef).type;
   } else if (typeof model === 'object') {
     return getModelMetaKey(model, 'type') || (model.constructor as typeof PureModel).type;
   }
@@ -92,7 +110,7 @@ export function cloneModel<T extends PureModel>(model: T): T {
   if (collection) {
     const modelType = getModelType(model);
 
-    return collection.add(rawData, modelType) as T;
+    return collection.add(rawData, modelType);
   } else {
     const TypeModel = model.constructor as typeof PureModel;
     warn(`The model is not in the collection. Referencing the original model won't be possible`);
@@ -230,7 +248,7 @@ export function modelToJSON(model: PureModel): IRawModel {
   const refs = {};
   Object.keys(rawRefs || {}).forEach((key) => {
     const ref = rawRefs[key];
-    if (ref.property) {
+    if (!ref || ref.property) {
       return;
     }
     const value: IBucket<PureModel> = storage.getModelDataKey(model, key);
