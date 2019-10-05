@@ -16,12 +16,15 @@ export class ToOneOrMany<T extends PureModel> {
   constructor(
     data: Array<T | IModelRef> | T | IModelRef | null,
     protected __collection?: PureCollection,
+    protected __readonly: boolean = false,
+    protected __model?: PureModel,
+    protected __key?: string,
   ) {
     this.__isList = data instanceof Array;
     if (data instanceof Array) {
-      this.__toManyBucket = new ToMany(data, __collection);
+      this.__toManyBucket = new ToMany(data, __collection, __readonly, __model, __key);
     } else {
-      this.__toOneBucket = new ToOne(data, __collection);
+      this.__toOneBucket = new ToOne(data, __collection, __readonly, __model, __key);
     }
   }
 

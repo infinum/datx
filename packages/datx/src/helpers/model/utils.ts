@@ -238,7 +238,6 @@ export function modelToJSON(model: PureModel): IRawModel {
   });
   const rawMeta = Object.assign({}, storage.getModelMeta(model), {
     collection: undefined,
-    patch: undefined,
   });
   const meta = toJS(rawMeta);
   meta.refs = refs;
@@ -251,6 +250,7 @@ export function modelToJSON(model: PureModel): IRawModel {
   });
 
   delete meta.collection;
+  delete meta.patch;
 
   const raw = Object.assign(data, { [META_FIELD]: meta }, refs);
 
@@ -295,4 +295,5 @@ export function updateModelCollection(model: PureModel, collection?: PureCollect
       }
     }
   }
+  endAction(model);
 }

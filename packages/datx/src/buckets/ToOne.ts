@@ -3,6 +3,7 @@ import { computed } from 'mobx';
 import { READ_ONLY, REF_NEEDS_COLLECTION, REF_SINGLE } from '../errors';
 import { error } from '../helpers/format';
 import { getModelRef } from '../helpers/model/utils';
+import { endAction, startAction, updateAction } from '../helpers/patch';
 import { IModelRef } from '../interfaces/IModelRef';
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
@@ -14,6 +15,8 @@ export class ToOne<T extends PureModel> {
     data: T | IModelRef | null,
     protected __collection?: PureCollection,
     protected __readonly: boolean = false,
+    protected __model?: PureModel,
+    protected __key?: string,
   ) {
     if (data && !this.__collection) {
       throw error(REF_NEEDS_COLLECTION);
@@ -40,6 +43,11 @@ export class ToOne<T extends PureModel> {
       throw error(REF_SINGLE, { key: '' });
     }
     this.__rawValue = data;
+    if (this.__model && this.__key) {
+      startAction(this.__model);
+      updateAction(this.__model, this.__key, data);
+      endAction(this.__model);
+    }
   }
 
   @computed

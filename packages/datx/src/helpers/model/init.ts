@@ -80,11 +80,11 @@ export function initBucket(
 
   if (type === ReferenceType.TO_MANY) {
     // @ts-ignore Allow the mistake because it's handled in the bucket
-    bucket = new ToMany(data || [], collection);
+    bucket = new ToMany(data || [], collection, false, model, key);
   } else if (type === ReferenceType.TO_ONE) {
-    bucket = new ToOne(data, collection);
+    bucket = new ToOne(data, collection, false, model, key);
   } else {
-    bucket = new ToOneOrMany(data, collection);
+    bucket = new ToOneOrMany(data, collection, false, model, key);
   }
 
   storage.setModelDataKey(model, key, bucket);

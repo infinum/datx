@@ -7,7 +7,7 @@ configure({ enforceActions: 'observed' });
 
 import { Collection, IPatch, Model, PatchType, prop } from '../src';
 
-xdescribe('patch', () => {
+describe('patch', () => {
   describe('model', () => {
     it('should trigger on add, replace and remove', () => {
       const patches: Array<IPatch> = [];

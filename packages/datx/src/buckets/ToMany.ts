@@ -12,6 +12,7 @@ import {
 import { READ_ONLY, REF_ARRAY, REF_NEEDS_COLLECTION } from '../errors';
 import { error } from '../helpers/format';
 import { getModelCollection, getModelRef, isReference } from '../helpers/model/utils';
+import { endAction, startAction, updateAction } from '../helpers/patch';
 import { IModelRef } from '../interfaces/IModelRef';
 import { TChange } from '../interfaces/TChange';
 import { PureCollection } from '../PureCollection';
@@ -26,6 +27,8 @@ export class ToMany<T extends PureModel> {
     data: Array<IModelRef | T> = [],
     collection?: PureCollection,
     protected __readonly: boolean = false,
+    protected __model?: PureModel,
+    protected __key?: string,
   ) {
     if (data.length > 0 && !collection) {
       throw error(REF_NEEDS_COLLECTION);
@@ -77,6 +80,11 @@ export class ToMany<T extends PureModel> {
     }
 
     this.__rawList.replace(data);
+    if (this.__model && this.__key) {
+      startAction(this.__model);
+      updateAction(this.__model, this.__key, data);
+      endAction(this.__model);
+    }
   }
 
   @computed

@@ -232,14 +232,17 @@ Array [
       "type": "foo",
     },
     "newValue": Object {
-      "bar": 2,
+      "bar": Object {
+        "id": 2,
+        "type": "bar",
+      },
       "id": 1,
     },
     "oldValue": Object {
       "bar": undefined,
       "id": undefined,
     },
-    "patchType": 1,
+    "patchType": 0,
   },
   Object {
     "model": Object {
@@ -254,16 +257,38 @@ Array [
         "id": 1,
         "refs": Object {
           "bar": Object {
-            "model": "bar",
-            "type": 0,
+            "id": 2,
+            "type": "bar",
           },
         },
         "type": "foo",
       },
-      "bar": 2,
+      "bar": Object {
+        "id": 2,
+        "type": "bar",
+      },
       "id": 1,
     },
     "patchType": 0,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "bar": Object {
+        "id": 3,
+        "type": "bar",
+      },
+    },
+    "oldValue": Object {
+      "bar": Object {
+        "id": 2,
+        "type": "bar",
+      },
+    },
+    "patchType": 1,
   },
 ]
 `;
