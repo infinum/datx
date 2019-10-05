@@ -2,11 +2,11 @@
 
 import { autorun, configure } from 'mobx';
 
-import { cloneModel, Collection, getModelId, prop, PureModel, withMeta } from '../../src';
+import { cloneModel, Collection, getModelRef, prop, PureModel, withMeta } from '../../src';
 
 configure({ enforceActions: 'observed' });
 
-describe('Collection', () => {
+describe('withMeta', () => {
   it('should work with initial data', () => {
     class Foo extends PureModel {
       public static type = 'foo';
@@ -40,7 +40,7 @@ describe('Collection', () => {
     expect(autorunCount).toBe(2);
 
     class TestCollection extends Collection {
-      public static types = [Foo];
+      public static types = [FooMeta];
     }
     const collection = new TestCollection();
     collection.add(foo);
@@ -87,6 +87,6 @@ describe('Collection', () => {
 
     const foo2 = collection.add({ foo: 3, parent: foo1 }, FooMeta);
 
-    expect(foo2.meta.refs.parent).toBe(getModelId(foo1));
+    expect(foo2.meta.refs.parent).toEqual(getModelRef(foo1));
   });
 });

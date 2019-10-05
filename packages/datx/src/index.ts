@@ -1,4 +1,7 @@
-export { ToMany, ToOne, ToOneOrMany } from './buckets';
+import { ToMany, ToOne, ToOneOrMany } from './buckets';
+// tslint:disable-next-line:export-name
+export const Bucket = { ToMany, ToOne, ToOneOrMany };
+
 export { Collection } from './Collection';
 export { Model } from './Model';
 export { View } from './View';

@@ -6,7 +6,7 @@ import { PureCollection } from './PureCollection';
 import { PureModel } from './PureModel';
 import { storage } from './services/storage';
 
-function getClass<T extends PureModel>(obj: T): typeof PureModel {
+export function getClass<T extends PureModel>(obj: T): typeof PureModel {
   return (typeof obj === 'function' ? obj : obj.constructor) as typeof PureModel;
 }
 

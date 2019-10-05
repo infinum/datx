@@ -4,14 +4,14 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import { Collection, Model, prop, ToMany } from '../src';
+import { Bucket, Collection, Model, prop } from '../src';
 
 describe('ToMany', () => {
   it('should init a bucket', () => {
     const collection = new Collection();
-    const bucketInstance = new ToMany([], collection);
+    const bucketInstance = new Bucket.ToMany([], collection);
 
-    expect(bucketInstance).toBeInstanceOf(ToMany);
+    expect(bucketInstance).toBeInstanceOf(Bucket.ToMany);
   });
 
   it('should be able to get initial models', () => {
@@ -24,12 +24,12 @@ describe('ToMany', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}], Foo);
-    const bucketInstance = new ToMany(foos, collection);
+    const bucketInstance = new Bucket.ToMany(foos, collection);
 
     expect(bucketInstance.length).toBe(2);
-    expect(bucketInstance.list[0]).toBeInstanceOf(Foo);
-    expect(bucketInstance.list[1]).toBeInstanceOf(Foo);
-    expect(bucketInstance.list[0]).toBe(foos[0]);
+    expect(bucketInstance.value[0]).toBeInstanceOf(Foo);
+    expect(bucketInstance.value[1]).toBeInstanceOf(Foo);
+    expect(bucketInstance.value[0]).toBe(foos[0]);
   });
 
   it('should support multiple types', () => {
@@ -46,12 +46,12 @@ describe('ToMany', () => {
     const collection = new AppCollection();
     const foos = collection.add([{}, {}], Foo);
     const bars = collection.add([{}], Bar);
-    const bucketInstance = new ToMany([...foos, ...bars], collection);
+    const bucketInstance = new Bucket.ToMany([...foos, ...bars], collection);
 
     expect(bucketInstance.length).toBe(3);
-    expect(bucketInstance.list[0]).toBeInstanceOf(Foo);
-    expect(bucketInstance.list[2]).toBeInstanceOf(Bar);
-    expect(bucketInstance.list[0]).toBe(foos[0]);
+    expect(bucketInstance.value[0]).toBeInstanceOf(Foo);
+    expect(bucketInstance.value[2]).toBeInstanceOf(Bar);
+    expect(bucketInstance.value[0]).toBe(foos[0]);
   });
 
   it('should support ids before models', () => {
@@ -66,7 +66,7 @@ describe('ToMany', () => {
     }
 
     const collection = new AppCollection();
-    const bucketInstance = new ToMany<Foo>(
+    const bucketInstance = new Bucket.ToMany<Foo>(
       [{ id: 987, type: 'foo' }, { id: 123, type: 'foo' }, { id: 234, type: 'foo' }],
       collection,
     );
@@ -75,9 +75,9 @@ describe('ToMany', () => {
     expect(collection.length).toBe(2);
     expect(bucketInstance.length).toBe(2);
     expect(bucketInstance.snapshot.length).toBe(3);
-    expect(bucketInstance.list[0]).toBeInstanceOf(Foo);
-    expect(bucketInstance.list[1]).toBeInstanceOf(Foo);
-    expect(bucketInstance.list[0]).toBe(foos[0]);
+    expect(bucketInstance.value[0]).toBeInstanceOf(Foo);
+    expect(bucketInstance.value[1]).toBeInstanceOf(Foo);
+    expect(bucketInstance.value[0]).toBe(foos[0]);
   });
 
   it('should support array updates', () => {
@@ -94,19 +94,19 @@ describe('ToMany', () => {
     const collection = new AppCollection();
     const foos = collection.add([{}, {}], Foo);
     const bars = collection.add([{}], Bar);
-    const bucketInstance = new ToMany([...foos, ...bars], collection);
+    const bucketInstance = new Bucket.ToMany([...foos, ...bars], collection);
 
     expect(bucketInstance.length).toBe(3);
-    expect(bucketInstance.list[0]).toBe(foos[0]);
-    bucketInstance.list.shift();
+    expect(bucketInstance.value[0]).toBe(foos[0]);
+    bucketInstance.value.shift();
     expect(bucketInstance.length).toBe(2);
-    expect(bucketInstance.list[0]).toBe(foos[1]);
+    expect(bucketInstance.value[0]).toBe(foos[1]);
 
-    bucketInstance.list = foos;
+    bucketInstance.value = foos;
     expect(bucketInstance.length).toBe(2);
-    expect(bucketInstance.list[0]).toBe(foos[0]);
+    expect(bucketInstance.value[0]).toBe(foos[0]);
 
-    bucketInstance.list.push(bars[0]);
+    bucketInstance.value.push(bars[0]);
     expect(bucketInstance.length).toBe(3);
   });
 
@@ -124,16 +124,16 @@ describe('ToMany', () => {
     const collection = new AppCollection();
     const foos = collection.add([{}, {}], Foo);
     const bars = collection.add([{}], Bar);
-    const bucketInstance = new ToMany([...foos, ...bars], collection, true);
+    const bucketInstance = new Bucket.ToMany([...foos, ...bars], collection, true);
 
     expect(bucketInstance.length).toBe(3);
-    expect(bucketInstance.list[0]).toBe(foos[0]);
+    expect(bucketInstance.value[0]).toBe(foos[0]);
     expect(() => {
-      bucketInstance.list.shift();
+      bucketInstance.value.shift();
     }).toThrowError('[datx exception] This is a read-only bucket');
 
     expect(() => {
-      bucketInstance.list = foos;
+      bucketInstance.value = foos;
     }).toThrowError('[datx exception] This is a read-only bucket');
   });
 });

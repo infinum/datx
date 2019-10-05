@@ -3,7 +3,6 @@ import { computed } from 'mobx';
 import { DECORATE_MODEL } from '../errors';
 import { error } from '../helpers/format';
 import { isModel } from '../helpers/mixin';
-import { getRefId } from '../helpers/model/fields';
 import {
   getModelCollection,
   getModelId,
@@ -12,9 +11,11 @@ import {
   getOriginalModel,
   modelToJSON,
 } from '../helpers/model/utils';
+import { IBucket } from '../interfaces/IBucket';
 import { IMetaMixin } from '../interfaces/IMetaMixin';
 import { IModelConstructor } from '../interfaces/IModelConstructor';
 import { PureModel } from '../PureModel';
+import { storage } from '../services/storage';
 
 /**
  * Extends the model with the exposed meta data
@@ -56,7 +57,8 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
 
       const refs = {};
       Object.keys(refDefs).forEach((key) => {
-        refs[key] = getRefId(this.__instance, key);
+        const bucket: IBucket<PureModel> = storage.getModelDataKey(this.__instance, key);
+        refs[key] = (bucket && bucket.refValue) || null;
       });
 
       return refs;

@@ -7,7 +7,7 @@ import { Collection, prop, PureModel, ReferenceType, withActions, withMeta } fro
 
 configure({ enforceActions: 'observed' });
 
-describe('Collection', () => {
+describe('withActions', () => {
   it('should work with initial data', () => {
     class Foo extends PureModel {
       public static type = 'foo';
@@ -24,7 +24,7 @@ describe('Collection', () => {
     expect(foo.foo).toBe(1);
 
     class TestCollection extends Collection {
-      public static types = [Foo];
+      public static types = [FooActions];
     }
     const collection = new TestCollection();
     collection.add(foo);
@@ -32,6 +32,7 @@ describe('Collection', () => {
     const foo2 = foo.clone();
 
     expect(foo2).not.toBe(foo);
+    expect(foo2).toBeInstanceOf(Foo);
     expect(foo2.meta.original).toBe(foo);
     expect(foo2.foo).toBe(1);
 

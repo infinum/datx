@@ -23,6 +23,7 @@ import {
   modelToJSON,
   setModelMetaKey,
   updateModel,
+  updateModelCollection,
 } from './helpers/model/utils';
 import { triggerAction } from './helpers/patch';
 import { IIdentifier } from './interfaces/IIdentifier';
@@ -455,7 +456,7 @@ export class PureCollection {
     } else {
       set(this.__dataMap, stringType, observable.object({ [modelId]: model }, {}, { deep: false }));
     }
-    setModelMetaKey(model, 'collection', this);
+    updateModelCollection(model, this);
 
     triggerAction(
       {
@@ -499,7 +500,13 @@ export class PureCollection {
           const refIds = getRefId(item, key);
           if (refIds instanceof Array) {
             if (refIds.includes(modelId)) {
-              setRefId(item, key, refIds.filter((itemId) => itemId !== modelId));
+              setRefId(
+                item,
+                key,
+                refIds
+                  .filter((itemId) => itemId !== modelId)
+                  .map((itemId) => ({ id: itemId, type: refType })),
+              );
             }
           } else if (refIds === modelId) {
             setRefId(item, key, undefined);
@@ -508,7 +515,7 @@ export class PureCollection {
       });
     });
 
-    setModelMetaKey(model, 'collection', undefined);
+    updateModelCollection(model, undefined);
   }
 
   private __findOneByType(model: IType | typeof PureModel | PureModel, id: IIdentifier) {

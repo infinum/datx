@@ -4,14 +4,14 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import { Collection, Model, prop, ToOne } from '../src';
+import { Bucket, Collection, Model, prop } from '../src';
 
 describe('ToOne', () => {
   it('should init a bucket', () => {
     const collection = new Collection();
-    const bucketInstance = new ToOne(null, collection);
+    const bucketInstance = new Bucket.ToOne(null, collection);
 
-    expect(bucketInstance).toBeInstanceOf(ToOne);
+    expect(bucketInstance).toBeInstanceOf(Bucket.ToOne);
     expect(bucketInstance.snapshot).toBeNull();
   });
 
@@ -25,7 +25,7 @@ describe('ToOne', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}], Foo);
-    const bucketInstance = new ToOne(foos[0], collection);
+    const bucketInstance = new Bucket.ToOne(foos[0], collection);
 
     expect(bucketInstance.value).toBe(foos[0]);
   });
@@ -42,7 +42,7 @@ describe('ToOne', () => {
     }
 
     const collection = new AppCollection();
-    const bucketInstance = new ToOne<Foo>({ id: 234, type: 'foo' }, collection);
+    const bucketInstance = new Bucket.ToOne<Foo>({ id: 234, type: 'foo' }, collection);
     const foos = collection.add([{ id: 123 }, { id: 234 }], Foo);
 
     expect(collection.length).toBe(2);
@@ -62,7 +62,7 @@ describe('ToOne', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}], Foo);
-    const bucketInstance = new ToOne(foos[0], collection);
+    const bucketInstance = new Bucket.ToOne(foos[0], collection);
 
     expect(bucketInstance.value).toBe(foos[0]);
     bucketInstance.value = foos[1];
@@ -82,7 +82,7 @@ describe('ToOne', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}], Foo);
-    const bucketInstance = new ToOne(foos[0], collection, true);
+    const bucketInstance = new Bucket.ToOne(foos[0], collection, true);
 
     expect(bucketInstance.value).toBe(foos[0]);
     expect(() => {

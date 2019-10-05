@@ -10,6 +10,7 @@ import {
   Collection,
   getModelCollection,
   getModelId,
+  getModelRef,
   getModelType,
   getOriginalModel,
   initModelRef,
@@ -245,13 +246,18 @@ describe('Model', () => {
 
     it('should support cloning', () => {
       class Foo extends PureModel {
+        public static type = 'foo';
         @prop public foo!: number;
+      }
+
+      class AppStore extends Collection {
+        public static types = [Foo];
       }
 
       const foo = new Foo({ foo: 1 });
       expect(foo.foo).toBe(1);
 
-      const collection = new Collection();
+      const collection = new AppStore();
       collection.add(foo);
 
       const foo2 = cloneModel(foo);
@@ -268,8 +274,13 @@ describe('Model', () => {
 
     it('should support cloning with additional fields', () => {
       class Foo extends PureModel {
+        public static type = 'foo';
         @prop public foo!: number;
         public bar!: number; // Not observable
+      }
+
+      class AppStore extends Collection {
+        public static types = [Foo];
       }
 
       const foo = new Foo({ foo: 1 });
@@ -277,7 +288,7 @@ describe('Model', () => {
       expect(foo.foo).toBe(1);
       expect(foo.bar).toBe(2);
 
-      const collection = new Collection();
+      const collection = new AppStore();
       collection.add(foo);
 
       const foo2 = cloneModel(foo);
@@ -327,7 +338,7 @@ describe('Model', () => {
       expect(foo2.parent).toBe(foo1);
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2 = modelToJSON(foo2);
-      expect(raw2.parent).toBe(getModelId(foo1));
+      expect(raw2.parent).toEqual(getModelRef(foo1));
 
       const foo3 = collection.add({ foo: 4, parent: { foo: 5 } }, Foo);
       expect(foo3.parent).toBeInstanceOf(Foo);
@@ -354,7 +365,7 @@ describe('Model', () => {
       expect(foo2.parent).toBe(foo1);
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2 = modelToJSON(foo2);
-      expect(raw2.parent).toBe(getModelId(foo1));
+      expect(raw2.parent).toEqual(getModelRef(foo1));
 
       const foo3 = collection.add({ foo: 4, parent: { foo: 5 } }, Foo);
       expect(foo3.parent).toBeInstanceOf(Foo);
@@ -395,11 +406,11 @@ describe('Model', () => {
       collection.add(foo1);
 
       expect(() => collection.add({ foo: 3, parent: [foo1] }, Foo)).toThrowError(
-        "The reference parent can't be an array of values.",
+        "[datx exception] The reference can't be an array of values.",
       );
 
       expect(() => new Foo({ foo: 3, parent: [foo1] })).toThrowError(
-        "The reference parent can't be an array of values.",
+        '[datx exception] The model needs to be in a collection to be referenceable',
       );
     });
 
@@ -421,7 +432,7 @@ describe('Model', () => {
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
       const raw2 = modelToJSON(foo2);
-      expect(raw2.parent[0]).toBe(getModelId(foo1));
+      expect(raw2.parent[0]).toEqual(getModelRef(foo1));
     });
 
     it('should support array reference modification', () => {
@@ -442,15 +453,15 @@ describe('Model', () => {
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
       const raw2 = modelToJSON(foo2);
-      expect(raw2.parent[0]).toBe(getModelId(foo1));
+      expect(raw2.parent[0]).toEqual(getModelRef(foo1));
 
       foo2.parent.push(foo3);
       const raw2b = modelToJSON(foo2);
-      expect(raw2b.parent[1]).toBe(getModelId(foo3));
+      expect(raw2b.parent[1]).toEqual(getModelRef(foo3));
 
       foo2.parent[2] = foo2;
       const raw2c = modelToJSON(foo2);
-      expect(raw2c.parent[2]).toBe(getModelId(foo2));
+      expect(raw2c.parent[2]).toEqual(getModelRef(foo2));
 
       foo2.parent.pop();
       const raw2d = modelToJSON(foo2);
@@ -471,7 +482,7 @@ describe('Model', () => {
 
       const foo1 = store.add({ foo: 2 }, Foo);
       expect(() => store.add({ foo: 3, parent: foo1 }, Foo)).toThrowError(
-        'The reference parent must be an array of values.',
+        '[datx exception] The reference must be an array of values.',
       );
 
       const foo2 = store.add({ foo: 3, parent: null }, Foo);
@@ -500,13 +511,13 @@ describe('Model', () => {
       expect(isObservableArray(foo2.parent)).toBe(true);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
       const raw2 = modelToJSON(foo2);
-      expect(raw2.parent[0]).toBe(getModelId(foo1));
+      expect(raw2.parent[0]).toEqual(getModelRef(foo1));
 
       foo2.parent = foo1;
       expect(isObservableArray(foo2.parent)).toBe(false);
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2b = modelToJSON(foo2);
-      expect(raw2b.parent).toBe(getModelId(foo1));
+      expect(raw2b.parent).toEqual(getModelRef(foo1));
 
       foo1.foo = 4;
       expect(foo2.parent && foo2.parent.foo).toBe(4);
@@ -534,7 +545,7 @@ describe('Model', () => {
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
 
       const raw2 = modelToJSON(foo2);
-      expect(raw2.parent[0]).toBe(getModelId(foo1));
+      expect(raw2.parent[0]).toEqual(getModelRef(foo1));
 
       // @ts-ignore
       delete raw2.__META__.id;
@@ -572,7 +583,7 @@ describe('Model', () => {
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
 
       const raw2: IRawModel = JSON.parse(JSON.stringify(modelToJSON(foo2)));
-      expect(raw2.parent[0]).toBe(getModelId(foo1));
+      expect(raw2.parent[0]).toEqual(getModelRef(foo1));
 
       // @ts-ignore
       delete raw2.__META__.id;
@@ -738,7 +749,7 @@ describe('Model', () => {
         expect(foo4.parent).toBeNull();
 
         updateModelId(foo1, '123');
-        expect(modelToJSON(foo3).parent).toBe('123');
+        expect(modelToJSON(foo3).parent).toEqual({ id: '123', type: 'foo' });
 
         expect(() => (foo4.children = [foo1])).toThrowError('Back references are read only');
 
@@ -830,8 +841,8 @@ describe('Model', () => {
         expect(getModelId(foo2)).toBe(foo2.id);
         expect(foo2.type).toBe('foo');
         expect(getModelType(foo2)).toBe('foo');
-        expect(modelToJSON(foo2).parent).toBe(foo1.id);
-        expect(modelToJSON(foo2).foos).toContain(foo1.id);
+        expect(modelToJSON(foo2).parent).toEqual(getModelRef(foo1));
+        expect(modelToJSON(foo2).foos).toContainEqual(getModelRef(foo1));
 
         // @ts-ignore
         expect(modelToJSON(foo1).__META__.id).toBe(foo1.id);
@@ -843,8 +854,8 @@ describe('Model', () => {
         expect(store.findOne(Foo, foo1.id)).toBe(foo1);
         expect(foo2.parent).toBe(foo1);
         expect(foo2.foos).toContain(foo1);
-        expect(modelToJSON(foo2).parent).toBe(foo1.id);
-        expect(modelToJSON(foo2).foos).toContain(foo1.id);
+        expect(modelToJSON(foo2).parent).toEqual(getModelRef(foo1));
+        expect(modelToJSON(foo2).foos).toContainEqual(getModelRef(foo1));
 
         // @ts-ignore
         expect(modelToJSON(foo1).__META__.id).toBe(foo1.id);
@@ -897,8 +908,8 @@ describe('Model', () => {
         // @ts-ignore - Avoiding the TypeScript features on purpose
         expect(foo2.type).toBe('foo');
         expect(getModelType(foo2)).toBe('foo');
-        expect(modelToJSON(foo2).parent).toBe(foo1.id);
-        expect(modelToJSON(foo2).foos).toContain(foo1.id);
+        expect(modelToJSON(foo2).parent).toEqual(getModelRef(foo1));
+        expect(modelToJSON(foo2).foos).toContainEqual(getModelRef(foo1));
       });
     });
   });

@@ -26,9 +26,9 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     public unique: boolean = false,
   ) {
     super(
-      models.map((model) => {
-        return model instanceof PureModel ? model : { id: model, type: getModelType(modelType) };
-      }),
+      models.map((model) =>
+        model instanceof PureModel ? model : { id: model, type: getModelType(modelType) },
+      ),
       __collection,
     );
     this.modelType = getModelType(modelType);
@@ -36,11 +36,11 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
   }
 
   @computed public get length() {
-    return this.list.length;
+    return this.value.length;
   }
 
   @computed public get list(): Array<T> {
-    const list: Array<T> = super.__getList().slice();
+    const list: Array<T> = this.value.slice();
 
     if (this.sortMethod) {
       const sortFn =
@@ -111,7 +111,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
   public hasItem(model: T | IIdentifier): boolean {
     const id = getModelId(model);
 
-    return Boolean(this.__rawList.find((item) => getModelId(item) === id));
+    return Boolean(this.__getList().find((item) => getModelId(item) === id));
   }
 
   /**

@@ -1,8 +1,17 @@
-import { action, computed, intercept, IObservableArray, observable, reaction } from 'mobx';
+import {
+  action,
+  computed,
+  intercept,
+  IObservableArray,
+  IReactionDisposer,
+  observable,
+  reaction,
+  runInAction,
+} from 'mobx';
 
-import { READ_ONLY } from '../errors';
+import { READ_ONLY, REF_ARRAY, REF_NEEDS_COLLECTION } from '../errors';
 import { error } from '../helpers/format';
-import { getModelRef, isReference } from '../helpers/model/utils';
+import { getModelCollection, getModelRef, isReference } from '../helpers/model/utils';
 import { IModelRef } from '../interfaces/IModelRef';
 import { TChange } from '../interfaces/TChange';
 import { PureCollection } from '../PureCollection';
@@ -10,47 +19,78 @@ import { PureModel } from '../PureModel';
 
 export class ToMany<T extends PureModel> {
   protected readonly __rawList: IObservableArray<T | IModelRef> = observable.array([]);
+  protected __collection?: PureCollection;
+  private __disposer?: IReactionDisposer;
 
   constructor(
     data: Array<IModelRef | T> = [],
-    protected __collection: PureCollection,
+    collection?: PureCollection,
     protected __readonly: boolean = false,
   ) {
-    this.__rawList.replace(data.map((item) => this.__getModel(item) || item));
+    if (data.length > 0 && !collection) {
+      throw error(REF_NEEDS_COLLECTION);
+    } else if (!(data instanceof Array)) {
+      throw error(REF_ARRAY, { key: '' });
+    }
 
-    reaction(() => {
-      const references = this.__rawList.filter(isReference);
-      const check = references.filter((model: IModelRef) =>
-        this.__collection.findOne(model.type, model.id),
-      );
+    runInAction(() => {
+      this.__rawList.replace(data);
+      this.setCollection(collection);
+    });
+  }
 
-      return check.length > 0;
-    }, this.__reMap.bind(this));
+  public setCollection(collection: PureCollection | undefined) {
+    this.__collection = collection;
+
+    if (this.__disposer) {
+      this.__disposer();
+    }
+
+    if (collection) {
+      this.__rawList.forEach((item, index) => {
+        const model = this.__getModel(item);
+        if (model) {
+          this.__rawList[index] = model;
+        }
+      });
+      this.__disposer = reaction(() => {
+        const references = this.__rawList.filter(isReference);
+        const check = references
+          .filter(Boolean)
+          .filter((model: IModelRef) => collection.findOne(model.type, model.id));
+
+        return check.length > 0;
+      }, this.__reMap.bind(this));
+    }
   }
 
   @computed
-  public get list(): Array<T> {
+  public get value(): Array<T> {
     return this.__getList();
   }
 
-  public set list(val: Array<T>) {
+  public set value(data: Array<T>) {
     if (this.__readonly) {
       throw error(READ_ONLY);
+    } else if (!(data instanceof Array)) {
+      throw error(REF_ARRAY, { key: '' });
     }
-    this.__rawList.replace(val);
+
+    this.__rawList.replace(data);
   }
 
   @computed
   public get length(): number {
-    return this.list.length;
+    return this.value.length;
   }
 
-  public get refList(): Array<IModelRef> {
+  @computed
+  public get refValue(): Array<IModelRef> {
     return this.__rawList.map(getModelRef);
   }
 
   public toJSON(): any {
-    return this.refList.slice();
+    return this.refValue.slice();
   }
 
   @computed
@@ -59,18 +99,23 @@ export class ToMany<T extends PureModel> {
   }
 
   protected __getList(): IObservableArray<T> {
-    const list = this.__rawList.map(this.__getModel.bind(this)).filter(Boolean) as any;
-
+    const list = this.__rawList
+      .map(this.__getModel.bind(this))
+      .filter(Boolean)
+      .filter((model) => Boolean(model && getModelCollection(model))) as any;
     const instances = observable.array(list, { deep: false });
-
     intercept(instances, this.__partialRawListUpdate.bind(this));
 
     return instances;
   }
 
-  protected __getModel(model: T | IModelRef): T | null {
-    if (model instanceof PureModel) {
+  protected __getModel(model: T | IModelRef | null): T | null {
+    if (model instanceof PureModel || model === null) {
       return model;
+    }
+
+    if (!this.__collection) {
+      throw error(REF_NEEDS_COLLECTION);
     }
 
     return this.__collection.findOne(model.type, model.id);

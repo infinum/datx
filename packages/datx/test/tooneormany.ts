@@ -4,15 +4,15 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import { Collection, Model, prop, ToOneOrMany } from '../src';
+import { Bucket, Collection, Model, prop } from '../src';
 
 describe('ToOneOrMany', () => {
   describe('ToOneOrMany with lists', () => {
     it('should init a ToOneOrMany bucket', () => {
       const collection = new Collection();
-      const bucketInstance = new ToOneOrMany([], collection);
+      const bucketInstance = new Bucket.ToOneOrMany([], collection);
 
-      expect(bucketInstance).toBeInstanceOf(ToOneOrMany);
+      expect(bucketInstance).toBeInstanceOf(Bucket.ToOneOrMany);
     });
 
     it('should be able to get initial models', () => {
@@ -25,7 +25,7 @@ describe('ToOneOrMany', () => {
 
       const collection = new AppCollection();
       const foos = collection.add([{}, {}], Foo);
-      const bucketInstance = new ToOneOrMany(foos, collection);
+      const bucketInstance = new Bucket.ToOneOrMany(foos, collection);
 
       expect(bucketInstance.value).toBeInstanceOf(Array);
       if (bucketInstance.value instanceof Array) {
@@ -50,7 +50,7 @@ describe('ToOneOrMany', () => {
       const collection = new AppCollection();
       const foos = collection.add([{}, {}], Foo);
       const bars = collection.add([{}], Bar);
-      const bucketInstance = new ToOneOrMany([...foos, ...bars], collection);
+      const bucketInstance = new Bucket.ToOneOrMany([...foos, ...bars], collection);
 
       expect(bucketInstance.value).toBeInstanceOf(Array);
       if (bucketInstance.value instanceof Array) {
@@ -73,7 +73,7 @@ describe('ToOneOrMany', () => {
       }
 
       const collection = new AppCollection();
-      const bucketInstance = new ToOneOrMany<Foo>(
+      const bucketInstance = new Bucket.ToOneOrMany<Foo>(
         [{ id: 987, type: 'foo' }, { id: 123, type: 'foo' }, { id: 234, type: 'foo' }],
         collection,
       );
@@ -105,7 +105,7 @@ describe('ToOneOrMany', () => {
       const collection = new AppCollection();
       const foos = collection.add([{}, {}], Foo);
       const bars = collection.add([{}], Bar);
-      const bucketInstance = new ToOneOrMany<Foo | Bar>([...foos, ...bars], collection);
+      const bucketInstance = new Bucket.ToOneOrMany<Foo | Bar>([...foos, ...bars], collection);
 
       expect(bucketInstance.value).toBeInstanceOf(Array);
       if (bucketInstance.value instanceof Array) {
@@ -131,9 +131,9 @@ describe('ToOneOrMany', () => {
   describe('ToOneOrMany with a single item', () => {
     it('should init a ToOneOrMany bucket', () => {
       const collection = new Collection();
-      const bucketInstance = new ToOneOrMany([], collection);
+      const bucketInstance = new Bucket.ToOneOrMany([], collection);
 
-      expect(bucketInstance).toBeInstanceOf(ToOneOrMany);
+      expect(bucketInstance).toBeInstanceOf(Bucket.ToOneOrMany);
     });
 
     it('should be able to get initial model', () => {
@@ -146,7 +146,7 @@ describe('ToOneOrMany', () => {
 
       const collection = new AppCollection();
       const foos = collection.add([{}, {}], Foo);
-      const bucketInstance = new ToOneOrMany(foos[0], collection);
+      const bucketInstance = new Bucket.ToOneOrMany(foos[0], collection);
 
       expect(bucketInstance.value).toBe(foos[0]);
     });
@@ -163,7 +163,7 @@ describe('ToOneOrMany', () => {
       }
 
       const collection = new AppCollection();
-      const bucketInstance = new ToOneOrMany<Foo>({ id: 234, type: 'foo' }, collection);
+      const bucketInstance = new Bucket.ToOneOrMany<Foo>({ id: 234, type: 'foo' }, collection);
       const foos = collection.add([{ id: 123 }, { id: 234 }], Foo);
 
       expect(collection.length).toBe(2);
@@ -184,7 +184,7 @@ describe('ToOneOrMany', () => {
 
       const collection = new AppCollection();
       const foos = collection.add([{}, {}], Foo);
-      const bucketInstance = new ToOneOrMany(foos[0], collection);
+      const bucketInstance = new Bucket.ToOneOrMany(foos[0], collection);
 
       expect(bucketInstance.value).toBe(foos[0]);
       bucketInstance.value = foos[1];

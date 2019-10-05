@@ -1,6 +1,6 @@
 import { computed } from 'mobx';
 
-import { READ_ONLY } from '../errors';
+import { READ_ONLY, REF_NEEDS_COLLECTION, REF_SINGLE } from '../errors';
 import { error } from '../helpers/format';
 import { getModelRef } from '../helpers/model/utils';
 import { IModelRef } from '../interfaces/IModelRef';
@@ -12,10 +12,20 @@ export class ToOne<T extends PureModel> {
 
   constructor(
     data: T | IModelRef | null,
-    protected __collection: PureCollection,
+    protected __collection?: PureCollection,
     protected __readonly: boolean = false,
   ) {
+    if (data && !this.__collection) {
+      throw error(REF_NEEDS_COLLECTION);
+    } else if (data instanceof Array) {
+      throw error(REF_SINGLE, { key: '' });
+    }
+
     this.__rawValue = data;
+  }
+
+  public setCollection(value: PureCollection | undefined) {
+    this.__collection = value;
   }
 
   @computed
@@ -23,13 +33,16 @@ export class ToOne<T extends PureModel> {
     return this.__getModel(this.__rawValue);
   }
 
-  public set value(val: T | null) {
+  public set value(data: T | null) {
     if (this.__readonly) {
       throw error(READ_ONLY);
+    } else if (data instanceof Array) {
+      throw error(REF_SINGLE, { key: '' });
     }
-    this.__rawValue = val;
+    this.__rawValue = data;
   }
 
+  @computed
   public get refValue(): IModelRef | null {
     return this.__rawValue ? getModelRef(this.__rawValue) : null;
   }
@@ -46,6 +59,10 @@ export class ToOne<T extends PureModel> {
   protected __getModel(model: T | IModelRef | null): T | null {
     if (model instanceof PureModel || model === null) {
       return model;
+    }
+
+    if (!this.__collection) {
+      throw error(REF_NEEDS_COLLECTION);
     }
 
     return this.__collection.findOne(model.type, model.id);

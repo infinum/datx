@@ -15,5 +15,5 @@ function msg(str: string, keys: IDictionary) {
 
 // tslint:disable-next-line:export-name
 export function error(message: string, keys: IDictionary = {}): Error {
-  return new Error(`[datx exception] ${msg(message, keys)}`);
+  return new Error(`[datx exception] ${msg(message, keys)}`.replace(/\s+/g, ' '));
 }

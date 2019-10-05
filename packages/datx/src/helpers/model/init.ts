@@ -1,9 +1,12 @@
-import { assignComputed, IDictionary, IRawModel, META_FIELD } from 'datx-utils';
+import { assignComputed, IDictionary, IRawModel, mapItems, META_FIELD } from 'datx-utils';
 
+import { ToMany, ToOne, ToOneOrMany } from '../../buckets';
 import { FieldType } from '../../enums/FieldType';
 import { ReferenceType } from '../../enums/ReferenceType';
 import { ID_REQUIRED } from '../../errors';
+import { IBucket } from '../../interfaces/IBucket';
 import { IIdentifier } from '../../interfaces/IIdentifier';
+import { IModelRef } from '../../interfaces/IModelRef';
 import { IReferenceOptions } from '../../interfaces/IReferenceOptions';
 import { IType } from '../../interfaces/IType';
 import { TRefValue } from '../../interfaces/TRefValue';
@@ -12,7 +15,23 @@ import { PureModel } from '../../PureModel';
 import { storage } from '../../services/storage';
 import { updateAction } from '../patch';
 import { getField, getRef, updateField, updateRef } from './fields';
-import { getModelMetaKey, getModelType, setModelMetaKey } from './utils';
+import { getModelCollection, getModelMetaKey, getModelType, setModelMetaKey } from './utils';
+
+function isModelReference(value: IModelRef | Array<IModelRef>): true;
+function isModelReference(value: unknown): false;
+function isModelReference(value: unknown): boolean {
+  if (value instanceof Array) {
+    return value.every(isModelReference);
+  }
+
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'type' in value &&
+    'id' in value &&
+    Object.keys(value).length === 2
+  );
+}
 
 interface IMetaToInit extends IDictionary {
   fields: Array<string>;
@@ -50,6 +69,29 @@ export function initModelField<T extends PureModel>(
   );
 }
 
+export function initBucket(
+  model: PureModel,
+  key: string,
+  type: ReferenceType,
+  collection?: PureCollection,
+  data: PureModel | Array<PureModel> | null = null,
+) {
+  let bucket: IBucket<PureModel>;
+
+  if (type === ReferenceType.TO_MANY) {
+    // @ts-ignore Allow the mistake because it's handled in the bucket
+    bucket = new ToMany(data || [], collection);
+  } else if (type === ReferenceType.TO_ONE) {
+    bucket = new ToOne(data, collection);
+  } else {
+    bucket = new ToOneOrMany(data, collection);
+  }
+
+  storage.setModelDataKey(model, key, bucket);
+
+  return bucket;
+}
+
 /**
  * Initialize a reference to other models
  *
@@ -70,9 +112,21 @@ export function initModelRef(
   // Initialize the observable field to the given value
   refs[key] = options;
 
-  const isArray = options.type === ReferenceType.TO_MANY;
-  storage.setModelDataKey(obj, key, isArray ? [] : undefined);
-  updateAction(obj, key, isArray ? [] : undefined);
+  if (!options.property) {
+    const data =
+      initialVal &&
+      mapItems(initialVal, (item) =>
+        item instanceof PureModel || isModelReference(item)
+          ? item
+          : {
+              id: item,
+              type: getModelType(options.model),
+            },
+      );
+
+    const bucket = initBucket(obj, key, options.type, getModelCollection(obj), data);
+    updateAction(obj, key, bucket.value);
+  }
 
   assignComputed(
     obj,
@@ -82,10 +136,6 @@ export function initModelRef(
       updateRef(obj, key, value);
     },
   );
-
-  if (!options.property && initialVal !== undefined) {
-    obj[key] = initialVal;
-  }
 }
 
 function prepareFields(data: IRawModel, meta: IMetaToInit, model: PureModel) {
@@ -142,7 +192,10 @@ function initModelData(
   Object.keys(refs).forEach((key) => {
     const opts = refs[key];
     const value = data[key] || defaults[key] || undefined;
-    const models: any = collection ? collection.add(value, getModelType(opts.model)) : value;
+    const models: any =
+      collection && !isModelReference(value)
+        ? collection.add(value, getModelType(opts.model))
+        : value;
     initModelRef(model, key, opts, models);
   });
 }
