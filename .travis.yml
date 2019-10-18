@@ -1,8 +1,7 @@
 language: node_js
 node_js:
-  - "8"
   - "10"
-  - "11"
+  - "12"
 env:
   - MOBX_VERSION=4
   - MOBX_VERSION=5
