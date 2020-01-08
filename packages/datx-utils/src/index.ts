@@ -1,6 +1,5 @@
 export { DEFAULT_TYPE, META_FIELD } from './consts';
 
-export { IDictionary } from './interfaces/IDictionary';
 export { IRawModel } from './interfaces/IRawModel';
 
 export {
@@ -12,4 +11,9 @@ export {
   warn,
   deprecated,
   info,
+  getMeta,
+  setMeta,
+  mergeMeta,
+  reducePrototypeChain,
+  getMetaObj,
 } from './helpers';

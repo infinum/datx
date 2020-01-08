@@ -1,25 +1,25 @@
 import { IRawModel, META_FIELD } from 'datx-utils';
 
-import { UNDEFINED_MODEL, UNDEFINED_TYPE } from '../errors';
 import { IType } from '../interfaces/IType';
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
 import { error } from './format';
-import { getMetaKeyFromRaw, updateModel } from './model/utils';
+import { updateModel } from './model/utils';
+import { MetaModelField } from '../enums/MetaModelField';
 
 function initCollectionModel(collection: PureCollection, data: IRawModel): PureModel {
-  const type = getMetaKeyFromRaw(data, 'type');
+  const type = data?.[META_FIELD]?.[MetaModelField.TypeField];
 
   return upsertModel(data, type, collection);
 }
 
 export function upsertModel(
   data: IRawModel,
-  type: IType | typeof PureModel,
+  type: number | IType | typeof PureModel,
   collection: PureCollection,
 ): PureModel {
   if (!type && type !== 0) {
-    throw error(UNDEFINED_TYPE);
+    throw error('The type needs to be defined if the object is not an instance of the model.');
   }
 
   const staticCollection = collection.constructor as typeof PureCollection;
@@ -38,10 +38,10 @@ export function upsertModel(
         collection,
       );
     }
-    throw error(UNDEFINED_MODEL, { type });
+    throw error(`No model is defined for the type ${type}.`);
   }
 
-  const id = getMetaKeyFromRaw(data, 'id', TypeModel as typeof PureModel | undefined);
+  const id = data?.[META_FIELD]?.[MetaModelField.IdField];
   const existingModel = id && collection.findOne(type, id);
   if (existingModel) {
     return updateModel(existingModel, data);
@@ -51,7 +51,7 @@ export function upsertModel(
 }
 
 export function isSelectorFunction(fn: any) {
-  return typeof fn === 'function' && (fn !== PureModel && !(fn.prototype instanceof PureModel));
+  return typeof fn === 'function' && fn !== PureModel && !(fn.prototype instanceof PureModel);
 }
 
 export function initModels(collection: PureCollection, data: Array<IRawModel>) {

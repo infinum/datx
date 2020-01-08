@@ -1,4 +1,4 @@
-import { IDictionary, IRawModel } from 'datx-utils';
+import { IRawModel } from 'datx-utils';
 
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
@@ -11,7 +11,7 @@ export interface IMetaMixin<T extends PureModel = PureModel> {
     collection?: PureCollection;
     id: IIdentifier;
     original?: T;
-    refs: IDictionary<IModelRef | Array<IModelRef>>;
+    refs: Record<string, IModelRef | Array<IModelRef>>;
     snapshot: IRawModel;
     type: IType;
   };

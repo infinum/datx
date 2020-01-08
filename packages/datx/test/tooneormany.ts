@@ -4,7 +4,7 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import { Bucket, Collection, Model, prop } from '../src';
+import { Bucket, Collection, Model, Attribute } from '../src';
 
 describe('ToOneOrMany', () => {
   describe('ToOneOrMany with lists', () => {
@@ -65,7 +65,7 @@ describe('ToOneOrMany', () => {
       class Foo extends Model {
         public static type = 'foo';
 
-        @prop.identifier
+        @Attribute({ isIdentifier: true })
         public id!: number;
       }
       class AppCollection extends Collection {
@@ -74,10 +74,14 @@ describe('ToOneOrMany', () => {
 
       const collection = new AppCollection();
       const bucketInstance = new Bucket.ToOneOrMany<Foo>(
-        [{ id: 987, type: 'foo' }, { id: 123, type: 'foo' }, { id: 234, type: 'foo' }],
+        [
+          { id: '987', type: 'foo' },
+          { id: '123', type: 'foo' },
+          { id: '234', type: 'foo' },
+        ],
         collection,
       );
-      const foos = collection.add([{ id: 123 }, { id: 234 }], Foo);
+      const foos = collection.add([{ id: '123' }, { id: '234' }], Foo);
 
       expect(collection.length).toBe(2);
       expect(bucketInstance.value).toBeInstanceOf(Array);
@@ -155,7 +159,7 @@ describe('ToOneOrMany', () => {
       class Foo extends Model {
         public static type = 'foo';
 
-        @prop.identifier
+        @Attribute({ isIdentifier: true })
         public id!: number;
       }
       class AppCollection extends Collection {
@@ -163,8 +167,8 @@ describe('ToOneOrMany', () => {
       }
 
       const collection = new AppCollection();
-      const bucketInstance = new Bucket.ToOneOrMany<Foo>({ id: 234, type: 'foo' }, collection);
-      const foos = collection.add([{ id: 123 }, { id: 234 }], Foo);
+      const bucketInstance = new Bucket.ToOneOrMany<Foo>({ id: '234', type: 'foo' }, collection);
+      const foos = collection.add([{ id: '123' }, { id: '234' }], Foo);
 
       expect(collection.length).toBe(2);
       expect(bucketInstance.snapshot).not.toBeInstanceOf(Array);

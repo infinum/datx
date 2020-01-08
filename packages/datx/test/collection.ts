@@ -1,8 +1,9 @@
 // tslint:disable:max-classes-per-file
 import { autorun, configure } from 'mobx';
 
-import { Collection, getModelCollection, getModelId, prop, PureModel } from '../src';
+import { Collection, PureModel, Attribute } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
+import { getModelCollection, getModelId } from '../src/helpers/model/utils';
 
 configure({ enforceActions: 'observed' });
 
@@ -20,9 +21,9 @@ describe('Collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop public foo!: number;
-        @prop public bar!: number;
-        @prop public baz!: number;
+        @Attribute() public foo!: number;
+        @Attribute() public bar!: number;
+        @Attribute() public baz!: number;
       }
 
       class Baz extends PureModel {
@@ -105,9 +106,9 @@ describe('Collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop public foo!: number;
-        @prop public bar!: number;
-        @prop public baz!: number;
+        @Attribute() public foo!: number;
+        @Attribute() public bar!: number;
+        @Attribute() public baz!: number;
       }
 
       class Baz extends PureModel {
@@ -130,7 +131,7 @@ describe('Collection', () => {
     it('should reset the collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop public foo!: number;
+        @Attribute() public foo!: number;
       }
 
       class Store extends Collection {
@@ -157,9 +158,9 @@ describe('Collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop public foo!: number;
-        @prop public bar!: number;
-        @prop public baz!: number;
+        @Attribute() public foo!: number;
+        @Attribute() public bar!: number;
+        @Attribute() public baz!: number;
       }
 
       class Store extends Collection {
@@ -188,9 +189,9 @@ describe('Collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop public foo!: number;
-        @prop public bar!: number;
-        @prop public baz!: number;
+        @Attribute() public foo!: number;
+        @Attribute() public bar!: number;
+        @Attribute() public baz!: number;
       }
 
       class Store extends Collection {
@@ -220,9 +221,9 @@ describe('Collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop public foo!: number;
-        @prop public bar!: number;
-        @prop public baz!: number;
+        @Attribute() public foo!: number;
+        @Attribute() public bar!: number;
+        @Attribute() public baz!: number;
       }
 
       class Store extends Collection {
@@ -242,10 +243,10 @@ describe('Collection', () => {
       let foo;
       autorun(() => {
         autorunModelCount++;
-        foo = store.findOne(Foo, '123');
+        foo = store.findOne(Foo, 123);
       });
 
-      const foo2 = store.add({ id: '123' }, Foo);
+      const foo2 = store.add({ id: 123 }, Foo);
 
       expect(autorunModelCount).toBe(2);
       expect(foo).toBe(foo2);

@@ -5,7 +5,9 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import { Collection, IPatch, Model, PatchType, prop } from '../src';
+import { Collection, Model, Attribute } from '../src';
+import { IPatch } from '../src/interfaces/IPatch';
+import { PatchType } from '../src/enums/PatchType';
 
 describe('patch', () => {
   describe('model', () => {
@@ -357,9 +359,9 @@ describe('patch', () => {
       class FooModel extends Model {
         public static type = 'foo';
 
-        @prop.identifier
+        @Attribute({ isIdentifier: true })
         public id!: number | string;
-        @prop.toOne('bar')
+        @Attribute({ toOne: 'bar ' })
         public bar!: BarModel | null;
       }
 
@@ -402,16 +404,16 @@ describe('patch', () => {
       class BarModel extends Model {
         public static type = 'bar';
 
-        @prop.identifier
+        @Attribute({ isIdentifier: true })
         public id!: number | string;
       }
 
       class FooModel extends Model {
         public static type = 'foo';
 
-        @prop.identifier
+        @Attribute({ isIdentifier: true })
         public id!: number | string;
-        @prop.toOne(BarModel)
+        @Attribute({ toOne: BarModel })
         public bar!: BarModel;
       }
 

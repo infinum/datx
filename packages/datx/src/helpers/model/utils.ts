@@ -1,19 +1,17 @@
-import { IDictionary, IRawModel, META_FIELD, warn } from 'datx-utils';
-import { toJS } from 'mobx';
+import { getMeta, IRawModel, META_FIELD, warn, setMeta, mergeMeta, getMetaObj } from 'datx-utils';
 
-import { NO_REFS, NOT_A_CLONE, REF_NEEDS_COLLECTION } from '../../errors';
-import { IBucket } from '../../interfaces/IBucket';
-import { IIdentifier } from '../../interfaces/IIdentifier';
 import { IModelRef } from '../../interfaces/IModelRef';
-import { IReferenceOptions } from '../../interfaces/IReferenceOptions';
 import { IType } from '../../interfaces/IType';
-import { TRefValue } from '../../interfaces/TRefValue';
-import { PureCollection } from '../../PureCollection';
+import { MetaModelField } from '../../enums/MetaModelField';
 import { PureModel } from '../../PureModel';
-import { storage } from '../../services/storage';
+import { PureCollection } from '../../PureCollection';
+import { IIdentifier } from '../../interfaces/IIdentifier';
+import { startAction, endAction } from '../patch';
+import { MetaClassField } from '../../enums/MetaClassField';
+import { initModelField } from './init';
+import { IFieldDefinition } from '../../Attribute';
+import { IBucket } from '../../interfaces/IBucket';
 import { error } from '../format';
-import { initModelField, mergeMeta } from '../model/init';
-import { endAction, startAction } from '../patch';
 
 export function isModelReference(value: IModelRef | Array<IModelRef>): true;
 export function isModelReference(value: unknown): false;
@@ -40,30 +38,34 @@ export function isModelReference(value: unknown): boolean {
  */
 export function getModelType(model: IType | IModelRef | typeof PureModel | PureModel): IType {
   if (typeof model === 'function') {
-    // @ts-ignore
-    return model.type;
+    return (model as typeof PureModel).type;
   } else if (isModelReference(model)) {
     return (model as IModelRef).type;
   } else if (typeof model === 'object') {
-    return getModelMetaKey(model, 'type') || (model.constructor as typeof PureModel).type;
+    return getMeta(model, MetaModelField.TypeField) || (model.constructor as typeof PureModel).type;
   }
 
   return model;
 }
 
-/**
- * Get the model identifier
- *
- * @export
- * @param {(PureModel|IIdentifier)} model Model to be checked
- * @returns {IIdentifier} Model identifier
- */
 export function getModelId(model: PureModel | IIdentifier): IIdentifier {
   if (model instanceof PureModel) {
-    return getModelMetaKey(model, 'id');
+    const id = getMeta<IIdentifier>(model, MetaModelField.IdField);
+    if (id !== undefined) {
+      return id;
+    }
+    throw error('Model without an ID');
   }
 
   return model;
+}
+
+export function getModelCollection(model: PureModel): PureCollection | undefined {
+  return getMeta<PureCollection>(model, MetaModelField.Collection);
+}
+
+export function isReference(model: PureModel | IModelRef): boolean {
+  return !(model instanceof PureModel);
 }
 
 export function getModelRef(model: PureModel | IModelRef): IModelRef {
@@ -77,34 +79,37 @@ export function getModelRef(model: PureModel | IModelRef): IModelRef {
   return model;
 }
 
-export function isReference(model: PureModel | IModelRef): boolean {
-  return !(model instanceof PureModel);
+export function modelToJSON(model: PureModel): IRawModel {
+  const meta = getMetaObj(model);
+  const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
+  const raw = {
+    [META_FIELD]: {
+      ...meta,
+      [MetaModelField.IdField]: getModelId(model),
+      [MetaModelField.TypeField]: getModelType(model),
+      [MetaModelField.Collection]: undefined,
+    },
+  };
+
+  Object.keys(fields).forEach((fieldName) => {
+    const fieldDef = fields[fieldName];
+
+    if (fieldDef.referenceDef) {
+      const bucket = getMeta<IBucket<PureModel>>(model, `ref_${fieldName}`);
+      raw[fieldName] = bucket?.snapshot || null;
+    } else {
+      raw[fieldName] = model[fieldName];
+    }
+  });
+
+  return raw;
 }
 
-/**
- * Get a collection the given model belongs to
- *
- * @export
- * @param {PureModel} model Model to be checked
- * @returns {PureCollection} A collection the given model belongs to
- */
-export function getModelCollection(model: PureModel): PureCollection | undefined {
-  return getModelMetaKey(model, 'collection');
-}
-
-/**
- * Clone the given model
- *
- * @export
- * @template T
- * @param {T} model Model to be clones
- * @returns {T} Cloned model object
- */
 export function cloneModel<T extends PureModel>(model: T): T {
   const rawData = modelToJSON(model);
   const meta = rawData[META_FIELD] || {};
-  meta.originalId = meta.id;
-  delete meta.id;
+  meta[MetaModelField.OriginalId] = meta[MetaModelField.IdField];
+  delete meta[MetaModelField.IdField];
 
   const collection = getModelCollection(model);
   if (collection) {
@@ -119,44 +124,41 @@ export function cloneModel<T extends PureModel>(model: T): T {
   }
 }
 
-/**
- * Get the original model for the cloned model
- *
- * @export
- * @param {PureModel} model Cloned model
- * @returns {PureModel} Original model
- */
 export function getOriginalModel<T extends PureModel = PureModel>(model: T): T {
   const collection = getModelCollection(model);
-  const originalId = getModelMetaKey(model, 'originalId');
+  const originalId = getMeta<IIdentifier>(model, MetaModelField.OriginalId);
   if (originalId) {
     if (!collection) {
-      throw error(REF_NEEDS_COLLECTION);
+      throw error('The model needs to be in a collection to be referenceable');
     }
 
     return collection.findOne(model, originalId) as T;
   }
-  throw error(NOT_A_CLONE);
+  throw error('The given model is not a clone.');
 }
 
-const READ_ONLY_META = ['fields', 'id', 'refs', 'type'];
+const READ_ONLY_META: Array<string> = [
+  MetaModelField.Fields,
+  MetaModelField.IdField,
+  MetaModelField.TypeField,
+];
 
-/**
- * Bulk update the model data
- *
- * @export
- * @template T
- * @param {T} model Model to be updated
- * @param {IDictionary} data Data that should be assigned to the model
- * @returns {T}
- */
-export function updateModel<T extends PureModel>(model: T, data: IDictionary): T {
-  const modelId = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'id') || 'id';
-  const modelType =
-    storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type') || 'type';
+function omitKeys(obj: object, keys: Array<string>): object {
+  const newObj = {};
+
+  Object.keys(obj)
+    .filter((key) => !keys.includes(key))
+    .forEach((key) => (newObj[key] = obj[key]));
+
+  return newObj;
+}
+
+export function updateModel<T extends PureModel>(model: T, data: Record<string, any>): T {
+  const modelId = getMeta(model.constructor, MetaClassField.IdField, 'id');
+  const modelType = getMeta(model.constructor, MetaClassField.TypeField, 'type');
 
   const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
-  mergeMeta(model, storage.getModelMeta(model), data[META_FIELD]);
+  mergeMeta(model, omitKeys(data[META_FIELD] || {}, READ_ONLY_META));
   startAction(model);
 
   keys.forEach((key) => {
@@ -166,7 +168,7 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary): T
       const metaKeys = Object.keys(data[key] || {});
       metaKeys.forEach((metaKey) => {
         if (!READ_ONLY_META.includes(metaKey)) {
-          setModelMetaKey(model, metaKey, data[key][metaKey]);
+          setMeta(model, metaKey, data[key][metaKey]);
         }
       });
     }
@@ -176,141 +178,28 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary): T
   return model;
 }
 
-/**
- * Assign a property to a model
- *
- * @export
- * @template T
- * @param {T} model A model to modify
- * @param {string} key Property name
- * @param {*} value Property value
- */
 export function assignModel<T extends PureModel>(model: T, key: string, value: any): void {
   if (!(model instanceof PureModel)) {
     throw error('The given parameter is not a valid model');
   }
-  const refs = getModelMetaKey(model, 'refs') as IDictionary<IReferenceOptions>;
-  if (!refs) {
-    throw error('The given models is not initialized correctly');
-  }
-  startAction(model);
-  if (key in refs) {
-    assignModelRef(model, key, value);
-  } else if (value instanceof PureModel) {
-    endAction(model);
-    throw error(NO_REFS, { key });
-  } else {
-    assignModelField(model, key, value);
-  }
-  endAction(model);
-}
+  const fields = getMeta(model, MetaModelField.Fields, {});
 
-function assignModelField<T extends PureModel>(model: T, key: string, value: any): void {
-  const fields = getModelMetaKey(model, 'fields') as Array<string>;
-  if (fields.indexOf(key) !== -1) {
+  if (key in fields) {
     model[key] = value;
   } else {
     initModelField(model, key, value);
   }
 }
 
-function assignModelRef<T extends PureModel>(model: T, key: string, value: TRefValue): void {
-  // const refs = getModelMetaKey(model, 'refs');
-  model[key] = value;
-}
-
-export function getMetaKeyFromRaw(data: IRawModel, key: string, model?: typeof PureModel): any {
-  if (
-    META_FIELD in data &&
-    typeof data[META_FIELD] === 'object' &&
-    data[META_FIELD] !== undefined
-  ) {
-    return (data[META_FIELD] || {})[key];
-  }
-  if (model) {
-    const modelId = storage.getModelClassMetaKey(model, key);
-
-    return modelId && data[modelId];
-  }
-
-  return data && data[key];
-}
-
-/**
- * Get a serializable value of the model
- *
- * @export
- * @param {PureModel} model Model to serialize
- * @returns {IRawModel} Pure JS value of the model
- */
-export function modelToJSON(model: PureModel): IRawModel {
-  const rawRefs = storage.getModelMetaKey(model, 'refs');
-  const refs = {};
-  Object.keys(rawRefs || {}).forEach((key) => {
-    const ref = rawRefs[key];
-    if (!ref || ref.property) {
-      return;
-    }
-    const value: IBucket<PureModel> = storage.getModelDataKey(model, key);
-    refs[key] = (value && value.refValue) || undefined;
-  });
-  const rawMeta = Object.assign({}, storage.getModelMeta(model), {
-    collection: undefined,
-  });
-  const meta = toJS(rawMeta);
-  meta.refs = refs;
-  const data = {};
-  const observableData = storage.getModelData(model);
-  Object.keys(observableData).forEach((key) => {
-    if (!(key in meta.refs)) {
-      data[key] = toJS(observableData[key]);
-    }
-  });
-
-  delete meta.collection;
-  delete meta.patch;
-
-  const raw = Object.assign(data, { [META_FIELD]: meta }, refs);
-
-  const staticModel = model.constructor as typeof PureModel;
-  const modelId = storage.getModelClassMetaKey(staticModel, 'id');
-  const modelType = storage.getModelClassMetaKey(staticModel, 'type');
-  if (meta && modelId) {
-    raw[modelId] = meta.id;
-  }
-  if (meta && modelType) {
-    raw[modelType] = meta.type;
-  }
-
-  return raw;
-}
-
-export function getModelMetaKey(model: PureModel, key: string) {
-  return storage.getModelMetaKey(model, key);
-}
-
-export function setModelMetaKey(model: PureModel, key: string, value: any) {
-  storage.setModelMetaKey(model, key, value);
-
-  return;
-}
-
-export function getModelClassRefs(type: typeof PureModel) {
-  return storage.getModelClassReferences(type);
-}
-
 export function updateModelCollection(model: PureModel, collection?: PureCollection) {
-  setModelMetaKey(model, 'collection', collection);
+  setMeta(model, MetaModelField.Collection, collection);
 
-  const refs = getModelMetaKey(model, 'refs') as IDictionary<IReferenceOptions>;
+  const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
   startAction(model);
-  for (const key of Object.keys(refs)) {
-    const ref = refs[key];
-    if (!ref.property) {
-      const bucket: IBucket<PureModel> = storage.getModelDataKey(model, key);
-      if (bucket) {
-        bucket.setCollection(collection);
-      }
+  for (const key of Object.keys(fields)) {
+    const bucket = getMeta(model, `ref_${key}`);
+    if (bucket) {
+      bucket.setCollection(collection);
     }
   }
   endAction(model);

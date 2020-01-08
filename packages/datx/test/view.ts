@@ -4,7 +4,9 @@ import { autorun, configure, runInAction } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import { Collection, Model, prop, updateModelId, View, view } from '../src';
+import { Collection, Model, View, Attribute } from '../src';
+import { updateModelId } from '../src/helpers/model/fields';
+import { ViewAttribute } from '../src/Attribute';
 
 describe('View', () => {
   it('should init a view', () => {
@@ -94,7 +96,7 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop public key!: number;
+      @Attribute() public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -123,7 +125,7 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop public key!: number;
+      @Attribute() public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -166,7 +168,7 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop public key!: number;
+      @Attribute() public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -240,7 +242,7 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop.identifier public id!: number;
+      @Attribute({ isIdentifier: true }) public id!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -277,7 +279,7 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop.identifier public id!: number;
+      @Attribute({ isIdentifier: true }) public id!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -392,7 +394,7 @@ describe('View', () => {
       class AppCollection extends Collection {
         public static types = [Foo];
 
-        @view(Foo)
+        @ViewAttribute(Foo)
         public test!: View<Foo>;
       }
 
@@ -422,7 +424,12 @@ describe('View', () => {
 
     const collection = new AppCollection();
     const foos = collection.add([{}, {}], Foo);
-    const viewInstance = new View(Foo, collection, undefined, foos.map((foo) => foo.meta.id));
+    const viewInstance = new View(
+      Foo,
+      collection,
+      undefined,
+      foos.map((foo) => foo.meta.id),
+    );
 
     expect(viewInstance).toHaveLength(2);
     expect(viewInstance.list[0]).toBeInstanceOf(Foo);
@@ -441,7 +448,7 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop.identifier
+      @Attribute({ isIdentifier: true })
       public id!: number;
     }
     class AppCollection extends Collection {

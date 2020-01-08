@@ -1,6 +1,3 @@
-import { IDictionary } from 'datx-utils';
-
-import { DECORATE_MODEL } from '../errors';
 import { error } from '../helpers/format';
 import { isModel } from '../helpers/mixin';
 import { initModelRef } from '../helpers/model/init';
@@ -23,11 +20,11 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
   const BaseClass = Base as typeof PureModel;
 
   if (!isModel(Base)) {
-    throw error(DECORATE_MODEL);
+    throw error('This mixin can only decorate models');
   }
 
   class WithActions extends BaseClass implements IActionsMixin<T> {
-    public update(data: IDictionary) {
+    public update(data: Record<string, any>) {
       updateModel(this, data);
     }
 

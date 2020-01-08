@@ -1,6 +1,5 @@
 import { computed } from 'mobx';
 
-import { READ_ONLY, REF_NEEDS_COLLECTION, REF_SINGLE } from '../errors';
 import { error } from '../helpers/format';
 import { getModelRef } from '../helpers/model/utils';
 import { endAction, startAction, updateAction } from '../helpers/patch';
@@ -19,9 +18,9 @@ export class ToOne<T extends PureModel> {
     protected __key?: string,
   ) {
     if (data && !this.__collection) {
-      throw error(REF_NEEDS_COLLECTION);
+      throw error('The model needs to be in a collection to be referenceable');
     } else if (data instanceof Array) {
-      throw error(REF_SINGLE, { key: '' });
+      throw error("The reference can't be an array of values.");
     }
 
     this.__rawValue = data;
@@ -38,9 +37,9 @@ export class ToOne<T extends PureModel> {
 
   public set value(data: T | null) {
     if (this.__readonly) {
-      throw error(READ_ONLY);
+      throw error('This is a read-only bucket');
     } else if (data instanceof Array) {
-      throw error(REF_SINGLE, { key: '' });
+      throw error("The reference can't be an array of values.");
     }
     this.__rawValue = data;
     if (this.__model && this.__key) {
@@ -70,9 +69,9 @@ export class ToOne<T extends PureModel> {
     }
 
     if (!this.__collection) {
-      throw error(REF_NEEDS_COLLECTION);
+      throw error('The model needs to be in a collection to be referenceable');
     }
 
-    return this.__collection.findOne(model.type, model.id);
+    return this.__collection.findOne<T>(model.type, model.id);
   }
 }

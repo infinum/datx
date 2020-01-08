@@ -3,7 +3,9 @@
 import { META_FIELD } from 'datx-utils';
 import { configure } from 'mobx';
 
-import { Collection, prop, PureModel, ReferenceType, withActions, withMeta } from '../../src';
+import { Collection, PureModel, ReferenceType, Attribute } from '../../src';
+import { withMeta } from '../../src/mixins/withMeta';
+import { withActions } from '../../src/mixins/withActions';
 
 configure({ enforceActions: 'observed' });
 
@@ -11,9 +13,9 @@ describe('withActions', () => {
   it('should work with initial data', () => {
     class Foo extends PureModel {
       public static type = 'foo';
-      @prop public foo!: number;
-      @prop public bar!: number;
-      @prop public baz!: number;
+      @Attribute() public foo!: number;
+      @Attribute() public bar!: number;
+      @Attribute() public baz!: number;
     }
 
     const FooMeta = withMeta(Foo);

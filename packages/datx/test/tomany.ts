@@ -4,7 +4,7 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import { Bucket, Collection, Model, prop } from '../src';
+import { Collection, Model, Bucket, Attribute } from '../src';
 
 describe('ToMany', () => {
   it('should init a bucket', () => {
@@ -58,7 +58,7 @@ describe('ToMany', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop.identifier
+      @Attribute({ isIdentifier: true })
       public id!: number;
     }
     class AppCollection extends Collection {
@@ -67,10 +67,14 @@ describe('ToMany', () => {
 
     const collection = new AppCollection();
     const bucketInstance = new Bucket.ToMany<Foo>(
-      [{ id: 987, type: 'foo' }, { id: 123, type: 'foo' }, { id: 234, type: 'foo' }],
+      [
+        { id: '987', type: 'foo' },
+        { id: '123', type: 'foo' },
+        { id: '234', type: 'foo' },
+      ],
       collection,
     );
-    const foos = collection.add([{ id: 123 }, { id: 234 }], Foo);
+    const foos = collection.add([{ id: '123' }, { id: '234' }], Foo);
 
     expect(collection.length).toBe(2);
     expect(bucketInstance.length).toBe(2);

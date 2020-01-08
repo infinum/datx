@@ -1,266 +1,152 @@
-import { assignComputed, IDictionary, IRawModel, mapItems, META_FIELD } from 'datx-utils';
+import { assignComputed, IRawModel, getMeta, mapItems, setMeta, META_FIELD } from 'datx-utils';
+import { set } from 'mobx';
 
-import { ToMany, ToOne, ToOneOrMany } from '../../buckets';
-import { FieldType } from '../../enums/FieldType';
-import { ReferenceType } from '../../enums/ReferenceType';
-import { ID_REQUIRED } from '../../errors';
-import { IBucket } from '../../interfaces/IBucket';
-import { IIdentifier } from '../../interfaces/IIdentifier';
-import { IReferenceOptions } from '../../interfaces/IReferenceOptions';
-import { IType } from '../../interfaces/IType';
-import { TRefValue } from '../../interfaces/TRefValue';
-import { PureCollection } from '../../PureCollection';
 import { PureModel } from '../../PureModel';
-import { storage } from '../../services/storage';
-import { updateAction } from '../patch';
-import { getField, getRef, updateField, updateRef } from './fields';
-import {
-  getModelCollection,
-  getModelMetaKey,
-  getModelType,
-  isModelReference,
-  setModelMetaKey,
-} from './utils';
+import { PureCollection } from '../../PureCollection';
+import { MetaClassField } from '../../enums/MetaClassField';
+import { MetaModelField } from '../../enums/MetaModelField';
+import { IFieldDefinition } from '../../Attribute';
+import { ReferenceType } from '../../enums/ReferenceType';
+import { getModelType, getModelCollection, getModelId } from './utils';
+import { IType } from '../../interfaces/IType';
+import { getBucketConstructor } from '../../buckets';
+import { getRef, updateRef } from './fields';
+import { TRefValue } from '../../interfaces/TRefValue';
+import { IReferenceOptions } from '../../interfaces/IReferenceOptions';
+import { error } from '../format';
 
-interface IMetaToInit extends IDictionary {
-  fields: Array<string>;
-  id?: IIdentifier;
-  refs: IDictionary<IReferenceOptions>;
-  type?: IType;
-}
+type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
-export function initModelField<T extends PureModel>(
-  obj: T,
+export function initModelRef<T extends PureModel>(
+  model: T,
   key: string,
-  defValue: any,
-  type: FieldType = FieldType.DATA,
+  referenceDef?: IReferenceOptions,
+  initialVal?: TRefValue,
 ) {
-  const fields = getModelMetaKey(obj, 'fields') as Array<string>;
+  const fields = getMeta(model, MetaModelField.Fields, {});
+  const fieldDef = fields[key] || { referenceDef };
+  const collection = getModelCollection(model);
 
-  if (type === FieldType.ID && key in obj) {
-    storage.setModelDataKey(obj, key, undefined);
+  if (!collection && initialVal) {
+    throw error('The model needs to be in a collection to be referenceable');
   }
 
-  // Initialize the observable field to the default value
-  storage.setModelDataKey(obj, key, defValue);
-  updateAction(obj, key, defValue);
-  if (fields.indexOf(key) === -1) {
-    fields.push(key);
+  if (referenceDef) {
+    fields[key] = {
+      referenceDef,
+    };
   }
 
-  assignComputed(
-    obj,
-    key,
-    () => getField(obj, key),
-    (value) => {
-      updateField(obj, key, value, type);
-    },
-  );
-}
-
-export function initBucket(
-  model: PureModel,
-  key: string,
-  type: ReferenceType,
-  collection?: PureCollection,
-  data: PureModel | Array<PureModel> | null = null,
-) {
-  let bucket: IBucket<PureModel>;
-
-  if (type === ReferenceType.TO_MANY) {
-    // @ts-ignore Allow the mistake because it's handled in the bucket
-    bucket = new ToMany(data || [], collection, false, model, key);
-  } else if (type === ReferenceType.TO_ONE) {
-    bucket = new ToOne(data, collection, false, model, key);
+  if (fieldDef.referenceDef.property) {
+    // TODO: Implement backref
   } else {
-    bucket = new ToOneOrMany(data, collection, false, model, key);
+    const type = fieldDef.referenceDef.models[0];
+    const Bucket = getBucketConstructor(fieldDef.referenceDef.type);
+    setMeta(
+      model,
+      `ref_${key}`,
+      // @ts-ignore
+      new Bucket(collection?.add(initialVal, type), collection, false, model, key),
+    );
+
+    assignComputed(
+      model,
+      key,
+      () => getRef(model, key),
+      (value: TRefValue) => {
+        updateRef(model, key, value);
+      },
+    );
   }
-
-  storage.setModelDataKey(model, key, bucket);
-
-  return bucket;
 }
 
-/**
- * Initialize a reference to other models
- *
- * @export
- * @param {PureModel} obj Model to which the reference should be added
- * @param {string} key Model property where the reference will be defined
- * @param {IReferenceOptions} options Reference options
- * @param {TRefValue} initialVal Initial reference value
- */
-export function initModelRef(
-  obj: PureModel,
-  key: string,
-  options: IReferenceOptions,
-  initialVal: TRefValue,
-) {
-  const refs = getModelMetaKey(obj, 'refs');
+export function initModelField<T extends PureModel>(model: T, key: string, value: any): void {
+  const fields = getMeta(model, MetaModelField.Fields, {});
+  const fieldDef = fields[key];
 
-  // Initialize the observable field to the given value
-  refs[key] = options;
+  const typeField = getMeta(model.constructor, MetaClassField.TypeField, 'type', true);
+  const idField = getMeta(model.constructor, MetaClassField.IdField, 'id', true);
 
-  if (!options.property) {
-    const data =
-      initialVal &&
-      mapItems(initialVal, (item) =>
-        item instanceof PureModel || isModelReference(item)
-          ? item
-          : {
-              id: item,
-              type: getModelType(options.model),
-            },
-      );
-
-    const bucket = initBucket(obj, key, options.type, getModelCollection(obj), data);
-    updateAction(obj, key, bucket.value);
+  if (key === typeField) {
+    assignComputed(
+      model,
+      key,
+      () => getModelType(model),
+      () => {
+        throw error("Model type can't be changed after initialization.");
+      },
+    );
+  } else if (key === idField) {
+    assignComputed(
+      model,
+      key,
+      () => getModelId(model),
+      () => {
+        throw error(
+          "Model ID can't be updated directly. Use the `updateModelId` helper function instead.",
+        );
+      },
+    );
+  } else if (fieldDef.referenceDef) {
+    initModelRef(model, key, undefined, value);
+  } else {
+    set(model, key, value);
   }
+}
 
-  assignComputed(
-    obj,
-    key,
-    () => getRef(obj, key),
-    (value) => {
-      updateRef(obj, key, value);
-    },
+export function initModel(instance: PureModel, rawData: IRawModel, collection?: PureCollection) {
+  const modelClass = instance.constructor as typeof PureModel;
+  const modelClassFields: ModelFieldDefinitions = getMeta(
+    instance.constructor,
+    MetaClassField.Fields,
+    {},
+    true,
+    true,
   );
-}
+  const modelMeta: ModelFieldDefinitions | undefined = rawData?.[META_FIELD];
+  const fields: ModelFieldDefinitions = Object.assign({}, modelClassFields, modelMeta?.fields);
 
-function prepareFields(data: IRawModel, meta: IMetaToInit, model: PureModel) {
-  const staticModel = model.constructor as typeof PureModel;
-  const fields = meta.fields ? meta.fields.slice() : [];
-  const classRefs = storage.getModelClassReferences(staticModel);
-  const refs = Object.assign({}, classRefs, meta.refs);
+  setMeta(instance, MetaModelField.Collection, collection);
 
-  const defaults = storage.getModelDefaults(staticModel);
+  const typeField = getMeta(instance.constructor, MetaClassField.TypeField, 'type', true);
+  setMeta(
+    instance,
+    MetaModelField.TypeField,
+    rawData[typeField] || modelMeta?.type || modelClass.type,
+  );
 
-  Object.keys(data)
-    .concat(Object.keys(defaults))
-    .forEach((key) => {
-      if (!(key in refs) && fields.indexOf(key) === -1) {
-        fields.push(key);
-      }
+  const idField = getMeta(instance.constructor, MetaClassField.IdField, 'id', true);
+  setMeta(
+    instance,
+    MetaModelField.IdField,
+    rawData[idField] || modelMeta?.id || modelClass.getAutoId(),
+  );
+
+  setMeta(instance, MetaModelField.OriginalId, modelMeta?.originalId);
+
+  Object.keys(rawData)
+    .filter((field) => field !== META_FIELD)
+    .filter((field) => !(field in fields)) // Only new fields
+    .forEach((field) => {
+      const value = rawData[field];
+      const isRef =
+        value instanceof PureModel || (value instanceof Array && value[0] instanceof PureModel);
+      fields[field] = {
+        referenceDef: isRef
+          ? {
+              type: ReferenceType.TO_ONE_OR_MANY,
+              models: ([] as Array<IType>).concat(mapItems<PureModel, IType>(value, getModelType)),
+            }
+          : false,
+      };
     });
 
-  return { defaults, fields, refs };
-}
+  setMeta(instance, MetaModelField.Fields, fields);
 
-function initModelData(
-  model: PureModel,
-  data: IRawModel,
-  meta: IMetaToInit,
-  collection?: PureCollection,
-) {
-  const { defaults, fields, refs } = prepareFields(data, meta, model);
+  Object.keys(fields).forEach((fieldName) => {
+    const fieldDef = fields[fieldName];
 
-  const staticModel = model.constructor as typeof PureModel;
-  const modelId = storage.getModelClassMetaKey(staticModel, 'id');
-  const modelType = storage.getModelClassMetaKey(staticModel, 'type');
-
-  fields.forEach((key) => {
-    let type = FieldType.DATA;
-    let value = data[key];
-    if (value === undefined) {
-      value = defaults[key];
-    }
-    if (key === (modelId || 'id')) {
-      type = FieldType.ID;
-      value = meta.id;
-    } else if (key === modelType) {
-      type = FieldType.TYPE;
-      value = meta.type;
-    }
-    initModelField(model, key, value, type);
+    const value = fieldName in rawData ? rawData[fieldName] : fieldDef.defaultValue;
+    initModelField(instance, fieldName, value);
   });
-
-  if (modelId && !(modelId in fields)) {
-    initModelField(model, modelId, meta.id, FieldType.ID);
-  }
-
-  Object.keys(refs).forEach((key) => {
-    const opts = refs[key];
-    const value = data[key] || defaults[key] || undefined;
-    const models: any =
-      collection && !isModelReference(value)
-        ? collection.add(value, getModelType(opts.model))
-        : value;
-    initModelRef(model, key, opts, models);
-  });
-}
-
-export function initModelMeta(
-  model: PureModel,
-  data: IRawModel,
-  collection?: PureCollection,
-): IDictionary & IMetaToInit {
-  const staticModel = model.constructor as typeof PureModel;
-  const modelId = storage.getModelClassMetaKey(staticModel, 'id') || 'id';
-  const modelType = storage.getModelClassMetaKey(staticModel, 'type');
-
-  const dataMeta = (META_FIELD in data && data[META_FIELD]) || {};
-  const type =
-    (modelType && data[modelType]) ||
-    (dataMeta !== undefined && dataMeta.type) ||
-    getModelType(model);
-  let id = (modelId && data[modelId]) || (dataMeta !== undefined && dataMeta.id);
-
-  if (!id) {
-    if (!staticModel.enableAutoId) {
-      throw new Error(ID_REQUIRED);
-    }
-    id = staticModel.getAutoId();
-    while (collection && collection.findOne(type, id)) {
-      id = staticModel.getAutoId();
-    }
-  }
-
-  const meta = {
-    fields: [],
-    id,
-    refs: {},
-    type,
-  };
-
-  const newMeta =
-    META_FIELD in data && data[META_FIELD]
-      ? mergeMeta(model, meta, data[META_FIELD])
-      : (storage.setModelMeta(model, meta) as IMetaToInit);
-
-  // tslint:disable-next-line:no-dynamic-delete
-  delete data[META_FIELD];
-
-  return Object.assign({}, newMeta);
-}
-
-export function mergeMeta(
-  model: PureModel,
-  meta: IDictionary,
-  metaField: IDictionary = {},
-): IMetaToInit {
-  const toInit: IMetaToInit = { fields: [], refs: {} };
-  toInit.fields = metaField.fields;
-  meta.fields.push(...(metaField.fields || []));
-  toInit.refs = metaField.refs;
-  Object.assign(meta.refs, metaField.refs || {});
-
-  const exceptions = ['fields', 'refs', 'type', 'id'];
-
-  Object.keys(metaField).forEach((field: string) => {
-    if (exceptions.indexOf(field) === -1) {
-      meta[field] = metaField[field];
-    }
-  });
-
-  const newMeta = storage.setModelMeta(model, meta);
-
-  return Object.assign({}, newMeta, toInit);
-}
-
-export function initModel(model: PureModel, rawData: IRawModel, collection?: PureCollection) {
-  const staticModel = model.constructor as typeof PureModel;
-  const data = Object.assign({}, staticModel.preprocess(rawData, collection));
-  setModelMetaKey(model, 'collection', collection);
-  const meta = initModelMeta(model, data, collection);
-  initModelData(model, data, meta, collection);
 }

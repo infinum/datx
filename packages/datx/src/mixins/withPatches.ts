@@ -10,6 +10,8 @@ import { IModelConstructor } from '../interfaces/IModelConstructor';
 import { IPatch } from '../interfaces/IPatch';
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
+import { setMeta, getMeta } from 'datx-utils';
+import { MetaModelField } from '../enums/MetaModelField';
 
 function inversePatch<T = PureModel>(patch: IPatch<T>): IPatch<T> {
   const patchType: PatchType = reverseAction(patch.patchType);
@@ -91,13 +93,9 @@ export function withPatches<T extends PureCollection>(
     const BaseClass = Base as typeof PureModel;
     // tslint:disable-next-line:max-classes-per-file
     class WithPatches extends BaseClass {
-      private __patchListeners: Array<(patch: IPatch) => void> = [];
-
       constructor(...args: Array<any>) {
         super(...args);
-        Object.defineProperty(this, '__patchListeners', {
-          enumerable: false,
-        });
+        setMeta(this, MetaModelField.PatchListeners, []);
       }
 
       public applyPatch(patch: IPatch) {
@@ -113,10 +111,19 @@ export function withPatches<T extends PureCollection>(
       }
 
       public onPatch(listener: (patch: IPatch) => void): () => void {
-        this.__patchListeners.push(listener);
+        const listeners = getMeta<Array<(patch: IPatch) => void>>(
+          this,
+          MetaModelField.PatchListeners,
+          [],
+        );
+        listeners.push(listener);
 
         return () => {
-          this.__patchListeners = this.__patchListeners.filter((item) => item !== listener);
+          setMeta(
+            this,
+            MetaModelField.PatchListeners,
+            listeners.filter((item) => item !== listener),
+          );
         };
       }
     }

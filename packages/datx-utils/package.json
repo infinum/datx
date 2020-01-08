@@ -1,6 +1,6 @@
 {
   "name": "datx-utils",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "DatX lib utils for mixins",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -21,16 +21,16 @@
     "mobx"
   ],
   "devDependencies": {
-    "@infinumjs/tslint-config": "^2.0.0-beta.6",
-    "@types/jest": "^24.0.11",
-    "@types/node": "^12.0.0",
-    "jest": "^24.7.1",
-    "mobx": "^5.9.4",
-    "rollup": "^1.10.0",
-    "rollup-plugin-typescript2": "^0.24.0",
-    "ts-jest": "^24.0.2",
-    "tslint": "^5.15.0",
-    "typescript": "^3.4.3"
+    "@types/jest": "^24.0.24",
+    "@types/node": "^13.1.0",
+    "eslint": "^6.8.0",
+    "jest": "^24.9.0",
+    "mobx": "^5.15.1",
+    "rollup": "^1.27.14",
+    "rollup-plugin-terser": "^5.1.3",
+    "rollup-plugin-typescript2": "^0.25.3",
+    "ts-jest": "^24.2.0",
+    "typescript": "^3.7.4"
   },
   "peerDependencies": {
     "mobx": "^4.2.0 || ^5.5.0"
@@ -61,8 +61,5 @@
     },
     "preset": "ts-jest",
     "testMatch": null
-  },
-  "dependencies": {
-    "rollup-plugin-terser": "^5.1.2"
   }
 }

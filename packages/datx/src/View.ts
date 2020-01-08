@@ -1,8 +1,7 @@
-import { IDictionary, IRawModel, mapItems } from 'datx-utils';
+import { IRawModel, mapItems } from 'datx-utils';
 import { action, computed, intercept, observable } from 'mobx';
 
 import { ToMany } from './buckets/ToMany';
-import { SORTED_NO_WRITE, UNIQUE_MODEL } from './errors';
 import { error } from './helpers/format';
 import { getModelId, getModelType, isReference } from './helpers/model/utils';
 import { IIdentifier } from './interfaces/IIdentifier';
@@ -65,28 +64,10 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     };
   }
 
-  /**
-   * Add an existing or a new model to the collection
-   *
-   * @template T
-   * @param {T|IRawModel|IDictionary} data Model to be added
-   * @returns {T} Added model
-   * @memberof Collection
-   */
-  public add(data: T | IRawModel | IDictionary): T;
-
-  /**
-   * Add an array of existing or new models to the collection
-   *
-   * @template T
-   * @param {Array<T|IRawModel|IDictionary>} data Array of models to be added
-   * @returns {Array<T>} Added models
-   * @memberof Collection
-   */
-  public add(data: Array<T | IRawModel | IDictionary>): Array<T>;
-
+  public add(data: T | IRawModel | Record<string, any>): T;
+  public add(data: Array<T | IRawModel | Record<string, any>>): Array<T>;
   @action public add(
-    data: T | IRawModel | IDictionary | Array<T | IRawModel | IDictionary>,
+    data: T | IRawModel | Record<string, any> | Array<T | IRawModel | Record<string, any>>,
   ): T | Array<T> {
     const models = mapItems(data, (item) => this.__collection.add<T>(item, this.modelType)) as
       | T
@@ -101,25 +82,12 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     return models;
   }
 
-  /**
-   * Check if a model is in the collection
-   *
-   * @param {T|IIdentifier} model Model to check
-   * @returns {boolean} The given model is in the collection
-   * @memberof Collection
-   */
   public hasItem(model: T | IIdentifier): boolean {
     const id = getModelId(model);
 
     return Boolean(this.__getList().find((item) => getModelId(item) === id));
   }
 
-  /**
-   * Remove a model from the view
-   *
-   * @param {IIdentifier|T} model Model identifier
-   * @memberof Collection
-   */
   @action public remove(model: IIdentifier | T) {
     const item = this.__getModel(this.__normalizeModel(model));
     if (item) {
@@ -134,7 +102,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
   @action private __partialListUpdate(change: TChange) {
     if (change.type === 'splice') {
       if (this.sortMethod && change.added.length > 0) {
-        throw error(SORTED_NO_WRITE);
+        throw error("New models can't be added directly to a sorted view list");
       }
       const added = (change.added as Array<T>).map(this.__normalizeModel.bind(this));
 
@@ -142,7 +110,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
       if (this.unique) {
         added.forEach((newItem) => {
           if (this.__indexOf(newItem) !== -1 && this.__indexOf(newItem, toRemove) === -1) {
-            throw error(UNIQUE_MODEL);
+            throw error('The models in this view need to be unique');
           }
         });
       }
@@ -153,14 +121,14 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     }
 
     if (this.sortMethod && change.newValue) {
-      throw error(SORTED_NO_WRITE);
+      throw error("New models can't be added directly to a sorted view list");
     }
 
     const newModel = this.__getModel(this.__normalizeModel(change.newValue as any));
     if (newModel) {
       const idIndex = this.__indexOf(newModel);
       if (this.unique && idIndex !== -1 && idIndex !== change.index) {
-        throw error(UNIQUE_MODEL);
+        throw error('The models in this view need to be unique');
       }
 
       this.__rawList[change.index] = newModel;

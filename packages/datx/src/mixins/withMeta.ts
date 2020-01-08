@@ -1,21 +1,17 @@
 import { computed } from 'mobx';
 
-import { DECORATE_MODEL } from '../errors';
 import { error } from '../helpers/format';
 import { isModel } from '../helpers/mixin';
-import {
-  getModelCollection,
-  getModelId,
-  getModelMetaKey,
-  getModelType,
-  getOriginalModel,
-  modelToJSON,
-} from '../helpers/model/utils';
+import { getModelCollection, getModelId, getModelType, modelToJSON } from '../helpers/model/utils';
 import { IBucket } from '../interfaces/IBucket';
 import { IMetaMixin } from '../interfaces/IMetaMixin';
 import { IModelConstructor } from '../interfaces/IModelConstructor';
 import { PureModel } from '../PureModel';
-import { storage } from '../services/storage';
+import { getMeta } from 'datx-utils';
+import { MetaModelField } from '../enums/MetaModelField';
+import { IFieldDefinition } from '../Attribute';
+import { IIdentifier } from '../interfaces/IIdentifier';
+import { IType } from '../interfaces/IType';
 
 /**
  * Extends the model with the exposed meta data
@@ -29,7 +25,7 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
   const BaseClass = Base as typeof PureModel;
 
   if (!isModel(BaseClass)) {
-    throw error(DECORATE_MODEL);
+    throw error('This mixin can only decorate models');
   }
 
   class MetaClass {
@@ -42,24 +38,32 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
       return getModelCollection(this.__instance);
     }
 
-    @computed public get id() {
+    @computed public get id(): IIdentifier {
       return getModelId(this.__instance);
     }
 
     @computed public get original(): T | undefined {
-      return getModelMetaKey(this.__instance, 'originalId')
-        ? getOriginalModel<T>(this.__instance)
-        : undefined;
+      const originalId = getMeta(this.__instance, MetaModelField.OriginalId);
+      const collection = getModelCollection(this.__instance);
+      return (originalId && collection?.findOne(this.__instance, originalId)) || undefined;
     }
 
     @computed public get refs() {
-      const refDefs = getModelMetaKey(this.__instance, 'refs') || {};
+      const fields = getMeta<Record<string, IFieldDefinition>>(
+        this.__instance,
+        MetaModelField.Fields,
+        {},
+      );
 
       const refs = {};
-      Object.keys(refDefs).forEach((key) => {
-        const bucket: IBucket<PureModel> = storage.getModelDataKey(this.__instance, key);
-        refs[key] = (bucket && bucket.refValue) || null;
-      });
+      Object.keys(fields)
+        .filter((field) => fields[field].referenceDef)
+        .forEach((key) => {
+          const bucket: IBucket<PureModel> | undefined = getMeta(this.__instance, `ref_${key}`);
+          if (bucket) {
+            refs[key] = (bucket && bucket.refValue) || null;
+          }
+        });
 
       return refs;
     }
@@ -68,7 +72,7 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
       return modelToJSON(this.__instance);
     }
 
-    @computed public get type() {
+    @computed public get type(): IType {
       return getModelType(this.__instance);
     }
   }

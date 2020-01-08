@@ -9,14 +9,13 @@ import {
   runInAction,
 } from 'mobx';
 
-import { READ_ONLY, REF_ARRAY, REF_NEEDS_COLLECTION } from '../errors';
 import { error } from '../helpers/format';
 import { getModelCollection, getModelRef, isReference } from '../helpers/model/utils';
-import { endAction, startAction, updateAction } from '../helpers/patch';
 import { IModelRef } from '../interfaces/IModelRef';
 import { TChange } from '../interfaces/TChange';
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
+import { startAction, updateAction, endAction } from '../helpers/patch';
 
 export class ToMany<T extends PureModel> {
   protected readonly __rawList: IObservableArray<T | IModelRef> = observable.array([]);
@@ -31,9 +30,9 @@ export class ToMany<T extends PureModel> {
     protected __key?: string,
   ) {
     if (data.length > 0 && !collection) {
-      throw error(REF_NEEDS_COLLECTION);
+      throw error('The model needs to be in a collection to be referenceable');
     } else if (!(data instanceof Array)) {
-      throw error(REF_ARRAY, { key: '' });
+      throw error('The reference must be an array of values.');
     }
 
     runInAction(() => {
@@ -74,9 +73,9 @@ export class ToMany<T extends PureModel> {
 
   public set value(data: Array<T>) {
     if (this.__readonly) {
-      throw error(READ_ONLY);
+      throw error('This is a read-only bucket');
     } else if (!(data instanceof Array)) {
-      throw error(REF_ARRAY, { key: '' });
+      throw error('The reference must be an array of values.');
     }
 
     this.__rawList.replace(data);
@@ -123,16 +122,16 @@ export class ToMany<T extends PureModel> {
     }
 
     if (!this.__collection) {
-      throw error(REF_NEEDS_COLLECTION);
+      throw error('The model needs to be in a collection to be referenceable');
     }
 
-    return this.__collection.findOne(model.type, model.id);
+    return this.__collection.findOne<T>(model.type, model.id);
   }
 
   @action
   private __partialRawListUpdate(change: TChange) {
     if (this.__readonly) {
-      throw error(READ_ONLY);
+      throw error('This is a read-only bucket');
     }
 
     if (change.type === 'splice') {

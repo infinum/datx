@@ -57,9 +57,19 @@ describe('datx-utils', () => {
 
       assignComputed(obj2, 'foo', () => 2);
       // tslint:disable-next-line:no-empty
-      assignComputed(obj1, 'bar', () => obj2, () => {});
+      assignComputed(
+        obj1,
+        'bar',
+        () => obj2,
+        () => {},
+      );
       // tslint:disable-next-line:no-empty
-      assignComputed(obj2, 'bar', () => obj1, () => {});
+      assignComputed(
+        obj2,
+        'bar',
+        () => obj1,
+        () => {},
+      );
       assignComputed(
         obj1,
         'baz',
@@ -107,7 +117,12 @@ describe('datx-utils', () => {
             },
             (val) => (this.data = val),
           );
-          assignComputed(this, 'bar', () => -this.foo, (val) => (this.foo = -val));
+          assignComputed(
+            this,
+            'bar',
+            () => -this.foo,
+            (val) => (this.foo = -val),
+          );
         }
       }
       const data = new Data();
@@ -136,7 +151,7 @@ describe('datx-utils', () => {
     });
 
     it('should handle computed reassignment', () => {
-      const obj = observable({});
+      const obj: any = observable({});
       assignComputed(obj, 'foo', () => 1);
       assignComputed(obj, 'foo', () => 2);
 

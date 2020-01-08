@@ -1,9 +1,6 @@
 {
   "extends": "./tsconfig.build.json",
-  "include": [
-    "src/**/*",
-    "test/**/*"
-  ],
+  "include": ["src/**/*", "test/**/*"],
   "compilerOptions": {
     "moduleResolution": "node",
     "noUnusedLocals": true

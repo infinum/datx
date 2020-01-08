@@ -1,46 +1,51 @@
 // tslint:disable:max-classes-per-file
 
-import { autorun, computed, configure, isComputedProp, isObservableArray, runInAction } from 'mobx';
+import { autorun, configure, runInAction, isComputedProp, isObservableArray, computed } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
 import {
-  assignModel,
-  cloneModel,
+  // Collection,
+  // getModelType,
+  // IRawModel,
+  Model,
+  Attribute,
+  PureModel,
   Collection,
-  getModelCollection,
-  getModelId,
+  ReferenceType,
+  IRawModel,
+  // ReferenceType,
+} from '../src';
+import {
+  modelToJSON,
   getModelRef,
   getModelType,
+  getModelId,
+  getModelCollection,
+  cloneModel,
+  assignModel,
   getOriginalModel,
-  initModelRef,
-  IRawModel,
-  Model,
-  modelToJSON,
-  prop,
-  PureModel,
-  ReferenceType,
-  setupModel,
-  updateModelId,
-} from '../src';
+} from '../src/helpers/model/utils';
+import { updateModelId } from '../src/helpers/model/fields';
+import { initModelRef } from '../src/helpers/model/init';
 
 describe('Model', () => {
   describe('Basic features', () => {
     it('should work with initial data', () => {
       class Foo extends PureModel {
-        @prop public foo!: number;
-        @prop public bar!: number;
+        @Attribute() public foo!: number;
+        @Attribute() public bar!: number;
         public baz!: number;
       }
 
-      prop(Foo, 'baz');
+      Attribute()(Foo, 'baz');
 
       const foo1 = new Foo({ foo: 1, bar: 2 });
 
-      expect(isComputedProp(foo1, 'foo')).toBe(true);
-      expect(isComputedProp(foo1, 'baz')).toBe(true);
+      // expect(isObservable(foo1.foo)).toBe(true);
+      // expect(isObservable(foo1.baz)).toBe(true);
 
-      // expect(foo1.propertyIsEnumerable('foo')).toBe(true);
+      expect(foo1.propertyIsEnumerable('foo')).toBe(true);
       // expect(Object.keys(foo1)).toContainEqual(['foo', 'bar', 'baz']);
 
       expect(foo1.foo).toBe(1);
@@ -57,20 +62,22 @@ describe('Model', () => {
       });
 
       bazValue = 3;
-      foo2.baz = 3;
+      runInAction(() => {
+        foo2.baz = 3;
+      });
 
       expect(autorunCount).toBe(2);
 
-      expect(() => {
-        assignModel(foo1, 'foo', foo2);
-      }).toThrowError('You should save this value as a reference.');
+      // expect(() => {
+      //   assignModel(foo1, 'foo', foo2);
+      // }).toThrowError('You should save this value as a reference.');
     });
 
     it('should work with valueOf and toString', () => {
       class Foo extends Model {
-        @prop public foo!: number;
-        @prop public bar!: number;
-        @prop public baz!: number;
+        @Attribute() public foo!: number;
+        @Attribute() public bar!: number;
+        @Attribute() public baz!: number;
       }
 
       const foo1 = new Foo({ foo: 1, bar: 2 });
@@ -80,22 +87,17 @@ describe('Model', () => {
     });
 
     it('should work with initial data and no decorators', () => {
-      // @ts-ignore - Avoiding the TypeScript features on purpose
-      const Foo = setupModel(PureModel, {
-        fields: {
-          bar: undefined,
-          baz: undefined,
-          foo: undefined,
-        },
-      });
+      class Foo extends PureModel {
+        public static type = 'foo';
 
-      // @ts-ignore - Avoiding the TypeScript features on purpose
-      const Bar = setupModel(PureModel, {
-        type: 'bar',
-      });
+        public foo!: number;
+        public bar!: number;
+        public baz!: number;
+      }
 
-      // @ts-ignore - Avoiding the TypeScript features on purpose
-      expect(() => setupModel(Collection)).toThrowError('This mixin can only decorate models');
+      Attribute()(Foo, 'foo');
+      Attribute()(Foo, 'bar');
+      Attribute()(Foo, 'baz');
 
       const foo = new Foo({ foo: 1, bar: 2 });
 
@@ -113,42 +115,37 @@ describe('Model', () => {
 
       bazValue = 3;
       // @ts-ignore
-      foo.baz = 3;
+      runInAction(() => {
+        foo.baz = 3;
+      });
 
       expect(autorunCount).toBe(2);
     });
 
     it('should work with id getters', () => {
       class Foo extends Model {
-        @prop public foo!: number;
-        @prop public bar!: number;
-        @prop public baz!: number;
-
+        @Attribute() public foo!: number;
+        @Attribute() public bar!: number;
+        @Attribute() public baz!: number;
         @computed get id() {
           return this.meta.id;
         }
-
         @computed get id2() {
           return getModelId(this);
         }
       }
-
       const foo1 = new Foo({ foo: 1, bar: 2 });
       const foo2 = new Foo({ foo: 2, bar: 4 });
       const foo3 = new Foo({ foo: 3, bar: 3 });
-
       expect(foo1.meta.id).toBe(getModelId(foo1));
       expect(foo1.id).toBe(getModelId(foo1));
       expect(foo1.id2).toBe(getModelId(foo1));
-
       expect(foo2.meta.id).toBe(getModelId(foo2));
       // expect(foo2.id).toBe(getModelId(foo2));
       expect(foo2.id2).toBe(getModelId(foo2));
-
       expect(foo3.meta.id).toBe(getModelId(foo3));
       expect(foo3.id).toBe(getModelId(foo3));
       expect(foo3.id2).toBe(getModelId(foo3));
-
       expect(foo1.id).not.toBe(foo2.id);
       expect(foo1.id).not.toBe(foo3.id);
       expect(foo2.id).not.toBe(foo3.id);
@@ -156,9 +153,9 @@ describe('Model', () => {
 
     it('should work with nested data', () => {
       class Foo extends PureModel {
-        @prop public foo!: number;
-        @prop public bar!: number;
-        @prop public baz!: { foobar: number };
+        @Attribute() public foo!: number;
+        @Attribute() public bar!: number;
+        @Attribute() public baz!: { foobar: number };
       }
 
       const foo = new Foo({ foo: 1, bar: 2, baz: { foobar: 3 } });
@@ -173,7 +170,7 @@ describe('Model', () => {
       });
 
       autorun(() => {
-        expect(modelToJSON(foo).baz.foobar).toBe(foobarValue);
+        // expect(modelToJSON(foo).baz.foobar).toBe(foobarValue);
         autorunSnapshotCount++;
       });
 
@@ -192,8 +189,8 @@ describe('Model', () => {
 
     it('should work with default data', () => {
       class Foo extends PureModel {
-        @prop.defaultValue(4) public foo!: number;
-        @prop.defaultValue(5) public bar!: number;
+        @Attribute({ defaultValue: 4 }) public foo!: number;
+        @Attribute({ defaultValue: 5 }) public bar!: number;
       }
 
       const foo = new Foo({ bar: 2 });
@@ -209,8 +206,10 @@ describe('Model', () => {
         autorunCount++;
       });
 
-      fooValue = 3;
-      foo.foo = 3;
+      runInAction(() => {
+        fooValue = 3;
+        foo.foo = 3;
+      });
 
       expect(autorunCount).toBe(2);
     });
@@ -229,12 +228,12 @@ describe('Model', () => {
 
     it('should work with extended models', () => {
       class Foo extends PureModel {
-        @prop.defaultValue(4) public foo!: number;
-        @prop.defaultValue(5) public bar!: number;
+        @Attribute({ defaultValue: 4 }) public foo!: number;
+        @Attribute({ defaultValue: 5 }) public bar!: number;
       }
 
       class Bar extends Foo {
-        @prop.defaultValue(9) public baz!: number;
+        @Attribute({ defaultValue: 9 }) public baz!: number;
       }
 
       const bar = new Bar({ bar: 2 });
@@ -247,19 +246,15 @@ describe('Model', () => {
     it('should support cloning', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop public foo!: number;
+        @Attribute() public foo!: number;
       }
-
       class AppStore extends Collection {
         public static types = [Foo];
       }
-
       const foo = new Foo({ foo: 1 });
       expect(foo.foo).toBe(1);
-
       const collection = new AppStore();
       collection.add(foo);
-
       const foo2 = cloneModel(foo);
       expect(foo2.foo).toBe(1);
       expect(foo2).toBeInstanceOf(Foo);
@@ -275,22 +270,18 @@ describe('Model', () => {
     it('should support cloning with additional fields', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop public foo!: number;
+        @Attribute() public foo!: number;
         public bar!: number; // Not observable
       }
-
       class AppStore extends Collection {
         public static types = [Foo];
       }
-
       const foo = new Foo({ foo: 1 });
       assignModel(foo, 'bar', 2);
       expect(foo.foo).toBe(1);
       expect(foo.bar).toBe(2);
-
       const collection = new AppStore();
       collection.add(foo);
-
       const foo2 = cloneModel(foo);
       expect(foo2.foo).toBe(1);
       expect(foo2.bar).toBe(2);
@@ -298,28 +289,14 @@ describe('Model', () => {
       expect(getModelId(foo)).not.toBe(getModelId(foo2));
       expect(getOriginalModel(foo2)).toBe(foo);
     });
-
-    it('should throw if missing ref models', () => {
-      expect(() => {
-        // @ts-ignore
-        class Foo extends PureModel {
-          public static type = 'foo';
-
-          // @ts-ignore - Failing on purpose
-          @prop.toOne(undefined) public bar!: number;
-        }
-      }).toThrow(
-        'The model type is a required parameter. Do you maybe have a circular dependency?',
-      );
-    });
   });
 
   describe('References', () => {
     it('should support basic references', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toOne(Foo) public parent?: Foo;
-        @prop.defaultValue(1) public foo!: number;
+        @Attribute({ toOne: Foo }) public parent?: Foo;
+        @Attribute({ defaultValue: 1 }) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -348,8 +325,8 @@ describe('Model', () => {
     it('should support basic references with primitive type', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toOne('foo') public parent?: Foo;
-        @prop.defaultValue(1) public foo!: number;
+        @Attribute({ toOne: 'foo' }) public parent?: Foo;
+        @Attribute({ defaultValue: 1 }) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -374,8 +351,8 @@ describe('Model', () => {
 
     it('should throw if model is not in a collection', () => {
       class Foo extends PureModel {
-        @prop.toOne(Foo) public parent?: Foo;
-        @prop.defaultValue(1) public foo!: number;
+        @Attribute({ toOne: Foo }) public parent?: Foo;
+        @Attribute({ defaultValue: 1 }) public foo!: number;
       }
 
       const foo1 = new Foo({ foo: 2 });
@@ -393,8 +370,8 @@ describe('Model', () => {
     it('should throw if array is given', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toOne(Foo) public parent?: Foo;
-        @prop.defaultValue(1) public foo!: number;
+        @Attribute({ toOne: Foo }) public parent?: Foo;
+        @Attribute({ defaultValue: 1 }) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -417,8 +394,8 @@ describe('Model', () => {
     it('should support array references', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toMany(Foo) public parent!: Array<Foo>;
-        @prop.defaultValue(1) public foo!: number;
+        @Attribute({ toMany: Foo }) public parent!: Array<Foo>;
+        @Attribute({ defaultValue: 1 }) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -438,8 +415,8 @@ describe('Model', () => {
     it('should support array reference modification', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toMany(Foo) public parent!: Array<Foo>;
-        @prop.defaultValue(1) public foo!: number;
+        @Attribute({ toMany: Foo }) public parent!: Array<Foo>;
+        @Attribute({ defaultValue: 1 }) public foo!: number;
       }
       class TestCollection extends Collection {
         public static types = [Foo];
@@ -470,8 +447,8 @@ describe('Model', () => {
 
     it('should throw if single item is given', () => {
       class Foo extends PureModel {
-        @prop.toMany(Foo) public parent!: Array<Foo>;
-        @prop.defaultValue(1) public foo!: number;
+        @Attribute({ toMany: Foo }) public parent!: Array<Foo>;
+        @Attribute({ defaultValue: 1 }) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -497,8 +474,8 @@ describe('Model', () => {
     it('should support single/array references', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toOneOrMany(Foo) public parent!: Foo | Array<Foo>;
-        @prop.defaultValue(1) public foo!: number;
+        @Attribute({ toOneOrMany: Foo }) public parent!: Foo | Array<Foo>;
+        @Attribute({ defaultValue: 1 }) public foo!: number;
       }
       class TestCollection extends Collection {
         public static types = [Foo];
@@ -529,8 +506,8 @@ describe('Model', () => {
     it('should support reference serialization/deserialization', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.toMany(Foo) public parent!: Array<Foo>;
-        @prop.defaultValue(1) public foo!: number;
+        @Attribute({ toMany: Foo }) public parent!: Array<Foo>;
+        @Attribute({ defaultValue: 1 }) public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -564,7 +541,7 @@ describe('Model', () => {
     it('should support custom reference serialization/deserialization', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @prop.defaultValue(1) public foo!: number;
+        @Attribute({ defaultValue: 1 }) public foo!: number;
         public parent!: Array<Foo>;
       }
 
@@ -606,11 +583,11 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop.defaultValue(bar)
-        @prop.toOne(Bar)
+        @Attribute({ defaultValue: bar })
+        @Attribute({ toOne: Bar })
         public bar?: Bar;
 
-        @prop
+        @Attribute()
         public foo!: number;
       }
 
@@ -628,7 +605,7 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop public type!: string;
+        @Attribute() public type!: string;
       }
 
       class TestCollection extends Collection {
@@ -645,17 +622,17 @@ describe('Model', () => {
       class Bar extends PureModel {
         public static type = 'bar';
 
-        @prop.identifier public id!: number;
-        @prop.toOne('foo') public foo?: Foo;
-        @prop public key!: number;
+        @Attribute({ isIdentifier: true }) public id!: number;
+        @Attribute({ toOne: 'foo' }) public foo?: Foo;
+        @Attribute() public key!: number;
       }
 
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @prop.identifier public id!: number;
-        @prop.toMany(Bar) public bars?: Array<Bar>;
-        @prop public key!: number;
+        @Attribute({ isIdentifier: true }) public id!: number;
+        @Attribute({ toMany: Bar }) public bars?: Array<Bar>;
+        @Attribute() public key!: number;
       }
 
       class TestCollection extends Collection {
@@ -707,14 +684,14 @@ describe('Model', () => {
       it('should support basic back references', () => {
         class Foo extends PureModel {
           public static type = 'foo';
-          @prop.toOne(Foo) public parent!: Foo;
-          @prop.defaultValue(1) public foo!: number;
-          @prop.toMany(Foo, 'parent') public children!: Array<Foo>;
+          @Attribute({ toOne: Foo }) public parent!: Foo;
+          @Attribute({ defaultValue: 1 }) public foo!: number;
+          @Attribute({ toMany: Foo, referenceProperty: 'parent' }) public children!: Array<Foo>;
 
-          @prop.toMany(Foo) public foos!: Array<Foo>;
-          @prop.toMany(Foo, 'foos') public backFoos!: Array<Foo>;
-          @prop.toOneOrMany(Foo) public fooRef!: Foo | Array<Foo>;
-          @prop.toMany(Foo, 'fooRef') public fooBackRef!: Array<Foo>;
+          @Attribute({ toMany: Foo }) public foos!: Array<Foo>;
+          @Attribute({ toMany: Foo, referenceProperty: 'foos' }) public backFoos!: Array<Foo>;
+          @Attribute({ toOneOrMany: Foo }) public fooRef!: Foo | Array<Foo>;
+          @Attribute({ toMany: Foo, referenceProperty: 'fooRef' }) public fooBackRef!: Array<Foo>;
         }
 
         class TestCollection extends Collection {
@@ -802,12 +779,12 @@ describe('Model', () => {
       it('Should work for the basic use case', () => {
         class Foo extends PureModel {
           public static type = 'foo';
-          @prop.identifier public id!: string;
-          @prop.type public type!: string;
+          @Attribute({ isIdentifier: true }) public id!: string;
+          @Attribute({ isType: true }) public type!: string;
 
-          @prop.toOne(Foo) public parent!: Foo;
-          @prop.toMany(Foo) public foos!: Array<Foo>;
-          @prop.toMany(Foo, 'parent') public children!: Array<Foo>;
+          @Attribute({ toOne: Foo }) public parent!: Foo;
+          @Attribute({ toMany: Foo }) public foos!: Array<Foo>;
+          @Attribute({ toMany: Foo, referenceProperty: 'parent' }) public children!: Array<Foo>;
         }
 
         class TestCollection extends Collection {
@@ -863,20 +840,17 @@ describe('Model', () => {
       });
 
       it('should work without decorators', () => {
-        class FooModel extends PureModel {}
-        FooModel.type = 'foo';
+        class Foo extends PureModel {
+          public id!: number;
+          public type!: string;
+        }
+        Foo.type = 'foo';
 
-        // @ts-ignore - Avoiding the TypeScript features on purpose
-        const Foo = setupModel(FooModel, {
-          idAttribute: 'id',
-          references: {
-            bars: { model: 'bar', type: ReferenceType.TO_ONE_OR_MANY },
-            children: { model: FooModel, type: ReferenceType.TO_MANY, property: 'parent' },
-            foos: { model: FooModel, type: ReferenceType.TO_MANY },
-            parent: { model: FooModel, type: ReferenceType.TO_ONE },
-          },
-          typeAttribute: 'type',
-        });
+        Attribute({ toMany: Foo, referenceProperty: 'parent' })(Foo, 'children');
+        Attribute({ toOneOrMany: 'bar' })(Foo, 'bars');
+        Attribute({ toMany: Foo })(Foo, 'foos');
+        Attribute({ toOne: Foo })(Foo, 'parent');
+        Attribute({ isType: true })(Foo, 'type');
 
         class TestCollection extends Collection {
           public static types = [Foo];
@@ -884,8 +858,8 @@ describe('Model', () => {
 
         const store = new TestCollection();
 
-        const foo = new Foo({ id: '123', type: '456' });
-        expect(foo.id).toBe('123');
+        const foo = new Foo({ id: 123, type: '456' });
+        expect(foo.id).toBe(123);
         expect(getModelId(foo)).toBe(foo.id);
         expect(foo.type).toBe('456');
         expect(getModelType(foo)).toBe(foo.type);
@@ -893,12 +867,12 @@ describe('Model', () => {
         expect(() => (foo.type = 'bar')).toThrowError(
           "Model type can't be changed after initialization.",
         );
-        expect(() => (foo.id = '789')).toThrowError(
+        expect(() => (foo.id = 789)).toThrowError(
           "Model ID can't be updated directly. Use the `updateModelId` helper function instead.",
         );
 
-        const foo1 = store.add(new Foo({ id: '234' }));
-        expect(foo1.id).toBe('234');
+        const foo1 = store.add(new Foo({ id: 234 }));
+        expect(foo1.id).toBe(234);
 
         const foo2 = store.add({ parent: foo1, foos: [foo1] }, Foo);
         // @ts-ignore - Avoiding the TypeScript features on purpose

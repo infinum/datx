@@ -1,66 +1,62 @@
-import { IDictionary, IRawModel } from 'datx-utils';
+import { IRawModel, getMeta, setMeta } from 'datx-utils';
 import {
   action,
-  computed,
-  extendObservable,
-  IObservableArray,
-  IObservableObject,
-  observable,
   set,
+  observable,
+  IObservableArray,
+  computed,
   toJS,
+  IObservableObject,
+  extendObservable,
 } from 'mobx';
 
-import { PatchType } from './enums/PatchType';
-import { MODEL_SINGLE_COLLECTION, UNDEFINED_TYPE, VIEW_NAME_TAKEN } from './errors';
-import { initModels, upsertModel } from './helpers/collection';
-import { error } from './helpers/format';
-import { getRefId, setRefId } from './helpers/model/fields';
-import {
-  getModelCollection,
-  getModelId,
-  getModelMetaKey,
-  getModelType,
-  isModelReference,
-  modelToJSON,
-  setModelMetaKey,
-  updateModel,
-  updateModelCollection,
-} from './helpers/model/utils';
-import { triggerAction } from './helpers/patch';
-import { IIdentifier } from './interfaces/IIdentifier';
-import { IModelConstructor } from './interfaces/IModelConstructor';
-import { IModelRef } from './interfaces/IModelRef';
-import { IRawCollection } from './interfaces/IRawCollection';
-import { IRawView } from './interfaces/IRawView';
+import { PureModel } from './PureModel';
 import { IType } from './interfaces/IType';
 import { TFilterFn } from './interfaces/TFilterFn';
-import { PureModel } from './PureModel';
+import { IIdentifier } from './interfaces/IIdentifier';
+import { IModelRef } from './interfaces/IModelRef';
+import { IModelConstructor } from './interfaces/IModelConstructor';
+import {
+  isModelReference,
+  getModelType,
+  getModelId,
+  getModelCollection,
+  updateModel,
+  updateModelCollection,
+  modelToJSON,
+} from './helpers/model/utils';
+import { PatchType } from './enums/PatchType';
+import { triggerAction } from './helpers/patch';
+import { upsertModel, initModels } from './helpers/collection';
+import { MetaClassField } from './enums/MetaClassField';
+import { IFieldDefinition } from './Attribute';
+import { IBucket } from './interfaces/IBucket';
+import { MetaModelField } from './enums/MetaModelField';
+import { IRawView } from './interfaces/IRawView';
+import { IRawCollection } from './interfaces/IRawCollection';
 import { View } from './View';
+import { error } from './helpers/format';
 
 export class PureCollection {
-  /**
-   * List of models available in the collection
-   *
-   * @static
-   * @type {Array<typeof PureModel>}
-   * @memberof Collection
-   */
-  public static types: Array<typeof PureModel | IModelConstructor> = [];
-
-  public static views: IDictionary<{
-    modelType: IType | PureModel;
-    sortMethod?: string | ((PureModel) => any);
-    unique?: boolean;
-    mixins?: Array<(view: any) => any>;
-  }> = {};
+  public static types: Array<typeof PureModel> = [];
 
   public static defaultModel?: typeof PureModel = PureModel;
+
+  public static views: Record<
+    string,
+    {
+      modelType: IType | PureModel;
+      sortMethod?: string | ((PureModel) => any);
+      unique?: boolean;
+      mixins?: Array<(view: any) => any>;
+    }
+  > = {};
 
   private readonly __data: IObservableArray<PureModel> = observable.array([], { deep: false });
   private readonly __views: Array<string> = [];
 
-  @observable.shallow private __dataMap: IDictionary<IDictionary<PureModel>> = {};
-  @observable.shallow private __dataList: IDictionary<IObservableArray<PureModel>> = {};
+  @observable.shallow private __dataMap: Record<string, Record<string, PureModel>> = {};
+  @observable.shallow private __dataList: Record<string, IObservableArray<PureModel>> = {};
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
     extendObservable(this, {});
@@ -84,6 +80,37 @@ export class PureCollection {
     });
   }
 
+  public addView<T extends PureModel = PureModel>(
+    name: string,
+    type: IModelConstructor<T> | IType,
+    {
+      sortMethod,
+      models = [],
+      unique,
+      mixins,
+    }: {
+      sortMethod?: string | ((item: T) => any);
+      models?: Array<IIdentifier | T>;
+      unique?: boolean;
+      mixins?: Array<(view: any) => any>;
+    } = {},
+  ) {
+    if (name in this && this[name]) {
+      throw error('The name is already taken');
+    }
+
+    const ViewConstructor = mixins
+      ? (mixins.reduce((view: any, mixin: (view: any) => any) => {
+          return mixin(view);
+        }, View) as typeof View)
+      : View;
+
+    this.__views.push(name);
+    this[name] = new ViewConstructor<T>(type, this, sortMethod, models, unique);
+
+    return this[name];
+  }
+
   /**
    * Function for inserting raw models into the collection. Used when hydrating the collection
    *
@@ -98,69 +125,39 @@ export class PureCollection {
     return models;
   }
 
-  /**
-   * Add an existing model to the collection
-   *
-   * @template T
-   * @param {T} data Model to be added
-   * @returns {T} Added model
-   * @memberof Collection
-   */
+  public hasItem(model: PureModel): boolean {
+    const id = getModelId(model);
+
+    return Boolean(this.findOne(model, id));
+  }
+
   public add<T extends PureModel>(data: T): T;
-
-  /**
-   * Add an array of existing models to the collection
-   *
-   * @template T
-   * @param {Array<T>} data Array of models to be added
-   * @returns {Array<T>} Added models
-   * @memberof Collection
-   */
   public add<T extends PureModel>(data: Array<T>): Array<T>;
-
-  /**
-   * Add an array of new models to the collection
-   *
-   * @template T
-   * @param {Array<IRawModel|IDictionary>} data Array of new data to be added
-   * @param {(IType|IModelConstructor<T>)} model Model type to be added
-   * @returns {Array<T>} Added models
-   * @memberof Collection
-   */
   public add<T extends PureModel>(
-    data: Array<IRawModel | IDictionary>,
+    data: Array<IRawModel | Record<string, any>>,
     model: IType | IModelConstructor<T>,
   ): Array<T>;
-
-  /**
-   * Add a new model to the collection
-   *
-   * @template T
-   * @param {(IRawModel|IDictionary)} data New data to be added
-   * @param {(IType|IModelConstructor<T>)} model Model type to be added
-   * @returns {T} Added model
-   * @memberof Collection
-   */
   public add<T extends PureModel>(
-    data: IRawModel | IDictionary,
+    data: IRawModel | Record<string, any>,
     model: IType | IModelConstructor<T>,
   ): T;
 
   @action public add(
-    data: PureModel | IRawModel | IDictionary | Array<PureModel> | Array<IRawModel | IDictionary>,
+    data:
+      | PureModel
+      | IRawModel
+      | Record<string, any>
+      | Array<PureModel>
+      | Array<IRawModel | Record<string, any>>,
     model?: IType | IModelConstructor,
   ): PureModel | Array<PureModel> {
     return data instanceof Array ? this.__addArray(data, model) : this.__addSingle(data, model);
   }
 
-  /**
-   * Find a model based on the defined type and identifier
-   *
-   * @param {(IType|typeof PureModel|PureModel)} type Model type
-   * @param {IIdentifier} id Model identifier
-   * @returns {(PureModel|null)} The first matching model
-   * @memberof Collection
-   */
+  public filter(test: TFilterFn): Array<PureModel> {
+    return this.__data.filter(test);
+  }
+
   public findOne<T extends PureModel>(
     type: IType | T | IModelConstructor<T>,
     id: IIdentifier | PureModel,
@@ -179,35 +176,6 @@ export class PureCollection {
     return this.__findOneByType(model as typeof PureModel, id);
   }
 
-  /**
-   * Find a model based on a matching function
-   *
-   * @param {TFilterFn} test Function used to match the model
-   * @returns {(PureModel|null)} The first matching model
-   * @memberof Collection
-   */
-  public find(test: TFilterFn): PureModel | null {
-    return this.__data.find(test) || null;
-  }
-
-  /**
-   * Filter models based on a matching function
-   *
-   * @param {TFilterFn} test Function used to match the models
-   * @returns {(PureModel|null)} The matching models
-   * @memberof Collection
-   */
-  public filter(test: TFilterFn): Array<PureModel> {
-    return this.__data.filter(test);
-  }
-
-  /**
-   * Find all matching models or all models if no type is given
-   *
-   * @param {(IType|typeof PureModel)} [model] Model type to select
-   * @returns {Array<PureModel>} List of matching models
-   * @memberof Collection
-   */
   public findAll<T extends PureModel>(model?: IType | IModelConstructor<T>): IObservableArray<T> {
     if (model) {
       const type = getModelType(model);
@@ -221,34 +189,11 @@ export class PureCollection {
     return this.__data as IObservableArray<T>;
   }
 
-  /**
-   * Check if a model is in the collection
-   *
-   * @param {PureModel} model Model to check
-   * @returns {boolean} The given model is in the collection
-   * @memberof Collection
-   */
-  public hasItem(model: PureModel): boolean {
-    const id = getModelId(model);
-
-    return Boolean(this.findOne(model, id));
+  public find(test: TFilterFn): PureModel | null {
+    return this.__data.find(test) || null;
   }
 
-  /**
-   * Remove the model based on the type and identifier
-   *
-   * @param {(IType|typeof PureModel)} type Model type
-   * @param {IIdentifier} id Model identifier
-   * @memberof Collection
-   */
   public removeOne(type: IType | typeof PureModel, id: IIdentifier): void;
-
-  /**
-   * Remove the given model from the collection
-   *
-   * @param {PureModel|IModelRef} model Model to be removed from the collection
-   * @memberof Collection
-   */
   public removeOne(model: PureModel | IModelRef): void;
 
   @action public removeOne(
@@ -266,35 +211,32 @@ export class PureCollection {
     }
   }
 
-  /**
-   * Remove all models of the given model type from the collection
-   *
-   * @param {(IType|typeof PureModel)} type Model type
-   * @memberof Collection
-   */
   @action public removeAll(type: IType | typeof PureModel) {
     this.__removeModel(this.findAll(type).slice());
   }
 
-  /**
-   * A total count of models in the collection
-   *
-   * @readonly
-   * @type {number}
-   * @memberof Collection
-   */
-  @computed public get length(): number {
-    return this.__data.length;
+  @action public reset() {
+    this.__data.forEach((model) => {
+      setMeta(model, MetaModelField.Collection, undefined);
+
+      triggerAction(
+        {
+          oldValue: modelToJSON(model),
+          patchType: PatchType.REMOVE,
+        },
+        model,
+      );
+    });
+    this.__data.replace([]);
+    // tslint:disable-next-line:max-line-length
+    this.__dataList = observable({}, {}, { deep: false }) as IObservableObject &
+      Record<string, IObservableArray<PureModel>>;
+    this.__dataMap = observable({}, {}, { deep: false }) as IObservableObject &
+      Record<string, Record<string, PureModel>>;
   }
 
-  /**
-   * Get the serializable value of the collection
-   *
-   * @returns {IRawCollection} Pure JS value of the collection
-   * @memberof Collection
-   */
   public toJSON(): IRawCollection {
-    const views: IDictionary<IRawView> = {};
+    const views: Record<string, IRawView> = {};
 
     this.__views.forEach((key) => {
       views[key] = this[key].toJSON();
@@ -310,88 +252,37 @@ export class PureCollection {
     return this.toJSON();
   }
 
-  /**
-   * Reset the collection (remove all models)
-   *
-   * @memberof Collection
-   */
-  @action public reset() {
-    this.__data.forEach((model) => {
-      setModelMetaKey(model, 'collection', undefined);
-
-      triggerAction(
-        {
-          oldValue: modelToJSON(model),
-          patchType: PatchType.REMOVE,
-        },
-        model,
-      );
-    });
-    this.__data.replace([]);
-    // tslint:disable-next-line:max-line-length
-    this.__dataList = observable({}, {}, { deep: false }) as IObservableObject &
-      IDictionary<IObservableArray<PureModel>>;
-    this.__dataMap = observable({}, {}, { deep: false }) as IObservableObject &
-      IDictionary<IDictionary<PureModel>>;
+  @computed public get length(): number {
+    return this.__data.length;
   }
 
   public getAllModels() {
     return this.__data.slice();
   }
 
-  /**
-   * Add a view to the collection
-   *
-   * @template T Model type of the view
-   * @param {string} name View name
-   * @param {(IModelConstructor<T>|IType)} type Model type the view will represent
-   * @param {({
-   *       sortMethod?: string|((item: T) => any),
-   *       models?: Array<IIdentifier|PureModel>,
-   *       unique?: boolean,
-   *       mixins?: Array<(view: any) => any>,
-   *     })} [{sortMethod, models, unique, mixins}={}] View options
-   * @returns {View} The created view
-   * @memberof PureCollection
-   */
-  public addView<T extends PureModel = PureModel>(
-    name: string,
-    type: IModelConstructor<T> | IType,
-    {
-      sortMethod,
-      models = [],
-      unique,
-      mixins,
-    }: {
-      sortMethod?: string | ((item: T) => any);
-      models?: Array<IIdentifier | T>;
-      unique?: boolean;
-      mixins?: Array<(view: any) => any>;
-    } = {},
-  ) {
-    if (name in this && this[name]) {
-      throw error(VIEW_NAME_TAKEN);
+  private __findOneByType(model: IType | typeof PureModel | PureModel, id: IIdentifier) {
+    const type = getModelType(model);
+    if (!type) {
+      return null;
+    }
+    const stringType = type.toString();
+
+    if (!(type in this.__dataMap)) {
+      set(this.__dataMap, stringType, observable.object({ [id]: null }, {}, { deep: false }));
+    } else if (!(id in this.__dataMap[type])) {
+      set(this.__dataMap[type], id.toString(), null);
     }
 
-    const ViewConstructor = mixins
-      ? (mixins.reduce((view: any, mixin: (view: any) => any) => {
-          return mixin(view);
-        }, View) as typeof View)
-      : View;
-
-    this.__views.push(name);
-    this[name] = new ViewConstructor<T>(type, this, sortMethod, models, unique);
-
-    return this[name];
+    return this.__dataMap[type][id] || null;
   }
 
   private __addArray<T extends PureModel>(data: Array<T>): Array<T>;
   private __addArray<T extends PureModel>(
-    data: Array<IDictionary>,
+    data: Array<Record<string, any>>,
     model?: IType | IModelConstructor<T>,
   ): Array<T>;
   private __addArray(
-    data: Array<PureModel | IDictionary>,
+    data: Array<PureModel | Record<string, any>>,
     model?: IType | IModelConstructor,
   ): Array<PureModel> {
     return data.filter(Boolean).map((item) => this.__addSingle(item, model));
@@ -399,12 +290,12 @@ export class PureCollection {
 
   private __addSingle<T extends PureModel>(data: T): T;
   private __addSingle<T extends PureModel>(
-    data: IDictionary,
+    data: Record<string, any>,
     model?: IType | IModelConstructor<T>,
   ): T;
   private __addSingle(
-    data: PureModel | IDictionary | IIdentifier | IModelRef,
-    model?: IType | IModelConstructor,
+    data: PureModel | Record<string, any> | IIdentifier | IModelRef,
+    model?: number | IType | IModelConstructor,
   ) {
     if (!data || typeof data === 'number' || typeof data === 'string' || isModelReference(data)) {
       return data;
@@ -419,7 +310,7 @@ export class PureCollection {
     }
 
     if (!model && model !== 0) {
-      throw error(UNDEFINED_TYPE);
+      throw error('The type needs to be defined if the object is not an instance of the model.');
     }
 
     const type = getModelType(model as IType | typeof PureModel);
@@ -427,6 +318,54 @@ export class PureCollection {
     this.__insertModel(modelInstance, type);
 
     return modelInstance;
+  }
+
+  private __removeModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier) {
+    if (model instanceof Array) {
+      model.forEach((item) => {
+        this.__removeModel(item, type, id);
+      });
+
+      return;
+    }
+
+    const modelType = type || getModelType(model);
+    const modelId = id || getModelId(model);
+
+    triggerAction(
+      {
+        oldValue: toJS(modelToJSON(model)),
+        patchType: PatchType.REMOVE,
+      },
+      model,
+    );
+
+    this.__data.remove(model);
+    this.__dataList[modelType].remove(model);
+    set(this.__dataMap[modelType], modelId.toString(), undefined);
+
+    this.__data.forEach((item) => {
+      const fields = getMeta<Record<string, IFieldDefinition>>(
+        item,
+        MetaClassField.Fields,
+        {},
+        true,
+        true,
+      );
+      const refKeys = Object.keys(fields || {});
+      refKeys
+        .map((key) => getMeta(item, `ref_${key}`))
+        .filter(Boolean)
+        .forEach((bucket: IBucket<PureModel>) => {
+          if (bucket.value instanceof Array && bucket.value.includes(item)) {
+            bucket.value = bucket.value.filter((model) => model !== item);
+          } else if (bucket.value === item) {
+            bucket.value = null;
+          }
+        });
+    });
+
+    updateModelCollection(model, undefined);
   }
 
   private __insertModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier) {
@@ -440,7 +379,7 @@ export class PureCollection {
 
     const collection = getModelCollection(model);
     if (collection && collection !== this) {
-      throw error(MODEL_SINGLE_COLLECTION);
+      throw error('A model can be in a single collection at once');
     }
 
     const modelType = type || getModelType(model);
@@ -475,74 +414,6 @@ export class PureCollection {
       },
       model,
     );
-  }
-
-  private __removeModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier) {
-    if (model instanceof Array) {
-      model.forEach((item) => {
-        this.__removeModel(item, type, id);
-      });
-
-      return;
-    }
-
-    const modelType = type || getModelType(model);
-    const modelId = id || getModelId(model);
-
-    triggerAction(
-      {
-        oldValue: toJS(modelToJSON(model)),
-        patchType: PatchType.REMOVE,
-      },
-      model,
-    );
-
-    this.__data.remove(model);
-    this.__dataList[modelType].remove(model);
-    set(this.__dataMap[modelType], modelId.toString(), undefined);
-
-    this.__data.forEach((item) => {
-      const refs = getModelMetaKey(item, 'refs');
-      const refKeys = Object.keys(refs || {});
-      refKeys.forEach((key) => {
-        const refType = getModelType(refs[key].model);
-        if (refType === modelType) {
-          const refIds = getRefId(item, key);
-          if (refIds instanceof Array) {
-            if (refIds.map((ref) => ref.id).includes(modelId)) {
-              setRefId(
-                item,
-                key,
-                refIds
-                  .filter((refItem: IModelRef | null) => refItem)
-                  .filter((refItem: IModelRef) => refItem.id !== modelId)
-                  .map((refItem: IModelRef) => ({ id: refItem.id, type: refItem.type || refType })),
-              );
-            }
-          } else if (!refIds || refIds.id === modelId) {
-            setRefId(item, key, undefined);
-          }
-        }
-      });
-    });
-
-    updateModelCollection(model, undefined);
-  }
-
-  private __findOneByType(model: IType | typeof PureModel | PureModel, id: IIdentifier) {
-    const type = getModelType(model);
-    if (!type) {
-      return null;
-    }
-    const stringType = type.toString();
-
-    if (!(type in this.__dataMap)) {
-      set(this.__dataMap, stringType, observable.object({ [id]: null }, {}, { deep: false }));
-    } else if (!(id in this.__dataMap[type])) {
-      set(this.__dataMap[type], id.toString(), null);
-    }
-
-    return this.__dataMap[type][id] || null;
   }
 
   // @ts-ignore - Used outside of the class, but marked as private to avoid undocumented use

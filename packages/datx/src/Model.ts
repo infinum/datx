@@ -1,14 +1,14 @@
-import { IDictionary, META_FIELD } from 'datx-utils';
+import { META_FIELD } from 'datx-utils';
 
-import { IModelRef } from './interfaces/IModelRef';
-import { withActions } from './mixins/withActions';
-import { withMeta } from './mixins/withMeta';
-import { withPatches } from './mixins/withPatches';
 import { PureModel } from './PureModel';
+import { withMeta } from './mixins/withMeta';
+import { withActions } from './mixins/withActions';
+import { IModelRef } from './interfaces/IModelRef';
+import { withPatches } from './mixins/withPatches';
 
 export class Model extends withPatches(withActions(withMeta(PureModel))) {
-  public valueOf(): IDictionary & { meta: IModelRef } {
-    const raw: IDictionary = this.meta.snapshot;
+  public valueOf(): Record<string, any> & { meta: IModelRef } {
+    const raw: Record<string, any> = this.meta.snapshot;
     // tslint:disable-next-line:no-dynamic-delete
     delete raw[META_FIELD];
 

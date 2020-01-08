@@ -4,7 +4,7 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import { Bucket, Collection, Model, prop } from '../src';
+import { Bucket, Collection, Model, Attribute } from '../src';
 
 describe('ToOne', () => {
   it('should init a bucket', () => {
@@ -34,7 +34,7 @@ describe('ToOne', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @prop.identifier
+      @Attribute({ isIdentifier: true })
       public id!: number;
     }
     class AppCollection extends Collection {

@@ -4,7 +4,7 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import { Collection, prop, PureModel } from '../src';
+import { Collection, PureModel, Attribute } from '../src';
 
 describe('issues', () => {
   it('should remove references on collection remove', () => {
@@ -15,7 +15,7 @@ describe('issues', () => {
     class Foo extends PureModel {
       public static type = 'foo';
 
-      @prop.toMany(Bar) public bar!: Array<Bar>;
+      @Attribute({ toMany: Bar }) public bar!: Array<Bar>;
     }
 
     class Store extends Collection {
