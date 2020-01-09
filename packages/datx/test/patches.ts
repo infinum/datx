@@ -9,7 +9,7 @@ import { Collection, Model, Attribute } from '../src';
 import { IPatch } from '../src/interfaces/IPatch';
 import { PatchType } from '../src/enums/PatchType';
 
-describe('patch', () => {
+xdescribe('patch', () => {
   describe('model', () => {
     it('should trigger on add, replace and remove', () => {
       const patches: Array<IPatch> = [];

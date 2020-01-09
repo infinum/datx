@@ -1,4 +1,4 @@
-import { getMeta, setMeta } from 'datx-utils';
+import { getMeta, setMeta, isArray } from 'datx-utils';
 
 import { PureModel } from './PureModel';
 import { IType } from './interfaces/IType';
@@ -78,7 +78,7 @@ export interface IFieldDefinition {
 }
 
 function getReferenceList(models: RefModel): Array<IType> {
-  const list: Array<PureModel | IType> = models instanceof Array ? models : [models];
+  const list: Array<PureModel | IType> = isArray(models) ? (models as Array<IType>) : [models];
 
   return list.map(getModelType);
 }

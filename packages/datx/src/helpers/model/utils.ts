@@ -1,4 +1,13 @@
-import { getMeta, IRawModel, META_FIELD, warn, setMeta, mergeMeta, getMetaObj } from 'datx-utils';
+import {
+  getMeta,
+  IRawModel,
+  META_FIELD,
+  warn,
+  setMeta,
+  mergeMeta,
+  getMetaObj,
+  isArray,
+} from 'datx-utils';
 
 import { IModelRef } from '../../interfaces/IModelRef';
 import { IType } from '../../interfaces/IType';
@@ -16,8 +25,8 @@ import { error } from '../format';
 export function isModelReference(value: IModelRef | Array<IModelRef>): true;
 export function isModelReference(value: unknown): false;
 export function isModelReference(value: unknown): boolean {
-  if (value instanceof Array) {
-    return value.every(isModelReference);
+  if (isArray(value)) {
+    return (value as Array<IModelRef>).every(isModelReference);
   }
 
   return (

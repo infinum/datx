@@ -1,4 +1,4 @@
-import { extendObservable } from 'mobx';
+import { extendObservable, isObservableArray, IObservableArray } from 'mobx';
 
 import { DATX_META } from './consts';
 
@@ -15,12 +15,12 @@ import { DATX_META } from './consts';
 export function mapItems<T, U>(data: Array<T>, fn: (item: T) => U): Array<U>;
 export function mapItems<T, U>(data: T, fn: (item: T) => U): U | null;
 export function mapItems<T, U>(data: T | Array<T>, fn: (item: T) => U): U | Array<U> | null {
-  if (data instanceof Array) {
+  if (isArray(data)) {
     // tslint:disable-next-line:no-unnecessary-callback-wrapper
-    return data.map((item) => fn(item));
+    return (data as Array<T>).map((item) => fn(item));
   }
 
-  return data === null ? null : fn(data);
+  return data === null ? null : fn(data as T);
 }
 
 /**
@@ -43,7 +43,7 @@ export function flatten<T>(data: Array<Array<T> | T>): Array<T> {
  * @returns {boolean} The given variable is an array with at least one falsy value
  */
 export function isFalsyArray(value: any): boolean {
-  return value instanceof Array && !value.every(Boolean);
+  return isArray(value) && !value.every(Boolean);
 }
 
 function undefinedGetter(): any {
@@ -197,4 +197,10 @@ export function reducePrototypeChain<T, U>(
   }
 
   return value;
+}
+
+export function isArray(value: Array<any> | IObservableArray<any>): true;
+export function isArray(value: any): false;
+export function isArray(value: any): boolean {
+  return value instanceof Array || isObservableArray(value);
 }

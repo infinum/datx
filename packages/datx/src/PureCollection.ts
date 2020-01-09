@@ -1,4 +1,4 @@
-import { IRawModel, getMeta, setMeta } from 'datx-utils';
+import { IRawModel, getMeta, setMeta, isArray } from 'datx-utils';
 import {
   action,
   set,
@@ -60,8 +60,8 @@ export class PureCollection {
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
     extendObservable(this, {});
-    if (data instanceof Array) {
-      this.insert(data);
+    if (isArray(data)) {
+      this.insert(data as Array<IRawModel>);
     } else if (data && 'models' in data) {
       this.insert(data.models);
     }
@@ -147,11 +147,12 @@ export class PureCollection {
       | PureModel
       | IRawModel
       | Record<string, any>
-      | Array<PureModel>
-      | Array<IRawModel | Record<string, any>>,
+      | Array<PureModel | IRawModel | Record<string, any>>,
     model?: IType | IModelConstructor,
   ): PureModel | Array<PureModel> {
-    return data instanceof Array ? this.__addArray(data, model) : this.__addSingle(data, model);
+    return isArray(data)
+      ? this.__addArray(data as Array<PureModel | IRawModel | Record<string, any>>, model)
+      : this.__addSingle(data, model);
   }
 
   public filter(test: TFilterFn): Array<PureModel> {
@@ -321,8 +322,8 @@ export class PureCollection {
   }
 
   private __removeModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier) {
-    if (model instanceof Array) {
-      model.forEach((item) => {
+    if (isArray(model)) {
+      (model as Array<PureModel>).forEach((item) => {
         this.__removeModel(item, type, id);
       });
 
@@ -357,8 +358,8 @@ export class PureCollection {
         .map((key) => getMeta(item, `ref_${key}`))
         .filter(Boolean)
         .forEach((bucket: IBucket<PureModel>) => {
-          if (bucket.value instanceof Array && bucket.value.includes(item)) {
-            bucket.value = bucket.value.filter((model) => model !== item);
+          if (isArray(bucket.value) && (bucket.value as Array<PureModel>).includes(item)) {
+            bucket.value = (bucket.value as Array<PureModel>).filter((model) => model !== item);
           } else if (bucket.value === item) {
             bucket.value = null;
           }
@@ -369,8 +370,8 @@ export class PureCollection {
   }
 
   private __insertModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier) {
-    if (model instanceof Array) {
-      model.forEach((item) => {
+    if (isArray(model)) {
+      (model as Array<PureModel>).forEach((item) => {
         this.__insertModel(item, type, id);
       });
 

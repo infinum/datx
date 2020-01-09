@@ -1,4 +1,12 @@
-import { assignComputed, IRawModel, getMeta, mapItems, setMeta, META_FIELD } from 'datx-utils';
+import {
+  assignComputed,
+  IRawModel,
+  getMeta,
+  mapItems,
+  setMeta,
+  META_FIELD,
+  isArray,
+} from 'datx-utils';
 import { set } from 'mobx';
 
 import { PureModel } from '../../PureModel';
@@ -129,8 +137,7 @@ export function initModel(instance: PureModel, rawData: IRawModel, collection?: 
     .filter((field) => !(field in fields)) // Only new fields
     .forEach((field) => {
       const value = rawData[field];
-      const isRef =
-        value instanceof PureModel || (value instanceof Array && value[0] instanceof PureModel);
+      const isRef = value instanceof PureModel || (isArray(value) && value[0] instanceof PureModel);
       fields[field] = {
         referenceDef: isRef
           ? {

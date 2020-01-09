@@ -1,3 +1,4 @@
+import { isArray } from 'datx-utils';
 import { computed, observable } from 'mobx';
 
 import { IModelRef } from '../interfaces/IModelRef';
@@ -20,11 +21,17 @@ export class ToOneOrMany<T extends PureModel> {
     protected __model?: PureModel,
     protected __key?: string,
   ) {
-    this.__isList = data instanceof Array;
-    if (data instanceof Array) {
-      this.__toManyBucket = new ToMany(data, __collection, __readonly, __model, __key);
+    this.__isList = isArray(data);
+    if (this.__isList) {
+      this.__toManyBucket = new ToMany(
+        data as Array<T | IModelRef>,
+        __collection,
+        __readonly,
+        __model,
+        __key,
+      );
     } else {
-      this.__toOneBucket = new ToOne(data, __collection, __readonly, __model, __key);
+      this.__toOneBucket = new ToOne<T>(data as T, __collection, __readonly, __model, __key);
     }
   }
 
@@ -44,18 +51,18 @@ export class ToOneOrMany<T extends PureModel> {
   }
 
   public set value(data: T | Array<T> | null) {
-    this.__isList = data instanceof Array;
-    if (data instanceof Array) {
+    this.__isList = isArray(data);
+    if (this.__isList) {
       if (this.__toManyBucket) {
-        this.__toManyBucket.value = data;
+        this.__toManyBucket.value = data as Array<T>;
       } else {
-        this.__toManyBucket = new ToMany(data, this.__collection);
+        this.__toManyBucket = new ToMany(data as Array<T | IModelRef>, this.__collection);
       }
     } else {
       if (this.__toOneBucket) {
-        this.__toOneBucket.value = data;
+        this.__toOneBucket.value = data as T;
       } else {
-        this.__toOneBucket = new ToOne(data, this.__collection);
+        this.__toOneBucket = new ToOne<T>(data as T, this.__collection);
       }
     }
   }

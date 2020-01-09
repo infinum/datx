@@ -13,7 +13,7 @@ import {
   ReferenceType,
   updateModel,
 } from 'datx';
-import { IDictionary, IRawModel, mapItems } from 'datx-utils';
+import { IDictionary, IRawModel, mapItems, isArray } from 'datx-utils';
 import { action } from 'mobx';
 
 import { clearAllCache, clearCacheByType } from './cache';
@@ -199,7 +199,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
           return;
         }
         const items = refData.data;
-        if (items instanceof Array && items.length < 1) {
+        if (isArray(items) && items.length < 1) {
           // it's only possible to update items with one ore more refs. Early exit
           return;
         } else if (record) {
@@ -211,7 +211,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
                   (def.id === undefined ? null : this.findOne(def.type, def.id)) || def.id,
               ) || null;
 
-            const itemType: string = items instanceof Array ? items[0].type : items.type;
+            const itemType: string = isArray(items) ? items[0].type : items.type;
             if (ref in record) {
               record[ref] = models;
             } else {

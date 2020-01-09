@@ -1,4 +1,5 @@
 import { getModelType, IType } from 'datx';
+import { isArray } from 'datx-utils';
 
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { Response } from './Response';
@@ -21,7 +22,7 @@ export function saveCache(url: string, response: Response<IJsonapiModel>, modelT
   ) {
     // The type might need to be 100% correct - used only to clear the cache
     const type =
-      modelType || getModelType(response.data instanceof Array ? response.data[0] : response.data);
+      modelType || getModelType(isArray(response.data) ? response.data[0] : response.data);
     cacheStorage.push({ response, time: new Date(), type, url });
   }
 }

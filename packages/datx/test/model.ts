@@ -291,7 +291,7 @@ describe('Model', () => {
     });
   });
 
-  describe('References', () => {
+  xdescribe('References', () => {
     it('should support basic references', () => {
       class Foo extends PureModel {
         public static type = 'foo';

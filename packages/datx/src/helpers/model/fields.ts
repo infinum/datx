@@ -1,4 +1,4 @@
-import { getMeta, setMeta } from 'datx-utils';
+import { getMeta, setMeta, isArray } from 'datx-utils';
 
 import { PureModel } from '../../PureModel';
 import { IBucket } from '../../interfaces/IBucket';
@@ -78,12 +78,12 @@ function updateModelReferences(
         .map((ref) => getMeta(item, `ref_${ref}`))
         .filter(Boolean)
         .forEach((bucket: IBucket<PureModel>) => {
-          if (bucket.value instanceof Array || isObservableArray(bucket.value)) {
-            const targetIndex = bucket.value.findIndex(
+          if (isArray(bucket.value) || isObservableArray(bucket.value)) {
+            const targetIndex = (bucket.value as Array<PureModel>).findIndex(
               (modelItem) => getModelId(modelItem) === oldId && getModelType(modelItem) === type,
             );
             if (targetIndex !== -1) {
-              bucket.value[targetIndex] = newId;
+              (bucket.value as Array<PureModel>)[targetIndex] = newId;
             }
           } else if (
             bucket.value &&

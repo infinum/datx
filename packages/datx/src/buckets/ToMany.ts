@@ -1,3 +1,4 @@
+import { isArray } from 'datx-utils';
 import {
   action,
   computed,
@@ -31,7 +32,7 @@ export class ToMany<T extends PureModel> {
   ) {
     if (data.length > 0 && !collection) {
       throw error('The model needs to be in a collection to be referenceable');
-    } else if (!(data instanceof Array)) {
+    } else if (!isArray(data)) {
       throw error('The reference must be an array of values.');
     }
 
@@ -74,7 +75,7 @@ export class ToMany<T extends PureModel> {
   public set value(data: Array<T>) {
     if (this.__readonly) {
       throw error('This is a read-only bucket');
-    } else if (!(data instanceof Array)) {
+    } else if (!isArray(data)) {
       throw error('The reference must be an array of values.');
     }
 

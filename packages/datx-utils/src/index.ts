@@ -7,6 +7,7 @@ export {
   mapItems,
   flatten,
   isFalsyArray,
+  isArray,
   error,
   warn,
   deprecated,
