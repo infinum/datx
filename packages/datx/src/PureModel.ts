@@ -4,18 +4,19 @@ import { extendObservable } from 'mobx';
 import { PureCollection } from './PureCollection';
 import { initModel } from './helpers/model/init';
 import { IIdentifier } from './interfaces/IIdentifier';
+import { IType } from './interfaces/IType';
 
 export class PureModel {
   public static type: string = DEFAULT_TYPE;
 
-  public static autoIdValue: number | IIdentifier = 0;
+  public static autoIdValue: IIdentifier = 0;
   public static enableAutoId: boolean = true;
 
   public static getAutoId(): IIdentifier {
     return typeof this.autoIdValue === 'number' ? --this.autoIdValue : this.autoIdValue;
   }
 
-  public static toJSON() {
+  public static toJSON(): IType {
     return this.type;
   }
 

@@ -7,12 +7,12 @@ import { IType } from './IType';
 
 export interface IModelConstructor<T = PureModel> {
   type: IType;
-  autoIdValue: number | IIdentifier;
+  autoIdValue: IIdentifier;
   enableAutoId: boolean;
 
   new (data?: IRawModel, collection?: PureCollection): T;
 
   // preprocess(data: object, collection?: PureCollection): object;
   getAutoId(): IIdentifier;
-  toJSON(): IIdentifier;
+  toJSON(): IType;
 }

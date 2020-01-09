@@ -73,7 +73,7 @@
   },
   "dependencies": {
     "datx": "^1.0.1",
-    "datx-utils": "^1.0.0",
+    "datx-utils": "^2.0.0",
     "rollup-plugin-terser": "^5.1.2"
   }
 }
