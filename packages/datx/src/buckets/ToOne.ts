@@ -33,7 +33,7 @@ export class ToOne<T extends PureModel> {
 
   @computed
   public get value(): T | null {
-    return this.__getModel(this.__rawValue);
+    return this.__rawValue ? this.__getModel(this.__rawValue) : null;
   }
 
   public set value(data: T | null) {

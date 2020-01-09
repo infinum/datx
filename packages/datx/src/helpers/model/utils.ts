@@ -24,6 +24,7 @@ import { IBucket } from '../../interfaces/IBucket';
 import { error } from '../format';
 import { ReferenceType } from '../../enums/ReferenceType';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
+import { toJS, extendObservable } from 'datx-utils/node_modules/mobx';
 
 export function isModelReference(value: IModelRef | Array<IModelRef>): true;
 export function isModelReference(value: unknown): false;
@@ -114,7 +115,7 @@ export function modelToJSON(model: PureModel): IRawModel {
     }
   });
 
-  return raw;
+  return toJS(raw);
 }
 
 export function cloneModel<T extends PureModel>(model: T): T {
@@ -200,17 +201,22 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
     model[key] = value;
   } else {
     if ((isArray(value) && value[0] instanceof PureModel) || value instanceof PureModel) {
-      fields[key] = {
-        referenceDef: {
-          type: ReferenceType.TO_ONE_OR_MANY,
-          models: Array.from(new Set(mapItems(value, getModelType))),
+      extendObservable(fields, {
+        [key]: {
+          referenceDef: {
+            type: ReferenceType.TO_ONE_OR_MANY,
+            models: Array.from(new Set(mapItems(value, getModelType))),
+          },
         },
-      };
+      });
     } else {
-      fields[key] = {
-        referenceDef: false,
-      };
+      extendObservable(fields, {
+        [key]: {
+          referenceDef: false,
+        },
+      });
     }
+    setMeta(model, MetaModelField.Fields, fields);
     initModelField(model, key, value);
   }
 }

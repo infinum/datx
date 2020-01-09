@@ -852,6 +852,7 @@ describe('Model', () => {
         Attribute({ toMany: Foo })(Foo, 'foos');
         Attribute({ toOne: Foo })(Foo, 'parent');
         Attribute({ isType: true })(Foo, 'type');
+        Attribute({ isIdentifier: true })(Foo, 'id');
 
         class TestCollection extends Collection {
           public static types = [Foo];

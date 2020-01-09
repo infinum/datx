@@ -1,4 +1,4 @@
-import { extendObservable, isObservableArray, IObservableArray } from 'mobx';
+import { extendObservable, isObservableArray, IObservableArray, observable, set } from 'mobx';
 
 import { DATX_META } from './consts';
 
@@ -59,7 +59,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
     Object.defineProperty(obj, DATX_META, {
       configurable: false,
       enumerable: false,
-      value: {},
+      value: observable({}, {}, { deep: false }),
     });
   }
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/1863
@@ -68,7 +68,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
 
 export function setMeta<T = any>(obj: Record<string, any>, key: string, value: T): void {
   const meta = getMetaObj(obj);
-  meta[key] = value;
+  set(meta, key, value);
 }
 
 export function getMeta<T = any>(
