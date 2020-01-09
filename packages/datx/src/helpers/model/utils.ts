@@ -23,6 +23,7 @@ import { IFieldDefinition } from '../../Attribute';
 import { IBucket } from '../../interfaces/IBucket';
 import { error } from '../format';
 import { ReferenceType } from '../../enums/ReferenceType';
+import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 
 export function isModelReference(value: IModelRef | Array<IModelRef>): true;
 export function isModelReference(value: unknown): false;
@@ -165,8 +166,8 @@ function omitKeys(obj: object, keys: Array<string>): object {
 }
 
 export function updateModel<T extends PureModel>(model: T, data: Record<string, any>): T {
-  const modelId = getMeta(model.constructor, MetaClassField.IdField, 'id');
-  const modelType = getMeta(model.constructor, MetaClassField.TypeField, 'type');
+  const modelId = getMeta(model.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD);
+  const modelType = getMeta(model.constructor, MetaClassField.TypeField, DEFAULT_TYPE_FIELD);
 
   const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
   mergeMeta(model, omitKeys(data[META_FIELD] || {}, READ_ONLY_META));

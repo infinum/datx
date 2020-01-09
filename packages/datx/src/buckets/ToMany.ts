@@ -30,14 +30,14 @@ export class ToMany<T extends PureModel> {
     protected __model?: PureModel,
     protected __key?: string,
   ) {
-    if (data.length > 0 && !collection) {
+    if (data?.length > 0 && !collection) {
       throw error('The model needs to be in a collection to be referenceable');
-    } else if (!isArray(data)) {
+    } else if (data && !isArray(data)) {
       throw error('The reference must be an array of values.');
     }
 
     runInAction(() => {
-      this.__rawList.replace(data);
+      this.__rawList.replace(data || []);
       this.setCollection(collection);
     });
   }

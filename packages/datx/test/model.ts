@@ -293,7 +293,7 @@ describe('Model', () => {
     });
   });
 
-  xdescribe('References', () => {
+  describe('References', () => {
     it('should support basic references', () => {
       class Foo extends PureModel {
         public static type = 'foo';
@@ -360,8 +360,7 @@ describe('Model', () => {
       const foo1 = new Foo({ foo: 2 });
 
       expect(() => {
-        // @ts-ignore
-        const _foo2 = new Foo({ foo: 3, parent: foo1 });
+        new Foo({ foo: 3, parent: foo1 });
       }).toThrowError('The model needs to be in a collection to be referenceable');
 
       expect(() => {

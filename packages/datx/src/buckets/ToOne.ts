@@ -37,7 +37,9 @@ export class ToOne<T extends PureModel> {
   }
 
   public set value(data: T | null) {
-    if (this.__readonly) {
+    if (!this.__collection) {
+      throw error('The model needs to be in a collection to be referenceable');
+    } else if (this.__readonly) {
       throw error('This is a read-only bucket');
     } else if (isArray(data)) {
       throw error("The reference can't be an array of values.");

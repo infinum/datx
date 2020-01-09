@@ -21,6 +21,7 @@ import { getBucketConstructor } from '../../buckets';
 import { getRef, updateRef } from './fields';
 import { TRefValue } from '../../interfaces/TRefValue';
 import { error } from '../format';
+import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
@@ -71,8 +72,8 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
   const fields = getMeta(model, MetaModelField.Fields, {});
   const fieldDef = fields[key];
 
-  const typeField = getMeta(model.constructor, MetaClassField.TypeField, 'type', true);
-  const idField = getMeta(model.constructor, MetaClassField.IdField, 'id', true);
+  const typeField = getMeta(model.constructor, MetaClassField.TypeField, DEFAULT_TYPE_FIELD, true);
+  const idField = getMeta(model.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD, true);
 
   if (key === typeField) {
     assignComputed(
@@ -115,14 +116,19 @@ export function initModel(instance: PureModel, rawData: IRawModel, collection?: 
 
   setMeta(instance, MetaModelField.Collection, collection);
 
-  const typeField = getMeta(instance.constructor, MetaClassField.TypeField, 'type', true);
+  const typeField = getMeta(
+    instance.constructor,
+    MetaClassField.TypeField,
+    DEFAULT_TYPE_FIELD,
+    true,
+  );
   setMeta(
     instance,
     MetaModelField.TypeField,
     rawData[typeField] || modelMeta?.type || modelClass.type,
   );
 
-  const idField = getMeta(instance.constructor, MetaClassField.IdField, 'id', true);
+  const idField = getMeta(instance.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD, true);
   setMeta(
     instance,
     MetaModelField.IdField,
