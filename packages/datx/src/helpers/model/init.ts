@@ -13,14 +13,13 @@ import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { MetaModelField } from '../../enums/MetaModelField';
-import { IFieldDefinition } from '../../Attribute';
+import { IFieldDefinition, IReferenceDefinition } from '../../Attribute';
 import { ReferenceType } from '../../enums/ReferenceType';
 import { getModelType, getModelCollection, getModelId } from './utils';
 import { IType } from '../../interfaces/IType';
 import { getBucketConstructor } from '../../buckets';
 import { getRef, updateRef } from './fields';
 import { TRefValue } from '../../interfaces/TRefValue';
-import { IReferenceOptions } from '../../interfaces/IReferenceOptions';
 import { error } from '../format';
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
@@ -28,7 +27,7 @@ type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 export function initModelRef<T extends PureModel>(
   model: T,
   key: string,
-  referenceDef?: IReferenceOptions,
+  referenceDef?: IReferenceDefinition,
   initialVal?: TRefValue,
 ) {
   const fields = getMeta(model, MetaModelField.Fields, {});

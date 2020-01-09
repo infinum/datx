@@ -1,12 +1,19 @@
 import { error } from '../helpers/format';
 import { isModel } from '../helpers/mixin';
 import { initModelRef } from '../helpers/model/init';
-import { assignModel, cloneModel, modelToJSON, updateModel } from '../helpers/model/utils';
+import {
+  assignModel,
+  cloneModel,
+  modelToJSON,
+  updateModel,
+  getModelType,
+} from '../helpers/model/utils';
 import { IActionsMixin } from '../interfaces/IActionsMixin';
 import { IModelConstructor } from '../interfaces/IModelConstructor';
 import { IReferenceOptions } from '../interfaces/IReferenceOptions';
 import { TRefValue } from '../interfaces/TRefValue';
 import { PureModel } from '../PureModel';
+import { IType } from '../interfaces/IType';
 
 /**
  * Extends the model with some handy actions
@@ -42,7 +49,15 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
       value: TRefValue<V>,
       options: IReferenceOptions<U>,
     ) {
-      initModelRef(this, key, options, value);
+      initModelRef(
+        this,
+        key,
+        {
+          type: options.type,
+          models: ([] as Array<U | IType>).concat(options.model).map(getModelType),
+        },
+        value,
+      );
     }
 
     public toJSON() {

@@ -435,7 +435,10 @@ describe('updates', () => {
 
       expect(event).toBeInstanceOf(Event);
       if (event) {
-        setRefId(event, 'images', [{ type: 'image', id: '1' }, { type: 'image', id: '2' }]);
+        setRefId(event, 'images', [
+          { type: 'image', id: '1' },
+          { type: 'image', id: '2' },
+        ]);
 
         mockApi({
           data: {

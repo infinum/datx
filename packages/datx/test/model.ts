@@ -170,7 +170,7 @@ describe('Model', () => {
       });
 
       autorun(() => {
-        // expect(modelToJSON(foo).baz.foobar).toBe(foobarValue);
+        expect(modelToJSON(foo).baz.foobar).toBe(foobarValue);
         autorunSnapshotCount++;
       });
 
@@ -180,8 +180,10 @@ describe('Model', () => {
         foo.baz.foobar = 4;
       });
 
-      // Trigger the snapshot autorun
-      foo.bar++;
+      runInAction(() => {
+        // Trigger the snapshot autorun
+        foo.bar++;
+      });
 
       expect(autorunSnapshotCount).toBe(3);
       expect(autorunCount).toBe(2);
@@ -555,7 +557,7 @@ describe('Model', () => {
 
       collection.add([foo1, foo2]);
 
-      initModelRef(foo2, 'parent', { model: Foo, type: ReferenceType.TO_MANY }, [foo1]);
+      initModelRef(foo2, 'parent', { models: [Foo.type], type: ReferenceType.TO_MANY }, [foo1]);
       expect(foo2.parent.length).toBe(1);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
 
