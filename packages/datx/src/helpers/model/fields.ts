@@ -1,20 +1,28 @@
-import { getMeta, setMeta, isArray } from 'datx-utils';
+import { getMeta, setMeta, isArray, warn } from 'datx-utils';
 
 import { PureModel } from '../../PureModel';
 import { IBucket } from '../../interfaces/IBucket';
 import { TRefValue } from '../../interfaces/TRefValue';
-import { runInAction, isObservableArray } from 'mobx';
+import {
+  runInAction,
+  isObservableArray,
+  IObservableArray,
+  intercept,
+  observable,
+  IArraySplice,
+  IArrayChange,
+} from 'mobx';
 import { IIdentifier } from '../../interfaces/IIdentifier';
-import { getModelCollection, getModelId } from './utils';
-import { getModelType } from '../..';
+import { getModelCollection, getModelId, getModelType } from './utils';
 import { IFieldDefinition, IReferenceDefinition } from '../../Attribute';
 import { MetaModelField } from '../../enums/MetaModelField';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { IType } from '../../interfaces/IType';
+import { TChange } from '../../interfaces/TChange';
+import { error } from '../format';
 
 export function getRef(model: PureModel, key: string): PureModel | Array<PureModel> | null {
   const value: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
-
   return value ? value.value : null;
 }
 
@@ -24,13 +32,7 @@ export function updateRef(
   value: TRefValue,
 ): PureModel | Array<PureModel> | null {
   const bucket: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
-
-  if (bucket) {
-    bucket.value = value;
-
-    return bucket.value;
-  }
-  return null;
+  return bucket ? (bucket.value = value) : null;
 }
 
 export function updateModelId(model: PureModel, newId: IIdentifier): void {
@@ -98,4 +100,117 @@ function updateModelReferences(
         });
     });
   }
+}
+
+function modelAddReference(model: PureModel, key: string, newReference: PureModel) {
+  const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
+  const refOptions = fields[key]?.referenceDef;
+  if (!refOptions) {
+    return;
+  }
+  if (isArray(model[key])) {
+    if (!model[key].includes(newReference)) {
+      model[key].push(newReference);
+    }
+  } else {
+    model[key] = newReference;
+  }
+}
+
+function modelRemoveReference(model: PureModel, key: string, oldReference: PureModel) {
+  if (isArray(model[key])) {
+    (model[key] as IObservableArray<PureModel>).remove(oldReference);
+  } else if (model[key] === oldReference) {
+    model[key] = null;
+  }
+}
+
+function hasBackRef(item: PureModel, property: string, target: PureModel): boolean {
+  if (item[property] === null || item[property] === undefined) {
+    return false;
+  } else if (item[property] instanceof PureModel) {
+    return item[property] === target;
+  } else {
+    return item[property].includes(target);
+  }
+}
+
+function backRefSplice(
+  model: PureModel,
+  key: string,
+  change: IArraySplice<PureModel>,
+  refOptions: IReferenceDefinition,
+) {
+  const property = refOptions.property as string;
+  change.added.forEach((item) => modelAddReference(item, property, model));
+  const removed = model[key].slice(change.index, change.index + change.removedCount);
+  removed.forEach((item: PureModel) => modelRemoveReference(item, property, model));
+
+  return null;
+}
+
+function backRefChange(
+  model: PureModel,
+  key: string,
+  change: IArrayChange<PureModel>,
+  refOptions: IReferenceDefinition,
+) {
+  const property = refOptions.property as string;
+  const oldValue = model[key].length > change.index ? model[key][change.index] : null;
+  if (change.newValue) {
+    modelAddReference(change.newValue, property, model);
+  }
+  if (oldValue) {
+    modelRemoveReference(oldValue, property, model);
+  }
+
+  warn(
+    `This shouldn't have happened. Please open an issue: https://github.com/infinum/datx/issues/new`,
+  );
+
+  return null;
+}
+
+function partialBackRefUpdate(model: PureModel, key: string, change: TChange) {
+  const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
+  const refOptions = fields[key]?.referenceDef;
+
+  if (!refOptions) {
+    return null;
+  }
+
+  if (change.type === 'splice') {
+    return backRefSplice(model, key, change, refOptions);
+  }
+
+  return backRefChange(model, key, change, refOptions);
+}
+
+export function getBackRef(model: PureModel, key: string): PureModel | Array<PureModel> | null {
+  const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
+  const refOptions = fields[key]?.referenceDef;
+
+  if (!refOptions) {
+    return null;
+  }
+
+  const types = refOptions.models.map(getModelType);
+
+  const collection = getModelCollection(model);
+  if (!collection) {
+    return null;
+  }
+
+  const backModels = ([] as Array<PureModel>)
+    .concat(...types.map((type) => collection.findAll(type)))
+    .filter((item) => hasBackRef(item, refOptions.property as string, model));
+
+  const backData: IObservableArray<PureModel> = observable.array(backModels, { deep: false });
+  intercept(backData, (change: TChange) => partialBackRefUpdate(model, key, change));
+
+  return backData;
+}
+
+export function updateBackRef(_model: PureModel, _key: string, _value: TRefValue) {
+  throw error('Back references are read only');
 }

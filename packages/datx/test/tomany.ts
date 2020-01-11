@@ -106,6 +106,10 @@ describe('ToMany', () => {
     expect(bucketInstance.length).toBe(2);
     expect(bucketInstance.value[0]).toBe(foos[1]);
 
+    bucketInstance.value.pop();
+    expect(bucketInstance.length).toBe(1);
+    expect(bucketInstance.value[0]).toBe(foos[1]);
+
     bucketInstance.value = foos;
     expect(bucketInstance.length).toBe(2);
     expect(bucketInstance.value[0]).toBe(foos[0]);

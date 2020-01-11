@@ -18,7 +18,7 @@ import { ReferenceType } from '../../enums/ReferenceType';
 import { getModelType, getModelCollection, getModelId } from './utils';
 import { IType } from '../../interfaces/IType';
 import { getBucketConstructor } from '../../buckets';
-import { getRef, updateRef } from './fields';
+import { getRef, updateRef, getBackRef, updateBackRef } from './fields';
 import { TRefValue } from '../../interfaces/TRefValue';
 import { error } from '../format';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
@@ -46,7 +46,14 @@ export function initModelRef<T extends PureModel>(
   }
 
   if (fieldDef.referenceDef.property) {
-    // TODO: Implement backref
+    assignComputed(
+      model,
+      key,
+      () => getBackRef(model, key),
+      (value: TRefValue) => {
+        updateBackRef(model, key, value);
+      },
+    );
   } else {
     const type = fieldDef.referenceDef.models[0];
     const Bucket = getBucketConstructor(fieldDef.referenceDef.type);

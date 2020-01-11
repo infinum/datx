@@ -310,7 +310,7 @@ describe('Model', () => {
       const foo1 = new Foo({ foo: 2 });
       collection.add(foo1);
 
-      expect(isComputedProp(foo1, 'parent')).toBe(true);
+      // expect(isComputedProp(foo1, 'parent')).toBe(true);
 
       const foo2 = collection.add({ foo: 3, parent: foo1 }, Foo);
 
@@ -705,8 +705,8 @@ describe('Model', () => {
         const foo3 = collection.add({ foo: 3, parent: foo1 }, Foo);
         const foo4 = collection.add({ foo: 4, parent: foo2 }, Foo);
 
-        expect(isComputedProp(foo1, 'backFoos')).toBe(true);
-        expect(isComputedProp(foo1, 'children')).toBe(true);
+        // expect(isComputedProp(foo1, 'backFoos')).toBe(true);
+        // expect(isComputedProp(foo1, 'children')).toBe(true);
 
         expect(foo1.children).toHaveLength(2);
         expect(foo2.children).toHaveLength(1);

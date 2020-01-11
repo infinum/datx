@@ -1,5 +1,5 @@
 import { isArray } from 'datx-utils';
-import { computed } from 'mobx';
+import { computed, observable } from 'mobx';
 
 import { error } from '../helpers/format';
 import { getModelRef } from '../helpers/model/utils';
@@ -9,6 +9,7 @@ import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
 
 export class ToOne<T extends PureModel> {
+  @observable
   private __rawValue: T | IModelRef | null = null;
 
   constructor(
