@@ -63,14 +63,22 @@ Array [
     },
     "oldValue": Object {
       "__META__": Object {
-        "fields": Array [
-          "name",
-          "nick",
-          "age",
-          "height",
-        ],
+        "collection": undefined,
+        "fields": Object {
+          "age": Object {
+            "referenceDef": false,
+          },
+          "height": Object {
+            "referenceDef": false,
+          },
+          "name": Object {
+            "referenceDef": false,
+          },
+          "nick": Object {
+            "referenceDef": false,
+          },
+        },
         "id": 1,
-        "refs": Object {},
         "type": "foo",
       },
       "age": 42,

@@ -1,4 +1,4 @@
-import { autorun, configure, isComputedProp, isObservableProp, observable } from 'mobx';
+import { autorun, configure, isObservableProp, observable, runInAction } from 'mobx';
 
 import { assignComputed, flatten, isFalsyArray, mapItems } from '../src';
 
@@ -93,8 +93,10 @@ describe('datx-utils', () => {
 
       // @ts-ignore
       expect(obj1.baz).toBe(1);
-      // @ts-ignore
-      obj1.baz = 6;
+      runInAction(() => {
+        // @ts-ignore
+        obj1.baz = 6;
+      });
       // @ts-ignore
       expect(obj1.baz).toBe(6);
     });
@@ -133,13 +135,15 @@ describe('datx-utils', () => {
       });
 
       expect(isObservableProp(data, 'data')).toBe(true);
-      expect(isComputedProp(data, 'foo')).toBe(true);
-      expect(isComputedProp(data, 'bar')).toBe(true);
+      expect(isObservableProp(data, 'foo')).toBe(true);
+      expect(isObservableProp(data, 'bar')).toBe(true);
 
       expect(data.foo).toBe(1);
       expect(data.bar).toBe(-1);
 
-      data.bar--;
+      runInAction(() => {
+        data.bar--;
+      });
       expect(data.foo).toBe(2);
       expect(data.bar).toBe(-2);
 

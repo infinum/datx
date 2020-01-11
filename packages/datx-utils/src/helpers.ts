@@ -145,7 +145,7 @@ export function assignComputed<T = any>(
       get [key]() {
         return getMeta<Getter<T>>(obj, `get__${key}`, undefinedGetter)();
       },
-      set [key](val: any) {
+      set [key](val: T) {
         getMeta<Setter<T>>(obj, `set__${key}`, defaultSetter)(val);
       },
     });

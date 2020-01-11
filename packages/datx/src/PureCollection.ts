@@ -267,14 +267,15 @@ export class PureCollection {
       return null;
     }
     const stringType = type.toString();
+    const stringId = id.toString();
 
     if (!(type in this.__dataMap)) {
-      set(this.__dataMap, stringType, observable.object({ [id]: null }, {}, { deep: false }));
-    } else if (!(id in this.__dataMap[type])) {
-      set(this.__dataMap[type], id.toString(), null);
+      set(this.__dataMap, stringType, observable.object({ [stringId]: null }, {}, { deep: false }));
+    } else if (!(stringId in this.__dataMap[stringType])) {
+      set(this.__dataMap[stringType], stringId, null);
     }
 
-    return this.__dataMap[type][id] || null;
+    return this.__dataMap[stringType][stringId] || null;
   }
 
   private __addArray<T extends PureModel>(data: Array<T>): Array<T>;

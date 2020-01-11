@@ -1,21 +1,18 @@
 // tslint:disable:max-classes-per-file
 
-import { autorun, configure, runInAction, isComputedProp, isObservableArray, computed } from 'mobx';
+import {
+  autorun,
+  configure,
+  runInAction,
+  isObservableArray,
+  computed,
+  action,
+  isObservableProp,
+} from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import {
-  // Collection,
-  // getModelType,
-  // IRawModel,
-  Model,
-  Attribute,
-  PureModel,
-  Collection,
-  ReferenceType,
-  IRawModel,
-  // ReferenceType,
-} from '../src';
+import { Model, Attribute, PureModel, Collection, ReferenceType, IRawModel } from '../src';
 import {
   modelToJSON,
   getModelRef,
@@ -42,11 +39,11 @@ describe('Model', () => {
 
       const foo1 = new Foo({ foo: 1, bar: 2 });
 
-      // expect(isObservable(foo1.foo)).toBe(true);
-      // expect(isObservable(foo1.baz)).toBe(true);
+      expect(isObservableProp(foo1, 'foo')).toBe(true);
+      expect(isObservableProp(foo1, 'baz')).toBe(true);
 
       expect(foo1.propertyIsEnumerable('foo')).toBe(true);
-      // expect(Object.keys(foo1)).toContainEqual(['foo', 'bar', 'baz']);
+      expect(JSON.stringify(Object.keys(foo1))).toBe(JSON.stringify(['foo', 'bar', 'baz']));
 
       expect(foo1.foo).toBe(1);
       expect(foo1.bar).toBe(2);
@@ -68,9 +65,9 @@ describe('Model', () => {
 
       expect(autorunCount).toBe(2);
 
-      // expect(() => {
-      //   assignModel(foo1, 'foo', foo2);
-      // }).toThrowError('You should save this value as a reference.');
+      expect(() => {
+        assignModel(foo1, 'foo', foo2);
+      }).toThrowError('You should save this value as a reference.');
     });
 
     it('should work with valueOf and toString', () => {
@@ -141,7 +138,7 @@ describe('Model', () => {
       expect(foo1.id).toBe(getModelId(foo1));
       expect(foo1.id2).toBe(getModelId(foo1));
       expect(foo2.meta.id).toBe(getModelId(foo2));
-      // expect(foo2.id).toBe(getModelId(foo2));
+      expect(foo2.id).toBe(getModelId(foo2));
       expect(foo2.id2).toBe(getModelId(foo2));
       expect(foo3.meta.id).toBe(getModelId(foo3));
       expect(foo3.id).toBe(getModelId(foo3));
@@ -297,7 +294,7 @@ describe('Model', () => {
     it('should support basic references', () => {
       class Foo extends PureModel {
         public static type = 'foo';
-        @Attribute({ toOne: Foo }) public parent?: Foo;
+        @Attribute({ toOne: Foo }) public parent?: Foo | null;
         @Attribute({ defaultValue: 1 }) public foo!: number;
       }
 
@@ -310,8 +307,6 @@ describe('Model', () => {
       const foo1 = new Foo({ foo: 2 });
       collection.add(foo1);
 
-      // expect(isComputedProp(foo1, 'parent')).toBe(true);
-
       const foo2 = collection.add({ foo: 3, parent: foo1 }, Foo);
 
       expect(foo2.parent).toBe(foo1);
@@ -322,6 +317,20 @@ describe('Model', () => {
       const foo3 = collection.add({ foo: 4, parent: { foo: 5 } }, Foo);
       expect(foo3.parent).toBeInstanceOf(Foo);
       expect(foo3.parent && foo3.parent.foo).toBe(5);
+
+      let autorunCount = 0;
+      let parent = foo3.parent;
+      autorun(() => {
+        autorunCount++;
+        expect(foo3.parent).toBe(parent);
+      });
+
+      parent = null;
+      runInAction(() => {
+        foo3.parent = null;
+      });
+
+      expect(autorunCount).toBe(2);
     });
 
     it('should support basic references with primitive type', () => {
@@ -363,9 +372,11 @@ describe('Model', () => {
         new Foo({ foo: 3, parent: foo1 });
       }).toThrowError('The model needs to be in a collection to be referenceable');
 
-      expect(() => {
-        foo1.parent = foo1;
-      }).toThrowError('The model needs to be in a collection to be referenceable');
+      expect(
+        action(() => {
+          foo1.parent = foo1;
+        }),
+      ).toThrowError('The model needs to be in a collection to be referenceable');
     });
 
     it('should throw if array is given', () => {
@@ -497,7 +508,9 @@ describe('Model', () => {
       const raw2b = modelToJSON(foo2);
       expect(raw2b.parent).toEqual(getModelRef(foo1));
 
-      foo1.foo = 4;
+      runInAction(() => {
+        foo1.foo = 4;
+      });
       expect(foo2.parent && foo2.parent.foo).toBe(4);
 
       assignModel(foo1, 'parent', foo2);
@@ -705,34 +718,52 @@ describe('Model', () => {
         const foo3 = collection.add({ foo: 3, parent: foo1 }, Foo);
         const foo4 = collection.add({ foo: 4, parent: foo2 }, Foo);
 
-        // expect(isComputedProp(foo1, 'backFoos')).toBe(true);
-        // expect(isComputedProp(foo1, 'children')).toBe(true);
+        let autorunCount = 0;
+        let expectedCount = 2;
+
+        autorun(() => {
+          autorunCount++;
+          expect(foo1.children).toHaveLength(expectedCount);
+        });
 
         expect(foo1.children).toHaveLength(2);
         expect(foo2.children).toHaveLength(1);
         expect(foo3.children).toHaveLength(0);
 
-        foo1.children.pop();
+        expectedCount = 1;
+        runInAction(() => {
+          foo1.children.pop();
+        });
+
         expect(foo1.children).toHaveLength(1);
         expect(foo3.parent).toBeNull();
+        expect(autorunCount).toBe(2);
 
-        foo1.children[1] = foo4;
+        expectedCount = 2;
+        runInAction(() => {
+          foo1.children[1] = foo4;
+        });
         expect(foo1.children).toHaveLength(2);
         expect(foo4.parent).toBe(foo1);
         expect(foo2.children).toHaveLength(0);
 
-        foo1.children[1] = foo3;
+        runInAction(() => {
+          foo1.children[1] = foo3;
+        });
         expect(foo1.children).toHaveLength(2);
         expect(foo3.parent).toBe(foo1);
         expect(foo4.parent).toBeNull();
+        expect(autorunCount).toBe(4);
 
         updateModelId(foo1, '123');
         expect(modelToJSON(foo3).parent).toEqual({ id: '123', type: 'foo' });
 
         expect(() => (foo4.children = [foo1])).toThrowError('Back references are read only');
 
-        foo1.foos = [foo2, foo3];
-        foo2.foos = [foo1, foo3, foo4];
+        runInAction(() => {
+          foo1.foos = [foo2, foo3];
+          foo2.foos = [foo1, foo3, foo4];
+        });
         expect(foo1.backFoos).toHaveLength(1);
         expect(foo1.backFoos).toContain(foo2);
         expect(foo3.backFoos).toHaveLength(2);
@@ -800,10 +831,10 @@ describe('Model', () => {
         expect(foo.type).toBe('456');
         expect(getModelType(foo)).toBe(foo.type);
 
-        expect(() => (foo.type = 'bar')).toThrowError(
+        expect(action(() => (foo.type = 'bar'))).toThrowError(
           "Model type can't be changed after initialization.",
         );
-        expect(() => (foo.id = '789')).toThrowError(
+        expect(action(() => (foo.id = '789'))).toThrowError(
           "Model ID can't be updated directly. Use the `updateModelId` helper function instead.",
         );
 
@@ -866,7 +897,7 @@ describe('Model', () => {
         expect(foo.type).toBe('456');
         expect(getModelType(foo)).toBe(foo.type);
 
-        expect(() => (foo.type = 'bar')).toThrowError(
+        expect(action(() => (foo.type = 'bar'))).toThrowError(
           "Model type can't be changed after initialization.",
         );
         expect(() => (foo.id = 789)).toThrowError(

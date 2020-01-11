@@ -368,6 +368,7 @@ xdescribe('patch', () => {
       class BarModel extends Model {
         public static type = 'bar';
 
+        @Attribute({ isIdentifier: true })
         public id!: number | string;
       }
 

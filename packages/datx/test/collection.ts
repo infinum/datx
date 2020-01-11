@@ -221,6 +221,7 @@ describe('Collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
+        @Attribute({ isIdentifier: true }) public id!: number;
         @Attribute() public foo!: number;
         @Attribute() public bar!: number;
         @Attribute() public baz!: number;

@@ -7,7 +7,7 @@ import {
   META_FIELD,
   isArray,
 } from 'datx-utils';
-import { set } from 'mobx';
+import { reaction, set } from 'mobx';
 
 import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';
@@ -22,6 +22,7 @@ import { getRef, updateRef, getBackRef, updateBackRef } from './fields';
 import { TRefValue } from '../../interfaces/TRefValue';
 import { error } from '../format';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
+import { startAction, endAction, updateAction } from '../patch';
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
@@ -106,6 +107,14 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
     initModelRef(model, key, undefined, value);
   } else {
     set(model, key, value);
+    reaction(
+      () => model[key],
+      (newValue: any) => {
+        startAction(model);
+        updateAction(model, key, newValue);
+        endAction(model);
+      },
+    );
   }
 }
 

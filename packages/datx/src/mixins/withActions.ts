@@ -1,3 +1,5 @@
+import { action } from 'mobx';
+
 import { error } from '../helpers/format';
 import { isModel } from '../helpers/mixin';
 import { initModelRef } from '../helpers/model/init';
@@ -31,6 +33,7 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
   }
 
   class WithActions extends BaseClass implements IActionsMixin<T> {
+    @action
     public update(data: Record<string, any>) {
       updateModel(this, data);
     }
@@ -40,6 +43,7 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
       return cloneModel(this);
     }
 
+    @action
     public assign(key: string, value: any) {
       assignModel(this, key, value);
     }

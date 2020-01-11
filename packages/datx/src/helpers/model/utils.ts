@@ -24,7 +24,7 @@ import { IBucket } from '../../interfaces/IBucket';
 import { error } from '../format';
 import { ReferenceType } from '../../enums/ReferenceType';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
-import { toJS, extendObservable } from 'datx-utils/node_modules/mobx';
+import { toJS, extendObservable, runInAction } from 'mobx';
 
 export function isModelReference(value: IModelRef | Array<IModelRef>): true;
 export function isModelReference(value: unknown): false;
@@ -92,12 +92,37 @@ export function getModelRef(model: PureModel | IModelRef): IModelRef {
   return model;
 }
 
+const INTERNAL_META = [
+  MetaModelField.Patch,
+  MetaModelField.PatchListeners,
+  MetaModelField.Collection,
+  MetaModelField.OriginalId,
+  'get__',
+  'set__',
+  'data__',
+  'ref_',
+];
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries
+function fromEntries(entries: Array<[string, any]>): Record<string, any> {
+  const data = {};
+
+  entries.forEach(([key, value]: [string, any]) => {
+    data[key] = value;
+  });
+
+  return data;
+}
+
 export function modelToJSON(model: PureModel): IRawModel {
   const meta = getMetaObj(model);
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
+  const metaKeys = Object.keys(meta).filter(
+    (key) => !INTERNAL_META.some((match) => key.startsWith(match)),
+  );
   const raw = {
     [META_FIELD]: {
-      ...meta,
+      ...fromEntries(metaKeys.map((key) => [key, meta[key]])),
       [MetaModelField.IdField]: getModelId(model),
       [MetaModelField.TypeField]: getModelType(model),
       [MetaModelField.Collection]: undefined,
@@ -192,33 +217,40 @@ export function updateModel<T extends PureModel>(model: T, data: Record<string, 
 }
 
 export function assignModel<T extends PureModel>(model: T, key: string, value: any): void {
-  if (!(model instanceof PureModel)) {
-    throw error('The given parameter is not a valid model');
-  }
-  const fields = getMeta(model, MetaModelField.Fields, {});
-
-  if (key in fields) {
-    model[key] = value;
-  } else {
-    if ((isArray(value) && value[0] instanceof PureModel) || value instanceof PureModel) {
-      extendObservable(fields, {
-        [key]: {
-          referenceDef: {
-            type: ReferenceType.TO_ONE_OR_MANY,
-            models: Array.from(new Set(mapItems(value, getModelType))),
-          },
-        },
-      });
-    } else {
-      extendObservable(fields, {
-        [key]: {
-          referenceDef: false,
-        },
-      });
+  runInAction(() => {
+    if (!(model instanceof PureModel)) {
+      throw error('The given parameter is not a valid model');
     }
-    setMeta(model, MetaModelField.Fields, fields);
-    initModelField(model, key, value);
-  }
+    const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
+    const shouldBeReference =
+      (isArray(value) && value[0] instanceof PureModel) || value instanceof PureModel;
+
+    if (key in fields) {
+      if (shouldBeReference && !fields[key].referenceDef) {
+        throw error('You should save this value as a reference.');
+      }
+      model[key] = value;
+    } else {
+      if (shouldBeReference) {
+        extendObservable(fields, {
+          [key]: {
+            referenceDef: {
+              type: ReferenceType.TO_ONE_OR_MANY,
+              models: Array.from(new Set<IType>(mapItems<PureModel, IType>(value, getModelType))),
+            },
+          },
+        });
+      } else {
+        extendObservable(fields, {
+          [key]: {
+            referenceDef: false,
+          },
+        });
+      }
+      setMeta(model, MetaModelField.Fields, fields);
+      initModelField(model, key, value);
+    }
+  });
 }
 
 export function updateModelCollection(model: PureModel, collection?: PureCollection) {
