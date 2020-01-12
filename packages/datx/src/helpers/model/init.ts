@@ -7,7 +7,6 @@ import {
   META_FIELD,
   isArray,
 } from 'datx-utils';
-import { reaction, set } from 'mobx';
 
 import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';
@@ -22,7 +21,8 @@ import { getRef, updateRef, getBackRef, updateBackRef } from './fields';
 import { TRefValue } from '../../interfaces/TRefValue';
 import { error } from '../format';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
-import { startAction, endAction, updateAction } from '../patch';
+import { updateSingleAction } from '../patch';
+import { observable } from 'mobx';
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
@@ -76,6 +76,10 @@ export function initModelRef<T extends PureModel>(
   }
 }
 
+function isPojo(val: any): boolean {
+  return typeof val === 'object' && val !== null && !(val instanceof PureModel);
+}
+
 export function initModelField<T extends PureModel>(model: T, key: string, value: any): void {
   const fields = getMeta(model, MetaModelField.Fields, {});
   const fieldDef = fields[key];
@@ -106,15 +110,18 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
   } else if (fieldDef.referenceDef) {
     initModelRef(model, key, undefined, value);
   } else {
-    set(model, key, value);
-    reaction(
-      () => model[key],
-      (newValue: any) => {
-        startAction(model);
-        updateAction(model, key, newValue);
-        endAction(model);
+    assignComputed(
+      model,
+      key,
+      () => getMeta(model, `data__${key}`),
+      (value: any) => {
+        // Make sure nested properties are observable
+        const packedValue = isPojo(value) ? observable(value) : value;
+        updateSingleAction(model, key, value);
+        setMeta(model, `data__${key}`, packedValue);
       },
     );
+    model[key] = value;
   }
 }
 

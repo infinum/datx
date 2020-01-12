@@ -1,4 +1,4 @@
-import { IRawModel, getMeta, setMeta, isArray } from 'datx-utils';
+import { IRawModel, getMeta, setMeta } from 'datx-utils';
 import {
   action,
   set,
@@ -8,6 +8,7 @@ import {
   toJS,
   IObservableObject,
   extendObservable,
+  isArrayLike,
 } from 'mobx';
 
 import { PureModel } from './PureModel';
@@ -60,8 +61,8 @@ export class PureCollection {
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
     extendObservable(this, {});
-    if (isArray(data)) {
-      this.insert(data as Array<IRawModel>);
+    if (isArrayLike(data)) {
+      this.insert(data);
     } else if (data && 'models' in data) {
       this.insert(data.models);
     }
@@ -150,9 +151,7 @@ export class PureCollection {
       | Array<PureModel | IRawModel | Record<string, any>>,
     model?: IType | IModelConstructor,
   ): PureModel | Array<PureModel> {
-    return isArray(data)
-      ? this.__addArray(data as Array<PureModel | IRawModel | Record<string, any>>, model)
-      : this.__addSingle(data, model);
+    return isArrayLike(data) ? this.__addArray(data, model) : this.__addSingle(data, model);
   }
 
   public filter(test: TFilterFn): Array<PureModel> {
@@ -222,7 +221,7 @@ export class PureCollection {
 
       triggerAction(
         {
-          oldValue: modelToJSON(model),
+          oldValue: modelToJSON(model) as Record<string, any>,
           patchType: PatchType.REMOVE,
         },
         model,
@@ -323,8 +322,8 @@ export class PureCollection {
   }
 
   private __removeModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier) {
-    if (isArray(model)) {
-      (model as Array<PureModel>).forEach((item) => {
+    if (isArrayLike(model)) {
+      model.forEach((item) => {
         this.__removeModel(item, type, id);
       });
 
@@ -336,7 +335,7 @@ export class PureCollection {
 
     triggerAction(
       {
-        oldValue: toJS(modelToJSON(model)),
+        oldValue: toJS(modelToJSON(model)) as Record<string, any>,
         patchType: PatchType.REMOVE,
       },
       model,
@@ -359,8 +358,8 @@ export class PureCollection {
         .map((key) => getMeta(item, `ref_${key}`))
         .filter(Boolean)
         .forEach((bucket: IBucket<PureModel>) => {
-          if (isArray(bucket.value) && (bucket.value as Array<PureModel>).includes(item)) {
-            bucket.value = (bucket.value as Array<PureModel>).filter((model) => model !== item);
+          if (isArrayLike(bucket.value) && bucket.value.includes(item)) {
+            bucket.value = bucket.value.filter((model) => model !== item);
           } else if (bucket.value === item) {
             bucket.value = null;
           }
@@ -371,8 +370,8 @@ export class PureCollection {
   }
 
   private __insertModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier) {
-    if (isArray(model)) {
-      (model as Array<PureModel>).forEach((item) => {
+    if (isArrayLike(model)) {
+      model.forEach((item) => {
         this.__insertModel(item, type, id);
       });
 
@@ -411,7 +410,7 @@ export class PureCollection {
 
     triggerAction(
       {
-        newValue: modelToJSON(model),
+        newValue: modelToJSON(model) as Record<string, any>,
         patchType: PatchType.CRATE,
       },
       model,

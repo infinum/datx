@@ -1,6 +1,12 @@
-import { autorun, configure, isObservableProp, observable, runInAction } from 'mobx';
+import {
+  autorun,
+  configure,
+  runInAction,
+  isComputedProp,
+  observable as mobxObservable,
+} from 'mobx';
 
-import { assignComputed, flatten, isFalsyArray, mapItems } from '../src';
+import { assignComputed, flatten, isFalsyArray, mapItems, observable } from '../src';
 
 configure({ enforceActions: 'observed' });
 
@@ -45,17 +51,19 @@ describe('datx-utils', () => {
 
   describe('assignComputed', () => {
     it('should set a computed prop', () => {
-      const obj1 = observable({});
-      const obj2 = observable.object({});
+      const obj1 = {};
+      const obj2 = {};
 
-      const data = observable({
+      const data = mobxObservable({
         data: 1,
       });
 
       assignComputed(obj1, 'foo', () => 1);
-      // expect(obj1.propertyIsEnumerable('foo')).toBe(true);
+      expect(obj1.propertyIsEnumerable('foo')).toBe(true);
+      expect(isComputedProp(obj1, 'foo')).toBe(false);
 
       assignComputed(obj2, 'foo', () => 2);
+      expect(obj2.propertyIsEnumerable('foo')).toBe(true);
       // tslint:disable-next-line:no-empty
       assignComputed(
         obj1,
@@ -93,12 +101,43 @@ describe('datx-utils', () => {
 
       // @ts-ignore
       expect(obj1.baz).toBe(1);
-      runInAction(() => {
-        // @ts-ignore
-        obj1.baz = 6;
-      });
+      // @ts-ignore
+      obj1.baz = 6;
       // @ts-ignore
       expect(obj1.baz).toBe(6);
+      expect(data.data).toBe(6);
+
+      let autorunCounter1 = 0;
+      let autorunCounter2 = 0;
+      let autorunCounter3 = 0;
+      let expectedData = 6;
+
+      autorun(() => {
+        autorunCounter1++;
+        // @ts-ignore
+        expect(obj1.baz).toBe(expectedData);
+      });
+
+      autorun(() => {
+        autorunCounter2++;
+        // @ts-ignore
+        expect(obj2.bar.baz).toBe(expectedData);
+      });
+
+      autorun(() => {
+        autorunCounter3++;
+        // @ts-ignore
+        expect(data.data).toBe(expectedData);
+      });
+
+      runInAction(() => {
+        expectedData = 42;
+        data.data = 42;
+      });
+
+      expect(autorunCounter3).toBe(2);
+      expect(autorunCounter1).toBe(2);
+      expect(autorunCounter2).toBe(2);
     });
 
     it('should handle dynamic computed props', () => {
@@ -114,6 +153,7 @@ describe('datx-utils', () => {
             'foo',
             () => {
               counter++;
+              console.log(this, this.data);
 
               return this.data;
             },
@@ -134,10 +174,6 @@ describe('datx-utils', () => {
         const tmp = data.foo;
       });
 
-      expect(isObservableProp(data, 'data')).toBe(true);
-      expect(isObservableProp(data, 'foo')).toBe(true);
-      expect(isObservableProp(data, 'bar')).toBe(true);
-
       expect(data.foo).toBe(1);
       expect(data.bar).toBe(-1);
 
@@ -152,10 +188,26 @@ describe('datx-utils', () => {
       }
 
       expect(counter).toBe(2);
+
+      let autorunCounter = 0;
+      let expectedData = 2;
+
+      autorun(() => {
+        autorunCounter++;
+        expect(data.foo).toBe(expectedData);
+      });
+
+      runInAction(() => {
+        expectedData = 3;
+        data.foo++;
+      });
+
+      expect(autorunCounter).toBe(2);
+      expect(data.propertyIsEnumerable('foo')).toBe(true);
     });
 
     it('should handle computed reassignment', () => {
-      const obj: any = observable({});
+      const obj: any = {};
       assignComputed(obj, 'foo', () => 1);
       assignComputed(obj, 'foo', () => 2);
 

@@ -3,7 +3,7 @@ import { computed, observable } from 'mobx';
 
 import { error } from '../helpers/format';
 import { getModelRef } from '../helpers/model/utils';
-import { endAction, startAction, updateAction } from '../helpers/patch';
+import { updateSingleAction } from '../helpers/patch';
 import { IModelRef } from '../interfaces/IModelRef';
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
@@ -47,9 +47,7 @@ export class ToOne<T extends PureModel> {
     }
     this.__rawValue = data;
     if (this.__model && this.__key) {
-      startAction(this.__model);
-      updateAction(this.__model, this.__key, data);
-      endAction(this.__model);
+      updateSingleAction(this.__model, this.__key, data);
     }
   }
 

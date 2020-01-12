@@ -1,7 +1,7 @@
 // tslint:disable:max-classes-per-file
 
 import { META_FIELD } from 'datx-utils';
-import { configure } from 'mobx';
+import { configure, runInAction } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
@@ -20,7 +20,9 @@ xdescribe('patch', () => {
 
       const unregister = model.onPatch((patch) => patches.push(patch));
 
-      model['name'] = 'FooBar';
+      runInAction(() => {
+        model['name'] = 'FooBar';
+      });
       model.assign('age', 42);
       model.assign('nick', undefined);
       model.update({
@@ -29,7 +31,9 @@ xdescribe('patch', () => {
       });
 
       unregister();
-      model['height'] = 200;
+      runInAction(() => {
+        model['height'] = 200;
+      });
 
       expect(patches).toMatchSnapshot();
 
@@ -70,7 +74,7 @@ xdescribe('patch', () => {
           newValue: { name: 'Bar' },
           patchType: PatchType.UPDATE,
         },
-      ] as Array<IPatch>;
+      ] as Array<IPatch<Record<string, any>>>;
 
       patches.map((patch: IPatch) => {
         model.applyPatch(patch);
@@ -82,7 +86,7 @@ xdescribe('patch', () => {
       expect(model['nick']).toBe(undefined);
     });
 
-    it('should be able to undo', () => {
+    xit('should be able to undo', () => {
       const patches: Array<IPatch> = [];
       const model = new Model({
         name: 'Foo',
@@ -114,7 +118,7 @@ xdescribe('patch', () => {
       expect(model['nick']).toBe('Bar');
     });
 
-    it('should ignore noop changes', () => {
+    xit('should ignore noop changes', () => {
       const patches: Array<IPatch> = [];
       const model = new Model({
         name: 'Foo',
@@ -123,18 +127,22 @@ xdescribe('patch', () => {
 
       const unregister = model.onPatch((patch) => patches.push(patch));
 
-      model['name'] = 'Foo';
+      runInAction(() => {
+        model['name'] = 'Foo';
+      });
       model.assign('age', 42);
       model.assign('nick', 'Bar');
 
       unregister();
-      model['height'] = 200;
+      runInAction(() => {
+        model['height'] = 200;
+      });
 
       expect(patches).toMatchSnapshot();
     });
   });
 
-  describe('collection', () => {
+  xdescribe('collection', () => {
     it('should trigger on add, replace and remove', () => {
       const patches: Array<IPatch> = [];
       const model = new Model({
@@ -150,7 +158,9 @@ xdescribe('patch', () => {
       const addSnapshot = model.meta.snapshot;
       store.add(model);
 
-      model['name'] = 'FooBar';
+      runInAction(() => {
+        model['name'] = 'FooBar';
+      });
       model.assign('age', 42);
       model.assign('nick', undefined);
       model.update({
@@ -161,7 +171,9 @@ xdescribe('patch', () => {
       const removeSnapshot = model.meta.snapshot;
       store.removeOne('foo', 1);
 
-      model['height'] = 200;
+      runInAction(() => {
+        model['height'] = 200;
+      });
 
       expect(patches).toEqual([
         {
@@ -261,7 +273,7 @@ xdescribe('patch', () => {
     });
   });
 
-  describe('collection with initial data', () => {
+  xdescribe('collection with initial data', () => {
     it('should trigger on add, replace and remove', () => {
       const patches: Array<IPatch> = [];
 
@@ -277,7 +289,9 @@ xdescribe('patch', () => {
 
       expect(model).not.toBe(null);
       if (model) {
-        model['name'] = 'FooBar';
+        runInAction(() => {
+          model['name'] = 'FooBar';
+        });
         model.assign('age', 42);
         model.assign('nick', undefined);
         model.update({
@@ -287,7 +301,9 @@ xdescribe('patch', () => {
 
         store.removeOne('foo', 1);
 
-        model['height'] = 200;
+        runInAction(() => {
+          model['height'] = 200;
+        });
 
         expect(patches).toMatchSnapshot();
       }
@@ -354,7 +370,7 @@ xdescribe('patch', () => {
     });
   });
 
-  describe('references', () => {
+  xdescribe('references', () => {
     it('should trigger correct patches for ref changes', () => {
       class FooModel extends Model {
         public static type = 'foo';
@@ -393,10 +409,12 @@ xdescribe('patch', () => {
         'foo',
       );
 
-      model.bar = bar3;
-      model.meta.refs.bar = { id: 2, type: 'bar' };
-      model.bar = null;
-      model.bar = bar3;
+      runInAction(() => {
+        model.bar = bar3;
+        model.meta.refs.bar = { id: 2, type: 'bar' };
+        model.bar = null;
+        model.bar = bar3;
+      });
 
       expect(patches).toMatchSnapshot();
     });

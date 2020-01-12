@@ -16,7 +16,7 @@ import { IModelRef } from '../interfaces/IModelRef';
 import { TChange } from '../interfaces/TChange';
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
-import { startAction, updateAction, endAction } from '../helpers/patch';
+import { updateSingleAction } from '../helpers/patch';
 
 export class ToMany<T extends PureModel> {
   protected readonly __rawList: IObservableArray<T | IModelRef> = observable.array([]);
@@ -81,9 +81,7 @@ export class ToMany<T extends PureModel> {
 
     this.__rawList.replace(data);
     if (this.__model && this.__key) {
-      startAction(this.__model);
-      updateAction(this.__model, this.__key, data);
-      endAction(this.__model);
+      updateSingleAction(this.__model, this.__key, data);
     }
   }
 

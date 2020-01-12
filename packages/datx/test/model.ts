@@ -1,14 +1,6 @@
 // tslint:disable:max-classes-per-file
 
-import {
-  autorun,
-  configure,
-  runInAction,
-  isObservableArray,
-  computed,
-  action,
-  isObservableProp,
-} from 'mobx';
+import { autorun, configure, runInAction, isObservableArray, computed, action } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
@@ -38,9 +30,6 @@ describe('Model', () => {
       Attribute()(Foo, 'baz');
 
       const foo1 = new Foo({ foo: 1, bar: 2 });
-
-      expect(isObservableProp(foo1, 'foo')).toBe(true);
-      expect(isObservableProp(foo1, 'baz')).toBe(true);
 
       expect(foo1.propertyIsEnumerable('foo')).toBe(true);
       expect(JSON.stringify(Object.keys(foo1))).toBe(JSON.stringify(['foo', 'bar', 'baz']));
@@ -182,8 +171,14 @@ describe('Model', () => {
         foo.bar++;
       });
 
-      expect(autorunSnapshotCount).toBe(3);
-      expect(autorunCount).toBe(2);
+      // Trigger both autoruns
+      foobarValue = 5;
+      runInAction(() => {
+        foo.baz.foobar = 5;
+      });
+
+      expect(autorunCount).toBe(3);
+      expect(autorunSnapshotCount).toBe(4);
     });
 
     it('should work with default data', () => {

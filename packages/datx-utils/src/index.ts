@@ -17,4 +17,5 @@ export {
   mergeMeta,
   reducePrototypeChain,
   getMetaObj,
+  observable,
 } from './helpers';

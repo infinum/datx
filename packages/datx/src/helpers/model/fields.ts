@@ -1,16 +1,16 @@
-import { getMeta, setMeta, isArray, warn } from 'datx-utils';
+import { getMeta, setMeta, warn } from 'datx-utils';
 
 import { PureModel } from '../../PureModel';
 import { IBucket } from '../../interfaces/IBucket';
 import { TRefValue } from '../../interfaces/TRefValue';
 import {
   runInAction,
-  isObservableArray,
   IObservableArray,
   intercept,
   observable,
   IArraySplice,
   IArrayChange,
+  isArrayLike,
 } from 'mobx';
 import { IIdentifier } from '../../interfaces/IIdentifier';
 import { getModelCollection, getModelId, getModelType } from './utils';
@@ -32,6 +32,7 @@ export function updateRef(
   value: TRefValue,
 ): PureModel | Array<PureModel> | null {
   const bucket: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
+  // @ts-ignore Ref can be assigned instead of the model itself
   return bucket ? (bucket.value = value) : null;
 }
 
@@ -80,12 +81,13 @@ function updateModelReferences(
         .map((ref) => getMeta(item, `ref_${ref}`))
         .filter(Boolean)
         .forEach((bucket: IBucket<PureModel>) => {
-          if (isArray(bucket.value) || isObservableArray(bucket.value)) {
-            const targetIndex = (bucket.value as Array<PureModel>).findIndex(
+          if (isArrayLike(bucket.value)) {
+            const targetIndex = bucket.value.findIndex(
               (modelItem) => getModelId(modelItem) === oldId && getModelType(modelItem) === type,
             );
             if (targetIndex !== -1) {
-              (bucket.value as Array<PureModel>)[targetIndex] = newId;
+              // @ts-ignore Ref can be assigned instead of the model itself
+              bucket.value[targetIndex] = newId;
             }
           } else if (
             bucket.value &&
@@ -93,6 +95,7 @@ function updateModelReferences(
             getModelType(bucket.value) === type
           ) {
             bucket.value = {
+              // @ts-ignore Ref can be assigned instead of the model itself
               id: newId,
               type,
             };
@@ -108,7 +111,7 @@ function modelAddReference(model: PureModel, key: string, newReference: PureMode
   if (!refOptions) {
     return;
   }
-  if (isArray(model[key])) {
+  if (isArrayLike(model[key])) {
     if (!model[key].includes(newReference)) {
       model[key].push(newReference);
     }
@@ -118,8 +121,8 @@ function modelAddReference(model: PureModel, key: string, newReference: PureMode
 }
 
 function modelRemoveReference(model: PureModel, key: string, oldReference: PureModel) {
-  if (isArray(model[key])) {
-    (model[key] as IObservableArray<PureModel>).remove(oldReference);
+  if (isArrayLike(model[key])) {
+    model[key].remove(oldReference);
   } else if (model[key] === oldReference) {
     model[key] = null;
   }
@@ -190,19 +193,17 @@ export function getBackRef(model: PureModel, key: string): PureModel | Array<Pur
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
   const refOptions = fields[key]?.referenceDef;
 
-  if (!refOptions) {
+  if (!refOptions || !refOptions.property) {
     return null;
   }
-
-  const types = refOptions.models.map(getModelType);
 
   const collection = getModelCollection(model);
   if (!collection) {
     return null;
   }
 
-  const backModels = ([] as Array<PureModel>)
-    .concat(...types.map((type) => collection.findAll(type)))
+  const backModels = collection
+    .getAllModels()
     .filter((item) => hasBackRef(item, refOptions.property as string, model));
 
   const backData: IObservableArray<PureModel> = observable.array(backModels, { deep: false });

@@ -64,19 +64,33 @@ export function startAction(model: PureModel) {
   setMeta(model, MetaModelField.Patch, patchData);
 }
 
-export function updateAction(model: PureModel, key: string, value: any) {
+export function updateSingleAction(
+  model: PureModel,
+  key: string,
+  value: any,
+  oldValue?: { value: any },
+) {
+  startAction(model);
+  updateAction(model, key, value, oldValue);
+  endAction(model);
+}
+
+export function updateAction(model: PureModel, key: string, value: any, oldValue?: { value: any }) {
   const patchData = getMeta(model, MetaModelField.Patch, {
     count: 0,
     newValue: {},
     oldValue: {},
   });
-  if (model[key] === value) {
+  if ((model[key] === value && !oldValue) || value === oldValue?.value) {
     return;
   }
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
   if (!(key in patchData.oldValue)) {
-    patchData.oldValue[key] =
-      key in fields && fields[key].referenceDef ? getModelRef(model[key]) : model[key];
+    patchData.oldValue[key] = oldValue
+      ? oldValue.value
+      : key in fields && fields[key].referenceDef
+      ? getModelRef(model[key])
+      : model[key];
   }
   patchData.newValue[key] = key in fields && fields[key].referenceDef ? getModelRef(value) : value;
   setMeta(model, MetaModelField.Patch, patchData);

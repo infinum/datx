@@ -1,4 +1,11 @@
-import { extendObservable, isObservableArray, IObservableArray, observable, set } from 'mobx';
+import {
+  extendObservable,
+  isObservableArray,
+  IObservableArray,
+  observable as mobxObservable,
+  set,
+  isObservable,
+} from 'mobx';
 
 import { DATX_META } from './consts';
 
@@ -59,7 +66,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
     Object.defineProperty(obj, DATX_META, {
       configurable: false,
       enumerable: false,
-      value: observable({}, {}, { deep: false }),
+      value: mobxObservable({}, {}, { deep: false }),
     });
   }
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/1863
@@ -137,19 +144,29 @@ export function assignComputed<T = any>(
   getter: Getter<T> = undefinedGetter,
   setter: Setter<T> = defaultSetter,
 ) {
-  setMeta(obj, `get__${key}`, getter);
-  setMeta(obj, `set__${key}`, setter);
-
-  if (!obj.hasOwnProperty(key)) {
-    extendObservable(obj, {
-      get [key]() {
-        return getMeta<Getter<T>>(obj, `get__${key}`, undefinedGetter)();
-      },
-      set [key](val: T) {
-        getMeta<Setter<T>>(obj, `set__${key}`, defaultSetter)(val);
-      },
-    });
+  if (isObservable(obj)) {
+    throw new Error(`[datx exception] This object shouldn't be an observable`);
   }
+
+  const computedObj = extendObservable(
+    {},
+    {
+      get [key]() {
+        return getter.call(obj);
+      },
+    },
+  );
+
+  Object.defineProperty(obj, key, {
+    get() {
+      return computedObj[key];
+    },
+    set(val: T) {
+      setter.call(obj, val);
+    },
+    enumerable: true,
+    configurable: true,
+  });
 }
 
 export function error(...args: Array<any>) {
@@ -203,4 +220,15 @@ export function isArray(value: Array<any> | IObservableArray<any>): true;
 export function isArray(value: any): false;
 export function isArray(value: any): boolean {
   return value instanceof Array || isObservableArray(value);
+}
+
+export function observable(obj: object, key: string, descriptor: PropertyDescriptor) {
+  assignComputed(
+    obj,
+    key,
+    () => getMeta(obj, `get__${key}`),
+    (val: any) => {
+      setMeta(obj, `get__${key}`, val);
+    },
+  );
 }

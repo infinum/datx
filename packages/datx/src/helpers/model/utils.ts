@@ -16,7 +16,7 @@ import { MetaModelField } from '../../enums/MetaModelField';
 import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';
 import { IIdentifier } from '../../interfaces/IIdentifier';
-import { startAction, endAction } from '../patch';
+import { startAction, endAction, updateSingleAction } from '../patch';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { initModelField } from './init';
 import { IFieldDefinition } from '../../Attribute';
@@ -192,12 +192,12 @@ function omitKeys(obj: object, keys: Array<string>): object {
 }
 
 export function updateModel<T extends PureModel>(model: T, data: Record<string, any>): T {
+  startAction(model);
   const modelId = getMeta(model.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD);
   const modelType = getMeta(model.constructor, MetaClassField.TypeField, DEFAULT_TYPE_FIELD);
 
   const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
   mergeMeta(model, omitKeys(data[META_FIELD] || {}, READ_ONLY_META));
-  startAction(model);
 
   keys.forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
@@ -229,6 +229,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
       if (shouldBeReference && !fields[key].referenceDef) {
         throw error('You should save this value as a reference.');
       }
+      updateSingleAction(model, key, value);
       model[key] = value;
     } else {
       if (shouldBeReference) {
@@ -248,6 +249,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
         });
       }
       setMeta(model, MetaModelField.Fields, fields);
+      updateSingleAction(model, key, value);
       initModelField(model, key, value);
     }
   });
