@@ -3,10 +3,8 @@ import { IIdentifier } from './IIdentifier';
 import { IModelRef } from './IModelRef';
 
 export type TRefValue<T = PureModel> =
+  | Array<IIdentifier | IModelRef | T>
   | IIdentifier
-  | Array<IIdentifier>
   | IModelRef
-  | Array<IModelRef>
   | T
-  | Array<T>
   | null;

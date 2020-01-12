@@ -14,7 +14,7 @@ import { MetaClassField } from '../../enums/MetaClassField';
 import { MetaModelField } from '../../enums/MetaModelField';
 import { IFieldDefinition, IReferenceDefinition } from '../../Attribute';
 import { ReferenceType } from '../../enums/ReferenceType';
-import { getModelType, getModelCollection, getModelId } from './utils';
+import { getModelType, getModelCollection, getModelId, isModelReference } from './utils';
 import { IType } from '../../interfaces/IType';
 import { getBucketConstructor } from '../../buckets';
 import { getRef, updateRef, getBackRef, updateBackRef } from './fields';
@@ -23,6 +23,7 @@ import { error } from '../format';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 import { updateSingleAction } from '../patch';
 import { observable } from 'mobx';
+import { IModelRef } from '../../interfaces/IModelRef';
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
@@ -56,20 +57,28 @@ export function initModelRef<T extends PureModel>(
       },
     );
   } else {
-    const type = fieldDef.referenceDef.models[0];
     const Bucket = getBucketConstructor(fieldDef.referenceDef.type);
-    setMeta(
-      model,
-      `ref_${key}`,
-      // @ts-ignore
-      new Bucket(collection?.add(initialVal, type), collection, false, model, key),
-    );
+    let value = fieldDef.referenceDef.type === ReferenceType.TO_MANY ? [] : null;
+    if (initialVal) {
+      value = mapItems(initialVal, (item) =>
+        typeof item === 'object' && !isModelReference(item)
+          ? collection?.add(item, fieldDef.referenceDef.models[0])
+          : typeof item === 'object'
+          ? collection?.findOne(item as IModelRef)
+          : collection?.findOne(fieldDef.referenceDef.models[0], item),
+      );
+    }
+
+    const bucket = new Bucket(value, collection, false, model, key);
+    updateSingleAction(model, key, bucket.value);
+    setMeta(model, `ref_${key}`, bucket);
 
     assignComputed(
       model,
       key,
       () => getRef(model, key),
       (value: TRefValue) => {
+        updateSingleAction(model, key, value);
         updateRef(model, key, value);
       },
     );

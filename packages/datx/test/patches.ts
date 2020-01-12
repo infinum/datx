@@ -8,8 +8,9 @@ configure({ enforceActions: 'observed' });
 import { Collection, Model, Attribute } from '../src';
 import { IPatch } from '../src/interfaces/IPatch';
 import { PatchType } from '../src/enums/PatchType';
+import { getModelRef } from '../src/helpers/model/utils';
 
-xdescribe('patch', () => {
+describe('patch', () => {
   describe('model', () => {
     it('should trigger on add, replace and remove', () => {
       const patches: Array<IPatch> = [];
@@ -86,7 +87,7 @@ xdescribe('patch', () => {
       expect(model['nick']).toBe(undefined);
     });
 
-    xit('should be able to undo', () => {
+    it('should be able to undo', () => {
       const patches: Array<IPatch> = [];
       const model = new Model({
         name: 'Foo',
@@ -118,7 +119,7 @@ xdescribe('patch', () => {
       expect(model['nick']).toBe('Bar');
     });
 
-    xit('should ignore noop changes', () => {
+    it('should ignore noop changes', () => {
       const patches: Array<IPatch> = [];
       const model = new Model({
         name: 'Foo',
@@ -142,7 +143,7 @@ xdescribe('patch', () => {
     });
   });
 
-  xdescribe('collection', () => {
+  describe('collection', () => {
     it('should trigger on add, replace and remove', () => {
       const patches: Array<IPatch> = [];
       const model = new Model({
@@ -273,7 +274,7 @@ xdescribe('patch', () => {
     });
   });
 
-  xdescribe('collection with initial data', () => {
+  describe('collection with initial data', () => {
     it('should trigger on add, replace and remove', () => {
       const patches: Array<IPatch> = [];
 
@@ -370,7 +371,7 @@ xdescribe('patch', () => {
     });
   });
 
-  xdescribe('references', () => {
+  describe('references', () => {
     it('should trigger correct patches for ref changes', () => {
       class FooModel extends Model {
         public static type = 'foo';
@@ -467,14 +468,14 @@ xdescribe('patch', () => {
         },
         {
           model: modelMeta,
-          newValue: { bar: bar3.meta.id },
+          newValue: { bar: getModelRef(bar3) },
           oldValue: { bar: undefined },
           patchType: PatchType.UPDATE,
         },
         {
           model: modelMeta,
-          newValue: { bar: bar2.meta.id },
-          oldValue: { bar: bar3.meta.id },
+          newValue: { bar: getModelRef(bar2) },
+          oldValue: { bar: getModelRef(bar3) },
           patchType: PatchType.UPDATE,
         },
       ] as Array<IPatch>;

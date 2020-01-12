@@ -16,7 +16,7 @@ import { MetaModelField } from '../../enums/MetaModelField';
 import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';
 import { IIdentifier } from '../../interfaces/IIdentifier';
-import { startAction, endAction, updateSingleAction } from '../patch';
+import { startAction, endAction } from '../patch';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { initModelField } from './init';
 import { IFieldDefinition } from '../../Attribute';
@@ -229,7 +229,6 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
       if (shouldBeReference && !fields[key].referenceDef) {
         throw error('You should save this value as a reference.');
       }
-      updateSingleAction(model, key, value);
       model[key] = value;
     } else {
       if (shouldBeReference) {
@@ -249,7 +248,6 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
         });
       }
       setMeta(model, MetaModelField.Fields, fields);
-      updateSingleAction(model, key, value);
       initModelField(model, key, value);
     }
   });

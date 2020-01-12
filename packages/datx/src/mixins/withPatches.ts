@@ -117,7 +117,6 @@ export function withPatches<T extends PureCollection>(
           [],
         );
         listeners.push(listener);
-        console.log('register listener');
 
         return () => {
           setMeta(

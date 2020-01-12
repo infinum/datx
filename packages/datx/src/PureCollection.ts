@@ -170,6 +170,7 @@ export class PureCollection {
     } else if (isModelReference(model)) {
       return this.__findOneByType((model as IModelRef).type, (model as IModelRef).id);
     } else if (!id) {
+      console.log('error', arguments);
       throw new Error('The identifier is missing');
     }
 

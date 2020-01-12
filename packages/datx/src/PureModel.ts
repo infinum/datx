@@ -1,10 +1,11 @@
 import { DEFAULT_TYPE, IRawModel } from 'datx-utils';
-// import { extendObservable } from 'mobx';
 
 import { PureCollection } from './PureCollection';
 import { initModel } from './helpers/model/init';
 import { IIdentifier } from './interfaces/IIdentifier';
 import { IType } from './interfaces/IType';
+import { startAction, endAction } from './helpers/patch';
+import { PatchType } from './enums/PatchType';
 
 export class PureModel {
   public static type: string = DEFAULT_TYPE;
@@ -21,7 +22,8 @@ export class PureModel {
   }
 
   constructor(rawData: IRawModel = {}, collection?: PureCollection) {
-    // extendObservable(this, {});
+    startAction(this);
     initModel(this, rawData, collection);
+    endAction(this, PatchType.CRATE);
   }
 }

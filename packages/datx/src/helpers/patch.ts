@@ -81,7 +81,7 @@ export function updateAction(model: PureModel, key: string, value: any, oldValue
     newValue: {},
     oldValue: {},
   });
-  if ((model[key] === value && !oldValue) || value === oldValue?.value) {
+  if ((model[key] === value && !oldValue) || (oldValue && value === oldValue.value)) {
     return;
   }
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});

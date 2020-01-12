@@ -223,11 +223,14 @@ Array [
     },
     "newValue": Object {
       "__META__": Object {
-        "fields": Array [
-          "id",
-        ],
+        "collection": undefined,
+        "fields": Object {
+          "id": Object {
+            "defaultValue": undefined,
+            "referenceDef": false,
+          },
+        },
         "id": 2,
-        "refs": Object {},
         "type": "bar",
       },
       "id": 2,
@@ -244,11 +247,9 @@ Array [
         "id": 2,
         "type": "bar",
       },
-      "id": 1,
     },
     "oldValue": Object {
       "bar": undefined,
-      "id": undefined,
     },
     "patchType": 0,
   },
@@ -259,16 +260,23 @@ Array [
     },
     "newValue": Object {
       "__META__": Object {
-        "fields": Array [
-          "id",
-        ],
-        "id": 1,
-        "refs": Object {
+        "collection": undefined,
+        "fields": Object {
           "bar": Object {
-            "id": 2,
-            "type": "bar",
+            "defaultValue": undefined,
+            "referenceDef": Object {
+              "models": Array [
+                "bar ",
+              ],
+              "type": 0,
+            },
+          },
+          "id": Object {
+            "defaultValue": undefined,
+            "referenceDef": false,
           },
         },
+        "id": 1,
         "type": "foo",
       },
       "bar": Object {
@@ -295,6 +303,38 @@ Array [
         "id": 2,
         "type": "bar",
       },
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "bar": null,
+    },
+    "oldValue": Object {
+      "bar": Object {
+        "id": 3,
+        "type": "bar",
+      },
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "bar": Object {
+        "id": 3,
+        "type": "bar",
+      },
+    },
+    "oldValue": Object {
+      "bar": null,
     },
     "patchType": 1,
   },
