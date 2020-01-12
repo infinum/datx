@@ -7,7 +7,7 @@ import {
   updateModelId,
   View,
 } from 'datx';
-import { assignComputed, IDictionary } from 'datx-utils';
+import { assignComputed } from 'datx-utils';
 import { action } from 'mobx';
 
 import { IHeaders } from './interfaces/IHeaders';
@@ -45,7 +45,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {object}
    * @memberOf Response
    */
-  public links?: IDictionary<ILink>;
+  public links?: Record<string, ILink>;
 
   /**
    * The JSON API object returned by the server
@@ -152,10 +152,10 @@ export class Response<T extends IJsonapiModel> {
    * Cache used for the link requests
    *
    * @private
-   * @type {IDictionary<Promise<Response>>}
+   * @type {Record<string, Promise<Response>>}
    * @memberOf Response
    */
-  private readonly __cache: IDictionary<Promise<Response<T>>> = {};
+  private readonly __cache: Record<string, Promise<Response<T>>> = {};
 
   constructor(
     response: IRawResponse,

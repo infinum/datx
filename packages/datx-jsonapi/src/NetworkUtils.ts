@@ -1,5 +1,4 @@
 import { setModelMetaKey, View } from 'datx';
-import { IDictionary } from 'datx-utils';
 import { action } from 'mobx';
 
 import { getCache, saveCache } from './cache';
@@ -44,7 +43,7 @@ export interface IConfigType {
   baseFetch: FetchType;
   baseUrl: string;
   cache: boolean;
-  defaultFetchOptions: IDictionary;
+  defaultFetchOptions: Record<string, any>;
   fetchReference?: typeof fetch;
   paramArrayType: ParamArrayType;
   encodeQueryString?: boolean;

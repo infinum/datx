@@ -8,7 +8,7 @@ import { startAction, endAction } from './helpers/patch';
 import { PatchType } from './enums/PatchType';
 
 export class PureModel {
-  public static type: string = DEFAULT_TYPE;
+  public static type: IType = DEFAULT_TYPE;
 
   public static autoIdValue: IIdentifier = 0;
   public static enableAutoId: boolean = true;

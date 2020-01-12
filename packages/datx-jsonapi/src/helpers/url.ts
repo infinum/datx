@@ -1,5 +1,4 @@
 import { getModelType, IType, PureCollection, PureModel } from 'datx';
-import { IDictionary } from 'datx-utils';
 
 import { URL_REGEX } from '../consts';
 import { ParamArrayType } from '../enums/ParamArrayType';
@@ -40,7 +39,7 @@ export function prepareQuery(
 }
 
 export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
-  const headers: IDictionary<string> =
+  const headers: Record<string, string> =
     (options && options.networkConfig && options.networkConfig.headers) || {};
   let params: Array<string> = [
     ...prepareFilters((options && options.queryParams && options.queryParams.filter) || {}),
@@ -71,7 +70,7 @@ function prepareIncludes(include?: string | Array<string>): Array<string> {
   return include ? [`include=${include}`] : [];
 }
 
-function prepareFields(fields: IDictionary<string | Array<string>>): Array<string> {
+function prepareFields(fields: Record<string, string | Array<string>>): Array<string> {
   const list: Array<string> = [];
 
   Object.keys(fields).forEach((key) => {

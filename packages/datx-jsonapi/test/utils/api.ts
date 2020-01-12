@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as nodeUrl from 'url';
 
-import { IDictionary } from 'datx-utils';
 import { isFunction } from 'lodash';
 import * as nock from 'nock';
 
@@ -29,7 +28,7 @@ export interface IMockArgs {
   data?: any;
   query?: boolean | (() => boolean) | object;
   headers?: nock.HttpHeaders;
-  reqheaders?: IDictionary;
+  reqheaders?: Record<string, any>;
   status?: number;
   responseFn?(...args: Array<any>): void;
 }

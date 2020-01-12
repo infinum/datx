@@ -1,3 +1,1 @@
-import { IDictionary } from 'datx-utils';
-
-export type IHeaders = IDictionary<string>;
+export type IHeaders = Record<string, string>;

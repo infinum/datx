@@ -13,7 +13,7 @@ import {
   ReferenceType,
   updateModel,
 } from 'datx';
-import { IDictionary, IRawModel, mapItems, isArray } from 'datx-utils';
+import { IRawModel, mapItems, isArray } from 'datx-utils';
 import { action } from 'mobx';
 
 import { clearAllCache, clearCacheByType } from './cache';
@@ -194,7 +194,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       const record: PureModel | null = obj.id === undefined ? null : this.findOne(obj.type, obj.id);
       const refs: Array<string> = obj.relationships ? Object.keys(obj.relationships) : [];
       refs.forEach((ref: string) => {
-        const refData = (obj.relationships as IDictionary<IRelationship>)[ref];
+        const refData = (obj.relationships as Record<string, IRelationship>)[ref];
         if (!refData || !('data' in refData)) {
           return;
         }
@@ -223,7 +223,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
               );
             }
           } else {
-            const refsDef = getModelMetaKey(record, 'refs') as IDictionary<IReferenceOptions>;
+            const refsDef = getModelMetaKey(record, 'refs') as Record<string, IReferenceOptions>;
             if (refsDef && ref in refsDef) {
               record[ref] = refsDef[ref].type === ReferenceType.TO_MANY ? [] : null;
             }

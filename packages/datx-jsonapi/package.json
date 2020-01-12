@@ -23,20 +23,23 @@
   ],
   "devDependencies": {
     "@infinumjs/tslint-config": "^2.0.0-beta.6",
-    "@types/jest": "^24.0.11",
-    "@types/lodash": "^4.14.123",
+    "@rollup/plugin-commonjs": "^11.0.1",
+    "@types/jest": "^24.0.25",
+    "@types/lodash": "^4.14.149",
     "@types/nock": "^11.1.0",
-    "@types/node": "^12.0.0",
+    "@types/node": "^13.1.6",
     "isomorphic-fetch": "^2.2.1",
-    "jest": "^24.7.1",
-    "lodash": "^4.17.11",
-    "mobx": "^5.9.4",
-    "nock": "^10.0.6",
-    "rollup": "^1.10.0",
-    "rollup-plugin-typescript2": "^0.24.0",
-    "ts-jest": "^24.0.2",
-    "tslint": "^5.15.0",
-    "typescript": "^3.4.3"
+    "jest": "^24.9.0",
+    "lodash": "^4.17.15",
+    "mobx": "^5.15.1",
+    "nock": "^11.7.2",
+    "rollup": "^1.29.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.25.3",
+    "ts-jest": "^24.3.0",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.4"
   },
   "peerDependencies": {
     "mobx": "^4.2.0 || ^5.5.0"
@@ -72,8 +75,7 @@
     }
   },
   "dependencies": {
-    "datx": "^1.0.1",
-    "datx-utils": "^2.0.0",
-    "rollup-plugin-terser": "^5.1.2"
+    "datx": "^2.0.0",
+    "datx-utils": "^2.0.0"
   }
 }
