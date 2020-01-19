@@ -34,7 +34,7 @@ export function getModelClassRefs(type: typeof PureModel) {
 
   Object.keys(fields).forEach((key) => {
     if (fields[key].referenceDef) {
-      refs[key] = fields[key].referenceDef;
+      refs[key] = fields[key].referenceDef as IReferenceDefinition;
     }
   });
 

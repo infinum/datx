@@ -1,4 +1,5 @@
-import { setModelMetaKey, View } from 'datx';
+import { View } from 'datx';
+import { setMeta } from 'datx-utils';
 import { action } from 'mobx';
 
 import { getCache, saveCache } from './cache';
@@ -356,18 +357,18 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
       }
 
       if (response.status === 204) {
-        setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
+        setMeta(record, MODEL_PERSISTED_FIELD, true);
 
         return record;
       } else if (response.status === 202) {
         const responseRecord = response.data as T;
-        setModelMetaKey(responseRecord, MODEL_PROP_FIELD, prop);
-        setModelMetaKey(responseRecord, MODEL_QUEUE_FIELD, true);
-        setModelMetaKey(responseRecord, MODEL_RELATED_FIELD, record);
+        setMeta(responseRecord, MODEL_PROP_FIELD, prop);
+        setMeta(responseRecord, MODEL_QUEUE_FIELD, true);
+        setMeta(responseRecord, MODEL_RELATED_FIELD, record);
 
         return responseRecord;
       } else {
-        setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
+        setMeta(record, MODEL_PERSISTED_FIELD, true);
 
         return response.replaceData(record).data as T;
       }

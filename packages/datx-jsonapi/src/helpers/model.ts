@@ -2,6 +2,7 @@ import {
   getModelCollection,
   getModelId,
   getModelType,
+  IFieldDefinition,
   IModelRef,
   IReferenceOptions,
   modelToJSON,
@@ -42,12 +43,15 @@ export function flattenModel(
 
   const rawData = {
     [META_FIELD]: {
-      fields: Object.keys(data.attributes || {}),
+      fields: Object.keys(data.attributes || {}).reduce((obj, key) => {
+        obj[key] = { referenceDef: false };
+
+        return obj;
+      }, {}),
       id: data.id,
       [MODEL_LINKS_FIELD]: data.links,
       [MODEL_META_FIELD]: data.meta,
       [MODEL_PERSISTED_FIELD]: Boolean(data.id),
-      refs: {},
       type: data.type,
     },
   };
@@ -55,7 +59,7 @@ export function flattenModel(
   if (data.relationships) {
     const refLinks = {};
     const refMeta = {};
-    const refs = {};
+    const refs: Record<string, IFieldDefinition> = {};
     Object.keys(data.relationships).forEach((key) => {
       const ref = (data.relationships as Record<string, IRelationship>)[key];
       if (ref && 'data' in ref && ref.data) {
@@ -63,8 +67,10 @@ export function flattenModel(
           rawData[key] = mapItems(ref.data, (item: IDefinition) => item.id);
           if (!classRefs || !(key in classRefs)) {
             refs[key] = {
-              model: ref.data instanceof Array ? ref.data[0].type : ref.data.type,
-              type: ref.data instanceof Array ? ReferenceType.TO_MANY : ReferenceType.TO_ONE,
+              referenceDef: {
+                models: [ref.data instanceof Array ? ref.data[0].type : ref.data.type],
+                type: ref.data instanceof Array ? ReferenceType.TO_MANY : ReferenceType.TO_ONE,
+              },
             };
           }
         } else {
@@ -77,11 +83,9 @@ export function flattenModel(
       if (ref && 'meta' in ref) {
         refMeta[key] = ref.meta;
       }
-
-      rawData[META_FIELD].fields.push(...Object.keys(refs));
     });
 
-    rawData[META_FIELD].refs = refs;
+    Object.assign(rawData[META_FIELD].fields, refs);
     rawData[META_FIELD][MODEL_REF_LINKS_FIELD] = refLinks;
     rawData[META_FIELD][MODEL_REF_META_FIELD] = refMeta;
   }
@@ -192,7 +196,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
     type: getModelType(model) as string,
   };
 
-  const refs = getMeta(model, 'refs');
+  const refs = getModelRefMeta(model);
 
   Object.keys(refs).forEach((key) => {
     data.relationships = data.relationships || {};

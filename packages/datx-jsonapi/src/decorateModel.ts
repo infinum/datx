@@ -1,10 +1,25 @@
 import { PureCollection, PureModel } from 'datx';
-import { IRawModel } from 'datx-utils';
+import { IRawModel, META_FIELD, setMeta } from 'datx-utils';
 
+import {
+  MODEL_LINKS_FIELD,
+  MODEL_META_FIELD,
+  MODEL_PERSISTED_FIELD,
+  MODEL_REF_LINKS_FIELD,
+  MODEL_REF_META_FIELD,
+} from './consts';
 import { flattenModel, removeModel, saveModel } from './helpers/model';
 import { getModelClassRefs } from './helpers/utils';
 import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IRecord } from './interfaces/JsonApi';
+
+const HYDRATIZATION_KEYS = [
+  MODEL_LINKS_FIELD,
+  MODEL_META_FIELD,
+  MODEL_PERSISTED_FIELD,
+  MODEL_REF_LINKS_FIELD,
+  MODEL_REF_META_FIELD,
+];
 
 export function decorateModel(BaseClass: typeof PureModel) {
   class JsonapiModel extends BaseClass {
@@ -37,6 +52,13 @@ export function decorateModel(BaseClass: typeof PureModel) {
         data = flattenModel(classRefs, rawData as IRecord);
       }
       super(data, collection);
+
+      const modelMeta = data?.[META_FIELD] || {};
+      HYDRATIZATION_KEYS.forEach((key) => {
+        if (key in modelMeta) {
+          setMeta(this, key, modelMeta[key]);
+        }
+      });
     }
 
     public save(options?: IRequestOptions) {
