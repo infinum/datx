@@ -1,17 +1,14 @@
 import {
   getModelCollection,
   getModelId,
-  getModelMetaKey,
   getModelType,
-  getRefId,
   IModelRef,
   IReferenceOptions,
   modelToJSON,
   PureModel,
   ReferenceType,
-  setModelMetaKey,
 } from 'datx';
-import { IRawModel, mapItems, META_FIELD } from 'datx-utils';
+import { getMeta, IRawModel, mapItems, META_FIELD, setMeta } from 'datx-utils';
 
 import { clearCacheByType } from '../cache';
 import {
@@ -93,11 +90,11 @@ export function flattenModel(
 }
 
 export function getModelMeta(model: PureModel): Record<string, any> {
-  return getModelMetaKey(model, MODEL_META_FIELD);
+  return getMeta(model, MODEL_META_FIELD, {});
 }
 
 export function getModelLinks(model: PureModel): Record<string, ILink> {
-  return getModelMetaKey(model, MODEL_LINKS_FIELD);
+  return getMeta(model, MODEL_LINKS_FIELD, {});
 }
 
 export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
@@ -113,10 +110,10 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
   const link = links[key];
   const responseObj = fetchLink<T>(link, (collection as unknown) as IJsonapiCollection, options);
 
-  if (getModelMetaKey(model, MODEL_QUEUE_FIELD)) {
+  if (getMeta(model, MODEL_QUEUE_FIELD)) {
     return responseObj.then((response) => {
-      const related = getModelMetaKey(model, MODEL_RELATED_FIELD);
-      const prop = getModelMetaKey(model, MODEL_PROP_FIELD);
+      const related = getMeta(model, MODEL_RELATED_FIELD);
+      const prop = getMeta(model, MODEL_PROP_FIELD);
       const record = response.data;
       const recordType = record && getModelType(record);
       if (record && recordType !== getModelType(model) && recordType === getModelType(related)) {
@@ -125,7 +122,7 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
 
           return response;
         }
-        setModelMetaKey(related, MODEL_PERSISTED_FIELD, true);
+        setMeta(related, MODEL_PERSISTED_FIELD, true);
 
         return response.replaceData(related);
       }
@@ -167,19 +164,19 @@ export async function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>
 }
 
 export function getModelRefLinks(model: PureModel): Record<string, Record<string, ILink>> {
-  return getModelMetaKey(model, MODEL_REF_LINKS_FIELD);
+  return getMeta(model, MODEL_REF_LINKS_FIELD, {});
 }
 
 export function getModelRefMeta(model: PureModel): Record<string, any> {
-  return getModelMetaKey(model, MODEL_REF_META_FIELD);
+  return getMeta(model, MODEL_REF_META_FIELD, {});
 }
 
 function isModelPersisted(model: PureModel): boolean {
-  return getModelMetaKey(model, MODEL_PERSISTED_FIELD);
+  return getMeta(model, MODEL_PERSISTED_FIELD, false);
 }
 
 function setModelPersisted(model: PureModel, status: boolean) {
-  setModelMetaKey(model, MODEL_PERSISTED_FIELD, status);
+  setMeta(model, MODEL_PERSISTED_FIELD, status);
 }
 
 export function modelToJsonApi(model: IJsonapiModel): IRecord {
@@ -195,11 +192,11 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
     type: getModelType(model) as string,
   };
 
-  const refs = getModelMetaKey(model, 'refs');
+  const refs = getMeta(model, 'refs');
 
   Object.keys(refs).forEach((key) => {
     data.relationships = data.relationships || {};
-    const refsList: IModelRef | Array<IModelRef> | null = getRefId(model, key);
+    const refsList: IModelRef | Array<IModelRef> | null = model[key];
 
     data.relationships[key] = {
       data: mapItems(refsList, (refItem: IModelRef) => ({
@@ -297,8 +294,8 @@ export function saveRelationship<T extends IJsonapiModel>(
   const link = getLink(model, ref, 'self');
   const href: string = typeof link === 'object' ? link.href : link;
 
-  const ids = getRefId(model, ref);
-  const type = getModelType(getModelMetaKey(model, 'refs')[ref].model);
+  const ids = model[ref];
+  const type = getModelType(getMeta(model, 'refs')[ref].model);
   type ID = IDefinition | Array<IDefinition>;
   const data: ID = mapItems(ids, (refItem: IModelRef) => ({
     id: refItem.id,

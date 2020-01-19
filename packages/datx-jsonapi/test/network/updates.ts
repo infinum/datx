@@ -2,12 +2,10 @@ import {
   Collection,
   getModelId,
   getModelType,
-  getRefId,
   initModelRef,
   Model,
   prop,
   ReferenceType,
-  setRefId,
 } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
@@ -104,17 +102,18 @@ describe('updates', () => {
       const bar = store.add<Bar>({ foo }, Bar);
       const baz = store.add({}, 'baz');
       expect(bar.foo).toBe(foo);
-      const barRef = getRefId(bar, 'foo');
+      const barRef = bar.foo;
       if (barRef && 'id' in barRef) {
+        // @ts-ignore
         expect(barRef.id).toBe(foo.meta.id);
       } else {
         expect(true).toBe(false);
       }
 
-      initModelRef(baz, 'foo', { model: Foo, type: ReferenceType.TO_ONE }, foo);
+      initModelRef(baz, 'foo', { models: [Foo.type], type: ReferenceType.TO_ONE }, foo);
       expect(baz['foo']).toBe(foo);
 
-      const bazRef = getRefId(baz, 'foo');
+      const bazRef = baz['foo'];
       if (bazRef && 'id' in bazRef) {
         expect(bazRef.id).toBe(foo.meta.id);
       } else {
@@ -142,8 +141,9 @@ describe('updates', () => {
       expect(updated).toBe(foo);
       expect(foo.meta.id).toBe('12345');
 
-      const barRef2 = getRefId(bar, 'foo');
+      const barRef2 = bar.foo;
       if (barRef2 && 'id' in barRef2) {
+        // @ts-ignore
         expect(barRef2.id).toBe(foo.meta.id);
       } else {
         expect(true).toBe(false);
@@ -151,7 +151,7 @@ describe('updates', () => {
       expect(bar.foo).toBe(foo);
 
       expect(baz['foo']).toBe(foo);
-      const bazRef2 = getRefId(baz, 'foo');
+      const bazRef2 = baz['foo'];
       if (bazRef2 && 'id' in bazRef2) {
         expect(bazRef2.id).toBe(foo.meta.id);
       } else {
@@ -435,10 +435,12 @@ describe('updates', () => {
 
       expect(event).toBeInstanceOf(Event);
       if (event) {
-        setRefId(event, 'images', [
+        event.images = [
+          // @ts-ignore
           { type: 'image', id: '1' },
+          // @ts-ignore
           { type: 'image', id: '2' },
-        ]);
+        ];
 
         mockApi({
           data: {
@@ -461,7 +463,7 @@ describe('updates', () => {
         const event2 = await saveRelationship(event, 'images');
         expect(event2.meta.id).toBe('12345');
         expect(event2.meta.type).toBe('event');
-        const images = getRefId(event2, 'images');
+        const images = event2.images;
         expect(images).toHaveLength(2);
         if (images instanceof Array) {
           expect(images.map((image) => image.id)).toContain('1');

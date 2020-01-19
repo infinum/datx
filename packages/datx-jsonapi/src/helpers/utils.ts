@@ -1,3 +1,6 @@
+import { IFieldDefinition, IReferenceDefinition, PureModel } from 'datx';
+import { getMeta } from 'datx-utils';
+
 declare var window: object;
 
 // tslint:disable-next-line:no-typeof-undefined - The alternative breaks on node
@@ -23,4 +26,17 @@ export function getValue<T>(target: T | (() => T)): T {
 
 export function error(message: string): Error {
   return new Error(`[datx exception] ${message}`);
+}
+
+export function getModelClassRefs(type: typeof PureModel) {
+  const fields: Record<string, IFieldDefinition> = getMeta(type, 'fields', {});
+  const refs: Record<string, IReferenceDefinition> = {};
+
+  Object.keys(fields).forEach((key) => {
+    if (fields[key].referenceDef) {
+      refs[key] = fields[key].referenceDef;
+    }
+  });
+
+  return refs;
 }

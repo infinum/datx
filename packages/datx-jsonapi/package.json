@@ -54,25 +54,22 @@
   "jest": {
     "coveragePathIgnorePatterns": [
       "/test/",
-      "/node_modules/",
-      "../datx/dist",
-      "../datx-utils/dist"
+      "/node_modules/"
     ],
     "moduleFileExtensions": [
       "ts",
       "js"
     ],
     "testRegex": "test/main.ts",
-    "transform": {
-      ".ts": "ts-jest"
-    },
     "globals": {
       "ts-jest": {
         "diagnostics": {
           "warnOnly": true
         }
       }
-    }
+    },
+    "preset": "ts-jest",
+    "testMatch": null
   },
   "dependencies": {
     "datx": "^2.0.0",

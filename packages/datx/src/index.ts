@@ -4,7 +4,14 @@ import { ToMany, ToOne, ToOneOrMany } from './buckets';
 // tslint:disable-next-line:export-name
 export const Bucket = { ToMany, ToOne, ToOneOrMany };
 
-export { Attribute, ViewAttribute } from './Attribute';
+export {
+  Attribute,
+  ViewAttribute,
+  prop,
+  view,
+  IFieldDefinition,
+  IReferenceDefinition,
+} from './Attribute';
 export { Collection } from './Collection';
 export { Model } from './Model';
 export { PureCollection } from './PureCollection';

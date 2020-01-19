@@ -1,5 +1,5 @@
 import { Collection, getModelId, getModelType, Model } from 'datx';
-import { autorun } from 'mobx';
+import { autorun, runInAction } from 'mobx';
 
 import { getModelRefLinks, jsonapi, modelToJsonApi } from '../src';
 import { Event, Image, Photo, TestStore, User } from './utils/setup';
@@ -136,8 +136,10 @@ describe('General', () => {
         autorunCount++;
       });
 
-      name = 'Foo';
-      event.name = 'Foo';
+      runInAction(() => {
+        name = 'Foo';
+        event.name = 'Foo';
+      });
       expect(autorunCount).toBe(2);
     }
   });
@@ -288,7 +290,10 @@ describe('General', () => {
             ],
           },
           organizers: {
-            data: [{ type: 'organizers', id: '1' }, { type: 'organizers', id: '2' }],
+            data: [
+              { type: 'organizers', id: '1' },
+              { type: 'organizers', id: '2' },
+            ],
           },
         },
         type: 'event',

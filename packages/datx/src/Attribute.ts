@@ -1,4 +1,4 @@
-import { getMeta, setMeta, isArray } from 'datx-utils';
+import { getMeta, setMeta, isArray, deprecated } from 'datx-utils';
 
 import { PureModel } from './PureModel';
 import { IType } from './interfaces/IType';
@@ -167,3 +167,37 @@ export function ViewAttribute<TCollection extends PureCollection, TModel extends
     };
   };
 }
+
+// Compatibility implementation
+export function prop<T extends PureModel>(obj: T, key: string, opts?: object) {
+  deprecated('@prop was deprecated, use @Attribute instead');
+  Attribute()(obj, key, opts);
+}
+
+Object.assign(prop, {
+  defaultValue(value: any) {
+    deprecated('@prop was deprecated, use @Attribute instead');
+    return Attribute({ defaultValue: value });
+  },
+
+  toOne(refModel: typeof PureModel | IType) {
+    deprecated('@prop was deprecated, use @Attribute instead');
+    return Attribute({ toOne: refModel });
+  },
+
+  toMany(refModel: typeof PureModel | IType, property?: string) {
+    deprecated('@prop was deprecated, use @Attribute instead');
+    return Attribute({ toMany: refModel, referenceProperty: property });
+  },
+
+  toOneOrMany(refModel: typeof PureModel | IType) {
+    deprecated('@prop was deprecated, use @Attribute instead');
+    return Attribute({ toOneOrMany: refModel });
+  },
+
+  identifier: Attribute({ isIdentifier: true }),
+
+  type: Attribute({ isType: true }),
+});
+
+export const view = ViewAttribute;

@@ -1,7 +1,8 @@
-import { getModelClassRefs, PureCollection, PureModel } from 'datx';
+import { PureCollection, PureModel } from 'datx';
 import { IRawModel } from 'datx-utils';
 
 import { flattenModel, removeModel, saveModel } from './helpers/model';
+import { getModelClassRefs } from './helpers/utils';
 import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IRecord } from './interfaces/JsonApi';
 

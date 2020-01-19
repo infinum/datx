@@ -1,7 +1,5 @@
 import {
-  getModelClassRefs,
   getModelId,
-  getModelMetaKey,
   getModelType,
   ICollectionConstructor,
   IModelConstructor,
@@ -13,14 +11,14 @@ import {
   ReferenceType,
   updateModel,
 } from 'datx';
-import { IRawModel, mapItems, isArray } from 'datx-utils';
-import { action } from 'mobx';
+import { getMeta, IRawModel, mapItems } from 'datx-utils';
+import { action, isArrayLike } from 'mobx';
 
 import { clearAllCache, clearCacheByType } from './cache';
 import { GenericModel } from './GenericModel';
 import { flattenModel, removeModel } from './helpers/model';
 import { buildUrl, prepareQuery } from './helpers/url';
-import { isBrowser } from './helpers/utils';
+import { getModelClassRefs, isBrowser } from './helpers/utils';
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -199,7 +197,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
           return;
         }
         const items = refData.data;
-        if (isArray(items) && items.length < 1) {
+        if (isArrayLike(items) && items.length < 1) {
           // it's only possible to update items with one ore more refs. Early exit
           return;
         } else if (record) {
@@ -211,19 +209,19 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
                   (def.id === undefined ? null : this.findOne(def.type, def.id)) || def.id,
               ) || null;
 
-            const itemType: string = isArray(items) ? items[0].type : items.type;
+            const itemType: string = isArrayLike(items) ? items[0].type : items.type;
             if (ref in record) {
               record[ref] = models;
             } else {
               initModelRef(
                 record,
                 ref,
-                { model: itemType, type: ReferenceType.TO_ONE_OR_MANY },
+                { models: [itemType], type: ReferenceType.TO_ONE_OR_MANY },
                 models,
               );
             }
           } else {
-            const refsDef = getModelMetaKey(record, 'refs') as Record<string, IReferenceOptions>;
+            const refsDef = getMeta(record, 'refs') as Record<string, IReferenceOptions>;
             if (refsDef && ref in refsDef) {
               record[ref] = refsDef[ref].type === ReferenceType.TO_MANY ? [] : null;
             }
