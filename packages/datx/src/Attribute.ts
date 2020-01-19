@@ -169,12 +169,12 @@ export function ViewAttribute<TCollection extends PureCollection, TModel extends
 }
 
 // Compatibility implementation
-export function prop<T extends PureModel>(obj: T, key: string, opts?: object) {
+function propFn<T extends PureModel>(obj: T, key: string, opts?: object) {
   deprecated('@prop was deprecated, use @Attribute instead');
   Attribute()(obj, key, opts);
 }
 
-Object.assign(prop, {
+export const prop = Object.assign(propFn, {
   defaultValue(value: any) {
     deprecated('@prop was deprecated, use @Attribute instead');
     return Attribute({ defaultValue: value });

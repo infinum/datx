@@ -6105,6 +6105,11 @@ rimraf@2.6.3, rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2, rimraf@^2.6.3:
   dependencies:
     glob "^7.1.3"
 
+rollup-plugin-exclude-dependencies-from-bundle@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-exclude-dependencies-from-bundle/-/rollup-plugin-exclude-dependencies-from-bundle-1.1.5.tgz#1e835ad9fd10041f537303610480825aa5e9b14c"
+  integrity sha512-ySHsSJU9JLxgRUlCZIBp3Ar6OYcV8CowGHhIZfxXBUVUrfbbUOalUP0nL5fCgUBgITi2O2DOtKzicIT7tJ3U1A==
+
 rollup-plugin-node-resolve@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-node-resolve/-/rollup-plugin-node-resolve-5.2.0.tgz#730f93d10ed202473b1fb54a5997a7db8c6d8523"

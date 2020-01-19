@@ -2,6 +2,7 @@ import typescript from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
+import excludeDependenciesFromBundle from 'rollup-plugin-exclude-dependencies-from-bundle';
 
 import pkg from './package.json';
 
@@ -12,6 +13,7 @@ export default [
     plugins: [
       resolve(),
       commonjs(),
+      excludeDependenciesFromBundle(),
       typescript({
         check: true,
         typescript: require('typescript'),
@@ -31,6 +33,7 @@ export default [
     plugins: [
       resolve(),
       commonjs(),
+      excludeDependenciesFromBundle(),
       typescript({
         check: true,
         typescript: require('typescript'),

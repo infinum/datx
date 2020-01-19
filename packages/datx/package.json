@@ -24,6 +24,7 @@
     "jest": "^24.9.0",
     "mobx": "^5.15.1",
     "rollup": "^1.29.0",
+    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.5",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript2": "^0.25.3",
     "ts-jest": "^24.3.0",
