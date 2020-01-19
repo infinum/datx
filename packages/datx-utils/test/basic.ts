@@ -6,7 +6,15 @@ import {
   observable as mobxObservable,
 } from 'mobx';
 
-import { assignComputed, flatten, isFalsyArray, mapItems, observable } from '../src';
+import {
+  assignComputed,
+  flatten,
+  isFalsyArray,
+  mapItems,
+  observable,
+  setMeta,
+  getMeta,
+} from '../src';
 
 configure({ enforceActions: 'observed' });
 
@@ -153,7 +161,6 @@ describe('datx-utils', () => {
             'foo',
             () => {
               counter++;
-              console.log(this, this.data);
 
               return this.data;
             },
@@ -212,6 +219,52 @@ describe('datx-utils', () => {
       assignComputed(obj, 'foo', () => 2);
 
       expect(obj['foo']).toBe(2);
+    });
+  });
+
+  describe('meta getter/setter', () => {
+    it('should save the exact data, not be enumerable', () => {
+      const obj = {};
+      const metaData = { foo: 1 };
+
+      setMeta(obj, 'test', metaData);
+      const savedMeta = getMeta(obj, 'test');
+
+      expect(savedMeta).toBe(metaData);
+      expect(Object.keys(obj)).toEqual([]);
+    });
+
+    it('should work for chains', () => {
+      const obj1 = {};
+      const obj2 = Object.create(obj1);
+      const obj3 = Object.create(obj2);
+      const metaData = { foo: 1 };
+
+      setMeta(obj1, 'test', metaData);
+
+      expect(getMeta(obj3, 'test', {}, true)).toBe(metaData);
+    });
+
+    it('should work for chain merging', () => {
+      const obj1 = {};
+      const obj2 = Object.create(obj1);
+      const obj3 = Object.create(obj2);
+
+      setMeta(obj1, 'test', { foo: 1 });
+      setMeta(obj2, 'test', { bar: 2 });
+      setMeta(obj3, 'test', { baz: 3 });
+
+      expect(getMeta(obj3, 'test', {}, true)).toEqual({ baz: 3 });
+      expect(getMeta(obj3, 'test', {}, true, true)).toEqual({ foo: 1, bar: 2, baz: 3 });
+    });
+
+    it('should work with default data', () => {
+      const obj = {};
+      const metaData = { foo: 1 };
+
+      expect(getMeta(obj, 'test', metaData)).toBe(metaData);
+      expect(getMeta(obj, 'test')).toBe(undefined);
+      expect(Object.keys(obj)).toEqual([]);
     });
   });
 });

@@ -105,7 +105,7 @@ export function getMeta<T = any>(
         obj,
         (value, model): T => {
           const meta = getMeta(model, key, mergeChain ? {} : undefined);
-          return mergeChain ? { ...meta, ...value } : ((meta || value) as T);
+          return mergeChain ? { ...meta, ...value } : ((value || meta) as T);
         },
         (mergeChain ? {} : undefined) as T,
       ) || defaultValue
@@ -222,7 +222,7 @@ export function isArray(value: any): boolean {
   return value instanceof Array || isObservableArray(value);
 }
 
-export function observable(obj: object, key: string, descriptor: PropertyDescriptor) {
+export function observable(obj: object, key: string, _descriptor?: PropertyDescriptor) {
   assignComputed(
     obj,
     key,
