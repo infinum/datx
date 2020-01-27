@@ -5,7 +5,10 @@
     "previous": "Previous",
     "tagline": "A mobx data store",
     "docs": {
-      "configuring-collection": {
+      "collection": {
+        "title": "Collection"
+      },
+      "configuring-the-collection": {
         "title": "Configuring the collection"
       },
       "defining-models": {
@@ -17,13 +20,16 @@
       "known-issues": {
         "title": "Known issues"
       },
+      "model": {
+        "title": "Model"
+      },
       "persisting-data-locally": {
         "title": "Persisting data locally"
       },
       "references": {
         "title": "References"
       },
-      "using-collection": {
+      "using-the-collection": {
         "title": "Using the collection"
       }
     },
@@ -33,6 +39,7 @@
     },
     "categories": {
       "Getting started": "Getting started",
+      "API Reference": "API Reference",
       "Troubleshooting": "Troubleshooting"
     }
   },

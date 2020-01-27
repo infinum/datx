@@ -4,10 +4,11 @@
       "installation",
       "defining-models",
       "references",
-      "configuring-collection",
-      "using-collection",
+      "configuring-the-collection",
+      "using-the-collection",
       "persisting-data-locally"
     ],
+    "API Reference": ["collection", "model"],
     "Troubleshooting": ["known-issues"]
   }
 }
