@@ -1,6 +1,6 @@
 ---
-id: defining-modules
-title: Defining modules
+id: defining-models
+title: Defining models
 ---
 
 **Note:** If you're defining your own models, you also need to update the [collection configuration](Configuring-the-collection).
@@ -8,9 +8,13 @@ title: Defining modules
 
 ## TypeScript
 
-**Note 🚨:** When using Babel 7 with the new decorators plugin, the [`@prop` decorators are ignored](https://github.com/infinum/datx/issues/92). This is also the case when using the Babel TypeScript plugin (like is the case with [Create react app 2](https://facebook.github.io/create-react-app/) and [Next.js 7](https://nextjs.org/) with the [TypeScript plugin](https://github.com/zeit/next-plugins/tree/master/packages/next-typescript)). If this is the case on your project, you'll need to use one of the other two options bellow.
+**Note 🚨:** When using Babel 7 with the new decorators plugin, the [`@prop` decorators are ignored](https://github.com/infinum/datx/issues/92).
 
-The models can be defined by extending the [`Model`](Model) class. When extending the [`Model`](Model) class, the minimal thing you should do is to define a unique [`type`](Model#static-type) (can be either a number or a string):
+This is also the case when using the Babel TypeScript plugin (like is the case with [Create react app 2](https://facebook.github.io/create-react-app/) and [Next.js 7](https://nextjs.org/) with the [TypeScript plugin](https://github.com/zeit/next-plugins/tree/master/packages/next-typescript)). If this is the case on your project, you'll need to use one of the other two options bellow.
+
+----
+
+The models can be defined by extending the [`Model`](model) class. When extending the [`Model`](model) class, the minimal thing you should do is to define a unique [`type`](model#static-type) (can be either a number or a string):
 
 ```typescript
 import {Model} from 'datx';
@@ -20,7 +24,7 @@ class Person extends Model {
 }
 ```
 
-Other things that should be defined are props and their default values or [References](References):
+Other things that should be defined are props and their default values or [References](references):
 
 ```typescript
 import {Model, prop} from 'datx';
@@ -28,9 +32,14 @@ import {Model, prop} from 'datx';
 class Pet extends Model {
   static type = 'pet';
 
-  @prop name: string;
-  @prop.defaultValue(0) age: number;
-  @prop.toOne(Person) owner: Person;
+  @prop
+  public name: string;
+
+  @prop.defaultValue(0)
+  public age: number;
+
+  @prop.toOne(Person)
+  public owner: Person;
 }
 ```
 
@@ -49,9 +58,9 @@ import {Model, prop} from 'datx';
 class Pet extends Model {
   static type = 'pet';
 
-  name: string;
-  age: number;
-  owner: Person;
+  public name: string;
+  public age: number;
+  public owner: Person;
 }
 
 prop(Pet, 'name');
@@ -74,7 +83,7 @@ prop.toOne(Person)(Pet, 'owner');
 
 ### Option 2
 
-The models can be defined by extending the [`Model`](Model) class. When extending the [`Model`](Model) class, the minimal thing you should do is to define a unique [`type`](Model#static-type) (can be either a number or a string):
+The models can be defined by extending the [`Model`](model) class. When extending the [`Model`](model) class, the minimal thing you should do is to define a unique [`type`](model#static-type) (can be either a number or a string):
 
 ```javascript
 import {Model} from 'datx';
@@ -84,7 +93,7 @@ class Person extends Model {
 }
 ```
 
-Other things that should be defined are props and their default values or [References](References):
+Other things that should be defined are props and their default values or [References](references):
 
 ```javascript
 import {Model, setupModel} from 'datx';

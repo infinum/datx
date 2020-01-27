@@ -8,23 +8,14 @@
       "configuring-collection": {
         "title": "Configuring the collection"
       },
-      "defining-modules": {
-        "title": "Defining modules"
-      },
-      "doc2": {
-        "title": "document number 2"
-      },
-      "doc3": {
-        "title": "This is document number 3"
-      },
-      "doc4": {
-        "title": "Other Document"
-      },
-      "doc5": {
-        "title": "Fifth Document"
+      "defining-models": {
+        "title": "Defining models"
       },
       "installation": {
         "title": "Installation"
+      },
+      "known-issues": {
+        "title": "Known issues"
       },
       "persisting-data-locally": {
         "title": "Persisting data locally"
@@ -38,13 +29,11 @@
     },
     "links": {
       "Docs": "Docs",
-      "API": "API",
       "Help": "Help"
     },
     "categories": {
       "Getting started": "Getting started",
-      "First Category": "First Category",
-      "Second Category": "Second Category"
+      "Troubleshooting": "Troubleshooting"
     }
   },
   "pages-strings": {

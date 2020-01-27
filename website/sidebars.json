@@ -2,16 +2,12 @@
   "docs": {
     "Getting started": [
       "installation",
-      "defining-modules",
+      "defining-models",
       "references",
       "configuring-collection",
       "using-collection",
       "persisting-data-locally"
     ],
-    "First Category": ["doc2"],
-    "Second Category": ["doc3"]
-  },
-  "docs-other": {
-    "First Category": ["doc4", "doc5"]
+    "Troubleshooting": ["known-issues"]
   }
 }

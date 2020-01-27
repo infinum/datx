@@ -65,7 +65,9 @@ console.log(fido.owner.spouse.firstName); // Jane
 
 ## Indirect references
 Indirect references are used when the object is not directly referencing the target model. However, the other model has a direct reference to our object.
-In the previous example, we had a Pet model that had a direct reference to the Person model (owner). Since there is a direct reference in one direction, we can create a indirect reference in the other direction:
+In the previous example, we had a Pet model that had a direct reference to the Person model (owner).
+
+Since there is a direct reference in one direction, we can create a indirect reference in the other direction:
 
 ```javascript
 class Person extends Model {

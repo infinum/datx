@@ -5,11 +5,11 @@ title: Using the collection
 
 ## Initialisation
 
-The collection can be initialised without any parameters, or it can receive a previously serialised collection. To serialise a collection, the [`snapshot`](Collection#snapshot) getter should be used:
+The collection can be initialised without any parameters, or it can receive a previously serialised collection. To serialise a collection, the [`snapshot`](collection#snapshot) getter should be used:
 
 ```javascript
 const collectionA = new Collection();
-collectionA.add({firstName: 'John', 'person'});
+collectionA.add({ firstName: 'John' }, 'person');
 const data = collectionA.snapshot;
 
 const collectionB = new Collection(data);
@@ -55,7 +55,7 @@ collection.reset();
 
 ## Updating models
 
-Existing properties on models can be updated with normal property assignments. There are also three methods that can be used: [`assignModel `](Model#assignmodel), [`initModelRef`](Model#initmodelref) and [`updateModel `](Model#updatemodel):
+Existing properties on models can be updated with normal property assignments. There are also three methods that can be used: [`assignModel `](model#assignmodel), [`initModelRef`](model#initmodelref) and [`updateModel `](model#updatemodel):
 
 ```javascript
 const john = collection.add({firstName: 'John', lastName: 'Doe'}, Person); // Model class can be used as type
@@ -79,4 +79,4 @@ updateModel(john, {lastName: 'Williams', age: 25, spouse: null, city: 'San Franc
 
 ***
 
-For specifics about the exact parameters that can be used with the mentioned methods, check out the [Collection API reference](Collection).
+For specifics about the exact parameters that can be used with the mentioned methods, check out the [Collection API reference](collection).
