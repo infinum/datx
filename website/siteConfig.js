@@ -26,6 +26,11 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [{ doc: "installation", label: "Docs" }, { search: true }],
+  algolia: {
+    // setup DocSearch by algolia first
+    apiKey: "",
+    indexName: ""
+  },
 
   // If you have users set above, you add it here:
   users: [],
