@@ -23,14 +23,35 @@
       "jsonapi-basic-configuration": {
         "title": "Basic configuration"
       },
+      "jsonapi-collection": {
+        "title": "Collection"
+      },
+      "jsonapi-config": {
+        "title": "Config"
+      },
+      "jsonapi-model": {
+        "title": "Model"
+      },
       "jsonapi-network-configuration": {
         "title": "Network configuration"
       },
       "jsonapi-network-usage": {
         "title": "Network usage"
       },
+      "jsonapi-response": {
+        "title": "Response"
+      },
       "jsonapi-spec-compliance": {
         "title": "Spec compliance"
+      },
+      "jsonapi-typescript-interfaces": {
+        "title": "Typescript interfaces"
+      },
+      "jsonapi-utils": {
+        "title": "Utils"
+      },
+      "jsonapi-view": {
+        "title": "View"
       },
       "known-issues": {
         "title": "Known issues"

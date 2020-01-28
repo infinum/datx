@@ -23,7 +23,14 @@
       "jsonapi-basic-configuration",
       "jsonapi-network-configuration",
       "jsonapi-network-usage",
-      "jsonapi-spec-compliance"
+      "jsonapi-spec-compliance",
+      "jsonapi-model",
+      "jsonapi-collection",
+      "jsonapi-view",
+      "jsonapi-response",
+      "jsonapi-config",
+      "jsonapi-utils",
+      "jsonapi-typescript-interfaces"
     ],
     "Troubleshooting": ["known-issues"]
   }
