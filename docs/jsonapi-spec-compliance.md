@@ -5,26 +5,38 @@ title: Spec compliance
 
 Based on the official v1.0 [specification](http://jsonapi.org/format/), all the features should be implemented. If something is missing or not behaving correctly, feel free to [open an issue](https://github.com/infinum/datx/issues/new).
 
-## [Content Negotiation](http://jsonapai.org/format/#content-negotiation)
+## Content Negotiation
 
-### [Client Responsibilities](http://jsonapi.org/format/#content-negotiation-clients)
+[Official docs](http://jsonapai.org/format/#content-negotiation)
 
-- The lib is already setting the required headers, but you can also [extend/override them if needed](jsonapi-config#defaultfetchoptions)
+### Client Responsibilities
 
-### [Server Responsibilities](http://jsonapi.org/format/#content-negotiation-servers)
+[Official docs](http://jsonapi.org/format/#content-negotiation-clients)
 
-- If the server returns any HTTP status 400 or greater (including 406 and 415 mentioned in the spec), the request promise will reject with a [`Response`](jsonapi-response) object that has its `error` property set (message & HTTP status)
+The lib is already setting the required headers, but you can also [extend/override them if needed](jsonapi-config#defaultfetchoptions)
 
-## [Document Structure](http://jsonapi.org/format/#document-structure)
+### Server Responsibilities
 
-### [Top Level](http://jsonapi.org/format/#document-top-level)
+[Official docs](http://jsonapi.org/format/#content-negotiation-servers)
+
+If the server returns any HTTP status 400 or greater (including 406 and 415 mentioned in the spec), the request promise will reject with a [`Response`](jsonapi-response) object that has its `error` property set (message & HTTP status)
+
+## Document Structure
+
+[Official docs](http://jsonapi.org/format/#document-structure)
+
+### Top Level
+
+[Official docs](http://jsonapi.org/format/#document-top-level)
 
 - The lib supports `data`, `errors`, `meta`, `links`, `included`, and `jsonapi` properties:
   - `data`, `error` and `jsonapi` are exsposed in the [`Response`](jsonapi-response) object
   - `included` is consumed by the [`sync`](jsonapi-collection#sync) method
   - `meta` and `links` values are available on the model with [`getModelMeta`](jsonapi-utils#getmodelmeta), [`getModelLinks`](jsonapi-utils#getmodellinks), [`fetchModelLink`](jsonapi-utils#fetchmodellink), [`getModelRefLinks`](jsonapi-utils#getmodelreflinks), [`fetchModelRefLink`](jsonapi-utils#fetchmodelreflink) and [`getModelRefMeta`](jsonapi-utils#getmodelrefmeta).
 
-### [Resource Objects](http://jsonapi.org/format/#document-resource-objects)
+### Resource Objects
+
+[Official docs](http://jsonapi.org/format/#document-resource-objects)
 
 - The lib expects `id` and `type` properties, and they're available on the [`Model`](Model) instance
 - If the resource has `attributes`, they will be available as regular properties on the [`Model`](Model) instance
@@ -39,22 +51,30 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), all the 
 - If the resource has `links` or `meta`, they will be available with the `getLinks` and `getMeta` methods on the record
   - Use `fetchLink` to fetch the link
 
-### [Resource Identifier Objects](http://jsonapi.org/format/#document-resource-identifier-objects)
+### Resource Identifier Objects
+
+[Official docs](http://jsonapi.org/format/#document-resource-identifier-objects)
 
 - The lib expects `id` and `type`
 - `meta` is available with (`getModelMeta`)[jsonapi-utils#getmodelmeta]
 
-### [Compound Objects](http://jsonapi.org/format/#document-compound-documents)
+### Compound Objects
+
+[Official docs](http://jsonapi.org/format/#document-compound-documents)
 
 - The lib supports `included` property
 - The lib will add `included` resources as references to the `data` resources
 - The `included` resources are treated as regular records, just like the `data` resources, with same features and limitations
 
-### [Meta Information](http://jsonapi.org/format/#document-meta)
+### Meta Information
 
-- The `meta` property will be available directly on the [`Response`](jsonapi-response) object
+[Official docs](http://jsonapi.org/format/#document-meta)
 
-### [Links](http://jsonapi.org/format/#document-links)
+The `meta` property will be available directly on the [`Response`](jsonapi-response) object
+
+### Links
+
+[Official docs](http://jsonapi.org/format/#document-links)
 
 - The `links` property is supported, and exposes all links directly on the [`Response`](jsonapi-response) object
 - They are also available in raw form as a `links` property on the [`Response`](jsonapi-response) object
@@ -62,82 +82,120 @@ Based on the official v1.0 [specification](http://jsonapi.org/format/), all the 
   - The link is lazily evaluated, so the request won't be made until you access the property
   - The link can be a string with an URL
 
-### [JSON API Object](http://jsonapi.org/format/#document-jsonapi-object)
+### JSON API Object
 
-- The `jsonapi` property is available on the [`Response`](jsonapi-response) object instance
+[Official docs](http://jsonapi.org/format/#document-jsonapi-object)
 
-### [Member Names](http://jsonapi.org/format/#document-member-names)
+The `jsonapi` property is available on the [`Response`](jsonapi-response) object instance
+
+### Member Names
+
+[Official docs](http://jsonapi.org/format/#document-member-names)
 
 - All member names are treated as strings, therefore adhere to the specification
 - If a name is not a valid variable name, e.g. `"first-name"`, you can access it as `model['first-name']`
 
-## [Fetching Data](http://jsonapi.org/format/#fetching)
+## Fetching Data
 
-### [Fetching Resources](http://jsonapi.org/format/#fetching-resources)
+[Official docs](http://jsonapi.org/format/#fetching)
+
+### Fetching Resources
+
+[Official docs](http://jsonapi.org/format/#fetching-resources)
 
 - Fetch top-level `links`
 - Fetch resource-level `links` with [`fetchModelLink`](jsonapi-utils#fetchmodellink)
 - Fetch `related` link from relationship-level `links` with [`fetchModelRefLink`](jsonapi-utils#fetchmodelreflink)
 
-### [Fetching Relationships](http://jsonapi.org/format/#fetching-relationships)
+### Fetching Relationships
 
-- Fetch relationship-level `links` with [`fetchModelRefLink`](jsonapi-utils#fetchmodelreflink)
+[Official docs](http://jsonapi.org/format/#fetching-relationships)
 
-### [Inclusion of Related Resources](http://jsonapi.org/format/#fetching-includes)
+Fetch relationship-level `links` with [`fetchModelRefLink`](jsonapi-utils#fetchmodelreflink)
 
-- Supported by providing a `include` property in the request options ([`IRequestOptions`](jsonapi-typescript-interfaces#irequestoptions))
+### Inclusion of Related Resources
 
-### [Sparse Fieldsets](http://jsonapi.org/format/#fetching-sparse-fieldsets)
+[Official docs](http://jsonapi.org/format/#fetching-includes)
 
-- Supported by providing a `fields` property in the request options ([`IRequestOptions`](jsonapi-typescript-interfaces#irequestoptions))
+Supported by providing a `include` property in the request options ([`IRequestOptions`](jsonapi-typescript-interfaces#irequestoptions))
 
-### [Sorting](http://jsonapi.org/format/#fetching-sorting)
+### Sparse Fieldsets
 
-- Supported by providing a `sort` property in the request options ([`IRequestOptions`](jsonapi-typescript-interfaces#irequestoptions))
+[Official docs](http://jsonapi.org/format/#fetching-sparse-fieldsets)
 
-### [Pagination](http://jsonapi.org/format/#fetching-pagination)
+Supported by providing a `fields` property in the request options ([`IRequestOptions`](jsonapi-typescript-interfaces#irequestoptions))
+
+### Sorting
+
+[Official docs](http://jsonapi.org/format/#fetching-sorting)
+
+Supported by providing a `sort` property in the request options ([`IRequestOptions`](jsonapi-typescript-interfaces#irequestoptions))
+
+### Pagination
+
+[Official docs](http://jsonapi.org/format/#fetching-pagination)
 
 - The lib supports top-level links
 - The lib allows access to raw links in the `links` property of the [`Response`](jsonapi-response) object instance
 - The lib allows pagination with links, e.g. `response.next` will return a Promise that will resolve to a [`Response`](jsonapi-response) object with either the `data` or `error` property set
   - The link is lazily evaluated, so the request won't be made until you access the property
 
-### [Filtering](http://jsonapi.org/format/#fetching-filtering)
+### Filtering
 
-- Supported by providing a `filter` property in the request options ([`IRequestOptions`](jsonapi-typescript-interfaces#irequestoptions))
+[Official docs](http://jsonapi.org/format/#fetching-filtering)
 
-## [Creating, Updating and Deleting Resources](http://jsonapi.org/format/#crud)
+Supported by providing a `filter` property in the request options ([`IRequestOptions`](jsonapi-typescript-interfaces#irequestoptions))
 
-### [Creating Resources](http://jsonapi.org/format/#crud-creating)
+## Creating, Updating and Deleting Resources
+
+[Official docs](http://jsonapi.org/format/#crud)
+
+### Creating Resources
+
+[Official docs](http://jsonapi.org/format/#crud-creating)
 
 - Creating resources is supported using the [`save`](jsonapi-model) method if the record was created on the client
 - Client-Generated IDs are supported
   - set [`useAutogeneratedIds`](Model#static-useautogeneratedids) to `true`
   - override [`autoIdFunction`](Model#static-autoidfunction) so it returns a valid UUID
 
-### [Updating Resources](http://jsonapi.org/format/#crud-updating)
+### Updating Resources
 
-- Updating resources is supported using the [`save`](jsonapi-model) method if the record was not created on the client
+[Official docs](http://jsonapi.org/format/#crud-updating)
 
-### [Updating Relationships](http://jsonapi.org/format/#crud-updating-relationships)
+Updating resources is supported using the [`save`](jsonapi-model) method if the record was not created on the client
+
+### Updating Relationships
+
+[Official docs](http://jsonapi.org/format/#crud-updating-relationships)
 
 - Direct update of relationships is supported with the [`saveRelationship`](jsonapi-utils#saverelationship) method
 - **Tip:** If you want to add a new relationship, use [`initModelRef`](model#initmodelref)
 
-### [Deleting Resources](http://jsonapi.org/format/#crud-deleting)
+### Deleting Resources
 
-- The resource can be deleted with the [`destroy`](jsonapi-model) method on the record
+[Official docs](http://jsonapi.org/format/#crud-deleting)
 
-## [Query Parameters](http://jsonapi.org/format/#query-parameters)
+The resource can be deleted with the [`destroy`](jsonapi-model) method on the record
 
-- All current communication with the server is using the required naming method
+## Query Parameters
 
-## [Errors](http://jsonapi.org/format/#errors)
+[Official docs](http://jsonapi.org/format/#query-parameters)
 
-### [Processing Errors](http://jsonapi.org/format/#errors-processing)
+All current communication with the server is using the required naming method
 
-- The lib will process all HTTP status 400+ as errors
+## Errors
 
-### [Error Objects](http://jsonapi.org/format/#error-objects)
+[Official docs](http://jsonapi.org/format/#errors)
 
-- The error objects will be available in the [`Response`](jsonapi-response) object under the `error` property (without any modification)
+### Processing Errors
+
+[Official docs](http://jsonapi.org/format/#errors-processing)
+
+The lib will process all HTTP status 400+ as errors
+
+### Error Objects
+
+[Official docs](http://jsonapi.org/format/#error-objects)
+
+The error objects will be available in the [`Response`](jsonapi-response) object under the `error` property (without any modification)
