@@ -18,6 +18,13 @@
       "lib-utils",
       "typescript-interfaces"
     ],
+    "JSON API": [
+      "jsonapi-getting-started",
+      "jsonapi-basic-configuration",
+      "jsonapi-network-configuration",
+      "jsonapi-network-usage",
+      "jsonapi-spec-compliance"
+    ],
     "Troubleshooting": ["known-issues"]
   }
 }

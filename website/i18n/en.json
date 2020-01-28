@@ -14,8 +14,23 @@
       "defining-models": {
         "title": "Defining models"
       },
+      "jsonapi-getting-started": {
+        "title": "Getting started with JSON Api"
+      },
       "installation": {
         "title": "Installation"
+      },
+      "jsonapi-basic-configuration": {
+        "title": "Basic configuration"
+      },
+      "jsonapi-network-configuration": {
+        "title": "Network configuration"
+      },
+      "jsonapi-network-usage": {
+        "title": "Network usage"
+      },
+      "jsonapi-spec-compliance": {
+        "title": "Spec compliance"
       },
       "known-issues": {
         "title": "Known issues"
@@ -57,6 +72,7 @@
     "categories": {
       "Getting started": "Getting started",
       "API Reference": "API Reference",
+      "JSON API": "JSON API",
       "Troubleshooting": "Troubleshooting"
     }
   },
