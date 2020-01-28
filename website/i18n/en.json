@@ -20,6 +20,9 @@
       "known-issues": {
         "title": "Known issues"
       },
+      "lib-utils": {
+        "title": "Lib utils"
+      },
       "model-utils": {
         "title": "Model utils"
       },
@@ -37,6 +40,9 @@
       },
       "references": {
         "title": "References"
+      },
+      "typescript-interfaces": {
+        "title": "Typescript interfaces"
       },
       "using-the-collection": {
         "title": "Using the collection"

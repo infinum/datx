@@ -14,7 +14,9 @@
       "view",
       "prop",
       "pure-model",
-      "model-utils"
+      "model-utils",
+      "lib-utils",
+      "typescript-interfaces"
     ],
     "Troubleshooting": ["known-issues"]
   }
