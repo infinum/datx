@@ -20,22 +20,33 @@
       "known-issues": {
         "title": "Known issues"
       },
+      "model-utils": {
+        "title": "Model utils"
+      },
       "model": {
         "title": "Model"
       },
       "persisting-data-locally": {
         "title": "Persisting data locally"
       },
+      "prop": {
+        "title": "Prop"
+      },
+      "pure-model": {
+        "title": "Pure Model"
+      },
       "references": {
         "title": "References"
       },
       "using-the-collection": {
         "title": "Using the collection"
+      },
+      "view": {
+        "title": "View"
       }
     },
     "links": {
-      "Docs": "Docs",
-      "Help": "Help"
+      "Docs": "Docs"
     },
     "categories": {
       "Getting started": "Getting started",

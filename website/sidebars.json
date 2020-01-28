@@ -8,7 +8,14 @@
       "using-the-collection",
       "persisting-data-locally"
     ],
-    "API Reference": ["collection", "model"],
+    "API Reference": [
+      "collection",
+      "model",
+      "view",
+      "prop",
+      "pure-model",
+      "model-utils"
+    ],
     "Troubleshooting": ["known-issues"]
   }
 }
