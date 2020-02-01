@@ -211,6 +211,7 @@ export class Response<T extends IJsonapiModel> {
     Object.freeze(this);
 
     if (this.error) {
+      // eslint-disable-next-line no-throw-literal
       throw this;
     }
   }
@@ -225,6 +226,7 @@ export class Response<T extends IJsonapiModel> {
    */
   @action public replaceData(data: T): Response<T> {
     const record: PureModel = this.data as PureModel;
+
     if (record === data) {
       return this;
     }
@@ -244,6 +246,7 @@ export class Response<T extends IJsonapiModel> {
 
     this.views.forEach((view, index) => {
       if (viewIndexes[index] !== -1) {
+        // eslint-disable-next-line no-param-reassign
         view.list[viewIndexes[index]] = data;
       }
     });
@@ -266,6 +269,7 @@ export class Response<T extends IJsonapiModel> {
 
       if (link) {
         const options = Object.assign({}, this.__options);
+
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
         this.__cache[name] = fetchLink<T>(link, this.__collection, options, this.views);

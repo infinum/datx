@@ -1,10 +1,10 @@
-// tslint:disable:max-classes-per-file
+/* eslint-disable max-classes-per-file */
 
 import { configure } from 'mobx';
 
-configure({ enforceActions: 'observed' });
-
 import { Collection, PureModel, Attribute } from '../src';
+
+configure({ enforceActions: 'observed' });
 
 describe('issues', () => {
   it('should remove references on collection remove', () => {
@@ -24,6 +24,7 @@ describe('issues', () => {
 
     const store = new Store();
     const foo = store.add({ bar: [{}, {}] }, Foo);
+
     expect(foo.bar).toHaveLength(2);
     expect(store.length).toBe(3);
 

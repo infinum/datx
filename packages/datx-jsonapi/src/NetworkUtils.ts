@@ -134,6 +134,7 @@ export const config: IConfigType = {
       .then((responseData: IResponse) => {
         data = responseData;
         if (status >= 400) {
+          // eslint-disable-next-line no-throw-literal
           throw {
             message: `Invalid HTTP status: ${status}`,
             status,
@@ -183,6 +184,7 @@ function collectionFetch<T extends IJsonapiModel>(
 
   if (config.cache && isCacheSupported && collectionCache && !skipCache) {
     const cache = getCache(url);
+
     if (cache) {
       return Promise.resolve(cache.response) as Promise<LibResponse<T>>;
     }
@@ -199,6 +201,7 @@ function collectionFetch<T extends IJsonapiModel>(
         undefined,
         views,
       );
+
       if (config.cache && isCacheSupported) {
         saveCache(url, resp);
       }
@@ -360,18 +363,20 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
         setMeta(record, MODEL_PERSISTED_FIELD, true);
 
         return record;
-      } else if (response.status === 202) {
+      }
+
+      if (response.status === 202) {
         const responseRecord = response.data as T;
+
         setMeta(responseRecord, MODEL_PROP_FIELD, prop);
         setMeta(responseRecord, MODEL_QUEUE_FIELD, true);
         setMeta(responseRecord, MODEL_RELATED_FIELD, record);
 
         return responseRecord;
-      } else {
-        setMeta(record, MODEL_PERSISTED_FIELD, true);
-
-        return response.replaceData(record).data as T;
       }
+      setMeta(record, MODEL_PERSISTED_FIELD, true);
+
+      return response.replaceData(record).data as T;
     },
   );
 }

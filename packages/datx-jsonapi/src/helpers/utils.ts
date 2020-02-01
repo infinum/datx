@@ -1,9 +1,9 @@
 import { IFieldDefinition, IReferenceDefinition, PureModel } from 'datx';
 import { getMeta } from 'datx-utils';
 
+// eslint-disable-next-line no-var
 declare var window: object;
 
-// tslint:disable-next-line:no-typeof-undefined - The alternative breaks on node
 export const isBrowser: boolean = typeof window !== 'undefined';
 
 /**

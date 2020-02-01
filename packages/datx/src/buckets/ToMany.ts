@@ -20,7 +20,9 @@ import { updateSingleAction } from '../helpers/patch';
 
 export class ToMany<T extends PureModel> {
   protected readonly __rawList: IObservableArray<T | IModelRef> = observable.array([]);
+
   protected __collection?: PureCollection;
+
   private __disposer?: IReactionDisposer;
 
   constructor(
@@ -52,6 +54,7 @@ export class ToMany<T extends PureModel> {
     if (collection) {
       this.__rawList.forEach((item, index) => {
         const model = this.__getModel(item);
+
         if (model) {
           this.__rawList[index] = model;
         }
@@ -110,6 +113,7 @@ export class ToMany<T extends PureModel> {
       .filter(Boolean)
       .filter((model) => Boolean(model && getModelCollection(model))) as any;
     const instances = observable.array(list, { deep: false });
+
     intercept(instances, this.__partialRawListUpdate.bind(this));
 
     return instances;
@@ -135,6 +139,7 @@ export class ToMany<T extends PureModel> {
 
     if (change.type === 'splice') {
       const added = change.added as Array<T>;
+
       this.__rawList.slice(change.index, change.removedCount);
       this.__rawList.splice(change.index, change.removedCount, ...added);
 
@@ -142,6 +147,7 @@ export class ToMany<T extends PureModel> {
     }
 
     const newModel = this.__getModel(change.newValue as T);
+
     if (newModel) {
       this.__rawList[change.index] = newModel;
     }
@@ -154,6 +160,7 @@ export class ToMany<T extends PureModel> {
     for (let i = 0; i < this.__rawList.length; i++) {
       if (isReference(this.__rawList[i])) {
         const model = this.__getModel(this.__rawList[i]);
+
         if (model) {
           this.__rawList[i] = model;
         }

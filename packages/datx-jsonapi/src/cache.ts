@@ -23,6 +23,7 @@ export function saveCache(url: string, response: Response<IJsonapiModel>, modelT
     // The type might need to be 100% correct - used only to clear the cache
     const type =
       modelType || getModelType(isArrayLike(response.data) ? response.data[0] : response.data);
+
     cacheStorage.push({ response, time: new Date(), type, url });
   }
 }

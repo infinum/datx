@@ -24,6 +24,7 @@ export function decorateView<U>(BaseClass: typeof View) {
 
     public sync(body?: IResponse): M | Array<M> | null {
       const data = this.__collection.sync(body);
+
       if (data) {
         this.add(data);
       }

@@ -1,4 +1,5 @@
-// tslint:disable:max-classes-per-file
+/* eslint-disable max-classes-per-file */
+
 import { autorun, configure } from 'mobx';
 
 import { Collection, PureModel, Attribute } from '../src';
@@ -11,6 +12,7 @@ describe('Collection', () => {
   describe('Basic features', () => {
     it('should initialize', () => {
       const collection = new Collection();
+
       expect(collection.length).toBe(0);
 
       expect(isCollection(Collection)).toBe(true);
@@ -22,7 +24,9 @@ describe('Collection', () => {
         public static type = 'foo';
 
         @Attribute() public foo!: number;
+
         @Attribute() public bar!: number;
+
         @Attribute() public baz!: number;
       }
 
@@ -30,12 +34,11 @@ describe('Collection', () => {
         public static type = 'baz';
       }
 
-      // tslint:disable-next-line:no-unnecessary-class
       class FooBar {}
 
       class Store extends Collection {
         public static types = [Foo];
-        // tslint:disable-next-line:no-unnecessary-field-initialization
+
         public static defaultModel = undefined;
       }
 
@@ -107,7 +110,9 @@ describe('Collection', () => {
         public static type = 'foo';
 
         @Attribute() public foo!: number;
+
         @Attribute() public bar!: number;
+
         @Attribute() public baz!: number;
       }
 
@@ -131,6 +136,7 @@ describe('Collection', () => {
     it('should reset the collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
+
         @Attribute() public foo!: number;
       }
 
@@ -159,7 +165,9 @@ describe('Collection', () => {
         public static type = 'foo';
 
         @Attribute() public foo!: number;
+
         @Attribute() public bar!: number;
+
         @Attribute() public baz!: number;
       }
 
@@ -169,19 +177,23 @@ describe('Collection', () => {
 
       const store = new Store();
       const foo1 = store.add({ foo: 1 }, Foo);
+
       store.add<Foo>({ foo: 2 }, 'foo');
       store.add(new Foo({ foo: 3 }));
 
       const raw = store.toJSON();
 
       const store2 = new Store(raw);
+
       expect(store2.length).toBe(3);
       const foo1b = store2.find((item: Foo) => item.foo === 1);
+
       expect(foo1b).toBeInstanceOf(Foo);
       expect(foo1b && getModelId(foo1b)).toBe(getModelId(foo1));
       expect(foo1b).not.toBe(foo1);
 
       const fooB = store2.findAll(Foo)[0];
+
       expect(fooB).toBeInstanceOf(Foo);
     });
 
@@ -190,7 +202,9 @@ describe('Collection', () => {
         public static type = 'foo';
 
         @Attribute() public foo!: number;
+
         @Attribute() public bar!: number;
+
         @Attribute() public baz!: number;
       }
 
@@ -200,18 +214,22 @@ describe('Collection', () => {
 
       const store = new Store();
       const foo1 = store.add({ foo: 1 }, Foo);
+
       store.add<Foo>({ foo: 2 }, 'foo');
       store.add(new Foo({ foo: 3 }));
       expect(foo1.foo).toBe(1);
 
       const raw = store.toJSON();
+
       raw.models[0].foo = 4;
       expect(foo1.foo).toBe(1);
 
       const store2 = new Store(raw);
+
       expect(store2.length).toBe(3);
       const foo1b = store2.find((item: Foo) => item.foo === 1);
       const foo1c = store2.find((item: Foo) => item.foo === 4);
+
       expect(foo1b).toBeNull();
       expect(foo1c).not.toBe(foo1);
       expect(foo1.foo).toBe(1);
@@ -222,8 +240,11 @@ describe('Collection', () => {
         public static type = 'foo';
 
         @Attribute({ isIdentifier: true }) public id!: number;
+
         @Attribute() public foo!: number;
+
         @Attribute() public bar!: number;
+
         @Attribute() public baz!: number;
       }
 
@@ -235,6 +256,7 @@ describe('Collection', () => {
 
       let autorunLengthCount = 0;
       let fooLength;
+
       autorun(() => {
         autorunLengthCount++;
         fooLength = store.findAll(Foo).length;
@@ -242,6 +264,7 @@ describe('Collection', () => {
 
       let autorunModelCount = 0;
       let foo;
+
       autorun(() => {
         autorunModelCount++;
         foo = store.findOne(Foo, 123);

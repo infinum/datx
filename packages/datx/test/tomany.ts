@@ -1,10 +1,10 @@
-// tslint:disable:max-classes-per-file
+/* eslint-disable max-classes-per-file */
 
 import { configure } from 'mobx';
 
-configure({ enforceActions: 'observed' });
-
 import { Collection, Model, Bucket, Attribute } from '../src';
+
+configure({ enforceActions: 'observed' });
 
 describe('ToMany', () => {
   it('should init a bucket', () => {

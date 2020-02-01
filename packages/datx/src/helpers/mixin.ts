@@ -15,6 +15,7 @@ import { View } from '../View';
  */
 function isOfType<T>(obj: any, type: T): obj is T {
   let model = obj;
+
   while (model) {
     if (model === type) {
       return true;

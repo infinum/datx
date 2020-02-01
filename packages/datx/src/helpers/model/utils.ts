@@ -51,9 +51,13 @@ export function isModelReference(value: unknown): boolean {
 export function getModelType(model: IType | IModelRef | typeof PureModel | PureModel): IType {
   if (typeof model === 'function') {
     return (model as typeof PureModel).type;
-  } else if (isModelReference(model)) {
+  }
+
+  if (isModelReference(model)) {
     return (model as IModelRef).type;
-  } else if (typeof model === 'object') {
+  }
+
+  if (typeof model === 'object') {
     return getMeta(model, MetaModelField.TypeField) || (model.constructor as typeof PureModel).type;
   }
 
@@ -63,6 +67,7 @@ export function getModelType(model: IType | IModelRef | typeof PureModel | PureM
 export function getModelId(model: PureModel | IIdentifier): IIdentifier {
   if (model instanceof PureModel) {
     const id = getMeta<IIdentifier>(model, MetaModelField.IdField);
+
     if (id !== undefined) {
       return id;
     }
@@ -133,6 +138,7 @@ export function modelToJSON(model: PureModel): IRawModel {
 
     if (fieldDef.referenceDef) {
       const bucket = getMeta<IBucket<PureModel>>(model, `ref_${fieldName}`);
+
       raw[fieldName] = bucket?.snapshot || null;
     } else {
       raw[fieldName] = model[fieldName];
@@ -145,25 +151,28 @@ export function modelToJSON(model: PureModel): IRawModel {
 export function cloneModel<T extends PureModel>(model: T): T {
   const rawData = modelToJSON(model);
   const meta = rawData[META_FIELD] || {};
+
   meta[MetaModelField.OriginalId] = meta[MetaModelField.IdField];
   delete meta[MetaModelField.IdField];
 
   const collection = getModelCollection(model);
+
   if (collection) {
     const modelType = getModelType(model);
 
     return collection.add(rawData, modelType);
-  } else {
-    const TypeModel = model.constructor as typeof PureModel;
-    warn(`The model is not in the collection. Referencing the original model won't be possible`);
-
-    return new TypeModel(rawData) as T;
   }
+  const TypeModel = model.constructor as typeof PureModel;
+
+  warn(`The model is not in the collection. Referencing the original model won't be possible`);
+
+  return new TypeModel(rawData) as T;
 }
 
 export function getOriginalModel<T extends PureModel = PureModel>(model: T): T {
   const collection = getModelCollection(model);
   const originalId = getMeta<IIdentifier>(model, MetaModelField.OriginalId);
+
   if (originalId) {
     if (!collection) {
       throw error('The model needs to be in a collection to be referenceable');
@@ -185,34 +194,11 @@ function omitKeys(obj: object, keys: Array<string>): object {
 
   Object.keys(obj)
     .filter((key) => !keys.includes(key))
-    .forEach((key) => (newObj[key] = obj[key]));
+    .forEach((key) => {
+      newObj[key] = obj[key];
+    });
 
   return newObj;
-}
-
-export function updateModel<T extends PureModel>(model: T, data: Record<string, any>): T {
-  startAction(model);
-  const modelId = getMeta(model.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD);
-  const modelType = getMeta(model.constructor, MetaClassField.TypeField, DEFAULT_TYPE_FIELD);
-
-  const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
-  mergeMeta(model, omitKeys(data[META_FIELD] || {}, READ_ONLY_META));
-
-  keys.forEach((key) => {
-    if (key !== META_FIELD && key !== modelId && key !== modelType) {
-      assignModel(model, key, data[key]);
-    } else if (key === META_FIELD) {
-      const metaKeys = Object.keys(data[key] || {});
-      metaKeys.forEach((metaKey) => {
-        if (!READ_ONLY_META.includes(metaKey)) {
-          setMeta(model, metaKey, data[key][metaKey]);
-        }
-      });
-    }
-  });
-  endAction(model);
-
-  return model;
 }
 
 export function assignModel<T extends PureModel>(model: T, key: string, value: any): void {
@@ -228,6 +214,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
       if (shouldBeReference && !fields[key].referenceDef) {
         throw error('You should save this value as a reference.');
       }
+      // eslint-disable-next-line no-param-reassign
       model[key] = value;
     } else {
       if (shouldBeReference) {
@@ -252,16 +239,45 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
   });
 }
 
+export function updateModel<T extends PureModel>(model: T, data: Record<string, any>): T {
+  startAction(model);
+  const modelId = getMeta(model.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD);
+  const modelType = getMeta(model.constructor, MetaClassField.TypeField, DEFAULT_TYPE_FIELD);
+
+  const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
+
+  mergeMeta(model, omitKeys(data[META_FIELD] || {}, READ_ONLY_META));
+
+  keys.forEach((key) => {
+    if (key !== META_FIELD && key !== modelId && key !== modelType) {
+      assignModel(model, key, data[key]);
+    } else if (key === META_FIELD) {
+      const metaKeys = Object.keys(data[key] || {});
+
+      metaKeys.forEach((metaKey) => {
+        if (!READ_ONLY_META.includes(metaKey)) {
+          setMeta(model, metaKey, data[key][metaKey]);
+        }
+      });
+    }
+  });
+  endAction(model);
+
+  return model;
+}
+
 export function updateModelCollection(model: PureModel, collection?: PureCollection) {
   setMeta(model, MetaModelField.Collection, collection);
 
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
+
   startAction(model);
-  for (const key of Object.keys(fields)) {
+  Object.keys(fields).forEach((key) => {
     const bucket = getMeta(model, `ref_${key}`);
+
     if (bucket) {
       bucket.setCollection(collection);
     }
-  }
+  });
   endAction(model);
 }

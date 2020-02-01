@@ -53,23 +53,23 @@ describe('datx-utils', () => {
       });
 
       assignComputed(obj1, 'foo', () => 1);
-      expect(obj1.propertyIsEnumerable('foo')).toBe(true);
+      expect(Object.prototype.propertyIsEnumerable.call(obj1, 'foo')).toBe(true);
       expect(isComputedProp(obj1, 'foo')).toBe(false);
 
       assignComputed(obj2, 'foo', () => 2);
-      expect(obj2.propertyIsEnumerable('foo')).toBe(true);
-      // tslint:disable-next-line:no-empty
+      expect(Object.prototype.propertyIsEnumerable.call(obj2, 'foo')).toBe(true);
       assignComputed(
         obj1,
         'bar',
         () => obj2,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         () => {},
       );
-      // tslint:disable-next-line:no-empty
       assignComputed(
         obj2,
         'bar',
         () => obj1,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         () => {},
       );
       assignComputed(
@@ -136,9 +136,12 @@ describe('datx-utils', () => {
 
     it('should handle dynamic computed props', () => {
       let counter = 0;
+
       class Data {
         @observable public data = 1;
+
         public foo!: number;
+
         public bar!: number;
 
         constructor() {
@@ -150,12 +153,14 @@ describe('datx-utils', () => {
 
               return this.data;
             },
+            // eslint-disable-next-line no-return-assign
             (val) => (this.data = val),
           );
           assignComputed(
             this,
             'bar',
             () => -this.foo,
+            // eslint-disable-next-line no-return-assign
             (val) => (this.foo = -val),
           );
         }
@@ -164,6 +169,7 @@ describe('datx-utils', () => {
 
       autorun(() => {
         // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const tmp = data.foo;
       });
 
@@ -196,11 +202,12 @@ describe('datx-utils', () => {
       });
 
       expect(autorunCounter).toBe(2);
-      expect(data.propertyIsEnumerable('foo')).toBe(true);
+      expect(Object.prototype.propertyIsEnumerable.call(data, 'foo')).toBe(true);
     });
 
     it('should handle computed reassignment', () => {
       const obj: any = {};
+
       assignComputed(obj, 'foo', () => 1);
       assignComputed(obj, 'foo', () => 2);
 

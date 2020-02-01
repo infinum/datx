@@ -1,5 +1,3 @@
-// tslint:disable:no-import-side-effect
-
 import { configure } from 'mobx';
 
 import './general';

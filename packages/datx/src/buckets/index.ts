@@ -1,9 +1,9 @@
-import { ReferenceType } from '../enums/ReferenceType';
+import { error } from 'datx-utils';
 
+import { ReferenceType } from '../enums/ReferenceType';
 import { ToMany } from './ToMany';
 import { ToOne } from './ToOne';
 import { ToOneOrMany } from './ToOneOrMany';
-import { error } from 'datx-utils';
 
 export function getBucketConstructor(type: ReferenceType.TO_ONE): typeof ToOne;
 export function getBucketConstructor(type: ReferenceType.TO_ONE_OR_MANY): typeof ToOneOrMany;
@@ -16,9 +16,13 @@ export function getBucketConstructor(
 ): typeof ToOne | typeof ToOneOrMany | typeof ToMany {
   if (type === ReferenceType.TO_ONE) {
     return ToOne;
-  } else if (type === ReferenceType.TO_ONE_OR_MANY) {
+  }
+
+  if (type === ReferenceType.TO_ONE_OR_MANY) {
     return ToOneOrMany;
-  } else if (type === ReferenceType.TO_MANY) {
+  }
+
+  if (type === ReferenceType.TO_MANY) {
     return ToMany;
   }
 

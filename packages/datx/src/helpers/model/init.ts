@@ -50,17 +50,23 @@ export function initModelRef<T extends PureModel>(
   } else {
     const Bucket = getBucketConstructor(fieldDef.referenceDef.type);
     let value = fieldDef.referenceDef.type === ReferenceType.TO_MANY ? [] : null;
+
     if (initialVal) {
-      value = mapItems(initialVal, (item) =>
-        typeof item === 'object' && !isModelReference(item)
-          ? collection?.add(item, fieldDef.referenceDef.model)
-          : typeof item === 'object'
-          ? collection?.findOne(item as IModelRef)
-          : collection?.findOne(fieldDef.referenceDef.model, item),
-      );
+      value = mapItems(initialVal, (item) => {
+        if (typeof item === 'object' && !isModelReference(item)) {
+          return collection?.add(item, fieldDef.referenceDef.model);
+        }
+
+        if (typeof item === 'object') {
+          return collection?.findOne(item as IModelRef);
+        }
+
+        return collection?.findOne(fieldDef.referenceDef.model, item);
+      });
     }
 
     const bucket = new Bucket(value, collection, false, model, key);
+
     updateSingleAction(model, key, bucket.value);
     setMeta(model, `ref_${key}`, bucket);
 
@@ -68,9 +74,9 @@ export function initModelRef<T extends PureModel>(
       model,
       key,
       () => getRef(model, key),
-      (value: TRefValue) => {
-        updateSingleAction(model, key, value);
-        updateRef(model, key, value);
+      (newValue: TRefValue) => {
+        updateSingleAction(model, key, newValue);
+        updateRef(model, key, newValue);
       },
     );
   }
@@ -114,13 +120,15 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
       model,
       key,
       () => getMeta(model, `data__${key}`),
-      (value: any) => {
+      (newValue: any) => {
         // Make sure nested properties are observable
-        const packedValue = isPojo(value) ? observable(value) : value;
-        updateSingleAction(model, key, value);
+        const packedValue = isPojo(newValue) ? observable(newValue) : newValue;
+
+        updateSingleAction(model, key, newValue);
         setMeta(model, `data__${key}`, packedValue);
       },
     );
+    // eslint-disable-next-line no-param-reassign
     model[key] = value;
   }
 }
@@ -145,6 +153,7 @@ export function initModel(instance: PureModel, rawData: IRawModel, collection?: 
     DEFAULT_TYPE_FIELD,
     true,
   );
+
   setMeta(
     instance,
     MetaModelField.TypeField,
@@ -152,6 +161,7 @@ export function initModel(instance: PureModel, rawData: IRawModel, collection?: 
   );
 
   const idField = getMeta(instance.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD, true);
+
   setMeta(
     instance,
     MetaModelField.IdField,
@@ -167,6 +177,7 @@ export function initModel(instance: PureModel, rawData: IRawModel, collection?: 
       const value = rawData[field];
       const isRef =
         value instanceof PureModel || (isArrayLike(value) && value[0] instanceof PureModel);
+
       fields[field] = {
         referenceDef: isRef
           ? {
@@ -183,6 +194,7 @@ export function initModel(instance: PureModel, rawData: IRawModel, collection?: 
     const fieldDef = fields[fieldName];
 
     const value = fieldName in rawData ? rawData[fieldName] : fieldDef.defaultValue;
+
     initModelField(instance, fieldName, value);
   });
 }

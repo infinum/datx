@@ -1,7 +1,7 @@
-import {Model, prop} from 'datx';
-import {jsonapi} from 'datx-jsonapi';
+import { Model, prop } from 'datx';
+import { jsonapi } from 'datx-jsonapi';
 
-import {Person} from './Person';
+import { Person } from './Person';
 
 export class Pet extends jsonapi(Model) {
   public static type = 'pet';

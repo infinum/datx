@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+
 import { Collection, Model } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
@@ -41,6 +43,7 @@ describe('Network basics', () => {
     expect(events.data).toHaveLength(4);
     if (events.data instanceof Array) {
       const event = events.data[0];
+
       expect(event['title']).toBe('Test 1');
       expect(getModelMeta(event).createdAt).toBe('2017-03-19T16:00:00.000Z');
       expect(event.meta.refs.images).toBeInstanceOf(Array);
@@ -51,6 +54,7 @@ describe('Network basics', () => {
       expect(getModelRefMeta(event).images.foo).toBe('bar');
 
       const data = modelToJsonApi(event);
+
       expect(data.id).toBe('1');
       expect(data.type).toBe('event');
       expect(data.attributes && data.attributes.title).toBe('Test 1');
@@ -72,6 +76,7 @@ describe('Network basics', () => {
       url: 'image',
       responseFn(_path: string, req: string) {
         const request = JSON.parse(req);
+
         expect(request['data'].relationships.event.data).toBeNull();
       },
     });
@@ -81,6 +86,7 @@ describe('Network basics', () => {
     expect(image1.id).toBe(image1.meta.id);
 
     const images = store.findAll(Image);
+
     expect(images).toHaveLength(1);
 
     mockApi({
@@ -124,6 +130,7 @@ describe('Network basics', () => {
     });
 
     let hasTransformRequestHookBeenCalled = false;
+    const store = new TestStore();
 
     config.transformRequest = (opts) => {
       expect(opts.collection).toBe(store);
@@ -131,8 +138,6 @@ describe('Network basics', () => {
 
       return { ...opts, url: `${opts.url}/all` };
     };
-
-    const store = new TestStore();
     const events = await store.fetchAll('event');
 
     expect(events.data).toBeInstanceOf(Array);
@@ -244,6 +249,7 @@ describe('Network basics', () => {
         expect(events1.data instanceof Array && events1.data[0]['title']).toBe('Test 1');
 
         const events1b = await events2.prev;
+
         expect(events1).toEqual(events);
         expect(events1).toBe(events1b);
       }
@@ -269,6 +275,7 @@ describe('Network basics', () => {
       const image = await fetchModelLink<Image>(event, 'image');
 
       const imageData = image.data as Image;
+
       expect(imageData.meta.id).toBe('1');
       expect(imageData.meta.type).toBe('image');
       expect(imageData['url']).toBe('https://example.com/1.jpg');
@@ -285,11 +292,14 @@ describe('Network basics', () => {
     const events = await store.fetchAll(Event);
 
     const event = events.data;
+
     expect(event).toBeInstanceOf(Event);
     if (event instanceof Event) {
       let hasThrown = false;
+
       try {
         const foobar = await fetchModelLink(event, 'foobar');
+
         expect(foobar.data).toBeInstanceOf(Array);
         expect(foobar.data).toHaveLength(0);
       } catch (e) {
@@ -319,6 +329,7 @@ describe('Network basics', () => {
     if (event) {
       const image = await fetchModelRefLink(event, 'images', 'self');
       const imageData = image.data as Image;
+
       expect(imageData.meta.id).toBe('1');
       expect(imageData.meta.type).toBe('image');
       expect(imageData['url']).toBe('https://example.com/1.jpg');
@@ -326,13 +337,12 @@ describe('Network basics', () => {
   });
 
   it('should support endpoint', async () => {
-    // tslint:disable-next-line:max-classes-per-file
     class TestEvent extends jsonapi(Model) {
       public static type = 'event';
+
       public static endpoint = 'foo/event';
     }
 
-    // tslint:disable-next-line:max-classes-per-file
     class TestCollection extends Collection {
       public static types = [TestEvent];
     }
@@ -346,6 +356,7 @@ describe('Network basics', () => {
 
     const response = await store.fetchAll(TestEvent);
     const event = response.data as TestEvent;
+
     expect(event.meta.type).toBe('event');
 
     const req = mockApi({
@@ -359,13 +370,12 @@ describe('Network basics', () => {
   });
 
   it('should support functional endpoint', async () => {
-    // tslint:disable-next-line:max-classes-per-file
     class TestEvent extends jsonapi(Model) {
       public static type = 'event';
+
       public static endpoint = () => 'foo/event';
     }
 
-    // tslint:disable-next-line:max-classes-per-file
     class TestCollection extends Collection {
       public static types = [TestEvent];
     }
@@ -379,6 +389,7 @@ describe('Network basics', () => {
 
     const response = await store.fetchAll(TestEvent);
     const event = response.data as TestEvent;
+
     expect(event.meta.type).toBe('event');
   });
 

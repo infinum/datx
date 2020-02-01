@@ -1,12 +1,12 @@
-// tslint:disable:max-classes-per-file
+/* eslint-disable max-classes-per-file */
 
 import { autorun, configure, runInAction } from 'mobx';
-
-configure({ enforceActions: 'observed' });
 
 import { Collection, Model, View, Attribute } from '../src';
 import { updateModelId } from '../src/helpers/model/fields';
 import { ViewAttribute } from '../src/Attribute';
+
+configure({ enforceActions: 'observed' });
 
 describe('View', () => {
   it('should init a view', () => {
@@ -109,14 +109,17 @@ describe('View', () => {
     expect(viewInstance).toHaveLength(3);
     const item0a = viewInstance.list[0];
     const item2a = viewInstance.list[2];
+
     expect(item0a && item0a.key).toBe(1);
     expect(item2a && item2a.key).toBe(3);
 
     const foo0 = collection.add({ key: 0 }, Foo);
+
     expect(viewInstance).toHaveLength(3);
     viewInstance.add(foo0);
     const item0b = viewInstance.list[0];
     const item2b = viewInstance.list[2];
+
     expect(item0b && item0b.key).toBe(0);
     expect(item2b && item2b.key).toBe(2);
   });
@@ -138,6 +141,7 @@ describe('View', () => {
     expect(viewInstance).toHaveLength(3);
     const item0a = viewInstance.list[0];
     const item2a = viewInstance.list[2];
+
     expect(item0a && item0a.key).toBe(1);
     expect(item2a && item2a.key).toBe(3);
 
@@ -157,6 +161,7 @@ describe('View', () => {
 
     const item0b = viewInstance.list[0];
     const item2b = viewInstance.list[2];
+
     expect(item0b && item0b.key).toBe(2);
     expect(item2b && item2b.key).toBe(1);
     expect(keyList[2]).toBe(1);
@@ -181,14 +186,17 @@ describe('View', () => {
     expect(viewInstance).toHaveLength(3);
     const item0a = viewInstance.list[0];
     const item2a = viewInstance.list[2];
+
     expect(item0a && item0a.key).toBe(1);
     expect(item2a && item2a.key).toBe(3);
 
     const foo0 = collection.add({ key: 0 }, Foo);
+
     expect(viewInstance).toHaveLength(3);
     viewInstance.add(foo0);
     const item0b = viewInstance.list[0];
     const item2b = viewInstance.list[2];
+
     expect(item0b && item0b.key).toBe(0);
     expect(item2b && item2b.key).toBe(2);
   });
@@ -264,12 +272,12 @@ describe('View', () => {
       "New models can't be added directly to a sorted view list",
     );
 
-    expect(() => (viewInstance.list[1] = foo1)).toThrowError(
-      "New models can't be added directly to a sorted view list",
-    );
-    expect(() => (viewInstance.list[3] = foo1)).toThrowError(
-      "New models can't be added directly to a sorted view list",
-    );
+    expect(() => {
+      viewInstance.list[1] = foo1;
+    }).toThrowError("New models can't be added directly to a sorted view list");
+    expect(() => {
+      viewInstance.list[3] = foo1;
+    }).toThrowError("New models can't be added directly to a sorted view list");
 
     viewInstance.list.splice(1, 2);
     expect(viewInstance).toHaveLength(1);
@@ -293,9 +301,9 @@ describe('View', () => {
 
     viewInstance.list[0] = foo1;
 
-    expect(() => (viewInstance.list[1] = foo1)).toThrowError(
-      'The models in this view need to be unique',
-    );
+    expect(() => {
+      viewInstance.list[1] = foo1;
+    }).toThrowError('The models in this view need to be unique');
 
     expect(() => viewInstance.list.push(foo1)).toThrowError(
       'The models in this view need to be unique',
@@ -320,7 +328,7 @@ describe('View', () => {
 
     viewInstance.add(foos);
 
-    const snapshot = viewInstance.snapshot;
+    const { snapshot } = viewInstance;
 
     const view2 = new View(
       snapshot.modelType,
@@ -373,6 +381,7 @@ describe('View', () => {
       }
 
       const collection = new AppCollection();
+
       expect(collection.test.modelType).toBe('foo');
       const foos = collection.test.add([{}, {}]);
 
@@ -381,9 +390,10 @@ describe('View', () => {
       expect(collection.test.value[1]).toBeInstanceOf(Foo);
       expect(collection.test.value[0]).toBe(foos[0]);
 
-      const snapshot = collection.snapshot;
+      const { snapshot } = collection;
 
       const collection2 = new AppCollection(snapshot);
+
       expect(collection2.test).toHaveLength(2);
     });
 
@@ -399,6 +409,7 @@ describe('View', () => {
       }
 
       const collection = new AppCollection();
+
       expect(collection.test.modelType).toBe('foo');
       const foos = collection.test.add([{}, {}]);
 
@@ -407,9 +418,10 @@ describe('View', () => {
       expect(collection.test.value[1]).toBeInstanceOf(Foo);
       expect(collection.test.value[0]).toBe(foos[0]);
 
-      const snapshot = collection.snapshot;
+      const { snapshot } = collection;
 
       const collection2 = new AppCollection(snapshot);
+
       expect(collection2.test).toHaveLength(2);
     });
   });
@@ -438,6 +450,7 @@ describe('View', () => {
     expect(viewInstance.hasItem(foos[1])).toBe(true);
 
     const foo1 = foos[1];
+
     updateModelId(foo1, 123);
     expect(viewInstance.list[1]).toBe(foo1);
     expect(viewInstance.hasItem(foo1)).toBe(true);

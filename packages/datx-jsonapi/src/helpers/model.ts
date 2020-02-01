@@ -44,6 +44,7 @@ export function flattenModel(
   const rawData = {
     [META_FIELD]: {
       fields: Object.keys(data.attributes || {}).reduce((obj, key) => {
+        // eslint-disable-next-line no-param-reassign
         obj[key] = { referenceDef: false };
 
         return obj;
@@ -60,8 +61,10 @@ export function flattenModel(
     const refLinks = {};
     const refMeta = {};
     const refs: Record<string, IFieldDefinition> = {};
+
     Object.keys(data.relationships).forEach((key) => {
       const ref = (data.relationships as Record<string, IRelationship>)[key];
+
       if (ref && 'data' in ref && ref.data) {
         if (!(ref.data instanceof Array) || ref.data.length > 0) {
           rawData[key] = mapItems(ref.data, (item: IDefinition) => item.id);
@@ -108,6 +111,7 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
 ): Promise<Response<T>> {
   const collection = getModelCollection(model);
   const links = getModelLinks(model);
+
   if (!links || !(key in links)) {
     throw error(`Link ${key} doesn't exist on the model`);
   }
@@ -120,6 +124,7 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
       const prop = getMeta(model, MODEL_PROP_FIELD);
       const record = response.data;
       const recordType = record && getModelType(record);
+
       if (record && recordType !== getModelType(model) && recordType === getModelType(related)) {
         if (prop) {
           related[prop] = record;
@@ -138,16 +143,23 @@ export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
   return responseObj;
 }
 
+export function getModelRefLinks(model: PureModel): Record<string, Record<string, ILink>> {
+  return getMeta(model, MODEL_REF_LINKS_FIELD, {});
+}
+
 function getLink(model: PureModel, ref: string, key: string) {
   const collection = getModelCollection(model);
+
   if (!collection) {
     throw error('The model needs to be in a collection');
   }
   const links = getModelRefLinks(model);
+
   if (!links || !(ref in links)) {
     throw error(`The reference ${ref} doesn't have any links`);
   }
   const refLinks = links[ref];
+
   if (!refLinks || !(key in refLinks)) {
     throw error(`Link ${key} doesn't exist on the model`);
   }
@@ -165,10 +177,6 @@ export async function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>
   const link = getLink(model, ref, key);
 
   return fetchLink<T>(link, (collection as unknown) as IJsonapiCollection, options);
-}
-
-export function getModelRefLinks(model: PureModel): Record<string, Record<string, ILink>> {
-  return getMeta(model, MODEL_REF_LINKS_FIELD, {});
 }
 
 export function getModelRefMeta(model: PureModel): Record<string, any> {
@@ -209,14 +217,12 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
       })) as IDefinition | Array<IDefinition>,
     };
     if (data.attributes) {
-      // tslint:disable-next-line:no-dynamic-delete
       delete data.attributes[key];
     }
   });
 
   if (data.attributes) {
     delete data.attributes.id;
-    // tslint:disable-next-line:no-dynamic-delete
     delete data.attributes[META_FIELD];
   }
 
@@ -282,7 +288,9 @@ export function removeModel<T extends IJsonapiModel>(
         collection.removeOne(model);
       }
     });
-  } else if (collection) {
+  }
+
+  if (collection) {
     collection.removeOne(model);
   }
 
@@ -300,6 +308,7 @@ export function saveRelationship<T extends IJsonapiModel>(
 
   const ids = model[ref];
   const type = getModelType(getMeta(model, 'refs')[ref].model);
+
   type ID = IDefinition | Array<IDefinition>;
   const data: ID = mapItems(ids, (refItem: IModelRef) => ({
     id: refItem.id,

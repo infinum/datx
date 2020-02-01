@@ -1,4 +1,4 @@
-// tslint:disable:max-classes-per-file
+/* eslint-disable max-classes-per-file */
 
 import { META_FIELD } from 'datx-utils';
 import { configure } from 'mobx';
@@ -13,8 +13,11 @@ describe('withActions', () => {
   it('should work with initial data', () => {
     class Foo extends PureModel {
       public static type = 'foo';
+
       @Attribute() public foo!: number;
+
       @Attribute() public bar!: number;
+
       @Attribute() public baz!: number;
     }
 
@@ -22,6 +25,7 @@ describe('withActions', () => {
     const FooActions = withActions(FooMeta);
 
     const foo = new FooActions({ foo: 1, bar: 2 });
+
     expect(foo.meta.type).toBe('foo');
     expect(foo.foo).toBe(1);
 
@@ -29,6 +33,7 @@ describe('withActions', () => {
       public static types = [FooActions];
     }
     const collection = new TestCollection();
+
     collection.add(foo);
 
     const foo2 = foo.clone();
@@ -48,6 +53,7 @@ describe('withActions', () => {
     expect(foo2.foobar).toBe(5);
 
     const rawFoo2 = foo2.toJSON();
+
     expect(rawFoo2).toHaveProperty(META_FIELD);
 
     foo2.addReference<Foo, typeof Foo>('parent', foo.meta.id, {
@@ -62,7 +68,6 @@ describe('withActions', () => {
   });
 
   it('should fail for other classes', () => {
-    // tslint:disable-next-line:no-unnecessary-class
     class A {}
 
     // @ts-ignore - TS won't allow this mistake

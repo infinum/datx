@@ -16,7 +16,6 @@ import { config } from '../../src/NetworkUtils';
 function getMockStream(name: string): fs.ReadStream {
   const testPath = path.join(__dirname, `../mock/${name}.json`);
 
-  // tslint:disable-next-line:non-literal-fs-path
   return fs.createReadStream(testPath);
 }
 
@@ -51,7 +50,6 @@ export interface IMockArgs {
  * @param {Number} status - HTTP status code that should be returned
  * @return {undefined}
  */
-// tslint:disable-next-line:no-default-export
 export default function mockApi({
   name,
   method = 'GET',
@@ -83,6 +81,7 @@ export default function mockApi({
         }
       }
 
+      // eslint-disable-next-line consistent-return
       return [status, getMockStream(name || url)];
     },
     headers,

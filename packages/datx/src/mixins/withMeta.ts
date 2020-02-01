@@ -1,3 +1,6 @@
+/* eslint-disable max-classes-per-file */
+
+import { getMeta } from 'datx-utils';
 import { computed } from 'mobx';
 
 import { error } from '../helpers/format';
@@ -7,7 +10,6 @@ import { IBucket } from '../interfaces/IBucket';
 import { IMetaMixin } from '../interfaces/IMetaMixin';
 import { IModelConstructor } from '../interfaces/IModelConstructor';
 import { PureModel } from '../PureModel';
-import { getMeta } from 'datx-utils';
 import { MetaModelField } from '../enums/MetaModelField';
 import { IFieldDefinition } from '../Attribute';
 import { IIdentifier } from '../interfaces/IIdentifier';
@@ -30,6 +32,7 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
 
   class MetaClass {
     private readonly __instance: T;
+
     constructor(instance: T) {
       this.__instance = instance;
     }
@@ -45,6 +48,7 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
     @computed public get original(): T | undefined {
       const originalId = getMeta(this.__instance, MetaModelField.OriginalId);
       const collection = getModelCollection(this.__instance);
+
       return (originalId && collection?.findOne(this.__instance, originalId)) || undefined;
     }
 
@@ -56,10 +60,12 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
       );
 
       const refs = {};
+
       Object.keys(fields)
         .filter((field) => fields[field].referenceDef)
         .forEach((key) => {
           const bucket: IBucket<PureModel> | undefined = getMeta(this.__instance, `ref_${key}`);
+
           if (bucket) {
             refs[key] = (bucket && bucket.refValue) || null;
           }
@@ -77,7 +83,6 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
     }
   }
 
-  // tslint:disable-next-line:max-classes-per-file
   class WithMeta extends BaseClass implements IMetaMixin {
     // @ts-ignore
     public readonly meta = new MetaClass(this);

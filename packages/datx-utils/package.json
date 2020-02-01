@@ -41,7 +41,6 @@
   "scripts": {
     "test": "jest --coverage",
     "watch": "jest --watch --coverage",
-    "lint": "tslint --project .",
     "prepublish": "npm run build",
     "build": "rollup -c"
   },

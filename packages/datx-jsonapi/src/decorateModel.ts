@@ -45,15 +45,19 @@ export function decorateModel(BaseClass: typeof PureModel) {
       return super.getAutoId().toString();
     }
 
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     constructor(rawData: IRawModel | IRecord = {}, collection?: PureCollection) {
       let data = rawData;
+
       if (rawData && 'type' in rawData && ('attributes' in rawData || 'relationships' in rawData)) {
         const classRefs = getModelClassRefs(BaseClass);
+
         data = flattenModel(classRefs, rawData as IRecord);
       }
       super(data, collection);
 
       const modelMeta = data?.[META_FIELD] || {};
+
       HYDRATIZATION_KEYS.forEach((key) => {
         if (key in modelMeta) {
           setMeta(this, key, modelMeta[key]);

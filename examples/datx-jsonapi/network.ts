@@ -1,4 +1,4 @@
-import {config} from 'datx-jsonapi';
+import { config } from 'datx-jsonapi';
 import * as fetch from 'isomorphic-fetch'; // Or any other fetch lib
 
 // Don't need if fetch is polyfilled before the lib is loaded
@@ -15,7 +15,7 @@ config.transformRequest = function(options) {
     options.options.headers['Auth'] = options.collection['token'];
   }
   return options;
-}
+};
 
 // Example how to save auth tokens dynamically
 config.transformResponse = function(options) {
@@ -23,4 +23,4 @@ config.transformResponse = function(options) {
     options.collection['token'] = options.headers.get('Set-Auth');
   }
   return options;
-}
+};

@@ -1,10 +1,10 @@
 import { toJS } from 'mobx';
 
+import { getMeta, setMeta } from 'datx-utils';
 import { PatchType } from '../enums/PatchType';
 import { IPatch } from '../interfaces/IPatch';
 import { PureModel } from '../PureModel';
 import { getModelCollection, getModelId, getModelRef, getModelType } from './model/utils';
-import { getMeta, setMeta } from 'datx-utils';
 import { MetaModelField } from '../enums/MetaModelField';
 import { IFieldDefinition } from '../Attribute';
 
@@ -45,6 +45,7 @@ export function triggerAction(patchMeta: IPatchMeta, model: PureModel) {
   ).slice();
 
   const collection = getModelCollection(model);
+
   if (collection && '__patchListeners' in collection) {
     listeners.push(...(collection['__patchListeners'] || []));
   }
@@ -60,19 +61,9 @@ export function startAction(model: PureModel) {
     newValue: {},
     oldValue: {},
   });
+
   patchData.count++;
   setMeta(model, MetaModelField.Patch, patchData);
-}
-
-export function updateSingleAction(
-  model: PureModel,
-  key: string,
-  value: any,
-  oldValue?: { value: any },
-) {
-  startAction(model);
-  updateAction(model, key, value, oldValue);
-  endAction(model);
 }
 
 export function updateAction(model: PureModel, key: string, value: any, oldValue?: { value: any }) {
@@ -81,16 +72,20 @@ export function updateAction(model: PureModel, key: string, value: any, oldValue
     newValue: {},
     oldValue: {},
   });
+
   if ((model[key] === value && !oldValue) || (oldValue && value === oldValue.value)) {
     return;
   }
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
+
   if (!(key in patchData.oldValue)) {
-    patchData.oldValue[key] = oldValue
-      ? oldValue.value
-      : key in fields && fields[key].referenceDef
-      ? getModelRef(model[key])
-      : model[key];
+    if (oldValue) {
+      patchData.oldValue[key] = oldValue.value;
+    } else if (key in fields && fields[key].referenceDef) {
+      patchData.oldValue[key] = getModelRef(model[key]);
+    } else {
+      patchData.oldValue[key] = model[key];
+    }
   }
   patchData.newValue[key] = key in fields && fields[key].referenceDef ? getModelRef(value) : value;
   setMeta(model, MetaModelField.Patch, patchData);
@@ -102,10 +97,12 @@ export function endAction(model: PureModel, patchType: PatchType = PatchType.UPD
     newValue: {},
     oldValue: {},
   });
+
   patchData.count--;
   if (patchData.count === 0) {
     const newValue = toJS(patchData.newValue);
     const oldValue = toJS(patchData.oldValue);
+
     if (!isEmptyObject(newValue) || !isEmptyObject(oldValue)) {
       triggerAction({ newValue, oldValue, patchType }, model);
     }
@@ -113,4 +110,15 @@ export function endAction(model: PureModel, patchType: PatchType = PatchType.UPD
   } else {
     setMeta(model, MetaModelField.Patch, patchData);
   }
+}
+
+export function updateSingleAction(
+  model: PureModel,
+  key: string,
+  value: any,
+  oldValue?: { value: any },
+) {
+  startAction(model);
+  updateAction(model, key, value, oldValue);
+  endAction(model);
 }

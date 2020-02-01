@@ -1,4 +1,4 @@
-// tslint:disable:max-classes-per-file
+/* eslint-disable max-classes-per-file */
 
 import { autorun, configure, runInAction } from 'mobx';
 
@@ -12,8 +12,11 @@ describe('withMeta', () => {
   it('should work with initial data', () => {
     class Foo extends PureModel {
       public static type = 'foo';
+
       @Attribute() public foo!: number;
+
       @Attribute() public bar!: number;
+
       @Attribute() public baz!: number;
     }
 
@@ -48,16 +51,20 @@ describe('withMeta', () => {
       public static types = [FooMeta];
     }
     const collection = new TestCollection();
+
     collection.add(foo);
 
     const foo2 = cloneModel(foo);
+
     expect(foo2).not.toBe(foo);
     expect(foo2.meta.original).toBe(foo);
 
     // @ts-ignore - TS won't allow this mistake
-    expect(() => (foo2.meta.type = 'bar')).toThrowError();
+    expect(() => {
+      foo2.meta.type = 'bar';
+    }).toThrowError();
 
-    expect(foo2.propertyIsEnumerable('meta')).toBe(false);
+    expect(Object.prototype.propertyIsEnumerable.call(foo2, 'meta')).toBe(false);
   });
 
   it('should fail for collections', () => {
@@ -66,7 +73,6 @@ describe('withMeta', () => {
   });
 
   it('should fail for other classes', () => {
-    // tslint:disable-next-line:no-unnecessary-class
     class A {}
 
     // @ts-ignore - TS won't allow this mistake
@@ -76,7 +82,9 @@ describe('withMeta', () => {
   it('should support meta ref ids', () => {
     class Foo extends PureModel {
       public static type = 'foo';
+
       @Attribute({ toOne: Foo }) public parent?: Foo;
+
       @Attribute({ defaultValue: 1 }) public foo!: number;
     }
 
@@ -88,6 +96,7 @@ describe('withMeta', () => {
     const collection = new TestCollection();
 
     const foo1 = new FooMeta({ foo: 2 });
+
     collection.add(foo1);
 
     const foo2 = collection.add({ foo: 3, parent: foo1 }, FooMeta);

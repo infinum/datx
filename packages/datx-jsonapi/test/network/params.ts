@@ -109,6 +109,7 @@ describe('params', () => {
 
     const store = new TestStore();
     const event = store.add({}, Event);
+
     await event.save({ queryParams: { include: 'bar' } });
   });
 
@@ -288,6 +289,7 @@ describe('params', () => {
       });
 
       const store = new TestStore();
+
       await store.request('event', 'GET', undefined, { queryParams: { filter: { name: 'ć' } } });
     });
 
@@ -301,6 +303,7 @@ describe('params', () => {
       });
 
       const store = new TestStore();
+
       await store.request('event', 'GET', undefined, { queryParams: { filter: { name: 'ć=' } } });
     });
   });

@@ -1,14 +1,14 @@
-// tslint:disable:max-classes-per-file
+/* eslint-disable max-classes-per-file */
 
 import { META_FIELD } from 'datx-utils';
 import { configure, runInAction } from 'mobx';
-
-configure({ enforceActions: 'observed' });
 
 import { Collection, Model, Attribute } from '../src';
 import { IPatch } from '../src/interfaces/IPatch';
 import { PatchType } from '../src/enums/PatchType';
 import { getModelRef } from '../src/helpers/model/utils';
+
+configure({ enforceActions: 'observed' });
 
 describe('patch', () => {
   describe('model', () => {
@@ -38,7 +38,7 @@ describe('patch', () => {
 
       expect(patches).toMatchSnapshot();
 
-      expect(model.propertyIsEnumerable('__patchListeners')).toBe(false);
+      expect(Object.prototype.propertyIsEnumerable.call(model, '__patchListeners')).toBe(false);
     });
 
     it('should be able to apply patches', () => {
@@ -77,7 +77,7 @@ describe('patch', () => {
         },
       ] as Array<IPatch<Record<string, any>>>;
 
-      patches.map((patch: IPatch) => {
+      patches.forEach((patch: IPatch) => {
         model.applyPatch(patch);
       });
 
@@ -154,9 +154,11 @@ describe('patch', () => {
 
       const modelMeta = { type: model.meta.type, id: model.meta.id };
       const store = new Collection();
+
       store.onPatch((patch) => patches.push(patch));
 
       const addSnapshot = model.meta.snapshot;
+
       store.add(model);
 
       runInAction(() => {
@@ -170,6 +172,7 @@ describe('patch', () => {
       });
 
       const removeSnapshot = model.meta.snapshot;
+
       store.removeOne('foo', 1);
 
       runInAction(() => {
@@ -262,7 +265,7 @@ describe('patch', () => {
         },
       ] as Array<IPatch>;
 
-      patches.map((patch: IPatch) => {
+      patches.forEach((patch: IPatch) => {
         store.applyPatch(patch);
       });
 
@@ -285,6 +288,7 @@ describe('patch', () => {
           nick: 'Bar',
         },
       ]);
+
       store.onPatch((patch) => patches.push(patch));
       const model = store.findAll<Model>('foo')[0];
 
@@ -358,7 +362,7 @@ describe('patch', () => {
           },
         ] as Array<IPatch>;
 
-        patches.map((patch: IPatch) => {
+        patches.forEach((patch: IPatch) => {
           store.applyPatch(patch);
         });
 
@@ -378,6 +382,7 @@ describe('patch', () => {
 
         @Attribute({ isIdentifier: true })
         public id!: number | string;
+
         @Attribute({ toOne: 'bar ' })
         public bar!: BarModel | null;
       }
@@ -400,6 +405,7 @@ describe('patch', () => {
 
       const patches: Array<IPatch> = [];
       const collection = new TestCollection();
+
       collection.onPatch((patch) => patches.push(patch));
 
       const model = collection.add<FooModel>(
@@ -433,6 +439,7 @@ describe('patch', () => {
 
         @Attribute({ isIdentifier: true })
         public id!: number | string;
+
         @Attribute({ toOne: BarModel })
         public bar!: BarModel;
       }
@@ -481,7 +488,8 @@ describe('patch', () => {
       ] as Array<IPatch>;
 
       const collection = new TestCollection();
-      patches.map((patch: IPatch) => {
+
+      patches.forEach((patch: IPatch) => {
         collection.applyPatch(patch);
       });
 

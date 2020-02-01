@@ -11,6 +11,7 @@ export class PureModel {
   public static type: IType = DEFAULT_TYPE;
 
   public static autoIdValue: IIdentifier = 0;
+
   public static enableAutoId: boolean = true;
 
   public static getAutoId(): IIdentifier {

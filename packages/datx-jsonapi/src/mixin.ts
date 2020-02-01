@@ -34,10 +34,14 @@ export function jsonapi<T>(
   if (isModel(Base)) {
     // @ts-ignore
     return decorateModel(Base);
-  } else if (isCollection(Base)) {
+  }
+
+  if (isCollection(Base)) {
     // @ts-ignore
     return decorateCollection(Base);
-  } else if (isView(Base)) {
+  }
+
+  if (isView(Base)) {
     // @ts-ignore
     return decorateView<T>(Base);
   }

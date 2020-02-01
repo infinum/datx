@@ -10,52 +10,28 @@ import { IRequest } from '../interfaces/JsonApi';
 import { config } from '../NetworkUtils';
 import { getValue } from './utils';
 
-export function prepareQuery(
-  type: IType,
-  id?: number | string,
-  data?: IRequest,
-  options?: IRequestOptions,
-  collection?: PureCollection,
-  model?: IJsonapiModel,
-): {
-  url: string;
-  data?: object;
-  headers: IHeaders;
-} {
-  let queryModel: typeof PureModel | IJsonapiModel | undefined =
-    model && (model.constructor as typeof PureModel);
-  if (!queryModel && collection) {
-    const staticCollection = collection.constructor as typeof PureCollection;
-    queryModel = staticCollection.types.filter((item) => item.type === type)[0];
-  }
+function parametrize(params: object, scope: string = '') {
+  const list: Array<{ key: string; value: string }> = [];
 
-  const path: string = queryModel
-    ? getValue<string>(queryModel['endpoint']) || queryModel['baseUrl'] || getModelType(queryModel)
-    : type;
+  Object.keys(params).forEach((key) => {
+    if (params[key] instanceof Array) {
+      if (config.paramArrayType === ParamArrayType.OBJECT_PATH) {
+        list.push(...parametrize(params[key], `${key}.`));
+      } else if (config.paramArrayType === ParamArrayType.COMMA_SEPARATED) {
+        list.push({ key: `${scope}${key}`, value: params[key].join(',') });
+      } else if (config.paramArrayType === ParamArrayType.MULTIPLE_PARAMS) {
+        list.push(...params[key].map((param) => ({ key: `${scope}${key}`, value: param })));
+      } else if (config.paramArrayType === ParamArrayType.PARAM_ARRAY) {
+        list.push(...params[key].map((param) => ({ key: `${scope}${key}][`, value: param })));
+      }
+    } else if (typeof params[key] === 'object') {
+      list.push(...parametrize(params[key], `${key}.`));
+    } else {
+      list.push({ key: `${scope}${key}`, value: params[key] });
+    }
+  });
 
-  const url: string = id ? `${path}/${id}` : `${path}`;
-
-  return buildUrl(url, data, options);
-}
-
-export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
-  const headers: Record<string, string> =
-    (options && options.networkConfig && options.networkConfig.headers) || {};
-  let params: Array<string> = [
-    ...prepareFilters((options && options.queryParams && options.queryParams.filter) || {}),
-    ...prepareSort(options && options.queryParams && options.queryParams.sort),
-    ...prepareIncludes(options && options.queryParams && options.queryParams.include),
-    ...prepareFields((options && options.queryParams && options.queryParams.fields) || {}),
-    ...prepareRawParams((options && options.queryParams && options.queryParams.custom) || []),
-  ];
-
-  if (config.encodeQueryString) {
-    params = params.map(encodeParam);
-  }
-
-  const baseUrl: string = appendParams(prefixUrl(url), params);
-
-  return { data, headers, url: baseUrl };
+  return list;
 }
 
 function prepareFilters(filters: IFilters): Array<string> {
@@ -100,39 +76,67 @@ function prefixUrl(url: string) {
 
 function appendParams(url: string, params: Array<string>): string {
   let newUrl = url;
+
   if (params.length) {
     const separator = newUrl.indexOf('?') === -1 ? '?' : '&';
+
     newUrl += separator + params.join('&');
   }
 
   return newUrl;
 }
 
-function parametrize(params: object, scope: string = '') {
-  const list: Array<{ key: string; value: string }> = [];
-
-  Object.keys(params).forEach((key) => {
-    if (params[key] instanceof Array) {
-      if (config.paramArrayType === ParamArrayType.OBJECT_PATH) {
-        list.push(...parametrize(params[key], `${key}.`));
-      } else if (config.paramArrayType === ParamArrayType.COMMA_SEPARATED) {
-        list.push({ key: `${scope}${key}`, value: params[key].join(',') });
-      } else if (config.paramArrayType === ParamArrayType.MULTIPLE_PARAMS) {
-        list.push(...params[key].map((param) => ({ key: `${scope}${key}`, value: param })));
-      } else if (config.paramArrayType === ParamArrayType.PARAM_ARRAY) {
-        list.push(...params[key].map((param) => ({ key: `${scope}${key}][`, value: param })));
-      }
-    } else if (typeof params[key] === 'object') {
-      list.push(...parametrize(params[key], `${key}.`));
-    } else {
-      list.push({ key: `${scope}${key}`, value: params[key] });
-    }
-  });
-
-  return list;
-}
-
 function encodeParam(param: string) {
   // Manually decode field-value separator (=)
   return encodeURIComponent(param).replace('%3D', '=');
+}
+
+export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
+  const headers: Record<string, string> =
+    (options && options.networkConfig && options.networkConfig.headers) || {};
+  let params: Array<string> = [
+    ...prepareFilters((options && options.queryParams && options.queryParams.filter) || {}),
+    ...prepareSort(options && options.queryParams && options.queryParams.sort),
+    ...prepareIncludes(options && options.queryParams && options.queryParams.include),
+    ...prepareFields((options && options.queryParams && options.queryParams.fields) || {}),
+    ...prepareRawParams((options && options.queryParams && options.queryParams.custom) || []),
+  ];
+
+  if (config.encodeQueryString) {
+    params = params.map(encodeParam);
+  }
+
+  const baseUrl: string = appendParams(prefixUrl(url), params);
+
+  return { data, headers, url: baseUrl };
+}
+
+export function prepareQuery(
+  type: IType,
+  id?: number | string,
+  data?: IRequest,
+  options?: IRequestOptions,
+  collection?: PureCollection,
+  model?: IJsonapiModel,
+): {
+  url: string;
+  data?: object;
+  headers: IHeaders;
+} {
+  let queryModel: typeof PureModel | IJsonapiModel | undefined =
+    model && (model.constructor as typeof PureModel);
+
+  if (!queryModel && collection) {
+    const staticCollection = collection.constructor as typeof PureCollection;
+
+    [queryModel] = staticCollection.types.filter((item) => item.type === type);
+  }
+
+  const path: string = queryModel
+    ? getValue<string>(queryModel['endpoint']) || queryModel['baseUrl'] || getModelType(queryModel)
+    : type;
+
+  const url: string = id ? `${path}/${id}` : `${path}`;
+
+  return buildUrl(url, data, options);
 }

@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+
 import { Collection } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
@@ -56,6 +58,7 @@ describe('caching', () => {
 
       const events2 = await store.fetch(Event, '12345');
       const event2 = events2.data as Event;
+
       expect(event2.meta.id).toBe('12345');
       expect(req2.isDone()).toBe(true);
     });
@@ -93,7 +96,6 @@ describe('caching', () => {
         url: 'event/12345',
       });
 
-      // tslint:disable-next-line:max-classes-per-file
       class TestCollection extends Collection {
         public static cache = false;
 
@@ -130,6 +132,7 @@ describe('caching', () => {
 
       const store = new TestStore();
       let hasFailed = false;
+
       try {
         await store.fetch(Event, '12345');
       } catch (resp) {
@@ -159,6 +162,7 @@ describe('caching', () => {
 
       const store = new TestStore();
       let hasFailed = false;
+
       try {
         await store.fetch('event', '12345');
       } catch (e) {
@@ -220,6 +224,7 @@ describe('caching', () => {
       });
 
       const events2 = await store.fetchAll(Event);
+
       expect(events2.data).toHaveLength(4);
       expect(req2.isDone()).toBe(true);
     });
@@ -254,7 +259,6 @@ describe('caching', () => {
         url: 'event',
       });
 
-      // tslint:disable-next-line:max-classes-per-file
       class TestCollection extends Collection {
         public static cache = false;
       }
@@ -286,6 +290,7 @@ describe('caching', () => {
 
       const store = new TestStore();
       let hasFailed = false;
+
       try {
         await store.fetchAll('event');
       } catch (resp) {
@@ -314,6 +319,7 @@ describe('caching', () => {
 
       const store = new TestStore();
       let hasFailed = false;
+
       try {
         await store.fetchAll('event');
       } catch (e) {
@@ -342,6 +348,7 @@ describe('caching', () => {
       store.reset();
 
       const mockedApi = mockApi({ name: 'event-1', url: 'event' });
+
       await store.fetchAll('event');
 
       expect(mockedApi.isDone()).toBe(true);

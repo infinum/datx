@@ -54,9 +54,11 @@ export class PureCollection {
   > = {};
 
   private readonly __data: IObservableArray<PureModel> = observable.array([], { deep: false });
+
   private readonly __views: Array<string> = [];
 
   @observable.shallow private __dataMap: Record<string, Record<string, PureModel>> = {};
+
   @observable.shallow private __dataList: Record<string, IObservableArray<PureModel>> = {};
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
@@ -69,9 +71,11 @@ export class PureCollection {
 
     const staticCollection = this.constructor as typeof PureCollection;
     const initViews = data && 'views' in data ? data.views : {};
+
     Object.keys(staticCollection.views).forEach((key) => {
       const view = staticCollection.views[key];
       const init = initViews[key] || view;
+
       this.addView(key, init.modelType, {
         mixins: view.mixins,
         models: init.models || [],
@@ -121,6 +125,7 @@ export class PureCollection {
    */
   @action public insert(data: Array<Partial<IRawModel>>): Array<PureModel> {
     const models = initModels(this, data);
+
     this.__insertModel(models);
 
     return models;
@@ -133,11 +138,14 @@ export class PureCollection {
   }
 
   public add<T extends PureModel>(data: T): T;
+
   public add<T extends PureModel>(data: Array<T>): Array<T>;
+
   public add<T extends PureModel>(
     data: Array<IRawModel | Record<string, any>>,
     model: IType | IModelConstructor<T>,
   ): Array<T>;
+
   public add<T extends PureModel>(
     data: IRawModel | Record<string, any>,
     model: IType | IModelConstructor<T>,
@@ -162,14 +170,20 @@ export class PureCollection {
     type: IType | T | IModelConstructor<T>,
     id: IIdentifier | PureModel,
   ): T | null;
+
   public findOne<T extends PureModel>(ref: IModelRef): T | null;
 
   public findOne(model: IType | typeof PureModel | IModelRef, id?: IIdentifier | PureModel) {
     if (id instanceof PureModel) {
       return id;
-    } else if (isModelReference(model)) {
+    }
+
+    if (isModelReference(model)) {
       return this.__findOneByType((model as IModelRef).type, (model as IModelRef).id);
-    } else if (!id) {
+    }
+
+    if (!id) {
+      // eslint-disable-next-line prefer-rest-params, no-console
       console.log('error', arguments);
       throw new Error('The identifier is missing');
     }
@@ -180,6 +194,7 @@ export class PureCollection {
   public findAll<T extends PureModel>(model?: IType | IModelConstructor<T>): IObservableArray<T> {
     if (model) {
       const type = getModelType(model);
+
       if (!(type in this.__dataList)) {
         set(this.__dataList, { [type]: observable.array([]) });
       }
@@ -195,6 +210,7 @@ export class PureCollection {
   }
 
   public removeOne(type: IType | typeof PureModel, id: IIdentifier): void;
+
   public removeOne(model: PureModel | IModelRef): void;
 
   @action public removeOne(
@@ -202,6 +218,7 @@ export class PureCollection {
     id?: IIdentifier,
   ) {
     let model: PureModel | null = null;
+
     if (typeof obj === 'object') {
       model = obj;
     } else if (id) {
@@ -229,7 +246,6 @@ export class PureCollection {
       );
     });
     this.__data.replace([]);
-    // tslint:disable-next-line:max-line-length
     this.__dataList = observable({}, {}, { deep: false }) as IObservableObject &
       Record<string, IObservableArray<PureModel>>;
     this.__dataMap = observable({}, {}, { deep: false }) as IObservableObject &
@@ -263,6 +279,7 @@ export class PureCollection {
 
   private __findOneByType(model: IType | typeof PureModel | PureModel, id: IIdentifier) {
     const type = getModelType(model);
+
     if (!type) {
       return null;
     }
@@ -279,10 +296,12 @@ export class PureCollection {
   }
 
   private __addArray<T extends PureModel>(data: Array<T>): Array<T>;
+
   private __addArray<T extends PureModel>(
     data: Array<Record<string, any>>,
     model?: IType | IModelConstructor<T>,
   ): Array<T>;
+
   private __addArray(
     data: Array<PureModel | Record<string, any>>,
     model?: IType | IModelConstructor,
@@ -291,10 +310,12 @@ export class PureCollection {
   }
 
   private __addSingle<T extends PureModel>(data: T): T;
+
   private __addSingle<T extends PureModel>(
     data: Record<string, any>,
     model?: IType | IModelConstructor<T>,
   ): T;
+
   private __addSingle(
     data: PureModel | Record<string, any> | IIdentifier | IModelRef,
     model?: number | IType | IModelConstructor,
@@ -317,6 +338,7 @@ export class PureCollection {
 
     const type = getModelType(model as IType | typeof PureModel);
     const modelInstance = upsertModel(data, type, this);
+
     this.__insertModel(modelInstance, type);
 
     return modelInstance;
@@ -355,13 +377,16 @@ export class PureCollection {
         true,
       );
       const refKeys = Object.keys(fields || {});
+
       refKeys
         .map((key) => getMeta(item, `ref_${key}`))
         .filter(Boolean)
         .forEach((bucket: IBucket<PureModel>) => {
           if (isArrayLike(bucket.value) && bucket.value.includes(item)) {
-            bucket.value = bucket.value.filter((model) => model !== item);
+            // eslint-disable-next-line no-param-reassign
+            bucket.value = bucket.value.filter((bucketModel) => bucketModel !== item);
           } else if (bucket.value === item) {
+            // eslint-disable-next-line no-param-reassign
             bucket.value = null;
           }
         });
@@ -380,6 +405,7 @@ export class PureCollection {
     }
 
     const collection = getModelCollection(model);
+
     if (collection && collection !== this) {
       throw error('A model can be in a single collection at once');
     }
@@ -389,6 +415,7 @@ export class PureCollection {
     const stringType = modelType.toString();
 
     const existingModel = this.findOne(modelType, modelId);
+
     if (existingModel) {
       updateModel(existingModel, model);
 
@@ -421,7 +448,6 @@ export class PureCollection {
   // @ts-ignore - Used outside of the class, but marked as private to avoid undocumented use
   private __changeModelId(oldId: IIdentifier, newId: IIdentifier, type: IType) {
     this.__dataMap[type][newId] = this.__dataMap[type][oldId];
-    // tslint:disable-next-line:no-dynamic-delete
     delete this.__dataMap[type][oldId];
   }
 }

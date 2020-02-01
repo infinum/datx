@@ -58,7 +58,7 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
         key,
         {
           type: options.type,
-          models: ([] as Array<U | IType>).concat(options.model).map(getModelType),
+          model: getModelType(options.model),
         },
         value,
       );

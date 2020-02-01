@@ -1,3 +1,7 @@
+/* eslint-disable max-classes-per-file */
+
+import { setMeta, getMeta } from 'datx-utils';
+
 import { PatchType } from '../enums/PatchType';
 import { error } from '../helpers/format';
 import { isCollection, isModel } from '../helpers/mixin';
@@ -10,7 +14,6 @@ import { IModelConstructor } from '../interfaces/IModelConstructor';
 import { IPatch } from '../interfaces/IPatch';
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
-import { setMeta, getMeta } from 'datx-utils';
 import { MetaModelField } from '../enums/MetaModelField';
 
 function inversePatch<T = PureModel>(patch: IPatch<T>): IPatch<T> {
@@ -50,6 +53,7 @@ export function withPatches<T extends PureCollection>(
 
       public applyPatch(patch: IPatch) {
         const model = this.findOne(patch.model.type, patch.model.id);
+
         if (patch.patchType === PatchType.REMOVE) {
           if (model) {
             this.removeOne(model);
@@ -64,14 +68,12 @@ export function withPatches<T extends PureCollection>(
           } else {
             throw error("New patch value isn't set for an update patch");
           }
+        } else if (model) {
+          throw error("The model shouldn't exist before a create patch");
+        } else if (!patch.newValue) {
+          throw error("New patch value isn't set for a create patch");
         } else {
-          if (model) {
-            throw error("The model shouldn't exist before a create patch");
-          } else if (!patch.newValue) {
-            throw error("New patch value isn't set for a create patch");
-          } else {
-            this.add(patch.newValue, patch.model.type);
-          }
+          this.add(patch.newValue, patch.model.type);
         }
       }
 
@@ -89,9 +91,10 @@ export function withPatches<T extends PureCollection>(
     }
 
     return (WithPatches as any) as ICollectionConstructor<IMetaPatchesCollection & T>;
-  } else if (isModel(Base)) {
+  }
+  if (isModel(Base)) {
     const BaseClass = Base as typeof PureModel;
-    // tslint:disable-next-line:max-classes-per-file
+
     class WithPatches extends BaseClass {
       constructor(...args: Array<any>) {
         super(...args);
@@ -116,6 +119,7 @@ export function withPatches<T extends PureCollection>(
           MetaModelField.PatchListeners,
           [],
         );
+
         listeners.push(listener);
 
         return () => {

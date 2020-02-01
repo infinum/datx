@@ -2,6 +2,22 @@ import { extendObservable, isArrayLike, observable, set } from 'mobx';
 
 import { DATX_META } from './consts';
 
+export function reducePrototypeChain<T, U>(
+  obj: U,
+  reduceFn: (state: T, item: U) => T,
+  initialValue: T,
+): T {
+  let value = initialValue;
+  let model = obj;
+
+  while (model) {
+    value = reduceFn(value, model);
+    model = Object.getPrototypeOf(model);
+  }
+
+  return value;
+}
+
 /**
  * Map a single item or an array of items
  *
@@ -16,7 +32,6 @@ export function mapItems<T, U>(data: Array<T>, fn: (item: T) => U): Array<U>;
 export function mapItems<T, U>(data: T, fn: (item: T) => U): U | null;
 export function mapItems<T, U>(data: T | Array<T>, fn: (item: T) => U): U | Array<U> | null {
   if (isArrayLike(data)) {
-    // tslint:disable-next-line:no-unnecessary-callback-wrapper
     return (data as Array<T>).map((item) => fn(item));
   }
 
@@ -55,7 +70,7 @@ function defaultSetter() {
 }
 
 export function getMetaObj(obj: Record<string, any>): Record<string, any> {
-  if (!obj.hasOwnProperty(DATX_META)) {
+  if (!Object.prototype.hasOwnProperty.call(obj, DATX_META)) {
     Object.defineProperty(obj, DATX_META, {
       configurable: false,
       enumerable: false,
@@ -68,6 +83,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
 
 export function setMeta<T = any>(obj: Record<string, any>, key: string, value: T): void {
   const meta = getMetaObj(obj);
+
   set(meta, key, value);
 }
 
@@ -98,6 +114,7 @@ export function getMeta<T = any>(
         obj,
         (value, model): T => {
           const meta = getMeta(model, key, mergeChain ? {} : undefined);
+
           return mergeChain ? { ...meta, ...value } : ((value || meta) as T);
         },
         (mergeChain ? {} : undefined) as T,
@@ -105,6 +122,7 @@ export function getMeta<T = any>(
     );
   }
   const meta = getMetaObj(obj);
+
   return meta[key] === undefined ? defaultValue : meta[key];
 }
 
@@ -163,7 +181,7 @@ export function assignComputed<T = any>(
 }
 
 export function error(...args: Array<any>) {
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.error(`[datx error]`, ...args);
 }
 
@@ -172,7 +190,7 @@ export function warn(...args: Array<any>) {
     return;
   }
 
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.warn(`[datx warning]`, ...args);
 }
 
@@ -181,7 +199,7 @@ export function deprecated(...args: Array<any>) {
     return;
   }
 
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.warn(`[datx deprecated]`, ...args);
 }
 
@@ -190,21 +208,6 @@ export function info(...args: Array<any>) {
     return;
   }
 
-  // tslint:disable-next-line:no-console
+  // eslint-disable-next-line no-console
   console.info(`[datx info]`, ...args);
-}
-
-export function reducePrototypeChain<T, U>(
-  obj: U,
-  reduceFn: (state: T, item: U) => T,
-  initialValue: T,
-): T {
-  let value = initialValue;
-  let model = obj;
-  while (model) {
-    value = reduceFn(value, model);
-    model = Object.getPrototypeOf(model);
-  }
-
-  return value;
 }

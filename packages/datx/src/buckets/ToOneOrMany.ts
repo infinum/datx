@@ -8,6 +8,7 @@ import { ToOne } from './ToOne';
 
 export class ToOneOrMany<T extends PureModel> {
   private __toManyBucket!: ToMany<T>;
+
   private __toOneBucket!: ToOne<T>;
 
   @observable
@@ -57,12 +58,10 @@ export class ToOneOrMany<T extends PureModel> {
       } else {
         this.__toManyBucket = new ToMany(data as Array<T | IModelRef>, this.__collection);
       }
+    } else if (this.__toOneBucket) {
+      this.__toOneBucket.value = data as T;
     } else {
-      if (this.__toOneBucket) {
-        this.__toOneBucket.value = data as T;
-      } else {
-        this.__toOneBucket = new ToOne<T>(data as T, this.__collection);
-      }
+      this.__toOneBucket = new ToOne<T>(data as T, this.__collection);
     }
   }
 

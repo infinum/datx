@@ -9,7 +9,7 @@ import { withPatches } from './mixins/withPatches';
 export class Model extends withPatches(withActions(withMeta(PureModel))) {
   public valueOf(): Record<string, any> & { meta: IModelRef } {
     const raw: Record<string, any> = this.meta.snapshot;
-    // tslint:disable-next-line:no-dynamic-delete
+
     delete raw[META_FIELD];
 
     return {

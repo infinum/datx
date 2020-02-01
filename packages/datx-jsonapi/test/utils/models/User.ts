@@ -7,6 +7,7 @@ export class User extends jsonapi(Model) {
   public static type: IType = 'user';
 
   @prop public firstName!: string;
+
   @prop public lastName!: string;
 
   @computed get fullName(): string {

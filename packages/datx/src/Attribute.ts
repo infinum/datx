@@ -15,6 +15,7 @@ export function getClass<T extends PureModel>(obj: T): typeof PureModel {
 
 function prepareDecorator<T extends PureModel>(_obj: T, _key: string, opts?: object): void {
   if (opts && 'initializer' in opts) {
+    // eslint-disable-next-line no-param-reassign
     opts['initializer'] = undefined;
 
     // Babel 7 + Decorators fix
@@ -22,7 +23,7 @@ function prepareDecorator<T extends PureModel>(_obj: T, _key: string, opts?: obj
     // If initializer is undefined, the descriptor will be null and therefore
     // the initializerDefineProperty will be skipped
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-len
     // https://github.com/babel/babel/blob/3aaafae053fa75febb3aa45d45b6f00646e30ba4/packages/babel-helpers/src/helpers.js#L1019
   }
 }
@@ -88,12 +89,16 @@ function getReferenceDef(
       type: ReferenceType.TO_ONE,
       model: getModelType(toOne),
     };
-  } else if (toOneOrMany) {
+  }
+
+  if (toOneOrMany) {
     return {
       type: ReferenceType.TO_ONE_OR_MANY,
       model: getModelType(toOneOrMany),
     };
-  } else if (toMany) {
+  }
+
+  if (toMany) {
     return {
       type: ReferenceType.TO_MANY,
       model: getModelType(toMany),
@@ -125,6 +130,7 @@ export function Attribute<T extends PureModel>({
       MetaClassField.Fields,
       {},
     );
+
     modelClassFields[key] = {
       referenceDef: getReferenceDef(toOne, toOneOrMany, toMany, referenceProperty),
       defaultValue,
@@ -153,8 +159,10 @@ export function ViewAttribute<TCollection extends PureCollection, TModel extends
   return (obj: TCollection, key: string, opts?: object): void => {
     prepareDecorator(obj, key, opts);
     if (!Object.hasOwnProperty.call(obj.constructor, 'views')) {
+      // eslint-disable-next-line no-param-reassign
       obj.constructor['views'] = {};
     }
+    // eslint-disable-next-line no-param-reassign
     obj.constructor['views'][key] = {
       modelType,
       ...options,

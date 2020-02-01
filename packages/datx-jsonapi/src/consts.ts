@@ -7,4 +7,5 @@ export const MODEL_PROP_FIELD = 'jsonapiProp';
 export const MODEL_QUEUE_FIELD = 'jsonapiQueue';
 export const MODEL_RELATED_FIELD = 'jsonapiRelated';
 
+// eslint-disable-next-line no-useless-escape
 export const URL_REGEX = /^(?:http(s)?:\/\/)[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;

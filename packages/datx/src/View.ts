@@ -15,6 +15,7 @@ import { PureModel } from './PureModel';
 
 export class View<T extends PureModel = PureModel> extends ToMany<T> {
   public readonly modelType: IType;
+
   @observable public sortMethod?: string | ((item: T) => any);
 
   constructor(
@@ -46,6 +47,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
         typeof this.sortMethod === 'string'
           ? (item) => item[this.sortMethod as 'string']
           : this.sortMethod;
+
       list.sort((a: T, b: T) => sortFn(a) - sortFn(b));
     }
 
@@ -65,7 +67,9 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
   }
 
   public add(data: T | IRawModel | Record<string, any>): T;
+
   public add(data: Array<T | IRawModel | Record<string, any>>): Array<T>;
+
   @action public add(
     data: T | IRawModel | Record<string, any> | Array<T | IRawModel | Record<string, any>>,
   ): T | Array<T> {
@@ -90,6 +94,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
 
   @action public remove(model: IIdentifier | T) {
     const item = this.__getModel(this.__normalizeModel(model));
+
     if (item) {
       this.__rawList.remove(item);
     }
@@ -107,6 +112,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
       const added = (change.added as Array<T>).map(this.__normalizeModel.bind(this));
 
       const toRemove = this.__rawList.slice(change.index, change.removedCount);
+
       if (this.unique) {
         added.forEach((newItem) => {
           if (this.__indexOf(newItem) !== -1 && this.__indexOf(newItem, toRemove) === -1) {
@@ -125,8 +131,10 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     }
 
     const newModel = this.__getModel(this.__normalizeModel(change.newValue as any));
+
     if (newModel) {
       const idIndex = this.__indexOf(newModel);
+
       if (this.unique && idIndex !== -1 && idIndex !== change.index) {
         throw error('The models in this view need to be unique');
       }
@@ -145,7 +153,9 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     return target.findIndex((item) => {
       if (item instanceof PureModel && model instanceof PureModel) {
         return item === model;
-      } else if (isReference(item) && !(model instanceof PureModel)) {
+      }
+
+      if (isReference(item) && !(model instanceof PureModel)) {
         return (item as IModelRef).id === model.id && (item as IModelRef).type === model.type;
       }
 

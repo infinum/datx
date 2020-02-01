@@ -23,11 +23,13 @@ describe('error handling', () => {
     });
 
     let hasFailed = false;
+
     try {
       await store.fetchAll('event');
     } catch (response) {
       hasFailed = true;
       const err = response.error;
+
       expect(err).toBeInstanceOf(Object);
       expect(err.status).toBe(404);
       expect(err.message).toBe('Invalid HTTP status: 404');
@@ -44,6 +46,7 @@ describe('error handling', () => {
     });
 
     let hasFailed = false;
+
     try {
       await store.fetchAll('event');
     } catch (response) {
@@ -62,6 +65,7 @@ describe('error handling', () => {
     });
 
     let hasFailed = false;
+
     try {
       await store.fetchAll('event');
     } catch (response) {
@@ -77,6 +81,7 @@ describe('error handling', () => {
     const record = new Event({
       title: 'Test',
     });
+
     store.add(record);
 
     mockApi({
@@ -86,6 +91,7 @@ describe('error handling', () => {
     });
 
     let hasFailed = false;
+
     try {
       await record.save();
     } catch (response) {
@@ -116,11 +122,12 @@ describe('error handling', () => {
     expect(event).toBeInstanceOf(Event);
     if (event) {
       let hasFailed = false;
+
       try {
         await event.destroy();
-      } catch (response) {
+      } catch (responseWithError) {
         hasFailed = true;
-        expect(response.error[0]).toBeInstanceOf(Object);
+        expect(responseWithError.error[0]).toBeInstanceOf(Object);
       }
       expect(hasFailed).toBe(true);
     }

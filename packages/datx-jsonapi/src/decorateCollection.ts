@@ -27,6 +27,30 @@ import { IDefinition, IRecord, IRelationship, IRequest, IResponse } from './inte
 import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
 
+function handleErrors<T extends IJsonapiModel>(response: Response<T>) {
+  if (response.error) {
+    throw response.error;
+  }
+
+  return response;
+}
+
+function iterateEntries<T extends IJsonapiModel>(
+  body: IResponse,
+  fn: (item: IRecord) => T,
+): T | Array<T>;
+
+function iterateEntries<T extends IJsonapiModel>(
+  body: IResponse,
+  fn: (item: IRecord) => void,
+): void;
+
+function iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T) {
+  mapItems((body && body.included) || [], fn);
+
+  return mapItems((body && body.data) || [], fn);
+}
+
 export function decorateCollection(BaseClass: typeof PureCollection) {
   class JsonapiCollection extends BaseClass {
     public static types =
@@ -45,14 +69,12 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       if (!body) {
         return null;
       }
-      console.log('sync', body);
-      const data: T | Array<T> | null = this.__iterateEntries(body, (obj: IRecord) =>
+      const data: T | Array<T> | null = iterateEntries(body, (obj: IRecord) =>
         this.__addRecord<T>(obj),
       );
-      console.log('update');
-      this.__iterateEntries(body, this.__updateRelationships.bind(this));
 
-      console.log('sync done', data);
+      iterateEntries(body, this.__updateRelationships.bind(this));
+
       return data;
     }
 
@@ -72,10 +94,11 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, id, undefined, options);
       const reqOptions = options || {};
+
       reqOptions.networkConfig = reqOptions.networkConfig || {};
       reqOptions.networkConfig.headers = query.headers;
 
-      return read<T>(query.url, this, reqOptions).then((res) => this.__handleErrors<T>(res));
+      return read<T>(query.url, this, reqOptions).then(handleErrors);
     }
 
     /**
@@ -92,10 +115,11 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       const modelType = getModelType(type);
       const query = this.__prepareQuery(modelType, undefined, undefined, options);
       const reqOptions = options || {};
+
       reqOptions.networkConfig = reqOptions.networkConfig || {};
       reqOptions.networkConfig.headers = query.headers;
 
-      return read<T>(query.url, this, reqOptions).then((res) => this.__handleErrors<T>(res));
+      return read<T>(query.url, this, reqOptions).then(handleErrors);
     }
 
     public request<T extends IJsonapiModel = IJsonapiModel>(
@@ -114,7 +138,9 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       id: string,
       options?: IRequestOptions,
     ): Promise<void>;
+
     public removeOneRemote(model: PureModel, options?: IRequestOptions): Promise<void>;
+
     @action public removeOneRemote(
       obj: IType | typeof PureModel | PureModel,
       id?: string | boolean | IRequestOptions,
@@ -124,6 +150,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       let modelId: string;
       let model: IJsonapiModel | null;
       const type = getModelType(obj);
+
       if (typeof id === 'object' || id === undefined) {
         remoteOp = id;
         modelId = getModelId(obj).toString();
@@ -156,21 +183,6 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       clearAllCache();
     }
 
-    /**
-     * Function used to handle response errors
-     *
-     * @private
-     * @param {Response} response API response
-     * @returns API response
-     */
-    private __handleErrors<T extends IJsonapiModel>(response: Response<T>) {
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response;
-    }
-
     private __addRecord<T extends IJsonapiModel = IJsonapiModel>(obj: IRecord): T {
       const staticCollection = this.constructor as typeof PureCollection;
       const { type, id } = obj;
@@ -179,7 +191,6 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
         staticCollection.types.find((item) => getModelType(item) === type) || GenericModel;
       const classRefs = getModelClassRefs(Type);
       const flattened: IRawModel = flattenModel(classRefs, obj);
-      console.log(flattened);
 
       if (record) {
         updateModel(record, flattened);
@@ -195,16 +206,21 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     private __updateRelationships(obj: IRecord): void {
       const record: PureModel | null = obj.id === undefined ? null : this.findOne(obj.type, obj.id);
       const refs: Array<string> = obj.relationships ? Object.keys(obj.relationships) : [];
+
       refs.forEach((ref: string) => {
         const refData = (obj.relationships as Record<string, IRelationship>)[ref];
+
         if (!refData || !('data' in refData)) {
           return;
         }
         const items = refData.data;
+
         if (isArrayLike(items) && items.length < 1) {
           // it's only possible to update items with one ore more refs. Early exit
           return;
-        } else if (record) {
+        }
+
+        if (record) {
           if (items) {
             const models: PureModel | Array<PureModel> | string | null =
               mapItems(
@@ -214,6 +230,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
               ) || null;
 
             const itemType: string = isArrayLike(items) ? items[0].type : items.type;
+
             if (ref in record) {
               record[ref] = models;
             } else {
@@ -226,28 +243,13 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
             }
           } else {
             const refsDef = getMeta(record, 'refs') as Record<string, IReferenceOptions>;
+
             if (refsDef && ref in refsDef) {
               record[ref] = refsDef[ref].type === ReferenceType.TO_MANY ? [] : null;
             }
           }
         }
       });
-    }
-
-    private __iterateEntries<T extends IJsonapiModel>(
-      body: IResponse,
-      fn: (item: IRecord) => T,
-    ): T | Array<T>;
-    private __iterateEntries<T extends IJsonapiModel>(
-      body: IResponse,
-      fn: (item: IRecord) => void,
-    ): void;
-    private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T) {
-      console.log('iterate included');
-      mapItems((body && body.included) || [], fn);
-
-      console.log('iterate data');
-      return mapItems((body && body.data) || [], fn);
     }
 
     private __prepareQuery(

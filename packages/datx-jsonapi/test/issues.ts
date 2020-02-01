@@ -1,4 +1,5 @@
-// tslint:disable:max-classes-per-file
+/* eslint-disable max-classes-per-file */
+
 import { Collection, Model, prop } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 import { computed } from 'mobx';
@@ -37,12 +38,15 @@ describe('Issues', () => {
     it('should remove the reference if null', async () => {
       class ImageRecord extends jsonapi(Model) {
         public static type = 'image';
+
         @prop public name!: string;
+
         @prop public event!: Array<EventRecord>;
       }
 
       class EventRecord extends jsonapi(Model) {
         public static type = 'event';
+
         @prop.toOneOrMany(ImageRecord)
         public image!: ImageRecord | Array<ImageRecord>;
       }
@@ -64,6 +68,7 @@ describe('Issues', () => {
 
       const response = await store.fetch('event', '1');
       const event = response.data as EventRecord;
+
       expect(event.image).toBe(store.image[0]);
 
       mockApi({
@@ -99,12 +104,15 @@ describe('Issues', () => {
     it('should update the reference if not null', async () => {
       class ImageRecord extends jsonapi(Model) {
         public static type = 'image';
+
         @prop public name!: string;
+
         @prop public event!: Array<EventRecord>;
       }
 
       class EventRecord extends jsonapi(Model) {
         public static type = 'event';
+
         @prop.toOneOrMany(ImageRecord)
         public image!: ImageRecord | Array<ImageRecord>;
       }
@@ -125,6 +133,7 @@ describe('Issues', () => {
       });
       const response = await store.fetch('event', '1');
       const event = response.data as EventRecord;
+
       expect(event.image).toBe(store.image[0]);
 
       mockApi({
@@ -154,6 +163,7 @@ describe('Issues', () => {
     const event1 = response1.data as Event;
     const meta1 = getModelMeta(event1);
     const refMeta1 = getModelRefMeta(event1);
+
     expect(meta1.name).toBe('event-1d');
     expect(refMeta1.images.foo).toBe('bar');
 
@@ -166,6 +176,7 @@ describe('Issues', () => {
     const event2 = response2.data as Event;
     const meta2 = getModelMeta(event2);
     const refMeta2 = getModelRefMeta(event2);
+
     expect(meta2.name).toBe('event-1e');
     expect(refMeta2.images.foo).toBe('baz');
 
@@ -208,6 +219,7 @@ describe('Issues', () => {
     });
 
     const lineItem1 = new LineItem({}, store);
+
     await lineItem1.save();
 
     mockApi({
@@ -217,6 +229,7 @@ describe('Issues', () => {
     });
 
     const lineItem2 = new LineItem({}, store);
+
     await lineItem2.save();
   });
 });

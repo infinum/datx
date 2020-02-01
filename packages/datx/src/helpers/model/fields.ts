@@ -1,8 +1,4 @@
 import { getMeta, setMeta, warn } from 'datx-utils';
-
-import { PureModel } from '../../PureModel';
-import { IBucket } from '../../interfaces/IBucket';
-import { TRefValue } from '../../interfaces/TRefValue';
 import {
   runInAction,
   IObservableArray,
@@ -12,6 +8,10 @@ import {
   IArrayChange,
   isArrayLike,
 } from 'mobx';
+
+import { PureModel } from '../../PureModel';
+import { IBucket } from '../../interfaces/IBucket';
+import { TRefValue } from '../../interfaces/TRefValue';
 import { IIdentifier } from '../../interfaces/IIdentifier';
 import { getModelCollection, getModelId, getModelType } from './utils';
 import { IFieldDefinition, IReferenceDefinition } from '../../Attribute';
@@ -23,6 +23,7 @@ import { error } from '../format';
 
 export function getRef(model: PureModel, key: string): PureModel | Array<PureModel> | null {
   const value: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
+
   return value ? value.value : null;
 }
 
@@ -32,25 +33,10 @@ export function updateRef(
   value: TRefValue,
 ): PureModel | Array<PureModel> | null {
   const bucket: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
+
   // @ts-ignore Ref can be assigned instead of the model itself
+  // eslint-disable-next-line no-return-assign
   return bucket ? (bucket.value = value) : null;
-}
-
-export function updateModelId(model: PureModel, newId: IIdentifier): void {
-  runInAction(() => {
-    const collection = getModelCollection(model);
-
-    const oldId = getModelId(model);
-    const type = getModelType(model);
-    setMeta(model, MetaModelField.IdField, newId);
-
-    if (collection) {
-      // @ts-ignore - I'm bad and I should feel bad...
-      collection.__changeModelId(oldId, newId, type);
-    }
-
-    updateModelReferences(model, newId, oldId, type);
-  });
 }
 
 function getModelRefsByType(model: PureModel, type: IType) {
@@ -75,8 +61,9 @@ function updateModelReferences(
   type: IType,
 ) {
   const collection = getModelCollection(model);
+
   if (collection) {
-    collection.getAllModels().map((item) => {
+    collection.getAllModels().forEach((item) => {
       getModelRefsByType(item, type)
         .map((ref) => getMeta(item, `ref_${ref}`))
         .filter(Boolean)
@@ -85,8 +72,10 @@ function updateModelReferences(
             const targetIndex = bucket.value.findIndex(
               (modelItem) => getModelId(modelItem) === oldId && getModelType(modelItem) === type,
             );
+
             if (targetIndex !== -1) {
               // @ts-ignore Ref can be assigned instead of the model itself
+              // eslint-disable-next-line no-param-reassign
               bucket.value[targetIndex] = newId;
             }
           } else if (
@@ -94,6 +83,7 @@ function updateModelReferences(
             getModelId(bucket.value) === oldId &&
             getModelType(bucket.value) === type
           ) {
+            // eslint-disable-next-line no-param-reassign
             bucket.value = {
               // @ts-ignore Ref can be assigned instead of the model itself
               id: newId,
@@ -105,9 +95,29 @@ function updateModelReferences(
   }
 }
 
+export function updateModelId(model: PureModel, newId: IIdentifier): void {
+  runInAction(() => {
+    const collection = getModelCollection(model);
+
+    const oldId = getModelId(model);
+    const type = getModelType(model);
+
+    setMeta(model, MetaModelField.IdField, newId);
+
+    if (collection) {
+      // @ts-ignore - I'm bad and I should feel bad...
+      // eslint-disable-next-line no-underscore-dangle
+      collection.__changeModelId(oldId, newId, type);
+    }
+
+    updateModelReferences(model, newId, oldId, type);
+  });
+}
+
 function modelAddReference(model: PureModel, key: string, newReference: PureModel) {
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
   const refOptions = fields[key]?.referenceDef;
+
   if (!refOptions) {
     return;
   }
@@ -116,6 +126,7 @@ function modelAddReference(model: PureModel, key: string, newReference: PureMode
       model[key].push(newReference);
     }
   } else {
+    // eslint-disable-next-line no-param-reassign
     model[key] = newReference;
   }
 }
@@ -124,6 +135,7 @@ function modelRemoveReference(model: PureModel, key: string, oldReference: PureM
   if (isArrayLike(model[key])) {
     model[key].remove(oldReference);
   } else if (model[key] === oldReference) {
+    // eslint-disable-next-line no-param-reassign
     model[key] = null;
   }
 }
@@ -131,11 +143,13 @@ function modelRemoveReference(model: PureModel, key: string, oldReference: PureM
 function hasBackRef(item: PureModel, property: string, target: PureModel): boolean {
   if (item[property] === null || item[property] === undefined) {
     return false;
-  } else if (item[property] instanceof PureModel) {
-    return item[property] === target;
-  } else {
-    return item[property].includes(target);
   }
+
+  if (item[property] instanceof PureModel) {
+    return item[property] === target;
+  }
+
+  return item[property].includes(target);
 }
 
 function backRefSplice(
@@ -145,8 +159,10 @@ function backRefSplice(
   refOptions: IReferenceDefinition,
 ) {
   const property = refOptions.property as string;
+
   change.added.forEach((item) => modelAddReference(item, property, model));
   const removed = model[key].slice(change.index, change.index + change.removedCount);
+
   removed.forEach((item: PureModel) => modelRemoveReference(item, property, model));
 
   return null;
@@ -160,6 +176,7 @@ function backRefChange(
 ) {
   const property = refOptions.property as string;
   const oldValue = model[key].length > change.index ? model[key][change.index] : null;
+
   if (change.newValue) {
     modelAddReference(change.newValue, property, model);
   }
@@ -198,6 +215,7 @@ export function getBackRef(model: PureModel, key: string): PureModel | Array<Pur
   }
 
   const collection = getModelCollection(model);
+
   if (!collection) {
     return null;
   }
@@ -207,6 +225,7 @@ export function getBackRef(model: PureModel, key: string): PureModel | Array<Pur
     .filter((item) => hasBackRef(item, refOptions.property as string, model));
 
   const backData: IObservableArray<PureModel> = observable.array(backModels, { deep: false });
+
   intercept(backData, (change: TChange) => partialBackRefUpdate(model, key, change));
 
   return backData;

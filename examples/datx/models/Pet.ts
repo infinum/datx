@@ -1,6 +1,6 @@
-import {Model, prop} from 'datx';
+import { Model, prop } from 'datx';
 
-import {Person} from './Person';
+import { Person } from './Person';
 
 export class Pet extends Model {
   public static type = 'pet';

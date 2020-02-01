@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+
 import {
   Collection,
   getModelId,
@@ -28,6 +30,7 @@ describe('updates', () => {
       const record = new Event({
         title: 'Example title',
       });
+
       store.add(record);
 
       mockApi({
@@ -40,6 +43,7 @@ describe('updates', () => {
       });
 
       const data = modelToJsonApi(record);
+
       expect(record['title']).toBe('Example title');
       expect(data.id).toBeUndefined();
       expect(data.type).toBe('event');
@@ -47,6 +51,7 @@ describe('updates', () => {
       expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
+
       expect(updated['title']).toBe('Test 1');
       expect(updated).toBe(record);
     });
@@ -66,6 +71,7 @@ describe('updates', () => {
       });
 
       const data = modelToJsonApi(record);
+
       expect(record['title']).toBe('Example title');
       expect(data.id).toBeUndefined();
       expect(data.type).toBe('event');
@@ -73,6 +79,7 @@ describe('updates', () => {
       expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
+
       expect(updated['title']).toBe('Test 1');
       expect(updated).toBe(record);
     });
@@ -82,14 +89,12 @@ describe('updates', () => {
         public static type = 'event';
       }
 
-      // tslint:disable-next-line:max-classes-per-file
       class Bar extends jsonapi(Model) {
         public static type = 'bar';
 
         @prop.toOne(Foo) public foo!: Foo;
       }
 
-      // tslint:disable-next-line:max-classes-per-file
       class Test extends Collection {
         public static types = [Foo, Bar];
       }
@@ -98,11 +103,14 @@ describe('updates', () => {
       const foo = new Foo({
         title: 'Example title',
       });
+
       store.add(foo);
       const bar = store.add<Bar>({ foo }, Bar);
       const baz = store.add({}, 'baz');
+
       expect(bar.foo).toBe(foo);
       const barRef = bar.foo;
+
       if (barRef && 'id' in barRef) {
         // @ts-ignore
         expect(barRef.id).toBe(foo.meta.id);
@@ -114,6 +122,7 @@ describe('updates', () => {
       expect(baz['foo']).toBe(foo);
 
       const bazRef = baz['foo'];
+
       if (bazRef && 'id' in bazRef) {
         expect(bazRef.id).toBe(foo.meta.id);
       } else {
@@ -130,6 +139,7 @@ describe('updates', () => {
       });
 
       const data = modelToJsonApi(foo);
+
       expect(foo['title']).toBe('Example title');
       expect(data.id).toBeUndefined();
       expect(data.type).toBe('event');
@@ -137,11 +147,13 @@ describe('updates', () => {
       expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await foo.save();
+
       expect(updated['title']).toBe('Test 1');
       expect(updated).toBe(foo);
       expect(foo.meta.id).toBe('12345');
 
       const barRef2 = bar.foo;
+
       if (barRef2 && 'id' in barRef2) {
         // @ts-ignore
         expect(barRef2.id).toBe(foo.meta.id);
@@ -152,6 +164,7 @@ describe('updates', () => {
 
       expect(baz['foo']).toBe(foo);
       const bazRef2 = baz['foo'];
+
       if (bazRef2 && 'id' in bazRef2) {
         expect(bazRef2.id).toBe(foo.meta.id);
       } else {
@@ -164,6 +177,7 @@ describe('updates', () => {
       const record = new Event({
         title: 'Example title',
       });
+
       store.add(record);
 
       mockApi({
@@ -177,6 +191,7 @@ describe('updates', () => {
       });
 
       const data = modelToJsonApi(record);
+
       expect(record['title']).toBe('Example title');
       expect(data.id).toBeUndefined();
       expect(data.type).toBe('event');
@@ -184,6 +199,7 @@ describe('updates', () => {
       expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const queue = await record.save();
+
       expect(getModelType(queue)).toBe('queue');
 
       mockApi({
@@ -193,6 +209,7 @@ describe('updates', () => {
 
       const queue2 = await fetchModelLink(queue, 'self', { cacheOptions: { skipCache: true } });
       const queueRecord = queue2.data;
+
       expect(queueRecord).not.toBeNull();
       if (queueRecord) {
         expect(getModelType(queueRecord)).toBe('queue');
@@ -205,6 +222,7 @@ describe('updates', () => {
 
       const updatedRes = await fetchModelLink(queue, 'self', { cacheOptions: { skipCache: true } });
       const updated = updatedRes.data as Event;
+
       expect(updated.meta.type).toBe('event');
 
       expect(updated['title']).toBe('Test 1');
@@ -230,6 +248,7 @@ describe('updates', () => {
       });
 
       const data = modelToJsonApi(record);
+
       expect(record['title']).toBe('Example title');
       expect(data.id).toBeUndefined();
       expect(data.type).toBe('event');
@@ -237,6 +256,7 @@ describe('updates', () => {
       expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const queue = await record.save();
+
       expect(getModelType(queue)).toBe('queue');
 
       mockApi({
@@ -246,6 +266,7 @@ describe('updates', () => {
 
       const queue2 = await fetchModelLink(queue, 'self', { cacheOptions: { skipCache: true } });
       const queueRecord = queue2.data;
+
       expect(queueRecord).not.toBeNull();
       if (queueRecord) {
         expect(getModelType(queueRecord)).toBe('queue');
@@ -258,6 +279,7 @@ describe('updates', () => {
 
       const updatedRes = await fetchModelLink(queue, 'self', { cacheOptions: { skipCache: true } });
       const updated = updatedRes.data;
+
       expect(updated).not.toBeNull();
       if (updated) {
         expect(getModelType(updated)).toBe('event');
@@ -274,6 +296,7 @@ describe('updates', () => {
         __meta__: { id: 123 },
         title: 'Example title',
       });
+
       store.add(record);
 
       mockApi({
@@ -287,12 +310,14 @@ describe('updates', () => {
       });
 
       const data = modelToJsonApi(record);
+
       expect(record['title']).toBe('Example title');
       expect(data.type).toBe('event');
       expect(data.attributes && data.attributes.id).toBeUndefined();
       expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
+
       expect(updated['title']).toBe('Example title');
       expect(updated).toBe(record);
     });
@@ -314,12 +339,14 @@ describe('updates', () => {
       });
 
       const data = modelToJsonApi(record);
+
       expect(record['title']).toBe('Example title');
       expect(data.type).toBe('event');
       expect(data.attributes && data.attributes.id).toBeUndefined();
       expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
+
       expect(updated['title']).toBe('Example title');
       expect(updated).toBe(record);
     });
@@ -327,15 +354,16 @@ describe('updates', () => {
     it('should add a record with client-generated id', async () => {
       const store = new TestStore();
 
-      // tslint:disable-next-line:max-classes-per-file
       class GenRecord extends Event {
         public static useAutogeneratedIds = true;
+
         public static getAutoId = () => '110ec58a-a0f2-4ac4-8393-c866d813b8d1';
       }
 
       const record = new GenRecord({
         title: 'Example title',
       });
+
       store.add(record);
 
       mockApi({
@@ -348,6 +376,7 @@ describe('updates', () => {
       });
 
       const data = modelToJsonApi(record);
+
       expect(record['title']).toBe('Example title');
       expect(typeof data.id).toBe('string');
       expect(data.id).toHaveLength(36);
@@ -356,14 +385,15 @@ describe('updates', () => {
       expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
+
       expect(updated['title']).toBe('Test 1');
       expect(updated).toBe(record);
     });
 
     it('should add a record with client-generated id if not in store', async () => {
-      // tslint:disable-next-line:max-classes-per-file
       class GenRecord extends Event {
         public static useAutogeneratedIds = true;
+
         public static getAutoId = () => '110ec58a-a0f2-4ac4-8393-c866d813b8d1';
       }
 
@@ -381,6 +411,7 @@ describe('updates', () => {
       });
 
       const data = modelToJsonApi(record);
+
       expect(record['title']).toBe('Example title');
       expect(typeof data.id).toBe('string');
       expect(data.id).toHaveLength(36);
@@ -389,6 +420,7 @@ describe('updates', () => {
       expect(data.attributes && data.attributes.type).toBeUndefined();
 
       const updated = await record.save();
+
       expect(updated['title']).toBe('Test 1');
       expect(updated).toBe(record);
     });
@@ -418,6 +450,7 @@ describe('updates', () => {
         });
 
         const updated = await record.save();
+
         expect(updated['title']).toBe('Test 1');
         expect(updated).toBe(record);
       }
@@ -461,9 +494,11 @@ describe('updates', () => {
         });
 
         const event2 = await saveRelationship(event, 'images');
+
         expect(event2.meta.id).toBe('12345');
         expect(event2.meta.type).toBe('event');
-        const images = event2.images;
+        const { images } = event2;
+
         expect(images).toHaveLength(2);
         if (images instanceof Array) {
           expect(images.map((image) => image.id)).toContain('1');
@@ -482,8 +517,10 @@ describe('updates', () => {
       });
 
       const store = new TestStore();
+
       store.add({ id: '1' }, Event);
       const events = await store.fetch('event', '12345');
+
       store.add({ id: '2' }, Event);
 
       const record = events.data as Event;
@@ -498,6 +535,7 @@ describe('updates', () => {
       await record.destroy();
       expect(store.findAll('event').length).toBe(2);
       const remainingEvents = store.findAll(Event);
+
       expect(remainingEvents[0] && remainingEvents[0].meta.id).toBe('1');
       expect(remainingEvents[1] && remainingEvents[1].meta.id).toBe('2');
     });
@@ -532,6 +570,7 @@ describe('updates', () => {
       const record = new Event({
         title: 'Example title',
       });
+
       store.add(record);
 
       expect(record['title']).toBe('Example title');
@@ -569,6 +608,7 @@ describe('updates', () => {
       const record = new Event({
         title: 'Example title',
       });
+
       store.add(record);
 
       expect(record['title']).toBe('Example title');

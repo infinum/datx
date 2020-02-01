@@ -7,6 +7,7 @@ import { Event, Image, Photo, TestStore, User } from './utils/setup';
 describe('General', () => {
   it('should initialize', () => {
     const store = new TestStore();
+
     expect(store).toBeTruthy();
   });
 
@@ -94,6 +95,7 @@ describe('General', () => {
 
   it('should find an event', () => {
     const store = new TestStore();
+
     store.sync({
       data: {
         attributes: {
@@ -105,6 +107,7 @@ describe('General', () => {
     });
 
     const event = store.findOne(Event, '1');
+
     expect(event).not.toBeNull();
     if (event) {
       expect(event.meta.id).toBe('1');
@@ -115,6 +118,7 @@ describe('General', () => {
 
   it('should trigger autorun on change', () => {
     const store = new TestStore();
+
     store.sync({
       data: {
         attributes: {
@@ -131,6 +135,7 @@ describe('General', () => {
     if (event) {
       let name = 'Demo';
       let autorunCount = 0;
+
       autorun(() => {
         expect(event.name).toBe(name);
         autorunCount++;
@@ -146,6 +151,7 @@ describe('General', () => {
 
   it('should handle relationships with duplicates', () => {
     const store = new TestStore();
+
     store.sync({
       data: {
         attributes: {
@@ -183,6 +189,7 @@ describe('General', () => {
     });
 
     const event = store.findOne(Event, '1');
+
     expect(event).not.toBeNull();
     if (event) {
       expect(event.name).toBe('Demo');
@@ -190,14 +197,17 @@ describe('General', () => {
     }
 
     const images = store.findAll(Image);
+
     expect(images.length).toBe(1);
 
     const foo = store.findAll('foo');
+
     expect(foo.length).toBe(0);
   });
 
   it('should handle relationship elements without links attribute', () => {
     const store = new TestStore();
+
     store.sync({
       data: {
         attributes: {
@@ -217,6 +227,7 @@ describe('General', () => {
     });
 
     const event = store.findOne(Event, '1');
+
     expect(event).not.toBeNull();
     if (event) {
       expect(event.name).toBe('Demo');
@@ -226,6 +237,7 @@ describe('General', () => {
 
   it('should handle basic circular relations', () => {
     const store = new TestStore();
+
     store.sync({
       data: {
         attributes: {
@@ -264,6 +276,7 @@ describe('General', () => {
     });
 
     const event = store.findOne(Event, '1');
+
     expect(event).not.toBeNull();
     if (event) {
       expect(event.name).toBe('Demo');
@@ -274,6 +287,7 @@ describe('General', () => {
 
   it('should return a event with all associated objects', () => {
     const store = new TestStore();
+
     store.sync({
       data: {
         attributes: {
@@ -369,6 +383,7 @@ describe('General', () => {
     });
 
     const event = store.findOne(Event, '1');
+
     expect(event).not.toBeNull();
     if (event) {
       expect(event.organizers.length).toBe(2);
@@ -379,6 +394,7 @@ describe('General', () => {
 
   it('should remove an event', () => {
     const store = new TestStore();
+
     store.sync({
       data: [
         { id: '1', type: 'event', attributes: {} },
@@ -387,17 +403,20 @@ describe('General', () => {
     });
 
     const event = store.findOne(Event, '1');
+
     expect(event).not.toBeNull();
     if (event) {
       expect(event.meta.id).toBe('1');
     }
     store.removeOne(Event, '1');
     const event2 = store.findOne(Event, '1');
+
     expect(event2).toBe(null);
   });
 
   it('should remove all events', () => {
     const store = new TestStore();
+
     store.sync({
       data: [
         { id: '1', type: 'event', attributes: {} },
@@ -406,14 +425,17 @@ describe('General', () => {
     });
 
     const events = store.findAll(Event);
+
     expect(events.length).toBe(2);
     store.removeAll(Event);
     const events2 = store.findAll(Event);
+
     expect(events2).toHaveLength(0);
   });
 
   it('should reset', () => {
     const store = new TestStore();
+
     store.sync({
       data: [
         {
@@ -459,6 +481,7 @@ describe('General', () => {
 
     const events = store.findAll(Event);
     const images = store.findAll(Image);
+
     expect(events.length).toBe(2);
     expect(images.length).toBe(1);
 
@@ -466,12 +489,14 @@ describe('General', () => {
 
     const events2 = store.findAll(Event);
     const images2 = store.findAll(Image);
+
     expect(events2).toHaveLength(0);
     expect(images2).toHaveLength(0);
   });
 
   it('should handle circular relations', () => {
     const store = new TestStore();
+
     store.sync({
       data: {
         attributes: {
@@ -490,6 +515,7 @@ describe('General', () => {
     });
 
     const event = store.findOne(Event, '1');
+
     expect(event).not.toBeNull();
 
     if (event) {
@@ -502,6 +528,7 @@ describe('General', () => {
 
   it('should handle serialization/deserialization with circular relations', () => {
     const store = new TestStore();
+
     store.sync({
       data: {
         attributes: {
@@ -524,6 +551,7 @@ describe('General', () => {
     const newStore = new TestStore(JSON.parse(data));
 
     const event = newStore.findOne(Event, '1');
+
     expect(event).not.toBeNull();
 
     if (event) {
@@ -549,6 +577,7 @@ describe('General', () => {
     });
 
     const user = store.findOne(User, '1');
+
     expect(user).not.toBeNull();
 
     if (user) {
@@ -559,7 +588,6 @@ describe('General', () => {
   it('should support default properties', () => {
     const store = new TestStore();
 
-    console.log('start test');
     store.sync({
       data: [
         {
@@ -595,9 +623,9 @@ describe('General', () => {
         },
       ],
     });
-    console.log('end test');
 
     const user = store.findOne(User, '1');
+
     expect(user).not.toBeNull();
 
     if (user) {
@@ -605,6 +633,7 @@ describe('General', () => {
     }
 
     const photo1 = store.findOne(Photo, '1');
+
     expect(photo1).not.toBeNull();
     if (photo1) {
       expect(photo1.selected).toBe(false);
@@ -613,12 +642,14 @@ describe('General', () => {
     }
 
     const photo2 = store.findOne(Photo, '2');
+
     expect(photo2).not.toBeNull();
     if (photo2) {
       expect(photo2.selected).toBe(true);
     }
 
     const photo3 = store.findOne(Photo, '3');
+
     expect(photo3).not.toBeNull();
     if (photo3) {
       expect(photo3.selected).toBe(false);
@@ -626,6 +657,7 @@ describe('General', () => {
 
     const photos = store.findAll(Photo);
     const selected = photos.filter((photo) => photo.selected);
+
     expect(selected.length).toBe(1);
     expect(selected[0].meta.id).toBe('2');
   });

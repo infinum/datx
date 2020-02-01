@@ -1,7 +1,7 @@
-import {Model, prop} from 'datx';
+import { Model, prop } from 'datx';
 
-import {Event} from './Event';
-import {Pet} from './Pet';
+import { Event } from './Event';
+import { Pet } from './Pet';
 
 export class Person extends Model {
   public static type = 'person';

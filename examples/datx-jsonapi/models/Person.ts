@@ -1,8 +1,8 @@
-import {Model, prop} from 'datx';
-import {jsonapi} from 'datx-jsonapi';
+import { Model, prop } from 'datx';
+import { jsonapi } from 'datx-jsonapi';
 
-import {Event} from './Event';
-import {Pet} from './Pet';
+import { Event } from './Event';
+import { Pet } from './Pet';
 
 export class Person extends jsonapi(Model) {
   public static type = 'person';

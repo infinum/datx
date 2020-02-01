@@ -1,7 +1,7 @@
-export { IRawModel, observable } from 'datx-utils';
-
 import { ToMany, ToOne, ToOneOrMany } from './buckets';
-// tslint:disable-next-line:export-name
+
+export { IRawModel } from 'datx-utils';
+
 export const Bucket = { ToMany, ToOne, ToOneOrMany };
 
 export {
