@@ -1,4 +1,5 @@
 import {
+  Bucket,
   getModelId,
   getModelType,
   modelToJSON,
@@ -8,7 +9,7 @@ import {
   View,
 } from 'datx';
 import { assignComputed } from 'datx-utils';
-import { action } from 'mobx';
+import { action, computed } from 'mobx';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -23,13 +24,7 @@ import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { fetchLink } from './NetworkUtils';
 
 export class Response<T extends IJsonapiModel> {
-  /**
-   * API response data (synced with the store)
-   *
-   * @type {(PureModel|Array<PureModel>)}
-   * @memberOf Response
-   */
-  public data: T | Array<T> | null = null;
+  private __data;
 
   /**
    * API response metadata
@@ -173,9 +168,11 @@ export class Response<T extends IJsonapiModel> {
     }
 
     if (collection) {
-      this.data = overrideData
+      const data = overrideData
         ? collection.add<T>(overrideData as T)
         : collection.sync<T>(response.data);
+
+      this.__data = new Bucket.ToOneOrMany(data, collection as any, true);
     } else if (response.data) {
       // The case when a record is not in a store and save/remove are used
       const resp = response.data;
@@ -185,7 +182,9 @@ export class Response<T extends IJsonapiModel> {
           throw new Error('A save/remove operation should not return an array of results');
         }
 
-        this.data = overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T);
+        const data = overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T);
+
+        this.__data = new Bucket.ToOneOrMany(data, collection, true);
       }
     }
 
@@ -214,6 +213,10 @@ export class Response<T extends IJsonapiModel> {
       // eslint-disable-next-line no-throw-literal
       throw this;
     }
+  }
+
+  @computed public data(): T | Array<T> {
+    return this.__data.value;
   }
 
   /**

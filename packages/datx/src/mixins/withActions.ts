@@ -15,7 +15,6 @@ import { IModelConstructor } from '../interfaces/IModelConstructor';
 import { IReferenceOptions } from '../interfaces/IReferenceOptions';
 import { TRefValue } from '../interfaces/TRefValue';
 import { PureModel } from '../PureModel';
-import { IType } from '../interfaces/IType';
 
 /**
  * Extends the model with some handy actions

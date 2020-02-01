@@ -237,7 +237,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
               initModelRef(
                 record,
                 ref,
-                { models: [itemType], type: ReferenceType.TO_ONE_OR_MANY },
+                { model: itemType, type: ReferenceType.TO_ONE_OR_MANY },
                 models,
               );
             }

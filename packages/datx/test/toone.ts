@@ -91,4 +91,62 @@ describe('ToOne', () => {
       bucketInstance.value = foos[1];
     }).toThrowError('[datx exception] This is a read-only bucket');
   });
+
+  it('should work with initial model data and id', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+    }
+
+    class Bar extends Model {
+      public static type = 'bar';
+
+      @Attribute({ toOne: Foo })
+      public foo!: Foo;
+    }
+
+    class AppCollection extends Collection {
+      public static types = [Foo, Bar];
+    }
+
+    const collection = new AppCollection();
+
+    const bar = collection.add(
+      {
+        foo: '1',
+      },
+      Bar,
+    );
+
+    expect(bar.foo).toBeInstanceOf(Foo);
+    expect(bar.foo.meta.id).toBe('1');
+  });
+
+  it('should work with initial model data and ref', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+    }
+
+    class Bar extends Model {
+      public static type = 'bar';
+
+      @Attribute({ toOne: Foo })
+      public foo!: Foo;
+    }
+
+    class AppCollection extends Collection {
+      public static types = [Foo, Bar];
+    }
+
+    const collection = new AppCollection();
+
+    const bar = collection.add(
+      {
+        foo: { type: 'foo', id: '1' },
+      },
+      Bar,
+    );
+
+    expect(bar.foo).toBeInstanceOf(Foo);
+    expect(bar.foo.meta.id).toBe('1');
+  });
 });

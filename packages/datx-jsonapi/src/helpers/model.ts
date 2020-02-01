@@ -67,11 +67,11 @@ export function flattenModel(
 
       if (ref && 'data' in ref && ref.data) {
         if (!(ref.data instanceof Array) || ref.data.length > 0) {
-          rawData[key] = mapItems(ref.data, (item: IDefinition) => item.id);
+          rawData[key] = ref.data;
           if (!classRefs || !(key in classRefs)) {
             refs[key] = {
               referenceDef: {
-                models: [ref.data instanceof Array ? ref.data[0].type : ref.data.type],
+                model: ref.data instanceof Array ? ref.data[0].type : ref.data.type,
                 type: ref.data instanceof Array ? ReferenceType.TO_MANY : ReferenceType.TO_ONE,
               },
             };
