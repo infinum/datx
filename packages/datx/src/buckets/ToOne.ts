@@ -1,7 +1,7 @@
 import { computed, observable, isArrayLike } from 'mobx';
 
 import { error } from '../helpers/format';
-import { getModelRef } from '../helpers/model/utils';
+import { getModelRef, isModelReference } from '../helpers/model/utils';
 import { updateSingleAction } from '../helpers/patch';
 import { IModelRef } from '../interfaces/IModelRef';
 import { PureCollection } from '../PureCollection';
@@ -22,6 +22,8 @@ export class ToOne<T extends PureModel> {
       throw error('The model needs to be in a collection to be referenceable');
     } else if (isArrayLike(data)) {
       throw error("The reference can't be an array of values.");
+    } else if (!isModelReference(data) && !(data instanceof PureModel) && data !== null) {
+      throw error('The value needs to be a reference');
     }
 
     this.__rawValue = data;
@@ -43,6 +45,8 @@ export class ToOne<T extends PureModel> {
       throw error('This is a read-only bucket');
     } else if (isArrayLike(data)) {
       throw error("The reference can't be an array of values.");
+    } else if (!isModelReference(data) && !(data instanceof PureModel) && data !== null) {
+      throw error('The value needs to be a reference');
     }
     this.__rawValue = data;
     if (this.__model && this.__key) {

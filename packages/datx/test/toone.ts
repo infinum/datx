@@ -117,8 +117,18 @@ describe('ToOne', () => {
       Bar,
     );
 
-    expect(bar.foo).toBeInstanceOf(Foo);
-    expect(bar.foo.meta.id).toBe('1');
+    expect(bar.foo).toBe(null);
+
+    const foo = collection.add({}, Foo);
+
+    const bar2 = collection.add(
+      {
+        foo: foo.meta.id,
+      },
+      Bar,
+    );
+
+    expect(bar2.foo).toBe(foo);
   });
 
   it('should work with initial model data and ref', () => {
@@ -141,12 +151,22 @@ describe('ToOne', () => {
 
     const bar = collection.add(
       {
-        foo: { type: 'foo', id: '1' },
+        foo: { id: '1', type: 'foo' },
       },
       Bar,
     );
 
-    expect(bar.foo).toBeInstanceOf(Foo);
-    expect(bar.foo.meta.id).toBe('1');
+    expect(bar.foo).toBe(null);
+
+    const foo = collection.add({}, Foo);
+
+    const bar2 = collection.add(
+      {
+        foo: { id: foo.meta.id, type: foo.meta.type },
+      },
+      Bar,
+    );
+
+    expect(bar2.foo).toBe(foo);
   });
 });

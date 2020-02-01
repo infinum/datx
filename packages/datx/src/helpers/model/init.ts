@@ -176,7 +176,9 @@ export function initModel(instance: PureModel, rawData: IRawModel, collection?: 
     .forEach((field) => {
       const value = rawData[field];
       const isRef =
-        value instanceof PureModel || (isArrayLike(value) && value[0] instanceof PureModel);
+        value instanceof PureModel ||
+        (isArrayLike(value) && (value[0] instanceof PureModel || isModelReference(value[0]))) ||
+        isModelReference(value);
 
       fields[field] = {
         referenceDef: isRef

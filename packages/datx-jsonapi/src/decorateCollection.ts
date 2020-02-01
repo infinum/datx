@@ -226,7 +226,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
               mapItems(
                 items,
                 (def: IDefinition) =>
-                  (def.id === undefined ? null : this.findOne(def.type, def.id)) || def.id,
+                  (def.id === undefined ? null : this.findOne(def.type, def.id)) || def,
               ) || null;
 
             const itemType: string = isArrayLike(items) ? items[0].type : items.type;
