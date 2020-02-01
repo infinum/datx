@@ -24,5 +24,10 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
+  }
 }
