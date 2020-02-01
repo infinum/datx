@@ -1,5 +1,5 @@
 import { getModelType, IType } from 'datx';
-import { isArrayLike } from 'mobx';
+import { mapItems } from 'datx-utils';
 
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { Response } from './Response';
@@ -7,24 +7,22 @@ import { Response } from './Response';
 export interface ICache {
   response: Response<IJsonapiModel>;
   time: Date;
-  type: IType;
+  types: Array<IType>;
   url: string;
 }
 
 let cacheStorage: Array<ICache> = [];
 
-export function saveCache(url: string, response: Response<IJsonapiModel>, modelType?: string) {
-  if (
-    response &&
-    'data' in response &&
-    (!('error' in response) || !response.error) &&
-    response.data
-  ) {
-    // The type might need to be 100% correct - used only to clear the cache
-    const type =
-      modelType || getModelType(isArrayLike(response.data) ? response.data[0] : response.data);
+export function saveCache(url: string, response: Response<IJsonapiModel>) {
+  if (response && response.isSuccess && response.data) {
+    const types = mapItems(response.data, getModelType) as IType | Array<IType>;
 
-    cacheStorage.push({ response, time: new Date(), type, url });
+    cacheStorage.push({
+      response,
+      time: new Date(),
+      types: ([] as Array<IType>).concat(types),
+      url,
+    });
   }
 }
 
@@ -37,5 +35,5 @@ export function clearAllCache() {
 }
 
 export function clearCacheByType(type: IType) {
-  cacheStorage = cacheStorage.filter((item) => item.type !== type);
+  cacheStorage = cacheStorage.filter((item) => !item.types.includes(type));
 }

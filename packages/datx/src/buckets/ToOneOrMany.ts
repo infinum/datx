@@ -20,6 +20,7 @@ export class ToOneOrMany<T extends PureModel> {
     protected __readonly: boolean = false,
     protected __model?: PureModel,
     protected __key?: string,
+    protected __skipMissing = true,
   ) {
     this.__isList = isArrayLike(data);
     if (this.__isList) {
@@ -29,9 +30,17 @@ export class ToOneOrMany<T extends PureModel> {
         __readonly,
         __model,
         __key,
+        __skipMissing,
       );
     } else {
-      this.__toOneBucket = new ToOne<T>(data as T, __collection, __readonly, __model, __key);
+      this.__toOneBucket = new ToOne<T>(
+        data as T,
+        __collection,
+        __readonly,
+        __model,
+        __key,
+        __skipMissing,
+      );
     }
   }
 

@@ -31,6 +31,7 @@ export class ToMany<T extends PureModel> {
     protected __readonly: boolean = false,
     protected __model?: PureModel,
     protected __key?: string,
+    protected __skipMissing = true,
   ) {
     if (data?.length > 0 && !collection) {
       throw error('The model needs to be in a collection to be referenceable');
@@ -110,7 +111,7 @@ export class ToMany<T extends PureModel> {
   protected __getList(): IObservableArray<T> {
     const list = this.__rawList
       .map(this.__getModel.bind(this))
-      .filter(Boolean)
+      .filter((item) => (this.__skipMissing ? Boolean(item) : true))
       .filter((model) => Boolean(model && getModelCollection(model))) as any;
     const instances = observable.array(list, { deep: false });
 

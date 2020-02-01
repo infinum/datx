@@ -20,11 +20,18 @@ import { MetaClassField } from '../../enums/MetaClassField';
 import { IType } from '../../interfaces/IType';
 import { TChange } from '../../interfaces/TChange';
 import { error } from '../format';
+import { IModelRef } from '../../interfaces/IModelRef';
 
 export function getRef(model: PureModel, key: string): PureModel | Array<PureModel> | null {
   const value: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
 
   return value ? value.value : null;
+}
+
+export function getRefId(model: PureModel, key: string): IModelRef | Array<IModelRef> | null {
+  const value: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
+
+  return value ? value.refValue : null;
 }
 
 export function updateRef(

@@ -3,7 +3,7 @@ import { configure } from 'mobx';
 import './general';
 // import './views';
 
-// import './network/basics';
+import './network/basics';
 // import './network/caching';
 // import './network/error-handling';
 // import './network/headers';

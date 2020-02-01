@@ -65,7 +65,7 @@ export function initModelRef<T extends PureModel>(
       });
     }
 
-    const bucket = new Bucket(value, collection, false, model, key);
+    const bucket = new Bucket(value, collection, false, model, key, true);
 
     updateSingleAction(model, key, bucket.value);
     setMeta(model, `ref_${key}`, bucket);

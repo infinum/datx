@@ -2,6 +2,7 @@ import {
   getModelCollection,
   getModelId,
   getModelType,
+  getRefId,
   IFieldDefinition,
   IModelRef,
   IReferenceOptions,
@@ -208,7 +209,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
 
   Object.keys(refs).forEach((key) => {
     data.relationships = data.relationships || {};
-    const refsList: IModelRef | Array<IModelRef> | null = model[key];
+    const refsList: IModelRef | Array<IModelRef> | null = getRefId(model, key);
 
     data.relationships[key] = {
       data: mapItems(refsList, (refItem: IModelRef) => ({

@@ -1,22 +1,15 @@
 import * as fs from 'fs';
+import { isFunction } from 'lodash';
 import * as path from 'path';
 import * as nodeUrl from 'url';
-
-import { isFunction } from 'lodash';
-import * as nock from 'nock';
+import { v1 } from 'uuid';
 
 import { config } from '../../src/NetworkUtils';
 
-/**
- * Create a stream from a mock file
- *
- * @param {String} name - Mock name
- * @return {Stream} Mock stream
- */
-function getMockStream(name: string): fs.ReadStream {
+function getMockStream(name: string): string {
   const testPath = path.join(__dirname, `../mock/${name}.json`);
 
-  return fs.createReadStream(testPath);
+  return fs.readFileSync(testPath, 'utf-8');
 }
 
 export interface IMockArgs {
@@ -26,10 +19,64 @@ export interface IMockArgs {
   url?: string;
   data?: any;
   query?: boolean | (() => boolean) | object;
-  headers?: nock.HttpHeaders;
+  headers?: Record<string, any>;
   reqheaders?: Record<string, any>;
   status?: number;
   responseFn?(...args: Array<any>): void;
+}
+
+const expectedRequests: Array<{
+  id: string;
+  name?: string;
+  url: string;
+  method: string;
+  data?: any;
+  headers?: Record<string, any>;
+  reqheaders?: Record<string, any>;
+  status: number;
+  responseFn?(...args: Array<any>): void;
+}> = [];
+
+const executedRequests: Array<{
+  url: RequestInfo;
+  options: RequestInit | undefined;
+  id: string;
+}> = [];
+
+function fetchInterceptor(url: RequestInfo, options?: RequestInit | undefined): Promise<Response> {
+  const request = expectedRequests.find(
+    (req) => req.url === url && req.method === (options?.method || 'GET'),
+  );
+
+  if (!request) {
+    throw new Error(`Unexpected request: ${options?.method || 'GET'} ${url}`);
+  }
+
+  executedRequests.push({ url, options, id: request.id });
+  return (Promise.resolve({
+    status: request.status,
+    headers: request.reqheaders,
+    json() {
+      return new Promise((resolve) => {
+        if (request.responseFn) {
+          request.responseFn(url, options?.body);
+        }
+        const data = getMockStream(request.name || request.url);
+
+        resolve(JSON.parse(data));
+      });
+    },
+  }) as unknown) as Promise<Response>;
+}
+
+export function setupNetwork() {
+  expectedRequests.length = 0;
+  executedRequests.length = 0;
+  config.fetchReference = fetchInterceptor;
+}
+
+export function confirmNetwork() {
+  expect(expectedRequests).toHaveLength(executedRequests.length);
 }
 
 /**
@@ -50,7 +97,7 @@ export interface IMockArgs {
  * @param {Number} status - HTTP status code that should be returned
  * @return {undefined}
  */
-export default function mockApi({
+export function setRequest({
   name,
   method = 'GET',
   url = '/',
@@ -60,30 +107,46 @@ export default function mockApi({
   headers = { 'content-type': 'application/vnd.api+json' },
   reqheaders = { 'content-type': 'application/vnd.api+json' },
   status = 200,
-}: IMockArgs): nock.Scope {
+}: IMockArgs): { isDone(): boolean; assert(): void } {
   const apiUrl = nodeUrl.parse(config.baseUrl);
   const hostname = `${apiUrl.protocol}//${apiUrl.hostname}`;
-  const nockScope = nock(hostname, { reqheaders }).replyContentLength();
   const pathname = apiUrl.pathname || '';
 
-  let mock = nockScope.intercept(pathname + url, method, data);
+  let queryString = '';
 
-  if (query) {
-    mock = mock.query(query);
+  if (typeof query === 'object' && !isFunction(query)) {
+    queryString = `?${Object.keys(query).map((key) => `${key}=${query[key]}`)}`;
   }
 
-  return mock.reply(
-    status,
-    (...args: Array<any>) => {
-      if (responseFn && isFunction(responseFn)) {
-        if (responseFn(...args) !== undefined) {
-          return;
-        }
-      }
+  const id = v1();
+  const targetUrl = `${hostname}${pathname}${url}${queryString}`;
 
-      // eslint-disable-next-line consistent-return
-      return [status, getMockStream(name || url)];
-    },
+  expectedRequests.push({
+    id,
+    name,
+    method,
+    url: targetUrl,
+    data,
     headers,
-  );
+    reqheaders,
+    status,
+    responseFn,
+  });
+
+  return {
+    assert() {
+      const request = executedRequests.find((req) => req.id === id);
+      const expectedRequest = expectedRequests.find((req) => req.id === id);
+
+      expect(request).toBeTruthy();
+
+      if (expectedRequest?.headers) {
+        expect(request?.options?.headers).toEqual(expectedRequest.headers);
+      }
+    },
+
+    isDone() {
+      return Boolean(executedRequests.find((req) => req.id === id));
+    },
+  };
 }

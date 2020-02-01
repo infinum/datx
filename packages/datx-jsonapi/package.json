@@ -27,18 +27,19 @@
     "@types/lodash": "^4.14.149",
     "@types/nock": "^11.1.0",
     "@types/node": "^13.1.6",
+    "@types/uuid": "^3.4.7",
     "isomorphic-fetch": "^2.2.1",
     "jest": "^24.9.0",
     "lodash": "^4.17.15",
     "mobx": "^5.15.1",
-    "nock": "^11.7.2",
     "rollup": "^1.29.0",
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.5",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.2.0",
     "rollup-plugin-typescript2": "^0.25.3",
     "ts-jest": "^24.3.0",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.4",
+    "uuid": "^3.4.0"
   },
   "peerDependencies": {
     "mobx": "^4.2.0 || ^5.5.0"

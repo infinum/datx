@@ -2,7 +2,7 @@
 
 import { autorun, configure } from 'mobx';
 
-import { Collection, PureModel, Attribute } from '../src';
+import { Collection, PureModel, Attribute, updateModelId } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId } from '../src/helpers/model/utils';
 
@@ -198,6 +198,40 @@ describe('Collection', () => {
     });
 
     it('should upsert existing models', () => {
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        @Attribute() public foo!: number;
+
+        @Attribute() public bar!: number;
+
+        @Attribute() public baz!: number;
+      }
+
+      class Store extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new Store();
+      const foo = store.add({ foo: 1 }, Foo);
+
+      expect(store.length).toBe(1);
+      expect(store.findAll(Foo)).toHaveLength(1);
+
+      store.add(foo);
+
+      expect(store.length).toBe(1);
+      expect(store.findAll(Foo)).toHaveLength(1);
+
+      updateModelId(foo, '123');
+
+      store.add(foo);
+
+      expect(store.length).toBe(1);
+      expect(store.findAll(Foo)).toHaveLength(1);
+    });
+
+    it('should make model snapshots immutable', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 

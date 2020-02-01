@@ -9,7 +9,7 @@ import {
   View,
 } from 'datx';
 import { assignComputed } from 'datx-utils';
-import { action, computed } from 'mobx';
+import { action } from 'mobx';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -80,7 +80,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public first?: Promise<Response<T>>; // Handled by the __fetchLink
+  public first?: () => Promise<Response<T>>; // Handled by the __fetchLink
 
   /**
    * Previous data page
@@ -88,7 +88,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public prev?: Promise<Response<T>>; // Handled by the __fetchLink
+  public prev?: () => Promise<Response<T>>; // Handled by the __fetchLink
 
   /**
    * Next data page
@@ -96,7 +96,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public next?: Promise<Response<T>>; // Handled by the __fetchLink
+  public next?: () => Promise<Response<T>>; // Handled by the __fetchLink
 
   /**
    * Last data page
@@ -104,7 +104,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public last?: Promise<Response<T>>; // Handled by the __fetchLink
+  public last?: () => Promise<Response<T>>; // Handled by the __fetchLink
 
   /**
    * Received HTTP status
@@ -150,7 +150,7 @@ export class Response<T extends IJsonapiModel> {
    * @type {Record<string, Promise<Response>>}
    * @memberOf Response
    */
-  private readonly __cache: Record<string, Promise<Response<T>>> = {};
+  private readonly __cache: Record<string, () => Promise<Response<T>>> = {};
 
   constructor(
     response: IRawResponse,
@@ -168,11 +168,9 @@ export class Response<T extends IJsonapiModel> {
     }
 
     if (collection) {
-      const data = overrideData
-        ? collection.add<T>(overrideData as T)
-        : collection.sync<T>(response.data);
+      const data = overrideData || collection.sync<T>(response.data);
 
-      this.__data = new Bucket.ToOneOrMany(data, collection as any, true);
+      this.__data = new Bucket.ToOneOrMany<T>(data, collection as any, true);
     } else if (response.data) {
       // The case when a record is not in a store and save/remove are used
       const resp = response.data;
@@ -182,15 +180,15 @@ export class Response<T extends IJsonapiModel> {
           throw new Error('A save/remove operation should not return an array of results');
         }
 
-        const data = overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T);
-
-        this.__data = new Bucket.ToOneOrMany(data, collection, true);
+        this.__data = {
+          value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T);
+        };
       }
     }
 
     this.views.forEach((view) => {
-      if (this.data) {
-        view.add(this.data);
+      if (this.__data.value) {
+        view.add(this.__data.value);
       }
     });
 
@@ -215,7 +213,11 @@ export class Response<T extends IJsonapiModel> {
     }
   }
 
-  @computed public data(): T | Array<T> {
+  public get isSuccess(): boolean {
+    return Boolean(!this.error && this.__data.value);
+  }
+
+  public get data(): T | Array<T> | null {
     return this.__data.value;
   }
 
@@ -275,7 +277,7 @@ export class Response<T extends IJsonapiModel> {
 
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
-        this.__cache[name] = fetchLink<T>(link, this.__collection, options, this.views);
+        this.__cache[name] = () => fetchLink<T>(link, this.__collection, options, this.views);
       }
     }
 

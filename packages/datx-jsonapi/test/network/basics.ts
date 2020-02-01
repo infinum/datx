@@ -15,7 +15,7 @@ import {
 } from '../../src';
 
 import { clearAllCache } from '../../src/cache';
-import mockApi from '../utils/api';
+import { setRequest, setupNetwork, confirmNetwork } from '../utils/api';
 import { Event, Image, TestStore } from '../utils/setup';
 
 const baseTransformRequest = config.transformRequest;
@@ -28,10 +28,13 @@ describe('Network basics', () => {
     config.transformRequest = baseTransformRequest;
     config.transformResponse = baseTransformResponse;
     clearAllCache();
+    setupNetwork();
   });
 
+  afterEach(confirmNetwork);
+
   it('should fetch the basic data', async () => {
-    mockApi({
+    setRequest({
       name: 'events-1',
       url: 'event',
     });
@@ -70,7 +73,7 @@ describe('Network basics', () => {
     const image1 = store.add({}, Image);
     const image2 = new Image({});
 
-    mockApi({
+    setRequest({
       method: 'POST',
       name: 'image-1',
       url: 'image',
@@ -89,7 +92,7 @@ describe('Network basics', () => {
 
     expect(images).toHaveLength(1);
 
-    mockApi({
+    setRequest({
       method: 'POST',
       name: 'image-1',
       url: 'image',
@@ -101,7 +104,7 @@ describe('Network basics', () => {
   });
 
   it('should serialize existing relationships', async () => {
-    mockApi({
+    setRequest({
       name: 'events-1',
       url: 'event',
     });
@@ -124,7 +127,7 @@ describe('Network basics', () => {
   });
 
   it('should support transformRequest hook', async () => {
-    mockApi({
+    setRequest({
       name: 'events-1',
       url: 'event/all',
     });
@@ -145,7 +148,7 @@ describe('Network basics', () => {
   });
 
   it('should support transformResponse hook', async () => {
-    mockApi({
+    setRequest({
       name: 'events-1',
       url: 'event',
     });
@@ -168,7 +171,7 @@ describe('Network basics', () => {
   });
 
   it('should save the jsonapi data', async () => {
-    mockApi({
+    setRequest({
       name: 'jsonapi-object',
       url: 'event',
     });
@@ -186,7 +189,7 @@ describe('Network basics', () => {
   });
 
   it('should fetch one item', async () => {
-    mockApi({
+    setRequest({
       name: 'event-1b',
       url: 'event/1',
     });
@@ -205,7 +208,7 @@ describe('Network basics', () => {
   });
 
   it('should support pagination', async () => {
-    mockApi({
+    setRequest({
       name: 'events-1',
       url: 'event',
     });
@@ -224,7 +227,7 @@ describe('Network basics', () => {
       }
     }
 
-    mockApi({
+    setRequest({
       name: 'events-2',
       query: {
         page: 2,
@@ -232,7 +235,7 @@ describe('Network basics', () => {
       url: 'event',
     });
 
-    const events2 = await events.next;
+    const events2 = await events.next?.();
 
     expect(events2).toBeInstanceOf(Object);
     if (events2) {
@@ -240,7 +243,7 @@ describe('Network basics', () => {
       expect(events2.data).toHaveLength(2);
       expect(events2.data instanceof Array && events2.data[0]['title']).toBe('Test 5');
 
-      const events1 = await events2.prev;
+      const events1 = await events2.prev?.();
 
       expect(events1).toBeInstanceOf(Object);
       if (events1) {
@@ -248,7 +251,7 @@ describe('Network basics', () => {
         expect(events1.data).toHaveLength(4);
         expect(events1.data instanceof Array && events1.data[0]['title']).toBe('Test 1');
 
-        const events1b = await events2.prev;
+        const events1b = await events2.prev?.();
 
         expect(events1).toEqual(events);
         expect(events1).toBe(events1b);
@@ -257,7 +260,7 @@ describe('Network basics', () => {
   });
 
   it('should support record links', async () => {
-    mockApi({
+    setRequest({
       name: 'event-1',
       url: 'event',
     });
@@ -266,7 +269,7 @@ describe('Network basics', () => {
     const events = await store.fetchAll('event');
     const event = events.data;
 
-    mockApi({
+    setRequest({
       name: 'image-1',
       url: 'images/1',
     });
@@ -283,7 +286,7 @@ describe('Network basics', () => {
   });
 
   it('should recover if no link defined', async () => {
-    mockApi({
+    setRequest({
       name: 'event-1',
       url: 'event',
     });
@@ -311,7 +314,7 @@ describe('Network basics', () => {
   });
 
   it('should support relationship link fetch', async () => {
-    mockApi({
+    setRequest({
       name: 'events-1',
       url: 'event',
     });
@@ -320,7 +323,7 @@ describe('Network basics', () => {
     const events = await store.fetchAll(Event);
     const event = events.data && events.data instanceof Array && events.data[0];
 
-    mockApi({
+    setRequest({
       name: 'image-1',
       url: 'event/1/images',
     });
@@ -349,7 +352,7 @@ describe('Network basics', () => {
 
     const store = new (jsonapi(TestCollection))();
 
-    mockApi({
+    setRequest({
       name: 'event-1',
       url: 'foo/event',
     });
@@ -359,7 +362,7 @@ describe('Network basics', () => {
 
     expect(event.meta.type).toBe('event');
 
-    const req = mockApi({
+    const req = setRequest({
       method: 'PATCH',
       name: 'event-1',
       url: 'foo/event/12345',
@@ -382,7 +385,7 @@ describe('Network basics', () => {
 
     const store = new (jsonapi(TestCollection))();
 
-    mockApi({
+    setRequest({
       name: 'event-1',
       url: 'foo/event',
     });
@@ -394,7 +397,7 @@ describe('Network basics', () => {
   });
 
   it('should prepend config.baseUrl to the request url', async () => {
-    mockApi({
+    setRequest({
       name: 'event-1b',
       url: 'event/1',
     });
@@ -408,7 +411,7 @@ describe('Network basics', () => {
   });
 
   it('should handle the request methods', async () => {
-    mockApi({
+    setRequest({
       method: 'PUT',
       name: 'event-1b',
       url: 'event/1',

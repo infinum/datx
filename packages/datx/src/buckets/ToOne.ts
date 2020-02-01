@@ -17,6 +17,7 @@ export class ToOne<T extends PureModel> {
     protected __readonly: boolean = false,
     protected __model?: PureModel,
     protected __key?: string,
+    protected __skipMissing = true,
   ) {
     if (data && !this.__collection) {
       throw error('The model needs to be in a collection to be referenceable');
@@ -77,6 +78,15 @@ export class ToOne<T extends PureModel> {
       throw error('The model needs to be in a collection to be referenceable');
     }
 
-    return this.__collection.findOne<T>(model.type, model.id);
+    const item = this.__collection.findOne<T>(model.type, model.id);
+
+    if (item) {
+      return item;
+    }
+
+    if (!this.__skipMissing) {
+      return model as any;
+    }
+    return null;
   }
 }
