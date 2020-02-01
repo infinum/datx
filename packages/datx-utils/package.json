@@ -21,19 +21,19 @@
     "mobx"
   ],
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^11.0.1",
-    "@types/jest": "^24.0.25",
-    "@types/node": "^13.1.6",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@types/jest": "^25.1.1",
+    "@types/node": "^13.7.0",
     "eslint": "^6.8.0",
-    "jest": "^24.9.0",
-    "mobx": "^5.15.1",
-    "rollup": "^1.29.0",
-    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.5",
+    "jest": "^25.1.0",
+    "mobx": "^5.15.4",
+    "rollup": "^1.31.0",
+    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.6",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.2.0",
     "rollup-plugin-typescript2": "^0.25.3",
-    "ts-jest": "^24.3.0",
-    "typescript": "^3.7.4"
+    "ts-jest": "^25.1.0",
+    "typescript": "^3.7.5"
   },
   "peerDependencies": {
     "mobx": "^4.2.0 || ^5.5.0"
