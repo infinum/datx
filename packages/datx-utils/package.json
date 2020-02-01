@@ -64,7 +64,5 @@
     "preset": "ts-jest",
     "testMatch": null
   },
-  "dependencies": {
-    "datx": "^2.0.0"
-  }
+  "dependencies": {}
 }
