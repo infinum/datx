@@ -9,23 +9,10 @@ import { config } from '../../src/NetworkUtils';
 function getMockStream(name: string): string {
   const testPath = path.join(__dirname, `../mock/${name}.json`);
 
-  return fs.readFileSync(testPath, 'utf-8');
+  return fs.existsSync(testPath) ? fs.readFileSync(testPath, 'utf-8') : 'null';
 }
 
-export interface IMockArgs {
-  name?: string;
-  method?: string;
-  hostname?: string;
-  url?: string;
-  data?: any;
-  query?: boolean | (() => boolean) | object;
-  headers?: Record<string, any>;
-  reqheaders?: Record<string, any>;
-  status?: number;
-  responseFn?(...args: Array<any>): void;
-}
-
-const expectedRequests: Array<{
+interface IRequestOptions {
   id: string;
   name?: string;
   url: string;
@@ -34,8 +21,15 @@ const expectedRequests: Array<{
   headers?: Record<string, any>;
   reqheaders?: Record<string, any>;
   status: number;
-  responseFn?(...args: Array<any>): void;
-}> = [];
+  responseFn?(url: RequestInfo, body?: string): void;
+}
+
+export interface IMockArgs extends Partial<IRequestOptions> {
+  hostname?: string;
+  query?: boolean | string | (() => boolean) | object;
+}
+
+const expectedRequests: Array<IRequestOptions & { done: boolean }> = [];
 
 const executedRequests: Array<{
   url: RequestInfo;
@@ -45,7 +39,7 @@ const executedRequests: Array<{
 
 function fetchInterceptor(url: RequestInfo, options?: RequestInit | undefined): Promise<Response> {
   const request = expectedRequests.find(
-    (req) => req.url === url && req.method === (options?.method || 'GET'),
+    (req) => req.url === url && req.method === (options?.method || 'GET') && !req.done,
   );
 
   if (!request) {
@@ -53,20 +47,50 @@ function fetchInterceptor(url: RequestInfo, options?: RequestInit | undefined): 
   }
 
   executedRequests.push({ url, options, id: request.id });
-  return (Promise.resolve({
-    status: request.status,
-    headers: request.reqheaders,
-    json() {
-      return new Promise((resolve) => {
-        if (request.responseFn) {
-          request.responseFn(url, options?.body);
-        }
-        const data = getMockStream(request.name || request.url);
+  request.done = true;
 
-        resolve(JSON.parse(data));
+  if (request.reqheaders) {
+    expect(options?.headers).toMatchObject(request.reqheaders);
+  }
+
+  if (request.data) {
+    const expected = typeof request.data === 'string' ? request.data : JSON.stringify(request.data);
+    const received =
+      options && options.body && typeof options.body === 'string'
+        ? options?.body
+        : JSON.stringify(options?.body);
+
+    expect(received).toBe(expected);
+  }
+
+  return new Promise((resolve, reject) => {
+    const data = getMockStream(request.name || request.url);
+
+    try {
+      const parsed = JSON.parse(data);
+
+      resolve({
+        ok: request.status >= 200 && request.status < 300,
+        status: request.status,
+        headers: new Headers(request.headers),
+        json() {
+          let response;
+
+          if (request.responseFn) {
+            response = request.responseFn(url, options?.body as string);
+          }
+          return Promise.resolve(response === undefined ? parsed : response);
+        },
+      } as any);
+    } catch (e) {
+      // eslint-disable-next-line prefer-promise-reject-errors
+      reject({
+        name: 'JSON.parse',
+        message: 'JSON parse failed',
+        type: 'error',
       });
-    },
-  }) as unknown) as Promise<Response>;
+    }
+  });
 }
 
 export function setupNetwork() {
@@ -107,7 +131,7 @@ export function setRequest({
   headers = { 'content-type': 'application/vnd.api+json' },
   reqheaders = { 'content-type': 'application/vnd.api+json' },
   status = 200,
-}: IMockArgs): { isDone(): boolean; assert(): void } {
+}: IMockArgs): { isDone(): boolean } {
   const apiUrl = nodeUrl.parse(config.baseUrl);
   const hostname = `${apiUrl.protocol}//${apiUrl.hostname}`;
   const pathname = apiUrl.pathname || '';
@@ -116,6 +140,8 @@ export function setRequest({
 
   if (typeof query === 'object' && !isFunction(query)) {
     queryString = `?${Object.keys(query).map((key) => `${key}=${query[key]}`)}`;
+  } else if (typeof query === 'string') {
+    queryString = `?${query}`;
   }
 
   const id = v1();
@@ -131,20 +157,10 @@ export function setRequest({
     reqheaders,
     status,
     responseFn,
+    done: false,
   });
 
   return {
-    assert() {
-      const request = executedRequests.find((req) => req.id === id);
-      const expectedRequest = expectedRequests.find((req) => req.id === id);
-
-      expect(request).toBeTruthy();
-
-      if (expectedRequest?.headers) {
-        expect(request?.options?.headers).toEqual(expectedRequest.headers);
-      }
-    },
-
     isDone() {
       return Boolean(executedRequests.find((req) => req.id === id));
     },

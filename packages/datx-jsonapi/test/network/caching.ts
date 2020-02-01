@@ -6,7 +6,7 @@ import * as fetch from 'isomorphic-fetch';
 import { config, jsonapi } from '../../src';
 
 import { clearAllCache } from '../../src/cache';
-import mockApi from '../utils/api';
+import { setupNetwork, setRequest } from '../utils/api';
 import { Event, TestStore } from '../utils/setup';
 
 describe('caching', () => {
@@ -14,13 +14,17 @@ describe('caching', () => {
     config.fetchReference = fetch;
     config.baseUrl = 'https://example.com/';
     clearAllCache();
+    setupNetwork();
   });
 
   describe('fetch caching', () => {
-    beforeEach(clearAllCache);
+    beforeEach(() => {
+      clearAllCache();
+      setupNetwork();
+    });
 
     it('should cache fetch requests', async () => {
-      mockApi({
+      setRequest({
         name: 'event-1',
         url: 'event/12345',
       });
@@ -38,7 +42,7 @@ describe('caching', () => {
     });
 
     it('should clear fetch cache on removeAll', async () => {
-      mockApi({
+      setRequest({
         name: 'event-1',
         url: 'event/12345',
       });
@@ -51,7 +55,7 @@ describe('caching', () => {
 
       store.removeAll(Event);
 
-      const req2 = mockApi({
+      const req2 = setRequest({
         name: 'event-1',
         url: 'event/12345',
       });
@@ -64,7 +68,7 @@ describe('caching', () => {
     });
 
     it('should ignore fetch cache if skipCache is true', async () => {
-      mockApi({
+      setRequest({
         name: 'event-1',
         url: 'event/12345',
       });
@@ -76,7 +80,7 @@ describe('caching', () => {
       expect(event).toBeInstanceOf(Object);
       expect(event.meta.id).toBe('12345');
 
-      const req = mockApi({
+      const req = setRequest({
         name: 'event-1',
         url: 'event/12345',
       });
@@ -91,7 +95,7 @@ describe('caching', () => {
     });
 
     it('should ignore fetch cache if static cache is false', async () => {
-      mockApi({
+      setRequest({
         name: 'event-1',
         url: 'event/12345',
       });
@@ -110,7 +114,7 @@ describe('caching', () => {
       expect(event).toBeInstanceOf(Object);
       expect(event.meta.id).toBe('12345');
 
-      const req = mockApi({
+      const req = setRequest({
         name: 'event-1',
         url: 'event/12345',
       });
@@ -125,7 +129,7 @@ describe('caching', () => {
     });
 
     it('should not cache fetch if the response was an jsonapi error', async () => {
-      mockApi({
+      setRequest({
         name: 'error',
         url: 'event/12345',
       });
@@ -141,7 +145,7 @@ describe('caching', () => {
       }
       expect(hasFailed).toBe(true);
 
-      mockApi({
+      setRequest({
         name: 'event-1',
         url: 'event/12345',
       });
@@ -154,7 +158,7 @@ describe('caching', () => {
     });
 
     it('should not cache fetch if the response was an http error', async () => {
-      mockApi({
+      setRequest({
         name: 'event-1',
         status: 500,
         url: 'event/12345',
@@ -171,7 +175,7 @@ describe('caching', () => {
       }
       expect(hasFailed).toBe(true);
 
-      mockApi({
+      setRequest({
         name: 'event-1',
         url: 'event/12345',
       });
@@ -185,8 +189,13 @@ describe('caching', () => {
   });
 
   describe('fetchAll caching', () => {
+    beforeEach(() => {
+      clearAllCache();
+      setupNetwork();
+    });
+
     it('should cache fetchAll requests', async () => {
-      mockApi({
+      setRequest({
         name: 'events-1',
         url: 'event',
       });
@@ -204,7 +213,7 @@ describe('caching', () => {
     });
 
     it('should clear fetchAll cache on removeAll', async () => {
-      mockApi({
+      setRequest({
         name: 'events-1',
         url: 'event',
       });
@@ -218,7 +227,7 @@ describe('caching', () => {
 
       store.removeAll(Event);
 
-      const req2 = mockApi({
+      const req2 = setRequest({
         name: 'events-1',
         url: 'event',
       });
@@ -230,7 +239,7 @@ describe('caching', () => {
     });
 
     it('should ignore fetchAll cache if force is true', async () => {
-      mockApi({
+      setRequest({
         name: 'events-1',
         url: 'event',
       });
@@ -241,7 +250,7 @@ describe('caching', () => {
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
 
-      mockApi({
+      setRequest({
         name: 'events-1',
         url: 'event',
       });
@@ -254,7 +263,7 @@ describe('caching', () => {
     });
 
     it('should ignore fetchAll cache if static cache is false', async () => {
-      mockApi({
+      setRequest({
         name: 'events-1',
         url: 'event',
       });
@@ -269,7 +278,7 @@ describe('caching', () => {
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
 
-      const req = mockApi({
+      const req = setRequest({
         name: 'events-1',
         url: 'event',
       });
@@ -283,7 +292,7 @@ describe('caching', () => {
     });
 
     it('should not cache fetchAll if the response was an jsonapi error', async () => {
-      mockApi({
+      setRequest({
         name: 'error',
         url: 'event',
       });
@@ -299,7 +308,7 @@ describe('caching', () => {
       }
       expect(hasFailed).toBe(true);
 
-      mockApi({
+      setRequest({
         name: 'events-1',
         url: 'event',
       });
@@ -311,7 +320,7 @@ describe('caching', () => {
     });
 
     it('should not cache fetchAll if the response was an http error', async () => {
-      mockApi({
+      setRequest({
         name: 'events-1',
         status: 500,
         url: 'event',
@@ -328,7 +337,7 @@ describe('caching', () => {
       }
       expect(hasFailed).toBe(true);
 
-      mockApi({
+      setRequest({
         name: 'events-1',
         url: 'event',
       });
@@ -342,12 +351,12 @@ describe('caching', () => {
     it('should reset cache when resetting the store', async () => {
       const store = new TestStore();
 
-      mockApi({ name: 'event-1', url: 'event' });
+      setRequest({ name: 'event-1', url: 'event' });
       await store.fetchAll('event');
 
       store.reset();
 
-      const mockedApi = mockApi({ name: 'event-1', url: 'event' });
+      const mockedApi = setRequest({ name: 'event-1', url: 'event' });
 
       await store.fetchAll('event');
 

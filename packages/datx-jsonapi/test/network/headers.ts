@@ -3,7 +3,7 @@ import * as fetch from 'isomorphic-fetch';
 import { config } from '../../src';
 
 import { clearAllCache } from '../../src/cache';
-import mockApi from '../utils/api';
+import { setupNetwork, setRequest, confirmNetwork } from '../utils/api';
 import { TestStore } from '../utils/setup';
 
 describe('headers', () => {
@@ -17,10 +17,13 @@ describe('headers', () => {
       },
     };
     clearAllCache();
+    setupNetwork();
   });
 
+  afterEach(confirmNetwork);
+
   it('should send the default headers', async () => {
-    mockApi({
+    setRequest({
       name: 'events-1',
       reqheaders: {
         'X-Auth': '12345',
@@ -35,7 +38,7 @@ describe('headers', () => {
   });
 
   it('should send custom headers', async () => {
-    mockApi({
+    setRequest({
       name: 'events-1',
       reqheaders: {
         'X-Auth': '54321',
@@ -56,7 +59,7 @@ describe('headers', () => {
   });
 
   it('should receive headers', async () => {
-    mockApi({
+    setRequest({
       headers: {
         'X-Auth': '98765',
       },

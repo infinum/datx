@@ -31,6 +31,7 @@ import { create, fetchLink, handleResponse, remove, update } from '../NetworkUti
 import { Response } from '../Response';
 import { prepareQuery } from './url';
 import { error, getModelClassRefs } from './utils';
+import { GenericModel } from '../GenericModel';
 
 export function flattenModel(classRefs): null;
 export function flattenModel(classRefs, data?: IRecord): IRawModel;
@@ -66,13 +67,15 @@ export function flattenModel(
     Object.keys(data.relationships).forEach((key) => {
       const ref = (data.relationships as Record<string, IRelationship>)[key];
 
-      if (ref && 'data' in ref && ref.data) {
+      if (ref && 'data' in ref && (ref.data || ref.data === null)) {
         if (!(ref.data instanceof Array) || ref.data.length > 0) {
           rawData[key] = ref.data;
           if (!classRefs || !(key in classRefs)) {
             refs[key] = {
               referenceDef: {
-                model: ref.data instanceof Array ? ref.data[0].type : ref.data.type,
+                model:
+                  (ref.data instanceof Array ? ref.data[0].type : ref.data?.type) ||
+                  GenericModel.type,
                 type: ref.data instanceof Array ? ReferenceType.TO_MANY : ReferenceType.TO_ONE,
               },
             };
@@ -307,11 +310,12 @@ export function saveRelationship<T extends IJsonapiModel>(
   const link = getLink(model, ref, 'self');
   const href: string = typeof link === 'object' ? link.href : link;
 
-  const ids = model[ref];
-  const type = getModelType(getMeta(model, 'refs')[ref].model);
+  const modelRefs = getRefId(model, ref);
+  const fields: IFieldDefinition = getMeta<IFieldDefinition>(model, 'fields')?.[ref];
+  const type = fields?.referenceDef ? fields.referenceDef.model : null;
 
   type ID = IDefinition | Array<IDefinition>;
-  const data: ID = mapItems(ids, (refItem: IModelRef) => ({
+  const data: ID = mapItems(modelRefs, (refItem: IModelRef) => ({
     id: refItem.id,
     type: refItem.type || type,
   })) as ID;

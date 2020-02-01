@@ -3,7 +3,7 @@ import * as fetch from 'isomorphic-fetch';
 import { config } from '../../src';
 
 import { clearAllCache } from '../../src/cache';
-import mockApi from '../utils/api';
+import { setupNetwork, setRequest, confirmNetwork } from '../utils/api';
 import { Event, TestStore } from '../utils/setup';
 
 describe('error handling', () => {
@@ -11,12 +11,15 @@ describe('error handling', () => {
     config.fetchReference = fetch;
     config.baseUrl = 'https://example.com/';
     clearAllCache();
+    setupNetwork();
   });
+
+  afterEach(confirmNetwork);
 
   it('should handle network failure', async () => {
     const store = new TestStore();
 
-    mockApi({
+    setRequest({
       name: 'events-1',
       status: 404,
       url: 'event',
@@ -40,7 +43,7 @@ describe('error handling', () => {
   it('should handle invalid responses', async () => {
     const store = new TestStore();
 
-    mockApi({
+    setRequest({
       name: 'invalid',
       url: 'event',
     });
@@ -59,7 +62,7 @@ describe('error handling', () => {
   it('should handle api error', async () => {
     const store = new TestStore();
 
-    mockApi({
+    setRequest({
       name: 'error',
       url: 'event',
     });
@@ -84,7 +87,7 @@ describe('error handling', () => {
 
     store.add(record);
 
-    mockApi({
+    setRequest({
       method: 'POST',
       name: 'error',
       url: 'event',
@@ -104,14 +107,14 @@ describe('error handling', () => {
   it('should handle api error on remove', async () => {
     const store = new TestStore();
 
-    mockApi({
+    setRequest({
       name: 'events-1',
       url: 'event',
     });
 
     const response = await store.fetchAll('event');
 
-    mockApi({
+    setRequest({
       method: 'DELETE',
       name: 'error',
       url: 'event/1',

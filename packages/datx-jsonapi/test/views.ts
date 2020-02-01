@@ -1,9 +1,9 @@
-import { View } from 'datx';
+import { View, IViewConstructor, PureModel } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
 import { config, IJsonapiView, jsonapi } from '../src';
 import { clearAllCache } from '../src/cache';
-import mockApi from './utils/api';
+import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
 import { Event, TestStore } from './utils/setup';
 
 const baseTransformRequest = config.transformRequest;
@@ -12,7 +12,7 @@ const baseTransformResponse = config.transformResponse;
 describe('Views', () => {
   it('should sync an event', () => {
     const store = new TestStore();
-    const JsonapiView = jsonapi(View);
+    const JsonapiView = jsonapi(View as IViewConstructor<PureModel>);
     const view = new JsonapiView(Event, store);
 
     const event = view.sync({
@@ -36,16 +36,19 @@ describe('Views', () => {
       config.transformRequest = baseTransformRequest;
       config.transformResponse = baseTransformResponse;
       clearAllCache();
+      setupNetwork();
     });
 
+    afterEach(confirmNetwork);
+
     it('should fetch the basic data', async () => {
-      mockApi({
+      setRequest({
         name: 'events-1',
         url: 'event',
       });
 
       const store = new TestStore();
-      const JsonapiView = jsonapi(View);
+      const JsonapiView = jsonapi(View as IViewConstructor<PureModel>);
       const view = new JsonapiView(Event, store);
       const events = await view.fetchAll();
 
@@ -55,13 +58,13 @@ describe('Views', () => {
     });
 
     it('should support pagination', async () => {
-      mockApi({
+      setRequest({
         name: 'events-1',
         url: 'event',
       });
 
       const store = new TestStore();
-      const JsonapiView = jsonapi(View);
+      const JsonapiView = jsonapi(View as IViewConstructor<PureModel>);
       const view = new JsonapiView(Event, store);
       const events = await view.fetchAll();
 
@@ -69,7 +72,7 @@ describe('Views', () => {
       expect(events.data).toHaveLength(4);
       expect(view.length).toBe(4);
 
-      mockApi({
+      setRequest({
         name: 'events-2',
         query: {
           page: 2,
@@ -77,7 +80,7 @@ describe('Views', () => {
         url: 'event',
       });
 
-      const events2 = await events.next;
+      const events2 = await events.next?.();
 
       expect(events2).toBeInstanceOf(Object);
       if (events2) {
@@ -88,7 +91,7 @@ describe('Views', () => {
     });
 
     it('should support collection views with mixins', async () => {
-      mockApi({
+      setRequest({
         name: 'events-1',
         url: 'event',
       });
@@ -111,7 +114,7 @@ describe('Views', () => {
       expect(events.data).toHaveLength(4);
       expect(store.test.length).toBe(4);
 
-      mockApi({
+      setRequest({
         name: 'events-2',
         query: {
           page: 2,
@@ -119,7 +122,7 @@ describe('Views', () => {
         url: 'event',
       });
 
-      const events2 = await events.next;
+      const events2 = await events.next?.();
 
       expect(events2).toBeInstanceOf(Object);
       if (events2) {

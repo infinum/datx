@@ -6,7 +6,7 @@ import { computed } from 'mobx';
 import { config, getModelMeta, getModelRefMeta, jsonapi } from '../src';
 import { clearAllCache } from '../src/cache';
 
-import mockApi from './utils/api';
+import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
 import { Event, LineItem, TestStore } from './utils/setup';
 
 const baseTransformRequest = config.transformRequest;
@@ -19,7 +19,10 @@ describe('Issues', () => {
     config.transformRequest = baseTransformRequest;
     config.transformResponse = baseTransformResponse;
     clearAllCache();
+    setupNetwork();
   });
+
+  afterEach(confirmNetwork);
 
   it('should handle models without attributes (#78)', () => {
     const store = new TestStore();
@@ -61,7 +64,7 @@ describe('Issues', () => {
 
       const store = new ApiStore();
 
-      mockApi({
+      setRequest({
         name: 'issue-47a',
         url: 'event/1',
       });
@@ -71,21 +74,21 @@ describe('Issues', () => {
 
       expect(event.image).toBe(store.image[0]);
 
-      mockApi({
+      setRequest({
         name: 'issue-47b',
         url: 'event/1',
       });
       await store.fetch('event', '1', { cacheOptions: { skipCache: true } });
       expect(event.image).toBe(null);
 
-      mockApi({
+      setRequest({
         name: 'issue-47a',
         url: 'event/1',
       });
       await store.fetch('event', '1', { cacheOptions: { skipCache: true } });
       expect(event.image).toBe(store.image[0]);
 
-      mockApi({
+      setRequest({
         name: 'issue-47d',
         url: 'event/1',
       });
@@ -93,7 +96,7 @@ describe('Issues', () => {
       expect(event.image['length']).toBe(1);
       expect(event.image[0]).toBe(store.image[1]);
 
-      mockApi({
+      setRequest({
         name: 'issue-47e',
         url: 'event/1',
       });
@@ -127,7 +130,7 @@ describe('Issues', () => {
 
       const store = new ApiStore();
 
-      mockApi({
+      setRequest({
         name: 'issue-47a',
         url: 'event/1',
       });
@@ -136,14 +139,14 @@ describe('Issues', () => {
 
       expect(event.image).toBe(store.image[0]);
 
-      mockApi({
+      setRequest({
         name: 'issue-47c',
         url: 'event/1',
       });
       await store.fetch('event', '1', { cacheOptions: { skipCache: true } });
       expect(event.image).toBe(store.image[1]);
 
-      mockApi({
+      setRequest({
         name: 'issue-47a',
         url: 'event/1',
       });
@@ -155,7 +158,7 @@ describe('Issues', () => {
   it('should update the meta on model update', async () => {
     const store = new TestStore();
 
-    mockApi({
+    setRequest({
       name: 'event-1d',
       url: 'event/1',
     });
@@ -167,7 +170,7 @@ describe('Issues', () => {
     expect(meta1.name).toBe('event-1d');
     expect(refMeta1.images.foo).toBe('bar');
 
-    mockApi({
+    setRequest({
       name: 'event-1e',
       url: 'event/1',
     });
@@ -186,7 +189,7 @@ describe('Issues', () => {
   it('should remove a reference when the model is destroyed', async () => {
     const store = new TestStore();
 
-    mockApi({
+    setRequest({
       name: 'event-1f',
       url: 'event/1',
     });
@@ -198,7 +201,7 @@ describe('Issues', () => {
 
     const toRemove = event.images[0];
 
-    mockApi({
+    setRequest({
       method: 'DELETE',
       responseFn: () => null,
       status: 204,
@@ -212,7 +215,7 @@ describe('Issues', () => {
   it('should not exceed maximum call stack', async () => {
     const store = new TestStore();
 
-    mockApi({
+    setRequest({
       method: 'POST',
       name: 'issue-maximum-call-stack-exceeded-b',
       url: 'line_items',
@@ -222,7 +225,7 @@ describe('Issues', () => {
 
     await lineItem1.save();
 
-    mockApi({
+    setRequest({
       method: 'POST',
       name: 'issue-maximum-call-stack-exceeded-c',
       url: 'line_items',

@@ -7,6 +7,9 @@ import { Organizer } from './Organizer';
 export class Event extends jsonapi(Model) {
   public static type: IType = 'event';
 
+  @prop.identifier
+  public id!: string;
+
   @prop public name!: string;
 
   @prop.toMany(Organizer) public organizers!: Array<Organizer>;

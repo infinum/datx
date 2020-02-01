@@ -167,7 +167,7 @@ export class Response<T extends IJsonapiModel> {
       this.views = views;
     }
 
-    if (collection) {
+    if (collection && response.data) {
       const data = overrideData || collection.sync<T>(response.data);
 
       this.__data = new Bucket.ToOneOrMany<T>(data, collection as any, true);
@@ -181,7 +181,7 @@ export class Response<T extends IJsonapiModel> {
         }
 
         this.__data = {
-          value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T);
+          value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T),
         };
       }
     }
