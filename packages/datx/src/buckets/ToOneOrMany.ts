@@ -1,5 +1,4 @@
-import { isArray } from 'datx-utils';
-import { computed, observable } from 'mobx';
+import { computed, observable, isArrayLike } from 'mobx';
 
 import { IModelRef } from '../interfaces/IModelRef';
 import { PureCollection } from '../PureCollection';
@@ -21,7 +20,7 @@ export class ToOneOrMany<T extends PureModel> {
     protected __model?: PureModel,
     protected __key?: string,
   ) {
-    this.__isList = isArray(data);
+    this.__isList = isArrayLike(data);
     if (this.__isList) {
       this.__toManyBucket = new ToMany(
         data as Array<T | IModelRef>,
@@ -51,7 +50,7 @@ export class ToOneOrMany<T extends PureModel> {
   }
 
   public set value(data: T | Array<T> | null) {
-    this.__isList = isArray(data);
+    this.__isList = isArrayLike(data);
     if (this.__isList) {
       if (this.__toManyBucket) {
         this.__toManyBucket.value = data as Array<T>;

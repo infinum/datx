@@ -559,6 +559,7 @@ describe('General', () => {
   it('should support default properties', () => {
     const store = new TestStore();
 
+    console.log('start test');
     store.sync({
       data: [
         {
@@ -594,6 +595,7 @@ describe('General', () => {
         },
       ],
     });
+    console.log('end test');
 
     const user = store.findOne(User, '1');
     expect(user).not.toBeNull();

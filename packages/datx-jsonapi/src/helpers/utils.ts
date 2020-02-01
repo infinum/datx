@@ -28,8 +28,8 @@ export function error(message: string): Error {
   return new Error(`[datx exception] ${message}`);
 }
 
-export function getModelClassRefs(type: typeof PureModel) {
-  const fields: Record<string, IFieldDefinition> = getMeta(type, 'fields', {});
+export function getModelClassRefs(type: typeof PureModel | PureModel) {
+  const fields: Record<string, IFieldDefinition> = getMeta(type, 'fields', {}, true, true);
   const refs: Record<string, IReferenceDefinition> = {};
 
   Object.keys(fields).forEach((key) => {

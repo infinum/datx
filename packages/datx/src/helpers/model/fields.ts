@@ -65,7 +65,7 @@ function getModelRefsByType(model: PureModel, type: IType) {
   return Object.keys(fields)
     .filter((key) => fields[key].referenceDef)
     .filter((key) => !(fields[key].referenceDef as IReferenceDefinition).property)
-    .filter((key) => (fields[key].referenceDef as IReferenceDefinition).models.includes(type));
+    .filter((key) => (fields[key].referenceDef as IReferenceDefinition).model === type);
 }
 
 function updateModelReferences(

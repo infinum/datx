@@ -1,20 +1,6 @@
-import {
-  autorun,
-  configure,
-  runInAction,
-  isComputedProp,
-  observable as mobxObservable,
-} from 'mobx';
+import { autorun, configure, runInAction, isComputedProp, observable } from 'mobx';
 
-import {
-  assignComputed,
-  flatten,
-  isFalsyArray,
-  mapItems,
-  observable,
-  setMeta,
-  getMeta,
-} from '../src';
+import { assignComputed, flatten, isFalsyArray, mapItems, setMeta, getMeta } from '../src';
 
 configure({ enforceActions: 'observed' });
 
@@ -62,7 +48,7 @@ describe('datx-utils', () => {
       const obj1 = {};
       const obj2 = {};
 
-      const data = mobxObservable({
+      const data = observable({
         data: 1,
       });
 

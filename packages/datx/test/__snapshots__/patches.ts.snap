@@ -265,9 +265,7 @@ Array [
           "bar": Object {
             "defaultValue": undefined,
             "referenceDef": Object {
-              "models": Array [
-                "bar ",
-              ],
+              "model": "bar ",
               "type": 0,
             },
           },

@@ -1,12 +1,5 @@
-import {
-  assignComputed,
-  IRawModel,
-  getMeta,
-  mapItems,
-  setMeta,
-  META_FIELD,
-  isArray,
-} from 'datx-utils';
+import { assignComputed, IRawModel, getMeta, mapItems, setMeta, META_FIELD } from 'datx-utils';
+import { observable, isArrayLike } from 'mobx';
 
 import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';
@@ -15,14 +8,12 @@ import { MetaModelField } from '../../enums/MetaModelField';
 import { IFieldDefinition, IReferenceDefinition } from '../../Attribute';
 import { ReferenceType } from '../../enums/ReferenceType';
 import { getModelType, getModelCollection, getModelId, isModelReference } from './utils';
-import { IType } from '../../interfaces/IType';
 import { getBucketConstructor } from '../../buckets';
 import { getRef, updateRef, getBackRef, updateBackRef } from './fields';
 import { TRefValue } from '../../interfaces/TRefValue';
 import { error } from '../format';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 import { updateSingleAction } from '../patch';
-import { observable } from 'mobx';
 import { IModelRef } from '../../interfaces/IModelRef';
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
@@ -62,10 +53,10 @@ export function initModelRef<T extends PureModel>(
     if (initialVal) {
       value = mapItems(initialVal, (item) =>
         typeof item === 'object' && !isModelReference(item)
-          ? collection?.add(item, fieldDef.referenceDef.models[0])
+          ? collection?.add(item, fieldDef.referenceDef.model)
           : typeof item === 'object'
           ? collection?.findOne(item as IModelRef)
-          : collection?.findOne(fieldDef.referenceDef.models[0], item),
+          : collection?.findOne(fieldDef.referenceDef.model, item),
       );
     }
 
@@ -174,12 +165,13 @@ export function initModel(instance: PureModel, rawData: IRawModel, collection?: 
     .filter((field) => !(field in fields)) // Only new fields
     .forEach((field) => {
       const value = rawData[field];
-      const isRef = value instanceof PureModel || (isArray(value) && value[0] instanceof PureModel);
+      const isRef =
+        value instanceof PureModel || (isArrayLike(value) && value[0] instanceof PureModel);
       fields[field] = {
         referenceDef: isRef
           ? {
               type: ReferenceType.TO_ONE_OR_MANY,
-              models: ([] as Array<IType>).concat(mapItems<PureModel, IType>(value, getModelType)),
+              model: getModelType(value),
             }
           : false,
       };

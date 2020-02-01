@@ -29,7 +29,7 @@ import { IDefinition, ILink, IRecord, IRelationship } from '../interfaces/JsonAp
 import { create, fetchLink, handleResponse, remove, update } from '../NetworkUtils';
 import { Response } from '../Response';
 import { prepareQuery } from './url';
-import { error } from './utils';
+import { error, getModelClassRefs } from './utils';
 
 export function flattenModel(classRefs): null;
 export function flattenModel(classRefs, data?: IRecord): IRawModel;
@@ -196,7 +196,7 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
     type: getModelType(model) as string,
   };
 
-  const refs = getModelRefMeta(model);
+  const refs = getModelClassRefs(model);
 
   Object.keys(refs).forEach((key) => {
     data.relationships = data.relationships || {};

@@ -7,7 +7,6 @@ export {
   mapItems,
   flatten,
   isFalsyArray,
-  isArray,
   error,
   warn,
   deprecated,
@@ -17,5 +16,4 @@ export {
   mergeMeta,
   reducePrototypeChain,
   getMetaObj,
-  observable,
 } from './helpers';

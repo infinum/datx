@@ -1,5 +1,4 @@
-import { isArray } from 'datx-utils';
-import { computed, observable } from 'mobx';
+import { computed, observable, isArrayLike } from 'mobx';
 
 import { error } from '../helpers/format';
 import { getModelRef } from '../helpers/model/utils';
@@ -21,7 +20,7 @@ export class ToOne<T extends PureModel> {
   ) {
     if (data && !this.__collection) {
       throw error('The model needs to be in a collection to be referenceable');
-    } else if (isArray(data)) {
+    } else if (isArrayLike(data)) {
       throw error("The reference can't be an array of values.");
     }
 
@@ -42,7 +41,7 @@ export class ToOne<T extends PureModel> {
       throw error('The model needs to be in a collection to be referenceable');
     } else if (this.__readonly) {
       throw error('This is a read-only bucket');
-    } else if (isArray(data)) {
+    } else if (isArrayLike(data)) {
       throw error("The reference can't be an array of values.");
     }
     this.__rawValue = data;

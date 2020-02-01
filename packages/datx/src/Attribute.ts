@@ -1,4 +1,4 @@
-import { getMeta, setMeta, isArray, deprecated } from 'datx-utils';
+import { getMeta, setMeta, deprecated } from 'datx-utils';
 
 import { PureModel } from './PureModel';
 import { IType } from './interfaces/IType';
@@ -27,7 +27,7 @@ function prepareDecorator<T extends PureModel>(_obj: T, _key: string, opts?: obj
   }
 }
 
-type RefModel = PureModel | IType | Array<PureModel | IType>;
+type RefModel = PureModel | IType;
 
 interface IAttributeFieldOptions {
   defaultValue?: any;
@@ -68,19 +68,13 @@ type IAttributeOptions = IAttributeFieldOptions &
 
 export interface IReferenceDefinition {
   type: ReferenceType;
-  models: Array<IType>;
+  model: IType;
   property?: string;
 }
 
 export interface IFieldDefinition {
   referenceDef: IReferenceDefinition | false;
   defaultValue?: any;
-}
-
-function getReferenceList(models: RefModel): Array<IType> {
-  const list: Array<PureModel | IType> = isArray(models) ? (models as Array<IType>) : [models];
-
-  return list.map(getModelType);
 }
 
 function getReferenceDef(
@@ -92,17 +86,17 @@ function getReferenceDef(
   if (toOne) {
     return {
       type: ReferenceType.TO_ONE,
-      models: getReferenceList(toOne),
+      model: getModelType(toOne),
     };
   } else if (toOneOrMany) {
     return {
       type: ReferenceType.TO_ONE_OR_MANY,
-      models: getReferenceList(toOneOrMany),
+      model: getModelType(toOneOrMany),
     };
   } else if (toMany) {
     return {
       type: ReferenceType.TO_MANY,
-      models: getReferenceList(toMany),
+      model: getModelType(toMany),
       property: referenceProperty,
     };
   }

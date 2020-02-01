@@ -6,9 +6,9 @@ import {
   setMeta,
   mergeMeta,
   getMetaObj,
-  isArray,
   mapItems,
 } from 'datx-utils';
+import { toJS, extendObservable, runInAction, isArrayLike } from 'mobx';
 
 import { IModelRef } from '../../interfaces/IModelRef';
 import { IType } from '../../interfaces/IType';
@@ -24,12 +24,11 @@ import { IBucket } from '../../interfaces/IBucket';
 import { error } from '../format';
 import { ReferenceType } from '../../enums/ReferenceType';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
-import { toJS, extendObservable, runInAction } from 'mobx';
 
 export function isModelReference(value: IModelRef | Array<IModelRef>): true;
 export function isModelReference(value: unknown): false;
 export function isModelReference(value: unknown): boolean {
-  if (isArray(value)) {
+  if (isArrayLike(value)) {
     return (value as Array<IModelRef>).every(isModelReference);
   }
 
@@ -223,7 +222,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
     }
     const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
     const shouldBeReference =
-      (isArray(value) && value[0] instanceof PureModel) || value instanceof PureModel;
+      (isArrayLike(value) && value[0] instanceof PureModel) || value instanceof PureModel;
 
     if (key in fields) {
       if (shouldBeReference && !fields[key].referenceDef) {

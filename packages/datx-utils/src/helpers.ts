@@ -1,11 +1,4 @@
-import {
-  extendObservable,
-  isObservableArray,
-  IObservableArray,
-  observable as mobxObservable,
-  set,
-  isObservable,
-} from 'mobx';
+import { extendObservable, isArrayLike, observable, set } from 'mobx';
 
 import { DATX_META } from './consts';
 
@@ -22,7 +15,7 @@ import { DATX_META } from './consts';
 export function mapItems<T, U>(data: Array<T>, fn: (item: T) => U): Array<U>;
 export function mapItems<T, U>(data: T, fn: (item: T) => U): U | null;
 export function mapItems<T, U>(data: T | Array<T>, fn: (item: T) => U): U | Array<U> | null {
-  if (isArray(data)) {
+  if (isArrayLike(data)) {
     // tslint:disable-next-line:no-unnecessary-callback-wrapper
     return (data as Array<T>).map((item) => fn(item));
   }
@@ -50,7 +43,7 @@ export function flatten<T>(data: Array<Array<T> | T>): Array<T> {
  * @returns {boolean} The given variable is an array with at least one falsy value
  */
 export function isFalsyArray(value: any): boolean {
-  return isArray(value) && !value.every(Boolean);
+  return isArrayLike(value) && !value.every(Boolean);
 }
 
 function undefinedGetter(): any {
@@ -66,7 +59,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
     Object.defineProperty(obj, DATX_META, {
       configurable: false,
       enumerable: false,
-      value: mobxObservable({}, {}, { deep: false }),
+      value: observable({}, {}, { deep: false }),
     });
   }
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/1863
@@ -144,9 +137,9 @@ export function assignComputed<T = any>(
   getter: Getter<T> = undefinedGetter,
   setter: Setter<T> = defaultSetter,
 ) {
-  if (isObservable(obj)) {
-    throw new Error(`[datx exception] This object shouldn't be an observable`);
-  }
+  // if (isObservable(obj)) {
+  //   throw new Error(`[datx exception] This object shouldn't be an observable`);
+  // }
 
   const computedObj = extendObservable(
     {},
@@ -214,21 +207,4 @@ export function reducePrototypeChain<T, U>(
   }
 
   return value;
-}
-
-export function isArray(value: Array<any> | IObservableArray<any>): true;
-export function isArray(value: any): false;
-export function isArray(value: any): boolean {
-  return value instanceof Array || isObservableArray(value);
-}
-
-export function observable(obj: object, key: string, _descriptor?: PropertyDescriptor) {
-  assignComputed(
-    obj,
-    key,
-    () => getMeta(obj, `get__${key}`),
-    (val: any) => {
-      setMeta(obj, `get__${key}`, val);
-    },
-  );
 }

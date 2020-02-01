@@ -1,4 +1,3 @@
-import { isArray } from 'datx-utils';
 import {
   action,
   computed,
@@ -8,6 +7,7 @@ import {
   observable,
   reaction,
   runInAction,
+  isArrayLike,
 } from 'mobx';
 
 import { error } from '../helpers/format';
@@ -32,7 +32,7 @@ export class ToMany<T extends PureModel> {
   ) {
     if (data?.length > 0 && !collection) {
       throw error('The model needs to be in a collection to be referenceable');
-    } else if (data && !isArray(data)) {
+    } else if (data && !isArrayLike(data)) {
       throw error('The reference must be an array of values.');
     }
 
@@ -75,7 +75,7 @@ export class ToMany<T extends PureModel> {
   public set value(data: Array<T>) {
     if (this.__readonly) {
       throw error('This is a read-only bucket');
-    } else if (!isArray(data)) {
+    } else if (!isArrayLike(data)) {
       throw error('The reference must be an array of values.');
     }
 

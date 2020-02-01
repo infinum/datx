@@ -45,11 +45,14 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       if (!body) {
         return null;
       }
+      console.log('sync', body);
       const data: T | Array<T> | null = this.__iterateEntries(body, (obj: IRecord) =>
         this.__addRecord<T>(obj),
       );
+      console.log('update');
       this.__iterateEntries(body, this.__updateRelationships.bind(this));
 
+      console.log('sync done', data);
       return data;
     }
 
@@ -176,6 +179,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
         staticCollection.types.find((item) => getModelType(item) === type) || GenericModel;
       const classRefs = getModelClassRefs(Type);
       const flattened: IRawModel = flattenModel(classRefs, obj);
+      console.log(flattened);
 
       if (record) {
         updateModel(record, flattened);
@@ -239,8 +243,10 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       fn: (item: IRecord) => void,
     ): void;
     private __iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T) {
+      console.log('iterate included');
       mapItems((body && body.included) || [], fn);
 
+      console.log('iterate data');
       return mapItems((body && body.data) || [], fn);
     }
 
