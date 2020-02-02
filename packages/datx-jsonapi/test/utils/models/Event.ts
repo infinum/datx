@@ -12,6 +12,8 @@ export class Event extends jsonapi(Model) {
 
   @prop public name!: string;
 
+  @prop public title!: string;
+
   @prop.toMany(Organizer) public organizers!: Array<Organizer>;
 
   @prop.toMany(Image) public images!: Array<Image>;

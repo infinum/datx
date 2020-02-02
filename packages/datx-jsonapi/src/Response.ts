@@ -199,6 +199,10 @@ export class Response<T extends IJsonapiModel> {
     this.requestHeaders = response.requestHeaders;
     this.error = (response.data && response.data.errors) || response.error;
 
+    if (!this.error && !this.status) {
+      this.error = new Error('Network not available');
+    }
+
     if (this.links) {
       Object.keys(this.links).forEach((link: string) => {
         assignComputed(this, link, () => this.__fetchLink(link));
@@ -214,7 +218,7 @@ export class Response<T extends IJsonapiModel> {
   }
 
   public get isSuccess(): boolean {
-    return Boolean(!this.error && this.__data.value);
+    return Boolean(!this.error && this.__data?.value);
   }
 
   public get data(): T | Array<T> | null {
@@ -257,6 +261,31 @@ export class Response<T extends IJsonapiModel> {
     });
 
     return new Response(this.__response, this.__collection, this.__options, data);
+  }
+
+  public clone(): Response<T> {
+    return new Response(this.__response, this.__collection, this.__options, this.data || undefined);
+  }
+
+  public update(response: IRawResponse, views?: Array<View>): Response<T> {
+    const newResponse = new Response(response);
+
+    // @ts-ignore
+    // eslint-disable-next-line no-underscore-dangle
+    this.__data.value = newResponse.__data.value;
+
+    this.meta = (response.data && response.data.meta) || {};
+    this.links = (response.data && response.data.links) || {};
+    this.jsonapi = (response.data && response.data.jsonapi) || {};
+    this.headers = response.headers;
+    this.requestHeaders = response.requestHeaders;
+    this.error = (response.data && response.data.errors) || response.error;
+    this.status = response.status;
+    if (views) {
+      this.views = views;
+    }
+
+    return this;
   }
 
   /**

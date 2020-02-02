@@ -6,7 +6,7 @@ import { Response } from './Response';
 
 export interface ICache {
   response: Response<IJsonapiModel>;
-  time: Date;
+  time: number;
   types: Array<IType>;
   url: string;
 }
@@ -17,17 +17,21 @@ export function saveCache(url: string, response: Response<IJsonapiModel>) {
   if (response && response.isSuccess && response.data) {
     const types = mapItems(response.data, getModelType) as IType | Array<IType>;
 
-    cacheStorage.push({
+    cacheStorage = cacheStorage.filter((item) => item.url !== url);
+
+    cacheStorage.unshift({
       response,
-      time: new Date(),
+      time: Date.now(),
       types: ([] as Array<IType>).concat(types),
       url,
     });
   }
 }
 
-export function getCache(url: string): ICache | undefined {
-  return cacheStorage.find((item) => item.url === url);
+export function getCache(url: string, maxAge: number): ICache | undefined {
+  const ageLimit = Date.now() - maxAge * 1000;
+
+  return cacheStorage.find((item) => item.url === url && item.time > ageLimit);
 }
 
 export function clearAllCache() {

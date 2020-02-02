@@ -11,7 +11,7 @@ import {
   ReferenceType,
   updateModel,
 } from 'datx';
-import { getMeta, IRawModel, mapItems } from 'datx-utils';
+import { getMeta, IRawModel, mapItems, deprecated } from 'datx-utils';
 import { action, isArrayLike } from 'mobx';
 
 import { clearAllCache, clearCacheByType } from './cache';
@@ -26,6 +26,7 @@ import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IDefinition, IRecord, IRelationship, IRequest, IResponse } from './interfaces/JsonApi';
 import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
+import { CachingStrategy } from './enums/CachingStrategy';
 
 function handleErrors<T extends IJsonapiModel>(response: Response<T>) {
   if (response.error) {
@@ -91,14 +92,14 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       id: string,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
-      const modelType = getModelType(type);
-      const query = this.__prepareQuery(modelType, id, undefined, options);
-      const reqOptions = options || {};
-
-      reqOptions.networkConfig = reqOptions.networkConfig || {};
-      reqOptions.networkConfig.headers = query.headers;
-
-      return read<T>(query.url, this, reqOptions).then(handleErrors);
+      deprecated('fetch is deprecated, use getOne instead');
+      return this.getOne(type, id, {
+        ...options,
+        cacheOptions: {
+          ...options?.cacheOptions,
+          cachingStrategy: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
+        },
+      });
     }
 
     /**
@@ -109,6 +110,35 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
     public fetchAll<T extends IJsonapiModel = IJsonapiModel>(
+      type: IType | IModelConstructor<T>,
+      options?: IRequestOptions,
+    ): Promise<Response<T>> {
+      deprecated('fetchAll is deprecated, use getMany instead');
+      return this.getMany(type, {
+        ...options,
+        cacheOptions: {
+          ...options?.cacheOptions,
+          cachingStrategy: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
+        },
+      });
+    }
+
+    public getOne<T extends IJsonapiModel = IJsonapiModel>(
+      type: IType | IModelConstructor<T>,
+      id: string,
+      options?: IRequestOptions,
+    ): Promise<Response<T>> {
+      const modelType = getModelType(type);
+      const query = this.__prepareQuery(modelType, id, undefined, options);
+      const reqOptions = options || {};
+
+      reqOptions.networkConfig = reqOptions.networkConfig || {};
+      reqOptions.networkConfig.headers = query.headers;
+
+      return read<T>(query.url, this, reqOptions).then(handleErrors);
+    }
+
+    public getMany<T extends IJsonapiModel = IJsonapiModel>(
       type: IType | IModelConstructor<T>,
       options?: IRequestOptions,
     ): Promise<Response<T>> {

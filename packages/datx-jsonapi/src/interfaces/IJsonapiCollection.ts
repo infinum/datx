@@ -34,6 +34,17 @@ export interface IJsonapiCollection extends PureCollection {
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
+  getOne<T extends IJsonapiModel = IJsonapiModel>(
+    type: IType | IModelConstructor<T>,
+    id: string,
+    options?: IRequestOptions,
+  ): Promise<Response<T>>;
+
+  getMany<T extends IJsonapiModel = IJsonapiModel>(
+    type: IType | IModelConstructor<T>,
+    options?: IRequestOptions,
+  ): Promise<Response<T>>;
+
   request<T extends IJsonapiModel = IJsonapiModel>(
     url: string,
     method?: string,

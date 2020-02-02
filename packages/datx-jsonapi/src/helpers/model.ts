@@ -108,7 +108,7 @@ export function getModelLinks(model: PureModel): Record<string, ILink> {
   return getMeta(model, MODEL_LINKS_FIELD, {});
 }
 
-export async function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
+export function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
   model: PureModel,
   key: string,
   options?: IRequestOptions,
@@ -171,7 +171,7 @@ function getLink(model: PureModel, ref: string, key: string) {
   return refLinks[key];
 }
 
-export async function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>(
+export function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>(
   model: PureModel,
   ref: string,
   key: string,

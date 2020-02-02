@@ -20,6 +20,7 @@ import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { ILink, IResponse } from './interfaces/JsonApi';
 import { Response as LibResponse } from './Response';
+import { CachingStrategy } from './enums/CachingStrategy';
 
 export type FetchType = (
   method: string,
@@ -43,7 +44,8 @@ export interface IResponseObject {
 export interface IConfigType {
   baseFetch: FetchType;
   baseUrl: string;
-  cache: boolean;
+  cache: CachingStrategy;
+  maxCacheAge: number;
   defaultFetchOptions: Record<string, any>;
   fetchReference?: typeof fetch;
   paramArrayType: ParamArrayType;
@@ -58,7 +60,8 @@ export const config: IConfigType = {
   baseUrl: '/',
 
   // Enable caching by default in the browser
-  cache: isBrowser,
+  cache: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
+  maxCacheAge: Infinity,
 
   // Default options that will be passed to the fetch function
   defaultFetchOptions: {
@@ -161,6 +164,52 @@ export const config: IConfigType = {
   },
 };
 
+function getLocalNetworkError<T extends IJsonapiModel>(
+  message: string,
+  reqOptions: ICollectionFetchOpts,
+  collection?: IJsonapiCollection,
+): LibResponse<T> {
+  return new LibResponse<T>(
+    {
+      error: new Error(message),
+      // collection,
+      requestHeaders: reqOptions.options?.networkConfig?.headers,
+    },
+    collection,
+    reqOptions.options,
+  );
+}
+
+function makeNetworkCall<T extends IJsonapiModel>(
+  params: ICollectionFetchOpts,
+  doCacheResponse: boolean = false,
+  existingResponse?: LibResponse<T>,
+): Promise<LibResponse<T>> {
+  return config
+    .baseFetch(params.method, params.url, params.data, params?.options?.networkConfig?.headers)
+    .then((response: IRawResponse) => {
+      const collectionResponse = Object.assign(response, { collection: params.collection });
+
+      if (existingResponse) {
+        return existingResponse.update(config.transformResponse(collectionResponse), params.views);
+      }
+
+      return new LibResponse<T>(
+        config.transformResponse(collectionResponse),
+        params.collection,
+        params.options,
+        undefined,
+        params.views,
+      );
+    })
+    .then((response: LibResponse<T>) => {
+      if (doCacheResponse) {
+        saveCache(params.url, response);
+      }
+      return response;
+    });
+}
+
 /**
  * Base implementation of the stateful fetch function (can be overridden)
  *
@@ -170,44 +219,88 @@ export const config: IConfigType = {
 function collectionFetch<T extends IJsonapiModel>(
   reqOptions: ICollectionFetchOpts,
 ): Promise<LibResponse<T>> {
-  const { url, options, data, method = 'GET', collection, views } = config.transformRequest(
-    reqOptions,
-  );
+  const params = config.transformRequest(reqOptions);
+  // const { url, options, data, method = 'GET', collection, views } = params;
 
-  const staticCollection = collection && (collection.constructor as { cache?: boolean });
+  const staticCollection = params?.collection?.constructor as { cache?: boolean };
   const collectionCache = staticCollection && staticCollection.cache;
-  const isCacheSupported = method.toUpperCase() === 'GET';
-  const skipCache =
-    reqOptions.options &&
-    reqOptions.options.cacheOptions &&
-    reqOptions.options.cacheOptions.skipCache;
+  const isCacheSupported = params.method.toUpperCase() === 'GET';
 
-  if (config.cache && isCacheSupported && collectionCache && !skipCache) {
-    const cache = getCache(url);
+  const cacheStrategy =
+    reqOptions.options?.cacheOptions?.skipCache || !isCacheSupported || collectionCache === false
+      ? CachingStrategy.NETWORK_ONLY
+      : reqOptions.options?.cacheOptions?.cachingStrategy || config.cache;
 
-    if (cache) {
-      return Promise.resolve(cache.response) as Promise<LibResponse<T>>;
-    }
+  const maxCacheAge = reqOptions.options?.cacheOptions?.maxAge ?? config.maxCacheAge;
+  const cacheContent: { response: LibResponse<T> } | undefined = (getCache(
+    params.url,
+    maxCacheAge,
+  ) as unknown) as { response: LibResponse<T> } | undefined;
+
+  // NETWORK_ONLY - Ignore cache
+  if (cacheStrategy === CachingStrategy.NETWORK_ONLY) {
+    return makeNetworkCall<T>(params);
   }
 
-  return config
-    .baseFetch(method, url, data, options && options.networkConfig && options.networkConfig.headers)
-    .then((response: IRawResponse) => {
-      const collectionResponse = Object.assign(response, { collection });
-      const resp = new LibResponse<T>(
-        config.transformResponse(collectionResponse),
-        collection,
-        options,
-        undefined,
-        views,
-      );
-
-      if (config.cache && isCacheSupported) {
-        saveCache(url, resp);
+  // NETWORK_FIRST - Fallback to cache only on network error
+  if (cacheStrategy === CachingStrategy.NETWORK_FIRST) {
+    return makeNetworkCall<T>(params, true).catch((errorResponse) => {
+      if (cacheContent) {
+        return cacheContent.response;
       }
-
-      return resp;
+      throw errorResponse;
     });
+  }
+
+  // STALE_WHILE_REVALIDATE - Use cache and update it in background
+  if (cacheStrategy === CachingStrategy.STALE_WHILE_REVALIDATE) {
+    const network = makeNetworkCall<T>(params, true);
+
+    if (cacheContent) {
+      network.catch(() => {
+        // Ignore the failure
+      });
+      return Promise.resolve(cacheContent.response);
+    }
+
+    return network;
+  }
+
+  // CACHE_ONLY - Fail if nothing in cache
+  if (cacheStrategy === CachingStrategy.CACHE_ONLY) {
+    if (cacheContent) {
+      return Promise.resolve(cacheContent.response);
+    }
+
+    return Promise.reject(
+      getLocalNetworkError('No cache for this request', reqOptions, params?.collection),
+    );
+  }
+
+  // PREFER_CACHE - Use cache if available
+  if (cacheStrategy === CachingStrategy.CACHE_FIRST) {
+    return cacheContent ? Promise.resolve(cacheContent.response) : makeNetworkCall<T>(params, true);
+  }
+
+  // STALE_AND_UPDATE - Use cache and update response once network is complete
+  if (cacheStrategy === CachingStrategy.STALE_AND_UPDATE) {
+    const existingResponse = cacheContent?.response?.clone();
+
+    const network = makeNetworkCall<T>(params, true, existingResponse);
+
+    if (existingResponse) {
+      network.catch(() => {
+        // Ignore the failure
+      });
+      return Promise.resolve(existingResponse);
+    }
+
+    return network;
+  }
+
+  return Promise.reject(
+    getLocalNetworkError('Invalid caching strategy', reqOptions, params?.collection),
+  );
 }
 
 export function libFetch<T extends IJsonapiModel = IJsonapiModel>(options: ICollectionFetchOpts) {

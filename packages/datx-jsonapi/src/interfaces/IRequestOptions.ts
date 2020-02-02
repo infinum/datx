@@ -1,5 +1,6 @@
 import { IFilters } from './IFilters';
 import { IHeaders } from './IHeaders';
+import { CachingStrategy } from '../enums/CachingStrategy';
 
 export interface IRequestOptions {
   queryParams?: {
@@ -10,6 +11,8 @@ export interface IRequestOptions {
     custom?: Array<{ key: string; value: string } | string>;
   };
   cacheOptions?: {
+    cachingStrategy?: CachingStrategy;
+    maxAge?: number;
     skipCache?: boolean;
   };
   networkConfig?: {
