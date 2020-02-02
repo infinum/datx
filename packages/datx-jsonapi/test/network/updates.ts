@@ -462,7 +462,7 @@ describe('updates', () => {
       }
     });
 
-    xit('should support updating relationships', async () => {
+    it('should support updating relationships', async () => {
       setRequest({
         name: 'events-1',
         url: 'event',
@@ -480,6 +480,13 @@ describe('updates', () => {
           // @ts-ignore
           { type: 'image', id: '2' },
         ];
+
+        store.sync({
+          data: [
+            { id: '1', type: 'image' },
+            { id: '2', type: 'image' },
+          ],
+        });
 
         setRequest({
           data: {
