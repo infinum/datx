@@ -43,3 +43,5 @@ typings/
 dist
 
 .rpt2_cache
+
+.DS_Store
