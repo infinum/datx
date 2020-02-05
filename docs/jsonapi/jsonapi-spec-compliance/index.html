@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Spec compliance · datx</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Based on the official v1.0 [specification](http://jsonapi.org/format/), all the features should be implemented. If something is missing or not behaving correctly, feel free to [open an issue](https://github.com/infinum/datx/issues/new)."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Spec compliance · datx"/><meta property="og:type" content="website"/><meta property="og:url" content="https://infinum.github.io/datx/"/><meta property="og:description" content="Based on the official v1.0 [specification](http://jsonapi.org/format/), all the features should be implemented. If something is missing or not behaving correctly, feel free to [open an issue](https://github.com/infinum/datx/issues/new)."/><meta property="og:image" content="https://infinum.github.io/datx/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://infinum.github.io/datx/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><h2 class="headerTitle">datx</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/getting-started/installation" target="_self">Docs</a></li><li class=""><a href="https://github.com/infinum/datx" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>JSON API</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Getting started<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/getting-started/installation">Installation</a></li><li class="navListItem"><a class="navItem" href="/docs/getting-started/defining-models">Defining models</a></li><li class="navListItem"><a class="navItem" href="/docs/getting-started/references">References</a></li><li class="navListItem"><a class="navItem" href="/docs/getting-started/configuring-the-collection">Configuring the collection</a></li><li class="navListItem"><a class="navItem" href="/docs/getting-started/using-the-collection">Using the collection</a></li><li class="navListItem"><a class="navItem" href="/docs/getting-started/persisting-data-locally">Persisting data locally</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">API Reference<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/api-reference/collection">Collection</a></li><li class="navListItem"><a class="navItem" href="/docs/api-reference/model">Model</a></li><li class="navListItem"><a class="navItem" href="/docs/api-reference/view">View</a></li><li class="navListItem"><a class="navItem" href="/docs/api-reference/prop">Prop</a></li><li class="navListItem"><a class="navItem" href="/docs/api-reference/pure-model">Pure Model</a></li><li class="navListItem"><a class="navItem" href="/docs/api-reference/model-utils">Model utils</a></li><li class="navListItem"><a class="navItem" href="/docs/api-reference/lib-utils">Lib utils</a></li><li class="navListItem"><a class="navItem" href="/docs/api-reference/typescript-interfaces">Typescript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-getting-started">Getting started with JSON Api</a></li><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-basic-configuration">Basic configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-network-configuration">Network configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-network-usage">Network usage</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/jsonapi/jsonapi-spec-compliance">Spec compliance</a></li><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-model">Model</a></li><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-collection">Collection</a></li><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-view">View</a></li><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-response">Response</a></li><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-config">Config</a></li><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-utils">Utils</a></li><li class="navListItem"><a class="navItem" href="/docs/jsonapi/jsonapi-typescript-interfaces">Typescript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Migration guide<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/migration-guide/compact-collection">CompactCollection</a></li><li class="navListItem"><a class="navItem" href="/docs/migration-guide/compact-model">CompactModel</a></li><li class="navListItem"><a class="navItem" href="/docs/migration-guide/mobx-collection-store">Mobx collection store</a></li><li class="navListItem"><a class="navItem" href="/docs/migration-guide/mobx-jsonapi-store">Mobx jsonapi store</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Troubleshooting<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/troubleshooting/known-issues">Known issues</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Spec compliance</h1></header><article><div><span><p>Based on the official v1.0 <a href="http://jsonapi.org/format/">specification</a>, all the features should be implemented. If something is missing or not behaving correctly, feel free to <a href="https://github.com/infinum/datx/issues/new">open an issue</a>.</p>
+<h2><a class="anchor" aria-hidden="true" id="content-negotiation"></a><a href="#content-negotiation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Content Negotiation</h2>
+<p><a href="http://jsonapai.org/format/#content-negotiation">Official docs</a></p>
+<h3><a class="anchor" aria-hidden="true" id="client-responsibilities"></a><a href="#client-responsibilities" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Client Responsibilities</h3>
+<p><a href="http://jsonapi.org/format/#content-negotiation-clients">Official docs</a></p>
+<p>The lib is already setting the required headers, but you can also <a href="jsonapi-config#defaultfetchoptions">extend/override them if needed</a></p>
+<h3><a class="anchor" aria-hidden="true" id="server-responsibilities"></a><a href="#server-responsibilities" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Server Responsibilities</h3>
+<p><a href="http://jsonapi.org/format/#content-negotiation-servers">Official docs</a></p>
+<p>If the server returns any HTTP status 400 or greater (including 406 and 415 mentioned in the spec), the request promise will reject with a <a href="jsonapi-response"><code>Response</code></a> object that has its <code>error</code> property set (message &amp; HTTP status)</p>
+<h2><a class="anchor" aria-hidden="true" id="document-structure"></a><a href="#document-structure" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Document Structure</h2>
+<p><a href="http://jsonapi.org/format/#document-structure">Official docs</a></p>
+<h3><a class="anchor" aria-hidden="true" id="top-level"></a><a href="#top-level" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Top Level</h3>
+<p><a href="http://jsonapi.org/format/#document-top-level">Official docs</a></p>
+<ul>
+<li>The lib supports <code>data</code>, <code>errors</code>, <code>meta</code>, <code>links</code>, <code>included</code>, and <code>jsonapi</code> properties:
+<ul>
+<li><code>data</code>, <code>error</code> and <code>jsonapi</code> are exsposed in the <a href="jsonapi-response"><code>Response</code></a> object</li>
+<li><code>included</code> is consumed by the <a href="jsonapi-collection#sync"><code>sync</code></a> method</li>
+<li><code>meta</code> and <code>links</code> values are available on the model with <a href="jsonapi-utils#getmodelmeta"><code>getModelMeta</code></a>, <a href="jsonapi-utils#getmodellinks"><code>getModelLinks</code></a>, <a href="jsonapi-utils#fetchmodellink"><code>fetchModelLink</code></a>, <a href="jsonapi-utils#getmodelreflinks"><code>getModelRefLinks</code></a>, <a href="jsonapi-utils#fetchmodelreflink"><code>fetchModelRefLink</code></a> and <a href="jsonapi-utils#getmodelrefmeta"><code>getModelRefMeta</code></a>.</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="resource-objects"></a><a href="#resource-objects" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Resource Objects</h3>
+<p><a href="http://jsonapi.org/format/#document-resource-objects">Official docs</a></p>
+<ul>
+<li><p>The lib expects <code>id</code> and <code>type</code> properties, and they're available on the <a href="Model"><code>Model</code></a> instance</p></li>
+<li><p>If the resource has <code>attributes</code>, they will be available as regular properties on the <a href="Model"><code>Model</code></a> instance</p></li>
+<li><p>If the resource has <code>relationships</code></p>
+<ul>
+<li><code>links</code> will be available using the <a href="jsonapi-utils#getmodelreflinks"><code>getModelRefpLinks</code></a> method on the record
+<ul>
+<li>Use <a href="jsonapi-utils#fetchmodelreflink"><code>fetchModelRefLink</code></a> to fetch the link</li>
+</ul></li>
+<li><code>data</code> will be used to build the references between models
+<ul>
+<li>If the store already contains the referenced model or <code>includes</code> contains the model it will be available right away on the record: <code>model[relName]</code>. Also, the id is available on <code>model.meta.refs[relName]</code></li>
+<li>If the model is &quot;unknown&quot;, the id will be available on <code>model.meta.refs[relName]</code></li>
+</ul></li>
+<li><code>meta</code> is available with <a href="jsonapi-utils#getmodelrefmeta"><code>getModelRefMeta</code></a></li>
+</ul></li>
+<li><p>If the resource has <code>links</code> or <code>meta</code>, they will be available with the <code>getLinks</code> and <code>getMeta</code> methods on the record</p>
+<ul>
+<li>Use <code>fetchLink</code> to fetch the link</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="resource-identifier-objects"></a><a href="#resource-identifier-objects" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Resource Identifier Objects</h3>
+<p><a href="http://jsonapi.org/format/#document-resource-identifier-objects">Official docs</a></p>
+<ul>
+<li>The lib expects <code>id</code> and <code>type</code></li>
+<li><code>meta</code> is available with (<code>getModelMeta</code>)[jsonapi-utils#getmodelmeta]</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="compound-objects"></a><a href="#compound-objects" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Compound Objects</h3>
+<p><a href="http://jsonapi.org/format/#document-compound-documents">Official docs</a></p>
+<ul>
+<li>The lib supports <code>included</code> property</li>
+<li>The lib will add <code>included</code> resources as references to the <code>data</code> resources</li>
+<li>The <code>included</code> resources are treated as regular records, just like the <code>data</code> resources, with same features and limitations</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="meta-information"></a><a href="#meta-information" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Meta Information</h3>
+<p><a href="http://jsonapi.org/format/#document-meta">Official docs</a></p>
+<p>The <code>meta</code> property will be available directly on the <a href="jsonapi-response"><code>Response</code></a> object</p>
+<h3><a class="anchor" aria-hidden="true" id="links"></a><a href="#links" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Links</h3>
+<p><a href="http://jsonapi.org/format/#document-links">Official docs</a></p>
+<ul>
+<li>The <code>links</code> property is supported, and exposes all links directly on the <a href="jsonapi-response"><code>Response</code></a> object</li>
+<li>They are also available in raw form as a <code>links</code> property on the <a href="jsonapi-response"><code>Response</code></a> object</li>
+<li><code>response[linkName]</code> is a Promise that will resolve to a <a href="jsonapi-response"><code>Response</code></a> with either the <code>data</code> or <code>error</code> property set
+<ul>
+<li>The link is lazily evaluated, so the request won't be made until you access the property</li>
+<li>The link can be a string with an URL</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="json-api-object"></a><a href="#json-api-object" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>JSON API Object</h3>
+<p><a href="http://jsonapi.org/format/#document-jsonapi-object">Official docs</a></p>
+<p>The <code>jsonapi</code> property is available on the <a href="jsonapi-response"><code>Response</code></a> object instance</p>
+<h3><a class="anchor" aria-hidden="true" id="member-names"></a><a href="#member-names" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Member Names</h3>
+<p><a href="http://jsonapi.org/format/#document-member-names">Official docs</a></p>
+<ul>
+<li>All member names are treated as strings, therefore adhere to the specification</li>
+<li>If a name is not a valid variable name, e.g. <code>&quot;first-name&quot;</code>, you can access it as <code>model['first-name']</code></li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="fetching-data"></a><a href="#fetching-data" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Fetching Data</h2>
+<p><a href="http://jsonapi.org/format/#fetching">Official docs</a></p>
+<h3><a class="anchor" aria-hidden="true" id="fetching-resources"></a><a href="#fetching-resources" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Fetching Resources</h3>
+<p><a href="http://jsonapi.org/format/#fetching-resources">Official docs</a></p>
+<ul>
+<li>Fetch top-level <code>links</code></li>
+<li>Fetch resource-level <code>links</code> with <a href="jsonapi-utils#fetchmodellink"><code>fetchModelLink</code></a></li>
+<li>Fetch <code>related</code> link from relationship-level <code>links</code> with <a href="jsonapi-utils#fetchmodelreflink"><code>fetchModelRefLink</code></a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="fetching-relationships"></a><a href="#fetching-relationships" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Fetching Relationships</h3>
+<p><a href="http://jsonapi.org/format/#fetching-relationships">Official docs</a></p>
+<p>Fetch relationship-level <code>links</code> with <a href="jsonapi-utils#fetchmodelreflink"><code>fetchModelRefLink</code></a></p>
+<h3><a class="anchor" aria-hidden="true" id="inclusion-of-related-resources"></a><a href="#inclusion-of-related-resources" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Inclusion of Related Resources</h3>
+<p><a href="http://jsonapi.org/format/#fetching-includes">Official docs</a></p>
+<p>Supported by providing a <code>include</code> property in the request options (<a href="jsonapi-typescript-interfaces#irequestoptions"><code>IRequestOptions</code></a>)</p>
+<h3><a class="anchor" aria-hidden="true" id="sparse-fieldsets"></a><a href="#sparse-fieldsets" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Sparse Fieldsets</h3>
+<p><a href="http://jsonapi.org/format/#fetching-sparse-fieldsets">Official docs</a></p>
+<p>Supported by providing a <code>fields</code> property in the request options (<a href="jsonapi-typescript-interfaces#irequestoptions"><code>IRequestOptions</code></a>)</p>
+<h3><a class="anchor" aria-hidden="true" id="sorting"></a><a href="#sorting" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Sorting</h3>
+<p><a href="http://jsonapi.org/format/#fetching-sorting">Official docs</a></p>
+<p>Supported by providing a <code>sort</code> property in the request options (<a href="jsonapi-typescript-interfaces#irequestoptions"><code>IRequestOptions</code></a>)</p>
+<h3><a class="anchor" aria-hidden="true" id="pagination"></a><a href="#pagination" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Pagination</h3>
+<p><a href="http://jsonapi.org/format/#fetching-pagination">Official docs</a></p>
+<ul>
+<li>The lib supports top-level links</li>
+<li>The lib allows access to raw links in the <code>links</code> property of the <a href="jsonapi-response"><code>Response</code></a> object instance</li>
+<li>The lib allows pagination with links, e.g. <code>response.next</code> will return a Promise that will resolve to a <a href="jsonapi-response"><code>Response</code></a> object with either the <code>data</code> or <code>error</code> property set
+<ul>
+<li>The link is lazily evaluated, so the request won't be made until you access the property</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="filtering"></a><a href="#filtering" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Filtering</h3>
+<p><a href="http://jsonapi.org/format/#fetching-filtering">Official docs</a></p>
+<p>Supported by providing a <code>filter</code> property in the request options (<a href="jsonapi-typescript-interfaces#irequestoptions"><code>IRequestOptions</code></a>)</p>
+<h2><a class="anchor" aria-hidden="true" id="creating-updating-and-deleting-resources"></a><a href="#creating-updating-and-deleting-resources" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Creating, Updating and Deleting Resources</h2>
+<p><a href="http://jsonapi.org/format/#crud">Official docs</a></p>
+<h3><a class="anchor" aria-hidden="true" id="creating-resources"></a><a href="#creating-resources" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Creating Resources</h3>
+<p><a href="http://jsonapi.org/format/#crud-creating">Official docs</a></p>
+<ul>
+<li>Creating resources is supported using the <a href="jsonapi-model"><code>save</code></a> method if the record was created on the client</li>
+<li>Client-Generated IDs are supported
+<ul>
+<li>set <a href="Model#static-useautogeneratedids"><code>useAutogeneratedIds</code></a> to <code>true</code></li>
+<li>override <a href="Model#static-autoidfunction"><code>autoIdFunction</code></a> so it returns a valid UUID</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="updating-resources"></a><a href="#updating-resources" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Updating Resources</h3>
+<p><a href="http://jsonapi.org/format/#crud-updating">Official docs</a></p>
+<p>Updating resources is supported using the <a href="jsonapi-model"><code>save</code></a> method if the record was not created on the client</p>
+<h3><a class="anchor" aria-hidden="true" id="updating-relationships"></a><a href="#updating-relationships" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Updating Relationships</h3>
+<p><a href="http://jsonapi.org/format/#crud-updating-relationships">Official docs</a></p>
+<ul>
+<li>Direct update of relationships is supported with the <a href="jsonapi-utils#saverelationship"><code>saveRelationship</code></a> method</li>
+<li><strong>Tip:</strong> If you want to add a new relationship, use <a href="model#initmodelref"><code>initModelRef</code></a></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="deleting-resources"></a><a href="#deleting-resources" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Deleting Resources</h3>
+<p><a href="http://jsonapi.org/format/#crud-deleting">Official docs</a></p>
+<p>The resource can be deleted with the <a href="jsonapi-model"><code>destroy</code></a> method on the record</p>
+<h2><a class="anchor" aria-hidden="true" id="query-parameters"></a><a href="#query-parameters" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Query Parameters</h2>
+<p><a href="http://jsonapi.org/format/#query-parameters">Official docs</a></p>
+<p>All current communication with the server is using the required naming method</p>
+<h2><a class="anchor" aria-hidden="true" id="errors"></a><a href="#errors" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Errors</h2>
+<p><a href="http://jsonapi.org/format/#errors">Official docs</a></p>
+<h3><a class="anchor" aria-hidden="true" id="processing-errors"></a><a href="#processing-errors" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Processing Errors</h3>
+<p><a href="http://jsonapi.org/format/#errors-processing">Official docs</a></p>
+<p>The lib will process all HTTP status 400+ as errors</p>
+<h3><a class="anchor" aria-hidden="true" id="error-objects"></a><a href="#error-objects" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Error Objects</h3>
+<p><a href="http://jsonapi.org/format/#error-objects">Official docs</a></p>
+<p>The error objects will be available in the <a href="jsonapi-response"><code>Response</code></a> object under the <code>error</code> property (without any modification)</p>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 1/28/2020 by Danijel Buhin</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/jsonapi/jsonapi-network-usage"><span class="arrow-prev">← </span><span>Network usage</span></a><a class="docs-next button" href="/docs/jsonapi/jsonapi-model"><span>Model</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#content-negotiation">Content Negotiation</a><ul class="toc-headings"><li><a href="#client-responsibilities">Client Responsibilities</a></li><li><a href="#server-responsibilities">Server Responsibilities</a></li></ul></li><li><a href="#document-structure">Document Structure</a><ul class="toc-headings"><li><a href="#top-level">Top Level</a></li><li><a href="#resource-objects">Resource Objects</a></li><li><a href="#resource-identifier-objects">Resource Identifier Objects</a></li><li><a href="#compound-objects">Compound Objects</a></li><li><a href="#meta-information">Meta Information</a></li><li><a href="#links">Links</a></li><li><a href="#json-api-object">JSON API Object</a></li><li><a href="#member-names">Member Names</a></li></ul></li><li><a href="#fetching-data">Fetching Data</a><ul class="toc-headings"><li><a href="#fetching-resources">Fetching Resources</a></li><li><a href="#fetching-relationships">Fetching Relationships</a></li><li><a href="#inclusion-of-related-resources">Inclusion of Related Resources</a></li><li><a href="#sparse-fieldsets">Sparse Fieldsets</a></li><li><a href="#sorting">Sorting</a></li><li><a href="#pagination">Pagination</a></li><li><a href="#filtering">Filtering</a></li></ul></li><li><a href="#creating-updating-and-deleting-resources">Creating, Updating and Deleting Resources</a><ul class="toc-headings"><li><a href="#creating-resources">Creating Resources</a></li><li><a href="#updating-resources">Updating Resources</a></li><li><a href="#updating-relationships">Updating Relationships</a></li><li><a href="#deleting-resources">Deleting Resources</a></li></ul></li><li><a href="#query-parameters">Query Parameters</a></li><li><a href="#errors">Errors</a><ul class="toc-headings"><li><a href="#processing-errors">Processing Errors</a></li><li><a href="#error-objects">Error Objects</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: '',
+                indexName: '',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
