@@ -11,14 +11,14 @@
 const siteConfig = {
   title: "datx", // Title for your website.
   tagline: "A mobx data store",
-  url: "https://your-docusaurus-test-site.com", // Your website URL
+  url: "https://datx.dev", // Your website URL
   baseUrl: "/", // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: "infinum/datx",
+  projectName: "datx",
   organizationName: "infinum",
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
@@ -40,36 +40,32 @@ const siteConfig = {
   users: [],
 
   /* path to images for header/footer */
-  headerIcon: "",
+  headerIcon: "img/datx-logo.svg",
   footerIcon: "",
   favicon: "img/favicon.ico",
 
   /* Colors for website */
   colors: {
-    primaryColor: "#4170f3",
-    secondaryColor: "#043359"
+    primaryColor: "#D8252C",
+    secondaryColor: "#043359",
+    headerBackground: "#fff",
+    darkGray: "#353535",
+    lightGray: "#e0e0e0",
+    gray: "#8B8B8B"
   },
 
   /* Custom fonts for website */
-  /*
-  fonts: {
-    myFont: [
-      "Times New Roman",
-      "Serif"
-    ],
-    myOtherFont: [
-      "-apple-system",
-      "system-ui"
-    ]
-  },
-  */
+  // fonts: {
+  //   myFont: ["Times New Roman", "Serif"],
+  //   myOtherFont: ["-apple-system", "system-ui"]
+  // },
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
   copyright: `Copyright © ${new Date().getFullYear()} infinum`,
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
-    theme: "atom-one-dark"
+    theme: "hybrid"
   },
 
   // Add custom scripts here that would be placed in <script> tags.
