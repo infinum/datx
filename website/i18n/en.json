@@ -8,6 +8,12 @@
       "collection": {
         "title": "Collection"
       },
+      "compact-collection": {
+        "title": "CompactCollection"
+      },
+      "compact-model": {
+        "title": "CompactModel"
+      },
       "configuring-the-collection": {
         "title": "Configuring the collection"
       },
@@ -59,6 +65,12 @@
       "lib-utils": {
         "title": "Lib utils"
       },
+      "mobx-collection-store": {
+        "title": "Mobx collection store"
+      },
+      "mobx-jsonapi-store": {
+        "title": "Mobx jsonapi store"
+      },
       "model-utils": {
         "title": "Model utils"
       },
@@ -94,7 +106,8 @@
       "Getting started": "Getting started",
       "API Reference": "API Reference",
       "JSON API": "JSON API",
-      "Troubleshooting": "Troubleshooting"
+      "Troubleshooting": "Troubleshooting",
+      "Migration guide": "Migration guide"
     }
   },
   "pages-strings": {

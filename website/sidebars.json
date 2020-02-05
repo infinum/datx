@@ -32,6 +32,12 @@
       "jsonapi-utils",
       "jsonapi-typescript-interfaces"
     ],
-    "Troubleshooting": ["known-issues"]
+    "Troubleshooting": ["known-issues"],
+    "Migration guide": [
+      "compact-collection",
+      "compact-model",
+      "mobx-collection-store",
+      "mobx-jsonapi-store"
+    ]
   }
 }
