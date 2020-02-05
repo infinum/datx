@@ -41,7 +41,9 @@ typings/
 
 # Build folder
 dist
+website/build
 
 .rpt2_cache
 
+website/.DS_Store
 .DS_Store
