@@ -15,11 +15,29 @@
   .separateOnPageNav .headerWrapper.wrapper {
     padding: 5px 20px;
   }
+
+  .reactNavSearchWrapper input#search_input_react:focus,
+  .reactNavSearchWrapper input#search_input_react:active {
+    background: transparent;
+    border-color: $gray;
+  }
 }
 
 @media only screen and (max-width: 1023px) {
   .navigationSlider .slidingNav ul {
     background: $lightGray;
+  }
+
+  .reactNavSearchWrapper input#search_input_react {
+    background: transparent;
+    border: 1px solid $lightGray;
+    color: $darkGray !important;
+  }
+
+  .reactNavSearchWrapper input#search_input_react:focus,
+  .reactNavSearchWrapper input#search_input_react:active {
+    background: transparent;
+    border-color: $gray;
   }
 }
 
@@ -49,12 +67,37 @@
   background: transparent;
 }
 
-input#search_input_react {
+.reactNavSearchWrapper input#search_input_react {
   background: transparent;
   border: 1px solid $lightGray;
   color: $darkGray !important;
 }
+
 ::selection {
   background-color: $primaryColor;
   color: #fff;
+}
+
+.projectTitle {
+  color: $darkGray;
+}
+
+.projectTitle img {
+  width: 50px;
+  margin-right: 5px;
+}
+
+.projectTitle span,
+img {
+  display: inline-block;
+  vertical-align: text-top;
+}
+
+.imageAlignTop.alignCenter .blockImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  max-width: 200px;
+  height: 140px;
 }
