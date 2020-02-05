@@ -18,14 +18,18 @@ const siteConfig = {
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: "datx",
+  projectName: "infinum/datx",
   organizationName: "infinum",
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
   //   organizationName: 'JoelMarcey'
 
   // For no header links in the top nav bar -> headerLinks: [],
-  headerLinks: [{ doc: "installation", label: "Docs" }, { search: true }],
+  headerLinks: [
+    { doc: "getting-started/installation", label: "Docs" },
+    { href: "https://github.com/infinum/datx", label: "GitHub" },
+    { search: true }
+  ],
   algolia: {
     // setup DocSearch by algolia first
     apiKey: "",
@@ -42,7 +46,7 @@ const siteConfig = {
 
   /* Colors for website */
   colors: {
-    primaryColor: "#D8252C",
+    primaryColor: "#4170f3",
     secondaryColor: "#043359"
   },
 

@@ -5,109 +5,110 @@
     "previous": "Previous",
     "tagline": "A mobx data store",
     "docs": {
-      "collection": {
+      "api-reference/collection": {
         "title": "Collection"
       },
-      "compact-collection": {
-        "title": "CompactCollection"
-      },
-      "compact-model": {
-        "title": "CompactModel"
-      },
-      "configuring-the-collection": {
-        "title": "Configuring the collection"
-      },
-      "defining-models": {
-        "title": "Defining models"
-      },
-      "jsonapi-getting-started": {
-        "title": "Getting started with JSON Api"
-      },
-      "installation": {
-        "title": "Installation"
-      },
-      "jsonapi-basic-configuration": {
-        "title": "Basic configuration"
-      },
-      "jsonapi-collection": {
-        "title": "Collection"
-      },
-      "jsonapi-config": {
-        "title": "Config"
-      },
-      "jsonapi-model": {
-        "title": "Model"
-      },
-      "jsonapi-network-configuration": {
-        "title": "Network configuration"
-      },
-      "jsonapi-network-usage": {
-        "title": "Network usage"
-      },
-      "jsonapi-response": {
-        "title": "Response"
-      },
-      "jsonapi-spec-compliance": {
-        "title": "Spec compliance"
-      },
-      "jsonapi-typescript-interfaces": {
-        "title": "Typescript interfaces"
-      },
-      "jsonapi-utils": {
-        "title": "Utils"
-      },
-      "jsonapi-view": {
-        "title": "View"
-      },
-      "known-issues": {
-        "title": "Known issues"
-      },
-      "lib-utils": {
+      "api-reference/lib-utils": {
         "title": "Lib utils"
       },
-      "mobx-collection-store": {
-        "title": "Mobx collection store"
-      },
-      "mobx-jsonapi-store": {
-        "title": "Mobx jsonapi store"
-      },
-      "model-utils": {
+      "api-reference/model-utils": {
         "title": "Model utils"
       },
-      "model": {
+      "api-reference/model": {
         "title": "Model"
       },
-      "persisting-data-locally": {
-        "title": "Persisting data locally"
-      },
-      "prop": {
+      "api-reference/prop": {
         "title": "Prop"
       },
-      "pure-model": {
+      "api-reference/pure-model": {
         "title": "Pure Model"
       },
-      "references": {
-        "title": "References"
-      },
-      "typescript-interfaces": {
+      "api-reference/typescript-interfaces": {
         "title": "Typescript interfaces"
       },
-      "using-the-collection": {
+      "api-reference/view": {
+        "title": "View"
+      },
+      "getting-started/configuring-the-collection": {
+        "title": "Configuring the collection"
+      },
+      "getting-started/defining-models": {
+        "title": "Defining models"
+      },
+      "getting-started/installation": {
+        "title": "Installation"
+      },
+      "getting-started/persisting-data-locally": {
+        "title": "Persisting data locally"
+      },
+      "getting-started/references": {
+        "title": "References"
+      },
+      "getting-started/using-the-collection": {
         "title": "Using the collection"
       },
-      "view": {
+      "jsonapi/jsonapi-basic-configuration": {
+        "title": "Basic configuration"
+      },
+      "jsonapi/jsonapi-collection": {
+        "title": "Collection"
+      },
+      "jsonapi/jsonapi-config": {
+        "title": "Config"
+      },
+      "jsonapi/jsonapi-getting-started": {
+        "title": "Getting started with JSON Api"
+      },
+      "jsonapi/jsonapi-model": {
+        "title": "Model"
+      },
+      "jsonapi/jsonapi-network-configuration": {
+        "title": "Network configuration"
+      },
+      "jsonapi/jsonapi-network-usage": {
+        "title": "Network usage"
+      },
+      "jsonapi/jsonapi-response": {
+        "title": "Response"
+      },
+      "jsonapi/jsonapi-spec-compliance": {
+        "title": "Spec compliance"
+      },
+      "jsonapi/jsonapi-typescript-interfaces": {
+        "title": "Typescript interfaces"
+      },
+      "jsonapi/jsonapi-utils": {
+        "title": "Utils"
+      },
+      "jsonapi/jsonapi-view": {
         "title": "View"
+      },
+      "migration-guide/compact-collection": {
+        "title": "CompactCollection"
+      },
+      "migration-guide/compact-model": {
+        "title": "CompactModel"
+      },
+      "migration-guide/mobx-collection-store": {
+        "title": "Mobx collection store"
+      },
+      "migration-guide/mobx-jsonapi-store": {
+        "title": "Mobx jsonapi store"
+      },
+      "troubleshooting/known-issues": {
+        "title": "Known issues"
       }
     },
     "links": {
-      "Docs": "Docs"
+      "Docs": "Docs",
+      "GitHub": "GitHub"
     },
     "categories": {
       "Getting started": "Getting started",
       "API Reference": "API Reference",
       "JSON API": "JSON API",
-      "Troubleshooting": "Troubleshooting",
-      "Migration guide": "Migration guide"
+      "Migration guide": "Migration guide",
+      "Troubleshooting": "Troubleshooting"
     }
   },
   "pages-strings": {

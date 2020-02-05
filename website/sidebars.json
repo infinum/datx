@@ -1,43 +1,43 @@
 {
   "docs": {
     "Getting started": [
-      "installation",
-      "defining-models",
-      "references",
-      "configuring-the-collection",
-      "using-the-collection",
-      "persisting-data-locally"
+      "getting-started/installation",
+      "getting-started/defining-models",
+      "getting-started/references",
+      "getting-started/configuring-the-collection",
+      "getting-started/using-the-collection",
+      "getting-started/persisting-data-locally"
     ],
     "API Reference": [
-      "collection",
-      "model",
-      "view",
-      "prop",
-      "pure-model",
-      "model-utils",
-      "lib-utils",
-      "typescript-interfaces"
+      "api-reference/collection",
+      "api-reference/model",
+      "api-reference/view",
+      "api-reference/prop",
+      "api-reference/pure-model",
+      "api-reference/model-utils",
+      "api-reference/lib-utils",
+      "api-reference/typescript-interfaces"
     ],
     "JSON API": [
-      "jsonapi-getting-started",
-      "jsonapi-basic-configuration",
-      "jsonapi-network-configuration",
-      "jsonapi-network-usage",
-      "jsonapi-spec-compliance",
-      "jsonapi-model",
-      "jsonapi-collection",
-      "jsonapi-view",
-      "jsonapi-response",
-      "jsonapi-config",
-      "jsonapi-utils",
-      "jsonapi-typescript-interfaces"
+      "jsonapi/jsonapi-getting-started",
+      "jsonapi/jsonapi-basic-configuration",
+      "jsonapi/jsonapi-network-configuration",
+      "jsonapi/jsonapi-network-usage",
+      "jsonapi/jsonapi-spec-compliance",
+      "jsonapi/jsonapi-model",
+      "jsonapi/jsonapi-collection",
+      "jsonapi/jsonapi-view",
+      "jsonapi/jsonapi-response",
+      "jsonapi/jsonapi-config",
+      "jsonapi/jsonapi-utils",
+      "jsonapi/jsonapi-typescript-interfaces"
     ],
-    "Troubleshooting": ["known-issues"],
     "Migration guide": [
-      "compact-collection",
-      "compact-model",
-      "mobx-collection-store",
-      "mobx-jsonapi-store"
-    ]
+      "migration-guide/compact-collection",
+      "migration-guide/compact-model",
+      "migration-guide/mobx-collection-store",
+      "migration-guide/mobx-jsonapi-store"
+    ],
+    "Troubleshooting": ["troubleshooting/known-issues"]
   }
 }
