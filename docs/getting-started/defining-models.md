@@ -3,16 +3,10 @@ id: defining-models
 title: Defining models
 ---
 
-**Note:** If you're defining your own models, you also need to update the [collection configuration](Configuring-the-collection).
+**Note:** If you're defining your own models, you also need to update the [collection configuration](configuring-the-collection).
 
 
 ## TypeScript
-
-**Note 🚨:** When using Babel 7 with the new decorators plugin, the [`@prop` decorators are ignored](https://github.com/infinum/datx/issues/92).
-
-This is also the case when using the Babel TypeScript plugin (like is the case with [Create react app 2](https://facebook.github.io/create-react-app/) and [Next.js 7](https://nextjs.org/) with the [TypeScript plugin](https://github.com/zeit/next-plugins/tree/master/packages/next-typescript)). If this is the case on your project, you'll need to use one of the other two options bellow.
-
-----
 
 The models can be defined by extending the [`Model`](model) class. When extending the [`Model`](model) class, the minimal thing you should do is to define a unique [`type`](model#static-type) (can be either a number or a string):
 
