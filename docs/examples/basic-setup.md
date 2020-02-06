@@ -3,6 +3,8 @@ id: basic-setup
 title: Basic setup
 ---
 
+> Make sure you followed all steps from [installing](../getting-started/installation) instructions before you start using datx.
+
 ## 1. Setting up your models
 <!--DOCUSAURUS_CODE_TABS-->
 <!--TypeScript-->
@@ -11,7 +13,6 @@ title: Basic setup
 // /models/index.ts
 import { Model, prop } from 'datx';
 import { computed } from 'mobx';
-
 
 export class Dog extends Model {
   public static type = 'dog';
@@ -53,7 +54,6 @@ export class Person extends Model {
 // /models/index.js
 import { Model, prop } from 'datx';
 import { computed } from 'mobx';
-
 
 class Dog extends Model {
   static type = 'dog';
@@ -150,7 +150,7 @@ export default class Family extends Collection {
 
 ### Create new instance
 
-```typescript
+```javascript
 import FamilyCollection from './store/Family';
 
 const family = new FamilyCollection();
@@ -158,9 +158,9 @@ const family = new FamilyCollection();
 
 ### Add models
 
-For more ways of adding models, you can check out [API Reference](../api-reference/collection#add) or [code examples](adding-models).
+For more ways of adding models, you can check out [API Reference](../api-reference/collection#add) and [code examples](adding-models).
 
-```typescript
+```javascript
 import FamilyCollection from './store/Family';
 import { Person, Dog } from './store/models';
 
@@ -174,12 +174,12 @@ const john = family.add({
 
 const rex = family.add({
   name: 'Rex',
-  breed: 'German Shepherd';
+  breed: 'German Shepherd',
 }, Dog);
 
 const floki = family.add({
   name: 'Floki',
-  breed: 'Labrador';
+  breed: 'Labrador',
 }, Dog);
 
 console.log(john.greet); // Hey, my name is John and I'm 12.
@@ -204,12 +204,12 @@ const john = family.add({
 
 const rex = family.add({
   name: 'Rex',
-  breed: 'German Shepherd';
+  breed: 'German Shepherd',
 }, Dog);
 
 const floki = family.add({
   name: 'Floki',
-  breed: 'Labrador';
+  breed: 'Labrador',
 }, Dog);
 
 console.log(family.getAllModels()); // [Person, Dog, Dog]
@@ -234,12 +234,12 @@ const john = family.add({
 
 const rex = family.add({
   name: 'Rex',
-  breed: 'German Shepherd';
+  breed: 'German Shepherd',
 }, Dog);
 
 const floki = family.add({
   name: 'Floki',
-  breed: 'Labrador';
+  breed: 'Labrador',
 }, Dog);
 
 console.log(family.removeAll(Dog))
