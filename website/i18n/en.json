@@ -29,6 +29,9 @@
       "api-reference/view": {
         "title": "View"
       },
+      "examples/examples-getting-started": {
+        "title": "Getting started"
+      },
       "getting-started/configuring-the-collection": {
         "title": "Configuring the collection"
       },
@@ -119,6 +122,7 @@
     },
     "links": {
       "Docs": "Docs",
+      "Examples": "Examples",
       "GitHub": "GitHub"
     },
     "categories": {

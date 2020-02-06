@@ -47,5 +47,8 @@
       "migration-guide/mobx-jsonapi-store"
     ],
     "Troubleshooting": ["troubleshooting/known-issues"]
+  },
+  "examples": {
+    "Getting started": ["examples/examples-getting-started"]
   }
 }
