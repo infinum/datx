@@ -41,6 +41,7 @@ typings/
 
 # Build folder
 dist
+website/build
 
 .rpt2_cache
 
