@@ -8,6 +8,14 @@
       "getting-started/using-the-collection",
       "getting-started/persisting-data-locally"
     ],
+    "Mixins": [
+      "mixins/what-are-mixis",
+      "mixins/with-actions",
+      "mixins/with-meta",
+      "mixins/with-patches",
+      "mixins/jsonapi-mixin",
+      "mixins/building-your-own-mixin"
+    ],
     "API Reference": [
       "api-reference/collection",
       "api-reference/model",

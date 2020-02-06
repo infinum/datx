@@ -95,6 +95,24 @@
       "migration-guide/mobx-jsonapi-store": {
         "title": "Mobx jsonapi store"
       },
+      "mixins/building-your-own-mixin": {
+        "title": "Build your own mixin"
+      },
+      "mixins/jsonapi-mixin": {
+        "title": "JSONAPI Mixin"
+      },
+      "mixins/what-are-mixins": {
+        "title": "What are mixins"
+      },
+      "mixins/with-actions": {
+        "title": "withActions"
+      },
+      "mixins/with-meta": {
+        "title": "withMeta"
+      },
+      "mixins/with-patches": {
+        "title": "withPatches"
+      },
       "troubleshooting/known-issues": {
         "title": "Known issues"
       }
@@ -105,6 +123,7 @@
     },
     "categories": {
       "Getting started": "Getting started",
+      "Mixins": "Mixins",
       "API Reference": "API Reference",
       "JSON API": "JSON API",
       "Migration guide": "Migration guide",
