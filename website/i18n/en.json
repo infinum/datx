@@ -83,11 +83,11 @@
       "jsonapi/jsonapi-view": {
         "title": "View"
       },
-      "migration-guide/compact-collection": {
-        "title": "CompactCollection"
+      "migration-guide/compat-collection": {
+        "title": "CompatCollection"
       },
-      "migration-guide/compact-model": {
-        "title": "CompactModel"
+      "migration-guide/compat-model": {
+        "title": "CompatModel"
       },
       "migration-guide/mobx-collection-store": {
         "title": "Mobx collection store"

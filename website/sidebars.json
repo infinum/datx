@@ -33,8 +33,8 @@
       "jsonapi/jsonapi-typescript-interfaces"
     ],
     "Migration guide": [
-      "migration-guide/compact-collection",
-      "migration-guide/compact-model",
+      "migration-guide/compat-collection",
+      "migration-guide/compat-model",
       "migration-guide/mobx-collection-store",
       "migration-guide/mobx-jsonapi-store"
     ],

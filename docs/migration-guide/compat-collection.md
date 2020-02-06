@@ -1,6 +1,6 @@
 ---
-id: compact-collection
-title: CompactCollection
+id: compat-collection
+title: CompatCollection
 ---
 
 The idea of `CompatCollection` and [`CompatModel`](compat-model) is to make migration from `mobx-collection-store` and `mobx-jsonapi-store` simpler.

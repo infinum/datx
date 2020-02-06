@@ -1,9 +1,9 @@
 ---
-id: compact-model
-title: CompactModel
+id: compat-model
+title: CompatModel
 ---
 
-The idea of [`CompatCollection`](compact-collection) and `CompatModel` is to make migration from `mobx-collection-store` and `mobx-jsonapi-store` simpler.
+The idea of [`CompatCollection`](compat-collection) and `CompatModel` is to make migration from `mobx-collection-store` and `mobx-jsonapi-store` simpler.
 
 **Note:** They should be used for migration only, and once you switch to `datx`, you should refactor your collections and models to use [`Model`](model) or [`PureModel`](pure-model). The usage of this class will emit deprecation warnings during development to make migration easier.
 

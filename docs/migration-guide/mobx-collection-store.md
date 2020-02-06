@@ -83,7 +83,7 @@ For `@prop` details check out the [prop documentation](prop).
 
 ## Collection changes
 
-To migrate your collections, you should move to either [`Collection`](collection) (ideally) or [`CompatCollection`](compact-collection):
+To migrate your collections, you should move to either [`Collection`](collection) (ideally) or [`CompatCollection`](compat-collection):
 
 ### Collection
 
@@ -102,7 +102,7 @@ Changed:
 ## Model changes
 
 Changed:
-To migrate your models, you should move to either [`Model`](odel)/[`PureModel`](pure-model) (ideally) or [`CompatModel`](migration-compact-model):
+To migrate your models, you should move to either [`Model`](odel)/[`PureModel`](pure-model) (ideally) or [`CompatModel`](migration-compat-model):
 
 ### CompatModel
 
