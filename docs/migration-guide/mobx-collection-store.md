@@ -83,7 +83,7 @@ For `@prop` details check out the [prop documentation](prop).
 
 ## Collection changes
 
-To migrate your collections, you should move to either [`Collection`](collection) (ideally) or [`CompatCollection`](compat-collection):
+To migrate your collections, you should move to either [`Collection`](../api-reference/collection) (ideally) or [`CompatCollection`](compat-collection):
 
 ### Collection
 
@@ -102,7 +102,7 @@ Changed:
 ## Model changes
 
 Changed:
-To migrate your models, you should move to either [`Model`](odel)/[`PureModel`](pure-model) (ideally) or [`CompatModel`](migration-compat-model):
+To migrate your models, you should move to either [`Model`](odel)/[`PureModel`](../api-reference/pure-model) (ideally) or [`CompatModel`](migration-compat-model):
 
 ### CompatModel
 
@@ -142,7 +142,7 @@ Changed:
 
 ### PureModel
 
-The PureModel class doesn't expose anything directly. Instead, you need to use [helper methods](model-utils):
+The PureModel class doesn't expose anything directly. Instead, you need to use [helper methods](../api-reference/model-utils):
 
 Changed:
 * `assign` - Use `assignModel(model, key, value)`

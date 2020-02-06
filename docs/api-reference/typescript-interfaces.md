@@ -9,7 +9,7 @@ A serialized model interface. It's a regular dictionary with an additional `__ME
 
 ## ICollectionConstructor
 
-Interface for the [`Collection`](collection) constructor.
+Interface for the [`Collection`](../api-reference/collection) constructor.
 
 ## IIdentifier
 
@@ -17,7 +17,7 @@ Interface for the model ID.
 
 ## IModelConstructor
 
-Interface for the [`PureModel`](pure-model) constructor.
+Interface for the [`PureModel`](../api-reference/pure-model) constructor.
 
 ## IType
 
@@ -25,11 +25,11 @@ Interface for the model type.
 
 ## IActionsMixin
 
-Interface for the [`withActions`](withActions) mixin.
+Interface for the [`withActions`](../mixins/with-actions) mixin.
 
 ## IMetaMixin
 
-Interface for the [`withMeta`](withMeta) mixin.
+Interface for the [`withMeta`](../mixins/with-meta) mixin.
 
 ## ICollectionFetchOptions
 

@@ -8,7 +8,7 @@ title: Defining models
 
 ## TypeScript
 
-The models can be defined by extending the [`Model`](model) class. When extending the [`Model`](model) class, the minimal thing you should do is to define a unique [`type`](model#static-type) (can be either a number or a string):
+The models can be defined by extending the [`Model`](../api-reference/model) class. When extending the [`Model`](../api-reference/model) class, the minimal thing you should do is to define a unique [`type`](../api-reference/model#static-type) (can be either a number or a string):
 
 ```typescript
 import {Model} from 'datx';
@@ -77,7 +77,7 @@ prop.toOne(Person)(Pet, 'owner');
 
 ### Option 2
 
-The models can be defined by extending the [`Model`](model) class. When extending the [`Model`](model) class, the minimal thing you should do is to define a unique [`type`](model#static-type) (can be either a number or a string):
+The models can be defined by extending the [`Model`](../api-reference/model) class. When extending the [`Model`](../api-reference/model) class, the minimal thing you should do is to define a unique [`type`](../api-reference/model#static-type) (can be either a number or a string):
 
 ```javascript
 import {Model} from 'datx';

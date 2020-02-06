@@ -49,7 +49,7 @@ public insert(data: Array<object>): Array<IModel>
 
 Function used to insert serialised data to the store. The data should be serialised using either the `snapshot` property or the `toJS` function on either a model or collection. The return value is an array of inserted models.
 
-**Important:** [`add`](collection#add) should be used for adding new or existing models to the collection.
+**Important:** [`add`](../api-reference/collection#add) should be used for adding new or existing models to the collection.
 
 ### add
 ```typescript

@@ -5,7 +5,7 @@ title: Pure Model
 
 `PureModel` is a model without any metadata or methods on itself. The goal is to have a model that is as close to the Plain JavaScript Object as possible.
 
-To get additional functionality, you can either use [model utils](model-utils), enhance the model with [mixins](mixins), or use the [`Model`](model).
+To get additional functionality, you can either use [model utils](../api-reference/model-utils), enhance the model with [mixins](mixins), or use the [`Model`](../api-reference/model).
 
 `PureModel` doesn't have any dynamic properties or methods, but has some static ones:
 

@@ -7,7 +7,7 @@ title: Mobx jsonapi store
 
 # Model and Collection definition
 
-Model and Collection definition examples use [`Model`](model) and [`Collection`](collection), but it would work the same way for [`CompatModel`](compat-model), [`PureModel`](pure-model), or [`CompatCollection`](compat-collection).
+Model and Collection definition examples use [`Model`](../api-reference/model) and [`Collection`](../api-reference/collection), but it would work the same way for [`CompatModel`](compat-model), [`PureModel`](../api-reference/pure-model), or [`CompatCollection`](compat-collection).
 
 ## Code diff
 

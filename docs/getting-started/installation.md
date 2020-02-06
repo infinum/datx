@@ -27,4 +27,4 @@ The lib makes use of the following features that are not yet available everywher
   * [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
   * [Array.prototype.find](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)
 
-[How to add the polyfills](known-issues#the-library-doesnt-work-in-internet-explorer-11).
+[How to add the polyfills](../troubleshooting/known-issues#the-library-doesnt-work-in-internet-explorer-11).
