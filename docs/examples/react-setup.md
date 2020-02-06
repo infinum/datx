@@ -1,6 +1,6 @@
 ---
-id: examples-getting-started
-title: Getting started
+id: react-setup
+title: React setup
 ---
 
 ## Henlo
@@ -19,6 +19,9 @@ title: Getting started
 </details>
 
 The simplest way to handle authentication is inside of the network transformers:
+
+<!--DOCUSAURUS_CODE_TABS-->
+<!--TypeScript-->
 
 ```typescript
 import { config, ICollectionFetchOpts, IRawResponse } from 'datx-jsonapi';
@@ -57,3 +60,11 @@ config.transformRequest = (opts: ICollectionFetchOpts) => {
   return opts;
 };
 ```
+
+<!--JavaScript-->
+
+```js
+console.log('Hello, world!');
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->

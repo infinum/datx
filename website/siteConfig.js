@@ -27,7 +27,7 @@ const siteConfig = {
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
     { doc: "getting-started/installation", label: "Docs" },
-    { doc: "examples/examples-getting-started", label: "Examples" },
+    { doc: "examples/basic-setup", label: "Examples" },
     { href: "https://github.com/infinum/datx", label: "GitHub" },
     { search: true }
   ],
@@ -54,6 +54,8 @@ const siteConfig = {
     lightGray: "#e0e0e0",
     gray: "#8B8B8B"
   },
+  usePrism: ["jsx"],
+  scrollToTop: true,
 
   /* Custom fonts for website */
   // fonts: {

@@ -46,6 +46,26 @@
 
 @media only screen and (min-width: 1500px) {
 }
+
+details {
+  border: 1px solid $lightGray;
+  border-bottom-color: transparent;
+  margin-bottom: 20px;
+  background: rgba(250, 250, 250);
+  border-radius: 3px;
+}
+
+details[open] {
+  border-bottom-color: $lightGray;
+}
+
+details summary {
+  user-select: none;
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid $lightGray;
+}
+
 .fixedHeaderContainer {
   background-color: $headerBackground;
   border-bottom: 1px solid $lightGray;
@@ -56,14 +76,15 @@
 }
 
 .navigationSlider .slidingNav ul li a {
-  color: $darkGray;
+  color: $gray;
+  font-weight: 400;
 }
 
 .navigationSlider .slidingNav ul li > a:focus,
 .navigationSlider .slidingNav ul li > a:hover,
 .navigationSlider .slidingNav ul li.siteNavItemActive > a,
 .navigationSlider .slidingNav ul li.siteNavGroupActive > a {
-  color: $gray;
+  color: $darkGray;
   background: transparent;
 }
 

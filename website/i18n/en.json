@@ -29,8 +29,11 @@
       "api-reference/view": {
         "title": "View"
       },
-      "examples/examples-getting-started": {
-        "title": "Getting started"
+      "examples/basic-setup": {
+        "title": "Basic setup"
+      },
+      "examples/react-setup": {
+        "title": "React setup"
       },
       "getting-started/configuring-the-collection": {
         "title": "Configuring the collection"
@@ -131,7 +134,8 @@
       "API Reference": "API Reference",
       "JSON API": "JSON API",
       "Migration guide": "Migration guide",
-      "Troubleshooting": "Troubleshooting"
+      "Troubleshooting": "Troubleshooting",
+      "Setup": "Setup"
     }
   },
   "pages-strings": {
