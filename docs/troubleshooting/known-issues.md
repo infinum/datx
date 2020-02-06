@@ -5,7 +5,7 @@ title: Known issues
 
 ## Relationships don't work
 
-Due to some inconsistent behaviour with a combination of class properties and decorators in Babel 7, `@prop` decorator can't be used in some setups. Instead, you can use `prop` [as a function](defining-models#javascript-without-decorators).
+Due to some inconsistent behaviour with a combination of class properties and decorators in Babel 7, `@prop` decorator can't be used in some setups. Instead, you can use `prop` [as a function](../getting-started/defining-models#javascript-without-decorators).
 
 ## Property values are undefined
 
