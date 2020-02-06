@@ -32,8 +32,8 @@
       "examples/basic-setup": {
         "title": "Basic setup"
       },
-      "examples/react-setup": {
-        "title": "React setup"
+      "examples/nextjs-setup": {
+        "title": "Nextjs Setup"
       },
       "getting-started/configuring-the-collection": {
         "title": "Configuring the collection"

@@ -54,7 +54,6 @@ const siteConfig = {
     lightGray: "#e0e0e0",
     gray: "#8B8B8B"
   },
-  usePrism: ["jsx"],
   scrollToTop: true,
 
   /* Custom fonts for website */

@@ -3,8 +3,6 @@ id: basic-setup
 title: Basic setup
 ---
 
-> Make sure you followed all steps from [installing](../getting-started/installation) instructions before you start using datx.
-
 ## 1. Setting up your models
 <!--DOCUSAURUS_CODE_TABS-->
 <!--TypeScript-->
