@@ -33,8 +33,8 @@ const siteConfig = {
   ],
   algolia: {
     // setup DocSearch by algolia first
-    apiKey: "",
-    indexName: ""
+    apiKey: "f03607e57957ae747b2342443460477a",
+    indexName: "datx"
   },
 
   // If you have users set above, you add it here:
