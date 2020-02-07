@@ -3,10 +3,10 @@ id: model
 title: Model
 ---
 
-The `Model` is a combination of the [`PureModel`](PureModel) and the [`withMeta`](withMeta) and [`withActions`](withActions) mixins:
+The `Model` is a combination of the [`PureModel`](../api-reference/pure-model) and the [`withMeta`](../mixins/with-meta) and [`withActions`](../mixins/with-actions) mixins:
 
 ## PureModel
-[`PureModel`](PureModel) features:
+[`PureModel`](../api-reference/pure-model) features:
 * `static type: IType` - The model type
 * `static autoIdValue: IIdentifier` - The starting id if auto ID is enabled (default is `0`)
 * `static enableAutoId: boolean` - Should the auto ID be generated if no ID is provided (default is `true`)
@@ -16,7 +16,7 @@ The `Model` is a combination of the [`PureModel`](PureModel) and the [`withMeta`
 * `constructor(rawData: IRawModel = {}, collection?: Collection)` - Constructor of the model. The first argument is a raw model or an object with the data that should be added to the new model. The second (optional) argument is a collection instance if the model should be added to it. 
 
 ## withMeta
-[`withMeta`](withMeta) mixin exposes a `meta` property with the following properties:
+[`withMeta`](../mixins/with-meta) mixin exposes a `meta` property with the following properties:
 * `collection` - (Optional) A collection the model belongs to
 * `id` - The model id
 * `type` - The model type
@@ -25,7 +25,7 @@ The `Model` is a combination of the [`PureModel`](PureModel) and the [`withMeta`
 * `snapshot` - An immutable snapshot of the model at this exact moment
 
 ## withActions
-[`withActions`](withActions) mixin exposes the following methods:
+[`withActions`](../mixins/with-actions) mixin exposes the following methods:
 * `assign(key, value)` - Add a new property to the model (or update an existing one)
 * `update(data)` - Update the model with an object (key/value)
 * `clone()` - Make a clone of the object

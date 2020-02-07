@@ -27,13 +27,14 @@ const siteConfig = {
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
     { doc: "getting-started/installation", label: "Docs" },
+    { doc: "examples/basic-setup", label: "Examples" },
     { href: "https://github.com/infinum/datx", label: "GitHub" },
     { search: true }
   ],
   algolia: {
     // setup DocSearch by algolia first
-    apiKey: "",
-    indexName: ""
+    apiKey: "f03607e57957ae747b2342443460477a",
+    indexName: "datx"
   },
 
   // If you have users set above, you add it here:
@@ -53,6 +54,7 @@ const siteConfig = {
     lightGray: "#e0e0e0",
     gray: "#8B8B8B"
   },
+  scrollToTop: true,
 
   /* Custom fonts for website */
   // fonts: {
@@ -69,7 +71,12 @@ const siteConfig = {
   },
 
   // Add custom scripts here that would be placed in <script> tags.
-  scripts: ["https://buttons.github.io/buttons.js"],
+  scripts: [
+    "https://buttons.github.io/buttons.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js",
+    "/js/code-block-buttons.js"
+  ],
+  stylesheets: ["/css/code-block-buttons.css"],
 
   // On page navigation for the current documentation page.
   onPageNav: "separate",

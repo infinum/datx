@@ -29,6 +29,12 @@
       "api-reference/view": {
         "title": "View"
       },
+      "examples/basic-setup": {
+        "title": "Basic setup"
+      },
+      "examples/nextjs-setup": {
+        "title": "Next.js Setup"
+      },
       "getting-started/configuring-the-collection": {
         "title": "Configuring the collection"
       },
@@ -83,11 +89,11 @@
       "jsonapi/jsonapi-view": {
         "title": "View"
       },
-      "migration-guide/compact-collection": {
-        "title": "CompactCollection"
+      "migration-guide/compat-collection": {
+        "title": "CompatCollection"
       },
-      "migration-guide/compact-model": {
-        "title": "CompactModel"
+      "migration-guide/compat-model": {
+        "title": "CompatModel"
       },
       "migration-guide/mobx-collection-store": {
         "title": "Mobx collection store"
@@ -95,20 +101,41 @@
       "migration-guide/mobx-jsonapi-store": {
         "title": "Mobx jsonapi store"
       },
+      "mixins/building-your-own-mixin": {
+        "title": "Build your own mixin"
+      },
+      "mixins/jsonapi-mixin": {
+        "title": "JSONAPI Mixin"
+      },
+      "mixins/what-are-mixins": {
+        "title": "What are mixins"
+      },
+      "mixins/with-actions": {
+        "title": "withActions"
+      },
+      "mixins/with-meta": {
+        "title": "withMeta"
+      },
+      "mixins/with-patches": {
+        "title": "withPatches"
+      },
       "troubleshooting/known-issues": {
         "title": "Known issues"
       }
     },
     "links": {
       "Docs": "Docs",
+      "Examples": "Examples",
       "GitHub": "GitHub"
     },
     "categories": {
       "Getting started": "Getting started",
+      "Mixins": "Mixins",
       "API Reference": "API Reference",
       "JSON API": "JSON API",
       "Migration guide": "Migration guide",
-      "Troubleshooting": "Troubleshooting"
+      "Troubleshooting": "Troubleshooting",
+      "Setup": "Setup"
     }
   },
   "pages-strings": {

@@ -19,7 +19,7 @@ Should the `GET` network calls be cached (default is `true` for browser and `fal
 static defaultModel: typeof PureModel
 ```
 
-A default model that will be used if no model is defined for a certain model type received from the server (default is `GenericModel` which is a combination of [JSON API Model](jsonapi-model) and [`PureModel`](pure-model)).
+A default model that will be used if no model is defined for a certain model type received from the server (default is `GenericModel` which is a combination of [JSON API Model](jsonapi-model) and [`PureModel`](../api-reference/pure-model)).
 
 ## sync
 
@@ -68,7 +68,7 @@ remove(type: IType|typeof PureModel, id?: IIdentifier, remote?: boolean|IRequest
 remove(model: PureModel, remote?: boolean|IRequestOptions): Promise<void>;
 ```
 
-The [`remove`](collection#remove) method equal to the one in the `datx` collection, but with an additional optional `remote` property. If set, the model will also be removed from the server.
+The [`remove`](../api-reference/collection#remove) method equal to the one in the `datx` collection, but with an additional optional `remote` property. If set, the model will also be removed from the server.
 
 ## removeAll and reset
 

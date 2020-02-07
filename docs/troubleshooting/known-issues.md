@@ -3,10 +3,6 @@ id: known-issues
 title: Known issues
 ---
 
-## Relationships don't work
-
-Due to some inconsistent behaviour with a combination of class properties and decorators in Babel 7, `@prop` decorator can't be used in some setups. Instead, you can use `prop` [as a function](defining-models#javascript-without-decorators).
-
 ## Property values are undefined
 
 Due to some inconsistent behaviour in some Babel 7 versions (related to the class properties), a [workaround with a model constructor](https://github.com/infinum/js-cra-starter/pull/2) is required.

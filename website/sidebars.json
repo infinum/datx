@@ -8,6 +8,14 @@
       "getting-started/using-the-collection",
       "getting-started/persisting-data-locally"
     ],
+    "Mixins": [
+      "mixins/what-are-mixis",
+      "mixins/with-actions",
+      "mixins/with-meta",
+      "mixins/with-patches",
+      "mixins/jsonapi-mixin",
+      "mixins/building-your-own-mixin"
+    ],
     "API Reference": [
       "api-reference/collection",
       "api-reference/model",
@@ -33,11 +41,14 @@
       "jsonapi/jsonapi-typescript-interfaces"
     ],
     "Migration guide": [
-      "migration-guide/compact-collection",
-      "migration-guide/compact-model",
+      "migration-guide/compat-collection",
+      "migration-guide/compat-model",
       "migration-guide/mobx-collection-store",
       "migration-guide/mobx-jsonapi-store"
     ],
     "Troubleshooting": ["troubleshooting/known-issues"]
+  },
+  "examples": {
+    "Setup": ["examples/basic-setup", "examples/nextjs-setup"]
   }
 }
