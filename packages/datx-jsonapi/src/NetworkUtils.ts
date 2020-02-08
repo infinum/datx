@@ -224,16 +224,26 @@ function collectionFetch<T extends IJsonapiModel>(
   const params = config.transformRequest(reqOptions);
   // const { url, options, data, method = 'GET', collection, views } = params;
 
-  const staticCollection = params?.collection?.constructor as { cache?: boolean };
+  const staticCollection = (params?.collection?.constructor as unknown) as {
+    maxCacheAge?: number;
+    cache: CachingStrategy;
+  };
   const collectionCache = staticCollection && staticCollection.cache;
   const isCacheSupported = params.method.toUpperCase() === 'GET';
 
   const cacheStrategy =
-    reqOptions.options?.cacheOptions?.skipCache || !isCacheSupported || collectionCache === false
+    reqOptions.options?.cacheOptions?.skipCache || !isCacheSupported
       ? CachingStrategy.NETWORK_ONLY
-      : reqOptions.options?.cacheOptions?.cachingStrategy || config.cache;
+      : reqOptions.options?.cacheOptions?.cachingStrategy || collectionCache || config.cache;
 
-  const maxCacheAge = reqOptions.options?.cacheOptions?.maxAge ?? config.maxCacheAge;
+  let maxCacheAge: number = config.maxCacheAge || Infinity;
+
+  if (staticCollection && staticCollection.maxCacheAge !== undefined) {
+    maxCacheAge = staticCollection.maxCacheAge;
+  }
+  if (reqOptions.options?.cacheOptions?.maxAge !== undefined) {
+    maxCacheAge = reqOptions.options?.cacheOptions?.maxAge;
+  }
 
   // NETWORK_ONLY - Ignore cache
   if (cacheStrategy === CachingStrategy.NETWORK_ONLY) {

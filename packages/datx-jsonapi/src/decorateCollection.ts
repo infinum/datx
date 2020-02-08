@@ -59,8 +59,10 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
         ? BaseClass.types.concat(GenericModel)
         : [GenericModel];
 
-    public static cache: boolean =
-      BaseClass['cache'] === undefined ? isBrowser : BaseClass['cache'];
+    public static maxCacheAge: number = BaseClass['maxCacheAge'];
+
+    // eslint-disable-next-line no-nested-ternary
+    public static cache?: CachingStrategy = BaseClass['cache'];
 
     public static defaultModel = BaseClass['defaultModel'] || GenericModel;
 

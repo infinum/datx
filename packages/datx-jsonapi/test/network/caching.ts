@@ -1,10 +1,9 @@
 /* eslint-disable max-classes-per-file */
 
-import { Collection } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 import { autorun } from 'mobx';
 
-import { config, jsonapi } from '../../src';
+import { config } from '../../src';
 
 import { clearAllCache } from '../../src/cache';
 import { setupNetwork, setRequest } from '../utils/api';
@@ -19,6 +18,7 @@ describe('caching', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
     config.baseUrl = 'https://example.com/';
+    config.cache = CachingStrategy.CACHE_FIRST;
     clearAllCache();
     setupNetwork();
   });
@@ -95,40 +95,6 @@ describe('caching', () => {
       const event2 = events2.data as Event;
 
       expect(events2).not.toEqual(events);
-      expect(event2).toBeInstanceOf(Object);
-      expect(event2.meta.id).toBe('12345');
-      expect(req.isDone()).toBe(true);
-    });
-
-    it('should ignore fetch cache if static cache is false', async () => {
-      setRequest({
-        name: 'event-1',
-        url: 'event/12345',
-      });
-
-      class TestCollection extends Collection {
-        public static cache = false;
-
-        public static types = [Event];
-      }
-
-      const store = new (jsonapi(TestCollection))();
-
-      const events = await store.fetch('event', '12345');
-      const event = events.data as Event;
-
-      expect(event).toBeInstanceOf(Object);
-      expect(event.meta.id).toBe('12345');
-
-      const req = setRequest({
-        name: 'event-1',
-        url: 'event/12345',
-      });
-
-      const events2 = await store.fetch('event', '12345');
-      const event2 = events2.data as Event;
-
-      expect(events2).not.toBe(events);
       expect(event2).toBeInstanceOf(Object);
       expect(event2.meta.id).toBe('12345');
       expect(req.isDone()).toBe(true);
@@ -266,35 +232,6 @@ describe('caching', () => {
       expect(events2).not.toEqual(events);
       expect(events2.data).toBeInstanceOf(Array);
       expect(events2.data).toHaveLength(4);
-    });
-
-    it('should ignore fetchAll cache if static cache is false', async () => {
-      setRequest({
-        name: 'events-1',
-        url: 'event',
-      });
-
-      class TestCollection extends Collection {
-        public static cache = false;
-      }
-
-      const store = new (jsonapi(TestCollection))();
-      const events = await store.fetchAll('event');
-
-      expect(events.data).toBeInstanceOf(Array);
-      expect(events.data).toHaveLength(4);
-
-      const req = setRequest({
-        name: 'events-1',
-        url: 'event',
-      });
-
-      const events2 = await store.fetchAll('event');
-
-      expect(events2).not.toBe(events);
-      expect(events2.data).toBeInstanceOf(Array);
-      expect(events2.data).toHaveLength(4);
-      expect(req.isDone()).toBe(true);
     });
 
     it('should not cache fetchAll if the response was an jsonapi error', async () => {
@@ -851,11 +788,8 @@ describe('caching', () => {
     it('should fail if invalid strategy', async () => {
       const store = new TestStore();
 
-      // @ts-ignore
-      config.cache = 123;
-
       try {
-        await store.getMany(Event);
+        await store.getMany(Event, { cacheOptions: { cachingStrategy: 123 } });
         throw Error('The request should fail');
       } catch (response) {
         expect(response?.error?.toString()).toBe('Error: Invalid caching strategy');
