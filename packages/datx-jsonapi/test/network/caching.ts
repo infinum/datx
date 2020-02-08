@@ -44,7 +44,7 @@ describe('caching', () => {
 
       const events2 = await store.fetch(Event, '12345');
 
-      expect(events2).toBe(events);
+      expect(events2.snapshot).toEqual(events.snapshot);
     });
 
     it('should clear fetch cache on removeAll', async () => {
@@ -215,7 +215,7 @@ describe('caching', () => {
 
       const events2 = await store.fetchAll(Event);
 
-      expect(events2).toBe(events);
+      expect(events2.snapshot).toEqual(events.snapshot);
     });
 
     it('should clear fetchAll cache on removeAll', async () => {
@@ -684,6 +684,32 @@ describe('caching', () => {
           throw Error('The request should fail');
         } catch (response) {
           expect(response?.error?.toString()).toBe('Error: Network not available');
+        }
+      });
+
+      it('should not use a dirty model for caching', async () => {
+        const store = new TestStore();
+
+        setRequest({
+          url: 'event/1',
+          name: 'event-1',
+        });
+
+        const eventResponse = await store.getOne(Event, '1', {
+          cacheOptions: { cachingStrategy: CachingStrategy.NETWORK_FIRST },
+        });
+
+        const originalEvent = eventResponse.data as Event;
+
+        originalEvent.title = 'Modified title';
+
+        const response = await store.getOne(Event, '1');
+        const event = response?.data;
+
+        if (event instanceof Event) {
+          expect(event?.title).toBe('Test 1');
+        } else {
+          throw new Error('Response is wrong');
         }
       });
     });

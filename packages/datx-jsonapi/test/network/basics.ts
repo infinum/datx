@@ -253,8 +253,8 @@ describe('Network basics', () => {
 
         const events1b = await events2.prev?.();
 
-        expect(events1).toEqual(events);
-        expect(events1).toBe(events1b);
+        expect(events1.snapshot).toEqual(events.snapshot);
+        expect(events1.snapshot).toEqual(events1b?.snapshot);
       }
     }
   });

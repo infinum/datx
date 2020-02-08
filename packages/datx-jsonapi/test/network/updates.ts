@@ -560,22 +560,24 @@ describe('updates', () => {
       });
 
       const store = new TestStore();
-      const events = await store.fetch('event', '12345');
+      const events = await store.fetch(Event, '12345');
 
       const record = events.data as Event;
 
-      expect(store.findAll('event').length).toBe(1);
+      expect(store.findAll(Event)).toHaveLength(1);
       store.removeOne(record.meta.type, record.meta.id);
-      expect(store.findAll('event').length).toBe(0);
+      expect(store.findAll(Event)).toHaveLength(0);
 
       setRequest({
         method: 'DELETE',
         name: 'event-1',
         url: 'event/12345',
+        responseFn: () => null,
+        status: 204,
       });
 
       await record.destroy();
-      expect(store.findAll('event').length).toBe(0);
+      expect(store.findAll(Event)).toHaveLength(0);
     });
 
     it('should remove a local record without api calls', async () => {

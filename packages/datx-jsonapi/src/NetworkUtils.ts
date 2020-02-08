@@ -234,15 +234,16 @@ function collectionFetch<T extends IJsonapiModel>(
       : reqOptions.options?.cacheOptions?.cachingStrategy || config.cache;
 
   const maxCacheAge = reqOptions.options?.cacheOptions?.maxAge ?? config.maxCacheAge;
-  const cacheContent: { response: LibResponse<T> } | undefined = (getCache(
-    params.url,
-    maxCacheAge,
-  ) as unknown) as { response: LibResponse<T> } | undefined;
 
   // NETWORK_ONLY - Ignore cache
   if (cacheStrategy === CachingStrategy.NETWORK_ONLY) {
     return makeNetworkCall<T>(params);
   }
+
+  const cacheContent: { response: LibResponse<T> } | undefined = (getCache(
+    params.url,
+    maxCacheAge,
+  ) as unknown) as { response: LibResponse<T> } | undefined;
 
   // NETWORK_FIRST - Fallback to cache only on network error
   if (cacheStrategy === CachingStrategy.NETWORK_FIRST) {

@@ -3,6 +3,8 @@ import { mapItems } from 'datx-utils';
 
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { Response } from './Response';
+import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
+import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 
 export interface ICache {
   response: Response<IJsonapiModel>;
@@ -11,7 +13,16 @@ export interface ICache {
   url: string;
 }
 
-let cacheStorage: Array<ICache> = [];
+export interface ICacheInternal {
+  response: IResponseSnapshot;
+  origResponse: Response<IJsonapiModel>;
+  collection?: IJsonapiCollection;
+  time: number;
+  types: Array<IType>;
+  url: string;
+}
+
+let cacheStorage: Array<ICacheInternal> = [];
 
 export function saveCache(url: string, response: Response<IJsonapiModel>) {
   if (response && response.isSuccess && response.data) {
@@ -20,7 +31,9 @@ export function saveCache(url: string, response: Response<IJsonapiModel>) {
     cacheStorage = cacheStorage.filter((item) => item.url !== url);
 
     cacheStorage.unshift({
-      response,
+      response: response.snapshot,
+      origResponse: response,
+      collection: response.collection,
       time: Date.now(),
       types: ([] as Array<IType>).concat(types),
       url,
@@ -30,8 +43,21 @@ export function saveCache(url: string, response: Response<IJsonapiModel>) {
 
 export function getCache(url: string, maxAge: number): ICache | undefined {
   const ageLimit = Date.now() - maxAge * 1000;
+  const cache = cacheStorage.find((item) => item.url === url && item.time > ageLimit);
 
-  return cacheStorage.find((item) => item.url === url && item.time > ageLimit);
+  if (cache) {
+    const data = cache.response;
+
+    return {
+      response: new Response(data.response, cache.collection, data.options),
+      // response: cache.origResponse,
+      time: cache.time,
+      types: cache.types,
+      url: cache.url,
+    };
+  }
+
+  return undefined;
 }
 
 export function clearAllCache() {

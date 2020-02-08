@@ -17,11 +17,13 @@ import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { IError, IJsonApiObject, ILink } from './interfaces/JsonApi';
+import { IResponseInternal } from './interfaces/IResponseInternal';
 
 import { GenericModel } from './GenericModel';
 import { flattenModel } from './helpers/model';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { fetchLink } from './NetworkUtils';
+import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 
 function initData<T extends IJsonapiModel>(
   response: IRawResponse,
@@ -55,16 +57,8 @@ function initData<T extends IJsonapiModel>(
 export class Response<T extends IJsonapiModel> {
   private __data;
 
-  private __internal: {
-    meta?: object;
-    links?: Record<string, ILink>;
-    jsonapi?: IJsonApiObject;
-    headers?: IResponseHeaders;
-    requestHeaders?: IHeaders;
-    error?: Array<IError> | Error;
-    status?: number;
-    views: Array<View>;
-  } = {
+  private __internal: IResponseInternal = {
+    response: {},
     views: [],
   };
 
@@ -166,7 +160,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {number}
    * @memberOf Response
    */
-  public status?: number;
+  public get status(): number | undefined {
+    return this.__internal.status;
+  }
 
   public get views(): Array<View> {
     return this.__internal.views;
@@ -175,29 +171,10 @@ export class Response<T extends IJsonapiModel> {
   /**
    * Related Store
    *
-   * @private
    * @type {IJsonapiCollection}
    * @memberOf Response
    */
-  private readonly __collection?: IJsonapiCollection;
-
-  /**
-   * Server options
-   *
-   * @private
-   * @type {IRequestOptions}
-   * @memberOf Response
-   */
-  private readonly __options?: IRequestOptions;
-
-  /**
-   * Original server response
-   *
-   * @private
-   * @type {IRawResponse}
-   * @memberOf Response
-   */
-  private readonly __response: IRawResponse;
+  public readonly collection?: IJsonapiCollection;
 
   /**
    * Cache used for the link requests
@@ -215,14 +192,8 @@ export class Response<T extends IJsonapiModel> {
     overrideData?: T | Array<T>,
     views?: Array<View>,
   ) {
-    this.__collection = collection;
-    this.__options = options;
-    this.__response = response;
-    this.status = response.status;
-    if (views) {
-      this.__internal.views = views;
-    }
-
+    this.collection = collection;
+    this.__updateInternal(response, options, views);
     this.__data = initData(response, collection, overrideData);
 
     this.views.forEach((view) => {
@@ -230,23 +201,6 @@ export class Response<T extends IJsonapiModel> {
         view.add(this.__data.value);
       }
     });
-
-    this.__internal.meta = (response.data && response.data.meta) || {};
-    this.__internal.links = (response.data && response.data.links) || {};
-    this.__internal.jsonapi = (response.data && response.data.jsonapi) || {};
-    this.__internal.headers = response.headers;
-    this.__internal.requestHeaders = response.requestHeaders;
-    this.__internal.error = (response.data && response.data.errors) || response.error;
-
-    if (!this.error && !this.status) {
-      this.__internal.error = new Error('Network not available');
-    }
-
-    if (this.links) {
-      Object.keys(this.links).forEach((link: string) => {
-        assignComputed(this, link, () => this.__fetchLink(link));
-      });
-    }
 
     Object.freeze(this);
 
@@ -262,6 +216,35 @@ export class Response<T extends IJsonapiModel> {
 
   public get data(): T | Array<T> | null {
     return this.__data.value;
+  }
+
+  private __updateInternal(response: IRawResponse, options?: IRequestOptions, views?: Array<View>) {
+    if (options) {
+      this.__internal.options = options;
+    }
+
+    this.__internal.response = response;
+    this.__internal.meta = response.data?.meta || {};
+    this.__internal.links = response.data?.links || {};
+    this.__internal.jsonapi = response.data?.jsonapi || {};
+    this.__internal.headers = response.headers;
+    this.__internal.requestHeaders = response.requestHeaders;
+    this.__internal.error = response.data?.errors || response.error;
+    this.__internal.status = response.status;
+
+    if (views) {
+      this.__internal.views = views;
+    }
+
+    if (!this.error && !this.status) {
+      this.__internal.error = new Error('Network not available');
+    }
+
+    if (this.links) {
+      Object.keys(this.links).forEach((link: string) => {
+        assignComputed(this, link, () => this.__fetchLink(link));
+      });
+    }
   }
 
   /**
@@ -284,9 +267,9 @@ export class Response<T extends IJsonapiModel> {
 
     const viewIndexes = this.views.map((view) => view.list.indexOf(record));
 
-    if (this.__collection) {
-      this.__collection.removeOne(type, newId);
-      this.__collection.add(data);
+    if (this.collection) {
+      this.collection.removeOne(type, newId);
+      this.collection.add(data);
     }
 
     updateModel(data, modelToJSON(record));
@@ -299,31 +282,30 @@ export class Response<T extends IJsonapiModel> {
       }
     });
 
-    return new Response(this.__response, this.__collection, this.__options, data);
+    return new Response(this.__internal.response, this.collection, this.__internal.options, data);
   }
 
   public clone(): Response<T> {
-    return new Response(this.__response, this.__collection, this.__options, this.data || undefined);
+    return new Response(
+      this.__internal.response,
+      this.collection,
+      this.__internal.options,
+      this.data || undefined,
+    );
+  }
+
+  public get snapshot(): IResponseSnapshot {
+    return { response: this.__internal.response, options: this.__internal.options };
   }
 
   @action
   public update(response: IRawResponse, views?: Array<View>): Response<T> {
-    const newData = initData(response, this.__collection);
+    this.__updateInternal(response, undefined, views);
+    const newData = initData(response, this.collection);
 
     // @ts-ignore
     // eslint-disable-next-line no-underscore-dangle
     this.__data.__readonlyValue = newData.value;
-
-    this.__internal.meta = response.data?.meta || {};
-    this.__internal.links = response.data?.links || {};
-    this.__internal.jsonapi = response.data?.jsonapi || {};
-    this.__internal.headers = response.headers;
-    this.__internal.requestHeaders = response.requestHeaders;
-    this.__internal.error = response.data?.errors || response.error;
-    this.__internal.status = response.status;
-    if (views) {
-      this.__internal.views = views;
-    }
 
     return this;
   }
@@ -342,11 +324,11 @@ export class Response<T extends IJsonapiModel> {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 
       if (link) {
-        const options = Object.assign({}, this.__options);
+        const options = Object.assign({}, this.__internal.options);
 
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
-        this.__cache[name] = () => fetchLink<T>(link, this.__collection, options, this.views);
+        this.__cache[name] = () => fetchLink<T>(link, this.collection, options, this.views);
       }
     }
 
