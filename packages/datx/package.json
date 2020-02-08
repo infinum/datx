@@ -18,7 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",
-    "@types/jest": "^25.1.1",
+    "@types/jest": "^25.1.2",
     "@types/node": "^13.7.0",
     "jest": "^25.1.0",
     "mobx": "^5.15.4",
@@ -26,7 +26,7 @@
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.6",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript2": "^0.25.3",
-    "ts-jest": "^25.1.0",
+    "ts-jest": "^25.2.0",
     "typescript": "^3.7.5"
   },
   "peerDependencies": {
