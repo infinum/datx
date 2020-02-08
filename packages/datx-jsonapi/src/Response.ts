@@ -23,8 +23,50 @@ import { flattenModel } from './helpers/model';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { fetchLink } from './NetworkUtils';
 
+function initData<T extends IJsonapiModel>(
+  response: IRawResponse,
+  collection?: IJsonapiCollection,
+  overrideData?: T | Array<T>,
+): any {
+  if (collection && response.data) {
+    const data = overrideData || collection.sync<T>(response.data);
+
+    return new Bucket.ToOneOrMany<T>(data, collection as any, true);
+  }
+
+  if (response.data) {
+    // The case when a record is not in a store and save/remove are used
+    const resp = response.data;
+
+    if (resp.data) {
+      if (resp.data instanceof Array) {
+        throw new Error('A save/remove operation should not return an array of results');
+      }
+
+      return {
+        value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T),
+      };
+    }
+  }
+
+  return undefined;
+}
+
 export class Response<T extends IJsonapiModel> {
   private __data;
+
+  private __internal: {
+    meta?: object;
+    links?: Record<string, ILink>;
+    jsonapi?: IJsonApiObject;
+    headers?: IResponseHeaders;
+    requestHeaders?: IHeaders;
+    error?: Array<IError> | Error;
+    status?: number;
+    views: Array<View>;
+  } = {
+    views: [],
+  };
 
   /**
    * API response metadata
@@ -32,7 +74,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {object}
    * @memberOf Response
    */
-  public meta?: object;
+  public get meta(): object | undefined {
+    return this.__internal.meta;
+  }
 
   /**
    * API response links
@@ -40,7 +84,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {object}
    * @memberOf Response
    */
-  public links?: Record<string, ILink>;
+  public get links(): Record<string, ILink> | undefined {
+    return this.__internal.links;
+  }
 
   /**
    * The JSON API object returned by the server
@@ -48,7 +94,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {JsonApi.IJsonApiObject}
    * @memberOf Response
    */
-  public jsonapi?: IJsonApiObject;
+  public get jsonapi(): IJsonApiObject | undefined {
+    return this.__internal.jsonapi;
+  }
 
   /**
    * Headers received from the API call
@@ -56,7 +104,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {IResponseHeaders}
    * @memberOf Response
    */
-  public headers?: IResponseHeaders;
+  public get headers(): IResponseHeaders | undefined {
+    return this.__internal.headers;
+  }
 
   /**
    * Headers sent to the server
@@ -64,7 +114,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {IHeaders}
    * @memberOf Response
    */
-  public requestHeaders?: IHeaders;
+  public get requestHeaders(): IHeaders | undefined {
+    return this.__internal.requestHeaders;
+  }
 
   /**
    * Request error
@@ -72,7 +124,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {(Array<JsonApi.IError>|Error)}
    * @memberOf Response
    */
-  public error?: Array<IError> | Error;
+  public get error(): Array<IError> | Error | undefined {
+    return this.__internal.error;
+  }
 
   /**
    * First data page
@@ -114,7 +168,9 @@ export class Response<T extends IJsonapiModel> {
    */
   public status?: number;
 
-  public views: Array<View> = [];
+  public get views(): Array<View> {
+    return this.__internal.views;
+  }
 
   /**
    * Related Store
@@ -164,27 +220,10 @@ export class Response<T extends IJsonapiModel> {
     this.__response = response;
     this.status = response.status;
     if (views) {
-      this.views = views;
+      this.__internal.views = views;
     }
 
-    if (collection && response.data) {
-      const data = overrideData || collection.sync<T>(response.data);
-
-      this.__data = new Bucket.ToOneOrMany<T>(data, collection as any, true);
-    } else if (response.data) {
-      // The case when a record is not in a store and save/remove are used
-      const resp = response.data;
-
-      if (resp.data) {
-        if (resp.data instanceof Array) {
-          throw new Error('A save/remove operation should not return an array of results');
-        }
-
-        this.__data = {
-          value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T),
-        };
-      }
-    }
+    this.__data = initData(response, collection, overrideData);
 
     this.views.forEach((view) => {
       if (this.__data.value) {
@@ -192,15 +231,15 @@ export class Response<T extends IJsonapiModel> {
       }
     });
 
-    this.meta = (response.data && response.data.meta) || {};
-    this.links = (response.data && response.data.links) || {};
-    this.jsonapi = (response.data && response.data.jsonapi) || {};
-    this.headers = response.headers;
-    this.requestHeaders = response.requestHeaders;
-    this.error = (response.data && response.data.errors) || response.error;
+    this.__internal.meta = (response.data && response.data.meta) || {};
+    this.__internal.links = (response.data && response.data.links) || {};
+    this.__internal.jsonapi = (response.data && response.data.jsonapi) || {};
+    this.__internal.headers = response.headers;
+    this.__internal.requestHeaders = response.requestHeaders;
+    this.__internal.error = (response.data && response.data.errors) || response.error;
 
     if (!this.error && !this.status) {
-      this.error = new Error('Network not available');
+      this.__internal.error = new Error('Network not available');
     }
 
     if (this.links) {
@@ -267,22 +306,23 @@ export class Response<T extends IJsonapiModel> {
     return new Response(this.__response, this.__collection, this.__options, this.data || undefined);
   }
 
+  @action
   public update(response: IRawResponse, views?: Array<View>): Response<T> {
-    const newResponse = new Response(response);
+    const newData = initData(response, this.__collection);
 
     // @ts-ignore
     // eslint-disable-next-line no-underscore-dangle
-    this.__data.value = newResponse.__data.value;
+    this.__data.__readonlyValue = newData.value;
 
-    this.meta = (response.data && response.data.meta) || {};
-    this.links = (response.data && response.data.links) || {};
-    this.jsonapi = (response.data && response.data.jsonapi) || {};
-    this.headers = response.headers;
-    this.requestHeaders = response.requestHeaders;
-    this.error = (response.data && response.data.errors) || response.error;
-    this.status = response.status;
+    this.__internal.meta = response.data?.meta || {};
+    this.__internal.links = response.data?.links || {};
+    this.__internal.jsonapi = response.data?.jsonapi || {};
+    this.__internal.headers = response.headers;
+    this.__internal.requestHeaders = response.requestHeaders;
+    this.__internal.error = response.data?.errors || response.error;
+    this.__internal.status = response.status;
     if (views) {
-      this.views = views;
+      this.__internal.views = views;
     }
 
     return this;

@@ -188,14 +188,16 @@ function makeNetworkCall<T extends IJsonapiModel>(
   return config
     .baseFetch(params.method, params.url, params.data, params?.options?.networkConfig?.headers)
     .then((response: IRawResponse) => {
-      const collectionResponse = Object.assign(response, { collection: params.collection });
+      const collectionResponse = Object.assign({}, response, { collection: params.collection });
+      const payload = config.transformResponse(collectionResponse);
 
       if (existingResponse) {
-        return existingResponse.update(config.transformResponse(collectionResponse), params.views);
+        existingResponse.update(payload, params.views);
+        return existingResponse;
       }
 
       return new LibResponse<T>(
-        config.transformResponse(collectionResponse),
+        payload,
         params.collection,
         params.options,
         undefined,

@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 import { computed, observable, isArrayLike } from 'mobx';
 
 import { IModelRef } from '../interfaces/IModelRef';
@@ -69,6 +71,37 @@ export class ToOneOrMany<T extends PureModel> {
       }
     } else if (this.__toOneBucket) {
       this.__toOneBucket.value = data as T;
+    } else {
+      this.__toOneBucket = new ToOne<T>(data as T, this.__collection);
+    }
+  }
+
+  // An ugly workaround to still be able to pdate the response buckets
+  // @ts-ignore
+  private set __readonlyValue(data: T | Array<T> | null) {
+    this.__isList = isArrayLike(data);
+    if (this.__isList) {
+      if (this.__toManyBucket) {
+        // @ts-ignore
+        const readonlyStatus = this.__toManyBucket.__readonly;
+
+        // @ts-ignore
+        this.__toManyBucket.__readonly = false;
+        this.__toManyBucket.value = data as Array<T>;
+        // @ts-ignore
+        this.__toManyBucket.__readonly = readonlyStatus;
+      } else {
+        this.__toManyBucket = new ToMany(data as Array<T | IModelRef>, this.__collection);
+      }
+    } else if (this.__toOneBucket) {
+      // @ts-ignore
+      const readonlyStatus = this.__toOneBucket.__readonly;
+
+      // @ts-ignore
+      this.__toOneBucket.__readonly = false;
+      this.__toOneBucket.value = data as T;
+      // @ts-ignore
+      this.__toOneBucket.__readonly = readonlyStatus;
     } else {
       this.__toOneBucket = new ToOne<T>(data as T, this.__collection);
     }

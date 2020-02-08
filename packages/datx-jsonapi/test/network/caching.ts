@@ -732,7 +732,7 @@ describe('caching', () => {
         }
       });
 
-      xit('should update the cache and response after call is done', async () => {
+      it('should update the cache and response after call is done', async () => {
         const store = new TestStore();
 
         setRequest({
@@ -770,7 +770,7 @@ describe('caching', () => {
 
         expect(autorunCounter1).toBe(1);
 
-        await sleep(10);
+        await sleep(0);
 
         const event3 = response2?.data as Event;
 
