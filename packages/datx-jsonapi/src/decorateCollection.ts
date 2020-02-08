@@ -4,6 +4,7 @@ import {
   ICollectionConstructor,
   IModelConstructor,
   initModelRef,
+  IRawCollection,
   IReferenceOptions,
   IType,
   PureCollection,
@@ -14,7 +15,13 @@ import {
 import { getMeta, IRawModel, mapItems, deprecated } from 'datx-utils';
 import { action, isArrayLike } from 'mobx';
 
-import { clearAllCache, clearCacheByType } from './cache';
+import {
+  clearAllCache,
+  clearCacheByType,
+  ICacheInternal,
+  getCacheByCollection,
+  saveCacheForCollection,
+} from './cache';
 import { GenericModel } from './GenericModel';
 import { flattenModel, removeModel } from './helpers/model';
 import { buildUrl, prepareQuery } from './helpers/url';
@@ -27,6 +34,8 @@ import { IDefinition, IRecord, IRelationship, IRequest, IResponse } from './inte
 import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
 import { CachingStrategy } from './enums/CachingStrategy';
+
+type TSerialisedStore = IRawCollection & { cache?: Array<Omit<ICacheInternal, 'collection'>> };
 
 function handleErrors<T extends IJsonapiModel>(response: Response<T>) {
   if (response.error) {
@@ -65,6 +74,14 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
     public static cache?: CachingStrategy = BaseClass['cache'];
 
     public static defaultModel = BaseClass['defaultModel'] || GenericModel;
+
+    constructor(data: Array<IRawModel> | TSerialisedStore = []) {
+      super(data);
+
+      if (!(data instanceof Array) && data?.cache) {
+        saveCacheForCollection(data.cache, this);
+      }
+    }
 
     @action public sync<T extends IJsonapiModel = IJsonapiModel>(
       body?: IResponse,
@@ -295,6 +312,12 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       headers: IHeaders;
     } {
       return prepareQuery(type, id, data, options, this);
+    }
+
+    public toJSON(): TSerialisedStore {
+      return Object.assign({}, super.toJSON(), {
+        cache: getCacheByCollection(this),
+      });
     }
   }
 

@@ -25,6 +25,28 @@ import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { fetchLink } from './NetworkUtils';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 
+function serializeHeaders(headers: Array<[string, string]> | IResponseHeaders) {
+  if (headers instanceof Array) {
+    return headers;
+  }
+
+  const list: Array<[string, string]> = [];
+
+  headers.forEach((value: string, key: string) => {
+    list.push([key, value]);
+  });
+
+  return list;
+}
+
+function initHeaders(headers: Array<[string, string]> | IResponseHeaders) {
+  if (headers instanceof Array) {
+    return new Headers(headers);
+  }
+
+  return headers;
+}
+
 function initData<T extends IJsonapiModel>(
   response: IRawResponse,
   collection?: IJsonapiCollection,
@@ -227,7 +249,7 @@ export class Response<T extends IJsonapiModel> {
     this.__internal.meta = response.data?.meta || {};
     this.__internal.links = response.data?.links || {};
     this.__internal.jsonapi = response.data?.jsonapi || {};
-    this.__internal.headers = response.headers;
+    this.__internal.headers = response.headers && initHeaders(response.headers);
     this.__internal.requestHeaders = response.requestHeaders;
     this.__internal.error = response.data?.errors || response.error;
     this.__internal.status = response.status;
@@ -295,7 +317,14 @@ export class Response<T extends IJsonapiModel> {
   }
 
   public get snapshot(): IResponseSnapshot {
-    return { response: this.__internal.response, options: this.__internal.options };
+    return {
+      response: Object.assign({}, this.__internal.response, {
+        headers:
+          this.__internal.response.headers && serializeHeaders(this.__internal.response.headers),
+        collection: undefined,
+      }),
+      options: this.__internal.options,
+    };
   }
 
   @action

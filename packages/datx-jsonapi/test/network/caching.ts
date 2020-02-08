@@ -649,6 +649,52 @@ describe('caching', () => {
           throw new Error('Response is wrong');
         }
       });
+
+      it('should support cache serialization', async () => {
+        const store = new TestStore();
+
+        setRequest({
+          url: 'event/1',
+          name: 'event-1',
+        });
+
+        await store.getOne(Event, '1', {
+          cacheOptions: { cachingStrategy: CachingStrategy.NETWORK_FIRST },
+        });
+
+        const storeJson = store.toJSON();
+
+        const rawStore = JSON.parse(JSON.stringify(storeJson));
+
+        clearAllCache();
+
+        try {
+          await store.getOne(Event, '1');
+          throw Error('The request should fail');
+        } catch (e) {
+          expect(e.error.message).toBe('Unexpected request: GET https://example.com/event/1');
+        }
+
+        const store2 = new TestStore(rawStore);
+
+        const response1 = await store.getOne(Event, '1');
+        const event1 = response1?.data;
+
+        if (event1 instanceof Event) {
+          expect(event1?.title).toBe('Test 1');
+        } else {
+          throw new Error('Response is wrong');
+        }
+
+        const response = await store2.getOne(Event, '1');
+        const event = response?.data;
+
+        if (event instanceof Event) {
+          expect(event?.title).toBe('Test 1');
+        } else {
+          throw new Error('Response is wrong');
+        }
+      });
     });
 
     describe('STALE_AND_UPDATE', () => {

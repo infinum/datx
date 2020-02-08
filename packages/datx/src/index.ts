@@ -41,6 +41,7 @@ export { IIdentifier } from './interfaces/IIdentifier';
 export { IModelConstructor } from './interfaces/IModelConstructor';
 export { IPatch } from './interfaces/IPatch';
 export { IType } from './interfaces/IType';
+export { IRawCollection } from './interfaces/IRawCollection';
 export { IReferenceOptions } from './interfaces/IReferenceOptions';
 export { IViewConstructor } from './interfaces/IViewConstructor';
 export { IActionsMixin } from './interfaces/IActionsMixin';

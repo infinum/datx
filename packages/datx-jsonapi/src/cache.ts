@@ -15,7 +15,6 @@ export interface ICache {
 
 export interface ICacheInternal {
   response: IResponseSnapshot;
-  origResponse: Response<IJsonapiModel>;
   collection?: IJsonapiCollection;
   time: number;
   types: Array<IType>;
@@ -32,7 +31,6 @@ export function saveCache(url: string, response: Response<IJsonapiModel>) {
 
     cacheStorage.unshift({
       response: response.snapshot,
-      origResponse: response,
       collection: response.collection,
       time: Date.now(),
       types: ([] as Array<IType>).concat(types),
@@ -66,4 +64,19 @@ export function clearAllCache() {
 
 export function clearCacheByType(type: IType) {
   cacheStorage = cacheStorage.filter((item) => !item.types.includes(type));
+}
+
+export function getCacheByCollection(
+  collection: IJsonapiCollection,
+): Array<Omit<ICacheInternal, 'collection'>> {
+  return cacheStorage
+    .filter((item) => item.collection === collection)
+    .map((item) => Object.assign({}, item, { collection: undefined }));
+}
+
+export function saveCacheForCollection(
+  cacheItems: Array<Omit<ICacheInternal, 'collection'>>,
+  collection: IJsonapiCollection,
+): void {
+  cacheStorage.push(...cacheItems.map((item) => Object.assign({ collection }, item)));
 }
