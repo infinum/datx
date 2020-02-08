@@ -1,4 +1,4 @@
-import { Model, prop } from 'datx';
+import { Model, Attribute } from 'datx';
 import { jsonapi } from 'datx-jsonapi';
 
 import { Person } from './Person';
@@ -9,15 +9,15 @@ export class Pet extends jsonapi(Model) {
   // Endpoint can be dynamic - the function is called every time
   public static endpoint = () => 'pets';
 
-  @prop.identifier
+  @Attribute({ isIdentifier: true })
   public id: string;
 
-  @prop
+  @Attribute()
   public name: string;
 
-  @prop
+  @Attribute()
   public age: number;
 
-  @prop.toOne(Person)
+  @Attribute({ toOne: Person })
   public owner: Person;
 }

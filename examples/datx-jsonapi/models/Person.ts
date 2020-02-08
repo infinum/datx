@@ -1,4 +1,4 @@
-import { Model, prop } from 'datx';
+import { Model, Attribute } from 'datx';
 import { jsonapi } from 'datx-jsonapi';
 
 import { Event } from './Event';
@@ -9,24 +9,24 @@ export class Person extends jsonapi(Model) {
 
   public static endpoint = 'people'; // <baseUrl>/people
 
-  @prop.identifier
+  @Attribute({ isIdentifier: true })
   public id: string;
 
-  @prop
+  @Attribute()
   public name: string;
 
-  @prop
+  @Attribute()
   public age: number;
 
-  @prop.toOne(Person)
+  @Attribute({ toOne: Person })
   public spouse?: Person;
 
-  @prop.toMany('pet', 'owner')
+  @Attribute({ toMany: 'pet', referenceProperty: 'owner' })
   public pets: Array<Pet>;
 
-  @prop.toMany('event', 'responsible')
+  @Attribute({ toMany: 'event', referenceProperty: 'responsible' })
   public responsibleFor: Array<Event>;
 
-  @prop.toMany('event', 'organizers')
+  @Attribute({ toMany: 'event', referenceProperty: 'organizers' })
   public organizing: Array<Event>;
 }

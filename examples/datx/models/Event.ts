@@ -1,25 +1,25 @@
-import { Model, prop } from 'datx';
+import { Model, Attribute } from 'datx';
 
 import { Person } from './Person';
 
 export class Event extends Model {
   public static type = 'event';
 
-  @prop.identifier
+  @Attribute({ isIdentifier: true })
   public id: string;
 
-  @prop
+  @Attribute()
   public title: string;
 
-  @prop
+  @Attribute()
   public description: string;
 
-  @prop
+  @Attribute()
   public date: Date;
 
-  @prop.toOne(Person)
+  @Attribute({ toOne: Person })
   public responsible: Person;
 
-  @prop.toMany(Person)
+  @Attribute({ toMany: Person })
   public organizers: Array<Person>;
 }
