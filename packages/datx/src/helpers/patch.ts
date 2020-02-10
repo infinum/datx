@@ -30,13 +30,12 @@ interface IPatchMeta<T extends PureModel = PureModel> {
 }
 
 export function triggerAction(patchMeta: IPatchMeta, model: PureModel) {
-  const patch: IPatch = {
-    ...patchMeta,
+  const patch: IPatch = Object.assign({}, patchMeta, {
     model: {
       id: getModelId(model),
       type: getModelType(model),
     },
-  };
+  });
 
   const listeners = getMeta<Array<(patch: IPatch) => void>>(
     model,
@@ -47,7 +46,9 @@ export function triggerAction(patchMeta: IPatchMeta, model: PureModel) {
   const collection = getModelCollection(model);
 
   if (collection && '__patchListeners' in collection) {
-    listeners.push(...(collection['__patchListeners'] || []));
+    (collection['__patchListeners'] || []).forEach((item) => {
+      listeners.push(item);
+    });
   }
 
   listeners.forEach((listener) => {

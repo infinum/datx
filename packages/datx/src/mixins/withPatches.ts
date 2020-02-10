@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 
-import { setMeta, getMeta } from 'datx-utils';
+import { setMeta, getMeta, IRawModel } from 'datx-utils';
 
 import { PatchType } from '../enums/PatchType';
 import { error } from '../helpers/format';
@@ -15,6 +15,7 @@ import { IPatch } from '../interfaces/IPatch';
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
 import { MetaModelField } from '../enums/MetaModelField';
+import { IRawCollection } from '../interfaces/IRawCollection';
 
 function inversePatch<T = PureModel>(patch: IPatch<T>): IPatch<T> {
   const patchType: PatchType = reverseAction(patch.patchType);
@@ -44,8 +45,8 @@ export function withPatches<T extends PureCollection>(
     class WithPatches extends BaseClass implements IMetaPatchesCollection {
       private __patchListeners: Array<(patch: IPatch) => void> = [];
 
-      constructor(...args: Array<any>) {
-        super(...args);
+      constructor(data?: Array<IRawModel> | IRawCollection) {
+        super(data);
         Object.defineProperty(this, '__patchListeners', {
           enumerable: false,
         });
@@ -96,8 +97,8 @@ export function withPatches<T extends PureCollection>(
     const BaseClass = Base as typeof PureModel;
 
     class WithPatches extends BaseClass {
-      constructor(...args: Array<any>) {
-        super(...args);
+      constructor(rawData?: IRawModel, collection?: PureCollection) {
+        super(rawData, collection);
         setMeta(this, MetaModelField.PatchListeners, []);
       }
 

@@ -24,13 +24,9 @@ export function upsertModel(
 
     if (DefaultModel) {
       return new DefaultModel(
-        {
-          ...data,
-          [META_FIELD]: {
-            ...(data[META_FIELD] || {}),
-            type,
-          },
-        },
+        Object.assign({}, data, {
+          [META_FIELD]: Object.assign({}, data[META_FIELD] || {}, { type }),
+        }),
         collection,
       );
     }

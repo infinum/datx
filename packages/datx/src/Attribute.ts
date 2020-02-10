@@ -163,37 +163,41 @@ export function ViewAttribute<TCollection extends PureCollection, TModel extends
       obj.constructor['views'] = {};
     }
     // eslint-disable-next-line no-param-reassign
-    obj.constructor['views'][key] = {
-      modelType,
-      ...options,
-    };
+    obj.constructor['views'][key] = Object.assign(
+      {
+        modelType,
+      },
+      options,
+    );
   };
 }
 
+const propDeprecation = '@prop was deprecated, use @Attribute instead';
+
 // Compatibility implementation
 function propFn<T extends PureModel>(obj: T, key: string, opts?: object) {
-  deprecated('@prop was deprecated, use @Attribute instead');
+  deprecated(propDeprecation);
   Attribute()(obj, key, opts);
 }
 
 export const prop = Object.assign(propFn, {
   defaultValue(value: any) {
-    deprecated('@prop was deprecated, use @Attribute instead');
+    deprecated(propDeprecation);
     return Attribute({ defaultValue: value });
   },
 
   toOne(refModel: typeof PureModel | IType) {
-    deprecated('@prop was deprecated, use @Attribute instead');
+    deprecated(propDeprecation);
     return Attribute({ toOne: refModel });
   },
 
   toMany(refModel: typeof PureModel | IType, property?: string) {
-    deprecated('@prop was deprecated, use @Attribute instead');
+    deprecated(propDeprecation);
     return Attribute({ toMany: refModel, referenceProperty: property });
   },
 
   toOneOrMany(refModel: typeof PureModel | IType) {
-    deprecated('@prop was deprecated, use @Attribute instead');
+    deprecated(propDeprecation);
     return Attribute({ toOneOrMany: refModel });
   },
 

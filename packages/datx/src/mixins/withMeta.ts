@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 
-import { getMeta } from 'datx-utils';
+import { getMeta, IRawModel } from 'datx-utils';
 import { computed } from 'mobx';
 
 import { error } from '../helpers/format';
@@ -14,6 +14,7 @@ import { MetaModelField } from '../enums/MetaModelField';
 import { IFieldDefinition } from '../Attribute';
 import { IIdentifier } from '../interfaces/IIdentifier';
 import { IType } from '../interfaces/IType';
+import { PureCollection } from '../PureCollection';
 
 /**
  * Extends the model with the exposed meta data
@@ -87,8 +88,8 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
     // @ts-ignore
     public readonly meta = new MetaClass(this);
 
-    constructor(...args: Array<any>) {
-      super(...args);
+    constructor(rawData?: IRawModel, collection?: PureCollection) {
+      super(rawData, collection);
       Object.defineProperty(this, 'meta', {
         enumerable: false,
       });

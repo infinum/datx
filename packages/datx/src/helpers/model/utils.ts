@@ -125,12 +125,11 @@ export function modelToJSON(model: PureModel): IRawModel {
     (key) => !INTERNAL_META.some((match) => key.startsWith(match)),
   );
   const raw = {
-    [META_FIELD]: {
-      ...fromEntries(metaKeys.map((key) => [key, meta[key]])),
+    [META_FIELD]: Object.assign({}, fromEntries(metaKeys.map((key) => [key, meta[key]])), {
       [MetaModelField.IdField]: getModelId(model),
       [MetaModelField.TypeField]: getModelType(model),
       [MetaModelField.Collection]: undefined,
-    },
+    }),
   };
 
   Object.keys(fields).forEach((fieldName) => {

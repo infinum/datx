@@ -20,7 +20,15 @@ export default [
         typescript: require('typescript'),
         tsconfig: './tsconfig.build.json',
       }),
-      terser({ toplevel: true }),
+      terser({
+        toplevel: true,
+        compress: {
+          passes: 3,
+        },
+        output: {
+          comments: false,
+        },
+      }),
     ],
     onwarn(warning, rollupWarn) {
       if (warning.code !== 'CIRCULAR_DEPENDENCY') {

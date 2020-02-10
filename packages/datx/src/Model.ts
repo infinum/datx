@@ -12,13 +12,12 @@ export class Model extends withPatches(withActions(withMeta(PureModel))) {
 
     delete raw[META_FIELD];
 
-    return {
-      ...raw,
+    return Object.assign({}, raw, {
       meta: {
         id: this.meta.id,
         type: this.meta.type,
       },
-    };
+    });
   }
 
   public toString() {

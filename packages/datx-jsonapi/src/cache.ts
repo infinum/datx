@@ -78,5 +78,9 @@ export function saveCacheForCollection(
   cacheItems: Array<Omit<ICacheInternal, 'collection'>>,
   collection: IJsonapiCollection,
 ): void {
-  cacheStorage.push(...cacheItems.map((item) => Object.assign({ collection }, item)));
+  // eslint-disable-next-line prefer-spread
+  cacheStorage.push.apply(
+    cacheStorage,
+    cacheItems.map((item) => Object.assign({ collection }, item)),
+  );
 }

@@ -121,7 +121,11 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
         });
       }
 
-      this.__rawList.splice(change.index, change.removedCount, ...added);
+      // eslint-disable-next-line prefer-spread
+      this.__rawList.splice.apply(
+        this.__rawList,
+        ([change.index, change.removedCount] as Array<any>).concat(added),
+      );
 
       return null;
     }

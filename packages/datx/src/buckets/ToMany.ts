@@ -142,7 +142,11 @@ export class ToMany<T extends PureModel> {
       const added = change.added as Array<T>;
 
       this.__rawList.slice(change.index, change.removedCount);
-      this.__rawList.splice(change.index, change.removedCount, ...added);
+      // eslint-disable-next-line prefer-spread
+      this.__rawList.splice.apply(
+        this.__rawList,
+        ([change.index, change.removedCount] as Array<any>).concat(added),
+      );
 
       return null;
     }

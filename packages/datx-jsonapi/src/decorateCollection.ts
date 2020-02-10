@@ -111,14 +111,17 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       id: string,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
+      // @ts-ignore
       deprecated('fetch is deprecated, use getOne instead');
-      return this.getOne(type, id, {
-        ...options,
-        cacheOptions: {
-          ...options?.cacheOptions,
-          cachingStrategy: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
-        },
-      });
+      return this.getOne(
+        type,
+        id,
+        Object.assign({}, options, {
+          cacheOptions: Object.assign({}, options?.cacheOptions || {}, {
+            cachingStrategy: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
+          }),
+        }),
+      );
     }
 
     /**
@@ -132,14 +135,16 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       type: IType | IModelConstructor<T>,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
+      // @ts-ignore
       deprecated('fetchAll is deprecated, use getMany instead');
-      return this.getMany(type, {
-        ...options,
-        cacheOptions: {
-          ...options?.cacheOptions,
-          cachingStrategy: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
-        },
-      });
+      return this.getMany(
+        type,
+        Object.assign({}, options, {
+          cacheOptions: Object.assign({}, options?.cacheOptions || {}, {
+            cachingStrategy: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
+          }),
+        }),
+      );
     }
 
     public getOne<T extends IJsonapiModel = IJsonapiModel>(

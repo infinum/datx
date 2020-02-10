@@ -47,7 +47,7 @@ export function mapItems<T, U>(data: T | Array<T>, fn: (item: T) => U): U | Arra
  * @returns {Array<T>} Flattened array
  */
 export function flatten<T>(data: Array<Array<T> | T>): Array<T> {
-  return ([] as Array<T>).concat(...data);
+  return ([] as Array<T>).concat.apply([], data);
 }
 
 /**
@@ -115,7 +115,7 @@ export function getMeta<T = any>(
         (value, model): T => {
           const meta = getMeta(model, key, mergeChain ? {} : undefined);
 
-          return mergeChain ? { ...meta, ...value } : ((value || meta) as T);
+          return mergeChain ? Object.assign({}, meta, value) : ((value || meta) as T);
         },
         (mergeChain ? {} : undefined) as T,
       ) || defaultValue
@@ -180,34 +180,34 @@ export function assignComputed<T = any>(
   });
 }
 
-export function error(...args: Array<any>) {
-  // eslint-disable-next-line no-console
-  console.error(`[datx error]`, ...args);
+export function error() {
+  // eslint-disable-next-line no-console, prefer-rest-params
+  console.error(`[datx error]`, arguments);
 }
 
-export function warn(...args: Array<any>) {
+export function warn() {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }
 
-  // eslint-disable-next-line no-console
-  console.warn(`[datx warning]`, ...args);
+  // eslint-disable-next-line no-console, prefer-rest-params
+  console.warn(`[datx warning]`, arguments);
 }
 
-export function deprecated(...args: Array<any>) {
+export function deprecated() {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }
 
-  // eslint-disable-next-line no-console
-  console.warn(`[datx deprecated]`, ...args);
+  // eslint-disable-next-line no-console, prefer-rest-params
+  console.warn(`[datx deprecated]`, arguments);
 }
 
-export function info(...args: Array<any>) {
+export function info() {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }
 
-  // eslint-disable-next-line no-console
-  console.info(`[datx info]`, ...args);
+  // eslint-disable-next-line no-console, prefer-rest-params
+  console.info(`[datx info]`, arguments);
 }

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-spread */
 import { getModelType, IType, PureCollection, PureModel } from 'datx';
 
 import { URL_REGEX } from '../consts';
@@ -16,16 +17,22 @@ function parametrize(params: object, scope: string = '') {
   Object.keys(params).forEach((key) => {
     if (params[key] instanceof Array) {
       if (config.paramArrayType === ParamArrayType.OBJECT_PATH) {
-        list.push(...parametrize(params[key], `${key}.`));
+        list.push.apply(list, parametrize(params[key], `${key}.`));
       } else if (config.paramArrayType === ParamArrayType.COMMA_SEPARATED) {
         list.push({ key: `${scope}${key}`, value: params[key].join(',') });
       } else if (config.paramArrayType === ParamArrayType.MULTIPLE_PARAMS) {
-        list.push(...params[key].map((param) => ({ key: `${scope}${key}`, value: param })));
+        list.push.apply(
+          list,
+          params[key].map((param) => ({ key: `${scope}${key}`, value: param })),
+        );
       } else if (config.paramArrayType === ParamArrayType.PARAM_ARRAY) {
-        list.push(...params[key].map((param) => ({ key: `${scope}${key}][`, value: param })));
+        list.push.apply(
+          list,
+          params[key].map((param) => ({ key: `${scope}${key}][`, value: param })),
+        );
       }
     } else if (typeof params[key] === 'object') {
-      list.push(...parametrize(params[key], `${key}.`));
+      list.push.apply(list, parametrize(params[key], `${key}.`));
     } else {
       list.push({ key: `${scope}${key}`, value: params[key] });
     }
@@ -94,13 +101,13 @@ function encodeParam(param: string) {
 export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
   const headers: Record<string, string> =
     (options && options.networkConfig && options.networkConfig.headers) || {};
-  let params: Array<string> = [
-    ...prepareFilters((options && options.queryParams && options.queryParams.filter) || {}),
-    ...prepareSort(options && options.queryParams && options.queryParams.sort),
-    ...prepareIncludes(options && options.queryParams && options.queryParams.include),
-    ...prepareFields((options && options.queryParams && options.queryParams.fields) || {}),
-    ...prepareRawParams((options && options.queryParams && options.queryParams.custom) || []),
-  ];
+  let params: Array<string> = ([] as Array<string>).concat(
+    prepareFilters((options && options.queryParams && options.queryParams.filter) || {}),
+    prepareSort(options && options.queryParams && options.queryParams.sort),
+    prepareIncludes(options && options.queryParams && options.queryParams.include),
+    prepareFields((options && options.queryParams && options.queryParams.fields) || {}),
+    prepareRawParams((options && options.queryParams && options.queryParams.custom) || []),
+  );
 
   if (config.encodeQueryString) {
     params = params.map(encodeParam);
