@@ -2,9 +2,9 @@
 
 A utils library used for the [datx](https://github.com/infinum/datx) and its mixins.
 
-Want to make your own mixin? Check out [the guide](https://github.com/infinum/datx/wiki/Building-your-own-mixin).
+Want to make your own mixin? Check out [the guide](https://datx.dev/docs/mixins/building-your-own-mixin).
 
-For more details, [check the documentation](https://github.com/infinum/datx/wiki).
+For more details, [check the documentation](https://datx.dev/).
 
 [![Build Status](https://travis-ci.org/infinum/datx.svg?branch=master)](https://travis-ci.org/infinum/datx)
 [![npm version](https://badge.fury.io/js/datx-utils.svg)](https://badge.fury.io/js/datx-utils)
