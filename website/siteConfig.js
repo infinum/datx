@@ -24,6 +24,10 @@ const siteConfig = {
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
   //   organizationName: 'JoelMarcey'
 
+  // It will include custom domain into build folder and prevent github
+  // to override it to the github pages address
+  cname: "datx.dev",
+
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
     { doc: "getting-started/installation", label: "Docs" },
