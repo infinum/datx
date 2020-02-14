@@ -49,6 +49,10 @@
     "Troubleshooting": ["troubleshooting/known-issues"]
   },
   "examples": {
-    "Setup": ["examples/basic-setup", "examples/nextjs-setup"]
+    "Setup": [
+      "examples/basic-setup",
+      "examples/react-setup",
+      "examples/nextjs-setup"
+    ]
   }
 }

@@ -122,3 +122,32 @@ img {
   max-width: 200px;
   height: 140px;
 }
+
+.docs-card {
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px;
+  margin: 1.5rem 0px;
+  border-radius: 5px;
+  border: 1px solid rgb(234, 234, 234);
+  transition: box-shadow 0.2s ease 0s;
+}
+
+.docs-card a {
+  display: block;
+  padding: 20px;
+}
+
+.docs-card a h4 {
+  color: $darkGray;
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 1rem;
+}
+
+.docs-card a small {
+  font-size: 0.875rem;
+  color: $gray;
+}
+
+.docs-card:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 6px 12px;
+}
