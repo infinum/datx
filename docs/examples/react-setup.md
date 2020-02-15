@@ -5,7 +5,7 @@ title: React setup
 
 ## Preface
 
-This examples uses the `react-mobx ^6.x` since we will be only using [hooks](https://reactjs.org/docs/hooks-intro.html).
+This examples uses the `react-mobx ^6.x` since we will be only using functional components with [hooks](https://reactjs.org/docs/hooks-intro.html).
 
 If your codebase does not support hooks, you can check out [mobx-react docs](https://mobx-react.js.org/libraries) for more info.
 
@@ -17,7 +17,6 @@ Steps:
 - [Create `<StoreProvider>` that will wrap initial `<App />` component](./react-setup#storeprovider)
 - [Create `useStores` hook](./react-setup#usestores-hook)
 - [Use your store in component](./react-setup#use-your-store)
-- [Finishing touches](./react-setup#finishingtouches)
 
 ## `StoreProvider`
 
@@ -191,7 +190,7 @@ export const App = observer(() => {
 
 ### Using `useObserver` hook
 
-Here, we use `useObserver` hook to return our jsx element when observable change. Despite using it in the middle of out component, our entire component will be re-rendered on observable change.
+Here, we use `useObserver` hook to return our jsx element when observable change. Despite using it in the middle of our component, our entire component will be re-rendered on observable change.
 
 Read more on [mobx-react](https://mobx-react.js.org/observer-hook) docs.
 
@@ -233,6 +232,57 @@ export const App = () => {
       </ul>
     </div>
   ));
+};
+```
+
+### Using `<Observer>` component
+
+When using the Observer component, only a portion of code will be updated on observable change. It is a good approach if you have a large component and you want to update just a specific part(s) that needs to listen to changes.
+
+> Since observer can see observables only within its own render function, nesting another component with render prop will prevent Observer to observe changes. Check out [mobx-react docs](https://mobx-react.js.org/observer-component#nesting-caveat) for more information.
+
+```jsx
+// components/App.tsx (or jsx)
+
+import React from "react";
+import { useObserver } from "mobx-react";
+
+import { useStore } from "./store/StoreContext";
+import { Book } from "./store/models/Book";
+
+import "./styles.css";
+
+export const App = () => {
+  const { store } = useStore();
+
+  const handleRemoveBook = bookId => {
+    return () => {
+      store.removeOne(Book, bookId);
+    };
+  };
+
+  console.log(store.getAllModels()); // Always 4
+
+  return () => (
+    <div className="App">
+      <h1>Your books: {store.books.length}</h1> {/** Oops, this will stay 2 */}
+      <Observer>
+        {() => (
+          <ul>
+            {store.books.map(book => (
+              <li key={book.id}>
+                <h4>
+                  {book.title}{" "}
+                  <button onClick={handleRemoveBook(book.id)}>X</button>
+                </h4>
+                <small>by {book.author.name}</small>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Observer>
+    </div>
+  );
 };
 ```
 
