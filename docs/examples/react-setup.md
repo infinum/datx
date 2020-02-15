@@ -296,3 +296,9 @@ export const App = () => {
     <small>Setup your datx store and models</small>
   </a>
 </div>
+<div class="docs-card">
+  <a href="/docs/examples/basic-setup">
+    <h4>Adding models</h4>
+    <small>Learn the different ways of adding models to your store</small>
+  </a>
+</div>
