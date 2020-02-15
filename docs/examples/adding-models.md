@@ -66,7 +66,7 @@ console.log(tin); // Person
 
 ## 4. Adding an array of plain objects
 
-> When adding an array of plain objects, all models should be of **same type** (Person in this case).
+> When adding an array of plain objects, all models should be of **same type** (Person or Dog in this case).
 
 ```ts
 import AppStore from "../store/AppStore";
