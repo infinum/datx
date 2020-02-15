@@ -53,6 +53,7 @@
       "examples/basic-setup",
       "examples/react-setup",
       "examples/nextjs-setup"
-    ]
+    ],
+    "Collection": ["examples/adding-models"]
   }
 }

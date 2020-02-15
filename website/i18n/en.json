@@ -29,6 +29,9 @@
       "api-reference/view": {
         "title": "View"
       },
+      "examples/adding-models": {
+        "title": "Adding models"
+      },
       "examples/basic-setup": {
         "title": "Basic setup"
       },
@@ -138,7 +141,8 @@
       "JSON API": "JSON API",
       "Migration guide": "Migration guide",
       "Troubleshooting": "Troubleshooting",
-      "Setup": "Setup"
+      "Setup": "Setup",
+      "Collection": "Collection"
     }
   },
   "pages-strings": {
