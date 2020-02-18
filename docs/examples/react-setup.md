@@ -117,7 +117,7 @@ render(
 
 Now, our `<App>` component has access to the `storeContext` via `useStores` hook. (Since useStores hook returns a `useContext()` hook with `storeContext` as its parameter)
 
-### Use store inside wrapped compnent
+### Use store inside wrapped component
 
 ```jsx
 // components/App.tsx (or jsx)
