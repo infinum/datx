@@ -15,7 +15,7 @@ The collection constructor can receive an previously serialised collection store
 
 ```javascript
 const collectionA = new Collection();
-collectionA.add({ firstName: "John" }, "person");
+collectionA.add({ firstName: 'John' }, 'person');
 const data = collectionA.snapshot;
 
 const collectionB = new Collection(data);
@@ -36,9 +36,9 @@ A current plain JS value of the collection. The value is always immutable - a ne
 The static `types` property should be an array of all custom model classes.
 
 ```typescript
-import { Collection } from "datx";
+import { Collection } from 'datx';
 
-import { Person, Pet } from "./models";
+import { Person, Pet } from './models';
 
 export class MyCollection extends Collection {
   public static types = [Person, Pet];
@@ -125,7 +125,7 @@ A method used to filter through the models, similar to the [Array filter](https:
 Alternatively, you can use a combination of `findAll` and the native `filter` method instead:
 
 ```typescript
-data.findAll(User).filter(user => user.age >= 18);
+data.findAll(User).filter((user) => user.age >= 18);
 ```
 
 ### removeOne

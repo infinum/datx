@@ -30,9 +30,9 @@ Inside our store folder, along with models and collection(s), we will create a `
 ```tsx
 // store/StoreProvider.tsx
 
-import { createContext, ReactNode } from "react";
+import { createContext, ReactNode } from 'react';
 
-import AppStore from "./AppStore";
+import AppStore from './AppStore';
 
 export interface IStores {
   store: AppStore;
@@ -56,9 +56,9 @@ export const StoreProvider = ({ children }: IProviderProps) => {
 ```jsx
 // store/StoreProvider.jsx
 
-import { createContext } from "react";
+import { createContext } from 'react';
 
-import AppStore from "./AppStore";
+import AppStore from './AppStore';
 
 export const storeContext = createContext({ store });
 
@@ -78,9 +78,9 @@ Our `useStores` hook will get access to the `storeContext` via [useContext](http
 ```js
 // /hooks/useStores.ts
 
-import { useContext } from "react";
+import { useContext } from 'react';
 
-import { storeContext } from "../store/StoreProvider.tsx";
+import { storeContext } from '../store/StoreProvider.tsx';
 
 export const useStores = () => useContext(storeContext);
 ```
@@ -100,13 +100,13 @@ But first, we will setup our app with `StoreProvider` and use our store in our c
 ```jsx
 // /index.tsx (or jsx)
 
-import React from "react";
-import { render } from "react-dom";
+import React from 'react';
+import { render } from 'react-dom';
 
-import { App } from "./App";
-import { StoreProvider } from "./store/StoreContext";
+import { App } from './App';
+import { StoreProvider } from './store/StoreContext';
 
-const rootElement = document.getElementById("root");
+const rootElement = document.getElementById('root');
 render(
   <StoreProvider>
     <App />
@@ -122,12 +122,12 @@ Now, our `<App>` component has access to the `storeContext` via `useStores` hook
 ```jsx
 // components/App.tsx (or jsx)
 
-import React from "react";
+import React from 'react';
 
-import { useStore } from "./store/StoreContext";
-import { Book } from "./store/models/Book";
+import { useStore } from './store/StoreContext';
+import { Book } from './store/models/Book';
 
-import "./styles.css";
+import './styles.css';
 
 export const App = () => {
   const { store } = useStore();
@@ -150,18 +150,18 @@ When wrapping your component in `observer` HOC, the component will become reacti
 ```jsx
 // components/App.tsx (or jsx)
 
-import React from "react";
-import { observer } from "mobx-react";
+import React from 'react';
+import { observer } from 'mobx-react';
 
-import { useStore } from "./store/StoreContext";
-import { Book } from "./store/models/Book";
+import { useStore } from './store/StoreContext';
+import { Book } from './store/models/Book';
 
-import "./styles.css";
+import './styles.css';
 
 export const App = observer(() => {
   const { store } = useStore();
 
-  const handleRemoveBook = bookId => {
+  const handleRemoveBook = (bookId) => {
     return () => {
       store.removeOne(Book, bookId);
     };
@@ -173,10 +173,10 @@ export const App = observer(() => {
     <div className="App">
       <h1>Your books: {store.books.length}</h1>
       <ul>
-        {store.books.map(book => (
+        {store.books.map((book) => (
           <li key={book.id}>
             <h4>
-              {book.title}{" "}
+              {book.title}{' '}
               <button onClick={handleRemoveBook(book.id)}>X</button>
             </h4>
             <small>by {book.author.name}</small>
@@ -197,18 +197,18 @@ Read more on [mobx-react](https://mobx-react.js.org/observer-hook) docs.
 ```jsx
 // components/App.tsx (or jsx)
 
-import React from "react";
-import { useObserver } from "mobx-react";
+import React from 'react';
+import { useObserver } from 'mobx-react';
 
-import { useStore } from "./store/StoreContext";
-import { Book } from "./store/models/Book";
+import { useStore } from './store/StoreContext';
+import { Book } from './store/models/Book';
 
-import "./styles.css";
+import './styles.css';
 
 export const App = () => {
   const { store } = useStore();
 
-  const handleRemoveBook = bookId => {
+  const handleRemoveBook = (bookId) => {
     return () => {
       store.removeOne(Book, bookId);
     };
@@ -220,10 +220,10 @@ export const App = () => {
     <div className="App">
       <h1>Your books: {store.books.length}</h1>
       <ul>
-        {store.books.map(book => (
+        {store.books.map((book) => (
           <li key={book.id}>
             <h4>
-              {book.title}{" "}
+              {book.title}{' '}
               <button onClick={handleRemoveBook(book.id)}>X</button>
             </h4>
             <small>by {book.author.name}</small>
@@ -244,18 +244,18 @@ When using the Observer component, only a portion of code will be updated on obs
 ```jsx
 // components/App.tsx (or jsx)
 
-import React from "react";
-import { useObserver } from "mobx-react";
+import React from 'react';
+import { useObserver } from 'mobx-react';
 
-import { useStore } from "./store/StoreContext";
-import { Book } from "./store/models/Book";
+import { useStore } from './store/StoreContext';
+import { Book } from './store/models/Book';
 
-import "./styles.css";
+import './styles.css';
 
 export const App = () => {
   const { store } = useStore();
 
-  const handleRemoveBook = bookId => {
+  const handleRemoveBook = (bookId) => {
     return () => {
       store.removeOne(Book, bookId);
     };
@@ -269,10 +269,10 @@ export const App = () => {
       <Observer>
         {() => (
           <ul>
-            {store.books.map(book => (
+            {store.books.map((book) => (
               <li key={book.id}>
                 <h4>
-                  {book.title}{" "}
+                  {book.title}{' '}
                   <button onClick={handleRemoveBook(book.id)}>X</button>
                 </h4>
                 <small>by {book.author.name}</small>
