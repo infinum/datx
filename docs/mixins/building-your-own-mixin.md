@@ -10,10 +10,17 @@ A mixin is a function that receives a class (collection, model, or anything else
 ### Model AND Collection
 
 ```typescript
-import {ICollectionConstructor, IModelConstructor, isCollection, isModel, PureCollection, PureModel} from 'datx';
+import {
+  ICollectionConstructor,
+  IModelConstructor,
+  isCollection,
+  isModel,
+  PureCollection,
+  PureModel,
+} from 'datx';
 
-import {decorateCollection} from './decorateCollection';
-import {decorateModel} from './decorateModel';
+import { decorateCollection } from './decorateCollection';
+import { decorateModel } from './decorateModel';
 
 export function myAwesome<T extends PureModel>(
   Base: IModelConstructor<T>,
@@ -23,8 +30,8 @@ export function myAwesome<T extends PureCollection>(
   Base: ICollectionConstructor<T>,
 ): ICollectionConstructor<T & ICollectionWithMixin>;
 
-export function myAwesome<T extends PureModel|PureCollection>(
-  Base: IModelConstructor<T>|ICollectionConstructor<T>,
+export function myAwesome<T extends PureModel | PureCollection>(
+  Base: IModelConstructor<T> | ICollectionConstructor<T>,
 ) {
   if (isModel(Base)) {
     return decorateModel(Base as typeof PureModel);
@@ -39,7 +46,7 @@ export function myAwesome<T extends PureModel|PureCollection>(
 ### Model only (or collection only)
 
 ```typescript
-import {IModelConstructor, isModel, PureModel} from 'datx';
+import { IModelConstructor, isModel, PureModel } from 'datx';
 
 export function myAwesome<T extends PureModel>(Base: IModelConstructor<T>) {
   const BaseClass = Base as typeof PureModel;
@@ -62,9 +69,8 @@ export function myAwesome<T extends PureModel>(Base: IModelConstructor<T>) {
 
 ```typescript
 export function decorateModel(BaseClass: typeof PureModel) {
-
   class MyDecoratedModel extends BaseClass {
-	public awesome: boolean = true;
+    public awesome: boolean = true;
   }
 
   return MyDecoratedModel as typeof PureModel;
@@ -77,7 +83,9 @@ export function decorateModel(BaseClass: typeof PureModel) {
 import { Model } from 'datx';
 import myAwesomeMixin from 'my-awesome-mixin';
 
-class Person extends myAwesomeMixin(Model) { /* ... */ }
+class Person extends myAwesomeMixin(Model) {
+  /* ... */
+}
 ```
 
 ## datx helpers

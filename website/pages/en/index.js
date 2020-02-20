@@ -5,22 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const React = require("react");
+const React = require('react');
 
-const CompLibrary = require("../../core/CompLibrary.js");
+const CompLibrary = require('../../core/CompLibrary.js');
 
 const Container = CompLibrary.Container;
 const GridBlock = CompLibrary.GridBlock;
 
 class HomeSplash extends React.Component {
   render() {
-    const { siteConfig, language = "" } = this.props;
+    const { siteConfig, language = '' } = this.props;
     const { baseUrl, docsUrl } = siteConfig;
-    const docsPart = `${docsUrl ? `${docsUrl}/` : ""}`;
-    const langPart = `${language ? `${language}/` : ""}`;
-    const docUrl = doc => `${baseUrl}${docsPart}${langPart}${doc}`;
+    const docsPart = `${docsUrl ? `${docsUrl}/` : ''}`;
+    const langPart = `${language ? `${language}/` : ''}`;
+    const docUrl = (doc) => `${baseUrl}${docsPart}${langPart}${doc}`;
 
-    const SplashContainer = props => (
+    const SplashContainer = (props) => (
       <div className="homeContainer">
         <div className="homeSplashFade">
           <div className="wrapper homeWrapper">{props.children}</div>
@@ -28,7 +28,7 @@ class HomeSplash extends React.Component {
       </div>
     );
 
-    const ProjectTitle = props => (
+    const ProjectTitle = (props) => (
       <h2 className="projectTitle">
         <img src={props.img_src} />
         <span>{props.title}</span>
@@ -36,7 +36,7 @@ class HomeSplash extends React.Component {
       </h2>
     );
 
-    const PromoSection = props => (
+    const PromoSection = (props) => (
       <div className="section promoSection">
         <div className="promoRow">
           <div className="pluginRowBlock">{props.children}</div>
@@ -44,7 +44,7 @@ class HomeSplash extends React.Component {
       </div>
     );
 
-    const Button = props => (
+    const Button = (props) => (
       <div className="pluginWrapper buttonWrapper">
         <a className="button" href={props.href} target={props.target}>
           {props.children}
@@ -61,9 +61,7 @@ class HomeSplash extends React.Component {
             img_src={`${baseUrl}img/datx-logo.svg`}
           />
           <PromoSection>
-            <Button href={docUrl("getting-started/installation")}>
-              Get started
-            </Button>
+            <Button href={docUrl('getting-started/installation')}>Get started</Button>
           </PromoSection>
         </div>
       </SplashContainer>
@@ -73,20 +71,12 @@ class HomeSplash extends React.Component {
 
 class Index extends React.Component {
   render() {
-    const { config: siteConfig, language = "" } = this.props;
+    const { config: siteConfig, language = '' } = this.props;
     const { baseUrl } = siteConfig;
 
-    const Block = props => (
-      <Container
-        padding={["bottom", "top"]}
-        id={props.id}
-        background={props.background}
-      >
-        <GridBlock
-          align="center"
-          contents={props.children}
-          layout={props.layout}
-        />
+    const Block = (props) => (
+      <Container padding={['bottom', 'top']} id={props.id} background={props.background}>
+        <GridBlock align="center" contents={props.children} layout={props.layout} />
       </Container>
     );
 
@@ -94,23 +84,23 @@ class Index extends React.Component {
       <Block layout="threeColumn">
         {[
           {
-            content: "Use datx with SSR frameworks like Next.js, Nuxt...",
+            content: 'Use datx with SSR frameworks like Next.js, Nuxt...',
             image: `${baseUrl}img/undraw_next.svg`,
-            imageAlign: "top",
-            title: "SSR Support"
+            imageAlign: 'top',
+            title: 'SSR Support',
           },
           {
-            content: "You can use it with React, Angular, Vue",
+            content: 'You can use it with React, Angular, Vue',
             image: `${baseUrl}img/undraw_react.svg`,
-            imageAlign: "top",
-            title: "Various compatibilty"
+            imageAlign: 'top',
+            title: 'Various compatibilty',
           },
           {
-            content: "Create simple and scalable state management system",
+            content: 'Create simple and scalable state management system',
             image: `${baseUrl}img/undraw_store.svg`,
-            imageAlign: "top",
-            title: "Based on mobx"
-          }
+            imageAlign: 'top',
+            title: 'Based on mobx',
+          },
         ]}
       </Block>
     );

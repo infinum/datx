@@ -26,7 +26,7 @@ function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>(
   ref: string,
   key: string,
   requestHeaders?: IDictionary<string>,
-  options?: IRequestOptions
+  options?: IRequestOptions,
 ): Promise<Response<T>>;
 ```
 

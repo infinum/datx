@@ -28,41 +28,47 @@ Model and Collection definition examples use [`Model`](../api-reference/model) a
 ## Store changes
 
 Same:
-* `sync` - Stays the same
-* `destroy` - Stays the same
+
+- `sync` - Stays the same
+- `destroy` - Stays the same
 
 Changes:
-* `fetch` - Second argument (`force`) moved to the options object as the `skipCache` property
-* `fetchAll` - Second argument (`force`) moved to the options object as the `skipCache` property
-* `request` - Stays the same, but will be cached if it's a 'GET' method, unless `skipCache` is set to `true`
+
+- `fetch` - Second argument (`force`) moved to the options object as the `skipCache` property
+- `fetchAll` - Second argument (`force`) moved to the options object as the `skipCache` property
+- `request` - Stays the same, but will be cached if it's a 'GET' method, unless `skipCache` is set to `true`
 
 ## Record changes
 
 Same:
-* `save` - Stays the same
+
+- `save` - Stays the same
 
 Changed:
-* `getMeta` - Use [`getModelMeta`](jsonapi-utils#getmodelmeta)
-* `getLinks` - Use [`getModelLinks`](jsonapi-utils#getmodellinks)
-* `fetchLink` - Use [`fetchModelLink`](jsonapi-utils#fetchmodellink)
-* `getRelationshipLinks` - Use [`getModelRefLinks`](jsonapi-utils#getmodelreflinks)
-* `fetchRelationshipLink` - Use [`fetchModelRefLink`](jsonapi-utils#fetchmodelreflink)
-* `toJsonApi` - Use [`modelToJsonApi`](jsonapi-utils#modeltojsonapi)
-* `saveRelationship` - Use [`saveRelationship`](jsonapi-utils#saverelationship)
-* `remove` - Renamed to [`destroy`](jsonapi-model)
-* `setPersisted` - Removed
+
+- `getMeta` - Use [`getModelMeta`](jsonapi-utils#getmodelmeta)
+- `getLinks` - Use [`getModelLinks`](jsonapi-utils#getmodellinks)
+- `fetchLink` - Use [`fetchModelLink`](jsonapi-utils#fetchmodellink)
+- `getRelationshipLinks` - Use [`getModelRefLinks`](jsonapi-utils#getmodelreflinks)
+- `fetchRelationshipLink` - Use [`fetchModelRefLink`](jsonapi-utils#fetchmodelreflink)
+- `toJsonApi` - Use [`modelToJsonApi`](jsonapi-utils#modeltojsonapi)
+- `saveRelationship` - Use [`saveRelationship`](jsonapi-utils#saverelationship)
+- `remove` - Renamed to [`destroy`](jsonapi-model)
+- `setPersisted` - Removed
 
 ## Config changes
 
 Same:
-* `baseUrl` - Stays the same
-* `fetchReference` - Stays the same
-* `defaultFetchOptions` - Stays the same
-* `paramArrayType` - Stays the same
-* `baseFetch` - Stays the same
-* `transformRequest` - Stays the same
-* `transformResponse` - Stays the same
+
+- `baseUrl` - Stays the same
+- `fetchReference` - Stays the same
+- `defaultFetchOptions` - Stays the same
+- `paramArrayType` - Stays the same
+- `baseFetch` - Stays the same
+- `transformRequest` - Stays the same
+- `transformResponse` - Stays the same
 
 Changed:
-* `defaultHeaders` - Removed in favour of `defaultFetchOptions`
-* `storeFetch` - Removed in favour of `transformRequest` and `transformResponse`
+
+- `defaultHeaders` - Removed in favour of `defaultFetchOptions`
+- `storeFetch` - Removed in favour of `transformRequest` and `transformResponse`
