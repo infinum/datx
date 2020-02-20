@@ -111,7 +111,7 @@ render(
   <StoreProvider>
     <App />
   </StoreProvider>,
-  rootElement
+  rootElement,
 );
 ```
 
@@ -297,7 +297,7 @@ export const App = () => {
   </a>
 </div>
 <div class="docs-card">
-  <a href="/docs/examples/basic-setup">
+  <a href="/docs/examples/adding-models">
     <h4>Adding models</h4>
     <small>Learn the different ways of adding models to your store</small>
   </a>
