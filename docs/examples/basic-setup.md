@@ -4,6 +4,7 @@ title: Basic setup
 ---
 
 ## 1. Setting up your models
+
 <!--DOCUSAURUS_CODE_TABS-->
 <!--TypeScript-->
 
@@ -68,13 +69,13 @@ class Dog extends Model {
 
 export class Person extends Model {
   static type = 'person';
-  
+
   @prop id;
 
   @prop name;
-  
+
   @prop age;
-  
+
   @computed
   get greet() {
     return `Hey, my name is ${this.name} and I'm ${this.age}.`;
@@ -105,7 +106,7 @@ decorate(Dog, {
 
 export class Person extends Model {
   static type = 'person';
-  
+
   get greet() {
     return `Hey, my name is ${this.name} and I'm ${this.age}.`;
   }
@@ -121,8 +122,8 @@ decorate(Person, {
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-
 ## 2. Setting up your collection
+
 <!--DOCUSAURUS_CODE_TABS-->
 <!--TypeScript-->
 
@@ -142,12 +143,12 @@ export default class Family extends Collection {
 
   @computed
   public get germanShepherds() {
-    return this.dogs.filter(dog => dog.breed === 'German Shepherd');
+    return this.dogs.filter((dog) => dog.breed === 'German Shepherd');
   }
 
   @computed
   public get minors() {
-    return this.findAll(Person).filter(person => person.age < 18)
+    return this.findAll(Person).filter((person) => person.age < 18);
   }
 }
 ```
@@ -169,12 +170,12 @@ export default class Family extends Collection {
 
   @computed
   get germanShepherds() {
-    return this.dogs.filter(dog => dog.breed === 'German Shepherd');
+    return this.dogs.filter((dog) => dog.breed === 'German Shepherd');
   }
 
   @computed
   get minors() {
-    return this.findAll(Person).filter(person => person.age < 18)
+    return this.findAll(Person).filter((person) => person.age < 18);
   }
 }
 ```
@@ -195,11 +196,11 @@ export default class Family extends Collection {
   }
 
   get germanShepherds() {
-    return this.dogs.filter(dog => dog.breed === 'German Shepherd');
+    return this.dogs.filter((dog) => dog.breed === 'German Shepherd');
   }
 
   get minors() {
-    return this.findAll(Person).filter(person => person.age < 18)
+    return this.findAll(Person).filter((person) => person.age < 18);
   }
 }
 
@@ -208,7 +209,6 @@ decorate(Family, {
   minors: computed,
   germanShephers: computed,
 });
-
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -233,86 +233,109 @@ import { Person, Dog } from './store/models';
 
 const family = new FamilyCollection();
 
-const john = family.add({
-  name: 'John',
-  age: 12,
-  id: 1
-}, Person);
+const john = family.add(
+  {
+    name: 'John',
+    age: 12,
+    id: 1,
+  },
+  Person,
+);
 
-const rex = family.add({
-  name: 'Rex',
-  breed: 'German Shepherd',
-}, Dog);
+const rex = family.add(
+  {
+    name: 'Rex',
+    breed: 'German Shepherd',
+  },
+  Dog,
+);
 
-const floki = family.add({
-  name: 'Floki',
-  breed: 'Labrador',
-}, Dog);
+const floki = family.add(
+  {
+    name: 'Floki',
+    breed: 'Labrador',
+  },
+  Dog,
+);
 
 console.log(john.greet); // Hey, my name is John and I'm 12.
 console.log(rex.greet); // Hey, I am German Shepherd Rex.
-
 ```
 
 ### Finding models
 
 ```javascript
-
 import FamilyCollection from './store/Family';
 import { Person, Dog } from './store/models';
 
 const family = new FamilyCollection();
 
-const john = family.add({
-  name: 'John',
-  age: 12,
-  id: 1
-}, Person);
+const john = family.add(
+  {
+    name: 'John',
+    age: 12,
+    id: 1,
+  },
+  Person,
+);
 
-const rex = family.add({
-  name: 'Rex',
-  breed: 'German Shepherd',
-}, Dog);
+const rex = family.add(
+  {
+    name: 'Rex',
+    breed: 'German Shepherd',
+  },
+  Dog,
+);
 
-const floki = family.add({
-  name: 'Floki',
-  breed: 'Labrador',
-}, Dog);
+const floki = family.add(
+  {
+    name: 'Floki',
+    breed: 'Labrador',
+  },
+  Dog,
+);
 
 console.log(family.getAllModels()); // [Person, Dog, Dog]
-console.log(family.dogs) // [Dog, Dog]
-console.log(family.findOne(Person, 1)) // Person
+console.log(family.dogs); // [Dog, Dog]
+console.log(family.findOne(Person, 1)); // Person
 ```
 
 ### Deleting models
 
 ```javascript
-
 import FamilyCollection from './store/Family';
 import { Person, Dog } from './store/models';
 
 const family = new FamilyCollection();
 
-const john = family.add({
-  name: 'John',
-  age: 12,
-  id: 1
-}, Person);
+const john = family.add(
+  {
+    name: 'John',
+    age: 12,
+    id: 1,
+  },
+  Person,
+);
 
-const rex = family.add({
-  name: 'Rex',
-  breed: 'German Shepherd',
-}, Dog);
+const rex = family.add(
+  {
+    name: 'Rex',
+    breed: 'German Shepherd',
+  },
+  Dog,
+);
 
-const floki = family.add({
-  name: 'Floki',
-  breed: 'Labrador',
-}, Dog);
+const floki = family.add(
+  {
+    name: 'Floki',
+    breed: 'Labrador',
+  },
+  Dog,
+);
 
-console.log(family.removeAll(Dog))
-console.log(family.dogs) // [];
+console.log(family.removeAll(Dog));
+console.log(family.dogs); // [];
 
 console.log(family.removeOne(Person, 1));
-console.log(family.findAll(Person)) // [];
+console.log(family.findAll(Person)); // [];
 ```
-

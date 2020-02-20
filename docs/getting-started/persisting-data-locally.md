@@ -7,8 +7,8 @@ Sometimes, you'll need to persist some data locally.
 Bellow is a basic example using `localStorage`, but the same concept can be applied to any type of persistence:
 
 ```javascript
-import {autorun} from 'mobx';
-import {Collection} from 'datx';
+import { autorun } from 'mobx';
+import { Collection } from 'datx';
 
 class AppStore extends Collection {
   constructor(data = []) {
@@ -32,7 +32,6 @@ class AppStore extends Collection {
     });
   }
 }
-
 ```
 
 The code will use MobX `autorun` to monitor the collection and persist the data only when something relevant changes (e.g. it will ignore changes to models you're not persisting).
