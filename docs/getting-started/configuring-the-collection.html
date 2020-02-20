@@ -61,23 +61,23 @@
               }
             });
         </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Configuring the collection</h1></header><article><div><span><p>In order to work properly, the collection needs to know which models it supports. This is done by defining a static <code>types</code> array with a list of model classes:</p>
-<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> {Collection} <span class="hljs-keyword">from</span> <span class="hljs-string">'datx'</span>;
-<span class="hljs-keyword">import</span> {Person, Pet} <span class="hljs-keyword">from</span> <span class="hljs-string">'./models'</span>;
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { Collection } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx'</span>;
+<span class="hljs-keyword">import</span> { Person, Pet } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models'</span>;
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyCollection <span class="hljs-keyword">extends</span> Collection {
   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> types = [Person, Pet];
 }
 </code></pre>
 <p>Alternativelly, with JavaScript without class properties:</p>
-<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> {Collection} <span class="hljs-keyword">from</span> <span class="hljs-string">'datx'</span>;
-<span class="hljs-keyword">import</span> {Person, Pet} <span class="hljs-keyword">from</span> <span class="hljs-string">'./models'</span>;
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { Collection } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx'</span>;
+<span class="hljs-keyword">import</span> { Person, Pet } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models'</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyCollection</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Collection</span> </span>{}
 MyCollection.types = [Person, Pet];
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> MyCollection;
 </code></pre>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 1/27/2020 by Danijel Buhin</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/getting-started/references"><span class="arrow-prev">← </span><span>References</span></a><a class="docs-next button" href="/docs/getting-started/using-the-collection"><span>Using the collection</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 2/20/2020 by Danijel Buhin</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/getting-started/references"><span class="arrow-prev">← </span><span>References</span></a><a class="docs-next button" href="/docs/getting-started/using-the-collection"><span>Using the collection</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
                 document.addEventListener('keyup', function(e) {
                   if (e.target !== document.body) {
                     return;

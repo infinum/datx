@@ -61,15 +61,15 @@
               }
             });
         </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Basic configuration</h1></header><article><div><span><p>To apply the mixin to your models and collections, use the <code>jsonapi</code> method. Everything from the <a href="defining-models"><code>datx</code> defining models guide</a> also applies.</p>
-<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { Collection, Model } <span class="hljs-keyword">from</span> <span class="hljs-string">"datx"</span>;
-<span class="hljs-keyword">import</span> { config, jsonapi } <span class="hljs-keyword">from</span> <span class="hljs-string">"datx-jsonapi"</span>;
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { Collection, Model } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx'</span>;
+<span class="hljs-keyword">import</span> { config, jsonapi } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx-jsonapi'</span>;
 
 <span class="hljs-keyword">class</span> Person <span class="hljs-keyword">extends</span> jsonapi(Model) {
-  <span class="hljs-keyword">static</span> <span class="hljs-keyword">type</span> = <span class="hljs-string">"person"</span>;
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">type</span> = <span class="hljs-string">'person'</span>;
 }
 
 <span class="hljs-keyword">class</span> Pet <span class="hljs-keyword">extends</span> jsonapi(Model) {
-  <span class="hljs-keyword">static</span> <span class="hljs-keyword">type</span> = <span class="hljs-string">"pet"</span>;
+  <span class="hljs-keyword">static</span> <span class="hljs-keyword">type</span> = <span class="hljs-string">'pet'</span>;
 }
 
 <span class="hljs-keyword">class</span> MyCollection <span class="hljs-keyword">extends</span> jsonapi(Collection) {
@@ -77,7 +77,7 @@
 }
 </code></pre>
 <p>If you want to also use the network layer of the <code>datx-jsonapi</code> mixin, check the <a href="jsonapi-network-configuration">network configuration guide</a>.</p>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 1/28/2020 by Danijel Buhin</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/jsonapi/jsonapi-getting-started"><span class="arrow-prev">← </span><span>Getting started with JSON Api</span></a><a class="docs-next button" href="/docs/jsonapi/jsonapi-network-configuration"><span>Network configuration</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 2/20/2020 by Danijel Buhin</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/jsonapi/jsonapi-getting-started"><span class="arrow-prev">← </span><span>Getting started with JSON Api</span></a><a class="docs-next button" href="/docs/jsonapi/jsonapi-network-configuration"><span>Network configuration</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
                 document.addEventListener('keyup', function(e) {
                   if (e.target !== document.body) {
                     return;

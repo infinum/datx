@@ -63,16 +63,16 @@
         </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Config</h1></header><article><div><span><p>The library is exposing a config for some networking related options:</p>
 <h2><a class="anchor" aria-hidden="true" id="baseurl"></a><a href="#baseurl" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>baseUrl</h2>
 <p>The base URL used for the networking. By default, this is <code>&quot;/&quot;</code>, but can be changed to something like <code>&quot;https://example.com/api/&quot;</code></p>
-<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">"datx-jsonapi"</span>;
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx-jsonapi'</span>;
 
-config.baseUrl = <span class="hljs-string">"https://example.com/api/"</span>;
+config.baseUrl = <span class="hljs-string">'https://example.com/api/'</span>;
 
 <span class="hljs-comment">// Ready for some API calls</span>
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="fetchreference"></a><a href="#fetchreference" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>fetchReference</h2>
 <p>If you want to use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch">fetch API</a>, but need to use a different implementation, like <a href="https://www.npmjs.com/package/isomorphic-fetch"><code>isomorphic-fetch</code></a>, you can set the new reference here.</p>
-<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">"datx-jsonapi"</span>;
-<span class="hljs-keyword">import</span> fetch <span class="hljs-keyword">from</span> <span class="hljs-string">"isomorphic-fetch"</span>;
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx-jsonapi'</span>;
+<span class="hljs-keyword">import</span> fetch <span class="hljs-keyword">from</span> <span class="hljs-string">'isomorphic-fetch'</span>;
 
 config.fetchReference = fetch;
 
@@ -80,20 +80,20 @@ config.fetchReference = fetch;
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="defaultfetchoptions"></a><a href="#defaultfetchoptions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>defaultFetchOptions</h2>
 <p>If needed, you can define default options that are passed to the fetch method. Keep in mind that the body and method properties will be overridden.</p>
-<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">"datx-jsonapi"</span>;
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx-jsonapi'</span>;
 
 config.defaultFetchOptions = {
-  <span class="hljs-attr">credentials</span>: <span class="hljs-string">"same-origin"</span>,
+  <span class="hljs-attr">credentials</span>: <span class="hljs-string">'same-origin'</span>,
   <span class="hljs-attr">headers</span>: {
     <span class="hljs-comment">// My custom headers</span>
-  }
+  },
 };
 
 <span class="hljs-comment">// Ready for some API calls</span>
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="encodequerystring"></a><a href="#encodequerystring" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>encodeQueryString</h2>
 <p>URL query string isn't encoded by default, so you have to manually encode query params which may contain URL-unsafe characters (for example, user input), to ensure the URL is valid. This option enables encoding of all params handled by the lib.</p>
-<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">"datx-jsonapi"</span>;
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx-jsonapi'</span>;
 
 config.encodeQueryString = <span class="hljs-literal">true</span>;
 </code></pre>
@@ -131,7 +131,7 @@ config.encodeQueryString = <span class="hljs-literal">true</span>;
 </code></pre>
 <p>Can be used to modify the response before it's parsed. It is receiving a <a href="typescript-nterfaces#irawresponse">IRawResponse</a> object, and it should also return an object with the same interface.</p>
 <p>Note: It is recommended not to modify the existing object but instead create a copy.</p>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 1/28/2020 by Danijel Buhin</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/jsonapi/jsonapi-response"><span class="arrow-prev">← </span><span>Response</span></a><a class="docs-next button" href="/docs/jsonapi/jsonapi-utils"><span>Utils</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#baseurl">baseUrl</a></li><li><a href="#fetchreference">fetchReference</a></li><li><a href="#defaultfetchoptions">defaultFetchOptions</a></li><li><a href="#encodequerystring">encodeQueryString</a></li><li><a href="#paramarraytype">paramArrayType</a></li><li><a href="#basefetch">baseFetch</a></li><li><a href="#transformrequest">transformRequest</a></li><li><a href="#transformresponse">transformResponse</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 2/20/2020 by Danijel Buhin</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/jsonapi/jsonapi-response"><span class="arrow-prev">← </span><span>Response</span></a><a class="docs-next button" href="/docs/jsonapi/jsonapi-utils"><span>Utils</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#baseurl">baseUrl</a></li><li><a href="#fetchreference">fetchReference</a></li><li><a href="#defaultfetchoptions">defaultFetchOptions</a></li><li><a href="#encodequerystring">encodeQueryString</a></li><li><a href="#paramarraytype">paramArrayType</a></li><li><a href="#basefetch">baseFetch</a></li><li><a href="#transformrequest">transformRequest</a></li><li><a href="#transformresponse">transformResponse</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
                 document.addEventListener('keyup', function(e) {
                   if (e.target !== document.body) {
                     return;

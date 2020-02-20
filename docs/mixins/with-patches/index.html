@@ -66,11 +66,10 @@
 <li><code>undoPatch(patch: IPatch): void</code> - Undo a patch</li>
 <li><code>onPatch(callbackFn: (patch: IPatch) =&gt; void): () =&gt; void</code> - Subscribe to patches. The method returns an unsubscribe function.</li>
 </ul>
-<pre><code class="hljs css language-typescript">
-<span class="hljs-keyword">import</span> {PatchType} <span class="hljs-keyword">from</span> <span class="hljs-string">'../enums/PatchType'</span>;
-<span class="hljs-keyword">import</span> {PureModel} <span class="hljs-keyword">from</span> <span class="hljs-string">'../PureModel'</span>;
-<span class="hljs-keyword">import</span> {IIdentifier} <span class="hljs-keyword">from</span> <span class="hljs-string">'./IIdentifier'</span>;
-<span class="hljs-keyword">import</span> {IType} <span class="hljs-keyword">from</span> <span class="hljs-string">'./IType'</span>;
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { PatchType } <span class="hljs-keyword">from</span> <span class="hljs-string">'../enums/PatchType'</span>;
+<span class="hljs-keyword">import</span> { PureModel } <span class="hljs-keyword">from</span> <span class="hljs-string">'../PureModel'</span>;
+<span class="hljs-keyword">import</span> { IIdentifier } <span class="hljs-keyword">from</span> <span class="hljs-string">'./IIdentifier'</span>;
+<span class="hljs-keyword">import</span> { IType } <span class="hljs-keyword">from</span> <span class="hljs-string">'./IType'</span>;
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IPatch&lt;T = PureModel&gt; {
   patchType: PatchType;
@@ -83,7 +82,7 @@
 }
 </code></pre>
 <p>The mixin is already applied to the <a href="../api-reference/model"><code>Model</code></a> and <a href="../api-reference/collection"><code>Collection</code></a>, but can also be applied to <a href="../api-reference/pure-model"><code>PureModel</code></a> if needed.</p>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 2/6/2020 by Danijel Buhin</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/mixins/with-meta"><span class="arrow-prev">← </span><span class="function-name-prevnext">withMeta</span></a><a class="docs-next button" href="/docs/mixins/jsonapi-mixin"><span>JSONAPI Mixin</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 2/20/2020 by Danijel Buhin</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/mixins/with-meta"><span class="arrow-prev">← </span><span class="function-name-prevnext">withMeta</span></a><a class="docs-next button" href="/docs/mixins/jsonapi-mixin"><span>JSONAPI Mixin</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
                 document.addEventListener('keyup', function(e) {
                   if (e.target !== document.body) {
                     return;
