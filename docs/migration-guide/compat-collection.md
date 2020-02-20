@@ -9,6 +9,6 @@ The idea of `CompatCollection` and [`CompatModel`](compat-model) is to make migr
 
 `CompatCollection` enhances the [`Collection`](../api-reference/collection) with the following properties and methods:
 
-* type getters: If you have a model of type person, you can get all models of the type by using `collection.person`. This is an equivalent to the [`findAll`](../api-reference/collection#findall) method: `collection.findAll('person')` or `collection.findAll(Person)`.
-* `static: typeof CompatCollection` - Getter for the collection class. Mostly for internal use.
-* `toJS` - Equivalent to the [`toJSON`](../api-reference/collection#tojson) method.
+- type getters: If you have a model of type person, you can get all models of the type by using `collection.person`. This is an equivalent to the [`findAll`](../api-reference/collection#findall) method: `collection.findAll('person')` or `collection.findAll(Person)`.
+- `static: typeof CompatCollection` - Getter for the collection class. Mostly for internal use.
+- `toJS` - Equivalent to the [`toJSON`](../api-reference/collection#tojson) method.

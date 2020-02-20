@@ -6,16 +6,16 @@ title: Network usage
 ## `fetch` example
 
 ```typescript
-import { Collection, Model } from "datx";
-import { config, jsonapi } from "datx-jsonapi";
-config.baseUrl = "https://example.com/";
+import { Collection, Model } from 'datx';
+import { config, jsonapi } from 'datx-jsonapi';
+config.baseUrl = 'https://example.com/';
 
 class MyCollection extends jsonapi(Collection) {}
 const collection = new MyCollection();
 
 collection
-  .fetch("event", 1) // This will make a GET request to https://example.com/event/1
-  .then(response => {
+  .fetch('event', 1) // This will make a GET request to https://example.com/event/1
+  .then((response) => {
     const event = response.data;
     console.log(event.id); // 1
   });
@@ -24,16 +24,16 @@ collection
 ## `fetchAll` example
 
 ```typescript
-import { Collection, Model } from "datx";
-import { config, jsonapi } from "datx-jsonapi";
-config.baseUrl = "https://example.com/";
+import { Collection, Model } from 'datx';
+import { config, jsonapi } from 'datx-jsonapi';
+config.baseUrl = 'https://example.com/';
 
 class MyCollection extends jsonapi(Collection) {}
 const collection = new MyCollection();
 
 collection
-  .fetchAll("event") // This will make a GET request to https://example.com/event
-  .then(response => {
+  .fetchAll('event') // This will make a GET request to https://example.com/event
+  .then((response) => {
     const events = response.data;
     console.log(events.length); // e.g. 5
     console.log(events[0].id); // e.g. 1
@@ -45,16 +45,16 @@ collection
 The request method can be used if something (url, method, etc.) is not standard:
 
 ```typescript
-import { Collection, Model } from "datx";
-import { config, jsonapi } from "datx-jsonapi";
-config.baseUrl = "https://example.com/";
+import { Collection, Model } from 'datx';
+import { config, jsonapi } from 'datx-jsonapi';
+config.baseUrl = 'https://example.com/';
 
 class MyCollection extends jsonapi(Collection) {}
 const collection = new MyCollection();
 
 collection
-  .request("event/1/like", "POST") // This will make a POST request to https://example.com/event/1/like
-  .then(response => {
+  .request('event/1/like', 'POST') // This will make a POST request to https://example.com/event/1/like
+  .then((response) => {
     // The expected response of the API call is still a valid JSON API response
     const event = response.data;
   });
@@ -63,10 +63,10 @@ collection
 ## Pagination example
 
 ```typescript
-import { Collection, Model } from "datx";
-import { config, jsonapi } from "datx-jsonapi";
+import { Collection, Model } from 'datx';
+import { config, jsonapi } from 'datx-jsonapi';
 
-config.baseUrl = "https://example.com/";
+config.baseUrl = 'https://example.com/';
 
 class MyCollection extends jsonapi(Collection) {}
 const collection = new MyCollection();
@@ -75,7 +75,7 @@ const collection = new MyCollection();
 // Note: In normal usage, you should also have some error handling
 async function getAllUsers() {
   const users = [];
-  let response = await collection.fetchAll("user"); // GET https://example.com/user
+  let response = await collection.fetchAll('user'); // GET https://example.com/user
   users.push(...response.data);
   while (response.next) {
     response = await response.next;

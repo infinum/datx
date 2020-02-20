@@ -17,7 +17,9 @@ console.log(collectionB.length); // 1
 ```
 
 ## Adding models
+
 Models can be added to a collection in four ways:
+
 1. As an existing model instance: `collection.add(modelInstance);`
 2. As an array of existing model instances: `collection.add([modelInstanceA, modelInstanceB]);`
 3. As an plain object and a model type: `collection.add(plainObject, modelType);`
@@ -28,6 +30,7 @@ The returned value will be a model instance or an array of model instances.
 **Note:** When adding an array of plain JS objects, all of them need to be of the same type.
 
 ## Finding models
+
 ### Find all models of a certain type
 
 ```javascript
@@ -55,11 +58,11 @@ collection.reset();
 
 ## Updating models
 
-Existing properties on models can be updated with normal property assignments. There are also three methods that can be used: [`assignModel `](../api-reference/model#assignmodel), [`initModelRef`](../api-reference/model#initmodelref) and [`updateModel `](../api-reference/model#updatemodel):
+Existing properties on models can be updated with normal property assignments. There are also three methods that can be used: [`assignModel`](../api-reference/model#assignmodel), [`initModelRef`](../api-reference/model#initmodelref) and [`updateModel`](../api-reference/model#updatemodel):
 
 ```javascript
-const john = collection.add({firstName: 'John', lastName: 'Doe'}, Person); // Model class can be used as type
-const jane = collection.add({firstName: 'Jane', lastName: 'Doe'}, 'person'); // Type string/number is also valid
+const john = collection.add({ firstName: 'John', lastName: 'Doe' }, Person); // Model class can be used as type
+const jane = collection.add({ firstName: 'Jane', lastName: 'Doe' }, 'person'); // Type string/number is also valid
 
 // Should be used only for existing properties
 john.lastName = 'Smith';
@@ -68,15 +71,15 @@ john.lastName = 'Smith';
 assignModel(john, 'age', 42);
 
 // Assign a new dynamic reference to a model
-import {ReferenceType} from 'datx';
-initModelRef(john, 'spouse', {model: Person, type: ReferenceType.TO_ONE}, jane);
+import { ReferenceType } from 'datx';
+initModelRef(john, 'spouse', { model: Person, type: ReferenceType.TO_ONE }, jane);
 
 // Update multiple values
-updateModel(john, {lastName: 'Williams', age: 25, spouse: null, city: 'San Francisco'});
+updateModel(john, { lastName: 'Williams', age: 25, spouse: null, city: 'San Francisco' });
 ```
 
 **Note:** Direct assignment should not be used for new properties because the added property won't be observable (this is a MobX limitation).
 
-***
+---
 
 For specifics about the exact parameters that can be used with the mentioned methods, check out the [Collection API reference](../api-reference/collection).

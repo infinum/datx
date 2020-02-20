@@ -45,9 +45,7 @@ interface IProviderProps {
 const storeContext = createContext<IStores>({ store });
 
 export const StoreProvider = ({ children }: IProviderProps) => {
-  return (
-    <storeContext.Provider value={{ store }}>{children}</storeContext.Provider>
-  );
+  return <storeContext.Provider value={{ store }}>{children}</storeContext.Provider>;
 };
 ```
 
@@ -63,9 +61,7 @@ import AppStore from './AppStore';
 export const storeContext = createContext({ store });
 
 export const StoreProvider = ({ children }) => {
-  return (
-    <storeContext.Provider value={{ store }}>{children}</storeContext.Provider>
-  );
+  return <storeContext.Provider value={{ store }}>{children}</storeContext.Provider>;
 };
 ```
 
@@ -176,8 +172,7 @@ export const App = observer(() => {
         {store.books.map((book) => (
           <li key={book.id}>
             <h4>
-              {book.title}{' '}
-              <button onClick={handleRemoveBook(book.id)}>X</button>
+              {book.title} <button onClick={handleRemoveBook(book.id)}>X</button>
             </h4>
             <small>by {book.author.name}</small>
           </li>
@@ -223,8 +218,7 @@ export const App = () => {
         {store.books.map((book) => (
           <li key={book.id}>
             <h4>
-              {book.title}{' '}
-              <button onClick={handleRemoveBook(book.id)}>X</button>
+              {book.title} <button onClick={handleRemoveBook(book.id)}>X</button>
             </h4>
             <small>by {book.author.name}</small>
           </li>
@@ -272,8 +266,7 @@ export const App = () => {
             {store.books.map((book) => (
               <li key={book.id}>
                 <h4>
-                  {book.title}{' '}
-                  <button onClick={handleRemoveBook(book.id)}>X</button>
+                  {book.title} <button onClick={handleRemoveBook(book.id)}>X</button>
                 </h4>
                 <small>by {book.author.name}</small>
               </li>
