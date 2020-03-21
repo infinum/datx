@@ -9,7 +9,6 @@ import { IJsonapiModel } from '../interfaces/IJsonapiModel';
 import { IRequestOptions } from '../interfaces/IRequestOptions';
 import { IRequest } from '../interfaces/JsonApi';
 import { config } from '../NetworkUtils';
-import { getValue } from './utils';
 
 function parametrize(params: object, scope: string = '') {
   const list: Array<{ key: string; value: string }> = [];
@@ -73,8 +72,8 @@ function prepareRawParams(params: Array<{ key: string; value: string } | string>
   });
 }
 
-function prefixUrl(url: string) {
-  if (URL_REGEX.test(url)) {
+function prefixUrl(url: string, containsBase?: boolean) {
+  if (URL_REGEX.test(url) || containsBase) {
     return url;
   }
 
@@ -98,7 +97,12 @@ function encodeParam(param: string) {
   return encodeURIComponent(param).replace('%3D', '=');
 }
 
-export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions) {
+export function buildUrl(
+  url: string,
+  data?: IRequest,
+  options?: IRequestOptions,
+  containsBase?: boolean,
+) {
   const headers: Record<string, string> =
     (options && options.networkConfig && options.networkConfig.headers) || {};
   let params: Array<string> = ([] as Array<string>).concat(
@@ -113,7 +117,7 @@ export function buildUrl(url: string, data?: IRequest, options?: IRequestOptions
     params = params.map(encodeParam);
   }
 
-  const baseUrl: string = appendParams(prefixUrl(url), params);
+  const baseUrl: string = appendParams(prefixUrl(url, containsBase), params);
 
   return { data, headers, url: baseUrl };
 }
@@ -139,11 +143,19 @@ export function prepareQuery(
     [queryModel] = staticCollection.types.filter((item) => item.type === type);
   }
 
-  const path: string = queryModel
-    ? getValue<string>(queryModel['endpoint']) || queryModel['baseUrl'] || getModelType(queryModel)
-    : type;
+  let containsBase = false;
+  let path: string;
+
+  if (!queryModel) {
+    path = type.toString();
+  } else if (queryModel['endpoint'] && typeof queryModel['endpoint'] === 'function') {
+    containsBase = true;
+    path = queryModel['endpoint'](config.baseUrl);
+  } else {
+    path = queryModel['endpoint'] || queryModel['baseUrl'] || getModelType(queryModel);
+  }
 
   const url: string = id ? `${path}/${id}` : `${path}`;
 
-  return buildUrl(url, data, options);
+  return buildUrl(url, data, options, containsBase);
 }

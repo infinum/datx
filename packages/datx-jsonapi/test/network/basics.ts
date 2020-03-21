@@ -376,7 +376,9 @@ describe('Network basics', () => {
     class TestEvent extends jsonapi(Model) {
       public static type = 'event';
 
-      public static endpoint = () => 'foo/event';
+      public static endpoint = (baseUrl: string) => {
+        return `${baseUrl}foo/event`;
+      };
     }
 
     class TestCollection extends Collection {
