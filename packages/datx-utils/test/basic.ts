@@ -1,6 +1,6 @@
 import { autorun, configure, runInAction, isComputedProp, observable } from 'mobx';
 
-import { assignComputed, flatten, isFalsyArray, mapItems, setMeta, getMeta } from '../src';
+import { assignComputed, mapItems, setMeta, getMeta } from '../src';
 
 configure({ enforceActions: 'observed' });
 
@@ -16,30 +16,6 @@ describe('datx-utils', () => {
 
     it('should work for an array', () => {
       expect(mapItems([1, 2], (i) => i * 2)).toEqual([2, 4]);
-    });
-  });
-
-  describe('flatten', () => {
-    it('should work with a simple array', () => {
-      expect(flatten([[1], [2], [3]])).toEqual([1, 2, 3]);
-    });
-
-    it('should work with a complex array', () => {
-      expect(flatten([[1], [2, 3], [4, 5], [6]])).toEqual([1, 2, 3, 4, 5, 6]);
-    });
-  });
-
-  describe('isFalsyArray', () => {
-    it('should work for falsy arrays', () => {
-      expect(isFalsyArray([0, null, undefined, ''])).toBe(true);
-    });
-
-    it('should work for truthy arrays', () => {
-      expect(isFalsyArray([1, 2, 3, {}, [], '123'])).toBe(false);
-    });
-
-    it('should work for mixed arrays', () => {
-      expect(isFalsyArray([0, null, 1, ''])).toBe(true);
     });
   });
 

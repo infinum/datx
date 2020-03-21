@@ -5,8 +5,6 @@ export { IRawModel } from './interfaces/IRawModel';
 export {
   assignComputed,
   mapItems,
-  flatten,
-  isFalsyArray,
   error,
   warn,
   deprecated,
@@ -14,6 +12,5 @@ export {
   getMeta,
   setMeta,
   mergeMeta,
-  reducePrototypeChain,
   getMetaObj,
 } from './helpers';

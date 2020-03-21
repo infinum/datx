@@ -38,29 +38,6 @@ export function mapItems<T, U>(data: T | Array<T>, fn: (item: T) => U): U | Arra
   return data === null ? null : fn(data as T);
 }
 
-/**
- * Flatten a 2D array to a single array
- *
- * @export
- * @template T
- * @param {Array<Array<T>|T>} data Arrays to flatten
- * @returns {Array<T>} Flattened array
- */
-export function flatten<T>(data: Array<Array<T> | T>): Array<T> {
-  return ([] as Array<T>).concat.apply([], data);
-}
-
-/**
- * Check if the given variable is an array with at least one falsy value
- *
- * @export
- * @param {any} value A variable to check
- * @returns {boolean} The given variable is an array with at least one falsy value
- */
-export function isFalsyArray(value: any): boolean {
-  return isArrayLike(value) && !value.every(Boolean);
-}
-
 function undefinedGetter(): any {
   return undefined;
 }
