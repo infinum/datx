@@ -73,7 +73,7 @@ function initData<T extends IJsonapiModel>(
     }
   }
 
-  return undefined;
+  return new Bucket.ToOneOrMany<T>(null, collection as any, true);
 }
 
 export class Response<T extends IJsonapiModel> {
@@ -233,7 +233,7 @@ export class Response<T extends IJsonapiModel> {
   }
 
   public get isSuccess(): boolean {
-    return Boolean(!this.error && this.__data?.value);
+    return !this.error;
   }
 
   public get data(): T | Array<T> | null {

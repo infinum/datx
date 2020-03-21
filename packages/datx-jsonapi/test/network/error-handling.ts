@@ -74,6 +74,7 @@ describe('error handling', () => {
     } catch (response) {
       hasFailed = true;
       expect(response.error[0]).toBeInstanceOf(Object);
+      expect(response.data).toBeNull();
     }
     expect(hasFailed).toBe(true);
   });

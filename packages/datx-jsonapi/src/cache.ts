@@ -24,8 +24,8 @@ export interface ICacheInternal {
 let cacheStorage: Array<ICacheInternal> = [];
 
 export function saveCache(url: string, response: Response<IJsonapiModel>) {
-  if (response && response.isSuccess && response.data) {
-    const types = mapItems(response.data, getModelType) as IType | Array<IType>;
+  if (response && response.isSuccess && (response.data || response.data === null)) {
+    const types = mapItems(response.data || [], getModelType) as IType | Array<IType>;
 
     cacheStorage = cacheStorage.filter((item) => item.url !== url);
 

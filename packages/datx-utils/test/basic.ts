@@ -5,7 +5,7 @@ import { assignComputed, mapItems, setMeta, getMeta } from '../src';
 configure({ enforceActions: 'observed' });
 
 describe('datx-utils', () => {
-  describe('mapUtils', () => {
+  describe('mapItems', () => {
     it('should work for null', () => {
       expect(mapItems(null, () => 1)).toBe(null);
     });

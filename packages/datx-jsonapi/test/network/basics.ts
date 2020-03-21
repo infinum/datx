@@ -68,6 +68,18 @@ describe('Network basics', () => {
     }
   });
 
+  it('return null if no data in response', async () => {
+    setRequest({
+      name: 'eempty',
+      url: 'event',
+    });
+
+    const store = new TestStore();
+    const events = await store.fetchAll(Event);
+
+    expect(events.data).toBeNull();
+  });
+
   it('should handle id changes correctly', async () => {
     const store = new TestStore();
     const image1 = store.add({}, Image);

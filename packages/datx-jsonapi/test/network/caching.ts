@@ -1,6 +1,5 @@
 /* eslint-disable max-classes-per-file */
 
-import * as fetch from 'isomorphic-fetch';
 import { autorun } from 'mobx';
 
 import { config } from '../../src';
@@ -16,7 +15,6 @@ function sleep(duration: number) {
 
 describe('caching', () => {
   beforeEach(() => {
-    config.fetchReference = fetch;
     config.baseUrl = 'https://example.com/';
     config.cache = CachingStrategy.CACHE_FIRST;
     clearAllCache();

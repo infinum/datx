@@ -58,7 +58,7 @@ function iterateEntries<T extends IJsonapiModel>(
 function iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T) {
   mapItems((body && body.included) || [], fn);
 
-  return mapItems((body && body.data) || [], fn);
+  return mapItems((body && body.data) || null, fn);
 }
 
 export function decorateCollection(BaseClass: typeof PureCollection) {
