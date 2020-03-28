@@ -105,6 +105,33 @@ describe('Collection', () => {
       expect(store.length).toBe(0);
     });
 
+    it('should work with preprocess', () => {
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        static preprocess(data: object): object {
+          data['baz'] = 100;
+          return data;
+        }
+
+        @Attribute() public foo!: number;
+
+        @Attribute() public bar!: number;
+
+        @Attribute() public baz!: number;
+      }
+
+      class Store extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new Store();
+
+      const model = store.add({ foo: 1, bar: 2 }, Foo);
+
+      expect(model.baz).toBe(100);
+    });
+
     it('should work with removing all models of a certain type', () => {
       class Foo extends PureModel {
         public static type = 'foo';

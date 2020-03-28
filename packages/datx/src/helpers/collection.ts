@@ -40,7 +40,7 @@ export function upsertModel(
     return updateModel(existingModel, data);
   }
 
-  return new TypeModel(data, collection);
+  return new TypeModel(TypeModel.preprocess(data), collection);
 }
 
 function initCollectionModel(collection: PureCollection, data: IRawModel): PureModel {

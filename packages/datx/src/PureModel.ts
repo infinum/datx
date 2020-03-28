@@ -14,6 +14,10 @@ export class PureModel {
 
   public static enableAutoId: boolean = true;
 
+  public static preprocess(data: object): object {
+    return data;
+  }
+
   public static getAutoId(): IIdentifier {
     return typeof this.autoIdValue === 'number' ? --this.autoIdValue : this.autoIdValue;
   }

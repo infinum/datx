@@ -12,7 +12,7 @@ export interface IModelConstructor<T = PureModel> {
 
   new (data?: IRawModel, collection?: PureCollection): T;
 
-  // preprocess(data: object, collection?: PureCollection): object;
+  preprocess(data: object, collection?: PureCollection): object;
   getAutoId(): IIdentifier;
   toJSON(): IType;
 }
