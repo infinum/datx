@@ -41,3 +41,79 @@ yarn start next-app --example with-typescript your-app-name
 npx create-next-app --example with-typescript your-app-name
 ```
 
+## withDatx HOC
+
+```tsx
+import { NextPage, NextPageContext } from 'next';
+import App from 'next/app';
+import React from 'react';
+
+import { getOrInitializeStore } from '../../stores/getOrInitializeStore';
+import { AppStore } from '../../stores/AppStore';
+
+const StoreContext = React.createContext<AppStore | null>(null);
+
+export const useStores = () => React.useContext(StoreContext);
+
+interface IOptions {
+  ssr: boolean;
+}
+
+export type ContextWithStore = NextPageContext & { store: AppStore };
+
+// Extend NextPage type's context with 'store' (which is of type RootStore)
+export type NextPageWithDatx<P = {}, IP = P> = NextPage<P, IP> & {
+  getInitialProps?: (ctx: ContextWithStore) => Promise<IP>;
+};
+
+export const withDatx = (PageComponent: NextPageWithDatx, options: IOptions = { ssr: true }) => {
+  const WithDatx = ({ initialMobxState, ...props }: any) => {
+    const store: AppStore = getOrInitializeStore(initialMobxState);
+
+    return (
+      <StoreContext.Provider value={store}>
+        <PageComponent {...props} />
+      </StoreContext.Provider>
+    );
+  };
+
+  // Make sure people don't use this HOC on _app.js level
+  if (process.env.NODE_ENV !== 'production') {
+    const isAppHoc = PageComponent.prototype instanceof App;
+    if (isAppHoc) {
+      throw new Error('The withDatx HOC only works with PageComponents');
+    }
+  }
+
+  // Set the correct displayName in development
+  if (process.env.NODE_ENV !== 'production') {
+    const displayName = PageComponent.displayName || PageComponent.name || 'Component';
+    WithDatx.displayName = `withDatx(${displayName})`;
+  }
+
+  const { ssr = true } = options;
+
+  if (ssr || PageComponent.getInitialProps) {
+    WithDatx.getInitialProps = async (context: NextPageContext) => {
+      // Get or Create the store with `undefined` as initialState
+      // This allows you to set a custom default initialState
+      const store = getOrInitializeStore();
+
+      // Provide the store to getInitialProps of pages
+      // Run getInitialProps from HOCed PageComponent
+      const pageProps: any =
+        typeof PageComponent.getInitialProps === 'function'
+          ? await PageComponent.getInitialProps({ ...context, store })
+          : {};
+          
+      // Pass props to PageComponent
+      return {
+        ...pageProps,
+        initialMobxState: store.snapshot,
+      };
+    };
+  }
+
+  return WithDatx;
+};
+```
