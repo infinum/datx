@@ -330,18 +330,18 @@ const DashboardPage: NextPageWithDatx = () => {
     <div>
       <h1>Dashboard</h1>
       <div>
-        Senior developers: {store?.seniors.length}
-        <div className="seniors-wrapper">
-          {store?.seniors.map((senior) => (
-            <div key={senior.id} className="senior-card">
+        Active developers: {store?.developers.length}
+        <div className="developers-wrapper">
+          {store?.developers.map((developer) => (
+            <div key={developer.id} className="developer-card">
               <p>
-                <strong>Name:</strong> {senior.employee_name}
+                <strong>Name:</strong> {developer.employee_name}
               </p>
               <p>
-                <strong>Age:</strong> {senior.employee_age}
+                <strong>Age:</strong> {developer.employee_age}
               </p>
               <p>
-                <strong>Salary:</strong> {senior.formattedSalary}
+                <strong>Salary:</strong> {developer.formattedSalary}
               </p>
             </div>
           ))}
@@ -383,18 +383,18 @@ const DashboardPage = () => {
     <div>
       <h1>Dashboard</h1>
       <div>
-        Senior developers: {store?.seniors.length}
-        <div className="seniors-wrapper">
-          {store?.seniors.map((senior) => (
-            <div key={senior.id} className="senior-card">
+        Active developers: {store?.developers.length}
+        <div className="developers-wrapper">
+          {store?.developers.map((developer) => (
+            <div key={developer.id} className="developer-card">
               <p>
-                <strong>Name:</strong> {senior.employee_name}
+                <strong>Name:</strong> {developer.employee_name}
               </p>
               <p>
-                <strong>Age:</strong> {senior.employee_age}
+                <strong>Age:</strong> {developer.employee_age}
               </p>
               <p>
-                <strong>Salary:</strong> {senior.formattedSalary}
+                <strong>Salary:</strong> {developer.formattedSalary}
               </p>
             </div>
           ))}
