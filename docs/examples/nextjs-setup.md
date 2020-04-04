@@ -308,6 +308,9 @@ export const withDatx = (PageComponent, options = { ssr: true }) => {
 
 ## Use your store
 
+<!--DOCUSAURUS_CODE_TABS-->
+<!--TypeScript-->
+
 ```tsx
 import fetch from 'isomorphic-unfetch';
 
@@ -360,3 +363,58 @@ DashboardPage.getInitialProps = async ({ store }: PageContextWithStore) => {
 export default withDatx(DashboardPage);
 
 ```
+
+<!--JavaScript-->
+
+```tsx
+import fetch from 'isomorphic-unfetch';
+
+import {
+  withDatx,
+  useStores,
+} from '../components/HOC/withDatx';
+
+import { Employee } from '../stores/models/Employee';
+
+const DashboardPage = () => {
+  const store = useStores();
+
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <div>
+        Senior developers: {store?.seniors.length}
+        <div className="seniors-wrapper">
+          {store?.seniors.map((senior) => (
+            <div key={senior.id} className="senior-card">
+              <p>
+                <strong>Name:</strong> {senior.employee_name}
+              </p>
+              <p>
+                <strong>Age:</strong> {senior.employee_age}
+              </p>
+              <p>
+                <strong>Salary:</strong> {senior.formattedSalary}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+DashboardPage.getInitialProps = async ({ store }) => {
+  const response = await fetch('http://dummy.restapiexample.com/api/v1/employees');
+  const data = await response.json();
+
+  store.add(data.data, Employee);
+
+  return {};
+};
+
+export default withDatx(DashboardPage);
+
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
