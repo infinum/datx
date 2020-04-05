@@ -1,4 +1,4 @@
-import { IRawModel, META_FIELD } from 'datx-utils';
+import { IRawModel, META_FIELD, getMeta } from 'datx-utils';
 
 import { IType } from '../interfaces/IType';
 import { PureCollection } from '../PureCollection';
@@ -6,6 +6,7 @@ import { PureModel } from '../PureModel';
 import { error } from './format';
 import { modelMapParse, updateModel } from './model/utils';
 import { MetaModelField } from '../enums/MetaModelField';
+import { MetaClassField } from '../enums/MetaClassField';
 
 export function upsertModel(
   data: IRawModel,
@@ -33,16 +34,20 @@ export function upsertModel(
     throw error(`No model is defined for the type ${type}.`);
   }
 
-  const id = data?.[META_FIELD]?.[MetaModelField.IdField];
+  const metaId = data?.[META_FIELD]?.[MetaModelField.IdField];
+  const idField = getMeta(TypeModel, MetaClassField.IdField);
+  const id = idField ? data?.[idField] ?? metaId : metaId;
   const existingModel = id && collection.findOne(type, id);
 
   if (existingModel) {
+    const fields = getMeta(TypeModel, MetaClassField.Fields);
+    const keys = Object.keys({ ...data, ...fields });
     const parsedData = {};
 
-    Object.keys(data).forEach((key: string) => {
+    keys.forEach((key: string) => {
       parsedData[key] = modelMapParse(TypeModel, data, key);
     });
-    return updateModel(parsedData, data);
+    return updateModel(existingModel, parsedData);
   }
 
   return new TypeModel(TypeModel.preprocess(data), collection);
