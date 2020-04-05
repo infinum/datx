@@ -157,34 +157,34 @@ export function assignComputed<T = any>(
   });
 }
 
-export function error() {
+export function error(...args: Array<any>) {
   // eslint-disable-next-line no-console, prefer-rest-params
-  console.error(`[datx error]`, arguments);
+  console.error(`[datx error]`, ...args);
 }
 
-export function warn() {
+export function warn(...args: Array<any>) {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }
 
   // eslint-disable-next-line no-console, prefer-rest-params
-  console.warn(`[datx warning]`, arguments);
+  console.warn(`[datx warning]`, ...args);
 }
 
-export function deprecated() {
+export function deprecated(...args: Array<any>) {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }
 
   // eslint-disable-next-line no-console, prefer-rest-params
-  console.warn(`[datx deprecated]`, arguments);
+  console.warn(`[datx deprecated]`, ...args);
 }
 
-export function info() {
+export function info(...args: Array<any>) {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }
 
   // eslint-disable-next-line no-console, prefer-rest-params
-  console.info(`[datx info]`, arguments);
+  console.info(`[datx info]`, ...args);
 }

@@ -2,7 +2,7 @@
 
 import { configure } from 'mobx';
 
-import { Bucket, Collection, Model, Attribute } from '../src';
+import { Bucket, Collection, Model, Attribute, PureCollection } from '../src';
 
 configure({ enforceActions: 'observed' });
 
@@ -131,6 +131,143 @@ describe('ToOneOrMany', () => {
         expect(bucketInstance.value).toBeInstanceOf(Bar);
       }
     });
+    describe('dynamic', () => {
+      it('should work with a function and class type', () => {
+        class Bar extends Model {
+          public static type = 'bar';
+
+          @Attribute()
+          public value!: number;
+        }
+
+        class Foo extends Model {
+          public static type = 'foo';
+
+          @Attribute({
+            toOneOrMany: (data, parentModel, key, collection) => {
+              expect(data).toEqual({ value: 1 });
+              expect(parentModel).toBeInstanceOf(Foo);
+              expect(key).toBe('bar');
+              expect(collection).toBeInstanceOf(PureCollection);
+              return Bar;
+            },
+          })
+          public bar!: Bar;
+        }
+
+        class TestCollection extends Collection {
+          public static types = [Foo, Bar];
+        }
+
+        const store = new TestCollection();
+
+        const foo = store.add({ bar: [{ value: 1 }] }, Foo);
+
+        expect(foo.bar[0]).toBeInstanceOf(Bar);
+      });
+
+      it('should work with a function and class type', () => {
+        class Bar extends Model {
+          public static type = 'bar';
+
+          @Attribute()
+          public value!: number;
+        }
+
+        class Foo extends Model {
+          public static type = 'foo';
+
+          @Attribute({
+            toOneOrMany: (data) => {
+              expect(data).toEqual({ value: 1 });
+              return 'bar';
+            },
+          })
+          public bar!: Bar;
+        }
+
+        class TestCollection extends Collection {
+          public static types = [Foo, Bar];
+        }
+
+        const store = new TestCollection();
+
+        const foo = store.add({ bar: [{ value: 1 }] }, Foo);
+
+        expect(foo.bar[0]).toBeInstanceOf(Bar);
+      });
+
+      it('should work with multiple types', () => {
+        class Bar extends Model {
+          public static type = 'bar';
+
+          @Attribute()
+          public value!: number;
+        }
+
+        class Baz extends Model {
+          public static type = 'baz';
+
+          @Attribute()
+          public value!: number;
+        }
+
+        class Foo extends Model {
+          public static type = 'foo';
+
+          @Attribute({
+            toOneOrMany: (data: any) => {
+              return data.value % 2 === 0 ? Baz : Bar;
+            },
+          })
+          public bar!: Bar;
+        }
+
+        class TestCollection extends Collection {
+          public static types = [Foo, Bar, Baz];
+        }
+
+        const store = new TestCollection();
+
+        const foo = store.add({ bar: [{ value: 1 }, { value: 2 }, { value: 5 }] }, Foo);
+
+        expect(foo.bar[0]).toBeInstanceOf(Bar);
+        expect(foo.bar[1]).toBeInstanceOf(Baz);
+        expect(foo.bar[2]).toBeInstanceOf(Bar);
+      });
+
+      it('should fail on an invalid type', () => {
+        class Bar extends Model {
+          public static type = 'bar';
+
+          @Attribute()
+          public value!: number;
+        }
+
+        class Foo extends Model {
+          public static type = 'foo';
+
+          @Attribute({
+            toOneOrMany: (data) => {
+              expect(data).toEqual({ value: 1 });
+              return 'baz';
+            },
+          })
+          public bar!: Bar;
+        }
+
+        class TestCollection extends Collection {
+          public static types = [Foo, Bar];
+        }
+
+        const store = new TestCollection();
+
+        const foo = store.add({ bar: [{ value: 1 }] }, Foo);
+
+        expect(foo.bar[0]).not.toBeInstanceOf(Bar);
+        expect(foo.bar[0]).toBeInstanceOf(Model);
+      });
+    });
   });
 
   describe('ToOneOrMany with a single item', () => {
@@ -198,6 +335,105 @@ describe('ToOneOrMany', () => {
 
       bucketInstance.value = foos;
       expect(bucketInstance.value).toBeInstanceOf(Array);
+    });
+
+    describe('dynamic', () => {
+      it('should work with a function and class type', () => {
+        class Bar extends Model {
+          public static type = 'bar';
+
+          @Attribute()
+          public value!: number;
+        }
+
+        class Foo extends Model {
+          public static type = 'foo';
+
+          @Attribute({
+            toOneOrMany: (data, parentModel, key, collection) => {
+              expect(data).toEqual({ value: 1 });
+              expect(parentModel).toBeInstanceOf(Foo);
+              expect(key).toBe('bar');
+              expect(collection).toBeInstanceOf(PureCollection);
+              return Bar;
+            },
+          })
+          public bar!: Bar;
+        }
+
+        class TestCollection extends Collection {
+          public static types = [Foo, Bar];
+        }
+
+        const store = new TestCollection();
+
+        const foo = store.add({ bar: { value: 1 } }, Foo);
+
+        expect(foo.bar).toBeInstanceOf(Bar);
+      });
+
+      it('should work with a function and class type', () => {
+        class Bar extends Model {
+          public static type = 'bar';
+
+          @Attribute()
+          public value!: number;
+        }
+
+        class Foo extends Model {
+          public static type = 'foo';
+
+          @Attribute({
+            toOneOrMany: (data) => {
+              expect(data).toEqual({ value: 1 });
+              return 'bar';
+            },
+          })
+          public bar!: Bar;
+        }
+
+        class TestCollection extends Collection {
+          public static types = [Foo, Bar];
+        }
+
+        const store = new TestCollection();
+
+        const foo = store.add({ bar: { value: 1 } }, Foo);
+
+        expect(foo.bar).toBeInstanceOf(Bar);
+      });
+
+      it('should fail on an invalid type', () => {
+        class Bar extends Model {
+          public static type = 'bar';
+
+          @Attribute()
+          public value!: number;
+        }
+
+        class Foo extends Model {
+          public static type = 'foo';
+
+          @Attribute({
+            toOneOrMany: (data) => {
+              expect(data).toEqual({ value: 1 });
+              return 'baz';
+            },
+          })
+          public bar!: Bar;
+        }
+
+        class TestCollection extends Collection {
+          public static types = [Foo, Bar];
+        }
+
+        const store = new TestCollection();
+
+        const foo = store.add({ bar: { value: 1 } }, Foo);
+
+        expect(foo.bar).not.toBeInstanceOf(Bar);
+        expect(foo.bar).toBeInstanceOf(Model);
+      });
     });
   });
 });

@@ -110,8 +110,10 @@ describe('Collection', () => {
         public static type = 'foo';
 
         static preprocess(data: object): object {
-          data['baz'] = 100;
-          return data;
+          return {
+            ...data,
+            baz: 100,
+          };
         }
 
         @Attribute() public foo!: number;

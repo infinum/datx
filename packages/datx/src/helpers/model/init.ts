@@ -5,7 +5,7 @@ import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { MetaModelField } from '../../enums/MetaModelField';
-import { IFieldDefinition, IReferenceDefinition } from '../../Attribute';
+import { IFieldDefinition, IReferenceDefinition, ParsedRefModel } from '../../Attribute';
 import { ReferenceType } from '../../enums/ReferenceType';
 import { getModelType, getModelCollection, getModelId, isModelReference } from './utils';
 import { getBucketConstructor } from '../../buckets';
@@ -15,8 +15,23 @@ import { error } from '../format';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 import { updateSingleAction } from '../patch';
 import { IModelRef } from '../../interfaces/IModelRef';
+import { IType } from '../../interfaces/IType';
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
+
+function getModelRefType(
+  model: ParsedRefModel,
+  data: any,
+  parentModel: PureModel,
+  key: string,
+  collection?: PureCollection,
+): IType {
+  if (typeof model === 'function') {
+    return getModelType(model(data, parentModel, key, collection));
+  }
+
+  return model;
+}
 
 export function initModelRef<T extends PureModel>(
   model: T,
@@ -49,19 +64,30 @@ export function initModelRef<T extends PureModel>(
     );
   } else {
     const Bucket = getBucketConstructor(fieldDef.referenceDef.type);
-    let value = fieldDef.referenceDef.type === ReferenceType.TO_MANY ? [] : null;
+    let value: IType | Array<IType> | null =
+      fieldDef.referenceDef.type === ReferenceType.TO_MANY ? [] : null;
 
     if (initialVal) {
       value = mapItems(initialVal, (item) => {
         if (typeof item === 'object' && !isModelReference(item)) {
-          return collection?.add(item, fieldDef.referenceDef.model);
+          return (
+            collection?.add(
+              item,
+              getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
+            ) || null
+          );
         }
 
-        if (typeof item === 'object') {
-          return collection?.findOne(item as IModelRef);
+        if (typeof item === 'object' && isModelReference(item)) {
+          return collection?.findOne(item as IModelRef) || null;
         }
 
-        return collection?.findOne(fieldDef.referenceDef.model, item);
+        return (
+          collection?.findOne(
+            getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
+            item,
+          ) || null
+        );
       });
     }
 

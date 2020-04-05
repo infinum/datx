@@ -4,10 +4,11 @@ import { PureModel } from './PureModel';
 import { IType } from './interfaces/IType';
 import { MetaClassField } from './enums/MetaClassField';
 import { ReferenceType } from './enums/ReferenceType';
-import { getModelType } from './helpers/model/utils';
+import { getModelType, isModelReference } from './helpers/model/utils';
 import { IModelConstructor } from './interfaces/IModelConstructor';
 import { IIdentifier } from './interfaces/IIdentifier';
 import { PureCollection } from './PureCollection';
+import { isModel } from './helpers/mixin';
 
 export function getClass<T extends PureModel>(obj: T): typeof PureModel {
   return (typeof obj === 'function' ? obj : obj.constructor) as typeof PureModel;
@@ -28,7 +29,15 @@ function prepareDecorator<T extends PureModel>(_obj: T, _key: string, opts?: obj
   }
 }
 
-type RefModel = PureModel | IType;
+type BasicRefModel = typeof PureModel | IType;
+export type FunctionRefModel = (
+  data: object,
+  parentModel: PureModel,
+  key: string,
+  collection?: PureCollection,
+) => BasicRefModel;
+export type ParsedRefModel = IType | FunctionRefModel;
+export type DynamicRefModel = BasicRefModel | FunctionRefModel;
 
 interface IAttributeFieldOptions {
   defaultValue?: any;
@@ -44,7 +53,7 @@ interface IAttributeNoReference {
 }
 
 interface IAttributeToOne {
-  toOne: RefModel;
+  toOne: DynamicRefModel;
   toOneOrMany?: undefined;
   toMany?: undefined;
   referenceProperty?: undefined;
@@ -52,7 +61,7 @@ interface IAttributeToOne {
 
 interface IAttributeToOneOrMany {
   toOne?: undefined;
-  toOneOrMany: RefModel;
+  toOneOrMany: DynamicRefModel;
   toMany?: undefined;
   referenceProperty?: undefined;
 }
@@ -60,7 +69,7 @@ interface IAttributeToOneOrMany {
 interface IAttributeToMany {
   toOne?: undefined;
   toOneOrMany?: undefined;
-  toMany: RefModel;
+  toMany: DynamicRefModel;
   referenceProperty?: string;
 }
 
@@ -69,7 +78,7 @@ type IAttributeOptions = IAttributeFieldOptions &
 
 export interface IReferenceDefinition {
   type: ReferenceType;
-  model: IType;
+  model: ParsedRefModel;
   property?: string;
 }
 
@@ -78,30 +87,42 @@ export interface IFieldDefinition {
   defaultValue?: any;
 }
 
+function parseModelRef(ref: DynamicRefModel): ParsedRefModel {
+  if (ref instanceof PureModel || isModel(ref) || isModelReference(ref)) {
+    return getModelType(ref);
+  }
+
+  if (typeof ref === 'string' || typeof ref === 'number') {
+    return ref;
+  }
+
+  return ref as FunctionRefModel;
+}
+
 function getReferenceDef(
-  toOne?: RefModel,
-  toOneOrMany?: RefModel,
-  toMany?: RefModel,
+  toOne?: DynamicRefModel,
+  toOneOrMany?: DynamicRefModel,
+  toMany?: DynamicRefModel,
   referenceProperty?: string,
 ): IReferenceDefinition | false {
   if (toOne) {
     return {
       type: ReferenceType.TO_ONE,
-      model: getModelType(toOne),
+      model: parseModelRef(toOne),
     };
   }
 
   if (toOneOrMany) {
     return {
       type: ReferenceType.TO_ONE_OR_MANY,
-      model: getModelType(toOneOrMany),
+      model: parseModelRef(toOneOrMany),
     };
   }
 
   if (toMany) {
     return {
       type: ReferenceType.TO_MANY,
-      model: getModelType(toMany),
+      model: parseModelRef(toMany),
       property: referenceProperty,
     };
   }
