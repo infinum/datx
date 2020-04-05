@@ -54,10 +54,10 @@ function initCollectionModel(collection: PureCollection, data: IRawModel): PureM
   return upsertModel(data, type, collection);
 }
 
-export function isSelectorFunction(fn: any) {
+export function isSelectorFunction(fn: any): boolean {
   return typeof fn === 'function' && fn !== PureModel && !(fn.prototype instanceof PureModel);
 }
 
-export function initModels(collection: PureCollection, data: Array<IRawModel>) {
+export function initModels(collection: PureCollection, data: Array<IRawModel>): Array<PureModel> {
   return data.map((item) => initCollectionModel(collection, item));
 }

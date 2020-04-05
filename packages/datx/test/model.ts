@@ -42,7 +42,7 @@ describe('Model', () => {
       expect(foo1.baz).toBe(undefined);
 
       const foo2 = new Foo();
-      let bazValue: number;
+      let bazValue: number | undefined = undefined;
       let autorunCount = 0;
 
       autorun(() => {
@@ -128,7 +128,7 @@ describe('Model', () => {
       expect(foo.bar).toBe(2);
       expect(foo.baz).toBe(undefined);
 
-      let bazValue: number;
+      let bazValue: number | undefined = undefined;
       let autorunCount = 0;
 
       autorun(() => {
@@ -153,11 +153,11 @@ describe('Model', () => {
 
         @Attribute() public baz!: number;
 
-        @computed get id() {
+        @computed get id(): number | string {
           return this.meta.id;
         }
 
-        @computed get id2() {
+        @computed get id2(): number | string {
           return getModelId(this);
         }
       }
@@ -190,7 +190,7 @@ describe('Model', () => {
 
       const foo = new Foo({ foo: 1, bar: 2, baz: { foobar: 3 } });
 
-      let foobarValue: number = 3;
+      let foobarValue = 3;
       let autorunCount = 0;
       let autorunSnapshotCount = 0;
 
@@ -237,7 +237,7 @@ describe('Model', () => {
       expect(foo.foo).toBe(4);
       expect(foo.bar).toBe(2);
 
-      let fooValue: number = 4;
+      let fooValue = 4;
       let autorunCount = 0;
 
       autorun(() => {

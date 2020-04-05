@@ -30,7 +30,7 @@ export class ToOne<T extends PureModel> {
     this.__rawValue = data;
   }
 
-  public setCollection(value: PureCollection | undefined) {
+  public setCollection(value: PureCollection | undefined): void {
     this.__collection = value;
   }
 
@@ -65,7 +65,7 @@ export class ToOne<T extends PureModel> {
   }
 
   @computed
-  public get snapshot() {
+  public get snapshot(): IModelRef | null {
     return this.toJSON();
   }
 

@@ -202,7 +202,7 @@ export function ViewAttribute<TCollection extends PureCollection, TModel extends
 const propDeprecation = '@prop was deprecated, use @Attribute instead';
 
 // Compatibility implementation
-function propFn<T extends PureModel>(obj: T, key: string, opts?: object) {
+function propFn<T extends PureModel>(obj: T, key: string, opts?: object): void {
   deprecated(propDeprecation);
   Attribute()(obj, key, opts);
 }

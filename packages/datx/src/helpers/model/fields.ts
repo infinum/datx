@@ -46,7 +46,7 @@ export function updateRef(
   return bucket ? (bucket.value = value) : null;
 }
 
-function getModelRefsByType(model: PureModel, type: IType) {
+function getModelRefsByType(model: PureModel, type: IType): Array<string> {
   const fields = getMeta<Record<string, IFieldDefinition>>(
     model,
     MetaClassField.Fields,
@@ -66,7 +66,7 @@ function updateModelReferences(
   newId: IIdentifier,
   oldId: IIdentifier,
   type: IType,
-) {
+): void {
   const collection = getModelCollection(model);
 
   if (collection) {
@@ -121,7 +121,7 @@ export function updateModelId(model: PureModel, newId: IIdentifier): void {
   });
 }
 
-function modelAddReference(model: PureModel, key: string, newReference: PureModel) {
+function modelAddReference(model: PureModel, key: string, newReference: PureModel): void {
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
   const refOptions = fields[key]?.referenceDef;
 
@@ -138,7 +138,7 @@ function modelAddReference(model: PureModel, key: string, newReference: PureMode
   }
 }
 
-function modelRemoveReference(model: PureModel, key: string, oldReference: PureModel) {
+function modelRemoveReference(model: PureModel, key: string, oldReference: PureModel): void {
   if (isArrayLike(model[key])) {
     model[key].remove(oldReference);
   } else if (model[key] === oldReference) {
@@ -164,7 +164,7 @@ function backRefSplice(
   key: string,
   change: IArraySplice<PureModel>,
   refOptions: IReferenceDefinition,
-) {
+): null {
   const property = refOptions.property as string;
 
   change.added.forEach((item) => modelAddReference(item, property, model));
@@ -180,7 +180,7 @@ function backRefChange(
   key: string,
   change: IArrayChange<PureModel>,
   refOptions: IReferenceDefinition,
-) {
+): null {
   const property = refOptions.property as string;
   const oldValue = model[key].length > change.index ? model[key][change.index] : null;
 
@@ -198,7 +198,7 @@ function backRefChange(
   return null;
 }
 
-function partialBackRefUpdate(model: PureModel, key: string, change: TChange) {
+function partialBackRefUpdate(model: PureModel, key: string, change: TChange): null {
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
   const refOptions = fields[key]?.referenceDef;
 
@@ -238,6 +238,6 @@ export function getBackRef(model: PureModel, key: string): PureModel | Array<Pur
   return backData;
 }
 
-export function updateBackRef(_model: PureModel, _key: string, _value: TRefValue) {
+export function updateBackRef(/* model: PureModel, key: string, value: TRefValue */): void {
   throw error('Back references are read only');
 }

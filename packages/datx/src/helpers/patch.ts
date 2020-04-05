@@ -8,7 +8,7 @@ import { getModelCollection, getModelId, getModelRef, getModelType } from './mod
 import { MetaModelField } from '../enums/MetaModelField';
 import { IFieldDefinition } from '../Attribute';
 
-function isEmptyObject(data: object) {
+function isEmptyObject(data: object): boolean {
   return Object.keys(data).length === 0;
 }
 
@@ -29,7 +29,7 @@ interface IPatchMeta<T extends PureModel = PureModel> {
   newValue?: Partial<T>;
 }
 
-export function triggerAction(patchMeta: IPatchMeta, model: PureModel) {
+export function triggerAction(patchMeta: IPatchMeta, model: PureModel): void {
   const patch: IPatch = Object.assign({}, patchMeta, {
     model: {
       id: getModelId(model),
@@ -56,7 +56,7 @@ export function triggerAction(patchMeta: IPatchMeta, model: PureModel) {
   });
 }
 
-export function startAction(model: PureModel) {
+export function startAction(model: PureModel): void {
   const patchData = getMeta(model, MetaModelField.Patch, {
     count: 0,
     newValue: {},
@@ -67,7 +67,12 @@ export function startAction(model: PureModel) {
   setMeta(model, MetaModelField.Patch, patchData);
 }
 
-export function updateAction(model: PureModel, key: string, value: any, oldValue?: { value: any }) {
+export function updateAction(
+  model: PureModel,
+  key: string,
+  value: any,
+  oldValue?: { value: any },
+): void {
   const patchData = getMeta(model, MetaModelField.Patch, {
     count: 0,
     newValue: {},
@@ -92,7 +97,7 @@ export function updateAction(model: PureModel, key: string, value: any, oldValue
   setMeta(model, MetaModelField.Patch, patchData);
 }
 
-export function endAction(model: PureModel, patchType: PatchType = PatchType.UPDATE) {
+export function endAction(model: PureModel, patchType: PatchType = PatchType.UPDATE): void {
   const patchData = getMeta(model, MetaModelField.Patch, {
     count: 0,
     newValue: {},
@@ -118,7 +123,7 @@ export function updateSingleAction(
   key: string,
   value: any,
   oldValue?: { value: any },
-) {
+): void {
   startAction(model);
   updateAction(model, key, value, oldValue);
   endAction(model);

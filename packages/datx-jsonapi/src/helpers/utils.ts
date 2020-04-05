@@ -28,7 +28,9 @@ export function error(message: string): Error {
   return new Error(`[datx exception] ${message}`);
 }
 
-export function getModelClassRefs(type: typeof PureModel | PureModel) {
+export function getModelClassRefs(
+  type: typeof PureModel | PureModel,
+): Record<string, IReferenceDefinition> {
   const fields: Record<string, IFieldDefinition> = getMeta(type, 'fields', {}, true, true);
   const refs: Record<string, IReferenceDefinition> = {};
 

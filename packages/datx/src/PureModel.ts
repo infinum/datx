@@ -12,7 +12,7 @@ export class PureModel {
 
   public static autoIdValue: IIdentifier = 0;
 
-  public static enableAutoId: boolean = true;
+  public static enableAutoId = true;
 
   public static preprocess(data: object): object {
     return data;

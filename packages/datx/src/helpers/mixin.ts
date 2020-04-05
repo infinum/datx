@@ -35,7 +35,7 @@ function isOfType<T>(obj: any, type: T): obj is T {
  */
 export function isModel(obj: typeof PureModel | IModelConstructor<any>): true;
 export function isModel(obj: any): false;
-export function isModel(obj: any) {
+export function isModel(obj: any): boolean {
   return isOfType(obj, PureModel);
 }
 
@@ -48,7 +48,7 @@ export function isModel(obj: any) {
  */
 export function isCollection(obj: typeof PureCollection | ICollectionConstructor<any>): true;
 export function isCollection(obj: any): false;
-export function isCollection(obj: any) {
+export function isCollection(obj: any): boolean {
   return isOfType(obj, PureCollection);
 }
 
@@ -61,6 +61,6 @@ export function isCollection(obj: any) {
  */
 export function isView(obj: typeof View | IViewConstructor<any, any>): true;
 export function isView(obj: any): false;
-export function isView(obj: any) {
+export function isView(obj: any): boolean {
   return isOfType(obj, View);
 }

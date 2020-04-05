@@ -151,7 +151,7 @@ export function getModelRefLinks(model: PureModel): Record<string, Record<string
   return getMeta(model, MODEL_REF_LINKS_FIELD, {});
 }
 
-function getLink(model: PureModel, ref: string, key: string) {
+function getLink(model: PureModel, ref: string, key: string): ILink {
   const collection = getModelCollection(model);
 
   if (!collection) {
@@ -191,7 +191,7 @@ function isModelPersisted(model: PureModel): boolean {
   return getMeta(model, MODEL_PERSISTED_FIELD, false);
 }
 
-function setModelPersisted(model: PureModel, status: boolean) {
+function setModelPersisted(model: PureModel, status: boolean): void {
   setMeta(model, MODEL_PERSISTED_FIELD, status);
 }
 

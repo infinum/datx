@@ -38,7 +38,7 @@ export function withPatches<T extends PureCollection>(
 
 export function withPatches<T extends PureCollection>(
   Base: ICollectionConstructor<T> | IModelConstructor<T>,
-) {
+): IModelConstructor<IMetaPatchesModel & T> | ICollectionConstructor<IMetaPatchesCollection & T> {
   if (isCollection(Base)) {
     const BaseClass = Base as typeof PureCollection;
 
@@ -52,7 +52,7 @@ export function withPatches<T extends PureCollection>(
         });
       }
 
-      public applyPatch(patch: IPatch) {
+      public applyPatch(patch: IPatch): void {
         const model = this.findOne(patch.model.type, patch.model.id);
 
         if (patch.patchType === PatchType.REMOVE) {
@@ -78,14 +78,14 @@ export function withPatches<T extends PureCollection>(
         }
       }
 
-      public undoPatch(patch: IPatch) {
+      public undoPatch(patch: IPatch): void {
         this.applyPatch(inversePatch(patch));
       }
 
       public onPatch(listener: (patch: IPatch) => void): () => void {
         this.__patchListeners.push(listener);
 
-        return () => {
+        return (): void => {
           this.__patchListeners = this.__patchListeners.filter((item) => item !== listener);
         };
       }
@@ -102,7 +102,7 @@ export function withPatches<T extends PureCollection>(
         setMeta(this, MetaModelField.PatchListeners, []);
       }
 
-      public applyPatch(patch: IPatch) {
+      public applyPatch(patch: IPatch): void {
         if (patch.model.type === getModelType(this) && patch.model.id === getModelId(this)) {
           updateModel(this, patch.newValue || {});
         } else {
@@ -110,7 +110,7 @@ export function withPatches<T extends PureCollection>(
         }
       }
 
-      public undoPatch(patch: IPatch) {
+      public undoPatch(patch: IPatch): void {
         this.applyPatch(inversePatch(patch));
       }
 
@@ -123,7 +123,7 @@ export function withPatches<T extends PureCollection>(
 
         listeners.push(listener);
 
-        return () => {
+        return (): void => {
           setMeta(
             this,
             MetaModelField.PatchListeners,

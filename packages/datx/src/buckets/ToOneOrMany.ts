@@ -14,7 +14,7 @@ export class ToOneOrMany<T extends PureModel> {
   private __toOneBucket!: ToOne<T>;
 
   @observable
-  private __isList: boolean = true;
+  private __isList = true;
 
   constructor(
     data: Array<T | IModelRef> | T | IModelRef | null,
@@ -46,7 +46,7 @@ export class ToOneOrMany<T extends PureModel> {
     }
   }
 
-  public setCollection(value: PureCollection | undefined) {
+  public setCollection(value: PureCollection | undefined): void {
     this.__collection = value;
     if (this.__toManyBucket) {
       this.__toManyBucket.setCollection(value);
@@ -117,7 +117,7 @@ export class ToOneOrMany<T extends PureModel> {
   }
 
   @computed
-  public get snapshot() {
+  public get snapshot(): Array<IModelRef> | IModelRef | null {
     return this.toJSON();
   }
 }

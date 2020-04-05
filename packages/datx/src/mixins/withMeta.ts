@@ -24,7 +24,9 @@ import { PureCollection } from '../PureCollection';
  * @param {IModelConstructor<T>} Base Model to extend
  * @returns Extended model
  */
-export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructor<T>) {
+export function withMeta<T extends PureModel = PureModel>(
+  Base: IModelConstructor<T>,
+): IModelConstructor<IMetaMixin<T> & T> {
   const BaseClass = Base as typeof PureModel;
 
   if (!isModel(BaseClass)) {
@@ -38,7 +40,7 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
       this.__instance = instance;
     }
 
-    @computed public get collection() {
+    @computed public get collection(): PureCollection | undefined {
       return getModelCollection(this.__instance);
     }
 
@@ -53,7 +55,7 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
       return (originalId && collection?.findOne(this.__instance, originalId)) || undefined;
     }
 
-    @computed public get refs() {
+    @computed public get refs(): Record<string, IBucket<PureModel> | null> {
       const fields = getMeta<Record<string, IFieldDefinition>>(
         this.__instance,
         MetaModelField.Fields,
@@ -75,7 +77,7 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
       return refs;
     }
 
-    @computed public get snapshot() {
+    @computed public get snapshot(): any {
       return modelToJSON(this.__instance);
     }
 

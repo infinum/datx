@@ -1,6 +1,6 @@
 const REGEX = /\$\{\s*([a-zA-Z0-9\-_]+)\s*\}/g;
 
-function msg(str: string, keys: Record<string, any>) {
+function msg(str: string, keys: Record<string, any>): string {
   let msgStr = str;
   let match = REGEX.exec(msgStr);
 

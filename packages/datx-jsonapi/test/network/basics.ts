@@ -147,7 +147,7 @@ describe('Network basics', () => {
     let hasTransformRequestHookBeenCalled = false;
     const store = new TestStore();
 
-    config.transformRequest = (opts) => {
+    config.transformRequest = (opts): any => {
       expect(opts.collection).toBe(store);
       hasTransformRequestHookBeenCalled = true;
 
@@ -167,7 +167,7 @@ describe('Network basics', () => {
 
     let hasTransformResponseHookBeenCalled = false;
 
-    config.transformResponse = (opts) => {
+    config.transformResponse = (opts): any => {
       expect(opts.status).toBe(200);
       hasTransformResponseHookBeenCalled = true;
 
@@ -388,7 +388,7 @@ describe('Network basics', () => {
     class TestEvent extends jsonapi(Model) {
       public static type = 'event';
 
-      public static endpoint = (baseUrl: string) => {
+      public static endpoint = (baseUrl: string): string => {
         return `${baseUrl}foo/event`;
       };
     }

@@ -23,7 +23,7 @@ export interface ICacheInternal {
 
 let cacheStorage: Array<ICacheInternal> = [];
 
-export function saveCache(url: string, response: Response<IJsonapiModel>) {
+export function saveCache(url: string, response: Response<IJsonapiModel>): void {
   if (response && response.isSuccess && (response.data || response.data === null)) {
     const types = mapItems(response.data || [], getModelType) as IType | Array<IType>;
 
@@ -58,11 +58,11 @@ export function getCache(url: string, maxAge: number): ICache | undefined {
   return undefined;
 }
 
-export function clearAllCache() {
+export function clearAllCache(): void {
   cacheStorage.length = 0;
 }
 
-export function clearCacheByType(type: IType) {
+export function clearCacheByType(type: IType): void {
   cacheStorage = cacheStorage.filter((item) => !item.types.includes(type));
 }
 

@@ -44,7 +44,7 @@ export function initModelRef<T extends PureModel>(
   key: string,
   referenceDef?: IReferenceDefinition,
   initialVal?: TRefValue,
-) {
+): void {
   const fields = getMeta(model, MetaModelField.Fields, {});
   const fieldDef = fields[key] || { referenceDef };
   const collection = getModelCollection(model);
@@ -165,7 +165,11 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
   }
 }
 
-export function initModel(instance: PureModel, rawData: IRawModel, collection?: PureCollection) {
+export function initModel(
+  instance: PureModel,
+  rawData: IRawModel,
+  collection?: PureCollection,
+): void {
   const modelClass = instance.constructor as typeof PureModel;
   const modelClassFields: ModelFieldDefinitions = getMeta(
     instance.constructor,

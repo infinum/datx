@@ -182,7 +182,7 @@ function getLocalNetworkError<T extends IJsonapiModel>(
 
 function makeNetworkCall<T extends IJsonapiModel>(
   params: ICollectionFetchOpts,
-  doCacheResponse: boolean = false,
+  doCacheResponse = false,
   existingResponse?: LibResponse<T>,
 ): Promise<LibResponse<T>> {
   return config
@@ -316,7 +316,9 @@ function collectionFetch<T extends IJsonapiModel>(
   );
 }
 
-export function libFetch<T extends IJsonapiModel = IJsonapiModel>(options: ICollectionFetchOpts) {
+export function libFetch<T extends IJsonapiModel = IJsonapiModel>(
+  options: ICollectionFetchOpts,
+): Promise<LibResponse<T>> {
   return collectionFetch<T>(options);
 }
 

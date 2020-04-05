@@ -20,7 +20,7 @@ export class Model extends withPatches(withActions(withMeta(PureModel))) {
     });
   }
 
-  public toString() {
+  public toString(): string {
     return JSON.stringify(this.valueOf(), null, 2);
   }
 }

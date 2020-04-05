@@ -7,7 +7,9 @@ import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IResponse } from './interfaces/JsonApi';
 import { Response } from './Response';
 
-export function decorateView<U>(BaseClass: typeof View) {
+export function decorateView<U>(
+  BaseClass: typeof View,
+): IViewConstructor<IJsonapiModel, U & IJsonapiView> {
   class JsonapiView<M extends IJsonapiModel = IJsonapiModel> extends BaseClass {
     protected __collection: IJsonapiCollection & PureCollection;
 
@@ -16,7 +18,7 @@ export function decorateView<U>(BaseClass: typeof View) {
       collection: IJsonapiCollection & PureCollection,
       sortMethod?: string | ((item: M) => any),
       models: Array<string | PureModel> = [],
-      unique: boolean = false,
+      unique = false,
     ) {
       super(modelType, collection, sortMethod, models, unique);
       this.__collection = collection;
@@ -57,7 +59,7 @@ export function decorateView<U>(BaseClass: typeof View) {
         .then(this.__addFromResponse.bind(this));
     }
 
-    private __addFromResponse(response: Response<M>) {
+    private __addFromResponse(response: Response<M>): Response<M> {
       if (response.data) {
         this.add(response.data);
       }

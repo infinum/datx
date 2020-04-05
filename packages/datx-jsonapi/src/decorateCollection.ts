@@ -37,7 +37,7 @@ import { CachingStrategy } from './enums/CachingStrategy';
 
 type TSerialisedStore = IRawCollection & { cache?: Array<Omit<ICacheInternal, 'collection'>> };
 
-function handleErrors<T extends IJsonapiModel>(response: Response<T>) {
+function handleErrors<T extends IJsonapiModel>(response: Response<T>): Response<T> {
   if (response.error) {
     throw response.error;
   }
@@ -55,13 +55,18 @@ function iterateEntries<T extends IJsonapiModel>(
   fn: (item: IRecord) => void,
 ): void;
 
-function iterateEntries<T extends IJsonapiModel>(body: IResponse, fn: (item: IRecord) => T) {
+function iterateEntries<T extends IJsonapiModel>(
+  body: IResponse,
+  fn: (item: IRecord) => T,
+): T | Array<T> | null {
   mapItems((body && body.included) || [], fn);
 
   return mapItems((body && body.data) || null, fn);
 }
 
-export function decorateCollection(BaseClass: typeof PureCollection) {
+export function decorateCollection(
+  BaseClass: typeof PureCollection,
+): ICollectionConstructor<PureCollection & IJsonapiCollection> {
   class JsonapiCollection extends BaseClass {
     public static types =
       BaseClass.types && BaseClass.types.length
@@ -178,7 +183,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
 
     public request<T extends IJsonapiModel = IJsonapiModel>(
       url: string,
-      method: string = 'GET',
+      method = 'GET',
       data?: object,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
@@ -199,7 +204,7 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       obj: IType | typeof PureModel | PureModel,
       id?: string | boolean | IRequestOptions,
       options?: boolean | IRequestOptions,
-    ) {
+    ): Promise<void> {
       let remoteOp: boolean | IRequestOptions | undefined;
       let modelId: string;
       let model: IJsonapiModel | null;
@@ -227,12 +232,12 @@ export function decorateCollection(BaseClass: typeof PureCollection) {
       return Promise.resolve();
     }
 
-    @action public removeAll(type: string | number | typeof PureModel) {
+    @action public removeAll(type: string | number | typeof PureModel): void {
       super.removeAll(type);
       clearCacheByType(getModelType(type));
     }
 
-    @action public reset() {
+    @action public reset(): void {
       super.reset();
       clearAllCache();
     }

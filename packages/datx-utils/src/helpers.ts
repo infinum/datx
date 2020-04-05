@@ -42,7 +42,7 @@ function undefinedGetter(): any {
   return undefined;
 }
 
-function defaultSetter() {
+function defaultSetter(): void {
   throw new Error('The setter is not defined for this property');
 }
 
@@ -131,7 +131,7 @@ export function assignComputed<T = any>(
   key: string,
   getter: Getter<T> = undefinedGetter,
   setter: Setter<T> = defaultSetter,
-) {
+): void {
   // if (isObservable(obj)) {
   //   throw new Error(`[datx exception] This object shouldn't be an observable`);
   // }
@@ -157,12 +157,12 @@ export function assignComputed<T = any>(
   });
 }
 
-export function error(...args: Array<any>) {
+export function error(...args: Array<any>): void {
   // eslint-disable-next-line no-console, prefer-rest-params
   console.error(`[datx error]`, ...args);
 }
 
-export function warn(...args: Array<any>) {
+export function warn(...args: Array<any>): void {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }
@@ -171,7 +171,7 @@ export function warn(...args: Array<any>) {
   console.warn(`[datx warning]`, ...args);
 }
 
-export function deprecated(...args: Array<any>) {
+export function deprecated(...args: Array<any>): void {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }
@@ -180,7 +180,7 @@ export function deprecated(...args: Array<any>) {
   console.warn(`[datx deprecated]`, ...args);
 }
 
-export function info(...args: Array<any>) {
+export function info(...args: Array<any>): void {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     return;
   }

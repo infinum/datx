@@ -25,7 +25,7 @@ import { error } from '../format';
 import { ReferenceType } from '../../enums/ReferenceType';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 
-const defaultParseSerializeFn = (value: any) => value;
+const defaultParseSerializeFn = (value: any): any => value;
 
 export function modelMapParse(modelClass: typeof PureModel, data: object, key: string): any {
   const parseFn =
@@ -281,7 +281,7 @@ export function updateModel<T extends PureModel>(model: T, data: Record<string, 
   return model;
 }
 
-export function updateModelCollection(model: PureModel, collection?: PureCollection) {
+export function updateModelCollection(model: PureModel, collection?: PureCollection): void {
   setMeta(model, MetaModelField.Collection, collection);
 
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});

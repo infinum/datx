@@ -45,7 +45,7 @@ export class ToMany<T extends PureModel> {
     });
   }
 
-  public setCollection(collection: PureCollection | undefined) {
+  public setCollection(collection: PureCollection | undefined): void {
     this.__collection = collection;
 
     if (this.__disposer) {
@@ -104,7 +104,7 @@ export class ToMany<T extends PureModel> {
   }
 
   @computed
-  public get snapshot() {
+  public get snapshot(): any {
     return this.toJSON();
   }
 
@@ -133,7 +133,7 @@ export class ToMany<T extends PureModel> {
   }
 
   @action
-  private __partialRawListUpdate(change: TChange) {
+  private __partialRawListUpdate(change: TChange): null {
     if (this.__readonly) {
       throw error('This is a read-only bucket');
     }
@@ -161,7 +161,7 @@ export class ToMany<T extends PureModel> {
   }
 
   @action
-  private __reMap() {
+  private __reMap(): void {
     for (let i = 0; i < this.__rawList.length; i++) {
       if (isReference(this.__rawList[i])) {
         const model = this.__getModel(this.__rawList[i]);

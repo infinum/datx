@@ -9,7 +9,7 @@ import { setupNetwork, setRequest } from '../utils/api';
 import { Event, TestStore } from '../utils/setup';
 import { CachingStrategy } from '../../src/enums/CachingStrategy';
 
-function sleep(duration: number) {
+function sleep(duration: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, duration));
 }
 

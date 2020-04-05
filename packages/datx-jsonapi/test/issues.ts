@@ -57,7 +57,7 @@ describe('Issues', () => {
       class ApiStore extends jsonapi(Collection) {
         public static types = [ImageRecord, EventRecord];
 
-        @computed get image() {
+        @computed get image(): Array<ImageRecord> {
           return this.findAll(ImageRecord);
         }
       }
@@ -123,7 +123,7 @@ describe('Issues', () => {
       class ApiStore extends jsonapi(Collection) {
         public static types = [ImageRecord, EventRecord];
 
-        @computed get image() {
+        @computed get image(): Array<ImageRecord> {
           return this.findAll(ImageRecord);
         }
       }

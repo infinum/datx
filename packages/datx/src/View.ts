@@ -35,7 +35,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     this.sortMethod = sortMethod;
   }
 
-  @computed public get length() {
+  @computed public get length(): number {
     return this.value.length;
   }
 
@@ -45,7 +45,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     if (this.sortMethod) {
       const sortFn =
         typeof this.sortMethod === 'string'
-          ? (item) => item[this.sortMethod as 'string']
+          ? (item): any => item[this.sortMethod as 'string']
           : this.sortMethod;
 
       list.sort((a: T, b: T) => sortFn(a) - sortFn(b));
@@ -92,7 +92,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     return Boolean(this.__getList().find((item) => getModelId(item) === id));
   }
 
-  @action public remove(model: IIdentifier | T) {
+  @action public remove(model: IIdentifier | T): void {
     const item = this.__getModel(this.__normalizeModel(model));
 
     if (item) {
@@ -100,11 +100,11 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     }
   }
 
-  @action public removeAll() {
+  @action public removeAll(): void {
     this.__rawList.replace([]);
   }
 
-  @action private __partialListUpdate(change: TChange) {
+  @action private __partialListUpdate(change: TChange): null {
     if (change.type === 'splice') {
       if (this.sortMethod && change.added.length > 0) {
         throw error("New models can't be added directly to a sorted view list");

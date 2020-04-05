@@ -10,7 +10,7 @@ import { IRequestOptions } from '../interfaces/IRequestOptions';
 import { IRequest } from '../interfaces/JsonApi';
 import { config } from '../NetworkUtils';
 
-function parametrize(params: object, scope: string = '') {
+function parametrize(params: object, scope = ''): Array<{ key: string; value: string }> {
   const list: Array<{ key: string; value: string }> = [];
 
   Object.keys(params).forEach((key) => {
@@ -72,7 +72,7 @@ function prepareRawParams(params: Array<{ key: string; value: string } | string>
   });
 }
 
-function prefixUrl(url: string, containsBase?: boolean) {
+function prefixUrl(url: string, containsBase?: boolean): string {
   if (URL_REGEX.test(url) || containsBase) {
     return url;
   }
@@ -92,7 +92,7 @@ function appendParams(url: string, params: Array<string>): string {
   return newUrl;
 }
 
-function encodeParam(param: string) {
+function encodeParam(param: string): string {
   // Manually decode field-value separator (=)
   return encodeURIComponent(param).replace('%3D', '=');
 }
@@ -102,7 +102,11 @@ export function buildUrl(
   data?: IRequest,
   options?: IRequestOptions,
   containsBase?: boolean,
-) {
+): {
+  url: string;
+  data?: object;
+  headers: IHeaders;
+} {
   const headers: Record<string, string> =
     (options && options.networkConfig && options.networkConfig.headers) || {};
   let params: Array<string> = ([] as Array<string>).concat(

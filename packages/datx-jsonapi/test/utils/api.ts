@@ -93,13 +93,13 @@ function fetchInterceptor(url: RequestInfo, options?: RequestInit | undefined): 
   });
 }
 
-export function setupNetwork() {
+export function setupNetwork(): void {
   expectedRequests.length = 0;
   executedRequests.length = 0;
   config.fetchReference = fetchInterceptor;
 }
 
-export function confirmNetwork() {
+export function confirmNetwork(): void {
   expect(expectedRequests).toHaveLength(executedRequests.length);
 }
 
@@ -161,7 +161,7 @@ export function setRequest({
   });
 
   return {
-    isDone() {
+    isDone(): boolean {
       return Boolean(executedRequests.find((req) => req.id === id));
     },
   };

@@ -25,7 +25,9 @@ import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { fetchLink } from './NetworkUtils';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 
-function serializeHeaders(headers: Array<[string, string]> | IResponseHeaders) {
+function serializeHeaders(
+  headers: Array<[string, string]> | IResponseHeaders,
+): Array<[string, string]> {
   if (headers instanceof Array) {
     return headers;
   }
@@ -39,7 +41,7 @@ function serializeHeaders(headers: Array<[string, string]> | IResponseHeaders) {
   return list;
 }
 
-function initHeaders(headers: Array<[string, string]> | IResponseHeaders) {
+function initHeaders(headers: Array<[string, string]> | IResponseHeaders): IResponseHeaders {
   if (headers instanceof Array) {
     return new Headers(headers);
   }
@@ -240,7 +242,11 @@ export class Response<T extends IJsonapiModel> {
     return this.__data.value;
   }
 
-  private __updateInternal(response: IRawResponse, options?: IRequestOptions, views?: Array<View>) {
+  private __updateInternal(
+    response: IRawResponse,
+    options?: IRequestOptions,
+    views?: Array<View>,
+  ): void {
     if (options) {
       this.__internal.options = options;
     }
@@ -348,7 +354,7 @@ export class Response<T extends IJsonapiModel> {
    *
    * @memberOf Response
    */
-  private __fetchLink(name: string) {
+  private __fetchLink(name: string): () => Promise<Response<T>> {
     if (!this.__cache[name]) {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 
@@ -357,7 +363,8 @@ export class Response<T extends IJsonapiModel> {
 
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
-        this.__cache[name] = () => fetchLink<T>(link, this.collection, options, this.views);
+        this.__cache[name] = (): Promise<Response<T>> =>
+          fetchLink<T>(link, this.collection, options, this.views);
       }
     }
 

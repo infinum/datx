@@ -24,7 +24,9 @@ import { PureModel } from '../PureModel';
  * @param {IModelConstructor<T>} Base Model to extend
  * @returns Extended model
  */
-export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
+export function withActions<T extends PureModel>(
+  Base: IModelConstructor<T>,
+): IModelConstructor<IActionsMixin<T> & T> {
   const BaseClass = Base as typeof PureModel;
 
   if (!isModel(Base)) {
@@ -33,7 +35,7 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
 
   class WithActions extends BaseClass implements IActionsMixin<T> {
     @action
-    public update(data: Record<string, any>) {
+    public update(data: Record<string, any>): void {
       updateModel(this, data);
     }
 
@@ -43,7 +45,7 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
     }
 
     @action
-    public assign(key: string, value: any) {
+    public assign(key: string, value: any): void {
       assignModel(this, key, value);
     }
 
@@ -51,7 +53,7 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
       key: string,
       value: TRefValue<V>,
       options: IReferenceOptions<U>,
-    ) {
+    ): void {
       initModelRef(
         this,
         key,
@@ -63,7 +65,7 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
       );
     }
 
-    public toJSON() {
+    public toJSON(): any {
       return modelToJSON(this);
     }
   }

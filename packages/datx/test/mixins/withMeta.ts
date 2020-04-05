@@ -31,7 +31,7 @@ describe('withMeta', () => {
     expect(foo.meta.original).toBe(undefined);
     expect(foo.meta.collection).toBeFalsy();
 
-    let bazValue: number;
+    let bazValue: number | undefined = undefined;
     let autorunCount = 0;
 
     autorun(() => {

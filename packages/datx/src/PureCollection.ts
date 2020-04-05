@@ -99,7 +99,7 @@ export class PureCollection {
       unique?: boolean;
       mixins?: Array<(view: any) => any>;
     } = {},
-  ) {
+  ): View<T> {
     if (name in this && this[name]) {
       throw error('The name is already taken');
     }
@@ -173,7 +173,10 @@ export class PureCollection {
 
   public findOne<T extends PureModel>(ref: IModelRef): T | null;
 
-  public findOne(model: IType | typeof PureModel | IModelRef, id?: IIdentifier | PureModel) {
+  public findOne(
+    model: IType | typeof PureModel | IModelRef,
+    id?: IIdentifier | PureModel,
+  ): PureModel | null {
     if (id instanceof PureModel) {
       return id;
     }
@@ -216,7 +219,7 @@ export class PureCollection {
   @action public removeOne(
     obj: IType | typeof PureModel | PureModel | IModelRef,
     id?: IIdentifier,
-  ) {
+  ): void {
     let model: PureModel | null = null;
 
     if (typeof obj === 'object') {
@@ -229,11 +232,11 @@ export class PureCollection {
     }
   }
 
-  @action public removeAll(type: IType | typeof PureModel) {
+  @action public removeAll(type: IType | typeof PureModel): void {
     this.__removeModel(this.findAll(type).slice());
   }
 
-  @action public reset() {
+  @action public reset(): void {
     this.__data.forEach((model) => {
       setMeta(model, MetaModelField.Collection, undefined);
 
@@ -265,7 +268,7 @@ export class PureCollection {
     };
   }
 
-  public get snapshot() {
+  public get snapshot(): IRawCollection {
     return this.toJSON();
   }
 
@@ -273,11 +276,14 @@ export class PureCollection {
     return this.__data.length;
   }
 
-  public getAllModels() {
+  public getAllModels(): Array<PureModel> {
     return this.__data.slice();
   }
 
-  private __findOneByType(model: IType | typeof PureModel | PureModel, id: IIdentifier) {
+  private __findOneByType(
+    model: IType | typeof PureModel | PureModel,
+    id: IIdentifier,
+  ): PureModel | null {
     const type = getModelType(model);
 
     if (!type) {
@@ -319,7 +325,7 @@ export class PureCollection {
   private __addSingle(
     data: PureModel | Record<string, any> | IIdentifier | IModelRef,
     model?: number | IType | IModelConstructor,
-  ) {
+  ): PureModel {
     if (!data || typeof data === 'number' || typeof data === 'string' || isModelReference(data)) {
       return data;
     }
@@ -344,7 +350,7 @@ export class PureCollection {
     return modelInstance;
   }
 
-  private __removeModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier) {
+  private __removeModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier): void {
     if (isArrayLike(model)) {
       model.forEach((item) => {
         this.__removeModel(item, type, id);
@@ -395,7 +401,7 @@ export class PureCollection {
     updateModelCollection(model, undefined);
   }
 
-  private __insertModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier) {
+  private __insertModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier): void {
     if (isArrayLike(model)) {
       model.forEach((item) => {
         this.__insertModel(item, type, id);
@@ -446,7 +452,7 @@ export class PureCollection {
   }
 
   // @ts-ignore - Used outside of the class, but marked as private to avoid undocumented use
-  private __changeModelId(oldId: IIdentifier, newId: IIdentifier, type: IType) {
+  private __changeModelId(oldId: IIdentifier, newId: IIdentifier, type: IType): void {
     this.__dataMap[type][newId] = this.__dataMap[type][oldId];
     delete this.__dataMap[type][oldId];
   }
