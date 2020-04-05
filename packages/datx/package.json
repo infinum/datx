@@ -14,7 +14,7 @@
     "url": "https://github.com/infinum/datx/issues"
   },
   "homepage": "https://github.com/infinum/datx#readme",
-  "author": "Infinum JavaScript Team <hello@infinum.co>",
+  "author": "Infinum JavaScript Team <hello@infinum.com>",
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",
