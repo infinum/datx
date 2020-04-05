@@ -496,5 +496,48 @@ describe('patch', () => {
       expect(collection).toHaveLength(3);
       expect(model.bar).toBe(bar2);
     });
+
+    it('should handle references correctly', () => {
+      class Foo extends Model {
+        public static type = 'foo';
+
+        @Attribute()
+        public val!: number;
+      }
+
+      class Bar extends Model {
+        public static type = 'bar';
+
+        @Attribute({ toOne: Foo })
+        public foo!: Foo;
+      }
+
+      class TestStore extends Collection {
+        public static types = [Foo, Bar];
+      }
+
+      const store = new TestStore();
+      const foo = store.add({ val: 1 }, Foo);
+      const bar = store.add({ foo }, Bar);
+
+      expect(bar.foo.val).toBe(1);
+
+      const snapshot = bar.toJSON();
+
+      store.removeOne(bar);
+      expect(store.findAll(Bar)).toHaveLength(0);
+      store.applyPatch({
+        patchType: PatchType.CRATE,
+        model: {
+          id: snapshot?.__META__?.id,
+          type: snapshot?.__META__?.type,
+        },
+        newValue: snapshot,
+      });
+      const bar2 = store.findAll(Bar)[0];
+
+      expect(bar2).toBeInstanceOf(Bar);
+      expect(bar2.foo.val).toBe(1);
+    });
   });
 });
