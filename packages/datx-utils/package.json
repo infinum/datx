@@ -22,6 +22,7 @@
   ],
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.11.0",
     "eslint": "^6.8.0",
@@ -29,7 +30,6 @@
     "mobx": "^5.15.4",
     "rollup": "^2.3.3",
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.8",
-    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-typescript2": "^0.27.0",
     "ts-jest": "^25.3.1",
