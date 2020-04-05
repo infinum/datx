@@ -26,7 +26,7 @@
     "@types/jest": "^25.1.0",
     "jest": "^24.7.1",
     "mobx": "^5.9.4",
-    "rollup": "^1.10.0",
+    "rollup": "^2.0.0",
     "rollup-plugin-typescript2": "^0.24.0",
     "rollup-plugin-uglify": "^6.0.2",
     "ts-jest": "^25.1.0",
