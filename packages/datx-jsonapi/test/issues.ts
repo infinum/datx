@@ -42,9 +42,11 @@ describe('Issues', () => {
       class ImageRecord extends jsonapi(Model) {
         public static type = 'image';
 
-        @prop public name!: string;
+        @prop
+        public name!: string;
 
-        @prop public event!: Array<EventRecord>;
+        @prop
+        public event!: Array<EventRecord>;
       }
 
       class EventRecord extends jsonapi(Model) {
@@ -57,7 +59,8 @@ describe('Issues', () => {
       class ApiStore extends jsonapi(Collection) {
         public static types = [ImageRecord, EventRecord];
 
-        @computed get image(): Array<ImageRecord> {
+        @computed
+        get image(): Array<ImageRecord> {
           return this.findAll(ImageRecord);
         }
       }
@@ -108,9 +111,11 @@ describe('Issues', () => {
       class ImageRecord extends jsonapi(Model) {
         public static type = 'image';
 
-        @prop public name!: string;
+        @prop
+        public name!: string;
 
-        @prop public event!: Array<EventRecord>;
+        @prop
+        public event!: Array<EventRecord>;
       }
 
       class EventRecord extends jsonapi(Model) {
@@ -123,7 +128,8 @@ describe('Issues', () => {
       class ApiStore extends jsonapi(Collection) {
         public static types = [ImageRecord, EventRecord];
 
-        @computed get image(): Array<ImageRecord> {
+        @computed
+        get image(): Array<ImageRecord> {
           return this.findAll(ImageRecord);
         }
       }

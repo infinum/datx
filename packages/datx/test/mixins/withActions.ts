@@ -14,11 +14,14 @@ describe('withActions', () => {
     class Foo extends PureModel {
       public static type = 'foo';
 
-      @Attribute() public foo!: number;
+      @Attribute()
+      public foo!: number;
 
-      @Attribute() public bar!: number;
+      @Attribute()
+      public bar!: number;
 
-      @Attribute() public baz!: number;
+      @Attribute()
+      public baz!: number;
     }
 
     const FooMeta = withMeta(Foo);

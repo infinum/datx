@@ -283,7 +283,8 @@ export class Response<T extends IJsonapiModel> {
    *
    * @memberOf Response
    */
-  @action public replaceData(data: T): Response<T> {
+  @action
+  public replaceData(data: T): Response<T> {
     const record: PureModel = this.data as PureModel;
 
     if (record === data) {

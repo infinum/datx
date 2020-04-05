@@ -6,5 +6,6 @@ import { User } from './User';
 export class Organizer extends User {
   public static type: IType = 'organizers';
 
-  @prop.toOne(Image) public image!: Image;
+  @prop.toOne(Image)
+  public image!: Image;
 }

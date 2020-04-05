@@ -23,9 +23,11 @@ describe('Model', () => {
   describe('Basic features', () => {
     it('should work with initial data', () => {
       class Foo extends PureModel {
-        @Attribute() public foo!: number;
+        @Attribute()
+        public foo!: number;
 
-        @Attribute() public bar!: number;
+        @Attribute()
+        public bar!: number;
 
         public baz!: number;
       }
@@ -94,11 +96,14 @@ describe('Model', () => {
 
     it('should work with valueOf and toString', () => {
       class Foo extends Model {
-        @Attribute() public foo!: number;
+        @Attribute()
+        public foo!: number;
 
-        @Attribute() public bar!: number;
+        @Attribute()
+        public bar!: number;
 
-        @Attribute() public baz!: number;
+        @Attribute()
+        public baz!: number;
       }
 
       const foo1 = new Foo({ foo: 1, bar: 2 });
@@ -147,17 +152,22 @@ describe('Model', () => {
 
     it('should work with id getters', () => {
       class Foo extends Model {
-        @Attribute() public foo!: number;
+        @Attribute()
+        public foo!: number;
 
-        @Attribute() public bar!: number;
+        @Attribute()
+        public bar!: number;
 
-        @Attribute() public baz!: number;
+        @Attribute()
+        public baz!: number;
 
-        @computed get id(): number | string {
+        @computed
+        get id(): number | string {
           return this.meta.id;
         }
 
-        @computed get id2(): number | string {
+        @computed
+        get id2(): number | string {
           return getModelId(this);
         }
       }
@@ -181,11 +191,14 @@ describe('Model', () => {
 
     it('should work with nested data', () => {
       class Foo extends PureModel {
-        @Attribute() public foo!: number;
+        @Attribute()
+        public foo!: number;
 
-        @Attribute() public bar!: number;
+        @Attribute()
+        public bar!: number;
 
-        @Attribute() public baz!: { foobar: number };
+        @Attribute()
+        public baz!: { foobar: number };
       }
 
       const foo = new Foo({ foo: 1, bar: 2, baz: { foobar: 3 } });
@@ -227,9 +240,11 @@ describe('Model', () => {
 
     it('should work with default data', () => {
       class Foo extends PureModel {
-        @Attribute({ defaultValue: 4 }) public foo!: number;
+        @Attribute({ defaultValue: 4 })
+        public foo!: number;
 
-        @Attribute({ defaultValue: 5 }) public bar!: number;
+        @Attribute({ defaultValue: 5 })
+        public bar!: number;
       }
 
       const foo = new Foo({ bar: 2 });
@@ -268,13 +283,16 @@ describe('Model', () => {
 
     it('should work with extended models', () => {
       class Foo extends PureModel {
-        @Attribute({ defaultValue: 4 }) public foo!: number;
+        @Attribute({ defaultValue: 4 })
+        public foo!: number;
 
-        @Attribute({ defaultValue: 5 }) public bar!: number;
+        @Attribute({ defaultValue: 5 })
+        public bar!: number;
       }
 
       class Bar extends Foo {
-        @Attribute({ defaultValue: 9 }) public baz!: number;
+        @Attribute({ defaultValue: 9 })
+        public baz!: number;
       }
 
       const bar = new Bar({ bar: 2 });
@@ -288,7 +306,8 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute() public foo!: number;
+        @Attribute()
+        public foo!: number;
       }
       class AppStore extends Collection {
         public static types = [Foo];
@@ -316,7 +335,8 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute() public foo!: number;
+        @Attribute()
+        public foo!: number;
 
         public bar!: number; // Not observable
       }
@@ -346,9 +366,11 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute({ toOne: Foo }) public parent?: Foo | null;
+        @Attribute({ toOne: Foo })
+        public parent?: Foo | null;
 
-        @Attribute({ defaultValue: 1 }) public foo!: number;
+        @Attribute({ defaultValue: 1 })
+        public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -395,9 +417,11 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute({ toOne: 'foo' }) public parent?: Foo;
+        @Attribute({ toOne: 'foo' })
+        public parent?: Foo;
 
-        @Attribute({ defaultValue: 1 }) public foo!: number;
+        @Attribute({ defaultValue: 1 })
+        public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -425,9 +449,11 @@ describe('Model', () => {
 
     it('should throw if model is not in a collection', () => {
       class Foo extends PureModel {
-        @Attribute({ toOne: Foo }) public parent?: Foo;
+        @Attribute({ toOne: Foo })
+        public parent?: Foo;
 
-        @Attribute({ defaultValue: 1 }) public foo!: number;
+        @Attribute({ defaultValue: 1 })
+        public foo!: number;
       }
 
       const foo1 = new Foo({ foo: 2 });
@@ -448,9 +474,11 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute({ toOne: Foo }) public parent?: Foo;
+        @Attribute({ toOne: Foo })
+        public parent?: Foo;
 
-        @Attribute({ defaultValue: 1 }) public foo!: number;
+        @Attribute({ defaultValue: 1 })
+        public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -475,9 +503,11 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute({ toMany: Foo }) public parent!: Array<Foo>;
+        @Attribute({ toMany: Foo })
+        public parent!: Array<Foo>;
 
-        @Attribute({ defaultValue: 1 }) public foo!: number;
+        @Attribute({ defaultValue: 1 })
+        public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -499,9 +529,11 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute({ toMany: Foo }) public parent!: Array<Foo>;
+        @Attribute({ toMany: Foo })
+        public parent!: Array<Foo>;
 
-        @Attribute({ defaultValue: 1 }) public foo!: number;
+        @Attribute({ defaultValue: 1 })
+        public foo!: number;
       }
       class TestCollection extends Collection {
         public static types = [Foo];
@@ -536,9 +568,11 @@ describe('Model', () => {
 
     it('should throw if single item is given', () => {
       class Foo extends PureModel {
-        @Attribute({ toMany: Foo }) public parent!: Array<Foo>;
+        @Attribute({ toMany: Foo })
+        public parent!: Array<Foo>;
 
-        @Attribute({ defaultValue: 1 }) public foo!: number;
+        @Attribute({ defaultValue: 1 })
+        public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -568,9 +602,11 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute({ toOneOrMany: Foo }) public parent!: Foo | Array<Foo>;
+        @Attribute({ toOneOrMany: Foo })
+        public parent!: Foo | Array<Foo>;
 
-        @Attribute({ defaultValue: 1 }) public foo!: number;
+        @Attribute({ defaultValue: 1 })
+        public foo!: number;
       }
       class TestCollection extends Collection {
         public static types = [Foo];
@@ -606,9 +642,11 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute({ toMany: Foo }) public parent!: Array<Foo>;
+        @Attribute({ toMany: Foo })
+        public parent!: Array<Foo>;
 
-        @Attribute({ defaultValue: 1 }) public foo!: number;
+        @Attribute({ defaultValue: 1 })
+        public foo!: number;
       }
 
       class TestCollection extends Collection {
@@ -646,7 +684,8 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute({ defaultValue: 1 }) public foo!: number;
+        @Attribute({ defaultValue: 1 })
+        public foo!: number;
 
         public parent!: Array<Foo>;
       }
@@ -715,7 +754,8 @@ describe('Model', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute() public type!: string;
+        @Attribute()
+        public type!: string;
       }
 
       class TestCollection extends Collection {
@@ -733,21 +773,27 @@ describe('Model', () => {
       class Bar extends PureModel {
         public static type = 'bar';
 
-        @Attribute({ isIdentifier: true }) public id!: number;
+        @Attribute({ isIdentifier: true })
+        public id!: number;
 
-        @Attribute({ toOne: 'foo' }) public foo?: Foo;
+        @Attribute({ toOne: 'foo' })
+        public foo?: Foo;
 
-        @Attribute() public key!: number;
+        @Attribute()
+        public key!: number;
       }
 
       class Foo extends PureModel {
         public static type = 'foo';
 
-        @Attribute({ isIdentifier: true }) public id!: number;
+        @Attribute({ isIdentifier: true })
+        public id!: number;
 
-        @Attribute({ toMany: Bar }) public bars?: Array<Bar>;
+        @Attribute({ toMany: Bar })
+        public bars?: Array<Bar>;
 
-        @Attribute() public key!: number;
+        @Attribute()
+        public key!: number;
       }
 
       class TestCollection extends Collection {
@@ -803,19 +849,26 @@ describe('Model', () => {
         class Foo extends PureModel {
           public static type = 'foo';
 
-          @Attribute({ toOne: Foo }) public parent!: Foo;
+          @Attribute({ toOne: Foo })
+          public parent!: Foo;
 
-          @Attribute({ defaultValue: 1 }) public foo!: number;
+          @Attribute({ defaultValue: 1 })
+          public foo!: number;
 
-          @Attribute({ toMany: Foo, referenceProperty: 'parent' }) public children!: Array<Foo>;
+          @Attribute({ toMany: Foo, referenceProperty: 'parent' })
+          public children!: Array<Foo>;
 
-          @Attribute({ toMany: Foo }) public foos!: Array<Foo>;
+          @Attribute({ toMany: Foo })
+          public foos!: Array<Foo>;
 
-          @Attribute({ toMany: Foo, referenceProperty: 'foos' }) public backFoos!: Array<Foo>;
+          @Attribute({ toMany: Foo, referenceProperty: 'foos' })
+          public backFoos!: Array<Foo>;
 
-          @Attribute({ toOneOrMany: Foo }) public fooRef!: Foo | Array<Foo>;
+          @Attribute({ toOneOrMany: Foo })
+          public fooRef!: Foo | Array<Foo>;
 
-          @Attribute({ toMany: Foo, referenceProperty: 'fooRef' }) public fooBackRef!: Array<Foo>;
+          @Attribute({ toMany: Foo, referenceProperty: 'fooRef' })
+          public fooBackRef!: Array<Foo>;
         }
 
         class TestCollection extends Collection {
@@ -925,15 +978,20 @@ describe('Model', () => {
         class Foo extends PureModel {
           public static type = 'foo';
 
-          @Attribute({ isIdentifier: true }) public id!: string;
+          @Attribute({ isIdentifier: true })
+          public id!: string;
 
-          @Attribute({ isType: true }) public type!: string;
+          @Attribute({ isType: true })
+          public type!: string;
 
-          @Attribute({ toOne: Foo }) public parent!: Foo;
+          @Attribute({ toOne: Foo })
+          public parent!: Foo;
 
-          @Attribute({ toMany: Foo }) public foos!: Array<Foo>;
+          @Attribute({ toMany: Foo })
+          public foos!: Array<Foo>;
 
-          @Attribute({ toMany: Foo, referenceProperty: 'parent' }) public children!: Array<Foo>;
+          @Attribute({ toMany: Foo, referenceProperty: 'parent' })
+          public children!: Array<Foo>;
         }
 
         class TestCollection extends Collection {

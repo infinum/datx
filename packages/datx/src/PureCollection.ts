@@ -57,9 +57,11 @@ export class PureCollection {
 
   private readonly __views: Array<string> = [];
 
-  @observable.shallow private __dataMap: Record<string, Record<string, PureModel>> = {};
+  @observable.shallow
+  private __dataMap: Record<string, Record<string, PureModel>> = {};
 
-  @observable.shallow private __dataList: Record<string, IObservableArray<PureModel>> = {};
+  @observable.shallow
+  private __dataList: Record<string, IObservableArray<PureModel>> = {};
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
     extendObservable(this, {});
@@ -123,7 +125,8 @@ export class PureCollection {
    * @returns {Array<PureModel>} A list of initialized models
    * @memberof Collection
    */
-  @action public insert(data: Array<Partial<IRawModel>>): Array<PureModel> {
+  @action
+  public insert(data: Array<Partial<IRawModel>>): Array<PureModel> {
     const models = initModels(this, data);
 
     this.__insertModel(models);
@@ -151,7 +154,8 @@ export class PureCollection {
     model: IType | IModelConstructor<T>,
   ): T;
 
-  @action public add(
+  @action
+  public add(
     data:
       | PureModel
       | IRawModel
@@ -216,10 +220,8 @@ export class PureCollection {
 
   public removeOne(model: PureModel | IModelRef): void;
 
-  @action public removeOne(
-    obj: IType | typeof PureModel | PureModel | IModelRef,
-    id?: IIdentifier,
-  ): void {
+  @action
+  public removeOne(obj: IType | typeof PureModel | PureModel | IModelRef, id?: IIdentifier): void {
     let model: PureModel | null = null;
 
     if (typeof obj === 'object') {
@@ -232,11 +234,13 @@ export class PureCollection {
     }
   }
 
-  @action public removeAll(type: IType | typeof PureModel): void {
+  @action
+  public removeAll(type: IType | typeof PureModel): void {
     this.__removeModel(this.findAll(type).slice());
   }
 
-  @action public reset(): void {
+  @action
+  public reset(): void {
     this.__data.forEach((model) => {
       setMeta(model, MetaModelField.Collection, undefined);
 
@@ -272,7 +276,8 @@ export class PureCollection {
     return this.toJSON();
   }
 
-  @computed public get length(): number {
+  @computed
+  public get length(): number {
     return this.__data.length;
   }
 

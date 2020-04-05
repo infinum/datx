@@ -16,7 +16,8 @@ import { PureModel } from './PureModel';
 export class View<T extends PureModel = PureModel> extends ToMany<T> {
   public readonly modelType: IType;
 
-  @observable public sortMethod?: string | ((item: T) => any);
+  @observable
+  public sortMethod?: string | ((item: T) => any);
 
   constructor(
     modelType: IModelConstructor<T> | IType,
@@ -35,11 +36,13 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     this.sortMethod = sortMethod;
   }
 
-  @computed public get length(): number {
+  @computed
+  public get length(): number {
     return this.value.length;
   }
 
-  @computed public get list(): Array<T> {
+  @computed
+  public get list(): Array<T> {
     const list: Array<T> = this.value.slice();
 
     if (this.sortMethod) {
@@ -70,7 +73,8 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
 
   public add(data: Array<T | IRawModel | Record<string, any>>): Array<T>;
 
-  @action public add(
+  @action
+  public add(
     data: T | IRawModel | Record<string, any> | Array<T | IRawModel | Record<string, any>>,
   ): T | Array<T> {
     const models = mapItems(data, (item) => this.__collection.add<T>(item, this.modelType)) as
@@ -92,7 +96,8 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     return Boolean(this.__getList().find((item) => getModelId(item) === id));
   }
 
-  @action public remove(model: IIdentifier | T): void {
+  @action
+  public remove(model: IIdentifier | T): void {
     const item = this.__getModel(this.__normalizeModel(model));
 
     if (item) {
@@ -100,11 +105,13 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     }
   }
 
-  @action public removeAll(): void {
+  @action
+  public removeAll(): void {
     this.__rawList.replace([]);
   }
 
-  @action private __partialListUpdate(change: TChange): null {
+  @action
+  private __partialListUpdate(change: TChange): null {
     if (change.type === 'splice') {
       if (this.sortMethod && change.added.length > 0) {
         throw error("New models can't be added directly to a sorted view list");

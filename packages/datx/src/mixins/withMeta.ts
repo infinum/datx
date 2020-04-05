@@ -40,22 +40,26 @@ export function withMeta<T extends PureModel = PureModel>(
       this.__instance = instance;
     }
 
-    @computed public get collection(): PureCollection | undefined {
+    @computed
+    public get collection(): PureCollection | undefined {
       return getModelCollection(this.__instance);
     }
 
-    @computed public get id(): IIdentifier {
+    @computed
+    public get id(): IIdentifier {
       return getModelId(this.__instance);
     }
 
-    @computed public get original(): T | undefined {
+    @computed
+    public get original(): T | undefined {
       const originalId = getMeta(this.__instance, MetaModelField.OriginalId);
       const collection = getModelCollection(this.__instance);
 
       return (originalId && collection?.findOne(this.__instance, originalId)) || undefined;
     }
 
-    @computed public get refs(): Record<string, IBucket<PureModel> | null> {
+    @computed
+    public get refs(): Record<string, IBucket<PureModel> | null> {
       const fields = getMeta<Record<string, IFieldDefinition>>(
         this.__instance,
         MetaModelField.Fields,
@@ -77,11 +81,13 @@ export function withMeta<T extends PureModel = PureModel>(
       return refs;
     }
 
-    @computed public get snapshot(): any {
+    @computed
+    public get snapshot(): any {
       return modelToJSON(this.__instance);
     }
 
-    @computed public get type(): IType {
+    @computed
+    public get type(): IType {
       return getModelType(this.__instance);
     }
   }

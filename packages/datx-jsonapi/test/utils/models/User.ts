@@ -6,11 +6,14 @@ import { jsonapi } from '../../../src';
 export class User extends jsonapi(Model) {
   public static type: IType = 'user';
 
-  @prop public firstName!: string;
+  @prop
+  public firstName!: string;
 
-  @prop public lastName!: string;
+  @prop
+  public lastName!: string;
 
-  @computed get fullName(): string {
+  @computed
+  get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
 }

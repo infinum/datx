@@ -15,7 +15,8 @@ describe('issues', () => {
     class Foo extends PureModel {
       public static type = 'foo';
 
-      @Attribute({ toMany: Bar }) public bar!: Array<Bar>;
+      @Attribute({ toMany: Bar })
+      public bar!: Array<Bar>;
     }
 
     class Store extends Collection {

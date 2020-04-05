@@ -98,7 +98,8 @@ describe('updates', () => {
       class Bar extends jsonapi(Model) {
         public static type = 'bar';
 
-        @prop.toOne(Foo) public foo!: Foo;
+        @prop.toOne(Foo)
+        public foo!: Foo;
       }
 
       class Test extends Collection {

@@ -114,7 +114,8 @@ describe('datx-utils', () => {
       let counter = 0;
 
       class Data {
-        @observable public data = 1;
+        @observable
+        public data = 1;
 
         public foo!: number;
 

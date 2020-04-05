@@ -88,9 +88,8 @@ export function decorateCollection(
       }
     }
 
-    @action public sync<T extends IJsonapiModel = IJsonapiModel>(
-      body?: IResponse,
-    ): T | Array<T> | null {
+    @action
+    public sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T | Array<T> | null {
       if (!body) {
         return null;
       }
@@ -200,7 +199,8 @@ export function decorateCollection(
 
     public removeOneRemote(model: PureModel, options?: IRequestOptions): Promise<void>;
 
-    @action public removeOneRemote(
+    @action
+    public removeOneRemote(
       obj: IType | typeof PureModel | PureModel,
       id?: string | boolean | IRequestOptions,
       options?: boolean | IRequestOptions,
@@ -232,12 +232,14 @@ export function decorateCollection(
       return Promise.resolve();
     }
 
-    @action public removeAll(type: string | number | typeof PureModel): void {
+    @action
+    public removeAll(type: string | number | typeof PureModel): void {
       super.removeAll(type);
       clearCacheByType(getModelType(type));
     }
 
-    @action public reset(): void {
+    @action
+    public reset(): void {
       super.reset();
       clearAllCache();
     }

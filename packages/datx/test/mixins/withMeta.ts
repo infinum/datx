@@ -13,11 +13,14 @@ describe('withMeta', () => {
     class Foo extends PureModel {
       public static type = 'foo';
 
-      @Attribute() public foo!: number;
+      @Attribute()
+      public foo!: number;
 
-      @Attribute() public bar!: number;
+      @Attribute()
+      public bar!: number;
 
-      @Attribute() public baz!: number;
+      @Attribute()
+      public baz!: number;
     }
 
     const FooMeta = withMeta(Foo);
@@ -83,9 +86,11 @@ describe('withMeta', () => {
     class Foo extends PureModel {
       public static type = 'foo';
 
-      @Attribute({ toOne: Foo }) public parent?: Foo;
+      @Attribute({ toOne: Foo })
+      public parent?: Foo;
 
-      @Attribute({ defaultValue: 1 }) public foo!: number;
+      @Attribute({ defaultValue: 1 })
+      public foo!: number;
     }
 
     const FooMeta = withMeta(Foo);

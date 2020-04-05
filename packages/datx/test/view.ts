@@ -96,7 +96,8 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @Attribute() public key!: number;
+      @Attribute()
+      public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -128,7 +129,8 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @Attribute() public key!: number;
+      @Attribute()
+      public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -173,7 +175,8 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @Attribute() public key!: number;
+      @Attribute()
+      public key!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -250,7 +253,8 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @Attribute({ isIdentifier: true }) public id!: number;
+      @Attribute({ isIdentifier: true })
+      public id!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
@@ -287,7 +291,8 @@ describe('View', () => {
     class Foo extends Model {
       public static type = 'foo';
 
-      @Attribute({ isIdentifier: true }) public id!: number;
+      @Attribute({ isIdentifier: true })
+      public id!: number;
     }
     class AppCollection extends Collection {
       public static types = [Foo];
