@@ -43,6 +43,8 @@ interface IAttributeFieldOptions {
   defaultValue?: any;
   isIdentifier?: true;
   isType?: true;
+  parse?: (value: any, data: object) => any;
+  serialize?: (value: any, data: object) => any;
 }
 
 interface IAttributeNoReference {
@@ -141,6 +143,8 @@ export function Attribute<T extends PureModel>({
   toOneOrMany,
   toMany,
   referenceProperty,
+  parse,
+  serialize,
 }: IAttributeOptions = {}) {
   return (obj: T, key: string, opts?: object): void => {
     prepareDecorator(obj, key, opts);
@@ -157,6 +161,8 @@ export function Attribute<T extends PureModel>({
       defaultValue,
     };
     setMeta(modelClass, MetaClassField.Fields, modelClassFields);
+    setMeta(modelClass, `${MetaClassField.MapParse}_${key}`, parse);
+    setMeta(modelClass, `${MetaClassField.MapSerialize}_${key}`, serialize);
 
     if (isIdentifier) {
       setMeta(modelClass, MetaClassField.IdField, key);

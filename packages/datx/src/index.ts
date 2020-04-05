@@ -31,6 +31,8 @@ export {
   getOriginalModel,
   modelToJSON,
   updateModel,
+  modelMapParse,
+  modelMapSerialize,
 } from './helpers/model/utils';
 
 export { isCollection, isModel, isView } from './helpers/mixin';

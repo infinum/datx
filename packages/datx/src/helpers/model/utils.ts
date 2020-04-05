@@ -25,6 +25,22 @@ import { error } from '../format';
 import { ReferenceType } from '../../enums/ReferenceType';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 
+const defaultParseSerializeFn = (value: any) => value;
+
+export function modelMapParse(modelClass: typeof PureModel, data: object, key: string): any {
+  const parseFn =
+    getMeta(modelClass, `${MetaClassField.MapParse}_${key}`) || defaultParseSerializeFn;
+
+  return parseFn(data[key], data);
+}
+
+export function modelMapSerialize(modelClass: typeof PureModel, data: object, key: string): any {
+  const parseFn =
+    getMeta(modelClass, `${MetaClassField.MapSerialize}_${key}`) || defaultParseSerializeFn;
+
+  return parseFn(data[key], data);
+}
+
 export function isModelReference(value: IModelRef | Array<IModelRef>): true;
 export function isModelReference(value: unknown): false;
 export function isModelReference(value: unknown): boolean {
@@ -140,7 +156,7 @@ export function modelToJSON(model: PureModel): IRawModel {
 
       raw[fieldName] = bucket?.snapshot || null;
     } else {
-      raw[fieldName] = model[fieldName];
+      raw[fieldName] = modelMapSerialize(model.constructor as typeof PureModel, model, fieldName);
     }
   });
 

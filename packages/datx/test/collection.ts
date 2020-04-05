@@ -2,7 +2,7 @@
 
 import { autorun, configure } from 'mobx';
 
-import { Collection, PureModel, Attribute, updateModelId } from '../src';
+import { Collection, PureModel, Attribute, updateModelId, Model } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId } from '../src/helpers/model/utils';
 
@@ -103,6 +103,55 @@ describe('Collection', () => {
 
       store.removeOne([foo3, foo4]); // Remove foo3, ignore foo4
       expect(store.length).toBe(0);
+    });
+
+    it('should work with property parsers/serializers', () => {
+      class Foo extends Model {
+        @Attribute({
+          parse: (value: string) => parseInt(value, 10),
+          serialize: (value: number) => `TEST:${value}`,
+        })
+        public value!: number;
+
+        @Attribute({
+          parse: (_value: string, data: Record<string, string>) => parseInt(data.value, 10) * 2,
+          serialize: (value: number, data: Record<string, number>) => `TEST:${value}:${data.value}`,
+        })
+        public double!: number;
+
+        @Attribute({ isIdentifier: true })
+        public id!: number;
+      }
+
+      class Store extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new Store();
+
+      const foo = store.add({ value: '123', id: 1 }, Foo);
+
+      expect(foo.value).toBe(123);
+      expect(foo.double).toBe(246);
+
+      foo.value = 321;
+      expect(foo.value).toBe(321);
+      expect(foo.double).toBe(246);
+
+      const snapshot = foo.toJSON();
+
+      expect(snapshot.value).toBe('TEST:321');
+      expect(snapshot.double).toBe('TEST:246:321');
+
+      // Make sure it doesn't trigger for other models
+      store.add({ value: '234', id: 2 }, Foo);
+      expect(foo.value).toBe(321);
+      expect(foo.double).toBe(246);
+
+      // Make sure it works with upsert
+      store.add({ value: '345', id: 1 }, Foo);
+      expect(foo.value).toBe(345);
+      expect(foo.double).toBe(690);
     });
 
     it('should work with preprocess', () => {

@@ -4,7 +4,7 @@ import { IType } from '../interfaces/IType';
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
 import { error } from './format';
-import { updateModel } from './model/utils';
+import { modelMapParse, updateModel } from './model/utils';
 import { MetaModelField } from '../enums/MetaModelField';
 
 export function upsertModel(
@@ -37,7 +37,12 @@ export function upsertModel(
   const existingModel = id && collection.findOne(type, id);
 
   if (existingModel) {
-    return updateModel(existingModel, data);
+    const parsedData = {};
+
+    Object.keys(data).forEach((key: string) => {
+      parsedData[key] = modelMapParse(TypeModel, data, key);
+    });
+    return updateModel(parsedData, data);
   }
 
   return new TypeModel(TypeModel.preprocess(data), collection);

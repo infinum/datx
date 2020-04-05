@@ -7,7 +7,13 @@ import { MetaClassField } from '../../enums/MetaClassField';
 import { MetaModelField } from '../../enums/MetaModelField';
 import { IFieldDefinition, IReferenceDefinition, ParsedRefModel } from '../../Attribute';
 import { ReferenceType } from '../../enums/ReferenceType';
-import { getModelType, getModelCollection, getModelId, isModelReference } from './utils';
+import {
+  getModelType,
+  getModelCollection,
+  getModelId,
+  isModelReference,
+  modelMapParse,
+} from './utils';
 import { getBucketConstructor } from '../../buckets';
 import { getRef, updateRef, getBackRef, updateBackRef } from './fields';
 import { TRefValue } from '../../interfaces/TRefValue';
@@ -221,8 +227,11 @@ export function initModel(instance: PureModel, rawData: IRawModel, collection?: 
   Object.keys(fields).forEach((fieldName) => {
     const fieldDef = fields[fieldName];
 
-    const value = fieldName in rawData ? rawData[fieldName] : fieldDef.defaultValue;
+    const data = {
+      [fieldName]: fieldDef.defaultValue,
+      ...rawData,
+    };
 
-    initModelField(instance, fieldName, value);
+    initModelField(instance, fieldName, modelMapParse(modelClass, data, fieldName));
   });
 }
