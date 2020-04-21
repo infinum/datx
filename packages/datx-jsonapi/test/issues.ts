@@ -1,9 +1,9 @@
 /* eslint-disable max-classes-per-file */
 
-import { Collection, Model, prop } from 'datx';
+import { Collection, Model, prop, Attribute } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 import { computed } from 'mobx';
-import { config, getModelMeta, getModelRefMeta, jsonapi } from '../src';
+import { config, getModelMeta, getModelRefMeta, jsonapi, modelToJsonApi } from '../src';
 import { clearAllCache } from '../src/cache';
 
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
@@ -240,5 +240,40 @@ describe('Issues', () => {
     const lineItem2 = new LineItem({}, store);
 
     await lineItem2.save();
+  });
+
+  it('should serialize the right relationships', () => {
+    class Foo extends jsonapi(Model) {
+      public static type = 'foo';
+
+      @Attribute({ toOne: 'bar' })
+      public bar!: Bar;
+
+      @Attribute({ toMany: 'bar', referenceProperty: 'foo' })
+      public bars!: Array<Bar>;
+    }
+
+    class Bar extends jsonapi(Model) {
+      public static type = 'bar';
+
+      @Attribute({ toOne: 'foo' })
+      public foo!: Foo;
+    }
+
+    class Store extends jsonapi(Collection) {
+      public static types = [Foo, Bar];
+    }
+
+    const store = new Store();
+
+    const bar1 = store.add({}, Bar);
+    const foo1 = store.add({ bar: bar1 }, Foo);
+    bar1.foo = foo1;
+
+    expect(foo1.bars).toEqual([bar1]);
+
+    const jsonapiData = modelToJsonApi(foo1);
+    expect(jsonapiData.relationships?.bar).toEqual({ data: { id: bar1.meta.id, type: 'bar' } });
+    expect(jsonapiData.relationships?.bars).toBeUndefined();
   });
 });

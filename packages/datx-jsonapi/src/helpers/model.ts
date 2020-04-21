@@ -211,6 +211,9 @@ export function modelToJsonApi(model: IJsonapiModel): IRecord {
   const refs = getModelClassRefs(model);
 
   Object.keys(refs).forEach((key) => {
+    if (refs[key].property) {
+      return;
+    }
     data.relationships = data.relationships || {};
     const refsList: IModelRef | Array<IModelRef> | null = getRefId(model, key);
 
