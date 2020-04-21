@@ -94,6 +94,42 @@ describe('Model', () => {
       expect(snapshot.double).toBe('TEST:246:321');
     });
 
+    it('should work with property parsers/serializers for extended classes', () => {
+      class Foo extends Model {
+        @Attribute({
+          parse: (value: string) => parseInt(value, 10),
+          serialize: (value: number) => `TEST:${value}`,
+        })
+        public value!: number;
+
+        @Attribute({
+          parse: (_value: string, data: Record<string, string>) => parseInt(data.value, 10) * 2,
+          serialize: (value: number, data: Record<string, number>) => `TEST:${value}:${data.value}`,
+        })
+        public double!: number;
+
+        @Attribute({ defaultValue: 1 })
+        public one!: number;
+      }
+
+      class Bar extends Foo {}
+
+      const foo = new Bar({ value: '123' });
+
+      expect(foo.one).toBe(1);
+      expect(foo.value).toBe(123);
+      expect(foo.double).toBe(246);
+
+      foo.value = 321;
+      expect(foo.value).toBe(321);
+      expect(foo.double).toBe(246);
+
+      const snapshot = foo.toJSON();
+
+      expect(snapshot.value).toBe('TEST:321');
+      expect(snapshot.double).toBe('TEST:246:321');
+    });
+
     it('should work with valueOf and toString', () => {
       class Foo extends Model {
         @Attribute()

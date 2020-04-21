@@ -25,18 +25,26 @@ import { error } from '../format';
 import { ReferenceType } from '../../enums/ReferenceType';
 import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 
-const defaultParseSerializeFn = (value: any): any => value;
+const defaultParseSerializeFn = (value: any, _data: any): any => value;
 
 export function modelMapParse(modelClass: typeof PureModel, data: object, key: string): any {
-  const parseFn =
-    getMeta(modelClass, `${MetaClassField.MapParse}_${key}`) || defaultParseSerializeFn;
+  const parseFn = getMeta(
+    modelClass,
+    `${MetaClassField.MapParse}_${key}`,
+    defaultParseSerializeFn,
+    true,
+  );
 
   return parseFn(data[key], data);
 }
 
 export function modelMapSerialize(modelClass: typeof PureModel, data: object, key: string): any {
-  const parseFn =
-    getMeta(modelClass, `${MetaClassField.MapSerialize}_${key}`) || defaultParseSerializeFn;
+  const parseFn = getMeta(
+    modelClass,
+    `${MetaClassField.MapSerialize}_${key}`,
+    defaultParseSerializeFn,
+    true,
+  );
 
   return parseFn(data[key], data);
 }
