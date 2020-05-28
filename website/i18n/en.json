@@ -121,6 +121,123 @@
       },
       "troubleshooting/known-issues": {
         "title": "Known issues"
+      },
+      "version-1.0.0/api-reference/version-1.0.0-collection": {
+        "title": "Collection"
+      },
+      "version-1.0.0/api-reference/version-1.0.0-lib-utils": {
+        "title": "Lib utils"
+      },
+      "version-1.0.0/api-reference/version-1.0.0-model-utils": {
+        "title": "Model utils"
+      },
+      "version-1.0.0/api-reference/version-1.0.0-model": {
+        "title": "Model"
+      },
+      "version-1.0.0/api-reference/version-1.0.0-prop": {
+        "title": "Prop"
+      },
+      "version-1.0.0/api-reference/version-1.0.0-pure-model": {
+        "title": "Pure Model"
+      },
+      "version-1.0.0/api-reference/version-1.0.0-typescript-interfaces": {
+        "title": "Typescript interfaces"
+      },
+      "version-1.0.0/api-reference/version-1.0.0-view": {
+        "title": "View"
+      },
+      "version-1.0.0/examples/version-1.0.0-basic-setup": {
+        "title": "Basic setup"
+      },
+      "version-1.0.0/examples/version-1.0.0-nextjs-setup": {
+        "title": "Next.js Setup"
+      },
+      "version-1.0.0/getting-started/version-1.0.0-configuring-the-collection": {
+        "title": "Configuring the collection"
+      },
+      "version-1.0.0/getting-started/version-1.0.0-defining-models": {
+        "title": "Defining models"
+      },
+      "version-1.0.0/getting-started/version-1.0.0-installation": {
+        "title": "Installation"
+      },
+      "version-1.0.0/getting-started/version-1.0.0-persisting-data-locally": {
+        "title": "Persisting data locally"
+      },
+      "version-1.0.0/getting-started/version-1.0.0-references": {
+        "title": "References"
+      },
+      "version-1.0.0/getting-started/version-1.0.0-using-the-collection": {
+        "title": "Using the collection"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-basic-configuration": {
+        "title": "Basic configuration"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-collection": {
+        "title": "Collection"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-config": {
+        "title": "Config"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-getting-started": {
+        "title": "Getting started with JSON Api"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-model": {
+        "title": "Model"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-network-configuration": {
+        "title": "Network configuration"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-network-usage": {
+        "title": "Network usage"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-response": {
+        "title": "Response"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-spec-compliance": {
+        "title": "Spec compliance"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-typescript-interfaces": {
+        "title": "Typescript interfaces"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-utils": {
+        "title": "Utils"
+      },
+      "version-1.0.0/jsonapi/version-1.0.0-jsonapi-view": {
+        "title": "View"
+      },
+      "version-1.0.0/migration-guide/version-1.0.0-compat-collection": {
+        "title": "CompatCollection"
+      },
+      "version-1.0.0/migration-guide/version-1.0.0-compat-model": {
+        "title": "CompatModel"
+      },
+      "version-1.0.0/migration-guide/version-1.0.0-mobx-collection-store": {
+        "title": "Mobx collection store"
+      },
+      "version-1.0.0/migration-guide/version-1.0.0-mobx-jsonapi-store": {
+        "title": "Mobx jsonapi store"
+      },
+      "version-1.0.0/mixins/version-1.0.0-building-your-own-mixin": {
+        "title": "Build your own mixin"
+      },
+      "version-1.0.0/mixins/version-1.0.0-jsonapi-mixin": {
+        "title": "JSONAPI Mixin"
+      },
+      "version-1.0.0/mixins/version-1.0.0-what-are-mixins": {
+        "title": "What are mixins"
+      },
+      "version-1.0.0/mixins/version-1.0.0-with-actions": {
+        "title": "withActions"
+      },
+      "version-1.0.0/mixins/version-1.0.0-with-meta": {
+        "title": "withMeta"
+      },
+      "version-1.0.0/mixins/version-1.0.0-with-patches": {
+        "title": "withPatches"
+      },
+      "version-1.0.0/troubleshooting/version-1.0.0-known-issues": {
+        "title": "Known issues"
       }
     },
     "links": {
