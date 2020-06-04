@@ -12,6 +12,6 @@ jobs:
       - uses: sterlingwes/gh-pages-deploy-action@v1.1
         with:
           access-token: ${{ secrets.ACCESS_TOKEN }}
-          source-directory: website
-          build-command: yarn build
+          source-directory: docs
+          build-command: cd website && yarn install && yarn build
           custom-domain: datx.dev
