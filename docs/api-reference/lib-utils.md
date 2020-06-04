@@ -1,30 +1,7 @@
 ---
 id: lib-utils
-title: Lib utils
+title: Lib utils TODO
 ---
-
-## setupModel
-
-Helper used to set up models [without using decorators](defining-models#javascript-without-decorators).
-
-```typescript
-setupModel<IModel extends PureModel, IFields extends IDictionary<any>>(
-  Base: IModelConstructor<IModel>,
-  {
-    fields,
-    references,
-    type,
-    idAttribute,
-    typeAttribute,
-  }: {
-    fields: IFields;
-    references?: IDictionary<IReferenceOptions>;
-    type?: IType;
-    idAttribute?: string;
-    typeAttribute?: string;
-  } = {fields: {} as IFields},
-);
-```
 
 ## isCollection
 

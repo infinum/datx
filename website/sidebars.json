@@ -20,7 +20,7 @@
       "api-reference/collection",
       "api-reference/model",
       "api-reference/view",
-      "api-reference/prop",
+      "api-reference/attribute",
       "api-reference/pure-model",
       "api-reference/model-utils",
       "api-reference/lib-utils",
@@ -41,19 +41,15 @@
       "jsonapi/jsonapi-typescript-interfaces"
     ],
     "Migration guide": [
-      "migration-guide/compat-collection",
-      "migration-guide/compat-model",
-      "migration-guide/mobx-collection-store",
-      "migration-guide/mobx-jsonapi-store"
+      "migration-guide/breaking-changes",
+      "migration-guide/deprecations",
+      "migration-guide/whats-new",
+      "migration-guide/from-v1"
     ],
     "Troubleshooting": ["troubleshooting/known-issues"]
   },
   "examples": {
-    "Setup": [
-      "examples/basic-setup",
-      "examples/react-setup",
-      "examples/nextjs-setup"
-    ],
+    "Setup": ["examples/basic-setup", "examples/react-setup", "examples/nextjs-setup"],
     "Collection": ["examples/adding-models"]
   }
 }

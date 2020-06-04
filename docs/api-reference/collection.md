@@ -1,6 +1,6 @@
 ---
 id: collection
-title: Collection
+title: Collection TODO
 ---
 
 ## Properties

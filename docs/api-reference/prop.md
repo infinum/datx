@@ -1,6 +1,6 @@
 ---
-id: prop
-title: Prop
+id: attribute
+title: Attribute TODO
 ---
 
 The `prop` decorator util is used to define the properties of the model. If needed, multiple prop decorators can be used on the same property.
