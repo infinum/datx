@@ -1,7 +1,7 @@
 {
   "name": "datx",
   "devDependencies": {
-    "husky": "^3.0.0",
+    "husky": "^4.2.4",
     "lerna": "^3.10.7",
     "typescript": "^3.2.4"
   },

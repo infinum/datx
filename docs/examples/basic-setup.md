@@ -40,9 +40,16 @@ export class Person extends Model {
   @prop
   public age!: number;
 
+  @prop.toOne(Dog)
+  public favoriteDog!: Dog | null;
+
   @computed
   public get greet() {
-    return `Hey, I am ${this.breed} ${this.name}.`;
+    if (!this.favoriteDog) {
+      return `Hey, I am ${this.name}.`;
+    }
+
+    return `Hey, I am ${this.name} and my favorite dog is ${this.favoriteDog.name}.`;
   }
 }
 ```
@@ -78,7 +85,11 @@ export class Person extends Model {
 
   @computed
   get greet() {
-    return `Hey, my name is ${this.name} and I'm ${this.age}.`;
+    if (!this.favoriteDog) {
+      return `Hey, I am ${this.name}.`;
+    }
+
+    return `Hey, I am ${this.name} and my favorite dog is ${this.favoriteDog.name}.`;
   }
 }
 ```
@@ -108,13 +119,18 @@ export class Person extends Model {
   static type = 'person';
 
   get greet() {
-    return `Hey, my name is ${this.name} and I'm ${this.age}.`;
+    if (!this.favoriteDog) {
+      return `Hey, I am ${this.name}.`;
+    }
+
+    return `Hey, I am ${this.name} and my favorite dog is ${this.favoriteDog.name}.`;
   }
 }
 
 prop(Person, 'id');
 prop(Person, 'age');
 prop(Person, 'name');
+prop.toOne(Dog)(Person, 'favoriteDog');
 decorate(Person, {
   greet: computed,
 });

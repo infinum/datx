@@ -70,9 +70,7 @@ add<T>(model: object, type?: IType | typeof Model): T
 
 The `add` method can receive an model instance (or an array of instances) or a plain JS object (or an array of them) and the model type.
 
---
-Code sample
---
+You can check out examples [here](../examples/adding-models).
 
 ### hasItem
 
