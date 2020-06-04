@@ -108,18 +108,30 @@ isModel(obj: any): false;
 
 Check if the given value is an instance of the datx model.
 
-### getModelMetaKey
+### getMeta
 
 ```typescript
-getModelMetaKey(model: PureModel, key: string): any;
+getMeta<T = any>(
+  obj: Record<string, any>,
+  key: string,
+  defaultValue?: T,
+  includeChain?: boolean,
+  mergeChain?: boolean,
+): T | undefined;
 ```
 
 Get a meta data of the model.
 
-### setModelMetaKey
+- `obj` - The target object
+- `key` - name of the meta key
+- `defaultValue` - The value that will be returned if the meta value is not found
+- `includeChain` - Check the prototype chain for the meta value (stop when found)
+- `mergeChain` - Merge the meta objects from all objects in the prototype chain
+
+### setMeta
 
 ```typescript
-setModelMetaKey(model: PureModel, key: string, value: any): any;
+setMeta<T = any>(obj: Record<string, any>, key: string, value: T): void;
 ```
 
 Set a meta data of the model.

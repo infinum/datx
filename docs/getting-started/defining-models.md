@@ -17,32 +17,30 @@ class Person extends Model {
 }
 ```
 
-Other things that should be defined are props and their default values or [References](references):
+Other things that should be defined are attributes and their default values or [References](references):
 
 ```typescript
-import { Model, prop } from 'datx';
+import { Model, Attribute } from 'datx';
 
 class Pet extends Model {
   static type = 'pet';
 
-  @prop
+  @Attribute()
   public name: string;
 
-  @prop.defaultValue(0)
+  @Attribute({ defaultValue: 0 })
   public age: number;
 
-  @prop.toOne(Person)
+  @Attribute({ toOne: Person })
   public owner: Person;
 }
 ```
 
-In order to ensure some properties are always observables, you should define them with the `prop` decorator.
+In order to ensure some properties are always observables, you should define them with the `Attribute` decorator.
 
 ## JavaScript without decorators
 
-### Option 1
-
-Most of the code can remain the same, but the props need to be defined separately. In order to ensure some properties are always observables, they need to be marked as props (like the `name` property in the example bellow).
+Most of the code can remain the same, but the attributes need to be defined separately. In order to ensure some properties are always observables, they need to be marked as attributes (like the `name` property in the example bellow).
 
 #### TypeScript
 
@@ -57,52 +55,21 @@ class Pet extends Model {
   public owner: Person;
 }
 
-prop(Pet, 'name');
-prop.defaultValue(0)(Pet, 'age');
-prop.toOne(Person)(Pet, 'owner');
+Attribute()(Pet, 'name');
+Attribute({ defaultValue: 0 })(Pet, 'age');
+Attribute({ toOne: Person })(Pet, 'owner');
 ```
 
 #### JavaScript
 
 ```javascript
-import { Model, prop } from 'datx';
+import { Model, Attribute } from 'datx';
 
 class Pet extends Model {
   static type = 'pet';
 }
 
-prop(Pet, 'name');
-prop.defaultValue(0)(Pet, 'age');
-prop.toOne(Person)(Pet, 'owner');
+Attribute()(Pet, 'name');
+Attribute({ defaultValue: 0 })(Pet, 'age');
+Attribute({ toOne: Person })(Pet, 'owner');
 ```
-
-### Option 2
-
-The models can be defined by extending the [`Model`](../api-reference/model) class. When extending the [`Model`](../api-reference/model) class, the minimal thing you should do is to define a unique [`type`](../api-reference/model#static-type) (can be either a number or a string):
-
-```javascript
-import { Model } from 'datx';
-
-class Person extends Model {
-  static type = 'person';
-}
-```
-
-Other things that should be defined are props and their default values or [References](references):
-
-```javascript
-import { Model, setupModel } from 'datx';
-
-setupModel(Model, {
-  type: 'pet',
-  references: {
-    owner: Person,
-  },
-  fields: {
-    name: undefined,
-    age: 0,
-  },
-});
-```
-
-In order to ensure some properties are always observables, you should define them in the `fields` object.

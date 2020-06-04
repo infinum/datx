@@ -3,7 +3,7 @@ id: installation
 title: Installation
 ---
 
-## Installation V2!!!!
+## Installation v2
 
 To install, use `npm` or `yarn`. The lib has a peer dependency of `mobx` 4.1.0 or later.
 

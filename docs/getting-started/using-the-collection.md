@@ -78,7 +78,7 @@ initModelRef(john, 'spouse', { model: Person, type: ReferenceType.TO_ONE }, jane
 updateModel(john, { lastName: 'Williams', age: 25, spouse: null, city: 'San Francisco' });
 ```
 
-**Note:** Direct assignment should not be used for new properties because the added property won't be observable (this is a MobX limitation).
+**Note:** Direct assignment should not be used for new properties because the added property won't be observable ([this is a MobX limitation](https://mobx.js.org/best/pitfalls.html#objectsomenewprop-value-is-not-picked-up)).
 
 ---
 
