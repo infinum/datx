@@ -5,7 +5,7 @@ name: Unit tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, feature/*, release/* ]
   pull_request:
     branches: [ master ]
 
