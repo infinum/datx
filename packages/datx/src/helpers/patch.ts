@@ -46,7 +46,7 @@ export function triggerAction(patchMeta: IPatchMeta, model: PureModel): void {
   const collection = getModelCollection(model);
 
   if (collection && '__patchListeners' in collection) {
-    (collection['__patchListeners'] || []).forEach((item) => {
+    ((collection['__patchListeners'] || []) as Array<(patch: IPatch) => void>).forEach((item) => {
       listeners.push(item);
     });
   }
