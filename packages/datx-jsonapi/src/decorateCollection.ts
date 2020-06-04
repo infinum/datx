@@ -74,8 +74,6 @@ export function decorateCollection(
         : [GenericModel];
 
     public static maxCacheAge: number = BaseClass['maxCacheAge'];
-
-    // eslint-disable-next-line no-nested-ternary
     public static cache?: CachingStrategy = BaseClass['cache'];
 
     public static defaultModel = BaseClass['defaultModel'] || GenericModel;
@@ -115,7 +113,6 @@ export function decorateCollection(
       id: string,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
-      // @ts-ignore
       deprecated('fetch is deprecated, use getOne instead');
       return this.getOne(
         type,
@@ -139,7 +136,6 @@ export function decorateCollection(
       type: IType | IModelConstructor<T>,
       options?: IRequestOptions,
     ): Promise<Response<T>> {
-      // @ts-ignore
       deprecated('fetchAll is deprecated, use getMany instead');
       return this.getMany(
         type,

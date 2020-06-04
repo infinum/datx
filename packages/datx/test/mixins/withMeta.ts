@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { autorun, configure, runInAction } from 'mobx';
 
 import { Collection, PureModel, Attribute } from '../../src';
@@ -62,7 +60,6 @@ describe('withMeta', () => {
     expect(foo2).not.toBe(foo);
     expect(foo2.meta.original).toBe(foo);
 
-    // @ts-ignore - TS won't allow this mistake
     expect(() => {
       foo2.meta.type = 'bar';
     }).toThrowError();
@@ -71,14 +68,14 @@ describe('withMeta', () => {
   });
 
   it('should fail for collections', () => {
-    // @ts-ignore - TS won't allow this mistake
+    // @ts-expect-error
     expect(() => withMeta(Collection)).toThrowError('This mixin can only decorate models');
   });
 
   it('should fail for other classes', () => {
     class A {}
 
-    // @ts-ignore - TS won't allow this mistake
+    // @ts-expect-error
     expect(() => withMeta(A)).toThrowError('This mixin can only decorate models');
   });
 

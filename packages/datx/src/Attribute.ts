@@ -16,7 +16,6 @@ export function getClass<T extends PureModel>(obj: T): typeof PureModel {
 
 function prepareDecorator<T extends PureModel>(_obj: T, _key: string, opts?: object): void {
   if (opts && 'initializer' in opts) {
-    // eslint-disable-next-line no-param-reassign
     opts['initializer'] = undefined;
 
     // Babel 7 + Decorators fix
@@ -24,7 +23,6 @@ function prepareDecorator<T extends PureModel>(_obj: T, _key: string, opts?: obj
     // If initializer is undefined, the descriptor will be null and therefore
     // the initializerDefineProperty will be skipped
 
-    // eslint-disable-next-line max-len
     // https://github.com/babel/babel/blob/3aaafae053fa75febb3aa45d45b6f00646e30ba4/packages/babel-helpers/src/helpers.js#L1019
   }
 }
@@ -186,10 +184,8 @@ export function ViewAttribute<TCollection extends PureCollection, TModel extends
   return (obj: TCollection, key: string, opts?: object): void => {
     prepareDecorator(obj, key, opts);
     if (!Object.hasOwnProperty.call(obj.constructor, 'views')) {
-      // eslint-disable-next-line no-param-reassign
       obj.constructor['views'] = {};
     }
-    // eslint-disable-next-line no-param-reassign
     obj.constructor['views'][key] = Object.assign(
       {
         modelType,

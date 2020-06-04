@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { configure } from 'mobx';
 
 import { Collection, PureModel, Attribute } from '../src';

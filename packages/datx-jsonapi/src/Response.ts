@@ -229,7 +229,6 @@ export class Response<T extends IJsonapiModel> {
     Object.freeze(this);
 
     if (this.error) {
-      // eslint-disable-next-line no-throw-literal
       throw this;
     }
   }
@@ -306,7 +305,6 @@ export class Response<T extends IJsonapiModel> {
 
     this.views.forEach((view, index) => {
       if (viewIndexes[index] !== -1) {
-        // eslint-disable-next-line no-param-reassign
         view.list[viewIndexes[index]] = data;
       }
     });
@@ -339,8 +337,6 @@ export class Response<T extends IJsonapiModel> {
     this.__updateInternal(response, undefined, views);
     const newData = initData(response, this.collection);
 
-    // @ts-ignore
-    // eslint-disable-next-line no-underscore-dangle
     this.__data.__readonlyValue = newData.value;
 
     return this;

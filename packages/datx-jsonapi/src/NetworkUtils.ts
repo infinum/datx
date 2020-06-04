@@ -137,7 +137,6 @@ export const config: IConfigType = {
       .then((responseData: IResponse) => {
         data = responseData;
         if (status >= 400) {
-          // eslint-disable-next-line no-throw-literal
           throw {
             message: `Invalid HTTP status: ${status}`,
             status,

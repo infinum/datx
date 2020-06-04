@@ -1,6 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable max-classes-per-file */
-
 import { autorun, configure, runInAction, isObservableArray, computed, action } from 'mobx';
 
 import { Model, Attribute, PureModel, Collection, ReferenceType, IRawModel } from '../src';
@@ -178,7 +175,6 @@ describe('Model', () => {
       });
 
       bazValue = 3;
-      // @ts-ignore
       runInAction(() => {
         foo.baz = 3;
       });
@@ -495,7 +491,6 @@ describe('Model', () => {
       const foo1 = new Foo({ foo: 2 });
 
       expect(() => {
-        // eslint-disable-next-line no-new
         new Foo({ foo: 3, parent: foo1 });
       }).toThrowError('The model needs to be in a collection to be referenceable');
 
@@ -700,8 +695,7 @@ describe('Model', () => {
 
       expect(raw2.parent[0]).toEqual(getModelRef(foo1));
 
-      // @ts-ignore
-      delete raw2.__META__.id;
+      delete raw2.__META__?.id;
       const foo3 = collection.add(raw2, Foo);
 
       expect(foo3.parent.length).toBe(1);
@@ -744,8 +738,7 @@ describe('Model', () => {
 
       expect(raw2.parent[0]).toEqual(getModelRef(foo1));
 
-      // @ts-ignore
-      delete raw2.__META__.id;
+      delete raw2.__META__?.id;
       const foo3 = collection.add(raw2, Foo);
 
       expect(foo3.parent.length).toBe(1);
@@ -1000,7 +993,7 @@ describe('Model', () => {
 
         const toRemove = foo1.fooBackRef[1];
 
-        // @ts-ignore
+        // @ts-expect-error
         foo1.fooBackRef[1] = undefined;
         expect(foo1.fooBackRef).not.toContain(toRemove);
 
@@ -1073,8 +1066,7 @@ describe('Model', () => {
         expect(modelToJSON(foo2).parent).toEqual(getModelRef(foo1));
         expect(modelToJSON(foo2).foos).toContainEqual(getModelRef(foo1));
 
-        // @ts-ignore
-        expect(modelToJSON(foo1).__META__.id).toBe(foo1.id);
+        expect(modelToJSON(foo1).__META__?.id).toBe(foo1.id);
         expect(modelToJSON(foo1).id).toBe(foo1.id);
 
         updateModelId(foo1, '345');
@@ -1086,8 +1078,7 @@ describe('Model', () => {
         expect(modelToJSON(foo2).parent).toEqual(getModelRef(foo1));
         expect(modelToJSON(foo2).foos).toContainEqual(getModelRef(foo1));
 
-        // @ts-ignore
-        expect(modelToJSON(foo1).__META__.id).toBe(foo1.id);
+        expect(modelToJSON(foo1).__META__?.id).toBe(foo1.id);
         expect(modelToJSON(foo1).id).toBe(foo1.id);
       });
 
@@ -1136,11 +1127,8 @@ describe('Model', () => {
 
         const foo2 = store.add({ parent: foo1, foos: [foo1] }, Foo);
 
-        // @ts-ignore - Avoiding the TypeScript features on purpose
         expect(foo2.id).toBeLessThan(0);
-        // @ts-ignore - Avoiding the TypeScript features on purpose
         expect(getModelId(foo2)).toBe(foo2.id);
-        // @ts-ignore - Avoiding the TypeScript features on purpose
         expect(foo2.type).toBe('foo');
         expect(getModelType(foo2)).toBe('foo');
         expect(modelToJSON(foo2).parent).toEqual(getModelRef(foo1));

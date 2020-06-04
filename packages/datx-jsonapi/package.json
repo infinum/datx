@@ -22,24 +22,23 @@
     "jsonapi"
   ],
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^11.0.2",
-    "@rollup/plugin-node-resolve": "^7.1.1",
-    "@types/jest": "^25.2.1",
-    "@types/lodash": "^4.14.149",
-    "@types/nock": "^11.1.0",
-    "@types/node": "^13.11.0",
-    "@types/uuid": "^7.0.2",
+    "@rollup/plugin-commonjs": "^12.0.0",
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "@types/jest": "^25.2.3",
+    "@types/lodash": "^4.14.155",
+    "@types/node": "^14.0.10",
+    "@types/uuid": "^8.0.0",
     "isomorphic-fetch": "^2.2.1",
-    "jest": "^25.2.7",
+    "jest": "^26.0.1",
     "lodash": "^4.17.15",
     "mobx": "^5.15.4",
-    "rollup": "^2.3.3",
-    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.8",
-    "rollup-plugin-terser": "^5.3.0",
-    "rollup-plugin-typescript2": "^0.27.0",
-    "ts-jest": "^25.3.1",
-    "typescript": "^3.8.3",
-    "uuid": "^7.0.3"
+    "rollup": "^2.13.1",
+    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.9",
+    "rollup-plugin-terser": "^6.1.0",
+    "rollup-plugin-typescript2": "^0.27.1",
+    "ts-jest": "^26.1.0",
+    "typescript": "^3.9.5",
+    "uuid": "^8.1.0"
   },
   "peerDependencies": {
     "mobx": "^4.2.0 || ^5.5.0"

@@ -237,7 +237,6 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
       if (shouldBeReference && !fields[key].referenceDef) {
         throw error('You should save this value as a reference.');
       }
-      // eslint-disable-next-line no-param-reassign
       model[key] = value;
     } else {
       if (shouldBeReference) {

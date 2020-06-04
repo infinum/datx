@@ -41,8 +41,6 @@ export function updateRef(
 ): PureModel | Array<PureModel> | null {
   const bucket: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
 
-  // @ts-ignore Ref can be assigned instead of the model itself
-  // eslint-disable-next-line no-return-assign
   return bucket ? (bucket.value = value) : null;
 }
 
@@ -81,8 +79,6 @@ function updateModelReferences(
             );
 
             if (targetIndex !== -1) {
-              // @ts-ignore Ref can be assigned instead of the model itself
-              // eslint-disable-next-line no-param-reassign
               bucket.value[targetIndex] = newId;
             }
           } else if (
@@ -90,9 +86,7 @@ function updateModelReferences(
             getModelId(bucket.value) === oldId &&
             getModelType(bucket.value) === type
           ) {
-            // eslint-disable-next-line no-param-reassign
             bucket.value = {
-              // @ts-ignore Ref can be assigned instead of the model itself
               id: newId,
               type,
             };
@@ -113,7 +107,6 @@ export function updateModelId(model: PureModel, newId: IIdentifier): void {
 
     if (collection) {
       // @ts-ignore - I'm bad and I should feel bad...
-      // eslint-disable-next-line no-underscore-dangle
       collection.__changeModelId(oldId, newId, type);
     }
 
@@ -133,7 +126,6 @@ function modelAddReference(model: PureModel, key: string, newReference: PureMode
       model[key].push(newReference);
     }
   } else {
-    // eslint-disable-next-line no-param-reassign
     model[key] = newReference;
   }
 }
@@ -142,7 +134,6 @@ function modelRemoveReference(model: PureModel, key: string, oldReference: PureM
   if (isArrayLike(model[key])) {
     model[key].remove(oldReference);
   } else if (model[key] === oldReference) {
-    // eslint-disable-next-line no-param-reassign
     model[key] = null;
   }
 }

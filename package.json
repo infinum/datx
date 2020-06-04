@@ -3,10 +3,10 @@
   "devDependencies": {
     "@infinumjs/eslint-config": "^2.0.0",
     "eslint": "^6.8.0",
-    "husky": "^4.2.3",
-    "lerna": "^3.20.2",
-    "prettier": "^2.0.2",
-    "typescript": "^3.8.3"
+    "husky": "^4.2.5",
+    "lerna": "^3.22.0",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.5"
   },
   "scripts": {
     "precommit": "npm run lint & lerna run test",

@@ -139,7 +139,7 @@ export function assignComputed<T = any>(
   const computedObj = extendObservable(
     {},
     {
-      get [key]() {
+      get getter() {
         return getter.call(obj);
       },
     },
@@ -147,7 +147,7 @@ export function assignComputed<T = any>(
 
   Object.defineProperty(obj, key, {
     get() {
-      return computedObj[key];
+      return computedObj.getter;
     },
     set(val: T) {
       setter.call(obj, val);
@@ -158,7 +158,7 @@ export function assignComputed<T = any>(
 }
 
 export function error(...args: Array<any>): void {
-  // eslint-disable-next-line no-console, prefer-rest-params
+  // eslint-disable-next-line no-console
   console.error(`[datx error]`, ...args);
 }
 
@@ -167,7 +167,7 @@ export function warn(...args: Array<any>): void {
     return;
   }
 
-  // eslint-disable-next-line no-console, prefer-rest-params
+  // eslint-disable-next-line no-console
   console.warn(`[datx warning]`, ...args);
 }
 
@@ -176,7 +176,7 @@ export function deprecated(...args: Array<any>): void {
     return;
   }
 
-  // eslint-disable-next-line no-console, prefer-rest-params
+  // eslint-disable-next-line no-console
   console.warn(`[datx deprecated]`, ...args);
 }
 
@@ -185,6 +185,6 @@ export function info(...args: Array<any>): void {
     return;
   }
 
-  // eslint-disable-next-line no-console, prefer-rest-params
+  // eslint-disable-next-line no-console
   console.info(`[datx info]`, ...args);
 }

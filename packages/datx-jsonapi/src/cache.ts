@@ -47,8 +47,8 @@ export function getCache(url: string, maxAge: number): ICache | undefined {
     const data = cache.response;
 
     return {
+      // @ts-ignore Array headers that are supported but shouldn't be exposed in types
       response: new Response(data.response, cache.collection, data.options),
-      // response: cache.origResponse,
       time: cache.time,
       types: cache.types,
       url: cache.url,

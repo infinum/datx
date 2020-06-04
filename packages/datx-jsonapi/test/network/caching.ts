@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { autorun } from 'mobx';
 
 import { config } from '../../src';

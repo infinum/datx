@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { META_FIELD } from 'datx-utils';
 import { configure, runInAction } from 'mobx';
 

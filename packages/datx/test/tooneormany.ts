@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { configure } from 'mobx';
 
 import { Bucket, Collection, Model, Attribute, PureCollection } from '../src';
@@ -126,7 +124,6 @@ describe('ToOneOrMany', () => {
         expect(bucketInstance.value).toHaveLength(2);
         expect(bucketInstance.value[0]).toBe(foos[0]);
 
-        // eslint-disable-next-line prefer-destructuring
         bucketInstance.value = bars[0];
         expect(bucketInstance.value).toBeInstanceOf(Bar);
       }
@@ -329,7 +326,6 @@ describe('ToOneOrMany', () => {
       const bucketInstance = new Bucket.ToOneOrMany(foos[0], collection);
 
       expect(bucketInstance.value).toBe(foos[0]);
-      // eslint-disable-next-line prefer-destructuring
       bucketInstance.value = foos[1];
       expect(bucketInstance.value).toBe(foos[1]);
 

@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { configure } from 'mobx';
 
 import { Bucket, Collection, Model, Attribute, PureCollection } from '../src';
@@ -66,7 +64,6 @@ describe('ToOne', () => {
       const bucketInstance = new Bucket.ToOne(foos[0], collection);
 
       expect(bucketInstance.value).toBe(foos[0]);
-      // eslint-disable-next-line prefer-destructuring
       bucketInstance.value = foos[1];
       expect(bucketInstance.value).toBe(foos[1]);
     });
@@ -88,7 +85,6 @@ describe('ToOne', () => {
 
       expect(bucketInstance.value).toBe(foos[0]);
       expect(() => {
-        // eslint-disable-next-line prefer-destructuring
         bucketInstance.value = foos[1];
       }).toThrowError('[datx exception] This is a read-only bucket');
     });

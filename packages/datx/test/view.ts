@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { autorun, configure, runInAction } from 'mobx';
 
 import { Collection, Model, View, Attribute } from '../src';
@@ -484,7 +482,7 @@ describe('View', () => {
     });
 
     runInAction(() => {
-      // @ts-ignore Valid, but typings don't allow it
+      // @ts-expect-error
       viewInstance.list.push(876);
     });
 

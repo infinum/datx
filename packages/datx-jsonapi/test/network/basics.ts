@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { Collection, Model } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 

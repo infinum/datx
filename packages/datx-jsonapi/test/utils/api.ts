@@ -83,7 +83,6 @@ function fetchInterceptor(url: RequestInfo, options?: RequestInit | undefined): 
         },
       } as any);
     } catch (e) {
-      // eslint-disable-next-line prefer-promise-reject-errors
       reject({
         name: 'JSON.parse',
         message: 'JSON parse failed',

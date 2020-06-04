@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { computed, observable, isArrayLike } from 'mobx';
 
 import { IModelRef } from '../interfaces/IModelRef';
@@ -76,7 +74,7 @@ export class ToOneOrMany<T extends PureModel> {
     }
   }
 
-  // An ugly workaround to still be able to pdate the response buckets
+  // An ugly workaround to still be able to update the response buckets
   // @ts-ignore
   private set __readonlyValue(data: T | Array<T> | null) {
     this.__isList = isArrayLike(data);

@@ -46,7 +46,6 @@ export function flattenModel(
   const rawData = {
     [META_FIELD]: {
       fields: Object.keys(data.attributes || {}).reduce((obj, key) => {
-        // eslint-disable-next-line no-param-reassign
         obj[key] = { referenceDef: false };
 
         return obj;

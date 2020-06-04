@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { getMeta, IRawModel } from 'datx-utils';
 import { computed } from 'mobx';
 
@@ -104,5 +102,5 @@ export function withMeta<T extends PureModel = PureModel>(
     }
   }
 
-  return WithMeta as IModelConstructor<IMetaMixin<T> & T>;
+  return (WithMeta as unknown) as IModelConstructor<IMetaMixin<T> & T>;
 }

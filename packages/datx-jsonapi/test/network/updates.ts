@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import {
   Collection,
   getModelId,
@@ -119,7 +117,6 @@ describe('updates', () => {
       const barRef = bar.foo;
 
       if (barRef && 'id' in barRef) {
-        // @ts-ignore
         expect(barRef.id).toBe(foo.meta.id);
       } else {
         expect(true).toBe(false);
@@ -162,7 +159,6 @@ describe('updates', () => {
       const barRef2 = bar.foo;
 
       if (barRef2 && 'id' in barRef2) {
-        // @ts-ignore
         expect(barRef2.id).toBe(foo.meta.id);
       } else {
         expect(true).toBe(false);

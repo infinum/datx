@@ -46,7 +46,6 @@ export function decorateModel(BaseClass: typeof PureModel): typeof PureModel {
       return super.getAutoId().toString();
     }
 
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     constructor(rawData: IRawModel | IRecord = {}, collection?: PureCollection) {
       let data = rawData;
 

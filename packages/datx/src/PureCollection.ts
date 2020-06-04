@@ -190,8 +190,6 @@ export class PureCollection {
     }
 
     if (!id) {
-      // eslint-disable-next-line prefer-rest-params, no-console
-      console.log('error', arguments);
       throw new Error('The identifier is missing');
     }
 
@@ -394,10 +392,8 @@ export class PureCollection {
         .filter(Boolean)
         .forEach((bucket: IBucket<PureModel>) => {
           if (isArrayLike(bucket.value) && bucket.value.includes(item)) {
-            // eslint-disable-next-line no-param-reassign
             bucket.value = bucket.value.filter((bucketModel) => bucketModel !== item);
           } else if (bucket.value === item) {
-            // eslint-disable-next-line no-param-reassign
             bucket.value = null;
           }
         });

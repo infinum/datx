@@ -130,14 +130,12 @@ describe('datx-utils', () => {
 
               return this.data;
             },
-            // eslint-disable-next-line no-return-assign
             (val) => (this.data = val),
           );
           assignComputed(
             this,
             'bar',
             () => -this.foo,
-            // eslint-disable-next-line no-return-assign
             (val) => (this.foo = -val),
           );
         }

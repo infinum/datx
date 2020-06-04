@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { setMeta, getMeta, IRawModel } from 'datx-utils';
 
 import { PatchType } from '../enums/PatchType';

@@ -160,7 +160,6 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
         setMeta(model, `data__${key}`, packedValue);
       },
     );
-    // eslint-disable-next-line no-param-reassign
     model[key] = value;
   }
 }

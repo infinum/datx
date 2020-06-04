@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { META_FIELD } from 'datx-utils';
 import { configure } from 'mobx';
 
@@ -66,14 +64,14 @@ describe('withActions', () => {
   });
 
   it('should fail for collections', () => {
-    // @ts-ignore - TS won't allow this mistake
+    // @ts-expect-error
     expect(() => withActions(Collection)).toThrowError('This mixin can only decorate models');
   });
 
   it('should fail for other classes', () => {
     class A {}
 
-    // @ts-ignore - TS won't allow this mistake
+    // @ts-expect-error
     expect(() => withActions(A)).toThrowError('This mixin can only decorate models');
   });
 });

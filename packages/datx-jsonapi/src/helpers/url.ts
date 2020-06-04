@@ -1,4 +1,3 @@
-/* eslint-disable prefer-spread */
 import { getModelType, IType, PureCollection, PureModel } from 'datx';
 
 import { URL_REGEX } from '../consts';
@@ -16,21 +15,25 @@ function parametrize(params: object, scope = ''): Array<{ key: string; value: st
   Object.keys(params).forEach((key) => {
     if (params[key] instanceof Array) {
       if (config.paramArrayType === ParamArrayType.OBJECT_PATH) {
+        // eslint-disable-next-line prefer-spread
         list.push.apply(list, parametrize(params[key], `${key}.`));
       } else if (config.paramArrayType === ParamArrayType.COMMA_SEPARATED) {
         list.push({ key: `${scope}${key}`, value: params[key].join(',') });
       } else if (config.paramArrayType === ParamArrayType.MULTIPLE_PARAMS) {
+        // eslint-disable-next-line prefer-spread
         list.push.apply(
           list,
           params[key].map((param) => ({ key: `${scope}${key}`, value: param })),
         );
       } else if (config.paramArrayType === ParamArrayType.PARAM_ARRAY) {
+        // eslint-disable-next-line prefer-spread
         list.push.apply(
           list,
           params[key].map((param) => ({ key: `${scope}${key}][`, value: param })),
         );
       }
     } else if (typeof params[key] === 'object') {
+      // eslint-disable-next-line prefer-spread
       list.push.apply(list, parametrize(params[key], `${key}.`));
     } else {
       list.push({ key: `${scope}${key}`, value: params[key] });

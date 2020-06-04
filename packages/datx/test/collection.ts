@@ -1,5 +1,3 @@
-/* eslint-disable max-classes-per-file */
-
 import { autorun, configure } from 'mobx';
 
 import { Collection, PureModel, Attribute, updateModelId, Model } from '../src';
@@ -62,7 +60,6 @@ describe('Collection', () => {
 
       expect(() => store2.add(foo1)).toThrowError('A model can be in a single collection at once');
 
-      // @ts-ignore - TS won't allow this mistake
       expect(() => store.add({ foo: 4 })).toThrowError(
         'The type needs to be defined if the object is not an instance of the model.',
       );
@@ -75,12 +72,11 @@ describe('Collection', () => {
         'No model is defined for the type baz.',
       );
 
-      // @ts-ignore - TS won't allow this mistake
+      // @ts-expect-error
       expect(() => store.add({ foo: 4 }, FooBar)).toThrowError(
         'The type needs to be defined if the object is not an instance of the model.',
       );
 
-      // @ts-ignore - TS won't allow this mistake
       expect(() => store.add([{ foo: 4 }, { foo: 5 }])).toThrowError(
         'The type needs to be defined if the object is not an instance of the model.',
       );
@@ -92,7 +88,6 @@ describe('Collection', () => {
       store.removeOne(foo1);
       expect(getModelCollection(foo1)).toBe(undefined);
       expect(store.findOne(Foo, 'unexisting')).toBeNull();
-      // @ts-ignore
       expect(store.findOne('unexisting', 1)).toBeNull();
 
       expect(getModelCollection(foo2)).toBe(store);
