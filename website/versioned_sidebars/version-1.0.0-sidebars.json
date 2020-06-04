@@ -1,0 +1,59 @@
+{
+  "version-1.0.0-docs": {
+    "Getting started": [
+      "version-1.0.0-getting-started/installation",
+      "version-1.0.0-getting-started/defining-models",
+      "version-1.0.0-getting-started/references",
+      "version-1.0.0-getting-started/configuring-the-collection",
+      "version-1.0.0-getting-started/using-the-collection",
+      "version-1.0.0-getting-started/persisting-data-locally"
+    ],
+    "Mixins": [
+      "version-1.0.0-mixins/what-are-mixis",
+      "version-1.0.0-mixins/with-actions",
+      "version-1.0.0-mixins/with-meta",
+      "version-1.0.0-mixins/with-patches",
+      "version-1.0.0-mixins/jsonapi-mixin",
+      "version-1.0.0-mixins/building-your-own-mixin"
+    ],
+    "API Reference": [
+      "version-1.0.0-api-reference/collection",
+      "version-1.0.0-api-reference/model",
+      "version-1.0.0-api-reference/view",
+      "version-1.0.0-api-reference/prop",
+      "version-1.0.0-api-reference/pure-model",
+      "version-1.0.0-api-reference/model-utils",
+      "version-1.0.0-api-reference/lib-utils",
+      "version-1.0.0-api-reference/typescript-interfaces"
+    ],
+    "JSON API": [
+      "version-1.0.0-jsonapi/jsonapi-getting-started",
+      "version-1.0.0-jsonapi/jsonapi-basic-configuration",
+      "version-1.0.0-jsonapi/jsonapi-network-configuration",
+      "version-1.0.0-jsonapi/jsonapi-network-usage",
+      "version-1.0.0-jsonapi/jsonapi-spec-compliance",
+      "version-1.0.0-jsonapi/jsonapi-model",
+      "version-1.0.0-jsonapi/jsonapi-collection",
+      "version-1.0.0-jsonapi/jsonapi-view",
+      "version-1.0.0-jsonapi/jsonapi-response",
+      "version-1.0.0-jsonapi/jsonapi-config",
+      "version-1.0.0-jsonapi/jsonapi-utils",
+      "version-1.0.0-jsonapi/jsonapi-typescript-interfaces"
+    ],
+    "Migration guide": [
+      "version-1.0.0-migration-guide/compat-collection",
+      "version-1.0.0-migration-guide/compat-model",
+      "version-1.0.0-migration-guide/mobx-collection-store",
+      "version-1.0.0-migration-guide/mobx-jsonapi-store"
+    ],
+    "Troubleshooting": [
+      "version-1.0.0-troubleshooting/known-issues"
+    ]
+  },
+  "version-1.0.0-examples": {
+    "Setup": [
+      "version-1.0.0-examples/basic-setup",
+      "version-1.0.0-examples/nextjs-setup"
+    ]
+  }
+}

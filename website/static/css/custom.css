@@ -75,6 +75,11 @@ details summary {
   color: $darkGray;
 }
 
+.fixedHeaderContainer a h3 {
+  color: $primaryColor;
+  font-size: 12px;
+}
+
 .navigationSlider .slidingNav ul li a {
   color: $gray;
   font-weight: 400;
