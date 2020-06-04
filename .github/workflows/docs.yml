@@ -8,12 +8,20 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+        
       - name: Setup git
-      - run: git config --global user.name "${{ secrets.DOCS_USER_NAME }}"
-      - run: git config --global user.email "${{ secrets.DOCS_USER_EMAIL }}"
-      - run: echo "machine github.com login ${{ secrets.DOCS_USER_NAME }} password ${{ secrets.ACCESS_TOKEN }}" > ~/.netrc
+        run: |
+          git config --global user.name "${{ secrets.DOCS_USER_NAME }}"
+          git config --global user.email "${{ secrets.DOCS_USER_EMAIL }}"
+          echo "machine github.com login ${{ secrets.DOCS_USER_NAME }} password ${{ secrets.ACCESS_TOKEN }}" > ~/.netrc
+        
       - name: Prepare dependencies
-      - run: cd website
-      - run: yarn install
+        run: |
+          cd website
+          yarn install
+        
       - name: Run & deploy
-      - run: GIT_USER="${{ secrets.DOCS_USER_NAME }}" yarn run publish-gh-pages
+        run: GIT_USER="${{ secrets.DOCS_USER_NAME }}" yarn run publish-gh-pages
