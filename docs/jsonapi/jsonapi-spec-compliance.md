@@ -1,6 +1,6 @@
 ---
 id: jsonapi-spec-compliance
-title: Spec compliance
+title: Spec compliance TODO
 ---
 
 Based on the official v1.0 [specification](http://jsonapi.org/format/), all the features should be implemented. If something is missing or not behaving correctly, feel free to [open an issue](https://github.com/infinum/datx/issues/new).

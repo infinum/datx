@@ -1,6 +1,6 @@
 ---
 id: jsonapi-collection
-title: Collection
+title: Collection TODO
 ---
 
 The JSON API Collection enhances the `datx` collection with the following properties and methods:

@@ -1,6 +1,6 @@
 ---
 id: jsonapi-config
-title: Config
+title: Config TODO
 ---
 
 The library is exposing a config for some networking related options:

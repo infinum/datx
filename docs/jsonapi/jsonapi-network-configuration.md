@@ -1,6 +1,6 @@
 ---
 id: jsonapi-network-configuration
-title: Network configuration
+title: Network configuration TODO
 ---
 
 To use the network layer, you should check/update the following options:
