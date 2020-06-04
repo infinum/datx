@@ -1,0 +1,153 @@
+/**
+ * Copyright (c) 2017-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/* your custom css */
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+}
+
+@media only screen and (min-width: 1024px) {
+  .separateOnPageNav .wrapper,
+  .separateOnPageNav .headerWrapper.wrapper {
+    padding: 5px 20px;
+  }
+
+  .reactNavSearchWrapper input#search_input_react:focus,
+  .reactNavSearchWrapper input#search_input_react:active {
+    background: transparent;
+    border-color: $gray;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .navigationSlider .slidingNav ul {
+    background: $lightGray;
+  }
+
+  .reactNavSearchWrapper input#search_input_react {
+    background: transparent;
+    border: 1px solid $lightGray;
+    color: $darkGray !important;
+  }
+
+  .reactNavSearchWrapper input#search_input_react:focus,
+  .reactNavSearchWrapper input#search_input_react:active {
+    background: transparent;
+    border-color: $gray;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+}
+
+@media only screen and (min-width: 1500px) {
+}
+
+details {
+  border: 1px solid $lightGray;
+  border-bottom-color: transparent;
+  margin-bottom: 20px;
+  background: rgba(250, 250, 250);
+  border-radius: 3px;
+}
+
+details[open] {
+  border-bottom-color: $lightGray;
+}
+
+details summary {
+  user-select: none;
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid $lightGray;
+}
+
+.fixedHeaderContainer {
+  background-color: $headerBackground;
+  border-bottom: 1px solid $lightGray;
+}
+
+.fixedHeaderContainer a h2 {
+  color: $darkGray;
+}
+
+.navigationSlider .slidingNav ul li a {
+  color: $gray;
+  font-weight: 400;
+}
+
+.navigationSlider .slidingNav ul li > a:focus,
+.navigationSlider .slidingNav ul li > a:hover,
+.navigationSlider .slidingNav ul li.siteNavItemActive > a,
+.navigationSlider .slidingNav ul li.siteNavGroupActive > a {
+  color: $darkGray;
+  background: transparent;
+}
+
+.reactNavSearchWrapper input#search_input_react {
+  background: transparent;
+  border: 1px solid $lightGray;
+  color: $darkGray !important;
+}
+
+::selection {
+  background-color: $primaryColor;
+  color: #fff;
+}
+
+.projectTitle {
+  color: $darkGray;
+}
+
+.projectTitle img {
+  width: 50px;
+  margin-right: 5px;
+}
+
+.projectTitle span,
+img {
+  display: inline-block;
+  vertical-align: text-top;
+}
+
+.imageAlignTop.alignCenter .blockImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  max-width: 200px;
+  height: 140px;
+}
+
+.docs-card {
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px;
+  margin: 1.5rem 0px;
+  border-radius: 5px;
+  border: 1px solid rgb(234, 234, 234);
+  transition: box-shadow 0.2s ease 0s;
+}
+
+.docs-card a {
+  display: block;
+  padding: 20px;
+}
+
+.docs-card a h4 {
+  color: $darkGray;
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 1rem;
+}
+
+.docs-card a small {
+  font-size: 0.875rem;
+  color: $gray;
+}
+
+.docs-card:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 6px 12px;
+}

@@ -1,0 +1,59 @@
+{
+  "docs": {
+    "Getting started": [
+      "getting-started/installation",
+      "getting-started/defining-models",
+      "getting-started/references",
+      "getting-started/configuring-the-collection",
+      "getting-started/using-the-collection",
+      "getting-started/persisting-data-locally"
+    ],
+    "Mixins": [
+      "mixins/what-are-mixis",
+      "mixins/with-actions",
+      "mixins/with-meta",
+      "mixins/with-patches",
+      "mixins/jsonapi-mixin",
+      "mixins/building-your-own-mixin"
+    ],
+    "API Reference": [
+      "api-reference/collection",
+      "api-reference/model",
+      "api-reference/view",
+      "api-reference/prop",
+      "api-reference/pure-model",
+      "api-reference/model-utils",
+      "api-reference/lib-utils",
+      "api-reference/typescript-interfaces"
+    ],
+    "JSON API": [
+      "jsonapi/jsonapi-getting-started",
+      "jsonapi/jsonapi-basic-configuration",
+      "jsonapi/jsonapi-network-configuration",
+      "jsonapi/jsonapi-network-usage",
+      "jsonapi/jsonapi-spec-compliance",
+      "jsonapi/jsonapi-model",
+      "jsonapi/jsonapi-collection",
+      "jsonapi/jsonapi-view",
+      "jsonapi/jsonapi-response",
+      "jsonapi/jsonapi-config",
+      "jsonapi/jsonapi-utils",
+      "jsonapi/jsonapi-typescript-interfaces"
+    ],
+    "Migration guide": [
+      "migration-guide/compat-collection",
+      "migration-guide/compat-model",
+      "migration-guide/mobx-collection-store",
+      "migration-guide/mobx-jsonapi-store"
+    ],
+    "Troubleshooting": ["troubleshooting/known-issues"]
+  },
+  "examples": {
+    "Setup": [
+      "examples/basic-setup",
+      "examples/react-setup",
+      "examples/nextjs-setup"
+    ],
+    "Collection": ["examples/adding-models"]
+  }
+}

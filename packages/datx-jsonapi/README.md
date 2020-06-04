@@ -46,10 +46,10 @@ Note: `datx-jsonapi` has a peer dependency to `mobx@^4.2.0` or `mobx@^5.5.0`, so
 npm install --save datx-jsonapi mobx
 ```
 
-- [Basic configuration](https://github.com/infinum/datx/wiki/Basic-configuration)
-- [Network configuration](https://github.com/infinum/datx/wiki/Network-configuration)
-- [Network usage](https://github.com/infinum/datx/wiki/Network-usage)
-- [Spec compliance](https://github.com/infinum/datx/wiki/Spec-compliance)
+- [Basic configuration](https://datx.dev/docs/jsonapi/jsonapi-basic-configuration)
+- [Network configuration](https://datx.dev/docs/jsonapi/jsonapi-network-configuration)
+- [Network usage](https://datx.dev/docs/jsonapi/jsonapi-network-usage)
+- [Spec compliance](https://datx.dev/docs/jsonapi/jsonapi-spec-compliance)
 
 ### Polyfilling
 
@@ -61,22 +61,22 @@ The lib makes use of the following features that are not yet available everywher
 - [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 - [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
 
-[How to add the polyfills](https://github.com/infinum/datx/wiki/Troubleshooting#the-library-doesnt-work-in-internet-explorer-11).
+[How to add the polyfills](https://datx.dev/docs/troubleshooting/known-issues#the-library-doesnt-work-in-internet-explorer-11).
 Note: Fetch API is not included in the polyfills mentioned in the Troubleshooting page. Instead, you need to add it as a separate library. If you don't have any special requirements (like server-side rendering), you can use the [window.fetch polyfill](https://github.com/github/fetch#installation).
 
 ## API reference
 
-- [Model](https://github.com/infinum/datx/wiki/JSONAPI-Model)
-- [Collection](https://github.com/infinum/datx/wiki/JSONAPI-Collection)
-- [View](https://github.com/infinum/datx/wiki/JSONAPI-View)
-- [Response](https://github.com/infinum/datx/wiki/JSONAPI-Response)
-- [Config](https://github.com/infinum/datx/wiki/JSONAPI-Config)
-- [Utils](https://github.com/infinum/datx/wiki/JSONAPI-Utils)
-- [TypeScript Interfaces](https://github.com/infinum/datx/wiki/JSONAPI-Interfaces)
+- [Model](https://datx.dev/docs/jsonapi/jsonapi-model)
+- [Collection](https://datx.dev/docs/jsonapi/jsonapi-collection)
+- [View](https://datx.dev/docs/jsonapi/jsonapi-view)
+- [Response](https://datx.dev/docs/jsonapi/jsonapi-response)
+- [Config](https://datx.dev/docs/jsonapi/jsonapi-config)
+- [Utils](https://datx.dev/docs/jsonapi/jsonapi-utils)
+- [TypeScript Interfaces](https://datx.dev/docs/jsonapi/jsonapi-typescript-interfaces)
 
 ## Troubleshooting
 
-Having issues with the library? Check out the [troubleshooting](https://github.com/infinum/datx/wiki/Troubleshooting) page or [open](https://github.com/infinum/datx/issues/new) an issue.
+Having issues with the library? Check out the [troubleshooting](https://datx.dev/docs/troubleshooting/known-issues) page or [open](https://github.com/infinum/datx/issues/new) an issue.
 
 ---
 
