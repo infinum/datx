@@ -8,10 +8,12 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: sterlingwes/gh-pages-deploy-action@v1.1
-        with:
-          access-token: ${{ secrets.ACCESS_TOKEN }}
-          source-directory: docs
-          build-command: cd website && yarn install && yarn build
-          custom-domain: datx.dev
+      - name: Setup git
+      - run: git config --global user.name "${{ secrets.DOCS_USER_NAME }}"
+      - run: git config --global user.email "${{ secrets.DOCS_USER_EMAIL }}"
+      - run: echo "machine github.com login ${{ secrets.DOCS_USER_NAME }} password ${{ secrets.ACCESS_TOKEN }}" > ~/.netrc
+      - name: Prepare dependencies
+      - run: cd website
+      - run: yarn install
+      - name: Run & deploy
+      - run: GIT_USER="${{ secrets.DOCS_USER_NAME }}" yarn run publish-gh-pages
