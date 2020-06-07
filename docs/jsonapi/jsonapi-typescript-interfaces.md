@@ -47,11 +47,23 @@ interface IRawResponse {
 
 Interface defining the network request options (all optional):
 
-- `skipCache: boolean;` - Ignore the network cache
-- `headers` - Request headers object
-- JSON API params (Note: support depends on the server implementation)
-  - `include: string|Array<string>` - Models that should be included in the response
-  - `sort: string|Array<string>` - Sorting rules for the server
-  - `fields: IDictionary<string|Array<string>>` - Fields that should be returned in the response
-  - `filter: IFilters` - A dictionary of the filters that should be used on the server
-- `params` - Raw params sent to the server (if not covered by the JSON API options)
+```typescript
+interface IRequestOptions {
+  queryParams?: {
+    // JSON API params (Note: support depends on the server implementation)
+    include?: string | Array<string>; // Models that should be included in the response
+    filter?: IFilters; // A dictionary of the filters that should be used on the server
+    sort?: string | Array<string>; // Sorting rules for the server
+    fields?: Record<string, string | Array<string>>; // Fields that should be returned in the response
+    custom?: Array<{ key: string; value: string } | string>; // Any custom params you want to pass
+  };
+  cacheOptions?: {
+    cachingStrategy?: CachingStrategy;
+    maxAge?: number; // in seconds
+    skipCache?: boolean; // Ignore the network cache (deprecated)
+  };
+  networkConfig?: {
+    headers?: IHeaders; // Request headers object
+  };
+}
+```

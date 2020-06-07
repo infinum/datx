@@ -610,7 +610,7 @@ describe('updates', () => {
       });
 
       expect(store.findAll('event').length).toBe(1);
-      await store.removeOneRemote(record.meta.type as string, record.meta.id as string);
+      await store.removeOne(record.meta.type as string, record.meta.id as string, true);
       expect(store.findAll('event').length).toBe(0);
       expect(req.isDone()).toBe(true);
     });
@@ -626,7 +626,7 @@ describe('updates', () => {
       expect(record['title']).toBe('Example title');
 
       expect(store.findAll('event').length).toBe(1);
-      await store.removeOneRemote(record.meta.type as string, record.meta.id as string);
+      await store.removeOne(record.meta.type as string, record.meta.id as string, true);
       expect(store.findAll('event').length).toBe(0);
     });
 
@@ -634,7 +634,7 @@ describe('updates', () => {
       const store = new TestStore();
 
       expect(store.findAll('event').length).toBe(0);
-      await store.removeOneRemote('event', '1');
+      await store.removeOne('event', '1', true);
       expect(store.findAll('event').length).toBe(0);
     });
   });

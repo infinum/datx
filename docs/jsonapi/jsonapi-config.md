@@ -106,3 +106,20 @@ transformResponse(response: IRawResponse): IRawResponse
 Can be used to modify the response before it's parsed. It is receiving a [IRawResponse](typescript-nterfaces#irawresponse) object, and it should also return an object with the same interface.
 
 Note: It is recommended not to modify the existing object but instead create a copy.
+
+## onError
+
+```typescript
+onError(IResponseObject): IResponseObject;
+```
+
+Can be used to modify the response on error. By default it will just pass the regular response.
+
+## Caching
+
+```typescript
+cache: CachingStrategy;
+maxCacheAge: number; // seconds
+```
+
+Options for caching of requests. This can be overriden on a collection or request level.

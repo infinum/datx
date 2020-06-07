@@ -187,16 +187,16 @@ export function decorateCollection(
       return libFetch<T>({ url: query.url, options, data, method, collection: this });
     }
 
-    public removeOneRemote(
+    public removeOne(
       type: IType | typeof PureModel,
       id: string,
-      options?: IRequestOptions,
+      options?: boolean | IRequestOptions,
     ): Promise<void>;
 
-    public removeOneRemote(model: PureModel, options?: IRequestOptions): Promise<void>;
+    public removeOne(model: PureModel, options?: boolean | IRequestOptions): Promise<void>;
 
     @action
-    public removeOneRemote(
+    public removeOne(
       obj: IType | typeof PureModel | PureModel,
       id?: string | boolean | IRequestOptions,
       options?: boolean | IRequestOptions,
@@ -216,7 +216,7 @@ export function decorateCollection(
         model = modelId ? (this.findOne(type, modelId) as IJsonapiModel | null) : null;
       }
 
-      if (model) {
+      if (model && remoteOp) {
         return removeModel(model, typeof remoteOp === 'object' ? remoteOp : undefined);
       }
 

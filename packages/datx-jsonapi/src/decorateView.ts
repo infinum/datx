@@ -41,9 +41,9 @@ export function decorateView<U>(
      * @param {IRequestOptions} [options] Server options
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
-    public fetch(id: string, options?: IRequestOptions): Promise<Response<M>> {
+    public getOne(id: string, options?: IRequestOptions): Promise<Response<M>> {
       return this.__collection
-        .fetch(this.modelType, id, options)
+        .getOne(this.modelType, id, options)
         .then(this.__addFromResponse.bind(this));
     }
 
@@ -53,9 +53,9 @@ export function decorateView<U>(
      * @param {IRequestOptions} [options] Server options
      * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
      */
-    public fetchAll(options?: IRequestOptions): Promise<Response<M>> {
+    public getMany(options?: IRequestOptions): Promise<Response<M>> {
       return this.__collection
-        .fetchAll(this.modelType, options)
+        .getMany(this.modelType, options)
         .then(this.__addFromResponse.bind(this));
     }
 

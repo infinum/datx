@@ -11,8 +11,6 @@ import { User } from './models/User';
 
 export { Event, Image, Organizer, Photo, User, ProductVariant, LineItem };
 
-export class TestStoreCollection extends Collection {
+export class TestStore extends jsonapi(Collection) {
   public static types = [User, Event, Image, Organizer, Photo, ProductVariant, LineItem];
 }
-
-export const TestStore = jsonapi(TestStoreCollection);

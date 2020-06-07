@@ -50,7 +50,7 @@ describe('Views', () => {
       const store = new TestStore();
       const JsonapiView = jsonapi(View as IViewConstructor<PureModel>);
       const view = new JsonapiView(Event, store);
-      const events = await view.fetchAll();
+      const events = await view.getMany();
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
@@ -66,7 +66,7 @@ describe('Views', () => {
       const store = new TestStore();
       const JsonapiView = jsonapi(View as IViewConstructor<PureModel>);
       const view = new JsonapiView(Event, store);
-      const events = await view.fetchAll();
+      const events = await view.getMany();
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);
@@ -108,7 +108,7 @@ describe('Views', () => {
       }
 
       const store = new NewStore();
-      const events = await store.test.fetchAll();
+      const events = await store.test.getMany();
 
       expect(events.data).toBeInstanceOf(Array);
       expect(events.data).toHaveLength(4);

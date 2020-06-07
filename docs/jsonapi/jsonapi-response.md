@@ -37,7 +37,7 @@ Metadata received in the API response (not including the model or relationship m
 
 ## links
 
-Links received in the API response. The link promises are exposed as properties of the `Response` object. The promise will resolve to a different `Response` object. The properties are lazy evaluated, so no requests will be done unless you access the property.
+Links received in the API response. The link promises are exposed as methods of the `Response` object. The promise will resolve to a different `Response` object.
 
 ## headers
 
