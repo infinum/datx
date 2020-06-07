@@ -1,6 +1,6 @@
 ---
 id: model
-title: Model TODO
+title: Model
 ---
 
 The `Model` is a combination of the [`PureModel`](../api-reference/pure-model) and the [`withMeta`](../mixins/with-meta) and [`withActions`](../mixins/with-actions) mixins:

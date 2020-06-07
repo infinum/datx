@@ -11,6 +11,38 @@ Interface used to represent a `datx` collection enhanced with the `datx-jsonapi`
 
 Interface used to represent a `datx` model enhanced with the `datx-jsonapi` mixin.
 
+## ICollectionFetchOptions
+
+Options received by the [`transformRequest`](jsonapi-config#transformrequest) method
+
+```typescript
+interface ICollectionFetchOpts {
+  url: string;
+  options?: IRequestOptions & { headers?: IHeaders };
+  data?: object;
+  method: string;
+  collection?: IJsonapiCollection;
+  skipCache?: boolean;
+  views?: Array<View>;
+}
+```
+
+## IRawResponse
+
+Options received by the [`transformResponse`](JSONAPI-Config#transformresponse) method:
+
+```typescript
+interface IRawResponse {
+  data?: IResponse;
+  error?: Error;
+  headers?: IResponseHeaders;
+  requestHeaders?: IHeaders;
+  status?: number;
+  jsonapi?: IJsonApiObject;
+  collection?: Collection;
+}
+```
+
 ## IRequestOptions
 
 Interface defining the network request options (all optional):

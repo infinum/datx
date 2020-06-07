@@ -1,6 +1,6 @@
 ---
 id: view
-title: View TODO
+title: View
 ---
 
 A datx view is an object containing a list of models of a certain type. The list can be forced to be unique, and it can be dynamically sorted. The models are saved in the parent collection and therefore all references continue to work.

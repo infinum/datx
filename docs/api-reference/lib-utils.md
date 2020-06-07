@@ -1,6 +1,6 @@
 ---
 id: lib-utils
-title: Lib utils TODO
+title: Lib utils
 ---
 
 ## isCollection

@@ -1,6 +1,6 @@
 ---
 id: model-utils
-title: Model utils TODO
+title: Model utils
 ---
 
 ## assignModel

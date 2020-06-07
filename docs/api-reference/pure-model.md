@@ -1,6 +1,6 @@
 ---
 id: pure-model
-title: Pure Model TODO
+title: Pure Model
 ---
 
 `PureModel` is a model without any metadata or methods on itself. The goal is to have a model that is as close to the Plain JavaScript Object as possible.

@@ -7,21 +7,25 @@ title: Typescript interfaces TODO
 
 A serialized model interface. It's a regular dictionary with an additional `__META__` property for internal library needs.
 
-## ICollectionConstructor
+## IModelConstructor
 
-Interface for the [`Collection`](../api-reference/collection) constructor.
+Interface for the [`PureModel`](../api-reference/pure-model) constructor.
 
 ## IIdentifier
 
 Interface for the model ID.
 
-## IModelConstructor
-
-Interface for the [`PureModel`](../api-reference/pure-model) constructor.
-
 ## IType
 
 Interface for the model type.
+
+## IModelRef
+
+Interface that represents the reference model - contains the model id and type.
+
+## ICollectionConstructor
+
+Interface for the [`Collection`](../api-reference/collection) constructor.
 
 ## IActionsMixin
 
@@ -31,34 +35,18 @@ Interface for the [`withActions`](../mixins/with-actions) mixin.
 
 Interface for the [`withMeta`](../mixins/with-meta) mixin.
 
-## ICollectionFetchOptions
+## IPatch
 
-Options received by the [`transformRequest`](jsonapi-config#transformrequest) method
+Interface for the object exposed trough the patch feature.
 
-```typescript
-interface ICollectionFetchOpts {
-  url: string;
-  options?: IRequestOptions & { headers?: IHeaders };
-  data?: object;
-  method: string;
-  collection?: IJsonapiCollection;
-  skipCache?: boolean;
-  views?: Array<View>;
-}
-```
+# IRawCollection
 
-## IRawResponse
+A serialized collection interface.
 
-Options received by the [`transformResponse`](JSONAPI-Config#transformresponse) method:
+# IReferenceOptions
 
-```typescript
-interface IRawResponse {
-  data?: IResponse;
-  error?: Error;
-  headers?: IResponseHeaders;
-  requestHeaders?: IHeaders;
-  status?: number;
-  jsonapi?: IJsonApiObject;
-  collection?: Collection;
-}
-```
+Internal structure to save all the reference metadata
+
+# IViewConstructor
+
+Interface for the [`View`](../api-reference/view) constructor.
