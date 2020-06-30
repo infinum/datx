@@ -6,4 +6,5 @@ export enum MetaModelField {
   OriginalId = 'originalId',
   Patch = 'patch',
   PatchListeners = 'patchListeners',
+  Commit = 'commit',
 }

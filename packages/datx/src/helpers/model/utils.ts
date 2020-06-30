@@ -124,6 +124,7 @@ const INTERNAL_META = [
   MetaModelField.Patch,
   MetaModelField.PatchListeners,
   MetaModelField.Collection,
+  MetaModelField.Commit,
   MetaModelField.OriginalId,
   'get__',
   'set__',
@@ -302,4 +303,46 @@ export function updateModelCollection(model: PureModel, collection?: PureCollect
     }
   });
   endAction(model);
+}
+
+export function commitModel(model: PureModel): void {
+  setMeta(model, MetaModelField.Commit, { ...modelToJSON(model), __META__: undefined });
+}
+
+export function revertModel(model: PureModel): void {
+  const prevCommit: IRawModel | undefined = getMeta(model, MetaModelField.Commit);
+
+  if (prevCommit) {
+    updateModel(model, prevCommit);
+  }
+}
+
+function isSame(valA: any, valB: any): boolean {
+  return JSON.stringify(valA) === JSON.stringify(valB); // TODO: better comparison?
+}
+
+export function isAttributeDirty<T extends PureModel>(model: T, key: keyof T): boolean {
+  const prevCommit: IRawModel | undefined = getMeta(model, MetaModelField.Commit);
+
+  if (prevCommit) {
+    const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
+    const field = fields[key as string];
+
+    const value = field.referenceDef ? mapItems(model[key], getModelRef) : model[key];
+    return !isSame(value, prevCommit[key as string]);
+  }
+
+  return true;
+}
+
+export function modelToDirtyJSON<T extends PureModel>(model: T): IRawModel {
+  const raw = { ...modelToJSON(model) };
+
+  Object.keys(model).forEach((key) => {
+    if (!isAttributeDirty(model, key as keyof T)) {
+      delete raw[key];
+    }
+  });
+
+  return raw;
 }

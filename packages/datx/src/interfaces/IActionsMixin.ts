@@ -13,5 +13,7 @@ export interface IActionsMixin<T = PureModel> {
     value: TRefValue<V>,
     options: IReferenceOptions<U>,
   );
+  commit(): void;
+  revert(): void;
   toJSON(): IRawModel;
 }

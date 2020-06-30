@@ -12,6 +12,7 @@ export interface IMetaMixin<T extends PureModel = PureModel> {
     id: IIdentifier;
     original?: T;
     refs: Record<string, IBucket<PureModel> | null>;
+    dirty: Record<string, boolean>;
     snapshot: IRawModel;
     type: IType;
   };

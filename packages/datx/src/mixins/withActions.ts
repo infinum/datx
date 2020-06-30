@@ -9,6 +9,8 @@ import {
   modelToJSON,
   updateModel,
   getModelType,
+  commitModel,
+  revertModel,
 } from '../helpers/model/utils';
 import { IActionsMixin } from '../interfaces/IActionsMixin';
 import { IModelConstructor } from '../interfaces/IModelConstructor';
@@ -63,6 +65,14 @@ export function withActions<T extends PureModel>(
         },
         value,
       );
+    }
+
+    public commit(): void {
+      commitModel(this);
+    }
+
+    public revert(): void {
+      revertModel(this);
     }
 
     public toJSON(): any {

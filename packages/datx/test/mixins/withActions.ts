@@ -1,7 +1,7 @@
 import { META_FIELD } from 'datx-utils';
 import { configure } from 'mobx';
 
-import { Collection, PureModel, ReferenceType, Attribute } from '../../src';
+import { Collection, PureModel, ReferenceType, Attribute, isAttributeDirty } from '../../src';
 import { withMeta } from '../../src/mixins/withMeta';
 import { withActions } from '../../src/mixins/withActions';
 
@@ -73,5 +73,34 @@ describe('withActions', () => {
 
     // @ts-expect-error
     expect(() => withActions(A)).toThrowError('This mixin can only decorate models');
+  });
+
+  it('should work with actions', () => {
+    class Foo extends PureModel {
+      @Attribute()
+      public foo?: number;
+
+      @Attribute()
+      public bar?: number;
+    }
+    const FooMeta = withActions(Foo);
+
+    const foo = new FooMeta({ foo: 1 });
+    expect(isAttributeDirty(foo, 'foo')).toBe(false);
+    expect(isAttributeDirty(foo, 'bar')).toBe(false);
+
+    foo.foo = 5;
+    foo.commit();
+
+    foo.foo = 2;
+    foo.bar = 3;
+    expect(isAttributeDirty(foo, 'foo')).toBe(true);
+    expect(isAttributeDirty(foo, 'bar')).toBe(true);
+
+    foo.revert();
+    expect(isAttributeDirty(foo, 'foo')).toBe(false);
+    expect(foo.foo).toBe(5);
+    expect(isAttributeDirty(foo, 'bar')).toBe(false);
+    expect(foo.bar).toBeUndefined();
   });
 });

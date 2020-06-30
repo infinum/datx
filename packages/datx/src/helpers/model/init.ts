@@ -13,6 +13,7 @@ import {
   getModelId,
   isModelReference,
   modelMapParse,
+  commitModel,
 } from './utils';
 import { getBucketConstructor } from '../../buckets';
 import { getRef, updateRef, getBackRef, updateBackRef } from './fields';
@@ -237,4 +238,6 @@ export function initModel(
 
     initModelField(instance, fieldName, modelMapParse(modelClass, data, fieldName));
   });
+
+  commitModel(instance);
 }
