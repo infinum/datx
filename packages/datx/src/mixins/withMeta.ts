@@ -19,6 +19,7 @@ import { IFieldDefinition } from '../Attribute';
 import { IIdentifier } from '../interfaces/IIdentifier';
 import { IType } from '../interfaces/IType';
 import { PureCollection } from '../PureCollection';
+import { IModelRef } from '../interfaces/IModelRef';
 
 /**
  * Extends the model with the exposed meta data
@@ -63,7 +64,7 @@ export function withMeta<T extends PureModel = PureModel>(
     }
 
     @computed
-    public get refs(): Record<string, IBucket<PureModel> | null> {
+    public get refs(): Record<string, IModelRef | Array<IModelRef> | null> {
       const fields = getMeta<Record<string, IFieldDefinition>>(
         this.__instance,
         MetaModelField.Fields,
