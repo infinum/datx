@@ -445,12 +445,25 @@ describe('updates', () => {
       if (record instanceof Event) {
         setRequest({
           data: JSON.stringify({
-            data: modelToJsonApi(record),
+            data: {
+              attributes: {
+                title: 'Updated title',
+              },
+              id: '12345',
+              type: 'event',
+              relationships: {
+                organizers: { data: [] },
+                images: { data: [] },
+                image: { data: null },
+              },
+            },
           }),
           method: 'PATCH',
           name: 'event-1b',
           url: 'event/12345',
         });
+
+        record.title = 'Updated title';
 
         const updated = await record.save();
 
