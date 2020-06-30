@@ -464,9 +464,11 @@ describe('updates', () => {
         });
 
         record.title = 'Updated title';
+        expect(record.meta.dirty.title).toBe(true);
 
         const updated = await record.save();
 
+        expect(record.meta.dirty.title).toBe(false);
         expect(updated['title']).toBe('Test 1');
         expect(updated).toBe(record);
       }

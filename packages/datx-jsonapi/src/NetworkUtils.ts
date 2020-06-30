@@ -1,4 +1,4 @@
-import { View } from 'datx';
+import { View, commitModel } from 'datx';
 import { setMeta } from 'datx-utils';
 import { action } from 'mobx';
 
@@ -483,7 +483,11 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
       }
       setMeta(record, MODEL_PERSISTED_FIELD, true);
 
-      return response.replaceData(record).data as T;
+      const data = response.replaceData(record).data as T;
+
+      commitModel(data);
+
+      return data;
     },
   );
 }
