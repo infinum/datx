@@ -422,6 +422,20 @@ describe('Network basics', () => {
     expect(record['title']).toBe('Test 1');
   });
 
+  it('should prepend config.baseUrl to the request url with special characters', async () => {
+    setRequest({
+      name: 'event-1b',
+      url: 'event/1?test=hello%20world',
+    });
+
+    const store = new TestStore();
+    const events = await store.request('event/1?test=hello%20world');
+
+    const record = events.data as Event;
+
+    expect(record['title']).toBe('Test 1');
+  });
+
   it('should handle the request methods', async () => {
     setRequest({
       method: 'PUT',
