@@ -425,8 +425,11 @@ describe('Model', () => {
       expect(foo2.parent).toBe(foo1);
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2 = modelToJSON(foo2);
+      const rawDirty = modelToDirtyJSON(foo2);
 
       expect(raw2.parent).toEqual(getModelRef(foo1));
+      expect(rawDirty).not.toHaveProperty('parent');
+      expect(rawDirty).not.toHaveProperty('foo');
 
       const foo3 = collection.add({ foo: 4, parent: { foo: 5 } }, Foo);
 
