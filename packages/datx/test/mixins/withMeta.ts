@@ -2,7 +2,7 @@ import { autorun, configure, runInAction } from 'mobx';
 
 import { Collection, PureModel, Attribute } from '../../src';
 import { withMeta } from '../../src/mixins/withMeta';
-import { cloneModel, getModelRef } from '../../src/helpers/model/utils';
+import { cloneModel, getModelRef, revertModel } from '../../src/helpers/model/utils';
 
 configure({ enforceActions: 'observed' });
 
@@ -104,5 +104,30 @@ describe('withMeta', () => {
     const foo2 = collection.add({ foo: 3, parent: foo1 }, FooMeta);
 
     expect(foo2.meta.refs.parent).toEqual(getModelRef(foo1));
+  });
+
+  it('should work with meta', () => {
+    class Foo extends withMeta(PureModel) {
+      @Attribute()
+      public foo?: number;
+
+      @Attribute()
+      public bar?: number;
+    }
+
+    const foo = new Foo({ foo: 1 });
+    expect(foo.meta.dirty.foo).toBe(false);
+    expect(foo.meta.dirty.bar).toBe(false);
+
+    foo.foo = 2;
+    foo.bar = 3;
+    expect(foo.meta.dirty.foo).toBe(true);
+    expect(foo.meta.dirty.bar).toBe(true);
+
+    revertModel(foo);
+    expect(foo.meta.dirty.foo).toBe(false);
+    expect(foo.foo).toBe(1);
+    expect(foo.meta.dirty.bar).toBe(false);
+    expect(foo.bar).toBeUndefined();
   });
 });

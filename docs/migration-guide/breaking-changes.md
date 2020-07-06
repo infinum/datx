@@ -47,3 +47,7 @@ In v2, this is not done (it's still done when there is no endpoint or when it's 
 ## JSON API IRequestOptions options changes
 
 Rename `params` to `queryParams.custom`, separate `IRequestOptions` into three parts - `queryParams`, `networkConfig` and `cacheOptions`.
+
+## JSON API saves only send dirty fields
+
+Unlike v1 (but as the spec requres), when saving a model in v2 will do a `PATCH` request with only the changed attributes and relationships. This shouldn't be an issue if the server is also implementing the spec correctly.

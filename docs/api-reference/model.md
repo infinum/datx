@@ -26,6 +26,7 @@ The `Model` is a combination of the [`PureModel`](../api-reference/pure-model) a
 - `type` - The model type
 - `original` - (Optional) The original model if the model is a clone
 - `refs` - An object with reference ids. The keys are reference names, while the values can be either ids or array of ids (depending on the reference type).
+- `dirty` - An object with dirty states of all attributes of the model
 - `snapshot` - An immutable snapshot of the model at this exact moment
 
 ## withActions
@@ -39,3 +40,5 @@ The `Model` is a combination of the [`PureModel`](../api-reference/pure-model) a
   - `model` - The referenced model type
   - `type` - Reference type ([`ReferenceType`](References#dynamic-references) enum)
   - `property` - (Optional) Property name for indirect references
+- `commit()` - Commit the current state of the model (make as clean)
+- `revert()` - Revert the model state to the last commit

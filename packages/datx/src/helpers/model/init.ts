@@ -13,6 +13,7 @@ import {
   getModelId,
   isModelReference,
   modelMapParse,
+  commitModel,
 } from './utils';
 import { getBucketConstructor } from '../../buckets';
 import { getRef, updateRef, getBackRef, updateBackRef } from './fields';
@@ -148,6 +149,9 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
   } else if (fieldDef.referenceDef) {
     initModelRef(model, key, undefined, value);
   } else {
+    // Make sure we have the value we can track (MobX 4)
+    setMeta(model, `data__${key}`, undefined);
+
     assignComputed(
       model,
       key,
@@ -237,4 +241,6 @@ export function initModel(
 
     initModelField(instance, fieldName, modelMapParse(modelClass, data, fieldName));
   });
+
+  commitModel(instance);
 }

@@ -12,6 +12,10 @@ import {
   cloneModel,
   assignModel,
   getOriginalModel,
+  isAttributeDirty,
+  commitModel,
+  revertModel,
+  modelToDirtyJSON,
 } from '../src/helpers/model/utils';
 
 configure({ enforceActions: 'observed' });
@@ -421,8 +425,11 @@ describe('Model', () => {
       expect(foo2.parent).toBe(foo1);
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2 = modelToJSON(foo2);
+      const rawDirty = modelToDirtyJSON(foo2);
 
       expect(raw2.parent).toEqual(getModelRef(foo1));
+      expect(rawDirty).not.toHaveProperty('parent');
+      expect(rawDirty).not.toHaveProperty('foo');
 
       const foo3 = collection.add({ foo: 4, parent: { foo: 5 } }, Foo);
 
@@ -1134,6 +1141,128 @@ describe('Model', () => {
         expect(modelToJSON(foo2).parent).toEqual(getModelRef(foo1));
         expect(modelToJSON(foo2).foos).toContainEqual(getModelRef(foo1));
       });
+    });
+  });
+
+  describe('Dirty status', () => {
+    it('should show as dirty on any change of a new model', () => {
+      class Foo extends Model {
+        @Attribute()
+        public foo?: number;
+
+        @Attribute()
+        public bar?: number;
+      }
+
+      const foo = new Foo({ foo: 1 });
+      expect(isAttributeDirty(foo, 'foo')).toBe(false);
+      expect(isAttributeDirty(foo, 'bar')).toBe(false);
+
+      foo.bar = 2;
+      expect(isAttributeDirty(foo, 'foo')).toBe(false);
+      expect(isAttributeDirty(foo, 'bar')).toBe(true);
+      const raw = modelToDirtyJSON(foo);
+      expect(raw).not.toHaveProperty('foo');
+      expect(raw).toHaveProperty('bar');
+
+      foo.foo = 3;
+      expect(isAttributeDirty(foo, 'foo')).toBe(true);
+      expect(isAttributeDirty(foo, 'bar')).toBe(true);
+
+      foo.foo = 1;
+      expect(isAttributeDirty(foo, 'foo')).toBe(false);
+      expect(isAttributeDirty(foo, 'bar')).toBe(true);
+
+      foo.bar = undefined;
+      expect(isAttributeDirty(foo, 'foo')).toBe(false);
+      expect(isAttributeDirty(foo, 'bar')).toBe(false);
+    });
+
+    it('should show correct status after commit', () => {
+      class Foo extends Model {
+        @Attribute()
+        public foo?: number;
+
+        @Attribute()
+        public bar?: number;
+      }
+
+      const foo = new Foo({ foo: 1 });
+      expect(isAttributeDirty(foo, 'foo')).toBe(false);
+      expect(isAttributeDirty(foo, 'bar')).toBe(false);
+
+      foo.foo = 2;
+      foo.bar = 3;
+      expect(isAttributeDirty(foo, 'foo')).toBe(true);
+      expect(isAttributeDirty(foo, 'bar')).toBe(true);
+
+      commitModel(foo);
+      expect(isAttributeDirty(foo, 'foo')).toBe(false);
+      expect(isAttributeDirty(foo, 'bar')).toBe(false);
+    });
+
+    it('should revert correctly', () => {
+      class Foo extends Model {
+        @Attribute()
+        public foo?: number;
+
+        @Attribute()
+        public bar?: number;
+      }
+
+      const foo = new Foo({ foo: 1 });
+      expect(isAttributeDirty(foo, 'foo')).toBe(false);
+      expect(isAttributeDirty(foo, 'bar')).toBe(false);
+
+      foo.foo = 2;
+      foo.bar = 3;
+      expect(isAttributeDirty(foo, 'foo')).toBe(true);
+      expect(isAttributeDirty(foo, 'bar')).toBe(true);
+
+      revertModel(foo);
+      expect(isAttributeDirty(foo, 'foo')).toBe(false);
+      expect(foo.foo).toBe(1);
+      expect(isAttributeDirty(foo, 'bar')).toBe(false);
+      expect(foo.bar).toBeUndefined();
+    });
+
+    it('shoudl work with relationships', () => {
+      class Foo extends Model {
+        @Attribute({ toOne: Foo })
+        public one!: Foo;
+
+        @Attribute({ toMany: Foo })
+        public many!: Array<Foo>;
+      }
+
+      class Store extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new Store();
+
+      const [foo1, foo2, foo3, foo4] = store.add([{}, {}, {}, {}], Foo);
+
+      foo1.one = foo4;
+      foo1.many = [foo2, foo3];
+
+      expect(isAttributeDirty(foo1, 'one')).toBe(true);
+      expect(isAttributeDirty(foo1, 'many')).toBe(true);
+
+      commitModel(foo1);
+      expect(isAttributeDirty(foo1, 'one')).toBe(false);
+      expect(isAttributeDirty(foo1, 'many')).toBe(false);
+
+      foo1.one = foo2;
+      foo1.many.push(foo4);
+      expect(isAttributeDirty(foo1, 'one')).toBe(true);
+      expect(isAttributeDirty(foo1, 'many')).toBe(true);
+
+      revertModel(foo1);
+      expect(isAttributeDirty(foo1, 'one')).toBe(false);
+      expect(isAttributeDirty(foo1, 'many')).toBe(false);
+      expect(foo1.one).toBe(foo4);
+      expect(foo1.many).toEqual([foo2, foo3]);
     });
   });
 });

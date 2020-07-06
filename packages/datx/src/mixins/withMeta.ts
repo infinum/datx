@@ -3,7 +3,13 @@ import { computed } from 'mobx';
 
 import { error } from '../helpers/format';
 import { isModel } from '../helpers/mixin';
-import { getModelCollection, getModelId, getModelType, modelToJSON } from '../helpers/model/utils';
+import {
+  getModelCollection,
+  getModelId,
+  getModelType,
+  modelToJSON,
+  isAttributeDirty,
+} from '../helpers/model/utils';
 import { IBucket } from '../interfaces/IBucket';
 import { IMetaMixin } from '../interfaces/IMetaMixin';
 import { IModelConstructor } from '../interfaces/IModelConstructor';
@@ -13,6 +19,7 @@ import { IFieldDefinition } from '../Attribute';
 import { IIdentifier } from '../interfaces/IIdentifier';
 import { IType } from '../interfaces/IType';
 import { PureCollection } from '../PureCollection';
+import { IModelRef } from '../interfaces/IModelRef';
 
 /**
  * Extends the model with the exposed meta data
@@ -57,7 +64,7 @@ export function withMeta<T extends PureModel = PureModel>(
     }
 
     @computed
-    public get refs(): Record<string, IBucket<PureModel> | null> {
+    public get refs(): Record<string, IModelRef | Array<IModelRef> | null> {
       const fields = getMeta<Record<string, IFieldDefinition>>(
         this.__instance,
         MetaModelField.Fields,
@@ -77,6 +84,23 @@ export function withMeta<T extends PureModel = PureModel>(
         });
 
       return refs;
+    }
+
+    @computed
+    public get dirty(): Record<string, boolean> {
+      const fields = getMeta<Record<string, IFieldDefinition>>(
+        this.__instance,
+        MetaModelField.Fields,
+        {},
+      );
+
+      const dirty = {};
+
+      Object.keys(fields).forEach((key) => {
+        dirty[key] = isAttributeDirty(this.__instance, key as any);
+      });
+
+      return dirty;
     }
 
     @computed

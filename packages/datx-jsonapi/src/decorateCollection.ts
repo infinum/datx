@@ -11,6 +11,7 @@ import {
   PureModel,
   ReferenceType,
   updateModel,
+  commitModel,
 } from 'datx';
 import { getMeta, IRawModel, mapItems, deprecated } from 'datx-utils';
 import { action, isArrayLike } from 'mobx';
@@ -251,6 +252,7 @@ export function decorateCollection(
 
       if (record) {
         updateModel(record, flattened);
+        commitModel(record);
       } else if (staticCollection.types.filter((item) => item.type === type).length) {
         record = this.add<T>(flattened, type);
       } else {

@@ -33,6 +33,10 @@ export {
   updateModel,
   modelMapParse,
   modelMapSerialize,
+  commitModel,
+  revertModel,
+  isAttributeDirty,
+  modelToDirtyJSON,
 } from './helpers/model/utils';
 
 export { isCollection, isModel, isView } from './helpers/mixin';
