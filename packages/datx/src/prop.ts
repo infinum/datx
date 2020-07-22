@@ -126,6 +126,18 @@ export const prop = Object.assign(propFn, {
     storage.addModelDefaultField(getClass(obj), key);
     storage.setModelClassMetaKey(getClass(obj), 'type', key);
   },
+
+  /**
+   *  Define the field alias property on the model
+   * @param refKey {string | Array<string>}
+   */
+  alias(refKey: string | Array<string>): (obj: PureModel, key: string) => void {
+    return <T extends PureModel>(obj: T, key: string, opts?: object) => {
+      prepareDecorator(obj, key, opts);
+      storage.addModelDefaultField(getClass(obj), key);
+      storage.addModelClassFieldAlias(getClass(obj), key, refKey);
+    };
+  },
 });
 
 export function view<TCollection extends PureCollection, TModel extends PureModel>(

@@ -67,6 +67,10 @@ export function withMeta<T extends PureModel = PureModel>(Base: IModelConstructo
     @computed public get type() {
       return getModelType(this.__instance);
     }
+
+    @computed public get alias() {
+      return getModelMetaKey(this.__instance, 'alias') || { };
+    }
   }
 
   // tslint:disable-next-line:max-classes-per-file

@@ -4,6 +4,7 @@ import { observable, set } from 'mobx';
 import { MODEL_REQUIRED } from '../errors';
 import { error } from '../helpers/format';
 import { reducePrototypeChain } from '../helpers/selectors';
+import { mergeAsArray } from '../helpers/utils';
 import { IDataStorage } from '../interfaces/IDataStorage';
 import { IReferenceOptions } from '../interfaces/IReferenceOptions';
 import { PureModel } from '../PureModel';
@@ -129,6 +130,19 @@ export class DataStorage {
         data: { },
         meta: { },
         references: { [key]: options },
+      });
+    }
+  }
+
+  public addModelClassFieldAlias(model: typeof PureModel, key: string, refKey: string | Array<string>) {
+    const data = model[DATX_KEY];
+    if (data) {
+      data.meta.alias = mergeAsArray(data.meta.alias, key, refKey);
+    } else {
+      setMeta(model, {
+        data: { },
+        meta: { alias: { [key]: refKey } },
+        references: { },
       });
     }
   }

@@ -104,7 +104,7 @@ export function getOriginalModel<T extends PureModel = PureModel>(model: T): T {
   throw error(NOT_A_CLONE);
 }
 
-const READ_ONLY_META = ['fields', 'id', 'refs', 'type'];
+const READ_ONLY_META = ['fields', 'id', 'refs', 'type', 'alias'];
 
 /**
  * Bulk update the model data

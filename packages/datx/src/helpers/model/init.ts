@@ -11,7 +11,8 @@ import { PureCollection } from '../../PureCollection';
 import { PureModel } from '../../PureModel';
 import { storage } from '../../services/storage';
 import { updateAction } from '../patch';
-import { getField, getRef, updateField, updateRef } from './fields';
+import { peekValue, reverseObjectKV } from '../utils';
+import { getField, getRef, getRefId, updateField, updateRef } from './fields';
 import { getModelMetaKey, getModelType, setModelMetaKey } from './utils';
 
 interface IMetaToInit extends IDictionary {
@@ -19,6 +20,7 @@ interface IMetaToInit extends IDictionary {
   id?: IIdentifier;
   refs: IDictionary<IReferenceOptions>;
   type?: IType;
+  alias?: IDictionary<Array<string>>;
 }
 
 export function initModelField<T extends PureModel>(
@@ -28,6 +30,7 @@ export function initModelField<T extends PureModel>(
   type: FieldType = FieldType.DATA,
 ) {
   const fields = getModelMetaKey(obj, 'fields') as Array<string>;
+  const alias = getModelMetaKey(obj, 'alias');
 
   if (type === FieldType.ID && key in obj) {
     storage.setModelDataKey(obj, key, undefined);
@@ -44,6 +47,9 @@ export function initModelField<T extends PureModel>(
     () => getField(obj, key),
     (value) => {
       updateField(obj, key, value, type);
+      if (key in alias) {
+        alias[key].forEach((_key: string) => updateRef(obj, _key, value));
+      }
     },
   );
 }
@@ -59,6 +65,7 @@ export function initModelField<T extends PureModel>(
  */
 export function initModelRef(obj: PureModel, key: string, options: IReferenceOptions, initialVal: TRefValue) {
   const refs = getModelMetaKey(obj, 'refs');
+  const alias = reverseObjectKV(getModelMetaKey(obj, 'alias'));
 
   // Initialize the observable field to the given value
   refs[key] = options;
@@ -71,6 +78,10 @@ export function initModelRef(obj: PureModel, key: string, options: IReferenceOpt
     () => getRef(obj, key),
     (value) => {
       updateRef(obj, key, value);
+      const _value = getRefId(obj, key);
+      if (key in alias) {
+        alias[key].forEach((_key) => updateField(obj, _key, _value, FieldType.DATA));
+      }
     },
   );
 
@@ -82,6 +93,7 @@ export function initModelRef(obj: PureModel, key: string, options: IReferenceOpt
 function prepareFields(data: IRawModel, meta: IMetaToInit, model: PureModel) {
   const staticModel = model.constructor as typeof PureModel;
   const fields = meta.fields ? meta.fields.slice() : [];
+  const alias = meta.alias ? Object.assign({ },meta.alias) : { };
   const classRefs = storage.getModelClassReferences(staticModel);
   const refs = Object.assign({ }, classRefs, meta.refs);
 
@@ -94,11 +106,11 @@ function prepareFields(data: IRawModel, meta: IMetaToInit, model: PureModel) {
       }
     });
 
-  return { defaults, fields, refs };
+  return { defaults, fields, refs, alias};
 }
 
 function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, collection?: PureCollection) {
-  const { defaults, fields, refs } = prepareFields(data, meta, model);
+  const { defaults, fields, refs, alias } = prepareFields(data, meta, model);
 
   const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id');
@@ -124,12 +136,14 @@ function initModelData(model: PureModel, data: IRawModel, meta: IMetaToInit, col
     initModelField(model, modelId, meta.id, FieldType.ID);
   }
 
+  const reverseAlias = reverseObjectKV(alias);
   Object.keys(refs).forEach((key) => {
     const opts = refs[key];
-    const value = data[key] || defaults[key] || undefined;
+    const value = data[key] || defaults[key] || peekValue(data, reverseAlias[key]) || undefined;
     const models: any = collection ? collection.add(value, getModelType(opts.model)) : value;
     initModelRef(model, key, opts, models);
   });
+
 }
 
 export function initModelMeta(
@@ -140,6 +154,7 @@ export function initModelMeta(
   const staticModel = model.constructor as typeof PureModel;
   const modelId = storage.getModelClassMetaKey(staticModel, 'id') || 'id';
   const modelType = storage.getModelClassMetaKey(staticModel, 'type');
+  const alias = storage.getModelClassMetaKey(staticModel, 'alias') || { };
 
   const dataMeta = META_FIELD in data && data[META_FIELD] || { };
   const type = (modelType && data[modelType]) || (dataMeta !== undefined && dataMeta.type) || getModelType(model);
@@ -160,6 +175,8 @@ export function initModelMeta(
     id,
     refs: { },
     type,
+    // tslint:disable-next-line:object-literal-sort-keys
+    alias,
   };
 
   const newMeta = META_FIELD in data && data[META_FIELD]
@@ -179,7 +196,7 @@ export function mergeMeta(model: PureModel, meta: IDictionary, metaField: IDicti
   toInit.refs = metaField.refs;
   Object.assign(meta.refs, metaField.refs || { });
 
-  const exceptions = ['fields', 'refs', 'type', 'id'];
+  const exceptions = ['fields', 'refs', 'type', 'id', 'alias'];
 
   Object.keys(metaField).forEach((field: string) => {
     if (exceptions.indexOf(field) === -1) {

@@ -18,12 +18,14 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
     type,
     idAttribute,
     typeAttribute,
+    alias,
   }: {
     fields: IFields;
     references?: IDictionary<IReferenceOptions>;
     type?: IType;
     idAttribute?: string;
     typeAttribute?: string;
+    alias?: IDictionary<Array<string>>;
   // tslint:disable-next-line:no-object-literal-type-assertion
   } = { fields: { } as IFields },
 ) {
@@ -70,6 +72,12 @@ export function setupModel<IModel extends PureModel, IFields extends IDictionary
 
           return;
       }
+    });
+  }
+
+  if (alias) {
+    Object.keys(alias).forEach((key) => {
+        prop.alias(alias[key])(ModelWithProps.prototype, key);
     });
   }
 
