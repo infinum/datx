@@ -86,7 +86,7 @@ export function initModelRef<T extends PureModel>(
         }
 
         if (typeof item === 'object' && isModelReference(item)) {
-          return collection?.findOne(item as IModelRef) || null;
+          return collection?.findOne(item as IModelRef) || (item as IModelRef);
         }
 
         return (
