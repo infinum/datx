@@ -17,7 +17,7 @@ describe('Collection', () => {
       expect(isModel(Collection)).toBe(false);
     });
 
-    it('Should work with models', () => {
+    it('should work with models', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
@@ -407,6 +407,44 @@ describe('Collection', () => {
 
       expect(autorunLengthCount).toBe(2);
       expect(fooLength).toBe(1);
+    });
+
+    it('should auto set ref value at be a model is added', () => {
+      class Pet extends Model {
+        static type = 'pet';
+        @Attribute({ isIdentifier: true }) public id!: number;
+      }
+
+      class Toy extends Model {
+        static type = 'toy';
+        @Attribute({ isIdentifier: true }) public id!: number;
+      }
+
+      class Person extends Model {
+        static type = 'person';
+        @Attribute({ isIdentifier: true }) public id!: number;
+        @Attribute({ toOne: Person }) public spouse!: Person;
+        @Attribute({ toMany: Pet }) public pets!: Pet[];
+        @Attribute({ toOneOrMany: Toy }) public toy!: Toy | Toy[];
+      }
+
+      class Store extends Collection {
+        static types = [Person, Pet, Toy];
+      }
+
+      const store = new Store();
+      const steve = store.add<Person>({ spouse: 1111, id: 200, pets: [1, 2, 3] }, Person);
+      const jane = store.add<Person>({ id: 1111, spouse: 200, toy: 10 }, Person);
+      store.add([{ id: 1 }, { id: 2 }, { id: 3 }], Pet);
+
+      expect(steve.spouse).toBe(jane);
+      expect(jane.spouse).toBe(steve);
+      expect(steve.pets).toBeInstanceOf(Array);
+      expect(steve.pets.map((d) => d.id)).toEqual([1, 2, 3]);
+      const toy10 = store.add({ id: 10 }, Toy);
+      expect(jane.toy).toBe(toy10);
+      jane.toy = store.add([{ id: 11 }, { id: 12 }], Toy);
+      expect(jane.toy.map((d) => d.id)).toEqual([11, 12]);
     });
   });
 });

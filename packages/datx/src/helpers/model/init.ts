@@ -71,7 +71,7 @@ export function initModelRef<T extends PureModel>(
     );
   } else {
     const Bucket = getBucketConstructor(fieldDef.referenceDef.type);
-    let value: IType | Array<IType> | null =
+    let value: IType | Array<IType> | IModelRef | Array<IModelRef> | null =
       fieldDef.referenceDef.type === ReferenceType.TO_MANY ? [] : null;
 
     if (initialVal) {
@@ -93,7 +93,7 @@ export function initModelRef<T extends PureModel>(
           collection?.findOne(
             getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
             item,
-          ) || null
+          ) || ({ id: item, type: fieldDef.referenceDef.model } as IModelRef)
         );
       });
     }
