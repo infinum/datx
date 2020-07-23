@@ -1,6 +1,6 @@
 import { autorun, configure } from 'mobx';
 
-import { Collection, PureModel, Attribute, updateModelId, Model } from '../src';
+import { Collection, PureModel, Attribute, updateModelId, Model, getRefId } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId } from '../src/helpers/model/utils';
 
@@ -445,6 +445,10 @@ describe('Collection', () => {
       expect(jane.toy).toBe(toy10);
       jane.toy = store.add([{ id: 11 }, { id: 12 }], Toy);
       expect(jane.toy.map((d) => d.id)).toEqual([11, 12]);
+
+      const store2 = new Store();
+      const steve2 = store2.add<Person>({ spouse: { id: 1, type: 'person' }, id: 1 }, Person);
+      expect(getRefId(steve2, 'spouse')).toEqual({ id: 1, type: 'person' });
     });
   });
 });
