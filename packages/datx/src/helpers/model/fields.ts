@@ -1,4 +1,4 @@
-import { getMeta, setMeta, warn } from 'datx-utils';
+import { getMeta, setMeta, warn, mapItems } from 'datx-utils';
 import {
   runInAction,
   IObservableArray,
@@ -13,7 +13,7 @@ import { PureModel } from '../../PureModel';
 import { IBucket } from '../../interfaces/IBucket';
 import { TRefValue } from '../../interfaces/TRefValue';
 import { IIdentifier } from '../../interfaces/IIdentifier';
-import { getModelCollection, getModelId, getModelType } from './utils';
+import { getModelCollection, getModelId, getModelRef, getModelType, isIdentifier } from './utils';
 import { IFieldDefinition, IReferenceDefinition } from '../../Attribute';
 import { MetaModelField } from '../../enums/MetaModelField';
 import { MetaClassField } from '../../enums/MetaClassField';
@@ -40,6 +40,14 @@ export function updateRef(
   value: TRefValue,
 ): PureModel | Array<PureModel> | null {
   const bucket: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
+
+  if (isIdentifier(value) || Array.isArray(value)) {
+    const fieldDef = getMeta(model, MetaModelField.Fields, {})[key];
+    const type = fieldDef.referenceDef.model;
+    value = mapItems(value, (v: IIdentifier | IModelRef | PureModel) =>
+      isIdentifier(v) ? { id: v, type } : getModelRef(v),
+    );
+  }
 
   return bucket ? (bucket.value = value) : null;
 }

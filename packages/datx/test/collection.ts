@@ -450,5 +450,33 @@ describe('Collection', () => {
       const steve2 = store2.add<Person>({ spouse: { id: 1, type: 'person' }, id: 1 }, Person);
       expect(getRefId(steve2, 'spouse')).toEqual({ id: 1, type: 'person' });
     });
+
+    it('should upgrade ref fields by id or id[]', () => {
+      class Foo extends Model {
+        static type = 'foo';
+        @Attribute({ isIdentifier: true }) public id!: string;
+        @Attribute({ toOne: Foo }) public parent!: Foo;
+        @Attribute({ toMany: Foo }) public children!: Foo[];
+      }
+
+      class Store extends Collection {
+        static types = [Foo];
+      }
+
+      const store = new Store();
+      store.add(
+        [
+          { id: '1', parent: null, children: ['2', '3', '4'] },
+          { id: '1', parent: null, children: ['2', '3', '5'] },
+        ],
+        Foo,
+      );
+
+      const foo1 = store.findOne<Foo>(Foo, '1');
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const refId = getRefId(foo1!, 'children');
+      expect(refId).toBeInstanceOf(Array);
+      expect((refId as any[]).map((d) => d.id)).toEqual(['2', '3', '5']);
+    });
   });
 });
