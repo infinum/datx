@@ -13,6 +13,7 @@ import { PureModel } from '../../PureModel';
 import { IBucket } from '../../interfaces/IBucket';
 import { TRefValue } from '../../interfaces/TRefValue';
 import { IIdentifier } from '../../interfaces/IIdentifier';
+import { getModelRefType } from './init';
 import { getModelCollection, getModelId, getModelRef, getModelType, isIdentifier } from './utils';
 import { IFieldDefinition, IReferenceDefinition } from '../../Attribute';
 import { MetaModelField } from '../../enums/MetaModelField';
@@ -41,9 +42,15 @@ export function updateRef(
 ): PureModel | Array<PureModel> | null {
   const bucket: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
 
-  if (isIdentifier(value) || Array.isArray(value)) {
+  if (isIdentifier(value) || isArrayLike(value)) {
     const fieldDef = getMeta(model, MetaModelField.Fields, {})[key];
-    const type = fieldDef.referenceDef.model;
+    const type = getModelRefType(
+      fieldDef.referenceDef.model,
+      fieldDef.referenceDef.defaultValue,
+      model,
+      key,
+      getModelCollection(model),
+    );
     value = mapItems(value, (v: IIdentifier | IModelRef | PureModel) =>
       isIdentifier(v) ? { id: v, type } : getModelRef(v),
     );

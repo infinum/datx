@@ -26,7 +26,7 @@ import { IType } from '../../interfaces/IType';
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
-function getModelRefType(
+export function getModelRefType(
   model: ParsedRefModel,
   data: any,
   parentModel: PureModel,
@@ -93,7 +93,11 @@ export function initModelRef<T extends PureModel>(
           collection?.findOne(
             getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
             item,
-          ) || ({ id: item, type: fieldDef.referenceDef.model } as IModelRef)
+          ) ||
+          ({
+            id: item,
+            type: getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
+          } as IModelRef)
         );
       });
     }
