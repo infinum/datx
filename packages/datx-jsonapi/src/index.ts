@@ -15,6 +15,7 @@ export {
   modelToJsonApi,
   saveModel,
   saveRelationship,
+  isModelPersisted,
 } from './helpers/model';
 
 export { clearAllCache, clearCacheByType } from './cache';

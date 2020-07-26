@@ -187,7 +187,7 @@ export function getModelRefMeta(model: PureModel): Record<string, any> {
   return getMeta(model, MODEL_REF_META_FIELD, {});
 }
 
-function isModelPersisted(model: PureModel): boolean {
+export function isModelPersisted(model: PureModel): boolean {
   return getMeta(model, MODEL_PERSISTED_FIELD, false);
 }
 
