@@ -1,6 +1,6 @@
 import { autorun, configure } from 'mobx';
 
-import { Collection, PureModel, Attribute, updateModelId, Model } from '../src';
+import { Collection, PureModel, Attribute, updateModelId, Model, getRefId } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId } from '../src/helpers/model/utils';
 
@@ -17,7 +17,7 @@ describe('Collection', () => {
       expect(isModel(Collection)).toBe(false);
     });
 
-    it('Should work with models', () => {
+    it('should work with models', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
@@ -407,6 +407,76 @@ describe('Collection', () => {
 
       expect(autorunLengthCount).toBe(2);
       expect(fooLength).toBe(1);
+    });
+
+    it('should auto set ref value at be a model is added', () => {
+      class Pet extends Model {
+        static type = 'pet';
+        @Attribute({ isIdentifier: true }) public id!: number;
+      }
+
+      class Toy extends Model {
+        static type = 'toy';
+        @Attribute({ isIdentifier: true }) public id!: number;
+      }
+
+      class Person extends Model {
+        static type = 'person';
+        @Attribute({ isIdentifier: true }) public id!: number;
+        @Attribute({ toOne: Person }) public spouse!: Person;
+        @Attribute({ toMany: Pet }) public pets!: Pet[];
+        @Attribute({ toOneOrMany: Toy }) public toy!: Toy | Toy[];
+      }
+
+      class Store extends Collection {
+        static types = [Person, Pet, Toy];
+      }
+
+      const store = new Store();
+      const steve = store.add<Person>({ spouse: 1111, id: 200, pets: [1, 2, 3] }, Person);
+      const jane = store.add<Person>({ id: 1111, spouse: 200, toy: 10 }, Person);
+      store.add([{ id: 1 }, { id: 2 }, { id: 3 }], Pet);
+
+      expect(steve.spouse).toBe(jane);
+      expect(jane.spouse).toBe(steve);
+      expect(steve.pets).toBeInstanceOf(Array);
+      expect(steve.pets.map((d) => d.id)).toEqual([1, 2, 3]);
+      const toy10 = store.add({ id: 10 }, Toy);
+      expect(jane.toy).toBe(toy10);
+      jane.toy = store.add([{ id: 11 }, { id: 12 }], Toy);
+      expect(jane.toy.map((d) => d.id)).toEqual([11, 12]);
+
+      const store2 = new Store();
+      const steve2 = store2.add<Person>({ spouse: { id: 1, type: 'person' }, id: 1 }, Person);
+      expect(getRefId(steve2, 'spouse')).toEqual({ id: 1, type: 'person' });
+    });
+
+    it('should upgrade ref fields by id or id[]', () => {
+      class Foo extends Model {
+        static type = 'foo';
+        @Attribute({ isIdentifier: true }) public id!: string;
+        @Attribute({ toOne: Foo }) public parent!: Foo;
+        @Attribute({ toMany: Foo }) public children!: Foo[];
+      }
+
+      class Store extends Collection {
+        static types = [Foo];
+      }
+
+      const store = new Store();
+      store.add(
+        [
+          { id: '1', parent: null, children: ['2', '3', '4'] },
+          { id: '1', parent: null, children: ['2', '3', '5'] },
+        ],
+        Foo,
+      );
+
+      const foo1 = store.findOne<Foo>(Foo, '1');
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const refId = getRefId(foo1!, 'children');
+      expect(refId).toBeInstanceOf(Array);
+      expect((refId as any[]).map((d) => d.id)).toEqual(['2', '3', '5']);
     });
   });
 });
