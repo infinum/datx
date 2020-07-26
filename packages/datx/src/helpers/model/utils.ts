@@ -65,6 +65,10 @@ export function isModelReference(value: unknown): boolean {
   );
 }
 
+export function isIdentifier(value: any): boolean {
+  return typeof value === 'string' || typeof value === 'number';
+}
+
 /**
  * Get the type of the given model
  *
@@ -232,7 +236,8 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
     }
     const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
     const shouldBeReference =
-      (isArrayLike(value) && value[0] instanceof PureModel) || value instanceof PureModel;
+      (isArrayLike(value) && value.length > 0 && value[0] instanceof PureModel) ||
+      value instanceof PureModel;
 
     if (key in fields) {
       if (shouldBeReference && !fields[key].referenceDef) {

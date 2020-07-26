@@ -189,7 +189,8 @@ export class PureCollection {
       return this.__findOneByType((model as IModelRef).type, (model as IModelRef).id);
     }
 
-    if (!id) {
+    if (id === null || id === undefined) {
+      // ID mybe `""` or `0`
       throw new Error('The identifier is missing');
     }
 
@@ -423,7 +424,7 @@ export class PureCollection {
 
     const existingModel = this.findOne(modelType, modelId);
 
-    if (existingModel) {
+    if (existingModel && existingModel !== model) {
       updateModel(existingModel, model);
 
       return;

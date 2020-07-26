@@ -26,7 +26,7 @@ import { IType } from '../../interfaces/IType';
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
-function getModelRefType(
+export function getModelRefType(
   model: ParsedRefModel,
   data: any,
   parentModel: PureModel,
@@ -71,7 +71,7 @@ export function initModelRef<T extends PureModel>(
     );
   } else {
     const Bucket = getBucketConstructor(fieldDef.referenceDef.type);
-    let value: IType | Array<IType> | null =
+    let value: IType | Array<IType> | IModelRef | Array<IModelRef> | null =
       fieldDef.referenceDef.type === ReferenceType.TO_MANY ? [] : null;
 
     if (initialVal) {
@@ -86,14 +86,18 @@ export function initModelRef<T extends PureModel>(
         }
 
         if (typeof item === 'object' && isModelReference(item)) {
-          return collection?.findOne(item as IModelRef) || null;
+          return collection?.findOne(item as IModelRef) || (item as IModelRef);
         }
 
         return (
           collection?.findOne(
             getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
             item,
-          ) || null
+          ) ||
+          ({
+            id: item,
+            type: getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
+          } as IModelRef)
         );
       });
     }
