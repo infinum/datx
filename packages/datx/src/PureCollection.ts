@@ -424,9 +424,10 @@ export class PureCollection {
 
     const existingModel = this.findOne(modelType, modelId);
 
-    if (existingModel && existingModel !== model) {
-      updateModel(existingModel, model);
-
+    if (existingModel) {
+      if (existingModel !== model) {
+        updateModel(existingModel, model);
+      }
       return;
     }
 
