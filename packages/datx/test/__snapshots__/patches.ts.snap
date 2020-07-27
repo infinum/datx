@@ -306,6 +306,27 @@ Array [
   },
   Object {
     "model": Object {
+      "id": 3,
+      "type": "bar",
+    },
+    "newValue": Object {
+      "__META__": Object {
+        "collection": undefined,
+        "fields": Object {
+          "id": Object {
+            "defaultValue": undefined,
+            "referenceDef": false,
+          },
+        },
+        "id": 3,
+        "type": "bar",
+      },
+      "id": 3,
+    },
+    "patchType": 0,
+  },
+  Object {
+    "model": Object {
       "id": 1,
       "type": "foo",
     },

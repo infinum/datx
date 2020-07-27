@@ -41,6 +41,41 @@ export function getModelRefType(
   return model;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function getRefValue<T extends PureModel>(
+  value: TRefValue<any>,
+  collection: PureCollection,
+  fieldDef: any,
+  model: T,
+  key: string,
+): TRefValue<T> {
+  return mapItems(value, (item) => {
+    if (typeof item === 'object' && !isModelReference(item)) {
+      return (
+        collection?.add(
+          item,
+          getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
+        ) || null
+      );
+    }
+
+    if (typeof item === 'object' && isModelReference(item)) {
+      return collection?.findOne(item as IModelRef) || (item as IModelRef);
+    }
+
+    return (
+      collection?.findOne(
+        getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
+        item,
+      ) ||
+      ({
+        id: item,
+        type: getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
+      } as IModelRef)
+    );
+  });
+}
+
 export function initModelRef<T extends PureModel>(
   model: T,
   key: string,
@@ -72,35 +107,10 @@ export function initModelRef<T extends PureModel>(
     );
   } else {
     const Bucket = getBucketConstructor(fieldDef.referenceDef.type);
-    let value: IType | Array<IType> | IModelRef | Array<IModelRef> | null =
-      fieldDef.referenceDef.type === ReferenceType.TO_MANY ? [] : null;
+    let value: TRefValue = fieldDef.referenceDef.type === ReferenceType.TO_MANY ? [] : null;
 
-    if (initialVal) {
-      value = mapItems(initialVal, (item) => {
-        if (typeof item === 'object' && !isModelReference(item)) {
-          return (
-            collection?.add(
-              item,
-              getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
-            ) || null
-          );
-        }
-
-        if (typeof item === 'object' && isModelReference(item)) {
-          return collection?.findOne(item as IModelRef) || (item as IModelRef);
-        }
-
-        return (
-          collection?.findOne(
-            getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
-            item,
-          ) ||
-          ({
-            id: item,
-            type: getModelRefType(fieldDef.referenceDef.model, item, model, key, collection),
-          } as IModelRef)
-        );
-      });
+    if (initialVal !== null && initialVal !== undefined) {
+      value = getRefValue(initialVal, collection!, fieldDef, model, key);
     }
 
     const bucket = new Bucket(value, collection, false, model, key, true);
@@ -114,7 +124,7 @@ export function initModelRef<T extends PureModel>(
       () => getRef(model, key),
       (newValue: TRefValue) => {
         updateSingleAction(model, key, newValue);
-        updateRef(model, key, newValue);
+        updateRef(model, key, getRefValue(newValue, collection!, fieldDef, model, key));
       },
     );
   }

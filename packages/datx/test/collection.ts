@@ -489,7 +489,7 @@ describe('Collection', () => {
 
     it('should initialize data with id is `0`', () => {
       class Foo extends Model {
-        static type = '1xxxxx';
+        static type = 'foo';
 
         @Attribute({ isIdentifier: true }) public id!: number;
         @Attribute() public name!: string;
@@ -506,6 +506,47 @@ describe('Collection', () => {
       expect(fooData.id).toBe(0);
       // @ts-ignore
       expect(fooData.__META__.id).toBe(0);
+    });
+
+    it('should be set nested data as ref', () => {
+      class Bar extends Model {
+        static type = 'bar';
+
+        @Attribute({ isIdentifier: true }) public id!: number;
+        @Attribute() public name!: string;
+      }
+
+      class Foo extends Model {
+        static type = 'foo';
+        @Attribute({ isIdentifier: true }) public id!: number;
+        @Attribute() public name!: string;
+        @Attribute({ toOne: Bar }) public bar!: Bar;
+      }
+
+      class Store extends Collection {
+        static types = [Foo, Bar];
+      }
+
+      const store = new Store();
+      store.add(
+        {
+          id: 1,
+          name: 'foo0',
+          bar: { id: 1, name: 'bar0' },
+        },
+        Foo,
+      );
+      store.add(
+        {
+          id: 1,
+          name: 'foo0',
+          bar: { id: 1, name: 'bar1' },
+        },
+        Foo,
+      );
+
+      expect(store.findAll(Foo).length).toBe(1);
+      expect(store.findAll(Bar).length).toBe(1);
     });
   });
 });
