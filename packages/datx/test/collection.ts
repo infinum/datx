@@ -1,6 +1,14 @@
 import { autorun, configure } from 'mobx';
 
-import { Collection, PureModel, Attribute, updateModelId, Model, getRefId } from '../src';
+import {
+  Collection,
+  PureModel,
+  Attribute,
+  updateModelId,
+  Model,
+  getRefId,
+  modelToJSON,
+} from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId } from '../src/helpers/model/utils';
 
@@ -477,6 +485,27 @@ describe('Collection', () => {
       const refId = getRefId(foo1!, 'children');
       expect(refId).toBeInstanceOf(Array);
       expect((refId as any[]).map((d) => d.id)).toEqual(['2', '3', '5']);
+    });
+
+    it('should initialize data with id is `0`', () => {
+      class Foo extends Model {
+        static type = '1xxxxx';
+
+        @Attribute({ isIdentifier: true }) public id!: number;
+        @Attribute() public name!: string;
+      }
+
+      class Store extends Collection {
+        static types = [Foo];
+      }
+
+      const store = new Store();
+      const foo = store.add({ id: 0, name: '99999' }, Foo);
+      expect(foo.id).toBe(0);
+      const fooData = modelToJSON(foo);
+      expect(fooData.id).toBe(0);
+      // @ts-ignore
+      expect(fooData.__META__.id).toBe(0);
     });
   });
 });

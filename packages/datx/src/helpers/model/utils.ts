@@ -69,6 +69,23 @@ export function isIdentifier(value: any): boolean {
   return typeof value === 'string' || typeof value === 'number';
 }
 
+export function peekNonNullish(...args: any[]): any {
+  if (args.length === 0) return null;
+
+  let i = -1;
+  while (++i < args.length) {
+    let arg = args[i];
+
+    if (typeof arg === 'function') {
+      arg = arg();
+    }
+    if (arg !== null && arg !== undefined) {
+      return arg;
+    }
+  }
+  return null;
+}
+
 /**
  * Get the type of the given model
  *

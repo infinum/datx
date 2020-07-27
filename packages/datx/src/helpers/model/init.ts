@@ -14,6 +14,7 @@ import {
   isModelReference,
   modelMapParse,
   commitModel,
+  peekNonNullish,
 } from './utils';
 import { getBucketConstructor } from '../../buckets';
 import { getRef, updateRef, getBackRef, updateBackRef } from './fields';
@@ -200,7 +201,7 @@ export function initModel(
   setMeta(
     instance,
     MetaModelField.TypeField,
-    rawData[typeField] || modelMeta?.type || modelClass.type,
+    peekNonNullish(rawData[typeField], modelMeta?.type, modelClass.type),
   );
 
   const idField = getMeta(instance.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD, true);
@@ -208,7 +209,7 @@ export function initModel(
   setMeta(
     instance,
     MetaModelField.IdField,
-    rawData[idField] || modelMeta?.id || modelClass.getAutoId(),
+    peekNonNullish(rawData[idField], modelMeta?.id, () => modelClass.getAutoId()),
   );
 
   setMeta(instance, MetaModelField.OriginalId, modelMeta?.originalId);
@@ -220,7 +221,9 @@ export function initModel(
       const value = rawData[field];
       const isRef =
         value instanceof PureModel ||
-        (isArrayLike(value) && (value[0] instanceof PureModel || isModelReference(value[0]))) ||
+        (isArrayLike(value) &&
+          value.length &&
+          (value[0] instanceof PureModel || isModelReference(value[0]))) ||
         isModelReference(value);
 
       fields[field] = {
