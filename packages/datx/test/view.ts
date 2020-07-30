@@ -123,6 +123,39 @@ describe('View', () => {
     expect(item2b && item2b.key).toBe(2);
   });
 
+  it('should be able to sort models by non-numerical prop', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+
+      @Attribute()
+      public key!: string;
+    }
+    class AppCollection extends Collection {
+      public static types = [Foo];
+    }
+
+    const collection = new AppCollection();
+    const foos = collection.add([{ key: 'abd' }, { key: 'bbf' }, { key: 'ecf' }], Foo);
+    const viewInstance = new View(Foo, collection, (item: Foo) => item.key, foos);
+
+    expect(viewInstance).toHaveLength(3);
+    const item0a = viewInstance.list[0];
+    const item2a = viewInstance.list[2];
+
+    expect(item0a && item0a.key).toBe('abd');
+    expect(item2a && item2a.key).toBe('ecf');
+
+    const foo0 = collection.add({ key: 'ccc' }, Foo);
+
+    expect(viewInstance).toHaveLength(3);
+    viewInstance.add(foo0);
+    const item0b = viewInstance.list[0];
+    const item2b = viewInstance.list[2];
+
+    expect(item0b && item0b.key).toBe('abd');
+    expect(item2b && item2b.key).toBe('ccc');
+  });
+
   it('should be able to update sort method', () => {
     class Foo extends Model {
       public static type = 'foo';

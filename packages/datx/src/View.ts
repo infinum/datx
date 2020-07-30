@@ -51,7 +51,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
           ? (item): any => item[this.sortMethod as 'string']
           : this.sortMethod;
 
-      list.sort((a: T, b: T) => sortFn(a) - sortFn(b));
+      list.sort((a: T, b: T) => (sortFn(a) === sortFn(b) ? 0 : sortFn(a) > sortFn(b) ? 1 : -1));
     }
 
     const instances = observable.array(list, { deep: false });
