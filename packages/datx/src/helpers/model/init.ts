@@ -50,6 +50,8 @@ function getRefValue<T extends PureModel>(
   key: string,
 ): TRefValue<T> {
   return mapItems(value, (item) => {
+    if (item === null || item === undefined) return null;
+
     if (typeof item === 'object' && !isModelReference(item)) {
       return (
         collection?.add(
