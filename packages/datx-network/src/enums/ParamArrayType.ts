@@ -1,6 +1,6 @@
 export enum ParamArrayType {
-  MULTIPLE_PARAMS, // filter[a]=1&filter[a]=2
-  COMMA_SEPARATED, // filter[a]=1,2
-  PARAM_ARRAY, // filter[a][]=1&filter[a][]=2
-  OBJECT_PATH, // filter[a.0]=1&filter[a.1]=2
+  MultipleParams, // filter[a]=1&filter[a]=2
+  CommaSeparated, // filter[a]=1,2
+  ParamArray, // filter[a][]=1&filter[a][]=2
+  ObjectPath, // filter[a.0]=1&filter[a.1]=2
 }

@@ -74,7 +74,7 @@ describe('Request', () => {
     it('should fail if no cache with CACHE_ONLY strategy', async () => {
       const request1 = new MockNetworkPipeline('foobar');
 
-      const request2 = request1.pipe(cache(CachingStrategy.CACHE_ONLY));
+      const request2 = request1.pipe(cache(CachingStrategy.CacheOnly));
 
       try {
         await request2.fetch();

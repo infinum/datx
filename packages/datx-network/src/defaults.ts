@@ -84,7 +84,7 @@ export function getDefaultConfig(): IConfigType {
     baseUrl: '/',
 
     // Enable caching by default in the browser
-    cache: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
+    cache: isBrowser ? CachingStrategy.CacheFirst : CachingStrategy.NetworkOnly,
     maxCacheAge: Infinity,
 
     // Default options that will be passed to the fetch function
@@ -105,7 +105,7 @@ export function getDefaultConfig(): IConfigType {
       undefined,
 
     // Determines how will the request param arrays be stringified
-    paramArrayType: ParamArrayType.PARAM_ARRAY,
+    paramArrayType: ParamArrayType.ParamArray,
 
     serialize(data: object, _type: BodyType): object {
       return data;

@@ -148,11 +148,11 @@ export function cacheInterceptor<T extends PureModel>(
 
     const cacheStrategy =
       request.options?.cacheOptions?.skipCache || !isCacheSupported
-        ? CachingStrategy.NETWORK_ONLY
+        ? CachingStrategy.NetworkOnly
         : request.options?.cacheOptions?.cachingStrategy || cache;
 
-    // NETWORK_ONLY - Ignore cache
-    if (cacheStrategy === CachingStrategy.NETWORK_ONLY) {
+    // NetworkOnly - Ignore cache
+    if (cacheStrategy === CachingStrategy.NetworkOnly) {
       return makeNetworkCall<T>(request, next, networkPipeline);
     }
 
@@ -161,8 +161,8 @@ export function cacheInterceptor<T extends PureModel>(
       maxCacheAge,
     ) as unknown) as { response: Response<T> } | undefined;
 
-    // NETWORK_FIRST - Fallback to cache only on network error
-    if (cacheStrategy === CachingStrategy.NETWORK_FIRST) {
+    // NetworkFirst - Fallback to cache only on network error
+    if (cacheStrategy === CachingStrategy.NetworkFirst) {
       return makeNetworkCall<T>(request, next, networkPipeline, true).catch((errorResponse) => {
         if (cacheContent) {
           return cacheContent.response;
@@ -171,8 +171,8 @@ export function cacheInterceptor<T extends PureModel>(
       });
     }
 
-    // STALE_WHILE_REVALIDATE - Use cache and update it in background
-    if (cacheStrategy === CachingStrategy.STALE_WHILE_REVALIDATE) {
+    // StaleWhileRevalidate - Use cache and update it in background
+    if (cacheStrategy === CachingStrategy.StaleWhileRevalidate) {
       const network = makeNetworkCall<T>(request, next, networkPipeline, true);
 
       if (cacheContent) {
@@ -185,8 +185,8 @@ export function cacheInterceptor<T extends PureModel>(
       return network;
     }
 
-    // CACHE_ONLY - Fail if nothing in cache
-    if (cacheStrategy === CachingStrategy.CACHE_ONLY) {
+    // CacheOnly - Fail if nothing in cache
+    if (cacheStrategy === CachingStrategy.CacheOnly) {
       if (cacheContent) {
         return Promise.resolve(cacheContent.response);
       }
@@ -196,15 +196,15 @@ export function cacheInterceptor<T extends PureModel>(
       );
     }
 
-    // PREFER_CACHE - Use cache if available
-    if (cacheStrategy === CachingStrategy.CACHE_FIRST) {
+    // CacheFirst - Use cache if available
+    if (cacheStrategy === CachingStrategy.CacheFirst) {
       return cacheContent
         ? Promise.resolve(cacheContent.response)
         : makeNetworkCall<T>(request, next, networkPipeline, true);
     }
 
-    // STALE_AND_UPDATE - Use cache and update response once network is complete
-    if (cacheStrategy === CachingStrategy.STALE_AND_UPDATE) {
+    // StaleAndUpdate - Use cache and update response once network is complete
+    if (cacheStrategy === CachingStrategy.StaleAndUpdate) {
       const existingResponse = cacheContent?.response?.clone();
 
       const network = makeNetworkCall<T>(request, next, networkPipeline, true, existingResponse);

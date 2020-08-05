@@ -51,18 +51,18 @@ function parametrize(
 
   Object.keys(params).forEach((key) => {
     if (params[key] instanceof Array) {
-      if (paramArrayType === ParamArrayType.OBJECT_PATH) {
+      if (paramArrayType === ParamArrayType.ObjectPath) {
         // eslint-disable-next-line prefer-spread
         list.push.apply(list, parametrize(paramArrayType, params[key], `${key}.`));
-      } else if (paramArrayType === ParamArrayType.COMMA_SEPARATED) {
+      } else if (paramArrayType === ParamArrayType.CommaSeparated) {
         list.push({ key: `${scope}${key}`, value: params[key].join(',') });
-      } else if (paramArrayType === ParamArrayType.MULTIPLE_PARAMS) {
+      } else if (paramArrayType === ParamArrayType.MultipleParams) {
         // eslint-disable-next-line prefer-spread
         list.push.apply(
           list,
           params[key].map((param) => ({ key: `${scope}${key}`, value: param })),
         );
-      } else if (paramArrayType === ParamArrayType.PARAM_ARRAY) {
+      } else if (paramArrayType === ParamArrayType.ParamArray) {
         // eslint-disable-next-line prefer-spread
         list.push.apply(
           list,
