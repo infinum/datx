@@ -1,10 +1,12 @@
+import { PureModel } from 'datx';
+import { useCallback, useEffect, useState } from 'react';
+
 import { baseFetch, getDefaultConfig } from './defaults';
 import { IConfigType } from './interfaces/IConfigType';
 import { IHeaders } from './interfaces/IHeaders';
 import { IInterceptor } from './interfaces/IInterceptor';
 import { IPipeOperator } from './interfaces/IPipeOperator';
 import { Response } from './Response';
-import { PureModel } from 'datx';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { IResponseObject } from './interfaces/IResponseObject';
 import { deepCopy, interpolateParams, appendQueryParams } from './helpers/utils';
@@ -146,11 +148,39 @@ export class NetworkPipeline<TModel extends PureModel = PureModel, TParams exten
   }
 
   public useHook(
-    _params: object,
-    _options?: IHookOptions,
-  ): [Response<TModel>, boolean, string | Error] {
-    // TODO useHook
-    throw new Error('Not yet implemented');
+    params?: Partial<TParams>,
+    options?: IHookOptions,
+  ): [Response<TModel> | null, boolean, string | Error | null] {
+    const [loader, setLoader] = useState<Promise<Response<TModel>> | null>(null);
+    const [value, setValue] = useState<Response<TModel> | null>(null);
+    const [error, setError] = useState<string | Error | null>(null);
+
+    const execute = useCallback(() => {
+      const loaderPromise = this.fetch(params);
+      setLoader(loaderPromise);
+      setValue(null);
+      setError(null);
+
+      return loaderPromise
+        .then((response) => {
+          setValue(response);
+          setLoader(null);
+        })
+        .catch((error) => {
+          setError(error);
+          setLoader(null);
+        });
+    }, [this.fetch, params]);
+
+    useEffect(() => {
+      execute();
+    }, [execute]);
+
+    if (options?.suspense && loader) {
+      throw loader;
+    }
+
+    return [value, Boolean(loader), error];
   }
 
   public clone(

@@ -1,4 +1,6 @@
 import { ParamArrayType } from '../enums/ParamArrayType';
+import { PureModel, IFieldDefinition, IReferenceDefinition } from 'datx';
+import { getMeta } from 'datx-utils';
 
 export const isBrowser: boolean = typeof window !== 'undefined';
 
@@ -106,4 +108,19 @@ export function appendQueryParams(
     .map(({ key, value }) => `${key}=${value}`);
 
   return appendParams(url, processedParams);
+}
+
+export function getModelClassRefs(
+  type: typeof PureModel | PureModel,
+): Record<string, IReferenceDefinition> {
+  const fields: Record<string, IFieldDefinition> = getMeta(type, 'fields', {}, true, true);
+  const refs: Record<string, IReferenceDefinition> = {};
+
+  Object.keys(fields).forEach((key) => {
+    if (fields[key].referenceDef) {
+      refs[key] = fields[key].referenceDef as IReferenceDefinition;
+    }
+  });
+
+  return refs;
 }
