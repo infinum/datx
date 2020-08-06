@@ -79,6 +79,8 @@ export class ToMany<T extends PureModel> {
   public set value(data: Array<T>) {
     if (this.__readonly) {
       throw error('This is a read-only bucket');
+    } else if (data === null) {
+      data = [];
     } else if (!isArrayLike(data)) {
       throw error('The reference must be an array of values.');
     }

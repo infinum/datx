@@ -548,5 +548,38 @@ describe('Collection', () => {
       expect(store.findAll(Foo).length).toBe(1);
       expect(store.findAll(Bar).length).toBe(1);
     });
+
+    it('should be set raw (ref) data multi times', () => {
+      class Foo extends Model {
+        static type = 'foo';
+        @Attribute({ isIdentifier: true }) public key!: string;
+        @Attribute() public name!: string;
+        @Attribute({ toMany: Foo }) public children!: Foo[];
+      }
+
+      class Store extends Collection {
+        static types = [Foo];
+      }
+
+      const store = new Store();
+      store.add(
+        {
+          key: '0',
+          name: 'foo0',
+        },
+        Foo,
+      );
+      store.add(
+        {
+          key: '0',
+          name: 'foo1',
+        },
+        Foo,
+      );
+      expect(store.findAll(Foo).length).toBe(1);
+      const foo = store.findOne<Foo>(Foo, '0');
+      expect(foo!.name).toBe('foo1');
+      expect(foo!.children).toEqual([]);
+    });
   });
 });
