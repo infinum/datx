@@ -41,6 +41,7 @@ function initHeaders(headers: Array<[string, string]> | IResponseHeaders): IResp
   return headers;
 }
 
+@action
 function initData<T extends PureModel>(
   response: IResponseObject,
   collection?: PureCollection,

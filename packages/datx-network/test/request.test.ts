@@ -1,7 +1,12 @@
 import { MockNetworkPipeline } from './mock/MockNetworkPipeline';
 import { addInterceptor, cache, CachingStrategy, setUrl, Response } from '../src';
+import { clearAllCache } from '../src/cache';
 
 describe('Request', () => {
+  beforeEach(() => {
+    clearAllCache();
+  });
+
   it('should initialize', () => {
     const request = new MockNetworkPipeline('foobar');
     expect(request).toBeTruthy();
@@ -74,7 +79,7 @@ describe('Request', () => {
     it('should fail if no cache with CACHE_ONLY strategy', async () => {
       const request1 = new MockNetworkPipeline('foobar');
 
-      const request2 = request1.pipe(cache(CachingStrategy.CacheOnly));
+      const request2 = request1.pipe(setUrl('foobar'), cache(CachingStrategy.CacheOnly));
 
       try {
         await request2.fetch();
