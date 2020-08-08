@@ -1,5 +1,5 @@
 import { MockBaseRequest } from './mock/MockBaseRequest';
-import { addInterceptor, setUrl } from '../src';
+import { addInterceptor, setUrl, fetchReference } from '../src';
 
 describe('Request', () => {
   it('should initialize', () => {
@@ -68,5 +68,28 @@ describe('Request', () => {
 
     expect(request2.config.fetchReference).toHaveBeenCalledTimes(1);
     expect(request1.config.fetchReference).toHaveBeenCalledTimes(1);
+  });
+
+  it('should use the correct fetcher reference', async () => {
+    const request1 = new MockBaseRequest('foobar');
+
+    const request2 = request1.pipe(
+      setUrl('foobar'),
+      fetchReference(
+        jest.fn().mockResolvedValue(
+          Promise.resolve({
+            status: 200,
+            json() {
+              return Promise.resolve({});
+            },
+          }),
+        ),
+      ),
+    );
+
+    await request2.fetch();
+
+    expect(request2.config.fetchReference).toHaveBeenCalledTimes(1);
+    expect(request1.config.fetchReference).toHaveBeenCalledTimes(0);
   });
 });

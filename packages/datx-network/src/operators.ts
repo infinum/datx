@@ -30,10 +30,18 @@ export function method(method: HttpMethod) {
   };
 }
 
-export function body(body: any, bodyType: BodyType = BodyType.Json) {
+export function body(body: any, bodyType?: BodyType) {
   return (pipeline: BaseRequest): void => {
-    pipeline.options.body = pipeline.config.serialize(body, bodyType);
-    pipeline.options.bodyType = bodyType;
+    if (bodyType || bodyType === 0) {
+      pipeline.options.bodyType = bodyType;
+    } else if (body instanceof FormData) {
+      pipeline.options.bodyType = BodyType.Multipart;
+    } else if (typeof body === 'object') {
+      pipeline.options.bodyType = BodyType.Json;
+    } else {
+      pipeline.options.bodyType = BodyType.Raw;
+    }
+    pipeline.options.body = pipeline.config.serialize(body, pipeline.options.bodyType);
   };
 }
 

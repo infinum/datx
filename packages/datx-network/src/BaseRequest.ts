@@ -90,12 +90,12 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
       return;
     }
     if (this._options.bodyType === BodyType.Json) {
-      this._options.headers['Content-Type'] = 'application/json';
+      this._options.headers['content-type'] = 'application/json';
       return typeof this._options.body === 'string'
         ? this._options.body
         : JSON.stringify(this._options.body);
     } else if (this._options.bodyType === BodyType.Urlencoded) {
-      this._options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+      this._options.headers['content-type'] = 'application/x-www-form-urlencoded';
       return typeof this._options.body === 'string'
         ? this._options.body
         : appendQueryParams(
@@ -105,6 +105,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
             this._config.encodeQueryString,
           ).slice(1);
     } else if (this._options.bodyType === BodyType.Multipart) {
+      this._options.headers['content-type'] = 'multipart/form-data';
       return this._options.body instanceof FormData
         ? this._options.body
         : new FormData(this._options.body);
