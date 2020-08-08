@@ -7,7 +7,7 @@ import { CachingStrategy } from './enums/CachingStrategy';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { IResponseObject } from './interfaces/IResponseObject';
 import { HttpMethod } from './enums/HttpMethod';
-import { NetworkPipeline } from './NetworkPipeline';
+import { BaseRequest } from './BaseRequest';
 
 export type INextHandler = (request: IFetchOptions) => Promise<IResponseObject>;
 
@@ -93,7 +93,7 @@ export function saveCacheForCollection(
 function makeNetworkCall<T extends PureModel>(
   params: IFetchOptions,
   next: INextHandler,
-  networkPipeline: NetworkPipeline,
+  networkPipeline: BaseRequest,
   doCacheResponse = false,
   existingResponse?: Response<T>,
 ): Promise<Response<T>> {
@@ -141,7 +141,7 @@ function getLocalNetworkError<T extends PureModel>(
 export function cacheInterceptor<T extends PureModel>(
   cache: CachingStrategy,
   maxCacheAge: number,
-  networkPipeline: NetworkPipeline,
+  networkPipeline: BaseRequest,
 ) {
   return (request: IFetchOptions, next: INextHandler): Promise<Response<T>> => {
     const isCacheSupported = request.method === HttpMethod.Get;

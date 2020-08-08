@@ -3,7 +3,7 @@ import { IHeaders } from './interfaces/IHeaders';
 import { CachingStrategy } from './enums/CachingStrategy';
 import { isBrowser } from './helpers/utils';
 import { ParamArrayType } from './enums/ParamArrayType';
-import { NetworkPipeline } from './NetworkPipeline';
+import { BaseRequest } from './BaseRequest';
 import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { PureModel } from 'datx';
 import { IResponseObject } from './interfaces/IResponseObject';
@@ -20,7 +20,7 @@ import { BodyType } from './enums/BodyType';
  * @returns {Promise<IResponseObject>} Resolves with a raw response object
  */
 export function baseFetch<TModel extends PureModel, TParams extends object>(
-  requestObj: NetworkPipeline<TModel, TParams>,
+  requestObj: BaseRequest<TModel, TParams>,
   method: string,
   url: string,
   body?: string | FormData,

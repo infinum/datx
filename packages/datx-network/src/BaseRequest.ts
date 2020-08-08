@@ -29,10 +29,7 @@ interface IRequestOptions {
   bodyType: BodyType;
 }
 
-// TODO: A response generic
-// TODO: A params generic
-
-export class NetworkPipeline<TModel extends PureModel = PureModel, TParams extends object = {}> {
+export class BaseRequest<TModel extends PureModel = PureModel, TParams extends object = {}> {
   private _config: IConfigType = getDefaultConfig();
   private _options: IRequestOptions = {
     method: HttpMethod.Get,
@@ -64,11 +61,13 @@ export class NetworkPipeline<TModel extends PureModel = PureModel, TParams exten
     return baseFetch(this, method, url, body, requestHeaders);
   }
 
-  public pipe(...operators: Array<IPipeOperator>): NetworkPipeline<TModel, TParams> {
-    const destinationPipeline = this.clone();
+  public pipe<TNewModel extends PureModel = TModel, TNewParams extends object = TParams>(
+    ...operators: Array<IPipeOperator>
+  ): BaseRequest<TNewModel, TNewParams> {
+    const destinationPipeline = this.clone<TNewModel, TNewParams>();
     operators.forEach((operator) => operator(destinationPipeline));
 
-    return destinationPipeline as NetworkPipeline<TModel, TParams>;
+    return destinationPipeline as BaseRequest<TNewModel, TNewParams>;
   }
 
   private doRequest(options: IFetchOptions): Promise<IResponseObject> {
@@ -113,7 +112,7 @@ export class NetworkPipeline<TModel extends PureModel = PureModel, TParams exten
     }
   }
 
-  public fetch(params: Partial<TParams> = {}): Promise<Response<TModel>> {
+  public fetch(params?: TParams): Promise<Response<TModel>> {
     if (!this.options.url) {
       throw new Error('URL should be defined');
     }
@@ -148,7 +147,7 @@ export class NetworkPipeline<TModel extends PureModel = PureModel, TParams exten
   }
 
   public useHook(
-    params?: Partial<TParams>,
+    params?: TParams,
     options?: IHookOptions,
   ): [Response<TModel> | null, boolean, string | Error | null] {
     const [loader, setLoader] = useState<Promise<Response<TModel>> | null>(null);
@@ -183,15 +182,15 @@ export class NetworkPipeline<TModel extends PureModel = PureModel, TParams exten
     return [value, Boolean(loader), error];
   }
 
-  public clone(
-    NetworkPipelineConstructor: typeof NetworkPipeline = this.constructor as typeof NetworkPipeline,
-  ): NetworkPipeline<TModel, TParams> {
+  public clone<TNewModel extends PureModel = TModel, TNewParams extends object = TParams>(
+    NetworkPipelineConstructor: typeof BaseRequest = this.constructor as typeof BaseRequest,
+  ): BaseRequest<TNewModel, TNewParams> {
     // Can't use `new NetworkPipeline`, because we would lose the overridden methods
     const clone = new NetworkPipelineConstructor<PureModel, {}>(this._config.baseUrl);
     clone._config = deepCopy(this._config);
     clone._interceptors = this._interceptors.slice();
     clone._options = deepCopy(this._options);
 
-    return clone as NetworkPipeline<TModel, TParams>;
+    return clone as BaseRequest<TNewModel, TNewParams>;
   }
 }

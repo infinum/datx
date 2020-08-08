@@ -6,10 +6,10 @@ import { decorateView } from './decorateView';
 import { INetworkCollection } from './interfaces/INetworkCollection';
 import { INetworkModel } from './interfaces/INetworkModel';
 import { INetworkView } from './interfaces/INetworkView';
-import { NetworkPipeline } from './NetworkPipeline';
+import { BaseRequest } from './BaseRequest';
 
 interface INetwork<T> {
-  network?: NetworkPipeline;
+  network?: BaseRequest;
 
   new (): T;
 }
