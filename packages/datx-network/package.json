@@ -65,7 +65,7 @@
     },
     "preset": "ts-jest",
     "testMatch": null,
-    "setupFiles": [
+    "setupFilesAfterEnv": [
       "./test/setup.ts"
     ]
   },

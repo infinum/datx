@@ -85,7 +85,10 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     );
   }
 
-  private processBody(): string | FormData {
+  private processBody(): string | FormData | undefined {
+    if (!this._options.body) {
+      return;
+    }
     if (this._options.bodyType === BodyType.Json) {
       this._options.headers['Content-Type'] = 'application/json';
       return typeof this._options.body === 'string'

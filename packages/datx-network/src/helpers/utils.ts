@@ -52,30 +52,24 @@ function parametrize(
   const list: Array<{ key: string; value: string }> = [];
 
   Object.keys(params).forEach((key) => {
+    const scoped = `${scope}${scope ? `[${key}]` : key}`;
     if (params[key] instanceof Array) {
-      if (paramArrayType === ParamArrayType.ObjectPath) {
-        // eslint-disable-next-line prefer-spread
-        list.push.apply(list, parametrize(paramArrayType, params[key], `${key}.`));
-      } else if (paramArrayType === ParamArrayType.CommaSeparated) {
-        list.push({ key: `${scope}${key}`, value: params[key].join(',') });
+      if (paramArrayType === ParamArrayType.CommaSeparated) {
+        list.push({ key: scoped, value: params[key].join(',') });
       } else if (paramArrayType === ParamArrayType.MultipleParams) {
-        // eslint-disable-next-line prefer-spread
-        list.push.apply(
-          list,
-          params[key].map((param) => ({ key: `${scope}${key}`, value: param })),
-        );
+        list.push(...params[key].map((param: string) => ({ key: scoped, value: param })));
       } else if (paramArrayType === ParamArrayType.ParamArray) {
-        // eslint-disable-next-line prefer-spread
-        list.push.apply(
-          list,
-          params[key].map((param) => ({ key: `${scope}${key}][`, value: param })),
+        list.push(
+          ...params[key].map((param: string) => ({
+            key: `${scoped}[]`,
+            value: param,
+          })),
         );
       }
     } else if (typeof params[key] === 'object') {
-      // eslint-disable-next-line prefer-spread
-      list.push.apply(list, parametrize(paramArrayType, params[key], `${key}.`));
+      list.push(...parametrize(paramArrayType, params[key], scoped));
     } else {
-      list.push({ key: `${scope}${key}`, value: params[key] });
+      list.push({ key: scoped, value: params[key] });
     }
   });
 
@@ -86,7 +80,12 @@ function appendParams(url: string, params: Array<string>): string {
   let newUrl = url;
 
   if (params.length) {
-    const separator = newUrl.indexOf('?') === -1 ? '?' : '&';
+    let separator = '';
+    if (newUrl.indexOf('?') === -1) {
+      separator = '?';
+    } else if (!newUrl.endsWith('&') && !newUrl.endsWith('?')) {
+      separator = '&';
+    }
 
     newUrl += separator + params.join('&');
   }
