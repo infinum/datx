@@ -14,7 +14,7 @@ import { IHeaders } from './interfaces/IHeaders';
 import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
-import { action } from 'mobx';
+import { action, runInAction } from 'mobx';
 import { IResponseObject } from './interfaces/IResponseObject';
 
 function serializeHeaders(
@@ -41,7 +41,6 @@ function initHeaders(headers: Array<[string, string]> | IResponseHeaders): IResp
   return headers;
 }
 
-@action
 function initData<T extends PureModel>(
   response: IResponseObject,
   collection?: PureCollection,
@@ -146,20 +145,22 @@ export class Response<T extends PureModel> {
     views?: Array<View>,
   ) {
     this.collection = collection;
-    this.__updateInternal(response, options, views);
-    this.__data = initData(response, collection, overrideData);
+    runInAction(() => {
+      this.__updateInternal(response, options, views);
+      this.__data = initData(response, collection, overrideData);
 
-    this.views.forEach((view) => {
-      if (this.__data.value) {
-        view.add(this.__data.value);
+      this.views.forEach((view) => {
+        if (this.__data.value) {
+          view.add(this.__data.value);
+        }
+      });
+
+      Object.freeze(this);
+
+      if (this.error) {
+        throw this;
       }
     });
-
-    Object.freeze(this);
-
-    if (this.error) {
-      throw this;
-    }
   }
 
   private __updateInternal(
