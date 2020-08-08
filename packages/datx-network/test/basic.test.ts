@@ -1,18 +1,18 @@
-import { MockNetworkPipeline } from './mock/MockNetworkPipeline';
+import { MockBaseRequest } from './mock/MockBaseRequest';
 import { addInterceptor, setUrl } from '../src';
 
 describe('Request', () => {
   it('should initialize', () => {
-    const request = new MockNetworkPipeline('foobar');
+    const request = new MockBaseRequest('foobar');
     expect(request).toBeTruthy();
     expect(request.config.baseUrl).toBe('foobar');
     expect(request.config.maxCacheAge).toBe(Infinity);
-    expect(request).toBeInstanceOf(MockNetworkPipeline);
+    expect(request).toBeInstanceOf(MockBaseRequest);
   });
 
   it('should clone the request', () => {
-    class FooRequest extends MockNetworkPipeline {}
-    const request1 = new MockNetworkPipeline('foobar');
+    class FooRequest extends MockBaseRequest {}
+    const request1 = new MockBaseRequest('foobar');
     const request2 = request1.clone(FooRequest as any);
     const request3 = request1.pipe();
 
@@ -25,18 +25,18 @@ describe('Request', () => {
     expect(request3).not.toBe(request2);
     expect(request3.config).not.toBe(request2.config);
 
-    expect(request1).toBeInstanceOf(MockNetworkPipeline);
+    expect(request1).toBeInstanceOf(MockBaseRequest);
     expect(request1).not.toBeInstanceOf(FooRequest);
 
-    expect(request2).toBeInstanceOf(MockNetworkPipeline);
+    expect(request2).toBeInstanceOf(MockBaseRequest);
     expect(request2).toBeInstanceOf(FooRequest);
 
-    expect(request3).toBeInstanceOf(MockNetworkPipeline);
+    expect(request3).toBeInstanceOf(MockBaseRequest);
     expect(request3).not.toBeInstanceOf(FooRequest);
   });
 
   it('should run the pipes in the right order', () => {
-    const request1 = new MockNetworkPipeline('foobar');
+    const request1 = new MockBaseRequest('foobar');
 
     const request2 = request1.pipe(setUrl('foo'), setUrl('bar'));
 
@@ -55,7 +55,7 @@ describe('Request', () => {
       };
     }
 
-    const request1 = new MockNetworkPipeline('foobar');
+    const request1 = new MockBaseRequest('foobar');
 
     const request2 = request1.pipe(
       setUrl('foobar'),
@@ -66,7 +66,7 @@ describe('Request', () => {
 
     await request2.fetch();
 
-    expect(request2['baseFetch']).toHaveBeenCalledTimes(1);
-    expect(request1['baseFetch']).toHaveBeenCalledTimes(0);
+    expect(request2.config.fetchReference).toHaveBeenCalledTimes(1);
+    expect(request1.config.fetchReference).toHaveBeenCalledTimes(1);
   });
 });

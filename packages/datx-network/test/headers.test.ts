@@ -1,9 +1,9 @@
-import { MockNetworkPipeline } from './mock/MockNetworkPipeline';
+import { MockBaseRequest } from './mock/MockBaseRequest';
 import { setUrl, header } from '../src';
 
 describe('headers', () => {
   it('should work with basic headers', async () => {
-    const request = new MockNetworkPipeline('foobar').pipe(
+    const request = new MockBaseRequest('foobar').pipe(
       setUrl('/test'),
       header('foo', '1'),
       header('bar', '2'),
@@ -11,6 +11,10 @@ describe('headers', () => {
 
     await request.fetch();
 
-    expect(request['lastHeaders']).toEqual({ foo: '1', bar: '2' });
+    expect(request['lastHeaders']).toEqual({
+      foo: '1',
+      bar: '2',
+      'content-type': 'application/vnd.api+json',
+    });
   });
 });

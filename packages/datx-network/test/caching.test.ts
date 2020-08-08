@@ -1,9 +1,9 @@
-import { MockNetworkPipeline } from './mock/MockNetworkPipeline';
+import { MockBaseRequest } from './mock/MockBaseRequest';
 import { setUrl, cache, CachingStrategy, Response } from '../src';
 
 describe('caching', () => {
   it('should fail if no cache with CACHE_ONLY strategy', async () => {
-    const request1 = new MockNetworkPipeline('foobar');
+    const request1 = new MockBaseRequest('foobar');
 
     const request2 = request1.pipe(setUrl('foobar'), cache(CachingStrategy.CacheOnly));
 
@@ -14,6 +14,6 @@ describe('caching', () => {
       expect(resp).toBeInstanceOf(Response);
     }
 
-    expect(request2['baseFetch']).toHaveBeenCalledTimes(0);
+    expect(request2.config.fetchReference).toHaveBeenCalledTimes(0);
   });
 });

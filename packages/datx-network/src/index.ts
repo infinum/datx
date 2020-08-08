@@ -1,4 +1,4 @@
-export { BaseRequest as NetworkPipeline } from './BaseRequest';
+export { BaseRequest } from './BaseRequest';
 export { Response } from './Response';
 
 export {

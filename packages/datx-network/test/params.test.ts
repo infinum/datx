@@ -1,9 +1,9 @@
-import { MockNetworkPipeline } from './mock/MockNetworkPipeline';
+import { MockBaseRequest } from './mock/MockBaseRequest';
 import { setUrl, params } from '../src';
 
 describe('params', () => {
   it('should work for a basic params case', async () => {
-    const request = new MockNetworkPipeline('foobar').pipe(
+    const request = new MockBaseRequest('foobar').pipe(
       setUrl('/test/{testId}/{mockId}'),
       params('testId', '123'),
       params('mockId', '456'),
@@ -14,7 +14,7 @@ describe('params', () => {
   });
 
   it('should work for object params', async () => {
-    const request = new MockNetworkPipeline('foobar').pipe(
+    const request = new MockBaseRequest('foobar').pipe(
       setUrl('/test/{testId}/{mockId}'),
       params({
         testId: '234',
@@ -27,7 +27,7 @@ describe('params', () => {
   });
 
   it('should work with missing params', async () => {
-    const request = new MockNetworkPipeline('foobar').pipe(
+    const request = new MockBaseRequest('foobar').pipe(
       setUrl('/test/{testId}/{mockId}'),
       params('testId', '123'),
     );
@@ -37,7 +37,7 @@ describe('params', () => {
   });
 
   it('should work with fetch addon', async () => {
-    const request = new MockNetworkPipeline('foobar').pipe(
+    const request = new MockBaseRequest('foobar').pipe(
       setUrl('/test/{testId}/{mockId}'),
       params('testId', '123'),
     );
@@ -47,21 +47,21 @@ describe('params', () => {
   });
 
   it('should work with partial fetch addon', async () => {
-    const request = new MockNetworkPipeline('foobar').pipe(setUrl('/test/{testId}/{mockId}'));
+    const request = new MockBaseRequest('foobar').pipe(setUrl('/test/{testId}/{mockId}'));
 
     await request.fetch({ mockId: '321' });
     expect(request['lastUrl']).toBe('/test/{testId}/321');
   });
 
   it('should work with full fetch params', async () => {
-    const request = new MockNetworkPipeline('foobar').pipe(setUrl('/test/{testId}/{mockId}'));
+    const request = new MockBaseRequest('foobar').pipe(setUrl('/test/{testId}/{mockId}'));
 
     await request.fetch({ testId: '432', mockId: '321' });
     expect(request['lastUrl']).toBe('/test/432/321');
   });
 
   it('should work with multiple pipes', async () => {
-    const request = new MockNetworkPipeline('foobar').pipe(
+    const request = new MockBaseRequest('foobar').pipe(
       setUrl('/test/{testId}/{mockId}'),
       params('testId', '123'),
     );
@@ -69,9 +69,9 @@ describe('params', () => {
     const request2 = request.pipe(params('testId', '321'));
 
     await request2.fetch();
-    await request.fetch();
-
-    expect(request['lastUrl']).toBe('/test/123/{mockId}');
     expect(request2['lastUrl']).toBe('/test/321/{mockId}');
+
+    await request.fetch();
+    expect(request['lastUrl']).toBe('/test/123/{mockId}');
   });
 });

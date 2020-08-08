@@ -186,13 +186,14 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
   }
 
   public clone<TNewModel extends PureModel = TModel, TNewParams extends object = TParams>(
-    NetworkPipelineConstructor: typeof BaseRequest = this.constructor as typeof BaseRequest,
+    BaseRequestConstructor: typeof BaseRequest = this.constructor as typeof BaseRequest,
   ): BaseRequest<TNewModel, TNewParams> {
-    // Can't use `new NetworkPipeline`, because we would lose the overridden methods
-    const clone = new NetworkPipelineConstructor<PureModel, {}>(this._config.baseUrl);
+    // Can't use `new BaseRequest`, because we would lose the overridden methods
+    const clone = new BaseRequestConstructor<TNewModel, TNewParams>(this._config.baseUrl);
     clone._config = deepCopy(this._config);
     clone._interceptors = this._interceptors.slice();
     clone._options = deepCopy(this._options);
+    clone.config.fetchReference = this.config.fetchReference;
 
     return clone as BaseRequest<TNewModel, TNewParams>;
   }
