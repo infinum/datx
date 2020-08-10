@@ -10,6 +10,30 @@ describe('Request', () => {
     expect(request).toBeInstanceOf(MockBaseRequest);
   });
 
+  it('throw if no url is set', async () => {
+    const request = new MockBaseRequest('foobar');
+    try {
+      await request.fetch();
+      expect(true).toBe(false);
+    } catch (e) {
+      expect(e).toEqual(new Error('URL should be defined'));
+    }
+  });
+
+  it('throw on server error', async () => {
+    const request = new MockBaseRequest('foobar').pipe(setUrl('foobar'));
+    request['resetMock']({
+      status: 404,
+      json: async () => ({}),
+    });
+    try {
+      await request.fetch();
+      expect(true).toBe(false);
+    } catch (e) {
+      expect(e.error).toEqual({ message: 'Invalid HTTP status: 404', status: 404 });
+    }
+  });
+
   it('should clone the request', () => {
     class FooRequest extends MockBaseRequest {}
     const request1 = new MockBaseRequest('foobar');

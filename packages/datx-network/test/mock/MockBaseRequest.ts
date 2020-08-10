@@ -3,18 +3,16 @@ import { BaseRequest } from '../../src';
 export class MockBaseRequest extends BaseRequest {
   constructor(baseUrl: string) {
     super(baseUrl);
-    this.resetMock(
-      Promise.resolve({
-        status: 200,
-        json() {
-          return Promise.resolve({});
-        },
-      }),
-    );
+    this.resetMock({
+      status: 200,
+      json: async () => ({}),
+    });
   }
 
-  protected resetMock(mockResponse: any): void {
-    this.config.fetchReference = jest.fn().mockResolvedValue(mockResponse);
+  protected resetMock(mockResponse: any, success = true): void {
+    this.config.fetchReference = success
+      ? jest.fn().mockResolvedValue(mockResponse)
+      : jest.fn().mockRejectedValue(mockResponse);
   }
 
   private get lastRequest(): [

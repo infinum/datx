@@ -72,7 +72,7 @@ export function clearCacheByType(type: IType): void {
 }
 
 export function getCacheByCollection(
-  collection: PureCollection,
+  collection?: PureCollection,
 ): Array<Omit<ICacheInternal, 'collection'>> {
   return cacheStorage
     .filter((item) => item.collection === collection)
@@ -81,7 +81,7 @@ export function getCacheByCollection(
 
 export function saveCacheForCollection(
   cacheItems: Array<Omit<ICacheInternal, 'collection'>>,
-  collection: PureCollection,
+  collection?: PureCollection,
 ): void {
   // eslint-disable-next-line prefer-spread
   cacheStorage.push.apply(
@@ -119,6 +119,16 @@ function makeNetworkCall<T extends PureModel>(
         saveCache(params.url, response);
       }
       return response;
+    })
+    .catch((response: IResponseObject) => {
+      const collectionResponse = Object.assign({}, response, { collection: params.collection });
+      throw new Response<T>(
+        networkPipeline.config.parse(collectionResponse),
+        params.collection,
+        params.options,
+        undefined,
+        params.views,
+      );
     });
 }
 

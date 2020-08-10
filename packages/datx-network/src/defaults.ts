@@ -27,7 +27,7 @@ export function baseFetch<TModel extends PureModel, TParams extends object>(
   requestHeaders: IHeaders = {},
 ): Promise<IResponseObject> {
   let data: object;
-  let status: number;
+  let status = 0;
   let headers: IResponseHeaders;
 
   const request: Promise<void> = Promise.resolve();
@@ -59,6 +59,9 @@ export function baseFetch<TModel extends PureModel, TParams extends object>(
     .catch((error: Error) => {
       if (status === 204) {
         return null;
+      }
+      if (status === 0) {
+        throw null;
       }
       throw error;
     })

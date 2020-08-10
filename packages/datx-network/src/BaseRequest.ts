@@ -82,6 +82,16 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
           collection: resp.collection,
         };
       },
+      (resp) => {
+        return Promise.reject({
+          data: resp.data,
+          status: resp.status,
+          headers: resp.headers,
+          requestHeaders: resp.requestHeaders,
+          error: resp.error,
+          collection: resp.collection,
+        });
+      },
     );
   }
 
