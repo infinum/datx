@@ -74,10 +74,17 @@ export function baseFetch<TModel extends PureModel, TParams extends object>(
         };
       }
 
-      return { data, headers, requestHeaders, status };
+      return { data, headers, requestHeaders, status, collection: requestObj.config.collection };
     })
     .catch((error) => {
-      throw { data, error, headers, requestHeaders, status };
+      throw {
+        data,
+        error,
+        headers,
+        requestHeaders,
+        status,
+        collection: requestObj.config.collection,
+      };
     });
 }
 

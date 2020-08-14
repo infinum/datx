@@ -4,6 +4,7 @@ import { CachingStrategy } from './enums/CachingStrategy';
 import { HttpMethod } from './enums/HttpMethod';
 import { BodyType } from './enums/BodyType';
 import { ParamArrayType } from './enums/ParamArrayType';
+import { PureCollection } from 'datx';
 
 export function setUrl(url: string) {
   return (pipeline: BaseRequest): void => {
@@ -96,5 +97,11 @@ export function serializer(serialize: (data: object, _type: BodyType) => object)
 export function parser(parse: (data: object) => object) {
   return (pipeline: BaseRequest): void => {
     pipeline.config.parse = parse;
+  };
+}
+
+export function collection(collection?: PureCollection) {
+  return (pipeline: BaseRequest): void => {
+    pipeline.config.collection = collection;
   };
 }
