@@ -31,6 +31,7 @@ interface IRequestOptions {
 
 export class BaseRequest<TModel extends PureModel = PureModel, TParams extends object = {}> {
   private _config: IConfigType = getDefaultConfig();
+  private _interceptors: Array<IInterceptor> = [];
   private _options: IRequestOptions = {
     method: HttpMethod.Get,
     headers: {},
@@ -38,15 +39,6 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     params: {},
     bodyType: BodyType.Json,
   };
-  private _interceptors: Array<IInterceptor> = [];
-
-  public get config(): IConfigType {
-    return this._config;
-  }
-
-  public get options(): IRequestOptions {
-    return this._options;
-  }
 
   constructor(baseUrl: string) {
     this._config.baseUrl = baseUrl;
@@ -61,9 +53,10 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     return baseFetch(this, method, url, body, requestHeaders);
   }
 
-  public pipe<TNewModel extends PureModel = TModel, TNewParams extends object = TParams>(
-    ...operators: Array<IPipeOperator>
-  ): BaseRequest<TNewModel, TNewParams> {
+  public pipe<
+    TNewModel extends PureModel | Array<PureModel> = TModel,
+    TNewParams extends object = TParams
+  >(...operators: Array<IPipeOperator>): BaseRequest<TNewModel, TNewParams> {
     const destinationPipeline = this.clone<TNewModel, TNewParams>();
     operators.forEach((operator) => operator(destinationPipeline));
 
@@ -71,7 +64,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
   }
 
   private doRequest(options: IFetchOptions): Promise<IResponseObject> {
-    return this.baseFetch(options.method, options.url, options.data, this.options.headers).then(
+    return this.baseFetch(options.method, options.url, options.data, this._options.headers).then(
       (resp) => {
         return {
           data: resp.data,
@@ -80,6 +73,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
           requestHeaders: resp.requestHeaders,
           error: resp.error,
           collection: resp.collection,
+          type: this._config.type,
         };
       },
       (resp) => {
@@ -90,6 +84,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
           requestHeaders: resp.requestHeaders,
           error: resp.error,
           collection: resp.collection,
+          type: this._config.type,
         });
       },
     );
@@ -99,44 +94,43 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     if (!this._options.body) {
       return;
     }
+
+    const body = this._config.serialize
+      ? this._config.serialize(this._options.body, this._options.bodyType)
+      : this._options.body;
+
     if (this._options.bodyType === BodyType.Json) {
       this._options.headers['content-type'] = 'application/json';
-      return typeof this._options.body === 'string'
-        ? this._options.body
-        : JSON.stringify(this._options.body);
+      return typeof body === 'string' ? body : JSON.stringify(body);
     } else if (this._options.bodyType === BodyType.Urlencoded) {
       this._options.headers['content-type'] = 'application/x-www-form-urlencoded';
-      return typeof this._options.body === 'string'
-        ? this._options.body
+      return typeof body === 'string'
+        ? body
         : appendQueryParams(
             '',
-            this._options.body,
+            body,
             this._config.paramArrayType,
             this._config.encodeQueryString,
           ).slice(1);
     } else if (this._options.bodyType === BodyType.Multipart) {
       this._options.headers['content-type'] = 'multipart/form-data';
-      return this._options.body instanceof FormData
-        ? this._options.body
-        : new FormData(this._options.body);
+      return body instanceof FormData ? body : new FormData(body);
     } else {
-      return typeof this._options.body === 'string'
-        ? this._options.body
-        : JSON.stringify(this._options.body);
+      return typeof body === 'string' ? body : JSON.stringify(body);
     }
   }
 
   public fetch(params?: TParams): Promise<Response<TModel>> {
-    if (!this.options.url) {
+    if (!this._options.url) {
       throw new Error('URL should be defined');
     }
-    const urlParams = Object.assign({}, this.options.params, params);
-    const url = interpolateParams(this.options.url, urlParams);
+    const urlParams = Object.assign({}, this._options.params, params);
+    const url = interpolateParams(`${this._config.baseUrl}${this._options.url}`, urlParams);
     const processedUrl = appendQueryParams(
       url,
-      this.options.query,
-      this.config.paramArrayType,
-      this.config.encodeQueryString,
+      this._options.query,
+      this._config.paramArrayType,
+      this._config.encodeQueryString,
     );
     const initialCallback = this._interceptors.reverse().reduce(
       (callback: INetworkHandler<TModel>, interceptor: IInterceptor<TModel>) => {
@@ -157,6 +151,13 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
       url: processedUrl,
       method: this._options.method,
       data: this.processBody(),
+      collection: this._config.collection,
+      options: {
+        networkConfig: {
+          headers: this._options.headers,
+        },
+      },
+      views: this._config.views,
     });
   }
 
@@ -204,7 +205,11 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     clone._config = deepCopy(this._config);
     clone._interceptors = this._interceptors.slice();
     clone._options = deepCopy(this._options);
-    clone.config.fetchReference = this.config.fetchReference;
+
+    // Manually copy complex objects
+    clone._config.collection = this._config.collection;
+    clone._config.type = this._config.type;
+    clone._config.fetchReference = this._config.fetchReference;
 
     return clone as BaseRequest<TNewModel, TNewParams>;
   }

@@ -15,6 +15,7 @@ export {
   paramArrayType,
   serializer,
   parser,
+  collection,
 } from './operators';
 
 export { CachingStrategy } from './enums/CachingStrategy';

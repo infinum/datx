@@ -19,7 +19,7 @@ describe('caching', () => {
       expect(resp).toBeInstanceOf(Response);
     }
 
-    expect(request2.config.fetchReference).toHaveBeenCalledTimes(0);
+    expect(request2['_config'].fetchReference).toHaveBeenCalledTimes(0);
   });
 
   describe('caching strategies', () => {
@@ -47,7 +47,7 @@ describe('caching', () => {
         const response = await request.fetch();
 
         expect(response.isSuccess).toBeTruthy();
-        expect(request.config.fetchReference).toBeCalledTimes(2);
+        expect(request['_config'].fetchReference).toBeCalledTimes(2);
       });
     });
 

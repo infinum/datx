@@ -97,39 +97,40 @@ function makeNetworkCall<T extends PureModel>(
   doCacheResponse = false,
   existingResponse?: Response<T>,
 ): Promise<Response<T>> {
-  return next(params)
-    .then((response: IResponseObject) => {
+  return next(params).then(
+    (response: IResponseObject) => {
       const collectionResponse = Object.assign({}, response, { collection: params.collection });
+      let newResponse;
 
       if (existingResponse) {
         existingResponse.update(collectionResponse, params.views);
-        return existingResponse;
+        newResponse = existingResponse;
+      } else {
+        newResponse = new Response<T>(
+          networkPipeline['_config'].parse(collectionResponse),
+          params.collection,
+          params.options,
+          undefined,
+          params.views,
+        );
       }
 
-      return new Response<T>(
-        networkPipeline.config.parse(collectionResponse),
-        params.collection,
-        params.options,
-        undefined,
-        params.views,
-      );
-    })
-    .then((response: Response<T>) => {
       if (doCacheResponse) {
-        saveCache(params.url, response);
+        saveCache(params.url, newResponse);
       }
-      return response;
-    })
-    .catch((response: IResponseObject) => {
+      return newResponse;
+    },
+    (response: IResponseObject) => {
       const collectionResponse = Object.assign({}, response, { collection: params.collection });
       throw new Response<T>(
-        networkPipeline.config.parse(collectionResponse),
+        networkPipeline['_config'].parse(collectionResponse),
         params.collection,
         params.options,
         undefined,
         params.views,
       );
-    });
+    },
+  );
 }
 
 function getLocalNetworkError<T extends PureModel>(
@@ -154,7 +155,7 @@ export function cacheInterceptor<T extends PureModel>(
   networkPipeline: BaseRequest,
 ) {
   return (request: IFetchOptions, next: INextHandler): Promise<Response<T>> => {
-    const isCacheSupported = request.method === HttpMethod.Get;
+    const isCacheSupported = request.method.toUpperCase() === HttpMethod.Get;
 
     const cacheStrategy =
       request.options?.cacheOptions?.skipCache || !isCacheSupported

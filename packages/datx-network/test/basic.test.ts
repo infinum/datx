@@ -1,12 +1,24 @@
 import { MockBaseRequest } from './mock/MockBaseRequest';
-import { addInterceptor, setUrl, fetchReference } from '../src';
+import {
+  addInterceptor,
+  setUrl,
+  fetchReference,
+  collection,
+  parser,
+  method,
+  HttpMethod,
+  body,
+  serializer,
+} from '../src';
+import { PureModel, Attribute, Collection } from 'datx';
+import { clearAllCache } from '../src/cache';
 
 describe('Request', () => {
   it('should initialize', () => {
     const request = new MockBaseRequest('foobar');
     expect(request).toBeTruthy();
-    expect(request.config.baseUrl).toBe('foobar');
-    expect(request.config.maxCacheAge).toBe(Infinity);
+    expect(request['_config'].baseUrl).toBe('foobar');
+    expect(request['_config'].maxCacheAge).toBe(Infinity);
     expect(request).toBeInstanceOf(MockBaseRequest);
   });
 
@@ -41,13 +53,13 @@ describe('Request', () => {
     const request3 = request1.pipe();
 
     expect(request1).not.toBe(request2);
-    expect(request1.config).not.toBe(request2.config);
+    expect(request1['_config']).not.toBe(request2['_config']);
 
     expect(request1).not.toBe(request3);
-    expect(request1.config).not.toBe(request3.config);
+    expect(request1['_config']).not.toBe(request3['_config']);
 
     expect(request3).not.toBe(request2);
-    expect(request3.config).not.toBe(request2.config);
+    expect(request3['_config']).not.toBe(request2['_config']);
 
     expect(request1).toBeInstanceOf(MockBaseRequest);
     expect(request1).not.toBeInstanceOf(FooRequest);
@@ -64,8 +76,8 @@ describe('Request', () => {
 
     const request2 = request1.pipe(setUrl('foo'), setUrl('bar'));
 
-    expect(request1.options.url).toBe(undefined);
-    expect(request2.options.url).toBe('bar');
+    expect(request1['_options'].url).toBe(undefined);
+    expect(request2['_options'].url).toBe('bar');
   });
 
   it('should call interceptors in the correct order', async () => {
@@ -90,8 +102,8 @@ describe('Request', () => {
 
     await request2.fetch();
 
-    expect(request2.config.fetchReference).toHaveBeenCalledTimes(1);
-    expect(request1.config.fetchReference).toHaveBeenCalledTimes(1);
+    expect(request2['_config'].fetchReference).toHaveBeenCalledTimes(1);
+    expect(request1['_config'].fetchReference).toHaveBeenCalledTimes(1);
   });
 
   it('should use the correct fetcher reference', async () => {
@@ -113,7 +125,334 @@ describe('Request', () => {
 
     await request2.fetch();
 
-    expect(request2.config.fetchReference).toHaveBeenCalledTimes(1);
-    expect(request1.config.fetchReference).toHaveBeenCalledTimes(0);
+    expect(request2['_config'].fetchReference).toHaveBeenCalledTimes(1);
+    expect(request1['_config'].fetchReference).toHaveBeenCalledTimes(0);
+  });
+
+  describe('model initialization', () => {
+    beforeEach(() => {
+      clearAllCache();
+    });
+
+    it('default - PureModel, single model', async () => {
+      const request1 = new MockBaseRequest('foobar');
+
+      const request2 = request1.pipe(
+        setUrl('foobar'),
+        fetchReference(
+          jest.fn().mockResolvedValue(
+            Promise.resolve({
+              status: 200,
+              json() {
+                return Promise.resolve({
+                  title: 'Test',
+                });
+              },
+            }),
+          ),
+        ),
+      );
+
+      const response = await request2.fetch();
+
+      expect(response.data).toBeInstanceOf(PureModel);
+      expect(response.data?.['title']).toBe('Test');
+    });
+
+    it('default - PureModel, array', async () => {
+      const request1 = new MockBaseRequest('foobar');
+
+      const request2 = request1.pipe(
+        setUrl('foobar'),
+        fetchReference(
+          jest.fn().mockResolvedValue(
+            Promise.resolve({
+              status: 200,
+              json() {
+                return Promise.resolve([
+                  {
+                    title: 'Test',
+                  },
+                ]);
+              },
+            }),
+          ),
+        ),
+      );
+
+      const response = await request2.fetch();
+
+      expect(response.data?.[0]).toBeInstanceOf(PureModel);
+      expect(response.data?.[0]['title']).toBe('Test');
+    });
+
+    it('FooModel, single model', async () => {
+      const request1 = new MockBaseRequest('foobar');
+      class Foo extends PureModel {
+        @Attribute()
+        public title!: string;
+      }
+
+      const request2 = request1.pipe<Foo>(
+        setUrl('foobar', Foo),
+        fetchReference(
+          jest.fn().mockResolvedValue(
+            Promise.resolve({
+              status: 200,
+              json() {
+                return Promise.resolve({
+                  title: 'Test',
+                });
+              },
+            }),
+          ),
+        ),
+      );
+
+      const response = await request2.fetch();
+
+      expect(response.data).toBeInstanceOf(Foo);
+      expect(response.data?.title).toBe('Test');
+    });
+
+    it('FooModel, array', async () => {
+      const request1 = new MockBaseRequest('foobar');
+      class Foo extends PureModel {
+        @Attribute()
+        public title!: string;
+      }
+
+      const request2 = request1.pipe<Array<Foo>>(
+        setUrl('foobar', Foo),
+        fetchReference(
+          jest.fn().mockResolvedValue(
+            Promise.resolve({
+              status: 200,
+              json() {
+                return Promise.resolve([
+                  {
+                    title: 'Test',
+                  },
+                ]);
+              },
+            }),
+          ),
+        ),
+      );
+
+      const response = await request2.fetch();
+
+      expect(response.data?.[0]).toBeInstanceOf(Foo);
+      expect(response.data?.[0]['title']).toBe('Test');
+    });
+
+    it('collection, single model', async () => {
+      const request1 = new MockBaseRequest('foobar');
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        @Attribute()
+        public title!: string;
+      }
+      class TestStore extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new TestStore();
+
+      const request2 = request1.pipe<Foo>(
+        setUrl('foobar', 'foo'),
+        collection(store),
+        fetchReference(
+          jest.fn().mockResolvedValue(
+            Promise.resolve({
+              status: 200,
+              json() {
+                return Promise.resolve({
+                  title: 'Test',
+                });
+              },
+            }),
+          ),
+        ),
+      );
+
+      const response = await request2.fetch();
+
+      expect(response.data).toBeInstanceOf(Foo);
+      expect(response.data?.title).toBe('Test');
+    });
+
+    it('collection, array', async () => {
+      const request1 = new MockBaseRequest('foobar');
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        @Attribute()
+        public title!: string;
+      }
+      class TestStore extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new TestStore();
+
+      const request2 = request1.pipe<Array<Foo>>(
+        setUrl('foobar', 'foo'),
+        collection(store),
+        fetchReference(
+          jest.fn().mockResolvedValue(
+            Promise.resolve({
+              status: 200,
+              json() {
+                return Promise.resolve([
+                  {
+                    title: 'Test',
+                  },
+                ]);
+              },
+            }),
+          ),
+        ),
+      );
+
+      const response = await request2.fetch();
+
+      expect(response.data?.[0]).toBeInstanceOf(Foo);
+      expect(response.data?.[0]['title']).toBe('Test');
+    });
+
+    it('collection default, single model', async () => {
+      const request1 = new MockBaseRequest('foobar');
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        @Attribute()
+        public title!: string;
+      }
+      class TestStore extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new TestStore();
+
+      const request2 = request1.pipe<Foo>(
+        setUrl('foobar'),
+        collection(store),
+        fetchReference(
+          jest.fn().mockResolvedValue(
+            Promise.resolve({
+              status: 200,
+              json() {
+                return Promise.resolve({
+                  title: 'Test',
+                });
+              },
+            }),
+          ),
+        ),
+      );
+
+      const response = await request2.fetch();
+
+      expect(response.data).not.toBeInstanceOf(Foo);
+      expect(response.data?.title).toBe('Test');
+    });
+
+    it('collection default, array', async () => {
+      const request1 = new MockBaseRequest('foobar');
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        @Attribute()
+        public title!: string;
+      }
+      class TestStore extends Collection {
+        public static types = [Foo];
+      }
+
+      const store = new TestStore();
+
+      const request2 = request1.pipe<Array<Foo>>(
+        setUrl('foobar'),
+        collection(store),
+        fetchReference(
+          jest.fn().mockResolvedValue(
+            Promise.resolve({
+              status: 200,
+              json() {
+                return Promise.resolve([
+                  {
+                    title: 'Test',
+                  },
+                ]);
+              },
+            }),
+          ),
+        ),
+      );
+
+      const response = await request2.fetch();
+
+      expect(response.data?.[0]).not.toBeInstanceOf(Foo);
+      expect(response.data?.[0]['title']).toBe('Test');
+    });
+  });
+
+  it('should work with parsers', async () => {
+    const request1 = new MockBaseRequest('foobar');
+
+    const request2 = request1.pipe(
+      setUrl('foobar'),
+      parser((response) => ({ ...response, data: response.data?.['data'] })),
+      fetchReference(
+        jest.fn().mockResolvedValue(
+          Promise.resolve({
+            status: 200,
+            json() {
+              return Promise.resolve({
+                data: {
+                  title: 'Test',
+                },
+              });
+            },
+          }),
+        ),
+      ),
+    );
+
+    const response = await request2.fetch();
+
+    expect(response.data).toBeInstanceOf(PureModel);
+    expect(response.data?.['title']).toBe('Test');
+  });
+
+  it('should work with serializers', async () => {
+    const request1 = new MockBaseRequest('foobar');
+
+    const request2 = request1.pipe(
+      setUrl('foobar'),
+      method(HttpMethod.Post),
+      body({ test: true }),
+      serializer((data) => ({ data })),
+      fetchReference(
+        jest.fn().mockResolvedValue(
+          Promise.resolve({
+            status: 200,
+            json() {
+              return Promise.resolve({
+                title: 'Test',
+              });
+            },
+          }),
+        ),
+      ),
+    );
+
+    const response = await request2.fetch();
+
+    expect(response.data).toBeInstanceOf(PureModel);
+    expect(response.data?.['title']).toBe('Test');
+    expect(request2['lastBody']).toBe(JSON.stringify({ data: { test: true } }));
   });
 });

@@ -2,7 +2,7 @@ import { CachingStrategy } from '../enums/CachingStrategy';
 import { ParamArrayType } from '../enums/ParamArrayType';
 import { IResponseObject } from './IResponseObject';
 import { BodyType } from '../enums/BodyType';
-import { PureCollection } from 'datx';
+import { PureCollection, IType, PureModel, View } from 'datx';
 
 export interface IConfigType {
   baseUrl: string;
@@ -12,7 +12,9 @@ export interface IConfigType {
   fetchReference?: typeof fetch;
   paramArrayType: ParamArrayType;
   encodeQueryString: boolean;
-  serialize(data: IResponseObject, type: BodyType): IResponseObject;
+  serialize(data: any, type: BodyType): any;
   parse(data: IResponseObject): IResponseObject;
   collection?: PureCollection;
+  type?: IType | typeof PureModel;
+  views?: Array<View>;
 }

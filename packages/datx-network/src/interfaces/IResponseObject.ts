@@ -1,6 +1,6 @@
 import { IResponseHeaders } from './IResponseHeaders';
 import { IHeaders } from './IHeaders';
-import { PureCollection } from 'datx';
+import { PureCollection, IType, PureModel } from 'datx';
 
 export interface IResponseObject {
   data?: object;
@@ -9,4 +9,5 @@ export interface IResponseObject {
   requestHeaders?: IHeaders;
   status?: number;
   collection?: PureCollection;
+  type?: IType | typeof PureModel;
 }

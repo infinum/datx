@@ -16,6 +16,7 @@ import { IResponseInternal } from './interfaces/IResponseInternal';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 import { action, runInAction } from 'mobx';
 import { IResponseObject } from './interfaces/IResponseObject';
+import { mapItems } from 'datx-utils';
 
 function serializeHeaders(
   headers: Array<[string, string]> | IResponseHeaders,
@@ -41,35 +42,32 @@ function initHeaders(headers: Array<[string, string]> | IResponseHeaders): IResp
   return headers;
 }
 
-function initData<T extends PureModel>(
+function initData<T extends PureModel | Array<PureModel>>(
   response: IResponseObject,
   collection?: PureCollection,
-  overrideData?: T | Array<T>,
+  overrideData?: T,
 ): any {
+  let data: any = null;
   if (collection && response.data) {
-    const data: any = overrideData || collection.add(response.data);
+    data =
+      overrideData ||
+      (response.type
+        ? collection.add(response.data, response.type)
+        : collection.add(response.data));
+  } else if (response.data) {
+    const ModelConstructor =
+      response.type === PureModel || Object.isPrototypeOf.call(PureModel, response.type || {})
+        ? (response.type as typeof PureModel)
+        : PureModel;
 
-    return new Bucket.ToOneOrMany<T>(data, collection as any, true);
+    data = overrideData || mapItems(response.data, (item) => new ModelConstructor(item));
+    return { value: data };
   }
 
-  if (response.data) {
-    // The case when a record is not in a store and save/remove are used
-    if (response.data) {
-      if (response.data instanceof Array) {
-        throw new Error('A save/remove operation should not return an array of results');
-      }
-
-      return {
-        value: new PureModel(response.data), // TODO: Make a Generic model
-        // value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T),
-      };
-    }
-  }
-
-  return new Bucket.ToOneOrMany<T>(null, collection as any, true);
+  return new Bucket.ToOneOrMany<T>(data, collection as any, true);
 }
 
-export class Response<T extends PureModel> {
+export class Response<T extends PureModel | Array<PureModel>> {
   private __data;
 
   private __internal: IResponseInternal = {
@@ -133,7 +131,7 @@ export class Response<T extends PureModel> {
     return !this.error;
   }
 
-  public get data(): T | Array<T> | null {
+  public get data(): T | null {
     return this.__data.value;
   }
 
@@ -141,13 +139,17 @@ export class Response<T extends PureModel> {
     response: IResponseObject,
     collection?: PureCollection,
     options?: IRequestOptions,
-    overrideData?: T | Array<T>,
+    overrideData?: T,
     views?: Array<View>,
   ) {
     this.collection = collection;
     runInAction(() => {
       this.__updateInternal(response, options, views);
-      this.__data = initData(response, collection, overrideData);
+      try {
+        this.__data = initData(response, collection, overrideData);
+      } catch (e) {
+        this.__internal.error = e;
+      }
 
       this.views.forEach((view) => {
         if (this.__data.value) {

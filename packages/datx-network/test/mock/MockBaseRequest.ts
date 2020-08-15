@@ -10,7 +10,7 @@ export class MockBaseRequest extends BaseRequest {
   }
 
   protected resetMock(mockResponse: any, success = true): void {
-    this.config.fetchReference = success
+    this['_config'].fetchReference = success
       ? jest.fn().mockResolvedValue(mockResponse)
       : jest.fn().mockRejectedValue(mockResponse);
   }
@@ -19,7 +19,7 @@ export class MockBaseRequest extends BaseRequest {
     string,
     { method: string; body: string | FormData | undefined; headers: Record<string, string> },
   ] {
-    const mockFetch = (this.config.fetchReference as jest.Mock).mock.calls;
+    const mockFetch = (this['_config'].fetchReference as jest.Mock).mock.calls;
     return mockFetch[mockFetch.length - 1];
   }
 

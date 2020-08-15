@@ -37,16 +37,16 @@ export function baseFetch<TModel extends PureModel, TParams extends object>(
 
   return request
     .then(() => {
-      const defaultHeaders = requestObj.config.defaultFetchOptions.headers || {};
+      const defaultHeaders = requestObj['_config'].defaultFetchOptions.headers || {};
       const reqHeaders: IHeaders = Object.assign({}, defaultHeaders, requestHeaders) as IHeaders;
-      const options = Object.assign({}, requestObj.config.defaultFetchOptions, {
+      const options = Object.assign({}, requestObj['_config'].defaultFetchOptions, {
         body: (isBodySupported && body) || undefined,
         headers: reqHeaders,
         method,
       });
 
-      if (requestObj.config.fetchReference) {
-        return requestObj.config.fetchReference(url, options);
+      if (requestObj['_config'].fetchReference) {
+        return requestObj['_config'].fetchReference(url, options);
       }
       throw new Error('Fetch reference needs to be defined before using the network');
     })
@@ -74,7 +74,12 @@ export function baseFetch<TModel extends PureModel, TParams extends object>(
         };
       }
 
-      return { data, headers, requestHeaders, status, collection: requestObj.config.collection };
+      return {
+        data,
+        headers,
+        requestHeaders,
+        status,
+      };
     })
     .catch((error) => {
       throw {
@@ -83,7 +88,6 @@ export function baseFetch<TModel extends PureModel, TParams extends object>(
         headers,
         requestHeaders,
         status,
-        collection: requestObj.config.collection,
       };
     });
 }
@@ -117,11 +121,11 @@ export function getDefaultConfig(): IConfigType {
     // Determines how will the request param arrays be stringified
     paramArrayType: ParamArrayType.ParamArray,
 
-    serialize(data: object, _type: BodyType): object {
+    serialize(data: any, _type: BodyType): any {
       return data;
     },
 
-    parse(data: object): object {
+    parse(data: IResponseObject): IResponseObject {
       return data;
     },
   };
