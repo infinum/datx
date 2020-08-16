@@ -122,4 +122,4 @@ cache: CachingStrategy;
 maxCacheAge: number; // seconds
 ```
 
-Options for caching of requests. This can be overriden on a collection or request level.
+Options for caching of requests. This can be overridden on a collection or request level.
