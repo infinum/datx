@@ -56,9 +56,11 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
   public pipe<
     TNewModel extends PureModel | Array<PureModel> = TModel,
     TNewParams extends object = TParams
-  >(...operators: Array<IPipeOperator>): BaseRequest<TNewModel, TNewParams> {
+  >(...operators: Array<IPipeOperator | undefined>): BaseRequest<TNewModel, TNewParams> {
     const destinationPipeline = this.clone<TNewModel, TNewParams>();
-    operators.forEach((operator) => operator(destinationPipeline));
+    operators
+      .filter(Boolean)
+      .forEach((operator) => (operator as IPipeOperator)(destinationPipeline));
 
     return destinationPipeline as BaseRequest<TNewModel, TNewParams>;
   }
@@ -100,10 +102,12 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
       : this._options.body;
 
     if (this._options.bodyType === BodyType.Json) {
-      this._options.headers['content-type'] = 'application/json';
+      this._options.headers['content-type'] =
+        this._options.headers['content-type'] || 'application/json';
       return typeof body === 'string' ? body : JSON.stringify(body);
     } else if (this._options.bodyType === BodyType.Urlencoded) {
-      this._options.headers['content-type'] = 'application/x-www-form-urlencoded';
+      this._options.headers['content-type'] =
+        this._options.headers['content-type'] || 'application/x-www-form-urlencoded';
       return typeof body === 'string'
         ? body
         : appendQueryParams(
@@ -113,7 +117,8 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
             this._config.encodeQueryString,
           ).slice(1);
     } else if (this._options.bodyType === BodyType.Multipart) {
-      this._options.headers['content-type'] = 'multipart/form-data';
+      this._options.headers['content-type'] =
+        this._options.headers['content-type'] || 'multipart/form-data';
       return body instanceof FormData ? body : new FormData(body);
     } else {
       return typeof body === 'string' ? body : JSON.stringify(body);

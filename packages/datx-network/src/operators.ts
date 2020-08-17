@@ -48,15 +48,35 @@ export function body(body: any, bodyType?: BodyType) {
   };
 }
 
-export function query(name: string, value: string | Array<string> | object) {
+export function query(
+  name: string,
+  value: string | Array<string> | object,
+): (pipeline: BaseRequest) => void;
+export function query(
+  params: Record<string, string | Array<string> | object>,
+): (pipeline: BaseRequest) => void;
+export function query(
+  name: string | Record<string, string | Array<string> | object>,
+  value?: string | Array<string> | object,
+) {
   return (pipeline: BaseRequest): void => {
-    pipeline['_options'].query[name] = value;
+    if (typeof name === 'string') {
+      pipeline['_options'].query[name] = value || '';
+    } else {
+      Object.assign(pipeline['_options'].query, name);
+    }
   };
 }
 
-export function header(name: string, value: string) {
+export function header(name: string, value: string): (pipeline: BaseRequest) => void;
+export function header(params: Record<string, string>): (pipeline: BaseRequest) => void;
+export function header(name: string | Record<string, string>, value?: string) {
   return (pipeline: BaseRequest): void => {
-    pipeline['_options'].headers[name] = value;
+    if (typeof name === 'string') {
+      pipeline['_options'].headers[name] = value || '';
+    } else {
+      Object.assign(pipeline['_options'].headers, name);
+    }
   };
 }
 

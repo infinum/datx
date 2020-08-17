@@ -37,9 +37,8 @@ export function baseFetch<TModel extends PureModel, TParams extends object>(
 
   return request
     .then(() => {
-      const defaultHeaders = requestObj['_config'].defaultFetchOptions.headers || {};
-      const reqHeaders: IHeaders = Object.assign({}, defaultHeaders, requestHeaders) as IHeaders;
-      const options = Object.assign({}, requestObj['_config'].defaultFetchOptions, {
+      const reqHeaders: IHeaders = Object.assign({}, requestHeaders) as IHeaders;
+      const options = Object.assign({
         body: (isBodySupported && body) || undefined,
         headers: reqHeaders,
         method,
@@ -100,13 +99,6 @@ export function getDefaultConfig(): IConfigType {
     // Enable caching by default in the browser
     cache: isBrowser ? CachingStrategy.CacheFirst : CachingStrategy.NetworkOnly,
     maxCacheAge: Infinity,
-
-    // Default options that will be passed to the fetch function
-    defaultFetchOptions: {
-      headers: {
-        'content-type': 'application/vnd.api+json',
-      },
-    },
 
     encodeQueryString: true,
 

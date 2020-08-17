@@ -14,7 +14,6 @@ describe('headers', () => {
     expect(request['lastHeaders']).toEqual({
       foo: '1',
       bar: '2',
-      'content-type': 'application/vnd.api+json',
     });
   });
 });

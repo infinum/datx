@@ -8,7 +8,6 @@ export interface IConfigType {
   baseUrl: string;
   cache: CachingStrategy;
   maxCacheAge: number;
-  defaultFetchOptions: Record<string, any>;
   fetchReference?: typeof fetch;
   paramArrayType: ParamArrayType;
   encodeQueryString: boolean;
