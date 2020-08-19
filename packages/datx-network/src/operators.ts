@@ -5,7 +5,10 @@ import { HttpMethod } from './enums/HttpMethod';
 import { BodyType } from './enums/BodyType';
 import { ParamArrayType } from './enums/ParamArrayType';
 import { PureCollection, IType, PureModel } from 'datx';
+import { cacheInterceptor } from './interceptors/cache';
 import { IResponseObject } from './interfaces/IResponseObject';
+import { IFetchOptions } from './interfaces/IFetchOptions';
+import { fetchInterceptor } from './interceptors/fetch';
 
 export function setUrl(url: string, type: IType | typeof PureModel = PureModel) {
   return (pipeline: BaseRequest): void => {
@@ -14,17 +17,41 @@ export function setUrl(url: string, type: IType | typeof PureModel = PureModel) 
   };
 }
 
-export function addInterceptor(interceptor: IInterceptor) {
+export function addInterceptor(fn: IInterceptor, name: string = fn.name) {
   return (pipeline: BaseRequest): void => {
-    pipeline['_interceptors'].push(interceptor);
+    pipeline.interceptors = pipeline.interceptors.filter(
+      (interceptor) => interceptor.name !== name,
+    );
+
+    pipeline.interceptors.push({ name, fn });
   };
 }
 
-export function cache(strategy: CachingStrategy, maxAge = Infinity) {
+export function upsertInterceptor(fn: IInterceptor, name: string = fn.name) {
   return (pipeline: BaseRequest): void => {
-    pipeline['_config'].cache = strategy;
-    pipeline['_config'].maxCacheAge = maxAge;
+    const interceptor = pipeline.interceptors.find((interceptor) => interceptor.name === name);
+
+    if (interceptor) {
+      interceptor.fn = fn;
+    } else {
+      pipeline.interceptors.push({ name, fn });
+    }
   };
+}
+
+export function removeInterceptor(name: string) {
+  return (pipeline: BaseRequest): void => {
+    pipeline.interceptors = pipeline.interceptors.filter(
+      (interceptor) => interceptor.name !== name,
+    );
+  };
+}
+
+export function cache(
+  strategy: CachingStrategy,
+  maxAge = Infinity,
+): (pipeline: BaseRequest) => void {
+  return upsertInterceptor(cacheInterceptor(strategy, maxAge), 'cache');
 }
 
 export function method(method: HttpMethod) {
@@ -92,12 +119,6 @@ export function params(name: string | Record<string, string>, value?: string) {
   };
 }
 
-export function fetchReference(fetchReference: typeof fetch) {
-  return (pipeline: BaseRequest): void => {
-    pipeline['_config'].fetchReference = fetchReference;
-  };
-}
-
 export function encodeQueryString(encodeQueryString: boolean) {
   return (pipeline: BaseRequest): void => {
     pipeline['_config'].encodeQueryString = encodeQueryString;
@@ -110,15 +131,36 @@ export function paramArrayType(paramArrayType: ParamArrayType) {
   };
 }
 
-export function serializer(serialize: (data: any, type: BodyType) => any) {
+export function fetchReference(fetchReference: typeof fetch) {
   return (pipeline: BaseRequest): void => {
-    pipeline['_config'].serialize = serialize;
+    const config = pipeline['_config'];
+    config.fetchReference = fetchReference;
+    upsertInterceptor(
+      fetchInterceptor(config.fetchReference, config.serialize, config.parse),
+      'fetch',
+    )(pipeline);
   };
 }
 
-export function parser(parse: (data: IResponseObject) => IResponseObject) {
+export function serializer(serialize: (request: IFetchOptions) => IFetchOptions) {
   return (pipeline: BaseRequest): void => {
-    pipeline['_config'].parse = parse;
+    const config = pipeline['_config'];
+    config.serialize = serialize;
+    upsertInterceptor(
+      fetchInterceptor(config.fetchReference, config.serialize, config.parse),
+      'fetch',
+    )(pipeline);
+  };
+}
+
+export function parser(parse: (data: object, response: IResponseObject) => object) {
+  return (pipeline: BaseRequest): void => {
+    const config = pipeline['_config'];
+    config.parse = parse;
+    upsertInterceptor(
+      fetchInterceptor(config.fetchReference, config.serialize, config.parse),
+      'fetch',
+    )(pipeline);
   };
 }
 

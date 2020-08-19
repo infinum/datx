@@ -1,15 +1,12 @@
 import { getModelType, IType, PureModel, PureCollection } from 'datx';
 import { mapItems } from 'datx-utils';
 
-import { Response } from './Response';
-import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
-import { CachingStrategy } from './enums/CachingStrategy';
-import { IFetchOptions } from './interfaces/IFetchOptions';
-import { IResponseObject } from './interfaces/IResponseObject';
-import { HttpMethod } from './enums/HttpMethod';
-import { BaseRequest } from './BaseRequest';
-
-export type INextHandler = (request: IFetchOptions) => Promise<IResponseObject>;
+import { Response } from '../Response';
+import { IResponseSnapshot } from '../interfaces/IResponseSnapshot';
+import { CachingStrategy } from '../enums/CachingStrategy';
+import { IFetchOptions } from '../interfaces/IFetchOptions';
+import { HttpMethod } from '../enums/HttpMethod';
+import { INetworkHandler } from '../interfaces/INetworkHandler';
 
 export interface ICache {
   response: Response<PureModel>;
@@ -83,52 +80,31 @@ export function saveCacheForCollection(
   cacheItems: Array<Omit<ICacheInternal, 'collection'>>,
   collection?: PureCollection,
 ): void {
-  // eslint-disable-next-line prefer-spread
-  cacheStorage.push.apply(
-    cacheStorage,
-    cacheItems.map((item) => Object.assign({ collection }, item)),
+  cacheStorage.push(
+    ...cacheStorage,
+    ...cacheItems.map((item) => Object.assign({ collection }, item)),
   );
 }
 
 function makeNetworkCall<T extends PureModel>(
   params: IFetchOptions,
-  next: INextHandler,
-  networkPipeline: BaseRequest,
+  next: INetworkHandler,
   doCacheResponse = false,
   existingResponse?: Response<T>,
 ): Promise<Response<T>> {
   return next(params).then(
-    (response: IResponseObject) => {
-      const collectionResponse = Object.assign({}, response, { collection: params.collection });
-      let newResponse;
-
+    (response: Response<T>) => {
+      let finalResponse = response;
       if (existingResponse) {
-        existingResponse.update(collectionResponse, params.views);
-        newResponse = existingResponse;
-      } else {
-        newResponse = new Response<T>(
-          networkPipeline['_config'].parse(collectionResponse),
-          params.collection,
-          params.options,
-          undefined,
-          params.views,
-        );
+        finalResponse = existingResponse.update(response, params.views);
       }
-
       if (doCacheResponse) {
-        saveCache(params.url, newResponse);
+        saveCache(params.url, finalResponse);
       }
-      return newResponse;
+      return finalResponse;
     },
-    (response: IResponseObject) => {
-      const collectionResponse = Object.assign({}, response, { collection: params.collection });
-      throw new Response<T>(
-        networkPipeline['_config'].parse(collectionResponse),
-        params.collection,
-        params.options,
-        undefined,
-        params.views,
-      );
+    (response: Response<T>) => {
+      throw response;
     },
   );
 }
@@ -141,20 +117,22 @@ function getLocalNetworkError<T extends PureModel>(
   return new Response<T>(
     {
       error: new Error(message),
-      // collection,
+      collection,
       requestHeaders: reqOptions.options?.networkConfig?.headers,
     },
     collection,
-    reqOptions.options,
   );
 }
 
 export function cacheInterceptor<T extends PureModel>(
   cache: CachingStrategy,
-  maxCacheAge: number,
-  networkPipeline: BaseRequest,
+  maxCacheAge = Infinity,
 ) {
-  return (request: IFetchOptions, next: INextHandler): Promise<Response<T>> => {
+  return (request: IFetchOptions, next?: INetworkHandler): Promise<Response<T>> => {
+    if (!next) {
+      throw new Error("Cache interceptor can't be the last interceptor");
+    }
+
     const isCacheSupported = request.method.toUpperCase() === HttpMethod.Get;
 
     const cacheStrategy =
@@ -164,7 +142,7 @@ export function cacheInterceptor<T extends PureModel>(
 
     // NetworkOnly - Ignore cache
     if (cacheStrategy === CachingStrategy.NetworkOnly) {
-      return makeNetworkCall<T>(request, next, networkPipeline);
+      return makeNetworkCall<T>(request, next);
     }
 
     const cacheContent: { response: Response<T> } | undefined = (getCache(
@@ -174,7 +152,7 @@ export function cacheInterceptor<T extends PureModel>(
 
     // NetworkFirst - Fallback to cache only on network error
     if (cacheStrategy === CachingStrategy.NetworkFirst) {
-      return makeNetworkCall<T>(request, next, networkPipeline, true).catch((errorResponse) => {
+      return makeNetworkCall<T>(request, next, true).catch((errorResponse) => {
         if (cacheContent) {
           return cacheContent.response;
         }
@@ -184,7 +162,7 @@ export function cacheInterceptor<T extends PureModel>(
 
     // StaleWhileRevalidate - Use cache and update it in background
     if (cacheStrategy === CachingStrategy.StaleWhileRevalidate) {
-      const network = makeNetworkCall<T>(request, next, networkPipeline, true);
+      const network = makeNetworkCall<T>(request, next, true);
 
       if (cacheContent) {
         network.catch(() => {
@@ -211,14 +189,14 @@ export function cacheInterceptor<T extends PureModel>(
     if (cacheStrategy === CachingStrategy.CacheFirst) {
       return cacheContent
         ? Promise.resolve(cacheContent.response)
-        : makeNetworkCall<T>(request, next, networkPipeline, true);
+        : makeNetworkCall<T>(request, next, true);
     }
 
     // StaleAndUpdate - Use cache and update response once network is complete
     if (cacheStrategy === CachingStrategy.StaleAndUpdate) {
       const existingResponse = cacheContent?.response?.clone();
 
-      const network = makeNetworkCall<T>(request, next, networkPipeline, true, existingResponse);
+      const network = makeNetworkCall<T>(request, next, true, existingResponse);
 
       if (existingResponse) {
         network.catch(() => {
@@ -235,5 +213,3 @@ export function cacheInterceptor<T extends PureModel>(
     );
   };
 }
-
-export type IInterceptor = (request: IFetchOptions, next: INextHandler) => Promise<IResponseObject>;

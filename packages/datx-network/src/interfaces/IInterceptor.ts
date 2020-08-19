@@ -5,5 +5,5 @@ import { PureModel } from 'datx';
 
 export type IInterceptor<T extends PureModel = PureModel> = (
   request: IFetchOptions,
-  next: INetworkHandler,
+  next?: INetworkHandler,
 ) => Promise<Response<T>>;

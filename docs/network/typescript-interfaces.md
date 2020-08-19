@@ -3,6 +3,22 @@ id: typescript-interfaces
 title: TypeScript interfaces
 ---
 
+## IRequestOptions
+
+```typescript
+interface IRequestOptions {
+  query?: Record<string, string | Array<string> | object>;
+  cacheOptions?: {
+    cachingStrategy?: CachingStrategy;
+    maxAge?: number;
+    skipCache?: boolean;
+  };
+  networkConfig?: {
+    headers?: Record<string, string>;
+  };
+}
+```
+
 ## IResponseObject
 
 ```typescript
@@ -17,22 +33,6 @@ interface IResponseObject {
 }
 ```
 
-## IRequestOptions
-
-```typescript
-interface IRequestOptions {
-  query?: Array<{ key: string; value: string } | string>;
-  cacheOptions?: {
-    cachingStrategy?: CachingStrategy;
-    maxAge?: number;
-    skipCache?: boolean;
-  };
-  networkConfig?: {
-    headers?: Record<string, string>;
-  };
-}
-```
-
 ## IPipeOperator
 
 ```typescript
@@ -44,7 +44,7 @@ type IPipeOperator = (request: BaseRequest) => void;
 ```typescript
 type IInterceptor<T extends PureModel = PureModel> = (
   request: IFetchOptions,
-  next: INetworkHandler,
+  next?: INetworkHandler,
 ) => Promise<Response<T>>;
 ```
 
@@ -62,10 +62,11 @@ type INetworkHandler<T extends PureModel = PureModel> = (
 interface IFetchOptions {
   url: string;
   options?: IRequestOptions;
-  data?: string | FormData;
+  data?: string | object | FormData;
   method: HttpMethod;
   collection?: PureCollection;
   skipCache?: boolean;
   views?: Array<View>;
+  type?: IType | typeof PureModel;
 }
 ```

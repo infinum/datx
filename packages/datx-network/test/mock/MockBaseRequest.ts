@@ -1,4 +1,4 @@
-import { BaseRequest } from '../../src';
+import { BaseRequest, fetchReference } from '../../src';
 
 export class MockBaseRequest extends BaseRequest {
   constructor(baseUrl: string) {
@@ -10,9 +10,11 @@ export class MockBaseRequest extends BaseRequest {
   }
 
   protected resetMock(mockResponse: any, success = true): void {
-    this['_config'].fetchReference = success
-      ? jest.fn().mockResolvedValue(mockResponse)
-      : jest.fn().mockRejectedValue(mockResponse);
+    fetchReference(
+      success
+        ? jest.fn().mockResolvedValue(mockResponse)
+        : jest.fn().mockRejectedValue(mockResponse),
+    )(this);
   }
 
   private get lastRequest(): [

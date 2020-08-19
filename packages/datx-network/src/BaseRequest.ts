@@ -1,19 +1,19 @@
 import { PureModel } from 'datx';
 import { useCallback, useEffect, useState } from 'react';
 
-import { baseFetch, getDefaultConfig } from './defaults';
+import { getDefaultConfig } from './defaults';
 import { IConfigType } from './interfaces/IConfigType';
 import { IHeaders } from './interfaces/IHeaders';
 import { IInterceptor } from './interfaces/IInterceptor';
 import { IPipeOperator } from './interfaces/IPipeOperator';
 import { Response } from './Response';
 import { IFetchOptions } from './interfaces/IFetchOptions';
-import { IResponseObject } from './interfaces/IResponseObject';
-import { deepCopy, interpolateParams, appendQueryParams } from './helpers/utils';
-import { INetworkHandler } from './interfaces/INetworkHandler';
+import { deepCopy, interpolateParams, appendQueryParams, isBrowser } from './helpers/utils';
 import { HttpMethod } from './enums/HttpMethod';
-import { cacheInterceptor } from './cache';
+import { cacheInterceptor } from './interceptors/cache';
 import { BodyType } from './enums/BodyType';
+import { CachingStrategy } from './enums/CachingStrategy';
+import { fetchInterceptor } from './interceptors/fetch';
 
 interface IHookOptions {
   suspense?: boolean;
@@ -31,7 +31,6 @@ interface IRequestOptions {
 
 export class BaseRequest<TModel extends PureModel = PureModel, TParams extends object = {}> {
   private _config: IConfigType = getDefaultConfig();
-  private _interceptors: Array<IInterceptor> = [];
   private _options: IRequestOptions = {
     method: HttpMethod.Get,
     headers: {},
@@ -40,17 +39,21 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     bodyType: BodyType.Json,
   };
 
+  public interceptors: Array<{ name: string; fn: IInterceptor<TModel> }> = [
+    {
+      fn: fetchInterceptor(this._config.fetchReference, this._config.serialize, this._config.parse),
+      name: 'fetch',
+    },
+    {
+      fn: cacheInterceptor<TModel>(
+        isBrowser ? CachingStrategy.CacheFirst : CachingStrategy.NetworkOnly,
+      ),
+      name: 'cache',
+    },
+  ];
+
   constructor(baseUrl: string) {
     this._config.baseUrl = baseUrl;
-  }
-
-  protected baseFetch(
-    method: string,
-    url: string,
-    body?: string | FormData,
-    requestHeaders?: IHeaders,
-  ): Promise<IResponseObject> {
-    return baseFetch(this, method, url, body, requestHeaders);
   }
 
   public pipe<
@@ -65,63 +68,34 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     return destinationPipeline as BaseRequest<TNewModel, TNewParams>;
   }
 
-  private doRequest(options: IFetchOptions): Promise<IResponseObject> {
-    return this.baseFetch(options.method, options.url, options.data, this._options.headers).then(
-      (resp) => {
-        return {
-          data: resp.data,
-          status: resp.status,
-          headers: resp.headers,
-          requestHeaders: resp.requestHeaders,
-          error: resp.error,
-          collection: resp.collection,
-          type: this._config.type,
-        };
-      },
-      (resp) => {
-        return Promise.reject({
-          data: resp.data,
-          status: resp.status,
-          headers: resp.headers,
-          requestHeaders: resp.requestHeaders,
-          error: resp.error,
-          collection: resp.collection,
-          type: this._config.type,
-        });
-      },
-    );
-  }
-
-  private processBody(): string | FormData | undefined {
+  private processBody(): object | string | FormData | undefined {
     if (!this._options.body) {
       return;
     }
 
-    const body = this._config.serialize
-      ? this._config.serialize(this._options.body, this._options.bodyType)
-      : this._options.body;
-
     if (this._options.bodyType === BodyType.Json) {
       this._options.headers['content-type'] =
         this._options.headers['content-type'] || 'application/json';
-      return typeof body === 'string' ? body : JSON.stringify(body);
+      return this._options.body;
     } else if (this._options.bodyType === BodyType.Urlencoded) {
       this._options.headers['content-type'] =
         this._options.headers['content-type'] || 'application/x-www-form-urlencoded';
-      return typeof body === 'string'
-        ? body
+      return typeof this._options.body === 'string'
+        ? this._options.body
         : appendQueryParams(
             '',
-            body,
+            this._options.body,
             this._config.paramArrayType,
             this._config.encodeQueryString,
           ).slice(1);
     } else if (this._options.bodyType === BodyType.Multipart) {
       this._options.headers['content-type'] =
         this._options.headers['content-type'] || 'multipart/form-data';
-      return body instanceof FormData ? body : new FormData(body);
+      return this._options.body instanceof FormData
+        ? this._options.body
+        : new FormData(this._options.body);
     } else {
-      return typeof body === 'string' ? body : JSON.stringify(body);
+      return this._options.body;
     }
   }
 
@@ -137,22 +111,8 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
       this._config.paramArrayType,
       this._config.encodeQueryString,
     );
-    const initialCallback = this._interceptors.reverse().reduce(
-      (callback: INetworkHandler<TModel>, interceptor: IInterceptor<TModel>) => {
-        return (options: IFetchOptions): Promise<Response<TModel>> =>
-          interceptor(options, callback);
-      },
-      (options: IFetchOptions) => {
-        return cacheInterceptor<TModel>(
-          this._config.cache,
-          this._config.maxCacheAge,
-          this,
-        )(options, this.doRequest.bind(this));
-      },
-    );
 
-    // The error is not handled on purpose so UnhandledPromiseRejectionWarning is triggered if the client doesn't handle the error
-    return initialCallback({
+    const request: IFetchOptions = {
       url: processedUrl,
       method: this._options.method,
       data: this.processBody(),
@@ -163,7 +123,18 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
         },
       },
       views: this._config.views,
-    });
+      type: this._config.type,
+    };
+
+    const interceptorChain = this.interceptors.reduce((next, interceptor) => {
+      return (options: IFetchOptions): Promise<Response<TModel>> => interceptor.fn(options, next);
+    }, undefined);
+
+    if (!interceptorChain) {
+      throw new Error('Something went wrong');
+    }
+
+    return interceptorChain(request);
   }
 
   public useHook(
@@ -207,14 +178,16 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
   ): BaseRequest<TNewModel, TNewParams> {
     // Can't use `new BaseRequest`, because we would lose the overridden methods
     const clone = new BaseRequestConstructor<TNewModel, TNewParams>(this._config.baseUrl);
+
+    // @ts-ignore
+    clone.interceptors = deepCopy(this.interceptors);
+
     clone._config = deepCopy(this._config);
-    clone._interceptors = this._interceptors.slice();
     clone._options = deepCopy(this._options);
 
     // Manually copy complex objects
     clone._config.collection = this._config.collection;
     clone._config.type = this._config.type;
-    clone._config.fetchReference = this._config.fetchReference;
 
     return clone as BaseRequest<TNewModel, TNewParams>;
   }

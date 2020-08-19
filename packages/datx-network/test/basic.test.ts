@@ -11,14 +11,13 @@ import {
   serializer,
 } from '../src';
 import { PureModel, Attribute, Collection } from 'datx';
-import { clearAllCache } from '../src/cache';
+import { clearAllCache } from '../src/interceptors/cache';
 
 describe('Request', () => {
   it('should initialize', () => {
     const request = new MockBaseRequest('foobar');
     expect(request).toBeTruthy();
     expect(request['_config'].baseUrl).toBe('foobar');
-    expect(request['_config'].maxCacheAge).toBe(Infinity);
     expect(request).toBeInstanceOf(MockBaseRequest);
   });
 
@@ -95,9 +94,9 @@ describe('Request', () => {
 
     const request2 = request1.pipe(
       setUrl('foobar'),
-      addInterceptor(mockInterceptor(0)),
-      addInterceptor(mockInterceptor(1)),
       addInterceptor(mockInterceptor(2)),
+      addInterceptor(mockInterceptor(1)),
+      addInterceptor(mockInterceptor(0)),
     );
 
     await request2.fetch();
@@ -404,7 +403,7 @@ describe('Request', () => {
 
     const request2 = request1.pipe(
       setUrl('foobar'),
-      parser((response) => ({ ...response, data: response.data?.['data'] })),
+      parser((data) => data['data']),
       fetchReference(
         jest.fn().mockResolvedValue(
           Promise.resolve({
@@ -434,7 +433,7 @@ describe('Request', () => {
       setUrl('foobar'),
       method(HttpMethod.Post),
       body({ test: true }),
-      serializer((data) => ({ data })),
+      serializer((req) => ({ ...req, data: { data: req.data } })),
       fetchReference(
         jest.fn().mockResolvedValue(
           Promise.resolve({

@@ -1,7 +1,11 @@
 import { MockBaseRequest } from './mock/MockBaseRequest';
 import { setUrl, cache, CachingStrategy, Response, BaseRequest } from '../src';
 import { PureModel } from 'datx';
-import { getCacheByCollection, saveCacheForCollection, clearAllCache } from '../src/cache';
+import {
+  getCacheByCollection,
+  saveCacheForCollection,
+  clearAllCache,
+} from '../src/interceptors/cache';
 
 const sleep = (duration: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, duration));

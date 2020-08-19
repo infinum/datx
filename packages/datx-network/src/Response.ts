@@ -11,7 +11,6 @@ import {
 } from 'datx';
 import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { IHeaders } from './interfaces/IHeaders';
-import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 import { action, runInAction } from 'mobx';
@@ -138,13 +137,12 @@ export class Response<T extends PureModel | Array<PureModel>> {
   constructor(
     response: IResponseObject,
     collection?: PureCollection,
-    options?: IRequestOptions,
     overrideData?: T,
     views?: Array<View>,
   ) {
     this.collection = collection;
     runInAction(() => {
-      this.__updateInternal(response, options, views);
+      this.__updateInternal(response, views);
       try {
         this.__data = initData(response, collection, overrideData);
       } catch (e) {
@@ -165,15 +163,7 @@ export class Response<T extends PureModel | Array<PureModel>> {
     });
   }
 
-  private __updateInternal(
-    response: IResponseObject,
-    options?: IRequestOptions,
-    views?: Array<View>,
-  ): void {
-    if (options) {
-      this.__internal.options = options;
-    }
-
+  private __updateInternal(response: IResponseObject, views?: Array<View>): void {
     this.__internal.response = response;
     this.__internal.headers = response.headers && initHeaders(response.headers);
     this.__internal.requestHeaders = response.requestHeaders;
@@ -224,16 +214,11 @@ export class Response<T extends PureModel | Array<PureModel>> {
       }
     });
 
-    return new Response(this.__internal.response, this.collection, this.__internal.options, data);
+    return new Response(this.__internal.response, this.collection, data);
   }
 
   public clone(): Response<T> {
-    return new Response(
-      this.__internal.response,
-      this.collection,
-      this.__internal.options,
-      this.data || undefined,
-    );
+    return new Response(this.__internal.response, this.collection, this.data || undefined);
   }
 
   public get snapshot(): IResponseSnapshot {
@@ -243,14 +228,14 @@ export class Response<T extends PureModel | Array<PureModel>> {
           this.__internal.response.headers && serializeHeaders(this.__internal.response.headers),
         collection: undefined,
       }),
-      options: this.__internal.options,
     };
   }
 
   @action
-  public update(response: IResponseObject, views?: Array<View>): Response<T> {
-    this.__updateInternal(response, undefined, views);
-    const newData = initData(response, this.collection);
+  public update(response: IResponseObject | Response<T>, views?: Array<View>): Response<T> {
+    const responseData = response instanceof Response ? response.__internal.response : response;
+    this.__updateInternal(responseData, views);
+    const newData = initData(responseData, this.collection);
 
     this.__data.__readonlyValue = newData.value;
 

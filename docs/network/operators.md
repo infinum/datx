@@ -17,12 +17,30 @@ The url will be appended to the base url. An example with placeholders: `/articl
 ## addInterceptor
 
 ```typescript
-function addInterceptor(interceptor: IInterceptor);
+function addInterceptor(interceptor: IInterceptor, name?: string);
 ```
 
 The library is using a concept of interceptors to handle use cases like authentication or other flows. This is conceptually similar to [Angular interceptors](https://angular.io/api/common/http/HttpInterceptor) or [Express middleware](https://expressjs.com/en/guide/using-middleware.html).
 
+The interceptors can have an optional name so it's easier to manipulate them in later stages. The default name, if none given, will be the given function name.
+
 To find more about interceptors, check out the [interceptors](./interceptors) page.
+
+## upsertInterceptor
+
+```typescript
+function upsertInterceptor(interceptor: IInterceptor, name?: string);
+```
+
+Replace the interceptor with the given name. The new interceptor will be placed in the same place in the order as the old interceptor.
+
+## removeInterceptor
+
+```typescript
+function removeInterceptor(name: string);
+```
+
+Remove the interceptor with the given name.
 
 ## cache
 
@@ -33,7 +51,9 @@ function cache(strategy: CachingStrategy, maxAge?: number);
 The library supports multiple caching strategies. Only the GET request can be cached and you can configure the behavior by using the `cache` operator. The operator receives a strategy and the max age.
 The default caching strategy in the browser is `CachingStrategy.CacheFirst` and on the server it's `CachingStrategy.NetworkOnly`. The default maxAge is `Infinity`.
 
-To find out more about the caching strategies, check out the [caching](./caching) page.
+To find out more about the caching strategies, check out the [caching](./caching) page. To implement your custom caching strategy, check out the [interceptors](./interceptors) page about how to replace builtin interceptors.
+
+_Note:_ Used only with the [built in cache interceptor](./interceptors#cache).
 
 ## method
 
@@ -84,6 +104,8 @@ function fetchReference(fetchReference: typeof fetch);
 
 Set the reference to the fetch method. When running in the browser, this will default to `window.fetch`, while there will be no default for the server. To make the network work across server and client, you can use a library like `isomorphic-fetch`.
 
+_Note:_ Used only with the [built in fetch interceptor](./interceptors#fetch).
+
 ## encodeQueryString
 
 ```typescript
@@ -111,18 +133,22 @@ export enum ParamArrayType {
 ## serializer
 
 ```typescript
-function serializer(serialize: (data: any, type: BodyType) => any);
+function serializer(serialize: (request: IFetchOptions) => IFetchOptions);
 ```
 
 Prepare the body of the request for sending. The default serializer just passes the unmodified data argument.
 
+_Note:_ Used only with the [built in fetch interceptor](./interceptors#fetch).
+
 ## parser
 
 ```typescript
-function parser(parse: (data: IResponseObject) => IResponseObject);
+function parser(parse: (data: object, response: IResponseObject) => object);
 ```
 
 Parse the API response before data initialization. The function also receives other data that could be useful for parsing. An example use case for the parser is if all your API response is wrapped in a `data` object or something similar.
+
+_Note:_ Used only with the [built in fetch interceptor](./interceptors#fetch).
 
 ## collection
 

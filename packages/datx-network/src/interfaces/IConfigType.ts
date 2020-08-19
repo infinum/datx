@@ -1,19 +1,17 @@
-import { CachingStrategy } from '../enums/CachingStrategy';
-import { ParamArrayType } from '../enums/ParamArrayType';
-import { IResponseObject } from './IResponseObject';
-import { BodyType } from '../enums/BodyType';
 import { PureCollection, IType, PureModel, View } from 'datx';
+
+import { ParamArrayType } from '../enums/ParamArrayType';
+import { IFetchOptions } from './IFetchOptions';
+import { IResponseObject } from './IResponseObject';
 
 export interface IConfigType {
   baseUrl: string;
-  cache: CachingStrategy;
-  maxCacheAge: number;
-  fetchReference?: typeof fetch;
   paramArrayType: ParamArrayType;
   encodeQueryString: boolean;
-  serialize(data: any, type: BodyType): any;
-  parse(data: IResponseObject): IResponseObject;
   collection?: PureCollection;
   type?: IType | typeof PureModel;
   views?: Array<View>;
+  fetchReference?: typeof fetch;
+  serialize?: (options: IFetchOptions) => IFetchOptions;
+  parse?: (data: object, options: IResponseObject) => object;
 }
