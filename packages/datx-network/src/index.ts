@@ -28,3 +28,10 @@ export { IInterceptor } from './interfaces/IInterceptor';
 export { INetworkHandler } from './interfaces/INetworkHandler';
 export { IPipeOperator } from './interfaces/IPipeOperator';
 export { IResponseObject } from './interfaces/IResponseObject';
+
+export { withNetwork } from './withNetwork';
+
+export { INetworkCollection } from './interfaces/INetworkCollection';
+export { INetworkCollectionConstructor } from './interfaces/INetworkCollectionConstructor';
+export { INetworkModel } from './interfaces/INetworkModel';
+export { INetworkModelConstructor } from './interfaces/INetworkModelConstructor';

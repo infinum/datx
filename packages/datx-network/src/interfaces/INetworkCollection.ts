@@ -1,25 +1,19 @@
-import { PureCollection, IType, PureModel, IModelConstructor } from 'datx';
+import { PureModel, PureCollection, IType } from 'datx';
 
 import { IRequestOptions } from './IRequestOptions';
 import { Response } from '../Response';
 import { INetworkModel } from './INetworkModel';
+import { INetworkModelConstructor } from './INetworkModelConstructor';
 
 export interface INetworkCollection extends PureCollection {
   getOne<T extends INetworkModel = INetworkModel>(
-    type: IType | IModelConstructor<T>,
+    type: IType | INetworkModelConstructor,
     id: string,
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
   getMany<T extends INetworkModel = INetworkModel>(
-    type: IType | IModelConstructor<T>,
-    options?: IRequestOptions,
-  ): Promise<Response<T>>;
-
-  request<T extends INetworkModel = INetworkModel>(
-    url: string,
-    method?: string,
-    data?: object,
+    type: IType | INetworkModelConstructor,
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
@@ -28,5 +22,5 @@ export interface INetworkCollection extends PureCollection {
     id: string,
     options?: boolean | IRequestOptions,
   ): Promise<void>;
-  removeOne(model: PureModel, options?: boolean | IRequestOptions): Promise<void>;
+  removeOne(model: INetworkModel, options?: boolean | IRequestOptions): Promise<void>;
 }

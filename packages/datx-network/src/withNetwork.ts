@@ -1,8 +1,8 @@
-import { isCollection, isModel, isView, PureCollection, PureModel, View } from 'datx';
+import { isCollection, isModel, PureCollection, PureModel, View } from 'datx';
 
 import { decorateCollection } from './decorateCollection';
 import { decorateModel } from './decorateModel';
-import { decorateView } from './decorateView';
+// import { decorateView } from './decorateView';
 import { INetworkCollection } from './interfaces/INetworkCollection';
 import { INetworkModel } from './interfaces/INetworkModel';
 import { INetworkView } from './interfaces/INetworkView';
@@ -35,10 +35,10 @@ export function withNetwork<T>(
     return decorateCollection(Base);
   }
 
-  if (isView(Base)) {
-    // @ts-ignore
-    return decorateView<T>(Base);
-  }
+  // if (isView(Base)) {
+  //   // @ts-ignore
+  //   return decorateView<T>(Base);
+  // }
 
   throw new Error('The instance needs to be a model, collection or a view');
 }

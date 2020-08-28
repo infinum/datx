@@ -1,6 +1,9 @@
 import { ParamArrayType } from '../enums/ParamArrayType';
 import { PureModel, IFieldDefinition, IReferenceDefinition } from 'datx';
 import { getMeta } from 'datx-utils';
+import { BaseRequest } from '../BaseRequest';
+import { query, header, cache } from '../operators';
+import { IRequestOptions } from '../interfaces/IRequestOptions';
 
 export const isBrowser: boolean = typeof window !== 'undefined';
 
@@ -122,4 +125,16 @@ export function getModelClassRefs(
   });
 
   return refs;
+}
+
+export function addOptionsToRequest<TModel, TParams extends object>(
+  request: BaseRequest<TModel, TParams>,
+  options?: IRequestOptions,
+): BaseRequest<TModel, TParams> {
+  return request.pipe<TModel, TParams>(
+    options?.query && query(options?.query),
+    options?.networkConfig?.headers && header(options?.networkConfig?.headers),
+    options?.cacheOptions?.cachingStrategy &&
+      cache(options?.cacheOptions?.cachingStrategy, options?.cacheOptions?.maxAge),
+  );
 }
