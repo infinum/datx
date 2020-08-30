@@ -4,7 +4,7 @@ import { INetworkHandler } from '../interfaces/INetworkHandler';
 import { IResponseObject } from '../interfaces/IResponseObject';
 import { IResponseHeaders } from '../interfaces/IResponseHeaders';
 import { IHeaders } from '../interfaces/IHeaders';
-import { Response } from '../Response';
+import { Response as ResponseClass } from '../Response';
 
 function parseResponse(
   response: IResponseObject,
@@ -24,8 +24,9 @@ export function fetchInterceptor<T extends PureModel>(
   fetchReference?: typeof fetch,
   serialize: (options: IFetchOptions) => IFetchOptions = (options): IFetchOptions => options,
   parse: (data: object, options: IResponseObject) => object = (data): object => data,
+  Response: typeof ResponseClass = ResponseClass,
 ) {
-  return (request: IFetchOptions, _next?: INetworkHandler): Promise<Response<T>> => {
+  return (request: IFetchOptions, _next?: INetworkHandler): Promise<ResponseClass<T>> => {
     if (!fetchReference) {
       throw new Error('The fetch reference must be defined');
     }

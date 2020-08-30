@@ -2,7 +2,6 @@ import { Collection, Model } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
 import {
-  config,
   fetchModelLink,
   fetchModelRefLink,
   getModelLinks,
@@ -10,9 +9,10 @@ import {
   getModelRefMeta,
   jsonapi,
   modelToJsonApi,
+  config,
 } from '../../src';
-
 import { clearAllCache } from '../../src/cache';
+
 import { setRequest, setupNetwork, confirmNetwork } from '../utils/api';
 import { Event, Image, TestStore } from '../utils/setup';
 
@@ -141,18 +141,14 @@ describe('Network basics', () => {
       name: 'events-1',
       url: 'event/all',
     });
-
     let hasTransformRequestHookBeenCalled = false;
     const store = new TestStore();
-
     config.transformRequest = (opts): any => {
       expect(opts.collection).toBe(store);
       hasTransformRequestHookBeenCalled = true;
-
       return { ...opts, url: `${opts.url}/all` };
     };
     const events = await store.fetchAll('event');
-
     expect(events.data).toBeInstanceOf(Array);
     expect(hasTransformRequestHookBeenCalled).toBe(true);
   });
@@ -162,19 +158,14 @@ describe('Network basics', () => {
       name: 'events-1',
       url: 'event',
     });
-
     let hasTransformResponseHookBeenCalled = false;
-
     config.transformResponse = (opts): any => {
       expect(opts.status).toBe(200);
       hasTransformResponseHookBeenCalled = true;
-
       return { ...opts, status: 201 };
     };
-
     const store = new TestStore();
     const events = await store.fetchAll('event');
-
     expect(events.data).toBeInstanceOf(Array);
     expect(events.status).toBe(201);
     expect(hasTransformResponseHookBeenCalled).toBe(true);

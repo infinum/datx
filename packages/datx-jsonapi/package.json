@@ -58,7 +58,7 @@
       "ts",
       "js"
     ],
-    "testRegex": "test/main.ts",
+    "testRegex": "test/(.*).test.ts$",
     "globals": {
       "ts-jest": {
         "diagnostics": {
@@ -67,10 +67,14 @@
       }
     },
     "preset": "ts-jest",
-    "testMatch": null
+    "testMatch": null,
+    "setupFilesAfterEnv": [
+      "./test/setup.ts"
+    ]
   },
   "dependencies": {
     "datx": "^2.0.0-beta.4",
-    "datx-utils": "^2.0.0-beta.4"
+    "datx-utils": "^2.0.0-beta.4",
+    "datx-network": "^2.0.0-beta.7"
   }
 }

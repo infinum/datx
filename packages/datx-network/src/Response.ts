@@ -67,9 +67,9 @@ function initData<T extends PureModel | Array<PureModel>>(
 }
 
 export class Response<T extends PureModel | Array<PureModel>> {
-  private __data;
+  protected __data;
 
-  private __internal: IResponseInternal = {
+  protected __internal: IResponseInternal = {
     response: {},
     views: [],
   };
@@ -125,6 +125,15 @@ export class Response<T extends PureModel | Array<PureModel>> {
    * @memberOf Response
    */
   public readonly collection?: PureCollection;
+
+  /**
+   * Cache used for the link requests
+   *
+   * @protected
+   * @type {Record<string, Promise<Response>>}
+   * @memberOf Response
+   */
+  protected readonly __cache: Record<string, () => Promise<Response<T>>> = {};
 
   public get isSuccess(): boolean {
     return !this.error;

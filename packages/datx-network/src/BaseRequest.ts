@@ -187,6 +187,9 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
 
     // Manually copy complex objects
     clone._config.collection = this._config.collection;
+    clone._config.fetchInterceptor = this._config.fetchInterceptor;
+    clone._config.fetchReference = this._config.fetchReference;
+    clone._config.Response = this._config.Response;
     clone._config.type = this._config.type;
 
     return clone as BaseRequest<TNewModel, TNewParams>;

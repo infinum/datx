@@ -1,10 +1,10 @@
 import { View, IViewConstructor, PureModel } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
-import { config, IJsonapiView, jsonapi } from '../src';
-import { clearAllCache } from '../src/cache';
+import { IJsonapiView, jsonapi, config } from '../src';
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
 import { Event, TestStore } from './utils/setup';
+import { clearAllCache } from '../src/cache';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;

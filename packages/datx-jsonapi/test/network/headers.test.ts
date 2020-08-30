@@ -1,10 +1,9 @@
 import * as fetch from 'isomorphic-fetch';
 
-import { config } from '../../src';
-
-import { clearAllCache } from '../../src/cache';
 import { setupNetwork, setRequest, confirmNetwork } from '../utils/api';
 import { TestStore } from '../utils/setup';
+import { config } from '../../src/NetworkUtils';
+import { clearAllCache } from '../../src/cache';
 
 describe('headers', () => {
   beforeEach(() => {

@@ -9,9 +9,9 @@ import {
 } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 
-import { config, fetchModelLink, jsonapi, modelToJsonApi, saveRelationship } from '../../src';
-
+import { fetchModelLink, jsonapi, modelToJsonApi, saveRelationship, config } from '../../src';
 import { clearAllCache } from '../../src/cache';
+
 import { setupNetwork, setRequest, confirmNetwork } from '../utils/api';
 import { Event, TestStore } from '../utils/setup';
 

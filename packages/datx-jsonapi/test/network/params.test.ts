@@ -1,10 +1,10 @@
 import * as fetch from 'isomorphic-fetch';
 
-import { config, ParamArrayType } from '../../src';
-
-import { clearAllCache } from '../../src/cache';
 import { setupNetwork, setRequest, confirmNetwork } from '../utils/api';
-import { Event, TestStore } from '../utils/setup';
+import { TestStore, Event } from '../utils/setup';
+import { ParamArrayType } from '../../src';
+import { clearAllCache } from '../../src/cache';
+import { config } from '../../src/NetworkUtils';
 
 describe('params', () => {
   beforeEach(() => {
@@ -109,10 +109,8 @@ describe('params', () => {
       query: { include: 'bar' },
       url: 'event',
     });
-
     const store = new TestStore();
     const event = store.add({}, Event);
-
     await event.save({ queryParams: { include: 'bar' } });
   });
 
@@ -175,7 +173,7 @@ describe('params', () => {
 
   describe('Param array types', () => {
     afterEach(() => {
-      config.paramArrayType = ParamArrayType.COMMA_SEPARATED;
+      config.paramArrayType = ParamArrayType.CommaSeparated;
     });
 
     it('should work with coma separated values', async () => {
@@ -185,7 +183,7 @@ describe('params', () => {
         url: 'event',
       });
 
-      config.paramArrayType = ParamArrayType.COMMA_SEPARATED;
+      config.paramArrayType = ParamArrayType.CommaSeparated;
       const store = new TestStore();
       const events = await store.fetchAll('event', {
         queryParams: { filter: { a: ['1', '2'], b: '3' } },
@@ -202,24 +200,7 @@ describe('params', () => {
         url: 'event',
       });
 
-      config.paramArrayType = ParamArrayType.MULTIPLE_PARAMS;
-      const store = new TestStore();
-      const events = await store.fetchAll('event', {
-        queryParams: { filter: { a: ['1', '2'], b: '3' } },
-      });
-
-      expect(events.data).toBeInstanceOf(Array);
-      expect(events.data).toHaveLength(4);
-    });
-
-    it('should work with object paths', async () => {
-      setRequest({
-        name: 'events-1',
-        query: 'filter[a.0]=1&filter[a.1]=2&filter[b]=3',
-        url: 'event',
-      });
-
-      config.paramArrayType = ParamArrayType.OBJECT_PATH;
+      config.paramArrayType = ParamArrayType.MultipleParams;
       const store = new TestStore();
       const events = await store.fetchAll('event', {
         queryParams: { filter: { a: ['1', '2'], b: '3' } },
@@ -236,7 +217,7 @@ describe('params', () => {
         url: 'event',
       });
 
-      config.paramArrayType = ParamArrayType.PARAM_ARRAY;
+      config.paramArrayType = ParamArrayType.ParamArray;
       const store = new TestStore();
       const events = await store.fetchAll('event', {
         queryParams: { filter: { a: ['1', '2'], b: '3' } },

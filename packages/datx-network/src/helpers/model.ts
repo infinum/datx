@@ -7,7 +7,7 @@ import { BaseRequest } from '../BaseRequest';
 import { method, setUrl, query, header, cache, body } from '../operators';
 import { HttpMethod } from '../enums/HttpMethod';
 import { Response } from '../Response';
-import { PureModel, commitModel, getModelCollection, modelToJSON } from 'datx';
+import { PureModel, commitModel, getModelCollection, getModelId } from 'datx';
 import { action } from 'mobx';
 
 function handleResponse<T extends INetworkModel = INetworkModel>(
@@ -70,10 +70,10 @@ export function saveModel<TModel extends INetworkModel>(
     options?.networkConfig?.headers && header(options?.networkConfig?.headers),
     options?.cacheOptions?.cachingStrategy &&
       cache(options?.cacheOptions?.cachingStrategy, options?.cacheOptions?.maxAge),
-    body(modelToJSON(model)),
+    body(model),
   );
 
-  return request.fetch().then(handleResponse(model));
+  return request.fetch({ id: getModelId(model) }).then(handleResponse(model));
 }
 
 export function removeModel<TModel extends INetworkModel>(
@@ -113,7 +113,7 @@ export function removeModel<TModel extends INetworkModel>(
         options?.cacheOptions?.cachingStrategy &&
           cache(options?.cacheOptions?.cachingStrategy, options?.cacheOptions?.maxAge),
       )
-      .fetch()
+      .fetch({ id: getModelId(model) })
       .then(() => {
         const collection = getModelCollection(model);
         if (collection) {

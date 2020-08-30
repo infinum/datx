@@ -1,21 +1,16 @@
 import { Collection, Model, prop, Attribute } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 import { computed } from 'mobx';
-import { config, getModelMeta, getModelRefMeta, jsonapi, modelToJsonApi } from '../src';
-import { clearAllCache } from '../src/cache';
+import { getModelMeta, getModelRefMeta, jsonapi, modelToJsonApi, config } from '../src';
 
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
 import { Event, LineItem, TestStore } from './utils/setup';
-
-const baseTransformRequest = config.transformRequest;
-const baseTransformResponse = config.transformResponse;
+import { clearAllCache } from '../src/cache';
 
 describe('Issues', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
     config.baseUrl = 'https://example.com/';
-    config.transformRequest = baseTransformRequest;
-    config.transformResponse = baseTransformResponse;
     clearAllCache();
     setupNetwork();
   });

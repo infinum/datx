@@ -8,7 +8,7 @@ import { PureCollection, IType, PureModel } from 'datx';
 import { cacheInterceptor } from './interceptors/cache';
 import { IResponseObject } from './interfaces/IResponseObject';
 import { IFetchOptions } from './interfaces/IFetchOptions';
-import { fetchInterceptor } from './interceptors/fetch';
+import { IRequestOptions } from './interfaces/IRequestOptions';
 
 export function setUrl(url: string, type: IType | typeof PureModel = PureModel) {
   return (pipeline: BaseRequest): void => {
@@ -136,7 +136,12 @@ export function fetchReference(fetchReference: typeof fetch) {
     const config = pipeline['_config'];
     config.fetchReference = fetchReference;
     upsertInterceptor(
-      fetchInterceptor(config.fetchReference, config.serialize, config.parse),
+      config.fetchInterceptor(
+        config.fetchReference,
+        config.serialize,
+        config.parse,
+        config.Response,
+      ),
       'fetch',
     )(pipeline);
   };
@@ -147,7 +152,12 @@ export function serializer(serialize: (request: IFetchOptions) => IFetchOptions)
     const config = pipeline['_config'];
     config.serialize = serialize;
     upsertInterceptor(
-      fetchInterceptor(config.fetchReference, config.serialize, config.parse),
+      config.fetchInterceptor(
+        config.fetchReference,
+        config.serialize,
+        config.parse,
+        config.Response,
+      ),
       'fetch',
     )(pipeline);
   };
@@ -158,7 +168,12 @@ export function parser(parse: (data: object, response: IResponseObject) => objec
     const config = pipeline['_config'];
     config.parse = parse;
     upsertInterceptor(
-      fetchInterceptor(config.fetchReference, config.serialize, config.parse),
+      config.fetchInterceptor(
+        config.fetchReference,
+        config.serialize,
+        config.parse,
+        config.Response,
+      ),
       'fetch',
     )(pipeline);
   };
@@ -167,5 +182,21 @@ export function parser(parse: (data: object, response: IResponseObject) => objec
 export function collection(collection?: PureCollection) {
   return (pipeline: BaseRequest): void => {
     pipeline['_config'].collection = collection;
+  };
+}
+
+export function requestOptions(options?: IRequestOptions) {
+  return (pipeline: BaseRequest): void => {
+    if (options?.query) {
+      query(options?.query)(pipeline);
+    }
+
+    if (options?.networkConfig?.headers) {
+      header(options?.networkConfig?.headers)(pipeline);
+    }
+
+    if (options?.cacheOptions?.cachingStrategy) {
+      cache(options?.cacheOptions?.cachingStrategy, options?.cacheOptions?.maxAge)(pipeline);
+    }
   };
 }

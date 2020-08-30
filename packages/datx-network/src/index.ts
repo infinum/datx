@@ -16,7 +16,10 @@ export {
   serializer,
   parser,
   collection,
+  requestOptions,
 } from './operators';
+
+export { clearAllCache, clearCacheByType } from './interceptors/cache';
 
 export { CachingStrategy } from './enums/CachingStrategy';
 export { HttpMethod } from './enums/HttpMethod';

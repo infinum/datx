@@ -7,6 +7,7 @@ import { INetworkCollection } from './interfaces/INetworkCollection';
 import { INetworkModel } from './interfaces/INetworkModel';
 import { INetworkView } from './interfaces/INetworkView';
 import { BaseRequest } from './BaseRequest';
+import { INetworkCollectionConstructor } from './interfaces/INetworkCollectionConstructor';
 
 interface INetwork<T> {
   network?: BaseRequest;
@@ -18,7 +19,7 @@ export function withNetwork<T extends typeof PureModel>(Base: T): T & INetwork<I
 
 export function withNetwork<T extends typeof PureCollection>(
   Base: T,
-): T & INetwork<INetworkCollection>;
+): T & INetworkCollectionConstructor;
 
 export function withNetwork<T extends typeof View>(Base: T): T & INetwork<INetworkView>;
 

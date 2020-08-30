@@ -1,11 +1,9 @@
 import { autorun } from 'mobx';
 
-import { config } from '../../src';
-
-import { clearAllCache } from '../../src/cache';
 import { setupNetwork, setRequest } from '../utils/api';
 import { Event, TestStore } from '../utils/setup';
-import { CachingStrategy } from '../../src/enums/CachingStrategy';
+import { CachingStrategy, config } from '../../src';
+import { clearAllCache } from '../../src/cache';
 
 function sleep(duration: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, duration));
@@ -14,7 +12,7 @@ function sleep(duration: number): Promise<void> {
 describe('caching', () => {
   beforeEach(() => {
     config.baseUrl = 'https://example.com/';
-    config.cache = CachingStrategy.CACHE_FIRST;
+    config.cache = CachingStrategy.CacheFirst;
     clearAllCache();
     setupNetwork();
   });
@@ -170,6 +168,8 @@ describe('caching', () => {
 
       const store = new TestStore();
       const events = await store.fetchAll(Event);
+      // TODO: Fix array typing
+      // @ts-ignore
       const event = events.data as Array<Event>;
 
       expect(event).toBeInstanceOf(Array);
@@ -188,6 +188,8 @@ describe('caching', () => {
 
       const store = new TestStore();
       const events = await store.fetchAll(Event);
+      // TODO: Fix array typing
+      // @ts-ignore
       const event = events.data as Array<Event>;
 
       expect(event).toBeInstanceOf(Array);
@@ -304,19 +306,9 @@ describe('caching', () => {
   });
 
   describe('caching strategies', () => {
-    let baseCacheStrategy: CachingStrategy;
-
-    beforeEach(() => {
-      baseCacheStrategy = config.cache;
-    });
-
-    afterEach(() => {
-      config.cache = baseCacheStrategy;
-    });
-
-    describe('NETWORK_ONLY', () => {
+    describe('NetworkOnly', () => {
       beforeEach(() => {
-        config.cache = CachingStrategy.NETWORK_ONLY;
+        config.cache = CachingStrategy.NetworkOnly;
       });
 
       it('should fail if no network', async () => {
@@ -356,9 +348,9 @@ describe('caching', () => {
       });
     });
 
-    describe('NETWORK_FIRST', () => {
+    describe('NetworkFirst', () => {
       beforeEach(() => {
-        config.cache = CachingStrategy.NETWORK_FIRST;
+        config.cache = CachingStrategy.NetworkFirst;
       });
 
       it('should use network if available', async () => {
@@ -406,9 +398,9 @@ describe('caching', () => {
       });
     });
 
-    describe('STALE_WHILE_REVALIDATE', () => {
+    describe('StaleWhileRevalidate', () => {
       beforeEach(() => {
-        config.cache = CachingStrategy.STALE_WHILE_REVALIDATE;
+        config.cache = CachingStrategy.StaleWhileRevalidate;
       });
 
       it('should show new data if no cache', async () => {
@@ -508,9 +500,9 @@ describe('caching', () => {
       });
     });
 
-    describe('CACHE_ONLY', () => {
+    describe('CacheOnly', () => {
       beforeEach(() => {
-        config.cache = CachingStrategy.CACHE_ONLY;
+        config.cache = CachingStrategy.CacheOnly;
       });
 
       it('should fail if no cache', async () => {
@@ -533,7 +525,7 @@ describe('caching', () => {
         });
 
         await store.getOne(Event, '1', {
-          cacheOptions: { cachingStrategy: CachingStrategy.NETWORK_FIRST },
+          cacheOptions: { cachingStrategy: CachingStrategy.NetworkFirst },
         });
 
         await store.getOne(Event, '1');
@@ -550,9 +542,9 @@ describe('caching', () => {
       });
     });
 
-    describe('CACHE_FIRST', () => {
+    describe('CacheFirst', () => {
       beforeEach(() => {
-        config.cache = CachingStrategy.CACHE_FIRST;
+        config.cache = CachingStrategy.CacheFirst;
       });
 
       it('should use cache if available', async () => {
@@ -564,7 +556,7 @@ describe('caching', () => {
         });
 
         await store.getOne(Event, '1', {
-          cacheOptions: { cachingStrategy: CachingStrategy.NETWORK_FIRST },
+          cacheOptions: { cachingStrategy: CachingStrategy.NetworkFirst },
         });
 
         await store.getOne(Event, '1');
@@ -629,7 +621,7 @@ describe('caching', () => {
         });
 
         const eventResponse = await store.getOne(Event, '1', {
-          cacheOptions: { cachingStrategy: CachingStrategy.NETWORK_FIRST },
+          cacheOptions: { cachingStrategy: CachingStrategy.NetworkFirst },
         });
 
         const originalEvent = eventResponse.data as Event;
@@ -655,7 +647,7 @@ describe('caching', () => {
         });
 
         await store.getOne(Event, '1', {
-          cacheOptions: { cachingStrategy: CachingStrategy.NETWORK_FIRST },
+          cacheOptions: { cachingStrategy: CachingStrategy.NetworkFirst },
         });
 
         const storeJson = store.toJSON();
@@ -693,9 +685,9 @@ describe('caching', () => {
       });
     });
 
-    describe('STALE_AND_UPDATE', () => {
+    describe('StaleAndUpdate', () => {
       beforeEach(() => {
-        config.cache = CachingStrategy.STALE_AND_UPDATE;
+        config.cache = CachingStrategy.StaleAndUpdate;
       });
 
       it('should show new data if no cache', async () => {
@@ -786,7 +778,7 @@ describe('caching', () => {
     });
 
     it('should use maxAge', async () => {
-      config.cache = CachingStrategy.CACHE_FIRST;
+      config.cache = CachingStrategy.CacheFirst;
 
       const store = new TestStore();
 
@@ -796,7 +788,7 @@ describe('caching', () => {
       });
 
       await store.getOne(Event, '1', {
-        cacheOptions: { cachingStrategy: CachingStrategy.NETWORK_FIRST },
+        cacheOptions: { cachingStrategy: CachingStrategy.NetworkFirst },
       });
 
       await store.getOne(Event, '1');
@@ -828,6 +820,8 @@ describe('caching', () => {
     });
 
     it('should fail if invalid strategy', async () => {
+      // @ts-expect-error
+      config.cache = 'invalid-strategy';
       const store = new TestStore();
 
       try {

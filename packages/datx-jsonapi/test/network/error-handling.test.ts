@@ -1,10 +1,9 @@
 import * as fetch from 'isomorphic-fetch';
 
-import { config } from '../../src';
-
-import { clearAllCache } from '../../src/cache';
 import { setupNetwork, setRequest, confirmNetwork } from '../utils/api';
 import { Event, TestStore } from '../utils/setup';
+import { clearAllCache } from '../../src/cache';
+import { config } from '../../src/NetworkUtils';
 
 describe('error handling', () => {
   beforeEach(() => {
