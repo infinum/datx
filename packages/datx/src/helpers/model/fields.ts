@@ -162,7 +162,11 @@ function hasBackRef(item: PureModel, property: string, target: PureModel): boole
     return item[property] === target;
   }
 
-  return item[property].includes(target);
+  if (isIdentifier(item[property])) {
+    return item[property] === getModelId(target);
+  }
+  // item[property] maybe Array<ID> or Array<Model>
+  return item[property].includes(target) || item[property].includes(getModelId(target));
 }
 
 function backRefSplice(
@@ -235,6 +239,7 @@ export function getBackRef(model: PureModel, key: string): PureModel | Array<Pur
 
   const backModels = collection
     .getAllModels()
+    .filter((item) => getModelType(item) === refOptions.model)
     .filter((item) => hasBackRef(item, refOptions.property as string, model));
 
   const backData: IObservableArray<PureModel> = observable.array(backModels, { deep: false });

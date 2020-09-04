@@ -11,6 +11,9 @@ import {
 } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId } from '../src/helpers/model/utils';
+import Person from './__models__/Person';
+import Pet from './__models__/Pet';
+import Toy from './__models__/Toy';
 
 configure({ enforceActions: 'observed' });
 
@@ -578,8 +581,61 @@ describe('Collection', () => {
       );
       expect(store.findAll(Foo).length).toBe(1);
       const foo = store.findOne<Foo>(Foo, '0');
-      expect(foo!.name).toBe('foo1');
-      expect(foo!.children).toEqual([]);
+      expect(foo?.name).toBe('foo1');
+      expect(foo?.children).toEqual([]);
+    });
+
+    it('should be use model for indirect references', () => {
+      class MyCollection extends Collection {
+        static types = [Person, Pet];
+      }
+
+      const collection = new MyCollection();
+
+      collection.add<Person>({ firstName: 'Jane', id: 1 }, Person);
+      const steve = collection.add<Person>({ firstName: 'Steve', spouse: 1 }, Person);
+      const fido = collection.add<Pet>({ name: 'Fido', owner: steve }, Pet);
+
+      expect(steve.pets.length).toBe(1);
+      expect(steve.pets[0].name).toBe(fido.name);
+    });
+
+    it('should be use id for indirect references', () => {
+      class MyCollection extends Collection {
+        static types = [Person, Pet];
+      }
+
+      const collection = new MyCollection();
+
+      collection.add<Person>({ firstName: 'Jane', id: 1 }, Person);
+      const steve = collection.add<Person>({ firstName: 'Steve', spouse: 1 }, Person);
+      const fido = collection.add<Pet>({ name: 'Fido', owner: steve.id }, Pet);
+      const wufi = collection.add<Pet>({ name: 'wufi', owner: steve.id }, Pet);
+
+      expect(steve.pets.length).toBe(2);
+      expect(steve.pets[0].name).toBe(fido.name);
+      expect(steve.pets[1].name).toBe(wufi.name);
+      collection.removeOne(wufi);
+      expect(steve.pets.length).toBe(1);
+      expect(steve.pets[0].name).toBe(fido.name);
+    });
+
+    it('should be use ids for indirect references', () => {
+      class MyCollection extends Collection {
+        static types = [Person, Pet, Toy];
+      }
+
+      const collection = new MyCollection();
+
+      collection.add<Person>({ firstName: 'Jane', id: 1 }, Person);
+      const steve = collection.add<Person>({ firstName: 'Steve', spouse: 1 }, Person);
+      const jane = collection.add<Person>({ firstName: 'Jane', spouse: 1 }, Person);
+      const fido = collection.add<Toy>({ name: 'Fido', owners: [steve.id, jane.id] }, Toy);
+
+      expect(steve.toys.length).toBe(1);
+      expect(jane.toys.length).toBe(1);
+      expect(steve.toys[0].name).toBe(fido.name);
+      expect(jane.toys[0].name).toBe(fido.name);
     });
   });
 });
