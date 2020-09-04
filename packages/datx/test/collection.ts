@@ -596,6 +596,7 @@ describe('Collection', () => {
       const steve = collection.add<Person>({ firstName: 'Steve', spouse: 1 }, Person);
       const fido = collection.add<Pet>({ name: 'Fido', owner: steve }, Pet);
 
+      expect(fido.owner).toBe(steve);
       expect(steve.pets.length).toBe(1);
       expect(steve.pets[0].name).toBe(fido.name);
     });
@@ -612,6 +613,7 @@ describe('Collection', () => {
       const fido = collection.add<Pet>({ name: 'Fido', owner: steve.id }, Pet);
       const wufi = collection.add<Pet>({ name: 'wufi', owner: steve.id }, Pet);
 
+      expect(fido.owner).toBe(steve);
       expect(steve.pets.length).toBe(2);
       expect(steve.pets[0].name).toBe(fido.name);
       expect(steve.pets[1].name).toBe(wufi.name);
@@ -632,6 +634,9 @@ describe('Collection', () => {
       const jane = collection.add<Person>({ firstName: 'Jane', spouse: 1 }, Person);
       const fido = collection.add<Toy>({ name: 'Fido', owners: [steve.id, jane.id] }, Toy);
 
+      expect(fido.owners.length).toBe(2);
+      expect(fido.owners[0]).toBe(steve);
+      expect(fido.owners[1]).toBe(jane);
       expect(steve.toys.length).toBe(1);
       expect(jane.toys.length).toBe(1);
       expect(steve.toys[0].name).toBe(fido.name);

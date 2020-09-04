@@ -4,5 +4,5 @@ export default class Pet extends Model {
   static type = 'pet';
 
   @Attribute() public name!: string;
-  @Attribute({ toOne: Person }) public owner!: Person;
+  @Attribute({ toOne: () => Person }) public owner!: Person;
 }
