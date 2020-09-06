@@ -28,7 +28,7 @@ import { IType } from '../../interfaces/IType';
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
 export function getModelRefType(
-  model: ParsedRefModel,
+  model: ParsedRefModel | IType,
   data: any,
   parentModel: PureModel,
   key: string,
