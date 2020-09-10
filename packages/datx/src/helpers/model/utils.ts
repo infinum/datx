@@ -19,7 +19,7 @@ import { IIdentifier } from '../../interfaces/IIdentifier';
 import { startAction, endAction } from '../patch';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { initModelField } from './init';
-import { IFieldDefinition } from '../../Attribute';
+import { IFieldDefinition, IReferenceDefinition } from '../../Attribute';
 import { IBucket } from '../../interfaces/IBucket';
 import { error } from '../format';
 import { ReferenceType } from '../../enums/ReferenceType';
@@ -260,7 +260,9 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
       if (shouldBeReference && !fields[key].referenceDef) {
         throw error('You should save this value as a reference.');
       }
-      model[key] = value;
+      if (!(fields[key].referenceDef as IReferenceDefinition)?.property || value !== undefined) {
+        model[key] = value;
+      }
     } else {
       if (shouldBeReference) {
         extendObservable(fields, {

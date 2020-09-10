@@ -643,6 +643,27 @@ describe('Collection', () => {
       expect(jane.toys[0].name).toBe(fido.name);
     });
 
+    it('should be use ids for indirect references before references existed', () => {
+      class MyCollection extends Collection {
+        static types = [Person, Pet, Toy];
+      }
+
+      const collection = new MyCollection();
+
+      collection.add<Person>({ firstName: 'Jane', id: 1 }, Person);
+      const fido = collection.add<Toy>({ name: 'Fido', owners: [1, 2] }, Toy);
+      const steve = collection.add<Person>({ firstName: 'Steve', spouse: 2, id: 1 }, Person);
+      const jane = collection.add<Person>({ firstName: 'Jane', spouse: 1, id: 2 }, Person);
+
+      expect(fido.owners.length).toBe(2);
+      expect(fido.owners[0]).toBe(steve);
+      expect(fido.owners[1]).toBe(jane);
+      expect(steve.toys.length).toBe(1);
+      expect(jane.toys.length).toBe(1);
+      expect(steve.toys[0].name).toBe(fido.name);
+      expect(jane.toys[0].name).toBe(fido.name);
+    });
+
     it('should be use modelRefs for indirect references', () => {
       class MyCollection extends Collection {
         static types = [Person, Pet, Toy];
