@@ -238,8 +238,18 @@ export function getBackRef(model: PureModel, key: string): PureModel | Array<Pur
   }
 
   const backModels = collection
-    .findAll(getModelRefType(refOptions.model, model, model, key, collection))
-    .filter((item) => hasBackRef(item, refOptions.property as string, model));
+    .getAllModels()
+    .filter(
+      (item) =>
+        getModelType(item) ===
+          getModelRefType(
+            refOptions.model,
+            item,
+            model,
+            refOptions.property as string,
+            collection,
+          ) && hasBackRef(item, refOptions.property as string, model),
+    );
 
   const backData: IObservableArray<PureModel> = observable.array(backModels, { deep: false });
 

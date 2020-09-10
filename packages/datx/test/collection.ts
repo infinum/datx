@@ -642,5 +642,35 @@ describe('Collection', () => {
       expect(steve.toys[0].name).toBe(fido.name);
       expect(jane.toys[0].name).toBe(fido.name);
     });
+
+    it('should be use modelRefs for indirect references', () => {
+      class MyCollection extends Collection {
+        static types = [Person, Pet, Toy];
+      }
+
+      const collection = new MyCollection();
+
+      collection.add<Person>({ firstName: 'Jane', id: 1 }, Person);
+      const steve = collection.add<Person>({ firstName: 'Steve', spouse: 1 }, Person);
+      const jane = collection.add<Person>({ firstName: 'Jane', spouse: 1 }, Person);
+      const fido = collection.add<Toy>(
+        {
+          name: 'Fido',
+          owners: [
+            { type: 'person', id: steve.id },
+            { type: 'person', id: jane.id },
+          ],
+        },
+        Toy,
+      );
+
+      expect(fido.owners.length).toBe(2);
+      expect(fido.owners[0]).toBe(steve);
+      expect(fido.owners[1]).toBe(jane);
+      expect(steve.toys.length).toBe(1);
+      expect(jane.toys.length).toBe(1);
+      expect(steve.toys[0].name).toBe(fido.name);
+      expect(jane.toys[0].name).toBe(fido.name);
+    });
   });
 });
