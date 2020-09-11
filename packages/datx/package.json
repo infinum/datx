@@ -48,6 +48,7 @@
       "js"
     ],
     "testRegex": "test/(.*).ts$",
+    "testPathIgnorePatterns": ["test/__models__/*"],
     "globals": {
       "ts-jest": {
         "diagnostics": {
