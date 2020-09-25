@@ -28,7 +28,7 @@ import { IType } from '../../interfaces/IType';
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
 export function getModelRefType(
-  model: ParsedRefModel,
+  model: ParsedRefModel | IType,
   data: any,
   parentModel: PureModel,
   key: string,
@@ -112,6 +112,7 @@ export function initModelRef<T extends PureModel>(
     let value: TRefValue = fieldDef.referenceDef.type === ReferenceType.TO_MANY ? [] : null;
 
     if (initialVal !== null && initialVal !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       value = getRefValue(initialVal, collection!, fieldDef, model, key);
     }
 
@@ -126,6 +127,7 @@ export function initModelRef<T extends PureModel>(
       () => getRef(model, key),
       (newValue: TRefValue) => {
         updateSingleAction(model, key, newValue);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         updateRef(model, key, getRefValue(newValue, collection!, fieldDef, model, key));
       },
     );
