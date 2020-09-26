@@ -70,6 +70,6 @@
     ]
   },
   "dependencies": {
-    "datx": "^2.0.0-beta.7"
+    "datx": "^2.0.0-beta.6"
   }
 }
