@@ -17,6 +17,7 @@ export {
   parser,
   collection,
   requestOptions,
+  upsertInterceptor,
 } from './operators';
 
 export { clearAllCache, clearCacheByType } from './interceptors/cache';

@@ -18,7 +18,6 @@ export {
 } from './helpers/model';
 
 export { BaseJsonapiRequest } from './BaseRequest';
-// export { setBaseRequest, getBaseRequest, pipeBaseRequest } from './BaseRequest';
 
 export { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
 export { IJsonapiCollection } from './interfaces/IJsonapiCollection';

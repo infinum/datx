@@ -46,7 +46,7 @@ export class NetworkResponse<T extends IJsonapiModel> extends BaseResponse<T> {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public first?: () => Promise<Response<T>>; // Handled by the __fetchLink
+  public first?: () => Promise<NetworkResponse<T>>; // Handled by the __fetchLink
 
   /**
    * Previous data page
@@ -54,7 +54,7 @@ export class NetworkResponse<T extends IJsonapiModel> extends BaseResponse<T> {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public prev?: () => Promise<Response<T>>; // Handled by the __fetchLink
+  public prev?: () => Promise<NetworkResponse<T>>; // Handled by the __fetchLink
 
   /**
    * Next data page
@@ -62,7 +62,7 @@ export class NetworkResponse<T extends IJsonapiModel> extends BaseResponse<T> {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public next?: () => Promise<Response<T>>; // Handled by the __fetchLink
+  public next?: () => Promise<NetworkResponse<T>>; // Handled by the __fetchLink
 
   /**
    * Last data page
@@ -70,7 +70,7 @@ export class NetworkResponse<T extends IJsonapiModel> extends BaseResponse<T> {
    * @type {Promise<Response>}
    * @memberOf Response
    */
-  public last?: () => Promise<Response<T>>; // Handled by the __fetchLink
+  public last?: () => Promise<NetworkResponse<T>>; // Handled by the __fetchLink
 
   public get views(): Array<View> {
     return this.__internal.views;
@@ -98,9 +98,9 @@ export class NetworkResponse<T extends IJsonapiModel> extends BaseResponse<T> {
    * @param {string} name Link name
    * @returns Promise that resolves with a Response object
    *
-   * @memberOf Response
+   * @memberOf NetworkResponse
    */
-  private __fetchLink(name: string): () => Promise<Response<T>> {
+  private __fetchLink(name: string): () => Promise<NetworkResponse<T>> {
     if (!this.__cache[name]) {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 
@@ -109,11 +109,19 @@ export class NetworkResponse<T extends IJsonapiModel> extends BaseResponse<T> {
 
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
-        this.__cache[name] = (): Promise<Response<T>> =>
-          fetchLink<T>(link, this.collection as IJsonapiCollection, options, this.views);
+        this.__cache[name] = (): Promise<NetworkResponse<T>> =>
+          fetchLink<T>(link, this.collection as IJsonapiCollection, options, this.views).then(
+            (response) =>
+              new NetworkResponse<T>(
+                response['__internal'].response,
+                response.collection,
+                undefined,
+                response.views,
+              ),
+          );
       }
     }
 
-    return this.__cache[name];
+    return this.__cache[name] as () => Promise<NetworkResponse<T>>;
   }
 }
