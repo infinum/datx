@@ -24,6 +24,15 @@ describe('body', () => {
     expect(request['lastMethod']).toBe('POST');
   });
 
+  it('should send something in fetch if the method is supported', async () => {
+    const request = new MockBaseRequest('foobar').pipe(setUrl('foobar'), method(HttpMethod.Post));
+
+    await request.fetch(null, 'sdasdsad');
+
+    expect(request['lastBody']).toBe('sdasdsad');
+    expect(request['lastMethod']).toBe('POST');
+  });
+
   it('should send the no content type if body type is raw', async () => {
     const request = new MockBaseRequest('foobar').pipe(
       setUrl('foobar'),

@@ -14,6 +14,7 @@ import { cacheInterceptor } from './interceptors/cache';
 import { BodyType } from './enums/BodyType';
 import { CachingStrategy } from './enums/CachingStrategy';
 import { fetchInterceptor } from './interceptors/fetch';
+import { body as bodyOperator } from './operators';
 
 interface IHookOptions {
   suspense?: boolean;
@@ -99,34 +100,40 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     }
   }
 
-  public fetch(params?: TParams): Promise<Response<TModel>> {
-    if (!this._options.url) {
+  public fetch(
+    params?: TParams | null,
+    body?: any,
+    bodyType?: BodyType,
+  ): Promise<Response<TModel>> {
+    const request = body === undefined ? this : this.pipe(bodyOperator(body, bodyType));
+
+    if (!request._options.url) {
       throw new Error('URL should be defined');
     }
-    const urlParams = Object.assign({}, this._options.params, params);
-    const url = interpolateParams(`${this._config.baseUrl}${this._options.url}`, urlParams);
+    const urlParams = Object.assign({}, request._options.params, params || {});
+    const url = interpolateParams(`${request._config.baseUrl}${request._options.url}`, urlParams);
     const processedUrl = appendQueryParams(
       url,
-      this._options.query,
-      this._config.paramArrayType,
-      this._config.encodeQueryString,
+      request._options.query,
+      request._config.paramArrayType,
+      request._config.encodeQueryString,
     );
 
-    const request: IFetchOptions = {
+    const requestRef: IFetchOptions = {
       url: processedUrl,
-      method: this._options.method,
-      data: this.processBody(),
-      collection: this._config.collection,
+      method: request._options.method,
+      data: request.processBody(),
+      collection: request._config.collection,
       options: {
         networkConfig: {
-          headers: this._options.headers,
+          headers: request._options.headers,
         },
       },
-      views: this._config.views,
-      type: this._config.type,
+      views: request._config.views,
+      type: request._config.type,
     };
 
-    const interceptorChain = this.interceptors.reduce((next, interceptor) => {
+    const interceptorChain = request.interceptors.reduce((next, interceptor) => {
       return (options: IFetchOptions): Promise<Response<TModel>> => interceptor.fn(options, next);
     }, undefined);
 
@@ -134,11 +141,13 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
       throw new Error('Something went wrong');
     }
 
-    return interceptorChain(request);
+    return interceptorChain(requestRef);
   }
 
   public useHook(
     params?: TParams,
+    body?: any,
+    bodyType?: BodyType,
     options?: IHookOptions,
   ): [Response<TModel> | null, boolean, string | Error | null] {
     const [loader, setLoader] = useState<Promise<Response<TModel>> | null>(null);
@@ -146,7 +155,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     const [error, setError] = useState<string | Error | null>(null);
 
     const execute = useCallback(() => {
-      const loaderPromise = this.fetch(params);
+      const loaderPromise = this.fetch(params, body, bodyType);
       setLoader(loaderPromise);
       setValue(null);
       setError(null);
