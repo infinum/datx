@@ -22,7 +22,7 @@
   ],
   "devDependencies": {
     "@infinumjs/tslint-config": "^2.0.0-beta.6",
-    "@types/jest": "^25.1.0",
+    "@types/jest": "^26.0.14",
     "@types/node": "^14.0.0",
     "jest": "^26.4.2",
     "mobx": "^5.9.4",
