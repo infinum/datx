@@ -13,4 +13,6 @@ export {
   setMeta,
   mergeMeta,
   getMetaObj,
+  isArrayLike,
+  makeObservable,
 } from './helpers';

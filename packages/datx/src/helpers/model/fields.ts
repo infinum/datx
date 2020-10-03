@@ -1,13 +1,5 @@
-import { getMeta, setMeta, warn, mapItems } from 'datx-utils';
-import {
-  runInAction,
-  IObservableArray,
-  intercept,
-  observable,
-  IArraySplice,
-  IArrayChange,
-  isArrayLike,
-} from 'mobx';
+import { getMeta, setMeta, warn, mapItems, isArrayLike } from 'datx-utils';
+import { runInAction, IObservableArray, intercept, observable, IArraySplice } from 'mobx';
 
 import { PureModel } from '../../PureModel';
 import { IBucket } from '../../interfaces/IBucket';
@@ -22,6 +14,11 @@ import { IType } from '../../interfaces/IType';
 import { TChange } from '../../interfaces/TChange';
 import { error } from '../format';
 import { IModelRef } from '../../interfaces/IModelRef';
+
+interface IArrayChange<T> {
+  index: number;
+  newValue: T;
+}
 
 export function getRef(model: PureModel, key: string): PureModel | Array<PureModel> | null {
   const value: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
@@ -89,12 +86,12 @@ function updateModelReferences(
         .filter(Boolean)
         .forEach((bucket: IBucket<PureModel>) => {
           if (isArrayLike(bucket.value)) {
-            const targetIndex = bucket.value.findIndex(
+            const targetIndex = (bucket.value as Array<PureModel>).findIndex(
               (modelItem) => getModelId(modelItem) === oldId && getModelType(modelItem) === type,
             );
 
             if (targetIndex !== -1) {
-              bucket.value[targetIndex] = newId;
+              (bucket.value as Array<PureModel>)[targetIndex] = newId;
             }
           } else if (
             bucket.value &&

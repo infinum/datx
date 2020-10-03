@@ -1,4 +1,5 @@
-import { computed, observable, isArrayLike } from 'mobx';
+import { isArrayLike, makeObservable } from 'datx-utils';
+import { computed, observable } from 'mobx';
 
 import { error } from '../helpers/format';
 import { getModelRef, isModelReference } from '../helpers/model/utils';
@@ -19,6 +20,7 @@ export class ToOne<T extends PureModel> {
     protected __key?: string,
     protected __skipMissing = true,
   ) {
+    makeObservable(this);
     if (data && !this.__collection) {
       throw error('The model needs to be in a collection to be referenceable');
     } else if (isArrayLike(data)) {
