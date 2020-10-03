@@ -5,17 +5,22 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/packages/datx-utils" # Location of package manifests
+  - package-ecosystem: 'npm' # See documentation for possible values
+    directory: '/packages/datx-utils' # Location of package manifests
     schedule:
-      interval: "daily"
-      
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/packages/datx" # Location of package manifests
+      interval: 'daily'
+
+  - package-ecosystem: 'npm' # See documentation for possible values
+    directory: '/packages/datx' # Location of package manifests
     schedule:
-      interval: "daily"
-      
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/packages/datx-jsonapi" # Location of package manifests
+      interval: 'daily'
+
+  - package-ecosystem: 'npm' # See documentation for possible values
+    directory: '/packages/datx-network' # Location of package manifests
     schedule:
-      interval: "daily"
+      interval: 'daily'
+
+  - package-ecosystem: 'npm' # See documentation for possible values
+    directory: '/packages/datx-jsonapi' # Location of package manifests
+    schedule:
+      interval: 'daily'
