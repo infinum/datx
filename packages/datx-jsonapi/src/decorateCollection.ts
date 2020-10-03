@@ -34,7 +34,7 @@ import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IDefinition, IRecord, IRelationship, IRequest, IResponse } from './interfaces/JsonApi';
 import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
-import { CachingStrategy } from './enums/CachingStrategy';
+import { CachingStrategy } from 'datx-network';
 
 type TSerialisedStore = IRawCollection & { cache?: Array<Omit<ICacheInternal, 'collection'>> };
 
@@ -120,7 +120,7 @@ export function decorateCollection(
         id,
         Object.assign({}, options, {
           cacheOptions: Object.assign({}, options?.cacheOptions || {}, {
-            cachingStrategy: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
+            cachingStrategy: isBrowser ? CachingStrategy.CacheFirst : CachingStrategy.NetworkOnly,
           }),
         }),
       );
@@ -142,7 +142,7 @@ export function decorateCollection(
         type,
         Object.assign({}, options, {
           cacheOptions: Object.assign({}, options?.cacheOptions || {}, {
-            cachingStrategy: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
+            cachingStrategy: isBrowser ? CachingStrategy.CacheFirst : CachingStrategy.NetworkOnly,
           }),
         }),
       );

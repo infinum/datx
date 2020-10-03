@@ -21,7 +21,7 @@ Replace the response model with a different model. Used to replace a model while
 
 ## data
 
-An model or an array of model received from the API
+An model or an array of models received from the API
 
 ## error
 

@@ -1,6 +1,6 @@
 {
   "name": "datx",
-  "version": "2.0.0-beta.5",
+  "version": "2.0.0-beta.6",
   "description": "A MobX data store",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -59,6 +59,6 @@
     "testMatch": null
   },
   "dependencies": {
-    "datx-utils": "^2.0.0-beta.5"
+    "datx-utils": "^2.0.0-beta.6"
   }
 }

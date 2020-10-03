@@ -1,7 +1,6 @@
 export { jsonapi } from './mixin';
 export { Response } from './Response';
-export { config } from './NetworkUtils';
-export { ParamArrayType } from './enums/ParamArrayType';
+export { NetworkResponse } from './NetworkResponse';
 export { GenericModel } from './GenericModel';
 
 export {
@@ -13,12 +12,12 @@ export {
   getModelRefMeta,
   getModelEndpointUrl,
   modelToJsonApi,
-  saveModel,
   saveRelationship,
   isModelPersisted,
+  saveModel,
 } from './helpers/model';
 
-export { clearAllCache, clearCacheByType } from './cache';
+export { BaseJsonapiRequest } from './BaseRequest';
 
 export { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
 export { IJsonapiCollection } from './interfaces/IJsonapiCollection';
@@ -26,3 +25,34 @@ export { IJsonapiModel } from './interfaces/IJsonapiModel';
 export { IJsonapiView } from './interfaces/IJsonapiView';
 export { IRawResponse } from './interfaces/IRawResponse';
 export { IRequestOptions } from './interfaces/IRequestOptions';
+
+export { config } from './NetworkUtils';
+
+export {
+  BaseRequest,
+  addInterceptor,
+  cache,
+  method,
+  setUrl,
+  body,
+  query,
+  header,
+  params,
+  fetchReference,
+  encodeQueryString,
+  paramArrayType,
+  serializer,
+  parser,
+  collection,
+  ParamArrayType,
+  CachingStrategy,
+  HttpMethod,
+  IFetchOptions,
+  IHeaders,
+  IInterceptor,
+  INetworkHandler,
+  IPipeOperator,
+  IResponseObject,
+  clearAllCache,
+  clearCacheByType,
+} from 'datx-network';

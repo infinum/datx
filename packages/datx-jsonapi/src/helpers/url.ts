@@ -1,31 +1,28 @@
 import { getModelType, IType, PureCollection, PureModel } from 'datx';
 
 import { URL_REGEX } from '../consts';
-import { ParamArrayType } from '../enums/ParamArrayType';
 import { IFilters } from '../interfaces/IFilters';
 import { IHeaders } from '../interfaces/IHeaders';
 import { IJsonapiModel } from '../interfaces/IJsonapiModel';
 import { IRequestOptions } from '../interfaces/IRequestOptions';
 import { IRequest } from '../interfaces/JsonApi';
 import { config } from '../NetworkUtils';
+import { ParamArrayType } from 'datx-network';
 
 function parametrize(params: object, scope = ''): Array<{ key: string; value: string }> {
   const list: Array<{ key: string; value: string }> = [];
 
   Object.keys(params).forEach((key) => {
     if (params[key] instanceof Array) {
-      if (config.paramArrayType === ParamArrayType.OBJECT_PATH) {
-        // eslint-disable-next-line prefer-spread
-        list.push.apply(list, parametrize(params[key], `${key}.`));
-      } else if (config.paramArrayType === ParamArrayType.COMMA_SEPARATED) {
+      if (config.paramArrayType === ParamArrayType.CommaSeparated) {
         list.push({ key: `${scope}${key}`, value: params[key].join(',') });
-      } else if (config.paramArrayType === ParamArrayType.MULTIPLE_PARAMS) {
+      } else if (config.paramArrayType === ParamArrayType.MultipleParams) {
         // eslint-disable-next-line prefer-spread
         list.push.apply(
           list,
           params[key].map((param) => ({ key: `${scope}${key}`, value: param })),
         );
-      } else if (config.paramArrayType === ParamArrayType.PARAM_ARRAY) {
+      } else if (config.paramArrayType === ParamArrayType.ParamArray) {
         // eslint-disable-next-line prefer-spread
         list.push.apply(
           list,
