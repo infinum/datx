@@ -56,9 +56,15 @@ export class PureCollection {
 
   private readonly __views: Array<string> = [];
 
-  private __dataMap: Record<string, Record<string, PureModel>> = observable({}, { deep: false });
+  private __dataMap: Record<string, Record<string, PureModel>> = (observable(
+    {},
+    { deep: false },
+  ) as unknown) as Record<string, Record<string, PureModel>>;
 
-  private __dataList: Record<string, IObservableArray<PureModel>> = observable({}, { deep: false });
+  private __dataList: Record<string, IObservableArray<PureModel>> = (observable(
+    {},
+    { deep: false },
+  ) as unknown) as Record<string, IObservableArray<PureModel>>;
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
     extendObservable(this, {});
@@ -248,9 +254,9 @@ export class PureCollection {
       );
     });
     this.__data.replace([]);
-    this.__dataList = observable({}, {}, { deep: false }) as IObservable &
+    this.__dataList = (observable({}, {}, { deep: false }) as unknown) as IObservable &
       Record<string, IObservableArray<PureModel>>;
-    this.__dataMap = observable({}, {}, { deep: false }) as IObservable &
+    this.__dataMap = (observable({}, {}, { deep: false }) as unknown) as IObservable &
       Record<string, Record<string, PureModel>>;
   }
 
