@@ -1,6 +1,10 @@
-import { extendObservable, isArrayLike, observable, set } from 'mobx';
+import { extendObservable, observable, set, isObservableArray } from 'mobx';
 
 import { DATX_META } from './consts';
+
+export function isArrayLike(value: any): boolean {
+  return Array.isArray(value) || isObservableArray(value);
+}
 
 export function reducePrototypeChain<T, U>(
   obj: U,

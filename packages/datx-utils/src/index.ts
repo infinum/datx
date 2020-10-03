@@ -13,4 +13,5 @@ export {
   setMeta,
   mergeMeta,
   getMetaObj,
+  isArrayLike,
 } from './helpers';
