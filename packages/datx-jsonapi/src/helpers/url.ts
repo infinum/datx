@@ -93,8 +93,8 @@ function appendParams(url: string, params: Array<string>): string {
 }
 
 function encodeParam(param: string): string {
-  // Manually decode field-value separator (=)
-  return encodeURIComponent(param).replace('%3D', '=');
+  // Manually decode field-value separator (=) - only the first one
+  return encodeURIComponent(param).replace(/%3D/, '=');
 }
 
 export function buildUrl(
