@@ -9,18 +9,24 @@ DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) 
 ## Basic usage
 
 ```typescript
-import { Collection, Model, prop } from 'datx';
+import { Collection, Model, Attribute } from 'datx';
 import { jsonapi } from 'datx-jsonapi';
 import { computed } from 'mobx';
 
 class Person extends jsonapi(Model) {
   public static type = 'person'; // Unique name of the model class
 
-  @prop name: string; // A normal observable property without a default value
-  @prop surname: string;
-  @prop.toOne(Person) spouse?: Person; // A reference to a Person model
+  @Attribute()
+  public name: string; // A normal observable property without a default value
 
-  @computed get fullName() {
+  @Attribute()
+  public surname: string;
+
+  @Attribute({ toOne: Person })
+  public spouse?: Person; // A reference to a Person model
+
+  @computed
+  public get fullName() {
     // Standard MobX computed props
     return `${this.name} ${this.surname}`;
   }

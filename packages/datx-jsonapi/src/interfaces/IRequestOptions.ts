@@ -1,6 +1,6 @@
 import { IFilters } from './IFilters';
 import { IHeaders } from './IHeaders';
-import { CachingStrategy } from '../enums/CachingStrategy';
+import { CachingStrategy } from 'datx-network';
 
 export interface IRequestOptions {
   queryParams?: {

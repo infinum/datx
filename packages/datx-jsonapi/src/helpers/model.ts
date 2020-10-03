@@ -137,7 +137,7 @@ export function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
         }
         setMeta(related, MODEL_PERSISTED_FIELD, true);
 
-        return response.replaceData(related);
+        return response.replaceData(related) as Response<T>;
       }
 
       return response;

@@ -2,14 +2,12 @@ import { View, commitModel } from 'datx';
 import { setMeta } from 'datx-utils';
 import { action } from 'mobx';
 
-import { getCache, saveCache } from './cache';
 import {
   MODEL_PERSISTED_FIELD,
   MODEL_PROP_FIELD,
   MODEL_QUEUE_FIELD,
   MODEL_RELATED_FIELD,
 } from './consts';
-import { ParamArrayType } from './enums/ParamArrayType';
 import { isBrowser } from './helpers/utils';
 import { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
 import { IHeaders } from './interfaces/IHeaders';
@@ -20,7 +18,8 @@ import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { ILink, IResponse } from './interfaces/JsonApi';
 import { Response as LibResponse } from './Response';
-import { CachingStrategy } from './enums/CachingStrategy';
+import { CachingStrategy, ParamArrayType } from 'datx-network';
+import { saveCache, getCache } from './cache';
 
 export type FetchType = (
   method: string,
@@ -60,7 +59,7 @@ export const config: IConfigType = {
   baseUrl: '/',
 
   // Enable caching by default in the browser
-  cache: isBrowser ? CachingStrategy.CACHE_FIRST : CachingStrategy.NETWORK_ONLY,
+  cache: isBrowser ? CachingStrategy.CacheFirst : CachingStrategy.NetworkOnly,
   maxCacheAge: Infinity,
 
   // Default options that will be passed to the fetch function
@@ -81,7 +80,7 @@ export const config: IConfigType = {
     undefined,
 
   // Determines how will the request param arrays be stringified
-  paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
+  paramArrayType: ParamArrayType.CommaSeparated, // As recommended by the spec
 
   /**
    * Base implementation of the fetch function (can be overridden)
@@ -232,7 +231,7 @@ function collectionFetch<T extends IJsonapiModel>(
 
   const cacheStrategy =
     reqOptions.options?.cacheOptions?.skipCache || !isCacheSupported
-      ? CachingStrategy.NETWORK_ONLY
+      ? CachingStrategy.NetworkOnly
       : reqOptions.options?.cacheOptions?.cachingStrategy || collectionCache || config.cache;
 
   let maxCacheAge: number = config.maxCacheAge || Infinity;
@@ -244,8 +243,8 @@ function collectionFetch<T extends IJsonapiModel>(
     maxCacheAge = reqOptions.options?.cacheOptions?.maxAge;
   }
 
-  // NETWORK_ONLY - Ignore cache
-  if (cacheStrategy === CachingStrategy.NETWORK_ONLY) {
+  // NetworkOnly - Ignore cache
+  if (cacheStrategy === CachingStrategy.NetworkOnly) {
     return makeNetworkCall<T>(params);
   }
 
@@ -254,8 +253,8 @@ function collectionFetch<T extends IJsonapiModel>(
     maxCacheAge,
   ) as unknown) as { response: LibResponse<T> } | undefined;
 
-  // NETWORK_FIRST - Fallback to cache only on network error
-  if (cacheStrategy === CachingStrategy.NETWORK_FIRST) {
+  // NetworkFirst - Fallback to cache only on network error
+  if (cacheStrategy === CachingStrategy.NetworkFirst) {
     return makeNetworkCall<T>(params, true).catch((errorResponse) => {
       if (cacheContent) {
         return cacheContent.response;
@@ -264,8 +263,8 @@ function collectionFetch<T extends IJsonapiModel>(
     });
   }
 
-  // STALE_WHILE_REVALIDATE - Use cache and update it in background
-  if (cacheStrategy === CachingStrategy.STALE_WHILE_REVALIDATE) {
+  // StaleWhileRevalidate - Use cache and update it in background
+  if (cacheStrategy === CachingStrategy.StaleWhileRevalidate) {
     const network = makeNetworkCall<T>(params, true);
 
     if (cacheContent) {
@@ -278,8 +277,8 @@ function collectionFetch<T extends IJsonapiModel>(
     return network;
   }
 
-  // CACHE_ONLY - Fail if nothing in cache
-  if (cacheStrategy === CachingStrategy.CACHE_ONLY) {
+  // CacheOnly - Fail if nothing in cache
+  if (cacheStrategy === CachingStrategy.CacheOnly) {
     if (cacheContent) {
       return Promise.resolve(cacheContent.response);
     }
@@ -290,13 +289,13 @@ function collectionFetch<T extends IJsonapiModel>(
   }
 
   // PREFER_CACHE - Use cache if available
-  if (cacheStrategy === CachingStrategy.CACHE_FIRST) {
+  if (cacheStrategy === CachingStrategy.CacheFirst) {
     return cacheContent ? Promise.resolve(cacheContent.response) : makeNetworkCall<T>(params, true);
   }
 
-  // STALE_AND_UPDATE - Use cache and update response once network is complete
-  if (cacheStrategy === CachingStrategy.STALE_AND_UPDATE) {
-    const existingResponse = cacheContent?.response?.clone();
+  // StaleAndUpdate - Use cache and update response once network is complete
+  if (cacheStrategy === CachingStrategy.StaleAndUpdate) {
+    const existingResponse = cacheContent?.response?.clone() as LibResponse<T>;
 
     const network = makeNetworkCall<T>(params, true, existingResponse);
 

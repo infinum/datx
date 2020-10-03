@@ -1,6 +1,6 @@
 {
   "name": "datx-jsonapi",
-  "version": "2.0.0-beta.5",
+  "version": "2.0.0-beta.6",
   "description": "DatX mixin for JSON API support",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -58,7 +58,7 @@
       "ts",
       "js"
     ],
-    "testRegex": "test/main.ts",
+    "testRegex": "test/(.*).test.ts$",
     "globals": {
       "ts-jest": {
         "diagnostics": {
@@ -67,10 +67,14 @@
       }
     },
     "preset": "ts-jest",
-    "testMatch": null
+    "testMatch": null,
+    "setupFilesAfterEnv": [
+      "./test/setup.ts"
+    ]
   },
   "dependencies": {
-    "datx": "^2.0.0-beta.5",
-    "datx-utils": "^2.0.0-beta.5"
+    "datx": "^2.0.0-beta.6",
+    "datx-utils": "^2.0.0-beta.6",
+    "datx-network": "^2.0.0-beta.8"
   }
 }
