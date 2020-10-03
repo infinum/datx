@@ -7,8 +7,9 @@ import {
   mergeMeta,
   getMetaObj,
   mapItems,
+  isArrayLike,
 } from 'datx-utils';
-import { toJS, extendObservable, runInAction, isArrayLike } from 'mobx';
+import { toJS, extendObservable, runInAction } from 'mobx';
 
 import { IModelRef } from '../../interfaces/IModelRef';
 import { IType } from '../../interfaces/IType';

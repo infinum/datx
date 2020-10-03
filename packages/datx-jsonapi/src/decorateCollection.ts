@@ -13,8 +13,7 @@ import {
   updateModel,
   commitModel,
 } from 'datx';
-import { getMeta, IRawModel, mapItems, deprecated } from 'datx-utils';
-import { action, isArrayLike } from 'mobx';
+import { getMeta, IRawModel, mapItems, deprecated, isArrayLike } from 'datx-utils';
 
 import {
   clearAllCache,
@@ -87,7 +86,6 @@ export function decorateCollection(
       }
     }
 
-    @action
     public sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T | Array<T> | null {
       if (!body) {
         return null;
@@ -196,7 +194,6 @@ export function decorateCollection(
 
     public removeOne(model: PureModel, options?: boolean | IRequestOptions): Promise<void>;
 
-    @action
     public removeOne(
       obj: IType | typeof PureModel | PureModel,
       id?: string | boolean | IRequestOptions,
@@ -229,13 +226,11 @@ export function decorateCollection(
       return Promise.resolve();
     }
 
-    @action
     public removeAll(type: string | number | typeof PureModel): void {
       super.removeAll(type);
       clearCacheByType(getModelType(type));
     }
 
-    @action
     public reset(): void {
       super.reset();
       clearAllCache();
@@ -274,7 +269,7 @@ export function decorateCollection(
         }
         const items = refData.data;
 
-        if (isArrayLike(items) && items.length < 1) {
+        if (isArrayLike(items) && (items as Array<IDefinition>).length < 1) {
           // it's only possible to update items with one ore more refs. Early exit
           return;
         }
@@ -288,7 +283,9 @@ export function decorateCollection(
                   (def.id === undefined ? null : this.findOne(def.type, def.id)) || def,
               ) || null;
 
-            const itemType: string = isArrayLike(items) ? items[0].type : items.type;
+            const itemType: string = isArrayLike(items)
+              ? items[0].type
+              : (items as IDefinition).type;
 
             if (ref in record) {
               record[ref] = models;

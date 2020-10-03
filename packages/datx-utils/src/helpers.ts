@@ -2,6 +2,19 @@ import { extendObservable, observable, set, isObservableArray } from 'mobx';
 
 import { DATX_META } from './consts';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let makeObservableFn = (target: any, annotations?: any): void => {
+  // noop by default
+};
+
+try {
+  makeObservableFn = require('mobx').makeObservable;
+} catch {
+  // mobx 4/5
+}
+
+export const makeObservable = makeObservableFn;
+
 export function isArrayLike(value: any): boolean {
   return Array.isArray(value) || isObservableArray(value);
 }

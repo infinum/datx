@@ -14,4 +14,5 @@ export {
   mergeMeta,
   getMetaObj,
   isArrayLike,
+  makeObservable,
 } from './helpers';

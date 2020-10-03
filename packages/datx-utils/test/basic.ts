@@ -1,13 +1,6 @@
-import {
-  autorun,
-  configure,
-  runInAction,
-  isComputedProp,
-  observable,
-  makeAutoObservable,
-} from 'mobx';
+import { autorun, configure, runInAction, isComputedProp, observable } from 'mobx';
 
-import { assignComputed, mapItems, setMeta, getMeta, isArrayLike } from '../src';
+import { assignComputed, mapItems, setMeta, getMeta, isArrayLike, makeObservable } from '../src';
 
 configure({ enforceActions: 'observed' });
 
@@ -121,6 +114,7 @@ describe('datx-utils', () => {
       let counter = 0;
 
       class Data {
+        @observable
         public data = 1;
 
         public foo!: number;
@@ -128,7 +122,7 @@ describe('datx-utils', () => {
         public bar!: number;
 
         constructor() {
-          makeAutoObservable(this);
+          makeObservable(this);
           assignComputed(
             this,
             'foo',
@@ -159,7 +153,6 @@ describe('datx-utils', () => {
       expect(data.bar).toBe(-1);
 
       runInAction(() => {
-        console.log('bar--');
         data.bar--;
       });
       expect(data.foo).toBe(2);

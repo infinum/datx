@@ -1,4 +1,5 @@
-import { computed, observable, isArrayLike } from 'mobx';
+import { isArrayLike, makeObservable } from 'datx-utils';
+import { computed, observable } from 'mobx';
 
 import { IModelRef } from '../interfaces/IModelRef';
 import { PureCollection } from '../PureCollection';
@@ -22,6 +23,7 @@ export class ToOneOrMany<T extends PureModel> {
     protected __key?: string,
     protected __skipMissing = true,
   ) {
+    makeObservable(this);
     this.__isList = isArrayLike(data);
     if (this.__isList) {
       this.__toManyBucket = new ToMany(

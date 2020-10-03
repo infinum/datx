@@ -9,7 +9,6 @@ import {
   View,
 } from 'datx';
 import { assignComputed } from 'datx-utils';
-import { action } from 'mobx';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -282,7 +281,6 @@ export class Response<T extends IJsonapiModel> {
    *
    * @memberOf Response
    */
-  @action
   public replaceData(data: T): Response<T> {
     const record: PureModel = this.data as PureModel;
 
@@ -332,7 +330,6 @@ export class Response<T extends IJsonapiModel> {
     };
   }
 
-  @action
   public update(response: IRawResponse, views?: Array<View>): Response<T> {
     this.__updateInternal(response, undefined, views);
     const newData = initData(response, this.collection);
