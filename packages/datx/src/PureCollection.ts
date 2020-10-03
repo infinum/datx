@@ -56,15 +56,13 @@ export class PureCollection {
 
   private readonly __views: Array<string> = [];
 
-  private __dataMap: Record<string, Record<string, PureModel>> = (observable(
-    {},
-    { deep: false },
-  ) as unknown) as Record<string, Record<string, PureModel>>;
+  private __dataMap: Record<string, Record<string, PureModel>> = (observable({}, undefined, {
+    deep: false,
+  }) as unknown) as Record<string, Record<string, PureModel>>;
 
-  private __dataList: Record<string, IObservableArray<PureModel>> = (observable(
-    {},
-    { deep: false },
-  ) as unknown) as Record<string, IObservableArray<PureModel>>;
+  private __dataList: Record<string, IObservableArray<PureModel>> = (observable({}, undefined, {
+    deep: false,
+  }) as unknown) as Record<string, IObservableArray<PureModel>>;
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
     extendObservable(this, {});
