@@ -1,5 +1,13 @@
-import { assignComputed, IRawModel, getMeta, mapItems, setMeta, META_FIELD } from 'datx-utils';
-import { observable, isArrayLike } from 'mobx';
+import {
+  assignComputed,
+  IRawModel,
+  getMeta,
+  mapItems,
+  setMeta,
+  META_FIELD,
+  isArrayLike,
+} from 'datx-utils';
+import { observable } from 'mobx';
 
 import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';

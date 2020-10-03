@@ -1,5 +1,5 @@
+import { isArrayLike, makeObservable } from 'datx-utils';
 import {
-  action,
   computed,
   intercept,
   IObservableArray,
@@ -7,7 +7,6 @@ import {
   observable,
   reaction,
   runInAction,
-  isArrayLike,
 } from 'mobx';
 
 import { error } from '../helpers/format';
@@ -33,6 +32,7 @@ export class ToMany<T extends PureModel> {
     protected __key?: string,
     protected __skipMissing = true,
   ) {
+    makeObservable(this);
     if (data?.length > 0 && !collection) {
       throw error('The model needs to be in a collection to be referenceable');
     } else if (data && !isArrayLike(data)) {
@@ -85,10 +85,12 @@ export class ToMany<T extends PureModel> {
       throw error('The reference must be an array of values.');
     }
 
-    this.__rawList.replace(data);
-    if (this.__model && this.__key) {
-      updateSingleAction(this.__model, this.__key, data);
-    }
+    runInAction(() => {
+      this.__rawList.replace(data);
+      if (this.__model && this.__key) {
+        updateSingleAction(this.__model, this.__key, data);
+      }
+    });
   }
 
   @computed
@@ -134,7 +136,6 @@ export class ToMany<T extends PureModel> {
     return this.__collection.findOne<T>(model.type, model.id);
   }
 
-  @action
   private __partialRawListUpdate(change: TChange): null {
     if (this.__readonly) {
       throw error('This is a read-only bucket');
@@ -143,26 +144,29 @@ export class ToMany<T extends PureModel> {
     if (change.type === 'splice') {
       const added = change.added as Array<T>;
 
-      this.__rawList.slice(change.index, change.removedCount);
-      // eslint-disable-next-line prefer-spread
-      this.__rawList.splice.apply(
-        this.__rawList,
-        ([change.index, change.removedCount] as Array<any>).concat(added),
-      );
+      runInAction(() => {
+        this.__rawList.slice(change.index, change.removedCount);
+        // eslint-disable-next-line prefer-spread
+        this.__rawList.splice.apply(
+          this.__rawList,
+          ([change.index, change.removedCount] as Array<any>).concat(added),
+        );
+      });
 
       return null;
     }
 
-    const newModel = this.__getModel(change.newValue as T);
+    runInAction(() => {
+      const newModel = this.__getModel(change.newValue as T);
 
-    if (newModel) {
-      this.__rawList[change.index] = newModel;
-    }
+      if (newModel) {
+        this.__rawList[change.index] = newModel;
+      }
+    });
 
     return null;
   }
 
-  @action
   private __reMap(): void {
     for (let i = 0; i < this.__rawList.length; i++) {
       if (isReference(this.__rawList[i])) {

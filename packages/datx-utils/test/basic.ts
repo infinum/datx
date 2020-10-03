@@ -1,6 +1,6 @@
 import { autorun, configure, runInAction, isComputedProp, observable } from 'mobx';
 
-import { assignComputed, mapItems, setMeta, getMeta } from '../src';
+import { assignComputed, mapItems, setMeta, getMeta, isArrayLike, makeObservable } from '../src';
 
 configure({ enforceActions: 'observed' });
 
@@ -122,6 +122,7 @@ describe('datx-utils', () => {
         public bar!: number;
 
         constructor() {
+          makeObservable(this);
           assignComputed(
             this,
             'foo',
@@ -233,6 +234,31 @@ describe('datx-utils', () => {
       expect(getMeta(obj, 'test', metaData)).toBe(metaData);
       expect(getMeta(obj, 'test')).toBe(undefined);
       expect(Object.keys(obj)).toEqual([]);
+    });
+  });
+
+  describe('isArrayLike', () => {
+    it('should work with regular arrays', () => {
+      expect(isArrayLike([])).toBe(true);
+      expect(isArrayLike([1, true, 'three', {}])).toBe(true);
+    });
+
+    it('should work with observable arrays', () => {
+      expect(isArrayLike(observable([]))).toBe(true);
+      expect(isArrayLike(observable([1, true, 'three', {}]))).toBe(true);
+    });
+
+    it('should fail for sets', () => {
+      expect(isArrayLike(new Set([]))).toBe(false);
+      expect(isArrayLike(new Set([1, true, 'three', {}]))).toBe(false);
+    });
+
+    it('should fail for other values', () => {
+      expect(isArrayLike({})).toBe(false);
+      expect(isArrayLike({ length: 3 })).toBe(false);
+      expect(isArrayLike(true)).toBe(false);
+      expect(isArrayLike('array')).toBe(false);
+      expect(isArrayLike(Symbol('test'))).toBe(false);
     });
   });
 });

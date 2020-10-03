@@ -1,5 +1,5 @@
-import { IRawModel, mapItems } from 'datx-utils';
-import { action, computed, intercept, observable } from 'mobx';
+import { IRawModel, mapItems, makeObservable } from 'datx-utils';
+import { computed, intercept, observable, runInAction } from 'mobx';
 
 import { ToMany } from './buckets/ToMany';
 import { error } from './helpers/format';
@@ -34,6 +34,11 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     );
     this.modelType = getModelType(modelType);
     this.sortMethod = sortMethod;
+    makeObservable(this, {
+      sortMethod: observable,
+      length: computed,
+      list: computed,
+    });
   }
 
   @computed
@@ -73,7 +78,6 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
 
   public add(data: Array<T | IRawModel | Record<string, any>>): Array<T>;
 
-  @action
   public add(
     data: T | IRawModel | Record<string, any> | Array<T | IRawModel | Record<string, any>>,
   ): T | Array<T> {
@@ -81,10 +85,12 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
       | T
       | Array<T>;
 
-    mapItems(models, (instance: T) => {
-      if (!this.unique || this.__indexOf(instance) === -1) {
-        this.__rawList.push(instance);
-      }
+    runInAction(() => {
+      mapItems(models, (instance: T) => {
+        if (!this.unique || this.__indexOf(instance) === -1) {
+          this.__rawList.push(instance);
+        }
+      });
     });
 
     return models;
@@ -96,21 +102,22 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     return Boolean(this.__getList().find((item) => getModelId(item) === id));
   }
 
-  @action
   public remove(model: IIdentifier | T): void {
-    const item = this.__getModel(this.__normalizeModel(model));
+    runInAction(() => {
+      const item = this.__getModel(this.__normalizeModel(model));
 
-    if (item) {
-      this.__rawList.remove(item);
-    }
+      if (item) {
+        this.__rawList.remove(item);
+      }
+    });
   }
 
-  @action
   public removeAll(): void {
-    this.__rawList.replace([]);
+    runInAction(() => {
+      this.__rawList.replace([]);
+    });
   }
 
-  @action
   private __partialListUpdate(change: TChange): null {
     if (change.type === 'splice') {
       if (this.sortMethod && change.added.length > 0) {
@@ -128,30 +135,34 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
         });
       }
 
-      // eslint-disable-next-line prefer-spread
-      this.__rawList.splice.apply(
-        this.__rawList,
-        ([change.index, change.removedCount] as Array<any>).concat(added),
-      );
+      runInAction(() => {
+        // eslint-disable-next-line prefer-spread
+        this.__rawList.splice.apply(
+          this.__rawList,
+          ([change.index, change.removedCount] as Array<any>).concat(added),
+        );
+      });
 
       return null;
     }
 
-    if (this.sortMethod && change.newValue) {
-      throw error("New models can't be added directly to a sorted view list");
-    }
-
-    const newModel = this.__getModel(this.__normalizeModel(change.newValue as any));
-
-    if (newModel) {
-      const idIndex = this.__indexOf(newModel);
-
-      if (this.unique && idIndex !== -1 && idIndex !== change.index) {
-        throw error('The models in this view need to be unique');
+    runInAction(() => {
+      if (this.sortMethod && change.newValue) {
+        throw error("New models can't be added directly to a sorted view list");
       }
 
-      this.__rawList[change.index] = newModel;
-    }
+      const newModel = this.__getModel(this.__normalizeModel(change.newValue as any));
+
+      if (newModel) {
+        const idIndex = this.__indexOf(newModel);
+
+        if (this.unique && idIndex !== -1 && idIndex !== change.index) {
+          throw error('The models in this view need to be unique');
+        }
+
+        this.__rawList[change.index] = newModel;
+      }
+    });
 
     return null;
   }
