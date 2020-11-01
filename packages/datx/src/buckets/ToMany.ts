@@ -1,13 +1,4 @@
-import { isArrayLike, makeObservable } from 'datx-utils';
-import {
-  computed,
-  intercept,
-  IObservableArray,
-  IReactionDisposer,
-  observable,
-  reaction,
-  runInAction,
-} from 'mobx';
+import { isArrayLike, mobx, IObservableArray, IReactionDisposer, replace } from 'datx-utils';
 
 import { error } from '../helpers/format';
 import { getModelCollection, getModelRef, isReference } from '../helpers/model/utils';
@@ -18,7 +9,7 @@ import { PureModel } from '../PureModel';
 import { updateSingleAction } from '../helpers/patch';
 
 export class ToMany<T extends PureModel> {
-  protected readonly __rawList: IObservableArray<T | IModelRef> = observable.array([]);
+  protected readonly __rawList: IObservableArray<T | IModelRef> = mobx.observable.array([]);
 
   protected __collection?: PureCollection;
 
@@ -32,15 +23,15 @@ export class ToMany<T extends PureModel> {
     protected __key?: string,
     protected __skipMissing = true,
   ) {
-    makeObservable(this);
+    mobx.makeObservable(this);
     if (data?.length > 0 && !collection) {
       throw error('The model needs to be in a collection to be referenceable');
     } else if (data && !isArrayLike(data)) {
       throw error('The reference must be an array of values.');
     }
 
-    runInAction(() => {
-      this.__rawList.replace(data || []);
+    mobx.runInAction(() => {
+      replace(this.__rawList, data || []);
       this.setCollection(collection);
     });
   }
@@ -60,7 +51,7 @@ export class ToMany<T extends PureModel> {
           this.__rawList[index] = model;
         }
       });
-      this.__disposer = reaction(() => {
+      this.__disposer = mobx.reaction(() => {
         const references = this.__rawList.filter(isReference);
         const check = references
           .filter(Boolean)
@@ -71,7 +62,7 @@ export class ToMany<T extends PureModel> {
     }
   }
 
-  @computed
+  @mobx.computed
   public get value(): Array<T> {
     return this.__getList();
   }
@@ -85,20 +76,20 @@ export class ToMany<T extends PureModel> {
       throw error('The reference must be an array of values.');
     }
 
-    runInAction(() => {
-      this.__rawList.replace(data);
+    mobx.runInAction(() => {
+      replace(this.__rawList, data);
       if (this.__model && this.__key) {
         updateSingleAction(this.__model, this.__key, data);
       }
     });
   }
 
-  @computed
+  @mobx.computed
   public get length(): number {
     return this.value.length;
   }
 
-  @computed
+  @mobx.computed
   public get refValue(): Array<IModelRef> {
     return this.__rawList.map(getModelRef);
   }
@@ -107,7 +98,7 @@ export class ToMany<T extends PureModel> {
     return this.refValue.slice();
   }
 
-  @computed
+  @mobx.computed
   public get snapshot(): any {
     return this.toJSON();
   }
@@ -117,9 +108,9 @@ export class ToMany<T extends PureModel> {
       .map(this.__getModel.bind(this))
       .filter((item) => (this.__skipMissing ? Boolean(item) : true))
       .filter((model) => Boolean(model && getModelCollection(model))) as any;
-    const instances = observable.array(list, { deep: false });
+    const instances = mobx.observable.array(list, { deep: false });
 
-    intercept(instances, this.__partialRawListUpdate.bind(this));
+    mobx.intercept(instances, this.__partialRawListUpdate.bind(this));
 
     return instances;
   }
@@ -144,7 +135,7 @@ export class ToMany<T extends PureModel> {
     if (change.type === 'splice') {
       const added = change.added as Array<T>;
 
-      runInAction(() => {
+      mobx.runInAction(() => {
         this.__rawList.slice(change.index, change.removedCount);
         // eslint-disable-next-line prefer-spread
         this.__rawList.splice.apply(
@@ -156,7 +147,7 @@ export class ToMany<T extends PureModel> {
       return null;
     }
 
-    runInAction(() => {
+    mobx.runInAction(() => {
       const newModel = this.__getModel(change.newValue as T);
 
       if (newModel) {

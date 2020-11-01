@@ -14,5 +14,9 @@ export {
   mergeMeta,
   getMetaObj,
   isArrayLike,
-  makeObservable,
+  replace,
 } from './helpers';
+
+export { mobx } from './mobx';
+
+export * from './interfaces/IMobX';

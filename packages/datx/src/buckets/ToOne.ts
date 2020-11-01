@@ -1,5 +1,4 @@
-import { isArrayLike, makeObservable } from 'datx-utils';
-import { computed, observable } from 'mobx';
+import { isArrayLike, mobx } from 'datx-utils';
 
 import { error } from '../helpers/format';
 import { getModelRef, isModelReference } from '../helpers/model/utils';
@@ -9,7 +8,7 @@ import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
 
 export class ToOne<T extends PureModel> {
-  @observable
+  @mobx.observable
   private __rawValue: T | IModelRef | null = null;
 
   constructor(
@@ -20,7 +19,7 @@ export class ToOne<T extends PureModel> {
     protected __key?: string,
     protected __skipMissing = true,
   ) {
-    makeObservable(this);
+    mobx.makeObservable(this);
     if (data && !this.__collection) {
       throw error('The model needs to be in a collection to be referenceable');
     } else if (isArrayLike(data)) {
@@ -36,7 +35,7 @@ export class ToOne<T extends PureModel> {
     this.__collection = value;
   }
 
-  @computed
+  @mobx.computed
   public get value(): T | null {
     return this.__rawValue ? this.__getModel(this.__rawValue) : null;
   }
@@ -57,7 +56,7 @@ export class ToOne<T extends PureModel> {
     }
   }
 
-  @computed
+  @mobx.computed
   public get refValue(): IModelRef | null {
     return this.__rawValue ? getModelRef(this.__rawValue) : null;
   }
@@ -66,7 +65,7 @@ export class ToOne<T extends PureModel> {
     return this.refValue;
   }
 
-  @computed
+  @mobx.computed
   public get snapshot(): IModelRef | null {
     return this.toJSON();
   }

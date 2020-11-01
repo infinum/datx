@@ -1,8 +1,8 @@
-import { autorun, configure, runInAction, isComputedProp, observable } from 'mobx';
+import { autorun, isComputedProp } from 'mobx';
 
 import { assignComputed, mapItems, setMeta, getMeta, isArrayLike, mobx } from '../src';
 
-configure({ enforceActions: 'observed' });
+mobx.useMobx(false);
 
 describe('datx-utils', () => {
   describe('mapItems', () => {
@@ -24,9 +24,9 @@ describe('datx-utils', () => {
       const obj1 = {};
       const obj2 = {};
 
-      const data = observable({
+      const data = {
         data: 1,
-      });
+      };
 
       assignComputed(obj1, 'foo', () => 1);
       expect(Object.prototype.propertyIsEnumerable.call(obj1, 'foo')).toBe(true);
@@ -100,21 +100,18 @@ describe('datx-utils', () => {
         expect(data.data).toBe(expectedData);
       });
 
-      runInAction(() => {
         expectedData = 42;
         data.data = 42;
-      });
 
-      expect(autorunCounter3).toBe(2);
-      expect(autorunCounter1).toBe(2);
-      expect(autorunCounter2).toBe(2);
+      expect(autorunCounter3).toBe(1);
+      expect(autorunCounter1).toBe(1);
+      expect(autorunCounter2).toBe(1);
     });
 
     it('should handle dynamic computed props', () => {
       let counter = 0;
 
       class Data {
-        @observable
         public data = 1;
 
         public foo!: number;
@@ -136,25 +133,17 @@ describe('datx-utils', () => {
           assignComputed(
             this,
             'bar',
-            () => -this.foo,
+            () => (-this.foo),
             (val) => (this.foo = -val),
           );
         }
       }
       const data = new Data();
 
-      autorun(() => {
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const tmp = data.foo;
-      });
-
       expect(data.foo).toBe(1);
       expect(data.bar).toBe(-1);
 
-      runInAction(() => {
-        data.bar--;
-      });
+      data.bar--;
       expect(data.foo).toBe(2);
       expect(data.bar).toBe(-2);
 
@@ -162,7 +151,7 @@ describe('datx-utils', () => {
         expect(data.foo).toBe(2);
       }
 
-      expect(counter).toBe(2);
+      expect(counter).toBe(105);
 
       let autorunCounter = 0;
       let expectedData = 2;
@@ -172,12 +161,10 @@ describe('datx-utils', () => {
         expect(data.foo).toBe(expectedData);
       });
 
-      runInAction(() => {
-        expectedData = 3;
-        data.foo++;
-      });
+      expectedData = 3;
+      data.foo++;
 
-      expect(autorunCounter).toBe(2);
+      expect(autorunCounter).toBe(1);
       expect(Object.prototype.propertyIsEnumerable.call(data, 'foo')).toBe(true);
     });
 
@@ -244,8 +231,8 @@ describe('datx-utils', () => {
     });
 
     it('should work with observable arrays', () => {
-      expect(isArrayLike(observable([]))).toBe(true);
-      expect(isArrayLike(observable([1, true, 'three', {}]))).toBe(true);
+      expect(isArrayLike([])).toBe(true);
+      expect(isArrayLike([1, true, 'three', {}])).toBe(true);
     });
 
     it('should fail for sets', () => {
