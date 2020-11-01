@@ -1,5 +1,4 @@
 import { PureModel } from 'datx';
-import { useCallback, useEffect, useState } from 'react';
 
 import { getDefaultConfig } from './defaults';
 import { IConfigType } from './interfaces/IConfigType';
@@ -15,10 +14,6 @@ import { BodyType } from './enums/BodyType';
 import { CachingStrategy } from './enums/CachingStrategy';
 import { fetchInterceptor } from './interceptors/fetch';
 import { body as bodyOperator } from './operators';
-
-interface IHookOptions {
-  suspense?: boolean;
-}
 
 interface IRequestOptions {
   method: HttpMethod;
@@ -142,44 +137,6 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     }
 
     return interceptorChain(requestRef);
-  }
-
-  public useHook(
-    params?: TParams,
-    body?: any,
-    bodyType?: BodyType,
-    options?: IHookOptions,
-  ): [Response<TModel> | null, boolean, string | Error | null] {
-    const [loader, setLoader] = useState<Promise<Response<TModel>> | null>(null);
-    const [value, setValue] = useState<Response<TModel> | null>(null);
-    const [error, setError] = useState<string | Error | null>(null);
-
-    const execute = useCallback(() => {
-      const loaderPromise = this.fetch(params, body, bodyType);
-      setLoader(loaderPromise);
-      setValue(null);
-      setError(null);
-
-      return loaderPromise
-        .then((response) => {
-          setValue(response);
-          setLoader(null);
-        })
-        .catch((error) => {
-          setError(error);
-          setLoader(null);
-        });
-    }, [this.fetch, params]);
-
-    useEffect(() => {
-      execute();
-    }, [execute]);
-
-    if (options?.suspense && loader) {
-      throw loader;
-    }
-
-    return [value, Boolean(loader), error];
   }
 
   public clone<TNewModel extends PureModel = TModel, TNewParams extends object = TParams>(
