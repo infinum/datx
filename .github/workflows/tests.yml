@@ -31,10 +31,10 @@ jobs:
       - run: yarn
       - run: lerna bootstrap
       - name: Cleanup MobX
-        if: {{ matrix.mobx-version == '0' }}
+        if: ${{ matrix.mobx-version == '0' }}
         run: lerna remove mobx
       - name: Install correct MobX version
-        if: {{ matrix.mobx-version > 0 }}
+        if: ${{ matrix.mobx-version > 0 }}
         run: lerna add mobx@${{ matrix.mobx-version }} --dev
       - run: lerna run build
       - run: MOBX_VERSION=${{ matrix.mobx-version }} lerna run test
