@@ -1,5 +1,4 @@
-import { getMeta, IRawModel } from 'datx-utils';
-import { computed } from 'mobx';
+import { getMeta, IRawModel, mobx } from 'datx-utils';
 
 import { error } from '../helpers/format';
 import { isModel } from '../helpers/mixin';
@@ -45,17 +44,17 @@ export function withMeta<T extends PureModel = PureModel>(
       this.__instance = instance;
     }
 
-    @computed
+    @mobx.computed
     public get collection(): PureCollection | undefined {
       return getModelCollection(this.__instance);
     }
 
-    @computed
+    @mobx.computed
     public get id(): IIdentifier {
       return getModelId(this.__instance);
     }
 
-    @computed
+    @mobx.computed
     public get original(): T | undefined {
       const originalId = getMeta(this.__instance, MetaModelField.OriginalId);
       const collection = getModelCollection(this.__instance);
@@ -63,7 +62,7 @@ export function withMeta<T extends PureModel = PureModel>(
       return (originalId && collection?.findOne(this.__instance, originalId)) || undefined;
     }
 
-    @computed
+    @mobx.computed
     public get refs(): Record<string, IModelRef | Array<IModelRef> | null> {
       const fields = getMeta<Record<string, IFieldDefinition>>(
         this.__instance,
@@ -86,7 +85,7 @@ export function withMeta<T extends PureModel = PureModel>(
       return refs;
     }
 
-    @computed
+    @mobx.computed
     public get dirty(): Record<string, boolean> {
       const fields = getMeta<Record<string, IFieldDefinition>>(
         this.__instance,
@@ -103,12 +102,12 @@ export function withMeta<T extends PureModel = PureModel>(
       return dirty;
     }
 
-    @computed
+    @mobx.computed
     public get snapshot(): any {
       return modelToJSON(this.__instance);
     }
 
-    @computed
+    @mobx.computed
     public get type(): IType {
       return getModelType(this.__instance);
     }

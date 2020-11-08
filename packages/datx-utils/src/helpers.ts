@@ -55,7 +55,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
     Object.defineProperty(obj, DATX_META, {
       configurable: false,
       enumerable: false,
-      value: mobx.observable({}, {}, { deep: false }),
+      value: mobx.observable.object({}, {}, { deep: false }),
     });
   }
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/1863
@@ -193,7 +193,7 @@ export function info(...args: Array<any>): void {
   console.info(`[datx info]`, ...args);
 }
 
-export function replace<T = any>(arr: Array<T>, data: Array<T>): Array<T> {
+export function replaceInArray<T = any>(arr: Array<T>, data: Array<T>): Array<T> {
   if (mobx.isObservableArray(arr)) {
     return (arr as IObservableArray).replace(data);
   } else {
@@ -201,4 +201,9 @@ export function replace<T = any>(arr: Array<T>, data: Array<T>): Array<T> {
     arr.push(...data);
     return arr;
   }
+}
+
+export function removeFromArray<T = any>(arr: Array<T>, item: T): Array<T> {
+  const pos = arr.indexOf(item);
+  return arr.splice(pos, 1);
 }

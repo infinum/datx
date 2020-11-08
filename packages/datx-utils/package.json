@@ -52,7 +52,7 @@
       "ts",
       "js"
     ],
-    "testRegex": "test/(.*).ts$",
+    "testRegex": "test/(.*).test.ts$",
     "globals": {
       "ts-jest": {
         "diagnostics": {
@@ -61,6 +61,9 @@
       }
     },
     "preset": "ts-jest",
-    "testMatch": null
+    "testMatch": null,
+    "setupFilesAfterEnv": [
+      "./test/setup.ts"
+    ]
   }
 }

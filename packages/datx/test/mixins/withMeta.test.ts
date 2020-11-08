@@ -1,13 +1,17 @@
-import { autorun, configure, runInAction } from 'mobx';
+import testMobx from '../mobx';
 
 import { Collection, PureModel, Attribute } from '../../src';
 import { withMeta } from '../../src/mixins/withMeta';
 import { cloneModel, getModelRef, revertModel } from '../../src/helpers/model/utils';
+import { mobx } from 'datx-utils';
 
-configure({ enforceActions: 'observed' });
+// @ts-ignore
+testMobx.configure({ enforceActions: 'observed' });
 
 describe('withMeta', () => {
   it('should work with initial data', () => {
+    const expectedCount = mobx.useRealMobX ? 2 : 1;
+
     class Foo extends PureModel {
       public static type = 'foo';
 
@@ -35,18 +39,18 @@ describe('withMeta', () => {
     let bazValue: number | undefined = undefined;
     let autorunCount = 0;
 
-    autorun(() => {
+    testMobx.autorun(() => {
       expect(foo.baz).toBe(bazValue);
       autorunCount++;
     });
 
     bazValue = 3;
 
-    runInAction(() => {
+    testMobx.runInAction(() => {
       foo.baz = 3;
     });
 
-    expect(autorunCount).toBe(2);
+    expect(autorunCount).toBe(expectedCount);
 
     class TestCollection extends Collection {
       public static types = [FooMeta];

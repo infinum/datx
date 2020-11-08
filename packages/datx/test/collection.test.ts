@@ -1,4 +1,4 @@
-import { autorun, configure } from 'mobx';
+import testMobx from './mobx';
 
 import {
   Collection,
@@ -12,7 +12,8 @@ import {
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId } from '../src/helpers/model/utils';
 
-configure({ enforceActions: 'observed' });
+// @ts-ignore
+testMobx.configure({ enforceActions: 'observed' });
 
 describe('Collection', () => {
   describe('Basic features', () => {
@@ -395,7 +396,7 @@ describe('Collection', () => {
       let autorunLengthCount = 0;
       let fooLength;
 
-      autorun(() => {
+      testMobx.autorun(() => {
         autorunLengthCount++;
         fooLength = store.findAll(Foo).length;
       });
@@ -403,7 +404,7 @@ describe('Collection', () => {
       let autorunModelCount = 0;
       let foo;
 
-      autorun(() => {
+      testMobx.autorun(() => {
         autorunModelCount++;
         foo = store.findOne(Foo, 123);
       });

@@ -1,4 +1,4 @@
-import { autorun, configure, runInAction, isObservableArray, computed, action } from 'mobx';
+import testMobx from './mobx';
 
 import { Model, Attribute, PureModel, Collection, ReferenceType, IRawModel } from '../src';
 import { updateModelId } from '../src/helpers/model/fields';
@@ -18,7 +18,8 @@ import {
   modelToDirtyJSON,
 } from '../src/helpers/model/utils';
 
-configure({ enforceActions: 'observed' });
+// @ts-ignore
+testMobx.configure({ enforceActions: 'observed' });
 
 describe('Model', () => {
   describe('Basic features', () => {
@@ -48,13 +49,13 @@ describe('Model', () => {
       let bazValue: number | undefined = undefined;
       let autorunCount = 0;
 
-      autorun(() => {
+      testMobx.autorun(() => {
         expect(foo2.baz).toBe(bazValue);
         autorunCount++;
       });
 
       bazValue = 3;
-      runInAction(() => {
+      testMobx.runInAction(() => {
         foo2.baz = 3;
       });
 
@@ -173,13 +174,13 @@ describe('Model', () => {
       let bazValue: number | undefined = undefined;
       let autorunCount = 0;
 
-      autorun(() => {
+      testMobx.autorun(() => {
         expect(foo.baz).toBe(bazValue);
         autorunCount++;
       });
 
       bazValue = 3;
-      runInAction(() => {
+      testMobx.runInAction(() => {
         foo.baz = 3;
       });
 
@@ -197,12 +198,12 @@ describe('Model', () => {
         @Attribute()
         public baz!: number;
 
-        @computed
+        @testMobx.computed
         get id(): number | string {
           return this.meta.id;
         }
 
-        @computed
+        @testMobx.computed
         get id2(): number | string {
           return getModelId(this);
         }
@@ -243,30 +244,30 @@ describe('Model', () => {
       let autorunCount = 0;
       let autorunSnapshotCount = 0;
 
-      autorun(() => {
+      testMobx.autorun(() => {
         expect(foo.baz.foobar).toBe(foobarValue);
         autorunCount++;
       });
 
-      autorun(() => {
+      testMobx.autorun(() => {
         expect(modelToJSON(foo).baz.foobar).toBe(foobarValue);
         autorunSnapshotCount++;
       });
 
       // Trigger both autoruns
       foobarValue = 4;
-      runInAction(() => {
+      testMobx.runInAction(() => {
         foo.baz.foobar = 4;
       });
 
-      runInAction(() => {
+      testMobx.runInAction(() => {
         // Trigger the snapshot autorun
         foo.bar++;
       });
 
       // Trigger both autoruns
       foobarValue = 5;
-      runInAction(() => {
+      testMobx.runInAction(() => {
         foo.baz.foobar = 5;
       });
 
@@ -291,12 +292,12 @@ describe('Model', () => {
       let fooValue = 4;
       let autorunCount = 0;
 
-      autorun(() => {
+      testMobx.autorun(() => {
         expect(foo.foo).toBe(fooValue);
         autorunCount++;
       });
 
-      runInAction(() => {
+      testMobx.runInAction(() => {
         fooValue = 3;
         foo.foo = 3;
       });
@@ -439,13 +440,13 @@ describe('Model', () => {
       let autorunCount = 0;
       let { parent } = foo3;
 
-      autorun(() => {
+      testMobx.autorun(() => {
         autorunCount++;
         expect(foo3.parent).toBe(parent);
       });
 
       parent = null;
-      runInAction(() => {
+      testMobx.runInAction(() => {
         foo3.parent = null;
       });
 
@@ -502,7 +503,7 @@ describe('Model', () => {
       }).toThrowError('The model needs to be in a collection to be referenceable');
 
       expect(
-        action(() => {
+        testMobx.action(() => {
           foo1.parent = foo1;
         }),
       ).toThrowError('The model needs to be in a collection to be referenceable');
@@ -627,12 +628,12 @@ describe('Model', () => {
 
       const foo2 = store.add({ foo: 3, parent: null }, Foo);
 
-      expect(isObservableArray(foo2.parent)).toBe(true);
+      expect(testMobx.isObservableArray(foo2.parent)).toBe(true);
       expect(foo2.parent).toHaveLength(0);
 
       const foo3 = store.add({ foo: 3, parent: undefined }, Foo);
 
-      expect(isObservableArray(foo3.parent)).toBe(true);
+      expect(testMobx.isObservableArray(foo3.parent)).toBe(true);
       expect(foo3.parent).toHaveLength(0);
     });
 
@@ -654,20 +655,20 @@ describe('Model', () => {
       const foo1 = collection.add({ foo: 2 }, Foo);
       const foo2 = collection.add({ foo: 3, parent: [foo1] }, Foo);
 
-      expect(isObservableArray(foo2.parent)).toBe(true);
+      expect(testMobx.isObservableArray(foo2.parent)).toBe(true);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
       const raw2 = modelToJSON(foo2);
 
       expect(raw2.parent[0]).toEqual(getModelRef(foo1));
 
       foo2.parent = foo1;
-      expect(isObservableArray(foo2.parent)).toBe(false);
+      expect(testMobx.isObservableArray(foo2.parent)).toBe(false);
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2b = modelToJSON(foo2);
 
       expect(raw2b.parent).toEqual(getModelRef(foo1));
 
-      runInAction(() => {
+      testMobx.runInAction(() => {
         foo1.foo = 4;
       });
       expect(foo2.parent && foo2.parent.foo).toBe(4);
@@ -920,7 +921,7 @@ describe('Model', () => {
         let autorunCount = 0;
         let expectedCount = 2;
 
-        autorun(() => {
+        testMobx.autorun(() => {
           autorunCount++;
           expect(foo1.children).toHaveLength(expectedCount);
         });
@@ -930,7 +931,7 @@ describe('Model', () => {
         expect(foo3.children).toHaveLength(0);
 
         expectedCount = 1;
-        runInAction(() => {
+        testMobx.runInAction(() => {
           foo1.children.pop();
         });
 
@@ -939,14 +940,14 @@ describe('Model', () => {
         expect(autorunCount).toBe(2);
 
         expectedCount = 2;
-        runInAction(() => {
+        testMobx.runInAction(() => {
           foo1.children[1] = foo4;
         });
         expect(foo1.children).toHaveLength(2);
         expect(foo4.parent).toBe(foo1);
         expect(foo2.children).toHaveLength(0);
 
-        runInAction(() => {
+        testMobx.runInAction(() => {
           foo1.children[1] = foo3;
         });
         expect(foo1.children).toHaveLength(2);
@@ -961,7 +962,7 @@ describe('Model', () => {
           foo4.children = [foo1];
         }).toThrowError('Back references are read only');
 
-        runInAction(() => {
+        testMobx.runInAction(() => {
           foo1.foos = [foo2, foo3];
           foo2.foos = [foo1, foo3, foo4];
         });
@@ -1044,12 +1045,12 @@ describe('Model', () => {
         expect(getModelType(foo)).toBe(foo.type);
 
         expect(
-          action(() => {
+          testMobx.action(() => {
             foo.type = 'bar';
           }),
         ).toThrowError("Model type can't be changed after initialization.");
         expect(
-          action(() => {
+          testMobx.action(() => {
             foo.id = '789';
           }),
         ).toThrowError(
@@ -1118,7 +1119,7 @@ describe('Model', () => {
         expect(getModelType(foo)).toBe(foo.type);
 
         expect(
-          action(() => {
+          testMobx.action(() => {
             foo.type = 'bar';
           }),
         ).toThrowError("Model type can't be changed after initialization.");

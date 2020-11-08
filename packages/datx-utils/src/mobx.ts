@@ -1,5 +1,5 @@
 import { warn } from "./helpers";
-import { IReactionDisposer } from "./interfaces/IMobX";
+import { IObservableArray, IReactionDisposer } from "./interfaces/IMobX";
 
 const noop = (): void => {
   // Nothing to do
@@ -15,8 +15,12 @@ const noopMobX = {
     return false;
   },
 
-  set(obj: Record<string, any>, key: string, value: any): void {
-    obj[key] = value;
+  set(obj: Record<string, any>, key: string | Record<string, any>, value?: any): void {
+    if (typeof key === 'string') {
+      obj[key] = value;
+    } else {
+      Object.assign(obj, key);
+    }
   },
 
   extendObservable<T extends object, U extends object>(obj: T, prop: U): T & U {
@@ -24,12 +28,8 @@ const noopMobX = {
     return Object.defineProperties(obj, desc);
   },
 
-  observable<T extends object>(obj: T, ..._params: Array<any>): T & {
-    array: (obj: T, ...params: Array<any>) => T,
-    object: (obj: T, ...params: Array<any>) => T
-  } {
-    // @ts-ignore
-    return obj;
+  observable<T extends object>(_obj: T, ..._params: Array<any>): void {
+    // return obj;
   },
 
   computed(...params: Array<any>): any {
@@ -129,4 +129,10 @@ class MobXProxy {
   }
 }
 
-export const mobx = new MobXProxy() as unknown as typeof noopMobX & { useRealMobX: boolean, useMobx: (enabled: boolean) => void };
+type TObservableDecorator = <T extends object>(obj: T, ..._params: Array<any>) => void;
+type TObservable = {
+  object: <T extends object>(obj: T, decorators?: object, opts?: object) => T;
+  array: <T = any>(obj: Array<T>, decorators?: object, opts?: object) => IObservableArray<T>;
+} & TObservableDecorator;
+
+export const mobx = new MobXProxy() as unknown as typeof noopMobX & { useRealMobX: boolean, useMobx: (enabled: boolean) => void, observable: TObservable };

@@ -1,10 +1,11 @@
-import { autorun, configure, runInAction } from 'mobx';
+import testMobx from './mobx';
 
 import { Collection, Model, View, Attribute } from '../src';
 import { updateModelId } from '../src/helpers/model/fields';
 import { ViewAttribute } from '../src/Attribute';
 
-configure({ enforceActions: 'observed' });
+// @ts-ignore
+testMobx.configure({ enforceActions: 'observed' });
 
 describe('View', () => {
   it('should init a view', () => {
@@ -69,12 +70,12 @@ describe('View', () => {
     let lengthAutorunCount = 0;
     let listAutorunCount = 0;
 
-    autorun(() => {
+    testMobx.autorun(() => {
       expect(viewInstance).toHaveLength(expectedLength);
       lengthAutorunCount++;
     });
 
-    autorun(() => {
+    testMobx.autorun(() => {
       expect(viewInstance.list).toHaveLength(expectedLength);
       listAutorunCount++;
     });
@@ -181,14 +182,14 @@ describe('View', () => {
     let keyList: Array<number | null> = [];
     let autorunCount = 0;
 
-    autorun(() => {
+    testMobx.autorun(() => {
       keyList = viewInstance.list.map((item) => item && item.key);
       autorunCount++;
     });
 
     expect(keyList[2]).toBe(3);
 
-    runInAction(() => {
+    testMobx.runInAction(() => {
       viewInstance.sortMethod = 'id';
     });
 
@@ -510,11 +511,11 @@ describe('View', () => {
 
     const lengths: Array<number> = [];
 
-    autorun(() => {
+    testMobx.autorun(() => {
       lengths.push(viewInstance.length);
     });
 
-    runInAction(() => {
+    testMobx.runInAction(() => {
       // @ts-expect-error
       viewInstance.list.push(876);
     });

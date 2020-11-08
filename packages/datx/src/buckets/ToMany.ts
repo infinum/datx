@@ -1,4 +1,4 @@
-import { isArrayLike, mobx, IObservableArray, IReactionDisposer, replace } from 'datx-utils';
+import { isArrayLike, mobx, IObservableArray, IReactionDisposer, replaceInArray } from 'datx-utils';
 
 import { error } from '../helpers/format';
 import { getModelCollection, getModelRef, isReference } from '../helpers/model/utils';
@@ -31,7 +31,7 @@ export class ToMany<T extends PureModel> {
     }
 
     mobx.runInAction(() => {
-      replace(this.__rawList, data || []);
+      replaceInArray(this.__rawList, data || []);
       this.setCollection(collection);
     });
   }
@@ -77,7 +77,7 @@ export class ToMany<T extends PureModel> {
     }
 
     mobx.runInAction(() => {
-      replace(this.__rawList, data);
+      replaceInArray(this.__rawList, data);
       if (this.__model && this.__key) {
         updateSingleAction(this.__model, this.__key, data);
       }

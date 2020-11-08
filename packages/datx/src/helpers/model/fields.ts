@@ -1,5 +1,4 @@
-import { getMeta, setMeta, warn, mapItems, isArrayLike } from 'datx-utils';
-import { runInAction, IObservableArray, intercept, observable, IArraySplice } from 'mobx';
+import { getMeta, setMeta, warn, mapItems, isArrayLike, mobx, IArraySplice, IObservableArray } from 'datx-utils';
 
 import { PureModel } from '../../PureModel';
 import { IBucket } from '../../interfaces/IBucket';
@@ -109,7 +108,7 @@ function updateModelReferences(
 }
 
 export function updateModelId(model: PureModel, newId: IIdentifier): void {
-  runInAction(() => {
+  mobx.runInAction(() => {
     const collection = getModelCollection(model);
 
     const oldId = getModelId(model);
@@ -234,9 +233,9 @@ export function getBackRef(model: PureModel, key: string): PureModel | Array<Pur
     .getAllModels()
     .filter((item) => hasBackRef(item, refOptions.property as string, model));
 
-  const backData: IObservableArray<PureModel> = observable.array(backModels, { deep: false });
+  const backData: IObservableArray<PureModel> = mobx.observable.array(backModels, { deep: false });
 
-  intercept(backData, (change: TChange) => partialBackRefUpdate(model, key, change));
+  mobx.intercept(backData, (change: TChange) => partialBackRefUpdate(model, key, change));
 
   return backData;
 }

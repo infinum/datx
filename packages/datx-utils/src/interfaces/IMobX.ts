@@ -20,6 +20,11 @@ export interface IArraySplice<T = any> extends IArrayBaseChange<T> {
   removed: T[];
   removedCount: number;
 }
+export interface IArrayChange<T = any> extends IArrayBaseChange<T> {
+  type: "change";
+  newValue: T;
+  index: number;
+}
 
 export interface IReactionDisposer {
   (): void;

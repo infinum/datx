@@ -1,5 +1,4 @@
-import { isArrayLike, makeObservable } from 'datx-utils';
-import { computed, observable, runInAction } from 'mobx';
+import { isArrayLike, mobx } from 'datx-utils';
 
 import { IModelRef } from '../interfaces/IModelRef';
 import { PureCollection } from '../PureCollection';
@@ -12,7 +11,7 @@ export class ToOneOrMany<T extends PureModel> {
 
   private __toOneBucket!: ToOne<T>;
 
-  @observable
+  @mobx.observable
   private __isList = true;
 
   constructor(
@@ -23,8 +22,8 @@ export class ToOneOrMany<T extends PureModel> {
     protected __key?: string,
     protected __skipMissing = true,
   ) {
-    makeObservable(this);
-    runInAction(() => {
+    mobx.makeObservable(this);
+    mobx.runInAction(() => {
       this.__isList = isArrayLike(data);
       if (this.__isList) {
         this.__toManyBucket = new ToMany(
@@ -58,13 +57,13 @@ export class ToOneOrMany<T extends PureModel> {
     }
   }
 
-  @computed
+  @mobx.computed
   public get value(): T | Array<T> | null {
     return this.__isList ? this.__toManyBucket.value : this.__toOneBucket.value;
   }
 
   public set value(data: T | Array<T> | null) {
-    runInAction(() => {
+    mobx.runInAction(() => {
       this.__isList = isArrayLike(data);
       if (this.__isList) {
         if (this.__toManyBucket) {
@@ -83,7 +82,7 @@ export class ToOneOrMany<T extends PureModel> {
   // An ugly workaround to still be able to update the response buckets
   // @ts-ignore
   private set __readonlyValue(data: T | Array<T> | null) {
-    runInAction(() => {
+    mobx.runInAction(() => {
       this.__isList = isArrayLike(data);
       if (this.__isList) {
         if (this.__toManyBucket) {
@@ -113,7 +112,7 @@ export class ToOneOrMany<T extends PureModel> {
     });
   }
 
-  @computed
+  @mobx.computed
   public get refValue(): Array<IModelRef> | IModelRef | null {
     return this.__isList ? this.__toManyBucket.refValue : this.__toOneBucket.refValue;
   }
@@ -122,7 +121,7 @@ export class ToOneOrMany<T extends PureModel> {
     return this.refValue;
   }
 
-  @computed
+  @mobx.computed
   public get snapshot(): Array<IModelRef> | IModelRef | null {
     return this.toJSON();
   }

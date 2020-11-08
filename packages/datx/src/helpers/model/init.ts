@@ -6,8 +6,8 @@ import {
   setMeta,
   META_FIELD,
   isArrayLike,
+  mobx,
 } from 'datx-utils';
-import { observable } from 'mobx';
 
 import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';
@@ -185,7 +185,7 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
       () => getMeta(model, `data__${key}`),
       (newValue: any) => {
         // Make sure nested properties are observable
-        const packedValue = isPojo(newValue) ? observable(newValue) : newValue;
+        const packedValue = isPojo(newValue) ? mobx.observable.object(newValue) : newValue;
 
         updateSingleAction(model, key, newValue);
         setMeta(model, `data__${key}`, packedValue);

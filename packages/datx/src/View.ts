@@ -1,5 +1,4 @@
-import { IRawModel, mapItems, makeObservable } from 'datx-utils';
-import { computed, intercept, observable, runInAction } from 'mobx';
+import { IRawModel, mapItems, mobx, removeFromArray } from 'datx-utils';
 
 import { ToMany } from './buckets/ToMany';
 import { error } from './helpers/format';
@@ -16,7 +15,7 @@ import { PureModel } from './PureModel';
 export class View<T extends PureModel = PureModel> extends ToMany<T> {
   public readonly modelType: IType;
 
-  @observable
+  @mobx.observable
   public sortMethod?: string | ((item: T) => any);
 
   constructor(
@@ -34,19 +33,19 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     );
     this.modelType = getModelType(modelType);
     this.sortMethod = sortMethod;
-    makeObservable(this, {
-      sortMethod: observable,
-      length: computed,
-      list: computed,
+    mobx.makeObservable(this, {
+      sortMethod: mobx.observable,
+      length: mobx.computed,
+      list: mobx.computed,
     });
   }
 
-  @computed
+  @mobx.computed
   public get length(): number {
     return this.value.length;
   }
 
-  @computed
+  @mobx.computed
   public get list(): Array<T> {
     const list: Array<T> = this.value.slice();
 
@@ -59,9 +58,9 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
       list.sort((a: T, b: T) => (sortFn(a) === sortFn(b) ? 0 : sortFn(a) > sortFn(b) ? 1 : -1));
     }
 
-    const instances = observable.array(list, { deep: false });
+    const instances = mobx.observable.array(list, { deep: false });
 
-    intercept(instances, this.__partialListUpdate.bind(this));
+    mobx.intercept(instances, this.__partialListUpdate.bind(this));
 
     return instances;
   }
@@ -85,7 +84,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
       | T
       | Array<T>;
 
-    runInAction(() => {
+    mobx.runInAction(() => {
       mapItems(models, (instance: T) => {
         if (!this.unique || this.__indexOf(instance) === -1) {
           this.__rawList.push(instance);
@@ -103,17 +102,17 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
   }
 
   public remove(model: IIdentifier | T): void {
-    runInAction(() => {
+    mobx.runInAction(() => {
       const item = this.__getModel(this.__normalizeModel(model));
 
       if (item) {
-        this.__rawList.remove(item);
+        removeFromArray(this.__rawList, item);
       }
     });
   }
 
   public removeAll(): void {
-    runInAction(() => {
+    mobx.runInAction(() => {
       this.__rawList.replace([]);
     });
   }
@@ -135,7 +134,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
         });
       }
 
-      runInAction(() => {
+      mobx.runInAction(() => {
         // eslint-disable-next-line prefer-spread
         this.__rawList.splice.apply(
           this.__rawList,
@@ -146,7 +145,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
       return null;
     }
 
-    runInAction(() => {
+    mobx.runInAction(() => {
       if (this.sortMethod && change.newValue) {
         throw error("New models can't be added directly to a sorted view list");
       }

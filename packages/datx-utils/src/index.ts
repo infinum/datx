@@ -14,7 +14,8 @@ export {
   mergeMeta,
   getMetaObj,
   isArrayLike,
-  replace,
+  replaceInArray,
+  removeFromArray,
 } from './helpers';
 
 export { mobx } from './mobx';

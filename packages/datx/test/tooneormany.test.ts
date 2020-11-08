@@ -1,8 +1,9 @@
-import { configure } from 'mobx';
+import testMobx from './mobx';
 
 import { Bucket, Collection, Model, Attribute, PureCollection } from '../src';
 
-configure({ enforceActions: 'observed' });
+// @ts-ignore
+testMobx.configure({ enforceActions: 'observed' });
 
 describe('ToOneOrMany', () => {
   describe('ToOneOrMany with lists', () => {
