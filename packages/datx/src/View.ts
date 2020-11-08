@@ -1,4 +1,4 @@
-import { IRawModel, mapItems, mobx, removeFromArray } from 'datx-utils';
+import { IArraySplice, IRawModel, mapItems, mobx, removeFromArray, replaceInArray } from 'datx-utils';
 
 import { ToMany } from './buckets/ToMany';
 import { error } from './helpers/format';
@@ -65,6 +65,17 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     return instances;
   }
 
+  public set list(list: Array<T>) {
+    this.__partialListUpdate({
+      type: 'splice',
+      index: 0,
+      removed: this.list,
+      removedCount: this.__rawList.length,
+      added: list,
+      addedCount: list.length,
+    } as unknown as IArraySplice<PureModel>);
+  }
+
   public toJSON(): IRawView {
     return {
       modelType: this.modelType,
@@ -113,7 +124,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
 
   public removeAll(): void {
     mobx.runInAction(() => {
-      this.__rawList.replace([]);
+      replaceInArray(this.__rawList, []);
     });
   }
 
@@ -127,8 +138,11 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
       const toRemove = this.__rawList.slice(change.index, change.removedCount);
 
       if (this.unique) {
-        added.forEach((newItem) => {
-          if (this.__indexOf(newItem) !== -1 && this.__indexOf(newItem, toRemove) === -1) {
+        added.forEach((newItem, index) => {
+          if (
+            this.__indexOf(newItem) !== -1 &&
+            (this.__indexOf(newItem, toRemove) === -1 || this.__indexOf(newItem, added) !== index)
+          ) {
             throw error('The models in this view need to be unique');
           }
         });

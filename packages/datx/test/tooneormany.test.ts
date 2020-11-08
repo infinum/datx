@@ -1,6 +1,7 @@
 import testMobx from './mobx';
 
 import { Bucket, Collection, Model, Attribute, PureCollection } from '../src';
+import { mobx } from 'datx-utils';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });
@@ -117,7 +118,11 @@ describe('ToOneOrMany', () => {
         expect(bucketInstance.value[2]).toBeInstanceOf(Bar);
         expect(bucketInstance.value[0]).toBe(foos[0]);
 
-        bucketInstance.value.shift();
+        if (mobx.useRealMobX) {
+          bucketInstance.value.shift();
+        } else {
+          bucketInstance.value = bucketInstance.value.slice(1);
+        }
         expect(bucketInstance.value).toHaveLength(2);
         expect(bucketInstance.value[0]).toBe(foos[1]);
 

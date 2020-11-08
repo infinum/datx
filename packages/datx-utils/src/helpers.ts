@@ -204,6 +204,10 @@ export function replaceInArray<T = any>(arr: Array<T>, data: Array<T>): Array<T>
 }
 
 export function removeFromArray<T = any>(arr: Array<T>, item: T): Array<T> {
-  const pos = arr.indexOf(item);
-  return arr.splice(pos, 1);
+  if (mobx.isObservableArray(arr)) {
+    return (arr as IObservableArray).remove(item);
+  } else {
+    const pos = arr.indexOf(item);
+    return arr.splice(pos, 1);
+  }
 }

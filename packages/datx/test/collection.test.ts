@@ -11,6 +11,7 @@ import {
 } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId } from '../src/helpers/model/utils';
+import { mobx } from 'datx-utils';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });
@@ -411,11 +412,14 @@ describe('Collection', () => {
 
       const foo2 = store.add({ id: 123 }, Foo);
 
-      expect(autorunModelCount).toBe(2);
-      expect(foo).toBe(foo2);
-
-      expect(autorunLengthCount).toBe(2);
-      expect(fooLength).toBe(1);
+      if (mobx.useRealMobX) {
+        expect(autorunModelCount).toBe(2);
+        expect(foo).toBe(foo2);
+  
+        expect(autorunLengthCount).toBe(2);
+        expect(fooLength).toBe(1);
+      }
+      // The test doesn't make sense if MobX is not used
     });
 
     it('should auto set ref value at be a model is added', () => {

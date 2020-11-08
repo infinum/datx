@@ -17,6 +17,7 @@ import {
   revertModel,
   modelToDirtyJSON,
 } from '../src/helpers/model/utils';
+import { mobx } from 'datx-utils';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });
@@ -59,7 +60,7 @@ describe('Model', () => {
         foo2.baz = 3;
       });
 
-      expect(autorunCount).toBe(2);
+      expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
 
       expect(() => {
         assignModel(foo1, 'foo', foo2);
@@ -184,7 +185,7 @@ describe('Model', () => {
         foo.baz = 3;
       });
 
-      expect(autorunCount).toBe(2);
+      expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
     });
 
     it('should work with id getters', () => {
@@ -271,8 +272,8 @@ describe('Model', () => {
         foo.baz.foobar = 5;
       });
 
-      expect(autorunCount).toBe(3);
-      expect(autorunSnapshotCount).toBe(4);
+      expect(autorunCount).toBe(mobx.useRealMobX ? 3 : 1);
+      expect(autorunSnapshotCount).toBe(mobx.useRealMobX ? 4 : 1);
     });
 
     it('should work with default data', () => {
@@ -302,7 +303,7 @@ describe('Model', () => {
         foo.foo = 3;
       });
 
-      expect(autorunCount).toBe(2);
+      expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
     });
 
     it('should work with two models', () => {
@@ -450,7 +451,7 @@ describe('Model', () => {
         foo3.parent = null;
       });
 
-      expect(autorunCount).toBe(2);
+      expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
     });
 
     it('should support basic references with primitive type', () => {
@@ -589,17 +590,32 @@ describe('Model', () => {
 
       expect(raw2.parent[0]).toEqual(getModelRef(foo1));
 
-      foo2.parent.push(foo3);
+      if (mobx.useRealMobX) {
+        foo2.parent.push(foo3);
+      } else {
+        foo2.parent = [...foo2.parent, foo3];
+      }
+
       const raw2b = modelToJSON(foo2);
 
       expect(raw2b.parent[1]).toEqual(getModelRef(foo3));
 
-      foo2.parent[2] = foo2;
+      if (mobx.useRealMobX) {
+        foo2.parent[2] = foo2;
+      } else {
+        foo2.parent = [...foo2.parent.slice(0, 2), foo2];
+      }
+
       const raw2c = modelToJSON(foo2);
 
       expect(raw2c.parent[2]).toEqual(getModelRef(foo2));
 
-      foo2.parent.pop();
+      if (mobx.useRealMobX) {
+        foo2.parent.pop();
+      } else {
+        foo2.parent = foo2.parent.slice(0, -1);
+      }
+
       const raw2d = modelToJSON(foo2);
 
       expect(raw2d.parent).toHaveLength(2);
@@ -628,12 +644,12 @@ describe('Model', () => {
 
       const foo2 = store.add({ foo: 3, parent: null }, Foo);
 
-      expect(testMobx.isObservableArray(foo2.parent)).toBe(true);
+      expect(testMobx.isObservableArray(foo2.parent)).toBe(mobx.useRealMobX);
       expect(foo2.parent).toHaveLength(0);
 
       const foo3 = store.add({ foo: 3, parent: undefined }, Foo);
 
-      expect(testMobx.isObservableArray(foo3.parent)).toBe(true);
+      expect(testMobx.isObservableArray(foo3.parent)).toBe(mobx.useRealMobX);
       expect(foo3.parent).toHaveLength(0);
     });
 
@@ -655,7 +671,7 @@ describe('Model', () => {
       const foo1 = collection.add({ foo: 2 }, Foo);
       const foo2 = collection.add({ foo: 3, parent: [foo1] }, Foo);
 
-      expect(testMobx.isObservableArray(foo2.parent)).toBe(true);
+      expect(testMobx.isObservableArray(foo2.parent)).toBe(mobx.useRealMobX);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
       const raw2 = modelToJSON(foo2);
 
@@ -714,7 +730,12 @@ describe('Model', () => {
       expect(foo4.parent.length).toBe(1);
       expect(foo4.parent && foo4.parent[0].foo).toBe(2);
 
-      foo4.parent[0] = foo1;
+      if (mobx.useRealMobX) {
+        foo4.parent[0] = foo1;
+      } else {
+        foo4.parent = [foo1, ...foo4.parent.slice(1)];
+      }
+
       expect(foo4.parent).toContain(foo1);
     });
 
@@ -932,28 +953,44 @@ describe('Model', () => {
 
         expectedCount = 1;
         testMobx.runInAction(() => {
-          foo1.children.pop();
+          if (mobx.useRealMobX) {
+            foo1.children.pop();
+          } else {
+            // Back reference can't be replaced
+            // @ts-ignore
+            foo3.parent = null;
+          }
         });
 
         expect(foo1.children).toHaveLength(1);
         expect(foo3.parent).toBeNull();
-        expect(autorunCount).toBe(2);
+        expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
 
-        expectedCount = 2;
+        expectedCount = mobx.useRealMobX ? 2 : 1;
         testMobx.runInAction(() => {
-          foo1.children[1] = foo4;
+          if (mobx.useRealMobX) {
+            foo1.children[1] = foo4;
+          } else {
+            foo4.parent = foo1;
+          }
         });
         expect(foo1.children).toHaveLength(2);
         expect(foo4.parent).toBe(foo1);
         expect(foo2.children).toHaveLength(0);
 
         testMobx.runInAction(() => {
-          foo1.children[1] = foo3;
+          if (mobx.useRealMobX) {
+            foo1.children[1] = foo3;
+          } else {
+            foo3.parent = foo1;
+            // @ts-ignore
+            foo4.parent = null;
+          }
         });
         expect(foo1.children).toHaveLength(2);
         expect(foo3.parent).toBe(foo1);
         expect(foo4.parent).toBeNull();
-        expect(autorunCount).toBe(4);
+        expect(autorunCount).toBe(mobx.useRealMobX ? 4 : 1);
 
         updateModelId(foo1, '123');
         expect(modelToJSON(foo3).parent).toEqual({ id: '123', type: 'foo' });
@@ -972,41 +1009,44 @@ describe('Model', () => {
         expect(foo3.backFoos).toContain(foo1);
         expect(foo3.backFoos).toContain(foo2);
 
-        foo3.backFoos.push(foo4);
-        expect(foo4.foos).toHaveLength(1);
-        expect(foo4.foos).toContain(foo3);
-
-        foo3.backFoos.shift();
-        expect(foo1.foos).toHaveLength(1);
-        expect(foo1.foos).toContain(foo2);
-
-        foo3.fooRef = [foo4];
-        expect(foo4.fooBackRef).toHaveLength(1);
-        expect(foo4.fooBackRef).toContain(foo3);
-
-        foo3.fooRef.push(foo1);
-        foo3.fooRef.shift();
-        expect(foo3.fooRef).toHaveLength(1);
-        expect(foo3.fooRef).toContain(foo1);
-
-        foo4.fooBackRef.push(foo1);
-        expect(foo1.fooRef).toBe(foo4);
-        foo4.fooBackRef.pop();
-        expect(foo1.fooRef).toBeNull();
-
-        foo4.fooRef = foo1;
-        foo3.fooRef = foo1;
-        foo2.fooRef = foo1;
-        expect(foo1.fooBackRef).toHaveLength(3);
-
-        const toRemove = foo1.fooBackRef[1];
-
-        // @ts-expect-error
-        foo1.fooBackRef[1] = undefined;
-        expect(foo1.fooBackRef).not.toContain(toRemove);
-
-        foo1.fooBackRef[1] = foo1;
-        expect(foo1.fooRef).toBe(foo1);
+        // No point to test this without MobX
+        if (mobx.useRealMobX) {
+          foo3.backFoos.push(foo4);
+          expect(foo4.foos).toHaveLength(1);
+          expect(foo4.foos).toContain(foo3);
+  
+          foo3.backFoos.shift();
+          expect(foo1.foos).toHaveLength(1);
+          expect(foo1.foos).toContain(foo2);
+  
+          foo3.fooRef = [foo4];
+          expect(foo4.fooBackRef).toHaveLength(1);
+          expect(foo4.fooBackRef).toContain(foo3);
+  
+          foo3.fooRef.push(foo1);
+          foo3.fooRef.shift();
+          expect(foo3.fooRef).toHaveLength(1);
+          expect(foo3.fooRef).toContain(foo1);
+  
+          foo4.fooBackRef.push(foo1);
+          expect(foo1.fooRef).toBe(foo4);
+          foo4.fooBackRef.pop();
+          expect(foo1.fooRef).toBeNull();
+  
+          foo4.fooRef = foo1;
+          foo3.fooRef = foo1;
+          foo2.fooRef = foo1;
+          expect(foo1.fooBackRef).toHaveLength(3);
+  
+          const toRemove = foo1.fooBackRef[1];
+  
+          // @ts-expect-error
+          foo1.fooBackRef[1] = undefined;
+          expect(foo1.fooBackRef).not.toContain(toRemove);
+  
+          foo1.fooBackRef[1] = foo1;
+          expect(foo1.fooRef).toBe(foo1);
+        }
       });
     });
 
@@ -1227,7 +1267,7 @@ describe('Model', () => {
       expect(foo.bar).toBeUndefined();
     });
 
-    it('shoudl work with relationships', () => {
+    it('should work with relationships', () => {
       class Foo extends Model {
         @Attribute({ toOne: Foo })
         public one!: Foo;
@@ -1255,7 +1295,13 @@ describe('Model', () => {
       expect(isAttributeDirty(foo1, 'many')).toBe(false);
 
       foo1.one = foo2;
-      foo1.many.push(foo4);
+
+      if (mobx.useRealMobX) {
+        foo1.many.push(foo4);
+      } else {
+        foo1.many = [...foo1.many, foo4];
+      }
+
       expect(isAttributeDirty(foo1, 'one')).toBe(true);
       expect(isAttributeDirty(foo1, 'many')).toBe(true);
 
