@@ -30,9 +30,11 @@ jobs:
       - run: npm install -g lerna
       - run: yarn
       - run: lerna bootstrap
-      - if: {{ matrix.mobx-version == '0' }}
+      - name: Cleanup MobX
+        if: {{ matrix.mobx-version == '0' }}
         run: lerna remove mobx
-      - if: {{ matrix.mobx-version > 0 }}
+      - name: Install correct MobX version
+        if: {{ matrix.mobx-version > 0 }}
         run: lerna add mobx@${{ matrix.mobx-version }} --dev
       - run: lerna run build
       - run: MOBX_VERSION=${{ matrix.mobx-version }} lerna run test
