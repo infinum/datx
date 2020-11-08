@@ -32,7 +32,7 @@ jobs:
       - run: lerna bootstrap
       - name: Cleanup MobX
         if: ${{ matrix.mobx-version == '0' }}
-        run: lerna exec yarn remove mobx
+        run: cd packages/datx-utils; yarn remove mobx
       - name: Install correct MobX version
         if: ${{ matrix.mobx-version > 0 }}
         run: lerna add mobx@${{ matrix.mobx-version }} --dev
