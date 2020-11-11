@@ -351,6 +351,10 @@ export function isAttributeDirty<T extends PureModel>(model: T, key: keyof T): b
     const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
     const field = fields[key as string];
 
+    if(field === undefined) {
+      return false;
+    }
+    
     const value = field.referenceDef ? mapItems(model[key], getModelRef) : model[key];
     return !isSame(value, prevCommit[key as string]);
   }
