@@ -11,7 +11,7 @@ Object.assign(mobx, {
   }
 });
 
-if ([-1, 0].includes(parseInt(process.env.MOBX_VERSION || '0', 10))) {
+if (!['-1', '0'].includes(process.env.MOBX_VERSION || '0')) {
   testMobx = require('mobx');
   testMobx.makeObservable = testMobx.makeObservable || mobx.makeObservable;
 }
