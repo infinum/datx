@@ -74,7 +74,7 @@ noopMobX.observable.object = (obj: T): T => obj;
 noopMobX.observable.array = (obj: T): T => obj;
 
 class MobXProxy {
-  public readonly useRealMobX = true;
+  public readonly _useRealMobX = true;
   private access = false;
   private hasMobX = false;
 
@@ -95,12 +95,12 @@ class MobXProxy {
       }
       Object.defineProperty(this, key, {
         get() {
-          if (!mobxProxyInstance.hasMobX && mobxProxyInstance.useRealMobX) {
+          if (!mobxProxyInstance.hasMobX && mobxProxyInstance._useRealMobX) {
             warn('MobX not installed. Falling back to the static approach. Call `mobx.useMobx(false)` to disable this warning');
           }
 
           mobxProxyInstance.access = true;
-          if (mobxProxyInstance.hasMobX && mobxProxyInstance.useRealMobX) {
+          if (mobxProxyInstance.useRealMobX) {
             return require('mobx')[key];
           }
           // @ts-ignore
@@ -115,11 +115,15 @@ class MobXProxy {
       throw new Error('[datx] MobX was already used. Please move this function call to somewhere earlier.');
     }
     // @ts-ignore
-    this.useRealMobX = enabled;
+    this._useRealMobX = enabled;
+  }
+
+  public get useRealMobX(): boolean {
+    return this._useRealMobX && this.hasMobX;
   }
 
   public get makeObservable(): any {
-    if (this.useRealMobX && this.hasMobX) {
+    if (this.useRealMobX) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const mobx = require('mobx');

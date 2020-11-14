@@ -22,6 +22,7 @@ describe('datx-utils', () => {
 
   describe('assignComputed', () => {
     it('should set a computed prop', () => {
+      const expectedCount = mobx.useRealMobX ? 2 : 1;
       const obj1 = {};
       const obj2 = {};
 
@@ -107,9 +108,9 @@ describe('datx-utils', () => {
         data.data = 42;
       });
 
-      expect(autorunCounter3).toBe(2);
-      expect(autorunCounter1).toBe(2);
-      expect(autorunCounter2).toBe(2);
+      expect(autorunCounter3).toBe(expectedCount);
+      expect(autorunCounter1).toBe(expectedCount);
+      expect(autorunCounter2).toBe(expectedCount);
     });
 
     it('should handle dynamic computed props', () => {
