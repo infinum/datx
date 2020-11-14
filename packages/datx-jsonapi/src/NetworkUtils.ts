@@ -1,6 +1,5 @@
 import { View, commitModel } from 'datx';
-import { setMeta } from 'datx-utils';
-import { action } from 'mobx';
+import { setMeta, mobx } from 'datx-utils';
 
 import {
   MODEL_PERSISTED_FIELD,
@@ -459,7 +458,7 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
   record: T,
   prop?: string,
 ): (response: LibResponse<T>) => T {
-  return action(
+  return mobx.action(
     (response: LibResponse<T>): T => {
       if (response.error) {
         throw response.error;

@@ -1,6 +1,6 @@
 import { INetworkModel } from '../interfaces/INetworkModel';
 import { IRequestOptions } from '../interfaces/IRequestOptions';
-import { getMeta, setMeta } from 'datx-utils';
+import { getMeta, setMeta, mobx } from 'datx-utils';
 import { NETWORK_PERSISTED } from '../consts';
 import { INetworkModelConstructor } from '../interfaces/INetworkModelConstructor';
 import { BaseRequest } from '../BaseRequest';
@@ -8,12 +8,11 @@ import { method, setUrl, query, header, cache, body } from '../operators';
 import { HttpMethod } from '../enums/HttpMethod';
 import { Response } from '../Response';
 import { PureModel, commitModel, getModelCollection, getModelId } from 'datx';
-import { action } from 'mobx';
 
 function handleResponse<T extends INetworkModel = INetworkModel>(
   record: T,
 ): (response: Response<T>) => T {
-  return action(
+  return mobx.action(
     (response: Response<T>): T => {
       if (response.error) {
         throw response.error;

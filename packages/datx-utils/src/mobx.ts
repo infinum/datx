@@ -37,6 +37,9 @@ const noopMobX = {
   },
 
   action(...params: Array<any>): any {
+    if (params.length === 1) {
+      return params[0];
+    }
     return params[2];
   },
 

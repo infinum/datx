@@ -1,4 +1,4 @@
-import { autorun } from 'mobx';
+import { mobx } from 'datx-utils';
 
 import { setupNetwork, setRequest } from '../utils/api';
 import { Event, TestStore } from '../utils/setup';
@@ -742,7 +742,7 @@ describe('caching', () => {
         let autorunCounter1 = 0;
         let autorunCounter2 = 0;
 
-        autorun(() => {
+        mobx.autorun(() => {
           const event = response?.data as Event;
 
           autorunCounter1++;
@@ -757,7 +757,7 @@ describe('caching', () => {
         const response2 = await store.getOne(Event, '1');
         let expectedId = '12345';
 
-        autorun(() => {
+        mobx.autorun(() => {
           const event2 = response2?.data as Event;
 
           autorunCounter2++;
