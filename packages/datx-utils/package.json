@@ -34,7 +34,7 @@
     "ts-jest": "^26.4.1",
     "typescript": "^4.0.3"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "mobx": "^4.2.0 || ^5.5.0 || ^6.0.0"
   },
   "scripts": {

@@ -121,10 +121,11 @@ class MobXProxy {
   public get makeObservable(): any {
     if (this.useRealMobX) {
       try {
-        return require('mobx').makeObservable;
-        // mobx 6
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const mobx = require('mobx');
+        return mobx.makeObservable || noopMobX.makeObservable;
       } catch {
-        // mobx 4/5
+        // no mobx installed
         return noopMobX.makeObservable;
       }
     }
