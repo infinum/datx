@@ -100,7 +100,7 @@ class MobXProxy {
           }
 
           mobxProxyInstance.access = true;
-          if (!mobxProxyInstance.hasMobX || mobxProxyInstance.useRealMobX) {
+          if (mobxProxyInstance.hasMobX && mobxProxyInstance.useRealMobX) {
             return require('mobx')[key];
           }
           // @ts-ignore
@@ -119,7 +119,7 @@ class MobXProxy {
   }
 
   public get makeObservable(): any {
-    if (this.useRealMobX) {
+    if (this.useRealMobX && this.hasMobX) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const mobx = require('mobx');
