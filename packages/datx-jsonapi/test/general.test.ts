@@ -145,7 +145,7 @@ describe('General', () => {
         name = 'Foo';
         event.name = 'Foo';
       });
-      expect(autorunCount).toBe(2);
+      expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
     }
   });
 
