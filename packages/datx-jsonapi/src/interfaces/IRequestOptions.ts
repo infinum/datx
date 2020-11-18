@@ -18,4 +18,7 @@ export interface IRequestOptions {
   networkConfig?: {
     headers?: IHeaders;
   };
+
+  /** If you don't know what this is for, you should probably not use it */
+  fetchOptions?: object;
 }

@@ -2,7 +2,7 @@ import { DATX_META } from './consts';
 import { IObservableArray } from './interfaces/IMobX';
 import { mobx } from './mobx';
 
-export function isArrayLike(value: any): boolean {
+export function isArrayLike(value: any): value is Array<any> | IObservableArray<any> {
   return Array.isArray(value) || mobx.isObservableArray(value);
 }
 
