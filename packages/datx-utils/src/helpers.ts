@@ -1,4 +1,4 @@
-import { extendObservable, observable, set, isObservableArray } from 'mobx';
+import { extendObservable, observable, set, isObservableArray, IObservableArray } from 'mobx';
 
 import { DATX_META } from './consts';
 
@@ -17,7 +17,7 @@ export const makeObservable =
     // noop by default
   });
 
-export function isArrayLike(value: any): boolean {
+export function isArrayLike(value: any): value is Array<any> | IObservableArray<any> {
   return Array.isArray(value) || isObservableArray(value);
 }
 
