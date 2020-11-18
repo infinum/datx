@@ -1,11 +1,14 @@
-import { clearAllCache } from '../src/interceptors/cache';
 import { mobx } from 'datx-utils';
-
-import mobxInstance from './mobx';
 
 if (parseInt(process.env.MOBX_VERSION || '0', 10) < 0) {
   mobx.useMobx(false);
 }
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const mobxInstance = require('./mobx');
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { clearAllCache } = require('../src/interceptors/cache');
 
 // @ts-ignore
 mobxInstance.configure({
