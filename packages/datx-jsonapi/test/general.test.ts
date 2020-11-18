@@ -1,5 +1,5 @@
 import { Collection, getModelId, getModelType, Model } from 'datx';
-import { autorun, runInAction } from 'mobx';
+import { mobx } from 'datx-utils';
 
 import { getModelRefLinks, jsonapi, modelToJsonApi } from '../src';
 import { Event, Image, Photo, TestStore, User } from './utils/setup';
@@ -136,16 +136,16 @@ describe('General', () => {
       let name = 'Demo';
       let autorunCount = 0;
 
-      autorun(() => {
+      mobx.autorun(() => {
         expect(event.name).toBe(name);
         autorunCount++;
       });
 
-      runInAction(() => {
+      mobx.runInAction(() => {
         name = 'Foo';
         event.name = 'Foo';
       });
-      expect(autorunCount).toBe(2);
+      expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
     }
   });
 

@@ -1,8 +1,10 @@
-import { configure } from 'mobx';
+import testMobx from './mobx';
+import { mobx } from 'datx-utils';
 
 import { Collection, Model, Bucket, Attribute, PureCollection } from '../src';
 
-configure({ enforceActions: 'observed' });
+// @ts-ignore
+testMobx.configure({ enforceActions: 'observed' });
 
 describe('ToMany', () => {
   describe('static', () => {
@@ -83,7 +85,7 @@ describe('ToMany', () => {
       expect(bucketInstance.value[0]).toBe(foos[0]);
     });
 
-    it('should support array updates', () => {
+    it('should support array updates with real mobx', () => {
       class Foo extends Model {
         public static type = 'foo';
       }
@@ -101,11 +103,20 @@ describe('ToMany', () => {
 
       expect(bucketInstance.length).toBe(3);
       expect(bucketInstance.value[0]).toBe(foos[0]);
-      bucketInstance.value.shift();
+
+      if (mobx.useRealMobX) {
+        bucketInstance.value.shift();
+      } else {
+        bucketInstance.value = bucketInstance.value.slice(1);
+      }
       expect(bucketInstance.length).toBe(2);
       expect(bucketInstance.value[0]).toBe(foos[1]);
 
-      bucketInstance.value.pop();
+      if (mobx.useRealMobX) {
+        bucketInstance.value.pop();
+      } else {
+        bucketInstance.value = bucketInstance.value.slice(0, -1);
+      }
       expect(bucketInstance.length).toBe(1);
       expect(bucketInstance.value[0]).toBe(foos[1]);
 
@@ -113,7 +124,11 @@ describe('ToMany', () => {
       expect(bucketInstance.length).toBe(2);
       expect(bucketInstance.value[0]).toBe(foos[0]);
 
-      bucketInstance.value.push(bars[0]);
+      if (mobx.useRealMobX) {
+        bucketInstance.value.push(bars[0]);
+      } else {
+        bucketInstance.value = [...bucketInstance.value, bars[0]];
+      }
       expect(bucketInstance.length).toBe(3);
     });
 
@@ -136,7 +151,11 @@ describe('ToMany', () => {
       expect(bucketInstance.length).toBe(3);
       expect(bucketInstance.value[0]).toBe(foos[0]);
       expect(() => {
-        bucketInstance.value.shift();
+        if (mobx.useRealMobX) {
+          bucketInstance.value.shift();
+        } else {
+          bucketInstance.value = bucketInstance.value.slice(1);
+        }
       }).toThrowError('[datx exception] This is a read-only bucket');
 
       expect(() => {

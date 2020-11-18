@@ -1,14 +1,4 @@
-import { IRawModel, getMeta, setMeta, isArrayLike } from 'datx-utils';
-import {
-  set,
-  observable,
-  IObservableArray,
-  computed,
-  toJS,
-  IObservable,
-  extendObservable,
-  runInAction,
-} from 'mobx';
+import { IRawModel, getMeta, setMeta, isArrayLike, mobx, IObservable, IObservableArray, removeFromArray, replaceInArray } from 'datx-utils';
 
 import { PureModel } from './PureModel';
 import { IType } from './interfaces/IType';
@@ -52,20 +42,20 @@ export class PureCollection {
     }
   > = {};
 
-  private readonly __data: IObservableArray<PureModel> = observable.array([], { deep: false });
+  private readonly __data: IObservableArray<PureModel> = mobx.observable.array([], { deep: false });
 
   private readonly __views: Array<string> = [];
 
-  private __dataMap: Record<string, Record<string, PureModel>> = (observable({}, undefined, {
+  private __dataMap: Record<string, Record<string, PureModel>> = (mobx.observable.object({}, undefined, {
     deep: false,
   }) as unknown) as Record<string, Record<string, PureModel>>;
 
-  private __dataList: Record<string, IObservableArray<PureModel>> = (observable({}, undefined, {
+  private __dataList: Record<string, IObservableArray<PureModel>> = (mobx.observable.object({}, undefined, {
     deep: false,
   }) as unknown) as Record<string, IObservableArray<PureModel>>;
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
-    extendObservable(this, {});
+    mobx.extendObservable(this, {});
     if (isArrayLike(data)) {
       this.insert(data as Array<IRawModel>);
     } else if (data && 'models' in data) {
@@ -203,8 +193,8 @@ export class PureCollection {
       const type = getModelType(model);
 
       if (!(type in this.__dataList)) {
-        runInAction(() => {
-          set(this.__dataList, { [type]: observable.array([]) });
+        mobx.runInAction(() => {
+          mobx.set(this.__dataList, { [type]: mobx.observable.array([]) });
         });
       }
 
@@ -251,10 +241,10 @@ export class PureCollection {
         model,
       );
     });
-    this.__data.replace([]);
-    this.__dataList = (observable({}, {}, { deep: false }) as unknown) as IObservable &
+    replaceInArray(this.__data, []);
+    this.__dataList = (mobx.observable.object({}, {}, { deep: false }) as unknown) as IObservable &
       Record<string, IObservableArray<PureModel>>;
-    this.__dataMap = (observable({}, {}, { deep: false }) as unknown) as IObservable &
+    this.__dataMap = (mobx.observable.object({}, {}, { deep: false }) as unknown) as IObservable &
       Record<string, Record<string, PureModel>>;
   }
 
@@ -275,7 +265,7 @@ export class PureCollection {
     return this.toJSON();
   }
 
-  @computed
+  @mobx.computed
   public get length(): number {
     return this.__data.length;
   }
@@ -296,15 +286,15 @@ export class PureCollection {
     const stringType = type.toString();
     const stringId = id.toString();
 
-    runInAction(() => {
+    mobx.runInAction(() => {
       if (!(type in this.__dataMap)) {
-        set(
+        mobx.set(
           this.__dataMap,
           stringType,
-          observable.object({ [stringId]: null }, {}, { deep: false }),
+          mobx.observable.object({ [stringId]: null }, {}, { deep: false }),
         );
       } else if (!(stringId in this.__dataMap[stringType])) {
-        set(this.__dataMap[stringType], stringId, null);
+        mobx.set(this.__dataMap[stringType], stringId, null);
       }
     });
 
@@ -374,16 +364,16 @@ export class PureCollection {
 
     triggerAction(
       {
-        oldValue: toJS(modelToJSON(model)) as Record<string, any>,
+        oldValue: mobx.toJS(modelToJSON(model)) as Record<string, any>,
         patchType: PatchType.REMOVE,
       },
       model,
     );
 
-    runInAction(() => {
-      this.__data.remove(model);
-      this.__dataList[modelType].remove(model);
-      set(this.__dataMap[modelType], modelId.toString(), undefined);
+    mobx.runInAction(() => {
+      removeFromArray(this.__data, model);
+      removeFromArray(this.__dataList[modelType], model);
+      mobx.set(this.__dataMap[modelType], modelId.toString(), undefined);
     });
 
     this.__data.forEach((item) => {
@@ -441,21 +431,21 @@ export class PureCollection {
       return;
     }
 
-    runInAction(() => {
+    mobx.runInAction(() => {
       this.__data.push(model);
       if (modelType in this.__dataList) {
         this.__dataList[modelType].push(model);
       } else {
-        set(this.__dataList, stringType, observable.array([model], { deep: false }));
+        mobx.set(this.__dataList, stringType, mobx.observable.array([model], { deep: false }));
       }
 
       if (modelType in this.__dataMap) {
-        set(this.__dataMap[modelType], modelId.toString(), model);
+        mobx.set(this.__dataMap[modelType], modelId.toString(), model);
       } else {
-        set(
+        mobx.set(
           this.__dataMap,
           stringType,
-          observable.object({ [modelId]: model }, {}, { deep: false }),
+          mobx.observable.object({ [modelId]: model }, {}, { deep: false }),
         );
       }
       updateModelCollection(model, this);

@@ -1,4 +1,4 @@
-import { autorun, configure } from 'mobx';
+import testMobx from './mobx';
 
 import {
   Collection,
@@ -11,8 +11,10 @@ import {
 } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId } from '../src/helpers/model/utils';
+import { mobx } from 'datx-utils';
 
-configure({ enforceActions: 'observed' });
+// @ts-ignore
+testMobx.configure({ enforceActions: 'observed' });
 
 describe('Collection', () => {
   describe('Basic features', () => {
@@ -395,7 +397,7 @@ describe('Collection', () => {
       let autorunLengthCount = 0;
       let fooLength;
 
-      autorun(() => {
+      testMobx.autorun(() => {
         autorunLengthCount++;
         fooLength = store.findAll(Foo).length;
       });
@@ -403,18 +405,21 @@ describe('Collection', () => {
       let autorunModelCount = 0;
       let foo;
 
-      autorun(() => {
+      testMobx.autorun(() => {
         autorunModelCount++;
         foo = store.findOne(Foo, 123);
       });
 
       const foo2 = store.add({ id: 123 }, Foo);
 
-      expect(autorunModelCount).toBe(2);
-      expect(foo).toBe(foo2);
-
-      expect(autorunLengthCount).toBe(2);
-      expect(fooLength).toBe(1);
+      if (mobx.useRealMobX) {
+        expect(autorunModelCount).toBe(2);
+        expect(foo).toBe(foo2);
+  
+        expect(autorunLengthCount).toBe(2);
+        expect(fooLength).toBe(1);
+      }
+      // The test doesn't make sense if MobX is not used
     });
 
     it('should auto set ref value at be a model is added', () => {

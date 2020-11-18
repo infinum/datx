@@ -1,24 +1,9 @@
-import { extendObservable, observable, set, isObservableArray, IObservableArray } from 'mobx';
-
 import { DATX_META } from './consts';
-
-let makeObservableFn;
-
-try {
-  makeObservableFn = require('mobx').makeObservable;
-} catch {
-  // mobx 4/5
-}
-
-export const makeObservable =
-  makeObservableFn ||
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ((target: any, annotations?: any): void => {
-    // noop by default
-  });
+import { IObservableArray } from './interfaces/IMobX';
+import { mobx } from './mobx';
 
 export function isArrayLike(value: any): value is Array<any> | IObservableArray<any> {
-  return Array.isArray(value) || isObservableArray(value);
+  return Array.isArray(value) || mobx.isObservableArray(value);
 }
 
 export function reducePrototypeChain<T, U>(
@@ -70,7 +55,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
     Object.defineProperty(obj, DATX_META, {
       configurable: false,
       enumerable: false,
-      value: observable({}, {}, { deep: false }),
+      value: mobx.observable.object({}, {}, { deep: false }),
     });
   }
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/1863
@@ -80,7 +65,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
 export function setMeta<T = any>(obj: Record<string, any>, key: string, value: T): void {
   const meta = getMetaObj(obj);
 
-  set(meta, key, value);
+  mobx.set(meta, key, value);
 }
 
 export function getMeta<T = any>(
@@ -155,7 +140,7 @@ export function assignComputed<T = any>(
   //   throw new Error(`[datx exception] This object shouldn't be an observable`);
   // }
 
-  const computedObj = extendObservable(
+  const computedObj = mobx.extendObservable(
     {},
     {
       get getter() {
@@ -206,4 +191,23 @@ export function info(...args: Array<any>): void {
 
   // eslint-disable-next-line no-console
   console.info(`[datx info]`, ...args);
+}
+
+export function replaceInArray<T = any>(arr: Array<T>, data: Array<T>): Array<T> {
+  if (mobx.isObservableArray(arr)) {
+    return (arr as IObservableArray).replace(data);
+  } else {
+    arr.length = 0;
+    arr.push(...data);
+    return arr;
+  }
+}
+
+export function removeFromArray<T = any>(arr: Array<T>, item: T): Array<T> {
+  if (mobx.isObservableArray(arr)) {
+    return (arr as IObservableArray).remove(item);
+  } else {
+    const pos = arr.indexOf(item);
+    return arr.splice(pos, 1);
+  }
 }

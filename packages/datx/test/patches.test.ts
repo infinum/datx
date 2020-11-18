@@ -1,12 +1,13 @@
 import { META_FIELD } from 'datx-utils';
-import { configure, runInAction } from 'mobx';
+import testMobx from './mobx';
 
 import { Collection, Model, Attribute } from '../src';
 import { IPatch } from '../src/interfaces/IPatch';
 import { PatchType } from '../src/enums/PatchType';
 import { getModelRef } from '../src/helpers/model/utils';
 
-configure({ enforceActions: 'observed' });
+// @ts-ignore
+testMobx.configure({ enforceActions: 'observed' });
 
 describe('patch', () => {
   describe('model', () => {
@@ -19,7 +20,7 @@ describe('patch', () => {
 
       const unregister = model.onPatch((patch) => patches.push(patch));
 
-      runInAction(() => {
+      testMobx.runInAction(() => {
         model['name'] = 'FooBar';
       });
       model.assign('age', 42);
@@ -30,7 +31,7 @@ describe('patch', () => {
       });
 
       unregister();
-      runInAction(() => {
+      testMobx.runInAction(() => {
         model['height'] = 200;
       });
 
@@ -126,14 +127,14 @@ describe('patch', () => {
 
       const unregister = model.onPatch((patch) => patches.push(patch));
 
-      runInAction(() => {
+      testMobx.runInAction(() => {
         model['name'] = 'Foo';
       });
       model.assign('age', 42);
       model.assign('nick', 'Bar');
 
       unregister();
-      runInAction(() => {
+      testMobx.runInAction(() => {
         model['height'] = 200;
       });
 
@@ -159,7 +160,7 @@ describe('patch', () => {
 
       store.add(model);
 
-      runInAction(() => {
+      testMobx.runInAction(() => {
         model['name'] = 'FooBar';
       });
       model.assign('age', 42);
@@ -173,7 +174,7 @@ describe('patch', () => {
 
       store.removeOne('foo', 1);
 
-      runInAction(() => {
+      testMobx.runInAction(() => {
         model['height'] = 200;
       });
 
@@ -292,7 +293,7 @@ describe('patch', () => {
 
       expect(model).not.toBe(null);
       if (model) {
-        runInAction(() => {
+        testMobx.runInAction(() => {
           model['name'] = 'FooBar';
         });
         model.assign('age', 42);
@@ -304,7 +305,7 @@ describe('patch', () => {
 
         store.removeOne('foo', 1);
 
-        runInAction(() => {
+        testMobx.runInAction(() => {
           model['height'] = 200;
         });
 
@@ -414,7 +415,7 @@ describe('patch', () => {
         'foo',
       );
 
-      runInAction(() => {
+      testMobx.runInAction(() => {
         model.bar = bar3;
         model.meta.refs.bar = { id: 2, type: 'bar' };
         model.bar = null;

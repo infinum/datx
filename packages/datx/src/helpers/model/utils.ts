@@ -8,8 +8,8 @@ import {
   getMetaObj,
   mapItems,
   isArrayLike,
+  mobx,
 } from 'datx-utils';
-import { toJS, extendObservable, runInAction } from 'mobx';
 
 import { IModelRef } from '../../interfaces/IModelRef';
 import { IType } from '../../interfaces/IType';
@@ -191,7 +191,7 @@ export function modelToJSON(model: PureModel): IRawModel {
     }
   });
 
-  return toJS(raw);
+  return mobx.toJS(raw);
 }
 
 export function cloneModel<T extends PureModel>(model: T): T {
@@ -248,7 +248,7 @@ function omitKeys(obj: object, keys: Array<string>): object {
 }
 
 export function assignModel<T extends PureModel>(model: T, key: string, value: any): void {
-  runInAction(() => {
+  mobx.runInAction(() => {
     if (!(model instanceof PureModel)) {
       throw error('The given parameter is not a valid model');
     }
@@ -264,7 +264,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
       model[key] = value;
     } else {
       if (shouldBeReference) {
-        extendObservable(fields, {
+        mobx.extendObservable(fields, {
           [key]: {
             referenceDef: {
               type: ReferenceType.TO_ONE_OR_MANY,
@@ -273,7 +273,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
           },
         });
       } else {
-        extendObservable(fields, {
+        mobx.extendObservable(fields, {
           [key]: {
             referenceDef: false,
           },

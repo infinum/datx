@@ -1,5 +1,5 @@
 import { IType, Model, prop } from 'datx';
-import { computed } from 'mobx';
+import { mobx } from 'datx-utils';
 
 import { jsonapi } from '../../../src';
 
@@ -12,7 +12,7 @@ export class User extends jsonapi(Model) {
   @prop
   public lastName!: string;
 
-  @computed
+  @mobx.computed
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
