@@ -10,11 +10,12 @@ const mobxInstance = require('./mobx');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { clearAllCache } = require('../src/interceptors/cache');
 
-// @ts-ignore
-mobxInstance.configure({
-  enforceActions: 'observed',
-  // computedRequiresReaction: true,
-});
+if ('configure' in mobxInstance) {
+  mobxInstance.configure({
+    enforceActions: 'observed',
+    // computedRequiresReaction: true,
+  });
+}
 
 beforeEach(() => {
   clearAllCache();
