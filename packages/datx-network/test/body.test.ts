@@ -27,7 +27,7 @@ describe('body', () => {
   it('should send something in fetch if the method is supported', async () => {
     const request = new MockBaseRequest('foobar').pipe(setUrl('foobar'), method(HttpMethod.Post));
 
-    await request.fetch(null, 'sdasdsad');
+    await request.fetch(null, null, 'sdasdsad');
 
     expect(request['lastBody']).toBe('sdasdsad');
     expect(request['lastMethod']).toBe('POST');

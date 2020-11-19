@@ -97,6 +97,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
 
   public fetch(
     params?: TParams | null,
+    queryParams?: Record<string, string | Array<string> | object> | null,
     body?: any,
     bodyType?: BodyType,
   ): Promise<Response<TModel>> {
@@ -109,7 +110,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     const url = interpolateParams(`${request._config.baseUrl}${request._options.url}`, urlParams);
     const processedUrl = appendQueryParams(
       url,
-      request._options.query,
+      Object.assign({}, request._options.query, queryParams),
       request._config.paramArrayType,
       request._config.encodeQueryString,
     );

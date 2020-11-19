@@ -115,4 +115,44 @@ describe('query params', () => {
       'foobar/test?test=123,234&foo[bar]=1&foo[baz]=2,3&foo[test][foo][bar]=4,5',
     );
   });
+
+  it('should work for complex query in fetch and ParamArray', async () => {
+    const request = new MockBaseRequest('foobar').pipe(
+      setUrl('/test'),
+      query('test', ['123', '234']),
+      paramArrayType(ParamArrayType.CommaSeparated),
+    );
+
+    const request2 = request.pipe(encodeQueryString(false));
+
+    await request.fetch(null, {
+      foo: {
+        bar: '1',
+        baz: ['2', '3'],
+        test: {
+          foo: {
+            bar: ['4', '5'],
+          },
+        },
+      },
+    });
+    expect(request['lastUrl']).toBe(
+      'foobar/test?test=123%2C234&foo[bar]=1&foo[baz]=2%2C3&foo[test][foo][bar]=4%2C5',
+    );
+
+    await request2.fetch(null, {
+      foo: {
+        bar: '1',
+        baz: ['2', '3'],
+        test: {
+          foo: {
+            bar: ['4', '5'],
+          },
+        },
+      },
+    });
+    expect(request2['lastUrl']).toBe(
+      'foobar/test?test=123,234&foo[bar]=1&foo[baz]=2,3&foo[test][foo][bar]=4,5',
+    );
+  });
 });
