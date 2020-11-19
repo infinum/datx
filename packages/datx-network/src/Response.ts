@@ -46,13 +46,14 @@ function initData<T extends PureModel | Array<PureModel>>(
   overrideData?: T,
 ): any {
   let data: any = null;
-  if (collection && response.data) {
+  const hasData = Boolean(response.data && Object.keys(response.data).length);
+  if (collection && response.data && hasData) {
     data =
       overrideData ||
       (response.type
         ? collection.add(response.data, response.type)
         : collection.add(response.data));
-  } else if (response.data) {
+  } else if (hasData) {
     const ModelConstructor =
       response.type === PureModel || Object.isPrototypeOf.call(PureModel, response.type || {})
         ? (response.type as typeof PureModel)

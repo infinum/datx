@@ -32,7 +32,11 @@ describe('Request', () => {
   });
 
   it('throw on server error', async () => {
-    const request = new MockBaseRequest('foobar').pipe(setUrl('foobar'));
+    const store = new Collection();
+    const request = new MockBaseRequest('foobar').pipe(
+      setUrl('foobar'),
+      collection(store),
+    );
     request['resetMock']({
       status: 404,
       json: async () => ({}),
@@ -41,6 +45,7 @@ describe('Request', () => {
       await request.fetch();
       expect(true).toBe(false);
     } catch (e) {
+      expect(store.length).toBe(0);
       expect(e.error).toEqual({ message: 'Invalid HTTP status: 404', status: 404 });
     }
   });
