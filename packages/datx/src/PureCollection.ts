@@ -350,7 +350,7 @@ export class PureCollection {
     return modelInstance;
   }
 
-  private __removeModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier): void {
+  protected __removeModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier): void {
     if (isArrayLike(model)) {
       (model as Array<PureModel>).forEach((item) => {
         this.__removeModel(item, type, id);

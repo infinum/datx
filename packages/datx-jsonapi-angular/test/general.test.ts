@@ -5,7 +5,7 @@ import { getModelRefLinks, modelToJsonApi } from 'datx-jsonapi';
 import { Event, Image, Photo, TestStore, User } from './utils/setup';
 import { jsonapiAngular } from '../src';
 
-xdescribe('General', () => {
+describe('General', () => {
   it('should initialize', () => {
     const store = new TestStore();
 
@@ -410,9 +410,8 @@ xdescribe('General', () => {
       expect(event.meta.id).toBe('1');
     }
     store.removeOne(Event, '1');
-    const event2 = store.findOne(Event, '1');
-
-    expect(event2).toBe(null);
+    const events = store.findAll(Event);
+    expect(events.length).toBe(1);
   });
 
   it('should remove all events', () => {

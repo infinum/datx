@@ -293,13 +293,15 @@ export function removeModel<T extends IJsonapiModel>(
       setModelPersisted(model, false);
 
       if (collection) {
-        collection.removeOne(model);
+        // @ts-ignore
+        collection.__removeModel(model);
       }
     });
   }
 
   if (collection) {
-    collection.removeOne(model);
+    // @ts-ignore
+    collection.__removeModel(model);
   }
 
   return Promise.resolve();

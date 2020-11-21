@@ -18,7 +18,7 @@ export function decorateModel(
   
     public destroy(options?: IRequestOptions): Observable<void> {
       return observableWrapper<any, void>((rxOptions: IRxFetchOptions) => {
-        return super.save(Object.assign({}, options, rxOptions)) as any;
+        return super.destroy(Object.assign({}, options, rxOptions)) as any;
       });
     }
   }

@@ -309,10 +309,12 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
       }
     });
 
-    return new Response(this.__internal.response, this.collection, this.__internal.options, data);
+    const ResponseConstructor: typeof Response = this.constructor as typeof Response;
+    return new ResponseConstructor(this.__internal.response, this.collection, this.__internal.options, data);
   }
 
-  public clone(ResponseConstructor: typeof Response = this.constructor as typeof Response): Response<T> {
+  public clone(): Response<T> {
+    const ResponseConstructor: typeof Response = this.constructor as typeof Response;
     return new ResponseConstructor(
       this.__internal.response,
       this.collection,
@@ -351,6 +353,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
    * @memberOf Response
    */
   protected __fetchLink(name: string): () => P {
+    const ResponseConstructor: typeof Response = this.constructor as typeof Response;
     if (!this.__cache[name]) {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 
@@ -360,7 +363,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
         this.__cache[name] = (): P =>
-          fetchLink<T>(link, this.collection, options, this.views) as unknown as P;
+          fetchLink<T>(link, this.collection, options, this.views, ResponseConstructor) as unknown as P;
       }
     }
 

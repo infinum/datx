@@ -1,0 +1,16 @@
+{
+  "data": {
+    "id": "12345",
+    "type": "event",
+    "attributes": {
+      "title": "Test 1",
+      "date": "2017-03-19"
+    },
+    "links": {
+      "image": "https://example.com/images/1"
+    },
+    "meta": {
+      "name": "event-1"
+    }
+  }
+}

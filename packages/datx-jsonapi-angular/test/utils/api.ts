@@ -48,6 +48,13 @@ function fetchInterceptor(method: string, url: string, body: any, requestHeaders
     );
   
     if (!request) {
+      subscriber.error({
+        data: {},
+        headers: new Headers(),
+        requestHeaders,
+        status: 0,
+        error: new Error(`Unexpected request: ${method || 'GET'} ${url}`),
+      });
       throw new Error(`Unexpected request: ${method || 'GET'} ${url}`);
     }
   
@@ -87,15 +94,13 @@ function fetchInterceptor(method: string, url: string, body: any, requestHeaders
         });
       } else {
         subscriber.error({
-          data: {},
-          headers: new Headers(),
-          requestHeaders,
+          message: `Invalid HTTP status: ${request.status}`,
           status: request.status,
         });
       }
     } catch (e) {
       subscriber.error({
-        data: {},
+        error: e,
         headers: new Headers(),
         requestHeaders,
         status: 0,
@@ -114,10 +119,6 @@ function fetchInterceptor(method: string, url: string, body: any, requestHeaders
     }
 
     return d;
-  }).catch((e) => {
-    // eslint-disable-next-line no-console
-    console.error(e);
-    throw e;
   });
 };
 

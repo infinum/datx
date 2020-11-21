@@ -59,12 +59,9 @@ describe('Network basics', () => {
           ).toEqual({ type: 'image', id: '1' });
           expect(data.attributes && 'images' in data.attributes).toBe(false);
         }
-      } catch(e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-        throw e;
-      } finally {
         done();
+      } catch(e) {
+        done(e);
       }
     });
   });
@@ -79,12 +76,9 @@ describe('Network basics', () => {
     store.getMany(Event).subscribe((events) => {
       try {
         expect(events.data).toBeNull();
-      } catch(e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-        throw e;
-      } finally {
         done();
+      } catch(e) {
+        done(e);
       }
     });
   });
@@ -106,12 +100,9 @@ describe('Network basics', () => {
           expect(getModelLinks(record)).toBeInstanceOf(Object);
           expect(getModelLinks(record).self).toBe('https://example.com/event/1234');
         }
-      } catch(e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-        throw e;
-      } finally {
         done();
+      } catch(e) {
+        done(e);
       }
     });
   });
@@ -187,12 +178,9 @@ describe('Network basics', () => {
       try {
         expect(events1.snapshot).toEqual(events.snapshot);
         expect(events1.snapshot).toEqual(events1b?.snapshot);
-      } catch(e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-        throw e;
-      } finally {
         done();
+      } catch(e) {
+        done(e);
       }
     });
   });

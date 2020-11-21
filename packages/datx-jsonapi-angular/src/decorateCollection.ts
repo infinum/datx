@@ -1,6 +1,6 @@
-import { ICollectionConstructor, PureCollection, IModelConstructor, IType, PureModel } from 'datx';
-import { IRequestOptions } from 'datx-jsonapi';
-import { Observable } from 'rxjs';
+import { ICollectionConstructor, PureCollection, IModelConstructor, IType, PureModel, getModelType, getModelId } from 'datx';
+import { IRequestOptions, clearCacheByType } from 'datx-jsonapi';
+import { Observable, empty } from 'rxjs';
 
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -13,19 +13,19 @@ export function decorateCollection(
 ): ICollectionConstructor<PureCollection & IJsonapiCollection> {
   class JsonapiCollection extends BaseClass {
     public getOne<T extends IJsonapiModel = IJsonapiModel>(type: IType | IModelConstructor<T>, id: string, options?: IRequestOptions): Observable<Response<T>> {
-      return observableWrapper<T>((rxOptions: IRxFetchOptions) => {
+      return observableWrapper<T, Response<T>>((rxOptions: IRxFetchOptions) => {
         return super.getOne<any>(type, id, Object.assign({}, options, rxOptions));
       });
     }
 
     public getMany<T extends IJsonapiModel = IJsonapiModel>(type: IType | IModelConstructor<T>, options?: IRequestOptions): Observable<Response<T>> {
-      return observableWrapper<T>((rxOptions: IRxFetchOptions) => {
+      return observableWrapper<T, Response<T>>((rxOptions: IRxFetchOptions) => {
         return super.getMany<any>(type, Object.assign({}, options, rxOptions));
       });
     }
 
     public request<T extends IJsonapiModel = IJsonapiModel>(url: string, method?: string, data?: object, options?: IRequestOptions): Observable<Response<T>> {
-      return observableWrapper<T>((rxOptions: IRxFetchOptions) => {
+      return observableWrapper<T, Response<T>>((rxOptions: IRxFetchOptions) => {
         return super.request<any>(url, method, data, Object.assign({}, options, rxOptions));
       });
     }
@@ -37,9 +37,30 @@ export function decorateCollection(
       id?: string | boolean | IRequestOptions,
       options?: boolean | IRequestOptions,
     ): Observable<void> {
-      return observableWrapper<IJsonapiModel, void>((rxOptions: IRxFetchOptions) => {
-        return super.removeOne(obj as IType | typeof PureModel, id as string, Object.assign({}, options, rxOptions));
-      });
+      let remoteOp: boolean | IRequestOptions | undefined;
+      let modelId: string;
+      let model: IJsonapiModel | null;
+      const type = getModelType(obj);
+
+      if (typeof id === 'object' || id === undefined || typeof id === 'boolean') {
+        remoteOp = id;
+        modelId = getModelId(obj).toString();
+        model = obj as IJsonapiModel;
+      } else {
+        remoteOp = options;
+        modelId = getModelId(id).toString();
+        model = modelId ? (this.findOne(type, modelId) as IJsonapiModel | null) : null;
+      }
+
+      if (model && remoteOp) {
+        return model.destroy(remoteOp === true ? undefined : remoteOp);
+      }
+
+      if (model) {
+        this.__removeModel(model);
+      }
+      clearCacheByType(type);
+      return empty();
     }
   }
 

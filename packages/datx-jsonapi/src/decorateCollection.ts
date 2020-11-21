@@ -12,6 +12,8 @@ import {
   ReferenceType,
   updateModel,
   commitModel,
+  IIdentifier,
+  IModelRef,
 } from 'datx';
 import { getMeta, IRawModel, mapItems, deprecated, isArrayLike } from 'datx-utils';
 
@@ -204,7 +206,7 @@ export function decorateCollection(
       let model: IJsonapiModel | null;
       const type = getModelType(obj);
 
-      if (typeof id === 'object' || id === undefined) {
+      if (typeof id === 'object' || id === undefined || typeof id === 'boolean') {
         remoteOp = id;
         modelId = getModelId(obj).toString();
         model = obj as IJsonapiModel;
@@ -219,7 +221,7 @@ export function decorateCollection(
       }
 
       if (model) {
-        super.removeOne(model);
+        this.__removeModel(model);
       }
       clearCacheByType(type);
 

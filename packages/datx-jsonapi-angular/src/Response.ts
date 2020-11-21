@@ -17,6 +17,7 @@ export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseRe
    * @memberOf Response
    */
   protected __fetchLink(name: string): () => Observable<Response<T>> {
+    const ResponseConstructor: typeof Response = this.constructor as typeof Response;
     if (!this.__cache[name]) {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 
@@ -27,7 +28,7 @@ export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseRe
         options.networkConfig.headers = this.requestHeaders;
         this.__cache[name] = (): Observable<Response<T>> => {
           return observableWrapper((rxOptions): any => {
-            return fetchLink<any>(link, this.collection, Object.assign({}, options, rxOptions), this.views);
+            return fetchLink<any>(link, this.collection, Object.assign({}, options, rxOptions), this.views, ResponseConstructor as any);
           });
         }
       }

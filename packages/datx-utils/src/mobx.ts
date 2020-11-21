@@ -110,7 +110,8 @@ class MobXProxy {
     });
   }
 
-  useMobx(enabled: boolean): void {
+  // Enable external imports without caring about the context
+  useMobx = (enabled: boolean): void => {
     if (this.access) {
       throw new Error('[datx] MobX was already used. Please move this function call to somewhere earlier.');
     }
