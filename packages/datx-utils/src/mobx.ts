@@ -96,7 +96,7 @@ class MobXProxy {
       Object.defineProperty(this, key, {
         get() {
           if (!mobxProxyInstance.hasMobX && mobxProxyInstance._useRealMobX) {
-            warn('MobX not installed. Falling back to the static approach. Call `mobx.useMobx(false)` to disable this warning');
+            warn('MobX not installed. Falling back to the static approach. Call `mobx.useMobx(false)` from the datx-utils package to disable this warning');
           }
 
           mobxProxyInstance.access = true;
@@ -110,8 +110,7 @@ class MobXProxy {
     });
   }
 
-  // Enable external imports without caring about the context
-  useMobx = (enabled: boolean): void => {
+  useMobx(enabled: boolean): void {
     if (this.access) {
       throw new Error('[datx] MobX was already used. Please move this function call to somewhere earlier.');
     }

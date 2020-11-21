@@ -59,6 +59,3 @@ export { ReferenceType } from './enums/ReferenceType';
 export { withActions } from './mixins/withActions';
 export { withMeta } from './mixins/withMeta';
 export { withPatches } from './mixins/withPatches';
-
-import { mobx } from 'datx-utils';
-export const useMobx = mobx.useMobx;
