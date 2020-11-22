@@ -41,6 +41,10 @@
       "jsonapi/jsonapi-utils",
       "jsonapi/jsonapi-typescript-interfaces"
     ],
+    "JSON API Angular": [
+      "jsonapi-angular/mixin",
+      "jsonapi-angular/base-fetch"
+    ],
     "Migration guide": [
       "migration-guide/breaking-changes",
       "migration-guide/deprecations",
@@ -50,7 +54,7 @@
     "Troubleshooting": ["troubleshooting/known-issues"]
   },
   "examples": {
-    "Setup": ["examples/basic-setup", "examples/react-setup", "examples/nextjs-setup"],
+    "Setup": ["examples/basic-setup", "examples/react-setup", "examples/nextjs-setup", "examples/angular-setup"],
     "Collection": ["examples/adding-models"]
   }
 }
