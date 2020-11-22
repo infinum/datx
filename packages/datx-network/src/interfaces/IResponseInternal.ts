@@ -1,8 +1,8 @@
 import { View } from 'datx';
+import { IResponseHeaders } from 'datx-utils';
 
 import { IHeaders } from './IHeaders';
 import { IRequestOptions } from './IRequestOptions';
-import { IResponseHeaders } from './IResponseHeaders';
 import { IResponseObject } from './IResponseObject';
 
 export interface IResponseInternal {

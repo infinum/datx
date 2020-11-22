@@ -8,13 +8,12 @@ import {
   updateModelId,
   View,
 } from 'datx';
-import { assignComputed } from 'datx-utils';
+import { assignComputed, Headers, IResponseHeaders } from 'datx-utils';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { IError, IJsonApiObject, ILink } from './interfaces/JsonApi';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 
@@ -77,10 +76,12 @@ function initData<T extends IJsonapiModel>(
   return new Bucket.ToOneOrMany<T>(null, collection as any, true);
 }
 
-export class Response<T extends IJsonapiModel> {
+type IAsync<T extends IJsonapiModel> = Promise<Response<T>>;
+
+export class Response<T extends IJsonapiModel, P = IAsync<T>> {
   private __data;
 
-  private __internal: IResponseInternal = {
+  protected __internal: IResponseInternal = {
     response: {},
     views: [],
   };
@@ -148,34 +149,34 @@ export class Response<T extends IJsonapiModel> {
   /**
    * First data page
    *
-   * @type {Promise<Response>}
+   * @type {P<Response>}
    * @memberOf Response
    */
-  public first?: () => Promise<Response<T>>; // Handled by the __fetchLink
+  public first?: () => P; // Handled by the __fetchLink
 
   /**
    * Previous data page
    *
-   * @type {Promise<Response>}
+   * @type {P<Response>}
    * @memberOf Response
    */
-  public prev?: () => Promise<Response<T>>; // Handled by the __fetchLink
+  public prev?: () => P; // Handled by the __fetchLink
 
   /**
    * Next data page
    *
-   * @type {Promise<Response>}
+   * @type {P<Response>}
    * @memberOf Response
    */
-  public next?: () => Promise<Response<T>>; // Handled by the __fetchLink
+  public next?: () => P; // Handled by the __fetchLink
 
   /**
    * Last data page
    *
-   * @type {Promise<Response>}
+   * @type {P<Response>}
    * @memberOf Response
    */
-  public last?: () => Promise<Response<T>>; // Handled by the __fetchLink
+  public last?: () => P; // Handled by the __fetchLink
 
   /**
    * Received HTTP status
@@ -202,11 +203,11 @@ export class Response<T extends IJsonapiModel> {
   /**
    * Cache used for the link requests
    *
-   * @private
-   * @type {Record<string, Promise<Response>>}
+   * @protected
+   * @type {Record<string, P<Response>>}
    * @memberOf Response
    */
-  private readonly __cache: Record<string, () => Promise<Response<T>>> = {};
+  protected readonly __cache: Record<string, () => P> = {};
 
   constructor(
     response: IRawResponse,
@@ -281,7 +282,7 @@ export class Response<T extends IJsonapiModel> {
    *
    * @memberOf Response
    */
-  public replaceData(data: T): Response<T> {
+  public replaceData(data: T): Response<T, P> {
     const record: PureModel = this.data as PureModel;
 
     if (record === data) {
@@ -307,11 +308,13 @@ export class Response<T extends IJsonapiModel> {
       }
     });
 
-    return new Response(this.__internal.response, this.collection, this.__internal.options, data);
+    const ResponseConstructor: typeof Response = this.constructor as typeof Response;
+    return new ResponseConstructor(this.__internal.response, this.collection, this.__internal.options, data);
   }
 
   public clone(): Response<T> {
-    return new Response(
+    const ResponseConstructor: typeof Response = this.constructor as typeof Response;
+    return new ResponseConstructor(
       this.__internal.response,
       this.collection,
       this.__internal.options,
@@ -330,7 +333,7 @@ export class Response<T extends IJsonapiModel> {
     };
   }
 
-  public update(response: IRawResponse, views?: Array<View>): Response<T> {
+  public update(response: IRawResponse, views?: Array<View>): Response<T, P> {
     this.__updateInternal(response, undefined, views);
     const newData = initData(response, this.collection);
 
@@ -342,13 +345,14 @@ export class Response<T extends IJsonapiModel> {
   /**
    * Function called when a link is being fetched. The returned value is cached
    *
-   * @private
+   * @protected
    * @param {string} name Link name
-   * @returns Promise that resolves with a Response object
+   * @returns P that resolves with a Response object
    *
    * @memberOf Response
    */
-  private __fetchLink(name: string): () => Promise<Response<T>> {
+  protected __fetchLink(name: string): () => P {
+    const ResponseConstructor: typeof Response = this.constructor as typeof Response;
     if (!this.__cache[name]) {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 
@@ -357,8 +361,8 @@ export class Response<T extends IJsonapiModel> {
 
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
-        this.__cache[name] = (): Promise<Response<T>> =>
-          fetchLink<T>(link, this.collection, options, this.views);
+        this.__cache[name] = (): P =>
+          fetchLink<T>(link, this.collection, options, this.views, ResponseConstructor) as unknown as P;
       }
     }
 

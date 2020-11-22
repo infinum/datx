@@ -1,8 +1,9 @@
 import { PureModel } from 'datx';
+import { IResponseHeaders } from 'datx-utils';
+
 import { IFetchOptions } from '../interfaces/IFetchOptions';
 import { INetworkHandler } from '../interfaces/INetworkHandler';
 import { IResponseObject } from '../interfaces/IResponseObject';
-import { IResponseHeaders } from '../interfaces/IResponseHeaders';
 import { IHeaders } from '../interfaces/IHeaders';
 import { Response as ResponseClass } from '../Response';
 

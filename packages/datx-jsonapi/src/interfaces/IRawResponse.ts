@@ -1,7 +1,7 @@
 import { Collection } from 'datx';
+import { IResponseHeaders } from 'datx-utils';
 
 import { IHeaders } from './IHeaders';
-import { IResponseHeaders } from './IResponseHeaders';
 import { IJsonApiObject, IResponse } from './JsonApi';
 
 export interface IRawResponse {

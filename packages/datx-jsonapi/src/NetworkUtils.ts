@@ -1,5 +1,5 @@
 import { View, commitModel } from 'datx';
-import { setMeta, mobx } from 'datx-utils';
+import { setMeta, mobx, IResponseHeaders } from 'datx-utils';
 
 import {
   MODEL_PERSISTED_FIELD,
@@ -14,7 +14,6 @@ import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { ILink, IResponse } from './interfaces/JsonApi';
 import { Response as LibResponse } from './Response';
 import { CachingStrategy, ParamArrayType } from 'datx-network';
@@ -169,7 +168,8 @@ function getLocalNetworkError<T extends IJsonapiModel>(
   reqOptions: ICollectionFetchOpts,
   collection?: IJsonapiCollection,
 ): LibResponse<T> {
-  return new LibResponse<T>(
+  const ResponseConstructor: typeof LibResponse = reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
+  return new ResponseConstructor<T>(
     {
       error: new Error(message),
       // collection,
@@ -186,6 +186,7 @@ function makeNetworkCall<T extends IJsonapiModel>(
   doCacheResponse = false,
   existingResponse?: LibResponse<T>,
 ): Promise<LibResponse<T>> {
+  const ResponseConstructor: typeof LibResponse = fetchOptions?.['Response'] || LibResponse;
   return config
     .baseFetch(params.method, params.url, params.data, params?.options?.networkConfig?.headers, fetchOptions)
     .then((response: IRawResponse) => {
@@ -197,7 +198,7 @@ function makeNetworkCall<T extends IJsonapiModel>(
         return existingResponse;
       }
 
-      return new LibResponse<T>(
+      return new ResponseConstructor<T>(
         payload,
         params.collection,
         params.options,
@@ -222,6 +223,8 @@ function makeNetworkCall<T extends IJsonapiModel>(
 function collectionFetch<T extends IJsonapiModel>(
   reqOptions: ICollectionFetchOpts,
 ): Promise<LibResponse<T>> {
+  const ResponseConstructor: typeof LibResponse = reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
+  
   const params = config.transformRequest(reqOptions);
   // const { url, options, data, method = 'GET', collection, views } = params;
 
@@ -254,6 +257,7 @@ function collectionFetch<T extends IJsonapiModel>(
   const cacheContent: { response: LibResponse<T> } | undefined = (getCache(
     params.url,
     maxCacheAge,
+    ResponseConstructor,
   ) as unknown) as { response: LibResponse<T> } | undefined;
 
   // NetworkFirst - Fallback to cache only on network error
@@ -448,6 +452,7 @@ export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
   collection?: IJsonapiCollection,
   options?: IRequestOptions,
   views?: Array<View>,
+  ResponseConstructor: typeof LibResponse = LibResponse,
 ): Promise<LibResponse<T>> {
   if (link) {
     const href: string = typeof link === 'object' ? link.href : link;
@@ -457,7 +462,7 @@ export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
     }
   }
 
-  return Promise.resolve(new LibResponse({ data: undefined }, collection));
+  return Promise.resolve(new ResponseConstructor({ data: undefined }, collection));
 }
 
 export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(

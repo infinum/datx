@@ -25,8 +25,9 @@ export { IJsonapiModel } from './interfaces/IJsonapiModel';
 export { IJsonapiView } from './interfaces/IJsonapiView';
 export { IRawResponse } from './interfaces/IRawResponse';
 export { IRequestOptions } from './interfaces/IRequestOptions';
+export { IResponse } from './interfaces/JsonApi';
 
-export { config } from './NetworkUtils';
+export { config, fetchLink } from './NetworkUtils';
 
 export {
   BaseRequest,

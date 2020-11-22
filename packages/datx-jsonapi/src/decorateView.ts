@@ -59,7 +59,7 @@ export function decorateView<U>(
         .then(this.__addFromResponse.bind(this));
     }
 
-    private __addFromResponse(response: Response<M>): Response<M> {
+    protected __addFromResponse(response: Response<M>): Response<M> {
       if (response.data) {
         this.add(response.data);
       }

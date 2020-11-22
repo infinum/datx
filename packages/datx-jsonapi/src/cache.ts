@@ -24,7 +24,7 @@ export interface ICacheInternal {
 let cacheStorage: Array<ICacheInternal> = [];
 
 export function saveCache(url: string, response: Response<IJsonapiModel>): void {
-  if (response && response.isSuccess && (response.data || response.data === null)) {
+  if (response?.isSuccess && response.status !== -1 && (response.data || response.data === null)) {
     const types = mapItems(response.data || [], getModelType) as IType | Array<IType>;
 
     cacheStorage = cacheStorage.filter((item) => item.url !== url);
@@ -39,7 +39,7 @@ export function saveCache(url: string, response: Response<IJsonapiModel>): void 
   }
 }
 
-export function getCache(url: string, maxAge: number): ICache | undefined {
+export function getCache(url: string, maxAge: number, ResponseConstructor: typeof Response = Response): ICache | undefined {
   const ageLimit = Date.now() - maxAge * 1000;
   const cache = cacheStorage.find((item) => item.url === url && item.time > ageLimit);
 
@@ -48,7 +48,7 @@ export function getCache(url: string, maxAge: number): ICache | undefined {
 
     return {
       // @ts-ignore Array headers that are supported but shouldn't be exposed in types
-      response: new Response(data.response, cache.collection, data.options),
+      response: new ResponseConstructor(data.response, cache.collection, data.options),
       time: cache.time,
       types: cache.types,
       url: cache.url,
