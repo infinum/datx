@@ -8,13 +8,12 @@ import {
   updateModelId,
   View,
 } from 'datx';
-import { assignComputed } from 'datx-utils';
+import { assignComputed, Headers, IResponseHeaders } from 'datx-utils';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { IError, IJsonApiObject, ILink } from './interfaces/JsonApi';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 

@@ -1,6 +1,7 @@
 import { DATX_META } from './consts';
 import { IObservableArray } from './interfaces/IMobX';
 import { mobx } from './mobx';
+import { IResponseHeaders } from './interfaces/IResponseHeaders';
 
 export function isArrayLike(value: any): value is Array<any> | IObservableArray<any> {
   return Array.isArray(value) || mobx.isObservableArray(value);
@@ -209,5 +210,18 @@ export function removeFromArray<T = any>(arr: Array<T>, item: T): Array<T> {
   } else {
     const pos = arr.indexOf(item);
     return arr.splice(pos, 1);
+  }
+}
+
+export class Headers implements IResponseHeaders {
+  constructor(private headers: Array<[string, string]>) {}
+
+  public get(name: string): string | null {
+    const matches = this.headers.filter(([key, _value]) => key === name);
+    return matches.map(([_key, value]) => value).join(',') || null;
+  }
+
+  public forEach(cb: (value: string, key: string) => void): void {
+    this.headers.forEach(([key, value]) => cb(value, key));
   }
 }

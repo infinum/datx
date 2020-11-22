@@ -1,6 +1,7 @@
-import { IResponseHeaders } from './IResponseHeaders';
-import { IHeaders } from './IHeaders';
 import { PureCollection, IType, PureModel } from 'datx';
+import { IResponseHeaders } from 'datx-utils';
+
+import { IHeaders } from './IHeaders';
 
 export interface IResponseObject {
   data?: object;

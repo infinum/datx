@@ -12,8 +12,6 @@ import {
   ReferenceType,
   updateModel,
   commitModel,
-  IIdentifier,
-  IModelRef,
 } from 'datx';
 import { getMeta, IRawModel, mapItems, deprecated, isArrayLike } from 'datx-utils';
 

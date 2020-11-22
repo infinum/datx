@@ -20,6 +20,8 @@ export {
   upsertInterceptor,
 } from './operators';
 
+export { IResponseHeaders } from 'datx-utils';
+
 export { clearAllCache, clearCacheByType } from './interceptors/cache';
 
 export { CachingStrategy } from './enums/CachingStrategy';
