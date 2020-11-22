@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Angular JSON:API baseFetch · datx</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="By default, the library will use the FetchAPI to do all the networking. This is not ideal when using Angular as it would remove some useful features like interceptors and request cancellation."/><meta name="docsearch:version" content="next"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Angular JSON:API baseFetch · datx"/><meta property="og:type" content="website"/><meta property="og:url" content="https://datx.dev/"/><meta property="og:description" content="By default, the library will use the FetchAPI to do all the networking. This is not ideal when using Angular as it would remove some useful features like interceptors and request cancellation."/><meta property="og:image" content="https://datx.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://datx.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><link rel="stylesheet" href="/css/code-block-buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/code-block-buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100}
+          )
+        });
+        </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/datx-logo.svg" alt="datx"/><h2 class="headerTitleWithLogo">datx</h2></a><a href="/versions"><h3>next</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/next/getting-started/installation" target="_self">Docs</a></li><li class=""><a href="/docs/next/examples/basic-setup" target="_self">Examples</a></li><li class=""><a href="https://github.com/infinum/datx" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Angular JSON:API baseFetch</h1></header><article><div><span><p>By default, the library will use the FetchAPI to do all the networking. This is not ideal when using Angular as it would remove some useful features like interceptors and request cancellation.</p>
+<p><code>datx-jsonapi-angular</code> implements some hooks which can be used in combination with a custom <code>baseFetch</code> implementation to get those features back.</p>
+<p>Here is an example of the implementation, but you might have some other needs:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-comment">// src/app/services/custom-fetch.ts</span>
+
+<span class="hljs-keyword">import</span> { HttpClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/common/http'</span>;
+<span class="hljs-keyword">import</span> { Injectable } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { config, IResponseObject } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx-jsonapi'</span>;
+<span class="hljs-keyword">import</span> { IResponseHeaders } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx-jsonapi/dist/interfaces/IResponseHeaders'</span>;
+<span class="hljs-keyword">import</span> { Observable } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;
+<span class="hljs-keyword">import</span> { map, takeUntil } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs/operators'</span>;
+
+<span class="hljs-meta">@Injectable</span>({ providedIn: <span class="hljs-string">'root'</span> })
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> CustomFetchService {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> httpClient: HttpClient</span>) {}
+
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> fetch(
+    method: <span class="hljs-built_in">string</span>,
+    url: <span class="hljs-built_in">string</span>,
+    body?: unknown,
+    headers: Record&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>&gt; = {},
+    fetchOptions?: { takeUntil$?: Observable&lt;<span class="hljs-built_in">void</span>&gt; },
+  ): <span class="hljs-built_in">Promise</span>&lt;IResponseObject&gt; {
+    <span class="hljs-keyword">const</span> takeUntil$: Observable&lt;<span class="hljs-built_in">void</span>&gt; | <span class="hljs-literal">undefined</span> = fetchOptions?.takeUntil$;
+
+    <span class="hljs-keyword">const</span> requestHeaders = {
+      ...config.defaultFetchOptions.headers,
+      ...headers,
+    };
+
+    <span class="hljs-keyword">let</span> request$ = <span class="hljs-keyword">this</span>.httpClient.request(method, url, {
+      observe: <span class="hljs-string">'response'</span>,
+      responseType: <span class="hljs-string">'json'</span>,
+      headers: requestHeaders,
+      body,
+    }).pipe(
+      map(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
+        <span class="hljs-keyword">return</span> {
+          data: response.body,
+          headers: response.headers <span class="hljs-keyword">as</span> unknown <span class="hljs-keyword">as</span> IResponseHeaders, <span class="hljs-comment">// The interface actually matches</span>
+          requestHeaders,
+          status: response.status,
+        };
+      }),
+    );
+
+    <span class="hljs-keyword">if</span> (takeUntil$) {
+      request$ = request$.pipe(takeUntil(takeUntil$));
+    }
+
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-keyword">const</span> d = <span class="hljs-keyword">await</span> request$.toPromise();
+      <span class="hljs-keyword">if</span> (d === <span class="hljs-literal">undefined</span>) {
+        <span class="hljs-keyword">return</span> { status: <span class="hljs-number">-1</span> }; <span class="hljs-comment">// Signal to DatX that it shouldn't fail, but shouldn't cache either</span>
+      }
+
+      <span class="hljs-keyword">return</span> d;
+    } <span class="hljs-keyword">catch</span> (e) {
+      <span class="hljs-built_in">console</span>.error(e);
+      <span class="hljs-keyword">throw</span> e;
+    }
+  }
+}
+</code></pre>
+<p>The last step is to initialize all the settings:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-comment">// src/app/app/module.ts</span>
+
+<span class="hljs-keyword">import</span> { APP_INITIALIZER } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { CustomFetchService } <span class="hljs-keyword">from</span> <span class="hljs-string">'./services/custom-fetch.service'</span>;
+<span class="hljs-keyword">import</span> { CachingStrategy, config } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx-jsonapi'</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initDatx</span>(<span class="hljs-params">customFetch: CustomFetchService</span>): (<span class="hljs-params"></span>) =&gt; <span class="hljs-title">Promise</span>&lt;<span class="hljs-title">void</span>&gt; </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">async</span> () =&gt; {
+    config.baseFetch = customFetch.fetch.bind(customFetch);
+
+    config.defaultFetchOptions = {
+      credentials: <span class="hljs-string">'same-origin'</span>,
+      headers: {
+        <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/vnd.api+json'</span>,
+      },
+    };
+
+    <span class="hljs-comment">// Use cache if not older than 10 seconds</span>
+    config.maxCacheAge = <span class="hljs-number">10</span>;
+    config.cache = CachingStrategy.CacheFirst;
+  };
+}
+
+<span class="hljs-comment">// ... in the module providers</span>
+  {
+    provide: APP_INITIALIZER,
+    useFactory: initDatx,
+    multi: <span class="hljs-literal">true</span>,
+    deps: [CustomFetchService],
+  }
+
+</code></pre>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 11/22/2020 by Darko Kukovec</em></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'f03607e57957ae747b2342443460477a',
+                indexName: 'datx',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
