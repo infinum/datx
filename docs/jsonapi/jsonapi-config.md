@@ -79,7 +79,7 @@ baseFetch(
 ): Promise<IRawResponse>
 ```
 
-The function will receive a request method, request url, a body object and request headers (key/value object), and it needs to return a promise that resolves to [a raw response object](/docs/api-reference/typescript-interfaces#irawresponse) - a JSON API valid response with some additional properties:
+The function will receive a request method, request url, a body object and request headers (key/value object), and it needs to return a promise that resolves to [a raw response object](../api-reference/typescript-gitinterfaces#irawresponse) - a JSON API valid response with some additional properties:
 
 - `status` - HTTP status
 - `requestHeaders` - the same object that was received by the function
@@ -93,7 +93,7 @@ Depending on your `baseFetch` implementation, you might not need the `baseUrl`, 
 transformRequest(options: ICollectionFetchOptions): ICollectionFetchOptions
 ```
 
-Can be used to modify the request before it's made. It is receiving a [ICollectionFetchOptions](/docs/api-reference/typescript-interfaces#icollectionfetchoptions) object, and it should also return an object with the same interface.
+Can be used to modify the request before it's made. It is receiving a [ICollectionFetchOptions](../api-reference/typescript-interfaces#icollectionfetchoptions) object, and it should also return an object with the same interface.
 
 Note: It is recommended not to modify the existing object but instead create a copy.
 
@@ -103,6 +103,6 @@ Note: It is recommended not to modify the existing object but instead create a c
 transformResponse(response: IRawResponse): IRawResponse
 ```
 
-Can be used to modify the response before it's parsed. It is receiving a [IRawResponse](/docs/api-reference/typescript-interfaces#irawresponse) object, and it should also return an object with the same interface.
+Can be used to modify the response before it's parsed. It is receiving a [IRawResponse](../api-reference/typescript-interfaces#irawresponse) object, and it should also return an object with the same interface.
 
 Note: It is recommended not to modify the existing object but instead create a copy.
