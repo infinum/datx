@@ -79,7 +79,7 @@ baseFetch(
 ): Promise<IRawResponse>
 ```
 
-The function will receive a request method, request url, a body object and request headers (key/value object), and it needs to return a promise that resolves to [a raw response object](../api-reference/typescript-gitinterfaces#irawresponse) - a JSON API valid response with some additional properties:
+The function will receive a request method, request url, a body object and request headers (key/value object), and it needs to return a promise that resolves to [a raw response object](../api-reference/typescript-interfaces#irawresponse) - a JSON API valid response with some additional properties:
 
 - `status` - HTTP status
 - `requestHeaders` - the same object that was received by the function
