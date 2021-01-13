@@ -1,6 +1,6 @@
 {
   "name": "datx-network",
-  "version": "2.0.0-beta.13",
+  "version": "2.0.0-beta.14",
   "description": "DatX network layer",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
