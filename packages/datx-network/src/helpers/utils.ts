@@ -68,7 +68,7 @@ function parametrize(
       }
     } else if (typeof params[key] === 'object') {
       list.push(...parametrize(paramArrayType, params[key], scoped));
-    } else {
+    } else if (params[key] !== undefined) {
       list.push({ key: scoped, value: params[key] });
     }
   });

@@ -19,7 +19,7 @@ interface IRequestOptions {
   method: HttpMethod;
   url?: string;
   params: Record<string, string>;
-  query: Record<string, string | Array<string> | object>;
+  query: Record<string, string | Array<string> | object | undefined>;
   headers: IHeaders;
   body?: any;
   bodyType: BodyType;

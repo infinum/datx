@@ -77,18 +77,18 @@ export function body(body: any, bodyType?: BodyType) {
 
 export function query(
   name: string,
-  value: string | Array<string> | object,
+  value: string | Array<string> | object | undefined,
 ): (pipeline: BaseRequest) => void;
 export function query(
-  params: Record<string, string | Array<string> | object>,
+  params: Record<string, string | Array<string> | object | undefined>,
 ): (pipeline: BaseRequest) => void;
 export function query(
-  name: string | Record<string, string | Array<string> | object>,
-  value?: string | Array<string> | object,
+  name: string | Record<string, string | Array<string> | object | undefined>,
+  value?: string | Array<string> | object | undefined,
 ) {
   return (pipeline: BaseRequest): void => {
     if (typeof name === 'string') {
-      pipeline['_options'].query[name] = value || '';
+      pipeline['_options'].query[name] = value;
     } else {
       Object.assign(pipeline['_options'].query, name);
     }

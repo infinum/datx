@@ -9,6 +9,13 @@ describe('query params', () => {
     expect(request['lastUrl']).toBe('foobar/test?test=123');
   });
 
+  it('should skip the undefined params', async () => {
+    const request = new MockBaseRequest('foobar').pipe(setUrl('/test'), query('test', undefined));
+
+    await request.fetch();
+    expect(request['lastUrl']).toBe('foobar/test');
+  });
+
   it('should work for a basic params case and existing queryparams', async () => {
     const request = new MockBaseRequest('foobar').pipe(setUrl('/test?foo=1'), query('test', '123'));
 
