@@ -1,0 +1,242 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Angular JSON:API setup · datx</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Getting started"/><meta name="docsearch:version" content="2.0.0"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Angular JSON:API setup · datx"/><meta property="og:type" content="website"/><meta property="og:url" content="https://datx.dev/"/><meta property="og:description" content="## Getting started"/><meta property="og:image" content="https://datx.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://datx.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><link rel="stylesheet" href="/css/code-block-buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/code-block-buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100}
+          )
+        });
+        </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/datx-logo.svg" alt="datx"/><h2 class="headerTitleWithLogo">datx</h2></a><a href="/versions"><h3>2.0.0</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/getting-started/installation" target="_self">Docs</a></li><li class="siteNavGroupActive"><a href="/docs/examples/basic-setup" target="_self">Examples</a></li><li class=""><a href="https://github.com/infinum/datx" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Setup</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Setup<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/examples/basic-setup">Basic setup</a></li><li class="navListItem"><a class="navItem" href="/docs/examples/react-setup">React setup</a></li><li class="navListItem"><a class="navItem" href="/docs/examples/nextjs-setup">Next.js Setup</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/examples/angular-setup">Angular JSON:API setup</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Collection<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/examples/adding-models">Adding models</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Angular JSON:API setup</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="getting-started"></a><a href="#getting-started" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Getting started</h2>
+<p>Steps:</p>
+<ul>
+<li>(Optional) Disable MobX by importing <code>datx/disable-mobx</code> before any other datx imports</li>
+<li>Install <code>datx-jsonapi</code> and <code>datx-jsonapi-angular</code></li>
+<li><a href="./basic-setup">Setup your collection and models</a>, use <a href="/docs/jsonapi-angular/mixin"><code>jsonapiAngular</code> mixin</a> when setting them up</li>
+<li>Set up the <a href="/docs/jsonapi-angular/base-fetch"><code>baseFetch</code></a></li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="use-your-store"></a><a href="#use-your-store" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Use your store</h2>
+<p>In this section, we will show you a couple different ways of using your store:</p>
+<h3><a class="anchor" aria-hidden="true" id="setup-your-app"></a><a href="#setup-your-app" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Setup your app</h3>
+<p>First disable the MobX integration right away in the entrypoint:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-comment">// src/main.ts</span>
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">'datx/disable-mobx'</span>;
+<span class="hljs-comment">// .. Rest of the file</span>
+</code></pre>
+<p>Next, we need a special implementation of <code>baseFetch</code>. This is needed to integrate with Angular network features like interceptors and request canceling:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-comment">// src/app/services/custom-fetch.ts</span>
+
+<span class="hljs-keyword">import</span> { HttpClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/common/http'</span>;
+<span class="hljs-keyword">import</span> { Injectable } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { config, IResponseObject } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi'</span>;
+<span class="hljs-keyword">import</span> { IResponseHeaders } <span class="hljs-keyword">from</span> <span class="hljs-string">'datx-jsonapi/dist/interfaces/IResponseHeaders'</span>;
+<span class="hljs-keyword">import</span> { Observable } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;
+<span class="hljs-keyword">import</span> { map, takeUntil } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs/operators'</span>;
+
+<span class="hljs-meta">@Injectable</span>({ providedIn: <span class="hljs-string">'root'</span> })
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> CustomFetchService {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> httpClient: HttpClient</span>) {}
+
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">async</span> fetch(
+    method: <span class="hljs-built_in">string</span>,
+    url: <span class="hljs-built_in">string</span>,
+    body?: unknown,
+    headers: Record&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>&gt; = {},
+    fetchOptions?: { takeUntil$?: Observable&lt;<span class="hljs-built_in">void</span>&gt; },
+  ): <span class="hljs-built_in">Promise</span>&lt;IResponseObject&gt; {
+    <span class="hljs-keyword">const</span> takeUntil$: Observable&lt;<span class="hljs-built_in">void</span>&gt; | <span class="hljs-literal">undefined</span> = fetchOptions?.takeUntil$;
+
+    <span class="hljs-keyword">const</span> requestHeaders = {
+      ...config.defaultFetchOptions.headers,
+      ...headers,
+    };
+
+    <span class="hljs-keyword">let</span> request$ = <span class="hljs-keyword">this</span>.httpClient.request(method, url, {
+      observe: <span class="hljs-string">'response'</span>,
+      responseType: <span class="hljs-string">'json'</span>,
+      headers: requestHeaders,
+      body,
+    }).pipe(
+      map(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
+        <span class="hljs-keyword">return</span> {
+          data: response.body,
+          headers: response.headers <span class="hljs-keyword">as</span> unknown <span class="hljs-keyword">as</span> IResponseHeaders, <span class="hljs-comment">// The interface actually matches</span>
+          requestHeaders,
+          status: response.status,
+        };
+      }),
+    );
+
+    <span class="hljs-keyword">if</span> (takeUntil$) {
+      request$ = request$.pipe(takeUntil(takeUntil$));
+    }
+
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-keyword">const</span> d = <span class="hljs-keyword">await</span> request$.toPromise();
+      <span class="hljs-keyword">if</span> (d === <span class="hljs-literal">undefined</span>) {
+        <span class="hljs-keyword">return</span> { status: <span class="hljs-number">-1</span> }; <span class="hljs-comment">// Signal to DatX that it shouldn't fail, but shouldn't cache either</span>
+      }
+
+      <span class="hljs-keyword">return</span> d;
+    } <span class="hljs-keyword">catch</span> (e) {
+      <span class="hljs-built_in">console</span>.error(e);
+      <span class="hljs-keyword">throw</span> e;
+    }
+  }
+}
+</code></pre>
+<p>The last step is to initialize all the settings:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-comment">// src/app/app/module.ts</span>
+
+<span class="hljs-keyword">import</span> { APP_INITIALIZER } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { CustomFetchService } <span class="hljs-keyword">from</span> <span class="hljs-string">'./services/custom-fetch.service'</span>;
+<span class="hljs-keyword">import</span> { CachingStrategy, config } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi'</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">initDatx</span>(<span class="hljs-params">customFetch: CustomFetchService</span>): (<span class="hljs-params"></span>) =&gt; <span class="hljs-title">Promise</span>&lt;<span class="hljs-title">void</span>&gt; </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">async</span> () =&gt; {
+    config.baseFetch = customFetch.fetch.bind(customFetch);
+
+    config.defaultFetchOptions = {
+      credentials: <span class="hljs-string">'same-origin'</span>,
+      headers: {
+        <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/vnd.api+json'</span>,
+      },
+    };
+
+    <span class="hljs-comment">// Use cache if not older than 10 seconds</span>
+    config.maxCacheAge = <span class="hljs-number">10</span>;
+    config.cache = CachingStrategy.CacheFirst;
+  };
+}
+
+<span class="hljs-comment">// ... in the module providers</span>
+  {
+    provide: APP_INITIALIZER,
+    useFactory: initDatx,
+    multi: <span class="hljs-literal">true</span>,
+    deps: [CustomFetchService],
+  }
+
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="usage"></a><a href="#usage" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Usage</h3>
+<p>To use DatX in the app, inject your collection in your component or service and you can start using it. All the networking features will expose rxjs observables.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-comment">// src/app/app.component.ts</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent <span class="hljs-keyword">implements</span> OnInit {
+  <span class="hljs-keyword">public</span> results$: Observable&lt;Response&lt;Project&gt;&gt;;
+  <span class="hljs-keyword">public</span> search$: BehaviorSubject&lt;<span class="hljs-built_in">string</span>&gt; = <span class="hljs-keyword">new</span> BehaviorSubject(<span class="hljs-string">''</span>);
+
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">
+    <span class="hljs-keyword">private</span> collection: AppCollection,
+  </span>) {}
+
+  <span class="hljs-keyword">public</span> ngOnInit(): <span class="hljs-built_in">void</span> {
+    <span class="hljs-keyword">this</span>.results$ = <span class="hljs-keyword">this</span>.setupSearch().pipe(map(<span class="hljs-function">(<span class="hljs-params">result: Response&lt;Project&gt;</span>) =&gt;</span> result.data));
+  }
+
+  <span class="hljs-keyword">private</span> setupSearch(): Observable&lt;<span class="hljs-built_in">any</span>&gt; {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.search$.pipe(
+      switchMap(<span class="hljs-function">(<span class="hljs-params">query: <span class="hljs-built_in">string</span></span>) =&gt;</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.collection.getMany({ queryParams: { filter: { query } } });
+      })
+    );
+  }
+
+  <span class="hljs-keyword">public</span> onInputChanged(event: <span class="hljs-built_in">any</span>): <span class="hljs-built_in">void</span> {
+    <span class="hljs-keyword">this</span>.search$.next(event.target.value);
+  }
+}
+</code></pre>
+<pre><code class="hljs css language-html"><span class="hljs-comment">&lt;!-- src/app/app.component.html --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let result of results$ | async"</span>&gt;</span>
+  {{ result.name }}
+  {{ result.meta.id }}
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="related"></a><a href="#related" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Related</h2>
+<div class="docs-card">
+  <a href="/docs/examples/basic-setup">
+    <h4>Basic setup</h4>
+    <small>Setup your datx store and models</small>
+  </a>
+</div>
+<div class="docs-card">
+  <a href="/docs/examples/adding-models">
+    <h4>Adding models</h4>
+    <small>Learn the different ways of adding models to your store</small>
+  </a>
+</div>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 1/23/2021 by Darko Kukovec</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/examples/nextjs-setup"><span class="arrow-prev">← </span><span>Next.js setup</span></a><a class="docs-next button" href="/docs/examples/adding-models"><span>Adding models</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#getting-started">Getting started</a></li><li><a href="#use-your-store">Use your store</a><ul class="toc-headings"><li><a href="#setup-your-app">Setup your app</a></li><li><a href="#usage">Usage</a></li></ul></li><li><a href="#related">Related</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2021 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'f03607e57957ae747b2342443460477a',
+                indexName: 'datx',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
