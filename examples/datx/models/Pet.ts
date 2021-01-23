@@ -1,19 +1,19 @@
-import {Model, prop} from 'datx';
+import { Model, Attribute } from '@datx/core';
 
-import {Person} from './Person';
+import { Person } from './Person';
 
 export class Pet extends Model {
   public static type = 'pet';
 
-  @prop.identifier
+  @Attribute({ isIdentifier: true })
   public id: string;
 
-  @prop
+  @Attribute()
   public name: string;
 
-  @prop
+  @Attribute()
   public age: number;
 
-  @prop.toOne(Person)
+  @Attribute({ toOne: Person })
   public owner: Person;
 }

@@ -1,6 +1,6 @@
 {
   "data": {
-    "id": 12345,
+    "id": "12345",
     "type": "sessions",
     "attributes": {
       "token": "test123"

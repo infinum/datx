@@ -1,6 +1,6 @@
 {
   "data": {
-    "id": 12345,
+    "id": "12345",
     "type": "event",
     "attributes": {
       "title": "Test 1",
@@ -18,11 +18,13 @@
       }
     }
   },
-  "included": [{
-    "id": 2,
-    "type": "image",
-    "attributes": {
-      "url": "https://example.com/3.jpg"
+  "included": [
+    {
+      "id": "2",
+      "type": "image",
+      "attributes": {
+        "url": "https://example.com/3.jpg"
+      }
     }
-  }]
+  ]
 }

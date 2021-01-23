@@ -1,13 +1,14 @@
+/* eslint-disable no-console */
+
 // Set up the network before using the lib
 import './network';
 
-import {Event, Person, Pet} from './models';
+import { Event, Person } from './models';
 import state from './store';
 
 (async function() {
-
   // Fetch all events (or only the first page if the API is paginating!) with responsible people and organizers
-  const eventsResponse1 = await state.fetchAll(Event, {include: ['responsible', 'organizers']});
+  const eventsResponse1 = await state.fetchAll(Event, { include: ['responsible', 'organizers'] });
 
   // The data is available in the data property
   // In case of an error, the fetchAll function would throw with the same Response object, but it would contain an error property
@@ -18,6 +19,7 @@ import state from './store';
 
   // Get all people from the store. In this case all people related to the event
   const people = state.findAll(Person);
+
   console.log(people.length); // 12
 
   console.log(people[1].organizing); // [Event1, Event3]
@@ -28,6 +30,7 @@ import state from './store';
   if ('next' in eventsResponse1) {
     const eventsResponse2 = await eventsResponse1.next;
     const events2 = eventsResponse2.data as Array<Event>;
+
     console.log(events2.length); // 7
 
     console.log(state.findAll(Event).length); // 22 (15 + 7)
@@ -48,6 +51,7 @@ import state from './store';
   await party.save(); // Save the change to the server
 
   const party2 = state.find(Event, 14);
+
   await party2.destroy(); // Remove the model from the server and local store
 })();
 

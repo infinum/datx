@@ -3,7 +3,7 @@ import { PureModel } from '../PureModel';
 import { IType } from './IType';
 
 export interface IReferenceOptions<T = typeof PureModel> {
-  model: T | IType;
+  model: T | IType | Array<T | IType>;
   property?: string;
   type: ReferenceType;
 }

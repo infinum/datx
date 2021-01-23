@@ -1,12 +1,11 @@
-import { View } from 'datx';
+import { View } from '@datx/core';
 
-import { IHeaders } from './IHeaders';
 import { IJsonapiCollection } from './IJsonapiCollection';
 import { IRequestOptions } from './IRequestOptions';
 
 export interface ICollectionFetchOpts {
   url: string;
-  options?: IRequestOptions & { headers?: IHeaders };
+  options?: IRequestOptions;
   data?: object;
   method: string;
   collection?: IJsonapiCollection;

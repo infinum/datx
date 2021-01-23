@@ -1,15 +1,25 @@
 export { DEFAULT_TYPE, META_FIELD } from './consts';
 
-export { IDictionary } from './interfaces/IDictionary';
 export { IRawModel } from './interfaces/IRawModel';
+export { IResponseHeaders } from './interfaces/IResponseHeaders';
 
 export {
   assignComputed,
   mapItems,
-  flatten,
-  isFalsyArray,
   error,
   warn,
   deprecated,
   info,
+  getMeta,
+  setMeta,
+  mergeMeta,
+  getMetaObj,
+  isArrayLike,
+  replaceInArray,
+  removeFromArray,
+  Headers,
 } from './helpers';
+
+export { mobx } from './mobx';
+
+export * from './interfaces/IMobX';

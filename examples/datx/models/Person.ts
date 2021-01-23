@@ -1,29 +1,29 @@
-import {Model, prop} from 'datx';
+import { Model, Attribute } from '@datx/core';
 
-import {Event} from './Event';
-import {Pet} from './Pet';
+import { Event } from './Event';
+import { Pet } from './Pet';
 
 export class Person extends Model {
   public static type = 'person';
 
-  @prop.identifier
+  @Attribute({ isIdentifier: true })
   public id: string;
 
-  @prop
+  @Attribute()
   public name: string;
 
-  @prop
+  @Attribute()
   public age: number;
 
-  @prop.toOne(Person)
+  @Attribute({ toOne: Person })
   public spouse?: Person;
 
-  @prop.toMany('pet', 'owner')
+  @Attribute({ toMany: 'pet', referenceProperty: 'owner' })
   public pets: Array<Pet>;
 
-  @prop.toMany('event', 'responsible')
+  @Attribute({ toMany: 'event', referenceProperty: 'responsible' })
   public responsibleFor: Array<Event>;
 
-  @prop.toMany('event', 'organizers')
+  @Attribute({ toMany: 'event', referenceProperty: 'organizers' })
   public organizing: Array<Event>;
 }

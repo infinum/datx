@@ -10,16 +10,16 @@ title: Basic setup
 
 ```typescript
 // /models/index.ts
-import { Model, prop } from 'datx';
+import { Model, Attribute } from '@datx/core';
 import { computed } from 'mobx';
 
 export class Dog extends Model {
   public static type = 'dog';
 
-  @prop
+  @Attribute()
   public breed!: string;
 
-  @prop
+  @Attribute()
   public name!: string;
 
   @computed
@@ -31,16 +31,16 @@ export class Dog extends Model {
 export class Person extends Model {
   public static type = 'person';
 
-  @prop
+  @Attribute()
   public id!: number;
 
-  @prop
+  @Attribute()
   public name!: string;
 
-  @prop
+  @Attribute()
   public age!: number;
 
-  @prop.toOne(Dog)
+  @Attribute({ toOne: Dog })
   public favoriteDog!: Dog | null;
 
   @computed
@@ -58,15 +58,17 @@ export class Person extends Model {
 
 ```js
 // /models/index.js
-import { Model, prop } from 'datx';
+import { Model, Attribute } from '@datx/core';
 import { computed } from 'mobx';
 
 class Dog extends Model {
   static type = 'dog';
 
-  @prop breed;
+  @Attribute()
+  breed;
 
-  @prop name;
+  @Attribute()
+  name;
 
   @computed
   get greet() {
@@ -77,11 +79,14 @@ class Dog extends Model {
 export class Person extends Model {
   static type = 'person';
 
-  @prop id;
+  @Attribute()
+  id;
 
-  @prop name;
+  @Attribute()
+  name;
 
-  @prop age;
+  @Attribute()
+  age;
 
   @computed
   get greet() {
@@ -98,7 +103,7 @@ export class Person extends Model {
 
 ```js
 // /models/index.js
-import { Model, prop } from 'datx';
+import { Model, Attribute } from '@datx/core';
 import { computed, decorate } from 'mobx';
 
 export class Dog extends Model {
@@ -109,8 +114,8 @@ export class Dog extends Model {
   }
 }
 
-prop(Dog, 'breed');
-prop(Dog, 'name');
+Attribute()(Dog, 'breed');
+Attribute()(Dog, 'name');
 decorate(Dog, {
   greet: computed,
 });
@@ -127,10 +132,10 @@ export class Person extends Model {
   }
 }
 
-prop(Person, 'id');
-prop(Person, 'age');
-prop(Person, 'name');
-prop.toOne(Dog)(Person, 'favoriteDog');
+Attribute()(Person, 'id');
+Attribute()(Person, 'age');
+Attribute()(Person, 'name');
+Attribute({ toOne: Dog })(Person, 'favoriteDog');
 decorate(Person, {
   greet: computed,
 });
@@ -144,7 +149,7 @@ decorate(Person, {
 <!--TypeScript-->
 
 ```typescript
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 import { computed } from 'mobx';
 
 import { Person, Dog } from './models';
@@ -172,13 +177,14 @@ export default class Family extends Collection {
 <!--JavaScript-->
 
 ```js
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 import { computed } from 'mobx';
 
 import { Person, Dog } from './models';
 
 export default class Family extends Collection {
   static types = [Person, Dog];
+
   @computed
   get dogs() {
     return this.findAll(Dog);
@@ -199,7 +205,7 @@ export default class Family extends Collection {
 <!--JavaScript (No decorators)-->
 
 ```js
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 import { computed, decorate } from 'mobx';
 
 import { Person, Dog } from './models';

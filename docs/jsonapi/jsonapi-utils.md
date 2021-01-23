@@ -67,7 +67,7 @@ Get metadata defined on a model relationship.
 ### modelToJsonApi
 
 ```typescript
-modelToJsonApi(model: IJsonapiModel): IRecord;
+modelToJsonApi(model: IJsonapiModel, onlyDirty?: boolean): IRecord;
 ```
 
 Serialise the model into the JSON API format.

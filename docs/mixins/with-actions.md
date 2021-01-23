@@ -14,3 +14,5 @@ The mixin exposes the following methods:
   - `model` - The referenced model type
   - `type` - Reference type ([`ReferenceType`](../getting-started/references#dynamic-references) enum)
   - `property` - (Optional) Property name for indirect references
+- `commit()` - Commit the current state of the model (make as clean)
+- `revert()` - Revert the model state to the last commit

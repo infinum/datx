@@ -36,7 +36,7 @@ A current plain JS value of the collection. The value is always immutable - a ne
 The static `types` property should be an array of all custom model classes.
 
 ```typescript
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 
 import { Person, Pet } from './models';
 
@@ -138,19 +138,6 @@ removeOne<T>(model: PureModel): void;
 If a model is provided as a single argument, the `remove` method will remove that exact model from the collection.
 
 If the first argument is a model type (string, number, or class), it will find the model based on second argument id, and remove it. If the model with provided id does not exist, nothing will be removed.
-
-### remove - Deprecated!
-
-```typescript
-remove<T>(type: IType | typeof Model, id?: string | number): void;
-remove<T>(model: PureModel): void;
-```
-
-If a model is provided as a single argument, the `remove` method will remove that exact model from the collection.
-
-If the first argument is a model type (string, number, or class), it will find the model based on second argument id, and remove it.
-
-Caution: If id is not provided, or the model with provided id does not exist, it will remove the first model of that type from the collection.
 
 ### removeAll
 

@@ -12,4 +12,5 @@ The mixin exposes a `meta` property with the following properties:
 - `type` - The model type
 - `original` - (Optional) The original model if the model is a clone
 - `refs` - An object with reference ids. The keys are reference names, while the values can be either ids or array of ids (depending on the reference type).
+- `dirty` - An object with dirty states of all attributes of the model
 - `snapshot` - An immutable snapshot of the model at this exact moment

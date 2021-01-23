@@ -1,3 +1,3 @@
 export interface IFilters {
-  [key: string]: number | string | Array<number> | Array<string> | IFilters;
+  [key: string]: string | Array<string> | IFilters;
 }

@@ -71,14 +71,14 @@ john.lastName = 'Smith';
 assignModel(john, 'age', 42);
 
 // Assign a new dynamic reference to a model
-import { ReferenceType } from 'datx';
+import { ReferenceType } from '@datx/core';
 initModelRef(john, 'spouse', { model: Person, type: ReferenceType.TO_ONE }, jane);
 
 // Update multiple values
 updateModel(john, { lastName: 'Williams', age: 25, spouse: null, city: 'San Francisco' });
 ```
 
-**Note:** Direct assignment should not be used for new properties because the added property won't be observable (this is a MobX limitation).
+**Note:** Direct assignment should not be used for new properties because the added property won't be observable ([this is a MobX limitation](https://mobx.js.org/best/pitfalls.html#objectsomenewprop-value-is-not-picked-up)).
 
 ---
 

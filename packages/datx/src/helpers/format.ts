@@ -1,10 +1,9 @@
-import { IDictionary } from 'datx-utils';
+const REGEX = /\$\{\s*([a-zA-Z0-9\-_]+)\s*\}/g;
 
-const REGEX = /\$\{\s*([a-zA-Z0-9\-\_]+)\s*\}/g;
-
-function msg(str: string, keys: IDictionary) {
+function msg(str: string, keys: Record<string, any>): string {
   let msgStr = str;
   let match = REGEX.exec(msgStr);
+
   while (match) {
     msgStr = msgStr.replace(match[0], keys[match[1]]);
     match = REGEX.exec(msgStr);
@@ -13,7 +12,6 @@ function msg(str: string, keys: IDictionary) {
   return msgStr;
 }
 
-// tslint:disable-next-line:export-name
-export function error(message: string, keys: IDictionary = { }): Error {
-  return new Error(`[datx exception] ${msg(message, keys)}`);
+export function error(message: string, keys: Record<string, any> = {}): Error {
+  return new Error(`[datx exception] ${msg(message, keys)}`.replace(/\s+/g, ' '));
 }

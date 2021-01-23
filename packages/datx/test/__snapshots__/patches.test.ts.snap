@@ -1,0 +1,361 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`patch collection with initial data should trigger on add, replace and remove 1`] = `
+Array [
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "name": "FooBar",
+    },
+    "oldValue": Object {
+      "name": "Foo",
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "age": 42,
+    },
+    "oldValue": Object {
+      "age": undefined,
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "nick": undefined,
+    },
+    "oldValue": Object {
+      "nick": "Bar",
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "height": 180,
+      "name": "Bar",
+    },
+    "oldValue": Object {
+      "height": undefined,
+      "name": "FooBar",
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "oldValue": Object {
+      "__META__": Object {
+        "collection": undefined,
+        "fields": Object {
+          "age": Object {
+            "referenceDef": false,
+          },
+          "height": Object {
+            "referenceDef": false,
+          },
+          "name": Object {
+            "referenceDef": false,
+          },
+          "nick": Object {
+            "referenceDef": false,
+          },
+        },
+        "id": 1,
+        "type": "foo",
+      },
+      "age": 42,
+      "height": 180,
+      "name": "Bar",
+      "nick": undefined,
+    },
+    "patchType": 2,
+  },
+]
+`;
+
+exports[`patch model should be able to undo 1`] = `
+Array [
+  Object {
+    "model": Object {
+      "id": -3,
+      "type": "__DEFAULT_TYPE__",
+    },
+    "newValue": Object {
+      "age": 42,
+    },
+    "oldValue": Object {
+      "age": undefined,
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": -3,
+      "type": "__DEFAULT_TYPE__",
+    },
+    "newValue": Object {
+      "height": 180,
+      "name": "FooBar",
+    },
+    "oldValue": Object {
+      "height": undefined,
+      "name": "Foo",
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": -3,
+      "type": "__DEFAULT_TYPE__",
+    },
+    "newValue": Object {
+      "nick": undefined,
+    },
+    "oldValue": Object {
+      "nick": "Bar",
+    },
+    "patchType": 1,
+  },
+]
+`;
+
+exports[`patch model should ignore noop changes 1`] = `
+Array [
+  Object {
+    "model": Object {
+      "id": -4,
+      "type": "__DEFAULT_TYPE__",
+    },
+    "newValue": Object {
+      "age": 42,
+    },
+    "oldValue": Object {
+      "age": undefined,
+    },
+    "patchType": 1,
+  },
+]
+`;
+
+exports[`patch model should trigger on add, replace and remove 1`] = `
+Array [
+  Object {
+    "model": Object {
+      "id": -1,
+      "type": "__DEFAULT_TYPE__",
+    },
+    "newValue": Object {
+      "name": "FooBar",
+    },
+    "oldValue": Object {
+      "name": "Foo",
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": -1,
+      "type": "__DEFAULT_TYPE__",
+    },
+    "newValue": Object {
+      "age": 42,
+    },
+    "oldValue": Object {
+      "age": undefined,
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": -1,
+      "type": "__DEFAULT_TYPE__",
+    },
+    "newValue": Object {
+      "nick": undefined,
+    },
+    "oldValue": Object {
+      "nick": "Bar",
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": -1,
+      "type": "__DEFAULT_TYPE__",
+    },
+    "newValue": Object {
+      "height": 180,
+      "name": "Bar",
+    },
+    "oldValue": Object {
+      "height": undefined,
+      "name": "FooBar",
+    },
+    "patchType": 1,
+  },
+]
+`;
+
+exports[`patch references should trigger correct patches for ref changes 1`] = `
+Array [
+  Object {
+    "model": Object {
+      "id": 2,
+      "type": "bar",
+    },
+    "newValue": Object {
+      "__META__": Object {
+        "collection": undefined,
+        "fields": Object {
+          "id": Object {
+            "defaultValue": undefined,
+            "referenceDef": false,
+          },
+        },
+        "id": 2,
+        "type": "bar",
+      },
+      "id": 2,
+    },
+    "patchType": 0,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "bar": Object {
+        "id": 2,
+        "type": "bar",
+      },
+    },
+    "oldValue": Object {
+      "bar": undefined,
+    },
+    "patchType": 0,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "__META__": Object {
+        "collection": undefined,
+        "fields": Object {
+          "bar": Object {
+            "defaultValue": undefined,
+            "referenceDef": Object {
+              "model": "bar ",
+              "type": 0,
+            },
+          },
+          "id": Object {
+            "defaultValue": undefined,
+            "referenceDef": false,
+          },
+        },
+        "id": 1,
+        "type": "foo",
+      },
+      "bar": Object {
+        "id": 2,
+        "type": "bar",
+      },
+      "id": 1,
+    },
+    "patchType": 0,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "bar": Object {
+        "id": 3,
+        "type": "bar",
+      },
+    },
+    "oldValue": Object {
+      "bar": Object {
+        "id": 2,
+        "type": "bar",
+      },
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": 3,
+      "type": "bar",
+    },
+    "newValue": Object {
+      "__META__": Object {
+        "collection": undefined,
+        "fields": Object {
+          "id": Object {
+            "defaultValue": undefined,
+            "referenceDef": false,
+          },
+        },
+        "id": 3,
+        "type": "bar",
+      },
+      "id": 3,
+    },
+    "patchType": 0,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "bar": null,
+    },
+    "oldValue": Object {
+      "bar": Object {
+        "id": 3,
+        "type": "bar",
+      },
+    },
+    "patchType": 1,
+  },
+  Object {
+    "model": Object {
+      "id": 1,
+      "type": "foo",
+    },
+    "newValue": Object {
+      "bar": Object {
+        "id": 3,
+        "type": "bar",
+      },
+    },
+    "oldValue": Object {
+      "bar": null,
+    },
+    "patchType": 1,
+  },
+]
+`;

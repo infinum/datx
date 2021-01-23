@@ -3,36 +3,36 @@ id: jsonapi-network-usage
 title: Network usage
 ---
 
-## `fetch` example
+## `getOne` example
 
 ```typescript
-import { Collection, Model } from 'datx';
-import { config, jsonapi } from 'datx-jsonapi';
+import { Collection, Model } from '@datx/core';
+import { config, jsonapi } from '@datx/jsonapi';
 config.baseUrl = 'https://example.com/';
 
 class MyCollection extends jsonapi(Collection) {}
 const collection = new MyCollection();
 
 collection
-  .fetch('event', 1) // This will make a GET request to https://example.com/event/1
+  .getOne('event', 1) // This will make a GET request to https://example.com/event/1
   .then((response) => {
     const event = response.data;
     console.log(event.id); // 1
   });
 ```
 
-## `fetchAll` example
+## `getMany` example
 
 ```typescript
-import { Collection, Model } from 'datx';
-import { config, jsonapi } from 'datx-jsonapi';
+import { Collection, Model } from '@datx/core';
+import { config, jsonapi } from '@datx/jsonapi';
 config.baseUrl = 'https://example.com/';
 
 class MyCollection extends jsonapi(Collection) {}
 const collection = new MyCollection();
 
 collection
-  .fetchAll('event') // This will make a GET request to https://example.com/event
+  .getMany('event') // This will make a GET request to https://example.com/event
   .then((response) => {
     const events = response.data;
     console.log(events.length); // e.g. 5
@@ -45,8 +45,8 @@ collection
 The request method can be used if something (url, method, etc.) is not standard:
 
 ```typescript
-import { Collection, Model } from 'datx';
-import { config, jsonapi } from 'datx-jsonapi';
+import { Collection, Model } from '@datx/core';
+import { config, jsonapi } from '@datx/jsonapi';
 config.baseUrl = 'https://example.com/';
 
 class MyCollection extends jsonapi(Collection) {}
@@ -63,8 +63,8 @@ collection
 ## Pagination example
 
 ```typescript
-import { Collection, Model } from 'datx';
-import { config, jsonapi } from 'datx-jsonapi';
+import { Collection, Model } from '@datx/core';
+import { config, jsonapi } from '@datx/jsonapi';
 
 config.baseUrl = 'https://example.com/';
 
@@ -75,10 +75,10 @@ const collection = new MyCollection();
 // Note: In normal usage, you should also have some error handling
 async function getAllUsers() {
   const users = [];
-  let response = await collection.fetchAll('user'); // GET https://example.com/user
+  let response = await collection.getMany('user'); // GET https://example.com/user
   users.push(...response.data);
   while (response.next) {
-    response = await response.next;
+    response = await response.next();
     users.push(...response.data);
   }
   return users;

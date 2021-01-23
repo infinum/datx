@@ -1,28 +1,28 @@
-import {Model, prop} from 'datx';
-import {jsonapi} from 'datx-jsonapi';
+import { Model, Attribute } from '@datx/core';
+import { jsonapi } from '@datx/jsonapi';
 
-import {Person} from './Person';
+import { Person } from './Person';
 
 export class Event extends jsonapi(Model) {
   public static type = 'event';
 
   // If not given, the endpoint will be <baseUrl>/event
 
-  @prop.identifier
+  @Attribute({ isIdentifier: true })
   public id: string;
 
-  @prop
+  @Attribute()
   public title: string;
 
-  @prop
+  @Attribute()
   public description: string;
 
-  @prop
+  @Attribute()
   public date: Date;
 
-  @prop.toOne(Person)
+  @Attribute({ toOne: Person })
   public responsible: Person;
 
-  @prop.toMany(Person)
+  @Attribute({ toMany: Person })
   public organizers: Array<Person>;
 }
