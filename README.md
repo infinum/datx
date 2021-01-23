@@ -1,25 +1,33 @@
-# datx
+# DatX
 
 ![Unit tests](https://github.com/infinum/datx/workflows/Unit%20tests/badge.svg)
 
-DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
+DatX is an opinionated JS/TS data store. It features support for simple property definition, references to other models and first-class TypeScript support.
+
+By default, it uses the [MobX](https://mobx.js.org/) state management library, but this is optional and can be used as a pure JS library.
 
 ***
 
 ## Basic usage
 
 ```typescript
-import { Collection, Model, prop } from 'datx';
+import { Collection, Model, Attribute } from '@datx/core';
 import { computed } from 'mobx';
 
 class Person extends Model {
   public static type = 'person'; // Unique name of the model class
 
-  @prop name: string; // A normal observable property without a default value
-  @prop surname: string;
-  @prop.toOne(Person) spouse?: Person; // A reference to a Person model
+  @Attribute() 
+  public name!: string; // A normal property without a default value
+  
+  @Attribute()
+  public surname!: string;
+  
+  @Attribute({ toOne: Person })
+  public spouse?: Person; // A reference to a Person model
 
-  @computed get fullName() { // Standard MobX computed props
+  @computed
+  public get fullName() { // Standard MobX computed props
     return `${this.name} ${this.surname}`;
   }
 }
@@ -29,16 +37,14 @@ class AppData extends Collection {
 }
 
 const store = new AppData();
-const john = store.add(new Person({name: 'John', surname: 'Smith'})); // Add a model instance to the store
-const jane = store.add({name: 'Jane', surname: 'Smith', spouse: john}, Person); // Add a model to the store
+const john = store.add(new Person({ name: 'John', surname: 'Smith' })); // Add a model instance to the store
+const jane = store.add({ name: 'Jane', surname: 'Smith', spouse: john }, Person); // Add a model to the store
 ```
 
 ## Getting started
 
-Note: `datx` has a peer dependency to `mobx@^4.2.0` or `mobx@^5.5.0`, so don't forget to install the latest MobX version:
-
 ```bash
-npm install --save datx mobx
+npm install --save @datx/core
 ```
 
   * [Installation](https://datx.dev/docs/getting-started/installation)
@@ -97,13 +103,7 @@ Having issues with the library? Check out the [troubleshooting](https://datx.dev
 
 ***
 
-![Unit tests](https://github.com/infinum/datx/workflows/Unit%20tests/badge.svg)
-
-| Package      | npm version                                                                                        | dependency status                                                                                                                                      | dev dependency status                                                                                                                                                                     |
-| ------------ | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| datx         | [![npm version](https://badge.fury.io/js/datx.svg)](https://badge.fury.io/js/datx)                 | [![Dependency Status](https://david-dm.org/infinum/datx.svg?path=packages/datx)](https://david-dm.org/infinum/datx?path=packages/datx)                 | [![devDependency Status](https://david-dm.org/infinum/datx/dev-status.svg?path=packages/datx)](https://david-dm.org/infinum/datx?path=packages/datx#info=devDependencies)                 |
-| datx-jsonapi | [![npm version](https://badge.fury.io/js/datx-jsonapi.svg)](https://badge.fury.io/js/datx-jsonapi) | [![Dependency Status](https://david-dm.org/infinum/datx.svg?path=packages/datx-jsonapi)](https://david-dm.org/infinum/datx?path=packages/datx-jsonapi) | [![devDependency Status](https://david-dm.org/infinum/datx/dev-status.svg?path=packages/datx-jsonapi)](https://david-dm.org/infinum/datx?path=packages/datx-jsonapi#info=devDependencies) |
-| datx-utils   | [![npm version](https://badge.fury.io/js/datx-utils.svg)](https://badge.fury.io/js/datx-utils)     | [![Dependency Status](https://david-dm.org/infinum/datx.svg?path=packages/datx-utils)](https://david-dm.org/infinum/datx?path=packages/datx-utils)     | [![devDependency Status](https://david-dm.org/infinum/datx/dev-status.svg?path=packages/datx-utils)](https://david-dm.org/infinum/datx?path=packages/datx-utils#info=devDependencies)     |
+[![Build Status](https://travis-ci.org/infinum/datx.svg?branch=master)](https://travis-ci.org/infinum/datx)
 
 ## License
 
