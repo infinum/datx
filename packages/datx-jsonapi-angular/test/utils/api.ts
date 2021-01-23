@@ -120,7 +120,7 @@ function fetchInterceptor(method: string, url: string, body: any, requestHeaders
 
     return d;
   });
-};
+}
 
 export function setupNetwork(): void {
   expectedRequests.length = 0;

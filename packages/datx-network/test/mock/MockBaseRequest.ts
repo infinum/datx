@@ -1,6 +1,7 @@
 import { BaseRequest, fetchReference } from '../../src';
+import { PureModel } from 'datx';
 
-export class MockBaseRequest extends BaseRequest {
+export class MockBaseRequest<T extends PureModel = PureModel> extends BaseRequest<T> {
   constructor(baseUrl: string) {
     super(baseUrl);
     this.resetMock({

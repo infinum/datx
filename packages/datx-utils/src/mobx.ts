@@ -96,6 +96,7 @@ class MobXProxy {
       }
       Object.defineProperty(this, key, {
         get() {
+          /* eslint-disable @typescript-eslint/no-var-requires */
           if (!mobxProxyInstance.hasMobX && mobxProxyInstance._useRealMobX) {
             warn('MobX not installed. Falling back to the static approach. Import `datx/disable-mobx` before the first `datx` import to disable this warning');
           }

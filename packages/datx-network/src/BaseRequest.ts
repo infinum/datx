@@ -120,6 +120,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
       method: request._options.method,
       data: request.processBody(),
       collection: request._config.collection,
+      params,
       options: {
         networkConfig: {
           headers: request._options.headers,
@@ -146,8 +147,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     // Can't use `new BaseRequest`, because we would lose the overridden methods
     const clone = new BaseRequestConstructor<TNewModel, TNewParams>(this._config.baseUrl);
 
-    // @ts-ignore
-    clone.interceptors = deepCopy(this.interceptors);
+    clone.interceptors = deepCopy(this.interceptors) as unknown as Array<{ name: string, fn: IInterceptor<TNewModel> }>;
 
     clone._config = deepCopy(this._config);
     clone._options = deepCopy(this._options);

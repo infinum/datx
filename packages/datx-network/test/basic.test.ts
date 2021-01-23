@@ -9,6 +9,9 @@ import {
   HttpMethod,
   body,
   serializer,
+  IFetchOptions,
+  INetworkHandler,
+  Response,
 } from '../src';
 import { PureModel, Attribute, Collection } from 'datx';
 import { clearAllCache } from '../src/interceptors/cache';
@@ -84,14 +87,33 @@ describe('Request', () => {
     expect(request2['_options'].url).toBe('bar');
   });
 
+  it('should pass params data to interceptors', async () => {
+    async function mockInterceptor (request: IFetchOptions, next: INetworkHandler): Promise<Response<PureModel>> {
+      expect(request.params).toEqual({ foo: 1 });
+
+      return next(request);
+    }
+
+    const request1 = new MockBaseRequest('foobar');
+
+    const request2 = request1.pipe(
+      setUrl('/foobar'),
+      addInterceptor(mockInterceptor),
+    );
+
+    await request2.fetch({ foo: 1 });
+
+    expect(request2['_config'].fetchReference).toHaveBeenCalledTimes(1);
+  });
+
   it('should call interceptors in the correct order', async () => {
     let counter = 0;
 
     function mockInterceptor(expected: number) {
-      return async (options: any, next: any): Promise<any> => {
+      return async (request: IFetchOptions, next: INetworkHandler): Promise<Response<PureModel>> => {
         expect(counter).toBe(expected);
         counter++;
-        return next(options);
+        return next(request);
       };
     }
 
@@ -99,15 +121,16 @@ describe('Request', () => {
 
     const request2 = request1.pipe(
       setUrl('foobar'),
-      addInterceptor(mockInterceptor(2)),
-      addInterceptor(mockInterceptor(1)),
-      addInterceptor(mockInterceptor(0)),
+      addInterceptor(mockInterceptor(2), 'int2'),
+      addInterceptor(mockInterceptor(1), 'int1'),
+      addInterceptor(mockInterceptor(0), 'int0'),
     );
 
     await request2.fetch();
 
     expect(request2['_config'].fetchReference).toHaveBeenCalledTimes(1);
     expect(request1['_config'].fetchReference).toHaveBeenCalledTimes(1);
+    expect(counter).toBe(3);
   });
 
   it('should use the correct fetcher reference', async () => {

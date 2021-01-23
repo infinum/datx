@@ -6,6 +6,7 @@ import { HttpMethod } from '../enums/HttpMethod';
 export interface IFetchOptions {
   url: string;
   options?: IRequestOptions;
+  params?: object | null;
   data?: string | object | FormData;
   method: HttpMethod;
   collection?: PureCollection;

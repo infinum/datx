@@ -50,7 +50,7 @@ function iterateEntries<T extends IJsonapiModel>(
   fn: (item: IRecord) => T,
 ): T | Array<T>;
 
-function iterateEntries<T extends IJsonapiModel>(
+function iterateEntries(
   body: IResponse,
   fn: (item: IRecord) => void,
 ): void;

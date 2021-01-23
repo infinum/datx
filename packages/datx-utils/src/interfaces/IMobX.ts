@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 
-export interface IObservable {};
+export interface IObservable {}
 
 export interface IObservableArray<T = any> extends Array<T> {
   replace(data: Array<T>): Array<T>;
   remove(data: T): Array<T>;
-};
+}
 
 interface IArrayBaseChange<T> {
   object: IObservableArray<T>;

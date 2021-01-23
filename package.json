@@ -1,7 +1,7 @@
 {
   "name": "datx",
   "devDependencies": {
-    "@infinumjs/eslint-config": "^2.1.0",
+    "@infinumjs/eslint-config-core-ts": "^2.2.0",
     "eslint": "^7.18.0",
     "husky": "^4.3.8",
     "lerna": "^3.22.1",

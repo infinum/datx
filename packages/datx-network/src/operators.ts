@@ -60,7 +60,7 @@ export function method(method: HttpMethod) {
   };
 }
 
-export function body(body: any, bodyType?: BodyType) {
+export function body(body: unknown, bodyType?: BodyType) {
   return (pipeline: BaseRequest): void => {
     if (bodyType || bodyType === 0) {
       pipeline['_options'].bodyType = bodyType;
