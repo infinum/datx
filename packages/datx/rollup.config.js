@@ -1,31 +1,85 @@
 import typescript from 'rollup-plugin-typescript2';
-import {uglify} from 'rollup-plugin-uglify';
+import { terser } from 'rollup-plugin-terser';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import excludeDependenciesFromBundle from 'rollup-plugin-exclude-dependencies-from-bundle';
 
 import pkg from './package.json';
 
-export default [{
-  input: './src/index.ts',
-  output: [
-    { file: pkg.main, format: 'cjs' },
-  ],
-  plugins: [
-    typescript({
-      check: true,
-      typescript: require('typescript'),
-      tsconfig: './tsconfig.build.json',
-    }),
-    uglify(),
-  ]
-}, {
-  input: './src/index.ts',
-  output: [
-    { file: pkg.module, format: 'es' },
-  ],
-  plugins: [
-    typescript({
-      check: true,
-      typescript: require('typescript'),
-      tsconfig: './tsconfig.build.json',
-    }),
-  ]
-}]
+export default [
+  {
+    input: './src/index.ts',
+    output: [{ file: pkg.main, format: 'cjs' }],
+    plugins: [
+      resolve(),
+      commonjs(),
+      excludeDependenciesFromBundle(),
+      typescript({
+        check: true,
+        typescript: require('typescript'),
+        tsconfig: './tsconfig.build.json',
+      }),
+      terser({
+        toplevel: true,
+        compress: {
+          passes: 3,
+        },
+        output: {
+          comments: false,
+        },
+      }),
+    ],
+    onwarn(warning, rollupWarn) {
+      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+        rollupWarn(warning);
+      }
+    },
+  },
+  {
+    input: './src/index.ts',
+    output: [{ file: pkg.module, format: 'es' }],
+    plugins: [
+      resolve(),
+      commonjs(),
+      excludeDependenciesFromBundle(),
+      typescript({
+        check: true,
+        typescript: require('typescript'),
+        tsconfig: './tsconfig.build.json',
+      }),
+    ],
+    onwarn(warning, rollupWarn) {
+      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+        rollupWarn(warning);
+      }
+    },
+  },
+  {
+    input: './src/disable-mobx.ts',
+    output: [{ file: './disable-mobx.js', format: 'cjs' }],
+    plugins: [
+      resolve(),
+      commonjs(),
+      excludeDependenciesFromBundle(),
+      typescript({
+        check: true,
+        typescript: require('typescript'),
+        tsconfig: './tsconfig.mobx.json',
+      }),
+      terser({
+        toplevel: true,
+        compress: {
+          passes: 3,
+        },
+        output: {
+          comments: false,
+        },
+      }),
+    ],
+    onwarn(warning, rollupWarn) {
+      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+        rollupWarn(warning);
+      }
+    },
+  },
+];

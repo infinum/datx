@@ -17,7 +17,7 @@ import {
   isModel,
   PureCollection,
   PureModel,
-} from 'datx';
+} from '@datx/core';
 
 import { decorateCollection } from './decorateCollection';
 import { decorateModel } from './decorateModel';
@@ -46,7 +46,7 @@ export function myAwesome<T extends PureModel | PureCollection>(
 ### Model only (or collection only)
 
 ```typescript
-import { IModelConstructor, isModel, PureModel } from 'datx';
+import { IModelConstructor, isModel, PureModel } from '@datx/core';
 
 export function myAwesome<T extends PureModel>(Base: IModelConstructor<T>) {
   const BaseClass = Base as typeof PureModel;
@@ -80,7 +80,7 @@ export function decorateModel(BaseClass: typeof PureModel) {
 ## Applying a mixin
 
 ```typescript
-import { Model } from 'datx';
+import { Model } from '@datx/core';
 import myAwesomeMixin from 'my-awesome-mixin';
 
 class Person extends myAwesomeMixin(Model) {
@@ -108,27 +108,39 @@ isModel(obj: any): false;
 
 Check if the given value is an instance of the datx model.
 
-### getModelMetaKey
+### getMeta
 
 ```typescript
-getModelMetaKey(model: PureModel, key: string): any;
+getMeta<T = any>(
+  obj: Record<string, any>,
+  key: string,
+  defaultValue?: T,
+  includeChain?: boolean,
+  mergeChain?: boolean,
+): T | undefined;
 ```
 
 Get a meta data of the model.
 
-### setModelMetaKey
+- `obj` - The target object
+- `key` - name of the meta key
+- `defaultValue` - The value that will be returned if the meta value is not found
+- `includeChain` - Check the prototype chain for the meta value (stop when found)
+- `mergeChain` - Merge the meta objects from all objects in the prototype chain
+
+### setMeta
 
 ```typescript
-setModelMetaKey(model: PureModel, key: string, value: any): any;
+setMeta<T = any>(obj: Record<string, any>, key: string, value: T): void;
 ```
 
 Set a meta data of the model.
 
 **Note:** If you need to save any data about a model, please prefix your keys in order to avoid collisions with other mixins.
 
-## datx-utils
+## @datx/utils
 
-The `datx-utils` plugin contains some helper methods that could be useful for mixin development:
+The `@datx/utils` plugin contains some helper methods that could be useful for mixin development:
 
 ### mapItems
 

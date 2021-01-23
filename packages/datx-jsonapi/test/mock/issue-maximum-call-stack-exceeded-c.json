@@ -12,9 +12,11 @@
       }
     }
   },
-  "included": [{
-    "id": "19074",
-    "type": "product_variants",
-    "attributes": {}
-  }]
+  "included": [
+    {
+      "id": "19074",
+      "type": "product_variants",
+      "attributes": {}
+    }
+  ]
 }

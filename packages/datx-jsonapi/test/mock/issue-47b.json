@@ -1,6 +1,6 @@
 {
   "data": {
-    "id": 12345,
+    "id": "12345",
     "type": "event",
     "attributes": {
       "title": "Test 1",

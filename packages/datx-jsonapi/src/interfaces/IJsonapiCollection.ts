@@ -1,4 +1,4 @@
-import { IIdentifier, IModelConstructor, IType, PureCollection, PureModel } from 'datx';
+import { IModelConstructor, IType, PureCollection, PureModel } from '@datx/core';
 
 import { Response } from '../Response';
 import { IJsonapiModel } from './IJsonapiModel';
@@ -12,13 +12,13 @@ export interface IJsonapiCollection extends PureCollection {
    * Fetch the records with the given type and id
    *
    * @param {string} type Record type
-   * @param {number|string} type Record id
+   * @param {string} type Record id
    * @param {IRequestOptions} [options] Server options
    * @returns {Promise<Response>} Resolves with the Response object or rejects with an error
    */
   fetch<T extends IJsonapiModel = IJsonapiModel>(
     type: IType | IModelConstructor<T>,
-    id: number | string,
+    id: string,
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
@@ -34,6 +34,17 @@ export interface IJsonapiCollection extends PureCollection {
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
+  getOne<T extends IJsonapiModel = IJsonapiModel>(
+    type: IType | IModelConstructor<T>,
+    id: string,
+    options?: IRequestOptions,
+  ): Promise<Response<T>>;
+
+  getMany<T extends IJsonapiModel = IJsonapiModel>(
+    type: IType | IModelConstructor<T>,
+    options?: IRequestOptions,
+  ): Promise<Response<T>>;
+
   request<T extends IJsonapiModel = IJsonapiModel>(
     url: string,
     method?: string,
@@ -41,9 +52,10 @@ export interface IJsonapiCollection extends PureCollection {
     options?: IRequestOptions,
   ): Promise<Response<T>>;
 
-  removeOne(type: IType | typeof PureModel, id: IIdentifier, remote?: boolean | IRequestOptions);
-  removeOne(model: PureModel, remote?: boolean | IRequestOptions);
-
-  // remove(type: IType | typeof PureModel, id?: IIdentifier, remote?: boolean | IRequestOptions);
-  // remove(model: PureModel, remote?: boolean | IRequestOptions);
+  removeOne(
+    type: IType | typeof PureModel,
+    id: string,
+    options?: boolean | IRequestOptions,
+  ): Promise<void>;
+  removeOne(model: PureModel, options?: boolean | IRequestOptions): Promise<void>;
 }

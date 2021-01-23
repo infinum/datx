@@ -10,7 +10,7 @@ The library is exposing a config for some networking related options:
 The base URL used for the networking. By default, this is `"/"`, but can be changed to something like `"https://example.com/api/"`
 
 ```javascript
-import { config } from 'datx-jsonapi';
+import { config } from '@datx/jsonapi';
 
 config.baseUrl = 'https://example.com/api/';
 
@@ -22,7 +22,7 @@ config.baseUrl = 'https://example.com/api/';
 If you want to use the [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch), but need to use a different implementation, like [`isomorphic-fetch`](https://www.npmjs.com/package/isomorphic-fetch), you can set the new reference here.
 
 ```javascript
-import { config } from 'datx-jsonapi';
+import { config } from '@datx/jsonapi';
 import fetch from 'isomorphic-fetch';
 
 config.fetchReference = fetch;
@@ -35,7 +35,7 @@ config.fetchReference = fetch;
 If needed, you can define default options that are passed to the fetch method. Keep in mind that the body and method properties will be overridden.
 
 ```javascript
-import { config } from 'datx-jsonapi';
+import { config } from '@datx/jsonapi';
 
 config.defaultFetchOptions = {
   credentials: 'same-origin',
@@ -52,7 +52,7 @@ config.defaultFetchOptions = {
 URL query string isn't encoded by default, so you have to manually encode query params which may contain URL-unsafe characters (for example, user input), to ensure the URL is valid. This option enables encoding of all params handled by the lib.
 
 ```javascript
-import { config } from 'datx-jsonapi';
+import { config } from '@datx/jsonapi';
 
 config.encodeQueryString = true;
 ```
@@ -106,3 +106,20 @@ transformResponse(response: IRawResponse): IRawResponse
 Can be used to modify the response before it's parsed. It is receiving a [IRawResponse](../api-reference/typescript-interfaces#irawresponse) object, and it should also return an object with the same interface.
 
 Note: It is recommended not to modify the existing object but instead create a copy.
+
+## onError
+
+```typescript
+onError(IResponseObject): IResponseObject;
+```
+
+Can be used to modify the response on error. By default it will just pass the regular response.
+
+## Caching
+
+```typescript
+cache: CachingStrategy;
+maxCacheAge: number; // seconds
+```
+
+Options for caching of requests. This can be overridden on a collection or request level. The default caching strategy is `NetworkOnly` (no caching).

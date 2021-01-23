@@ -1,27 +1,90 @@
-import { getModelId, getModelType, modelToJSON, PureModel, updateModel, updateModelId, View } from 'datx';
-import { assignComputed, IDictionary } from 'datx-utils';
-import { action } from 'mobx';
+import {
+  Bucket,
+  getModelId,
+  getModelType,
+  modelToJSON,
+  PureModel,
+  updateModel,
+  updateModelId,
+  View,
+} from '@datx/core';
+import { assignComputed, Headers, IResponseHeaders } from '@datx/utils';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { IError, IJsonApiObject, ILink } from './interfaces/JsonApi';
+import { IResponseInternal } from './interfaces/IResponseInternal';
 
 import { GenericModel } from './GenericModel';
 import { flattenModel } from './helpers/model';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { fetchLink } from './NetworkUtils';
+import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 
-export class Response<T extends IJsonapiModel> {
-  /**
-   * API response data (synced with the store)
-   *
-   * @type {(PureModel|Array<PureModel>)}
-   * @memberOf Response
-   */
-  public data: T|Array<T>|null = null;
+function serializeHeaders(
+  headers: Array<[string, string]> | IResponseHeaders,
+): Array<[string, string]> {
+  if (headers instanceof Array) {
+    return headers;
+  }
+
+  const list: Array<[string, string]> = [];
+
+  headers.forEach((value: string, key: string) => {
+    list.push([key, value]);
+  });
+
+  return list;
+}
+
+function initHeaders(headers: Array<[string, string]> | IResponseHeaders): IResponseHeaders {
+  if (headers instanceof Array) {
+    return new Headers(headers);
+  }
+
+  return headers;
+}
+
+function initData<T extends IJsonapiModel>(
+  response: IRawResponse,
+  collection?: IJsonapiCollection,
+  overrideData?: T | Array<T>,
+): any {
+  if (collection && response.data) {
+    const data = overrideData || collection.sync<T>(response.data);
+
+    return new Bucket.ToOneOrMany<T>(data, collection as any, true);
+  }
+
+  if (response.data) {
+    // The case when a record is not in a store and save/remove are used
+    const resp = response.data;
+
+    if (resp.data) {
+      if (resp.data instanceof Array) {
+        throw new Error('A save/remove operation should not return an array of results');
+      }
+
+      return {
+        value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T),
+      };
+    }
+  }
+
+  return new Bucket.ToOneOrMany<T>(null, collection as any, true);
+}
+
+type IAsync<T extends IJsonapiModel> = Promise<Response<T>>;
+
+export class Response<T extends IJsonapiModel, P = IAsync<T>> {
+  private __data;
+
+  protected __internal: IResponseInternal = {
+    response: {},
+    views: [],
+  };
 
   /**
    * API response metadata
@@ -29,7 +92,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {object}
    * @memberOf Response
    */
-  public meta?: object;
+  public get meta(): object | undefined {
+    return this.__internal.meta;
+  }
 
   /**
    * API response links
@@ -37,7 +102,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {object}
    * @memberOf Response
    */
-  public links?: IDictionary<ILink>;
+  public get links(): Record<string, ILink> | undefined {
+    return this.__internal.links;
+  }
 
   /**
    * The JSON API object returned by the server
@@ -45,7 +112,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {JsonApi.IJsonApiObject}
    * @memberOf Response
    */
-  public jsonapi?: IJsonApiObject;
+  public get jsonapi(): IJsonApiObject | undefined {
+    return this.__internal.jsonapi;
+  }
 
   /**
    * Headers received from the API call
@@ -53,7 +122,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {IResponseHeaders}
    * @memberOf Response
    */
-  public headers?: IResponseHeaders;
+  public get headers(): IResponseHeaders | undefined {
+    return this.__internal.headers;
+  }
 
   /**
    * Headers sent to the server
@@ -61,7 +132,9 @@ export class Response<T extends IJsonapiModel> {
    * @type {IHeaders}
    * @memberOf Response
    */
-  public requestHeaders?: IHeaders;
+  public get requestHeaders(): IHeaders | undefined {
+    return this.__internal.requestHeaders;
+  }
 
   /**
    * Request error
@@ -69,39 +142,41 @@ export class Response<T extends IJsonapiModel> {
    * @type {(Array<JsonApi.IError>|Error)}
    * @memberOf Response
    */
-  public error?: Array<IError>|Error;
+  public get error(): Array<IError> | Error | undefined {
+    return this.__internal.error;
+  }
 
   /**
    * First data page
    *
-   * @type {Promise<Response>}
+   * @type {P<Response>}
    * @memberOf Response
    */
-  public first?: Promise<Response<T>>; // Handled by the __fetchLink
+  public first?: () => P; // Handled by the __fetchLink
 
   /**
    * Previous data page
    *
-   * @type {Promise<Response>}
+   * @type {P<Response>}
    * @memberOf Response
    */
-  public prev?: Promise<Response<T>>; // Handled by the __fetchLink
+  public prev?: () => P; // Handled by the __fetchLink
 
   /**
    * Next data page
    *
-   * @type {Promise<Response>}
+   * @type {P<Response>}
    * @memberOf Response
    */
-  public next?: Promise<Response<T>>; // Handled by the __fetchLink
+  public next?: () => P; // Handled by the __fetchLink
 
   /**
    * Last data page
    *
-   * @type {Promise<Response>}
+   * @type {P<Response>}
    * @memberOf Response
    */
-  public last?: Promise<Response<T>>; // Handled by the __fetchLink
+  public last?: () => P; // Handled by the __fetchLink
 
   /**
    * Received HTTP status
@@ -109,99 +184,93 @@ export class Response<T extends IJsonapiModel> {
    * @type {number}
    * @memberOf Response
    */
-  public status?: number;
+  public get status(): number | undefined {
+    return this.__internal.status;
+  }
 
-  public views: Array<View> = [];
+  public get views(): Array<View> {
+    return this.__internal.views;
+  }
 
   /**
    * Related Store
    *
-   * @private
    * @type {IJsonapiCollection}
    * @memberOf Response
    */
-  private readonly __collection?: IJsonapiCollection;
-
-  /**
-   * Server options
-   *
-   * @private
-   * @type {IRequestOptions}
-   * @memberOf Response
-   */
-  private readonly __options?: IRequestOptions;
-
-  /**
-   * Original server response
-   *
-   * @private
-   * @type {IRawResponse}
-   * @memberOf Response
-   */
-  private readonly __response: IRawResponse;
+  public readonly collection?: IJsonapiCollection;
 
   /**
    * Cache used for the link requests
    *
-   * @private
-   * @type {IDictionary<Promise<Response>>}
+   * @protected
+   * @type {Record<string, P<Response>>}
    * @memberOf Response
    */
-  private readonly __cache: IDictionary<Promise<Response<T>>> = { };
+  protected readonly __cache: Record<string, () => P> = {};
 
   constructor(
     response: IRawResponse,
     collection?: IJsonapiCollection,
     options?: IRequestOptions,
-    overrideData?: T|Array<T>,
+    overrideData?: T | Array<T>,
     views?: Array<View>,
   ) {
-    this.__collection = collection;
-    this.__options = options;
-    this.__response = response;
-    this.status = response.status;
-    if (views) {
-      this.views = views;
-    }
-
-    if (collection) {
-      this.data = overrideData ? collection.add<T>(overrideData as T) : collection.sync<T>(response.data);
-    } else if (response.data) {
-      // The case when a record is not in a store and save/remove are used
-      const resp = response.data;
-
-      if (resp.data) {
-        if (resp.data instanceof Array) {
-          throw new Error('A save/remove operation should not return an array of results');
-        }
-
-        this.data = overrideData || new GenericModel(flattenModel(undefined, resp.data)) as T;
-      }
-    }
+    this.collection = collection;
+    this.__updateInternal(response, options, views);
+    this.__data = initData(response, collection, overrideData);
 
     this.views.forEach((view) => {
-      if (this.data) {
-        view.add(this.data);
+      if (this.__data.value) {
+        view.add(this.__data.value);
       }
     });
-
-    this.meta = (response.data && response.data.meta) || { };
-    this.links = (response.data && response.data.links) || { };
-    this.jsonapi = (response.data && response.data.jsonapi) || { };
-    this.headers = response.headers;
-    this.requestHeaders = response.requestHeaders;
-    this.error = (response.data && response.data.errors) || response.error;
-
-    if (this.links) {
-      Object.keys(this.links).forEach((link: string) => {
-        assignComputed(this, link, () => this.__fetchLink(link));
-      });
-    }
 
     Object.freeze(this);
 
     if (this.error) {
       throw this;
+    }
+  }
+
+  public get isSuccess(): boolean {
+    return !this.error;
+  }
+
+  public get data(): T | Array<T> | null {
+    return this.__data.value;
+  }
+
+  private __updateInternal(
+    response: IRawResponse,
+    options?: IRequestOptions,
+    views?: Array<View>,
+  ): void {
+    if (options) {
+      this.__internal.options = options;
+    }
+
+    this.__internal.response = response;
+    this.__internal.meta = response.data?.meta || {};
+    this.__internal.links = response.data?.links || {};
+    this.__internal.jsonapi = response.data?.jsonapi || {};
+    this.__internal.headers = response.headers && initHeaders(response.headers);
+    this.__internal.requestHeaders = response.requestHeaders;
+    this.__internal.error = response.data?.errors || response.error;
+    this.__internal.status = response.status;
+
+    if (views) {
+      this.__internal.views = views;
+    }
+
+    if (!this.error && !this.status) {
+      this.__internal.error = new Error('Network not available');
+    }
+
+    if (this.links) {
+      Object.keys(this.links).forEach((link: string) => {
+        assignComputed(this, link, () => this.__fetchLink(link));
+      });
     }
   }
 
@@ -213,20 +282,21 @@ export class Response<T extends IJsonapiModel> {
    *
    * @memberOf Response
    */
-  @action public replaceData(data: T): Response<T> {
+  public replaceData(data: T): Response<T, P> {
     const record: PureModel = this.data as PureModel;
+
     if (record === data) {
       return this;
     }
 
-    const newId = getModelId(record);
+    const newId = getModelId(record).toString();
     const type = getModelType(record);
 
     const viewIndexes = this.views.map((view) => view.list.indexOf(record));
 
-    if (this.__collection) {
-      this.__collection.removeOne(type, newId);
-      this.__collection.add(data);
+    if (this.collection) {
+      this.collection.removeOne(type, newId);
+      this.collection.add(data);
     }
 
     updateModel(data, modelToJSON(record));
@@ -238,26 +308,61 @@ export class Response<T extends IJsonapiModel> {
       }
     });
 
-    return new Response(this.__response, this.__collection, this.__options, data);
+    const ResponseConstructor: typeof Response = this.constructor as typeof Response;
+    return new ResponseConstructor(this.__internal.response, this.collection, this.__internal.options, data);
+  }
+
+  public clone(): Response<T> {
+    const ResponseConstructor: typeof Response = this.constructor as typeof Response;
+    return new ResponseConstructor(
+      this.__internal.response,
+      this.collection,
+      this.__internal.options,
+      this.data || undefined,
+    );
+  }
+
+  public get snapshot(): IResponseSnapshot {
+    return {
+      response: Object.assign({}, this.__internal.response, {
+        headers:
+          this.__internal.response.headers && serializeHeaders(this.__internal.response.headers),
+        collection: undefined,
+      }),
+      options: this.__internal.options,
+    };
+  }
+
+  public update(response: IRawResponse, views?: Array<View>): Response<T, P> {
+    this.__updateInternal(response, undefined, views);
+    const newData = initData(response, this.collection);
+
+    this.__data.__readonlyValue = newData.value;
+
+    return this;
   }
 
   /**
    * Function called when a link is being fetched. The returned value is cached
    *
-   * @private
-   * @param {any} name Link name
-   * @returns Promise that resolves with a Response object
+   * @protected
+   * @param {string} name Link name
+   * @returns P that resolves with a Response object
    *
    * @memberOf Response
    */
-  private __fetchLink(name) {
+  protected __fetchLink(name: string): () => P {
+    const ResponseConstructor: typeof Response = this.constructor as typeof Response;
     if (!this.__cache[name]) {
-      const link: ILink|null = (this.links && name in this.links) ? this.links[name] : null;
+      const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 
       if (link) {
-        this.__cache[name] = fetchLink<T>(
-          link, this.__collection, this.requestHeaders, this.__options, this.views,
-        );
+        const options = Object.assign({}, this.__internal.options);
+
+        options.networkConfig = options.networkConfig || {};
+        options.networkConfig.headers = this.requestHeaders;
+        this.__cache[name] = (): P =>
+          fetchLink<T>(link, this.collection, options, this.views, ResponseConstructor) as unknown as P;
       }
     }
 

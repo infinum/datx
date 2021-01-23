@@ -3,7 +3,7 @@ id: references
 title: References
 ---
 
-The main feature of the library are the references between models. There are two types of references, and they can be defined with the `prop` decorator on the model:
+The main feature of the library are the references between models. There are two types of references, and they can be defined with the `Attribute` decorator on the model:
 
 ## Direct references
 
@@ -28,7 +28,7 @@ The direct reference can be used if a object contains a reference to another obj
 }
 ```
 
-The references are defined with the `prop` decorator and can be one of three types:
+The references are defined with the `Attribute` decorator and can be one of three types:
 
 - one to one - references a model
 - one to many - an array of references
@@ -38,17 +38,27 @@ The references are defined with the `prop` decorator and can be one of three typ
 class Person extends Model {
   static type = 'person';
 
-  @prop.identifier id: number;
-  @prop firstName: string;
-  @prop lastName: string;
-  @prop.toOne(Person) spouse: Person;
+  @Attribute({ isIdentifier: true })
+  public id!: number;
+
+  @Attribute()
+  public firstName!: string;
+
+  @Attribute()
+  public lastName!: string;
+
+  @Attribute({ toOne: Person })
+  public spouse!: Person;
 }
 
 class Pet extends Model {
   static type = 'pet';
 
-  @prop name: string;
-  @prop.toOne(Person) owner: Person;
+  @Attribute()
+  public name!: string;
+
+  @Attribute({ toOne: Person })
+  public owner!: Person;
 }
 
 class MyCollection extends Collection {
@@ -76,11 +86,20 @@ Since there is a direct reference in one direction, we can create a indirect ref
 class Person extends Model {
   static type = 'person';
 
-  @prop.identifier id: number;
-  @prop firstName: string;
-  @prop lastName: string;
-  @prop.toOne(Person) spouse: Person;
-  @prop.toMany(Pet, 'owner') pets: Array<Pet>;
+  @Attribute({ isIdentifier: true })
+  id: number;
+
+  @Attribute()
+  firstName: string;
+
+  @Attribute()
+  lastName: string;
+
+  @Attribute({ toOne: Person })
+  spouse: Person;
+
+  @Attribute({ toMany: Pet, referenceProperty: 'owner' })
+  pets: Array<Pet>;
 }
 
 class MyCollection extends Collection {
@@ -104,7 +123,7 @@ In this example, we define that the Person model has a reference to all Pet mode
 If you need to add an reference that is specific only to one instance of the model, you can use the `initModelRef` method:
 
 ```javascript
-import { initModelRef, ReferenceType } from 'datx';
+import { initModelRef, ReferenceType } from '@datx/core';
 
 initModelRef(bob, 'siblings', { model: Person, type: ReferenceType.TO_MANY }, [john]);
 ```
@@ -117,9 +136,8 @@ The `ReferenceType` enum has three possible values:
 
 ## Limitations
 
-There are currently four limitations:
+There are currently three limitations:
 
-1. A reference can only be to a single model type, e.g. a `pet` reference can refer to a `pet` model, but can't refer to the `cat` and `dog` models at the same time.
-2. There is no way to have both direct and indirect references for the same property, e.g. when we set a `spouse` property on the steve model, jane model won't have the spouse property automatically defined - we need to do it manually.
-3. A model (as opposed to the id reference) reference can't be set on a model if it's not in a collection (any collection).
-4. If a model has a reference and it's not in a collection or the referenced model is not in the same collection, only the reference model id can be retrieved.
+1. There is no way to have both direct and indirect references for the same property, e.g. when we set a `spouse` property on the steve model, jane model won't have the spouse property automatically defined - we need to do it manually.
+2. A model (as opposed to the id reference) reference can't be set on a model if it's not in a collection (any collection).
+3. If a model has a reference and it's not in a collection or the referenced model is not in the same collection, only the reference model id can be retrieved.

@@ -1,21 +1,27 @@
-import {Event, Person, Pet} from './models';
+/* eslint-disable no-console */
+
+import { Event, Person, Pet } from './models';
 import state from './store';
 
-const john = new Person({name: 'John'});
+const john = new Person({ name: 'John' });
+
 state.add(john);
 
 // Alternative syntax:
-const jane = state.add({name: 'Jane'}, Person);
+const jane = state.add({ name: 'Jane' }, Person);
 
-const fido = state.add({name: 'Fido', owner: john}, Pet);
+const fido = state.add({ name: 'Fido', owner: john }, Pet);
 
 console.log(john.pets); // [Fido]
 
-const party = state.add({
-  name: 'Party',
-  responsible: jane,
-  organizers: [jane, {name: 'Frank', spouse: jane}, john],
-}, Event);
+const party = state.add(
+  {
+    name: 'Party',
+    responsible: jane,
+    organizers: [jane, { name: 'Frank', spouse: jane }, john],
+  },
+  Event,
+);
 
 const frank = party.organizers[1];
 

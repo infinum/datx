@@ -1,12 +1,12 @@
-import { toJS } from 'mobx';
-
+import { getMeta, setMeta, mobx } from '@datx/utils';
 import { PatchType } from '../enums/PatchType';
 import { IPatch } from '../interfaces/IPatch';
 import { PureModel } from '../PureModel';
-import { storage } from '../services/storage';
-import { getModelCollection, getModelId, getModelType } from './model/utils';
+import { getModelCollection, getModelId, getModelRef, getModelType } from './model/utils';
+import { MetaModelField } from '../enums/MetaModelField';
+import { IFieldDefinition } from '../Attribute';
 
-function isEmptyObject(data: object) {
+function isEmptyObject(data: object): boolean {
   return Object.keys(data).length === 0;
 }
 
@@ -27,24 +27,26 @@ interface IPatchMeta<T extends PureModel = PureModel> {
   newValue?: Partial<T>;
 }
 
-export function triggerAction(patchMeta: IPatchMeta, model: PureModel) {
-  const patch: IPatch = {
-    ...patchMeta,
+export function triggerAction(patchMeta: IPatchMeta, model: PureModel): void {
+  const patch: IPatch = Object.assign({}, patchMeta, {
     model: {
       id: getModelId(model),
       type: getModelType(model),
     },
-  };
+  });
 
-  const listeners: Array<(patch: IPatch) => void> = [];
-
-  if ('__patchListeners' in model) {
-    listeners.push(...model['__patchListeners'] || []);
-  }
+  const listeners = getMeta<Array<(patch: IPatch) => void>>(
+    model,
+    MetaModelField.PatchListeners,
+    [],
+  ).slice();
 
   const collection = getModelCollection(model);
+
   if (collection && '__patchListeners' in collection) {
-    listeners.push(...collection['__patchListeners'] || []);
+    ((collection['__patchListeners'] || []) as Array<(patch: IPatch) => void>).forEach((item) => {
+      listeners.push(item);
+    });
   }
 
   listeners.forEach((listener) => {
@@ -52,35 +54,75 @@ export function triggerAction(patchMeta: IPatchMeta, model: PureModel) {
   });
 }
 
-export function startAction(model: PureModel) {
-  const patchData = storage.getModelMetaKey(model, 'patch') || { count: 0, oldValue: { }, newValue: { } };
+export function startAction(model: PureModel): void {
+  const patchData = getMeta(model, MetaModelField.Patch, {
+    count: 0,
+    newValue: {},
+    oldValue: {},
+  });
+
   patchData.count++;
-  storage.setModelMetaKey(model, 'patch', patchData);
+  setMeta(model, MetaModelField.Patch, patchData);
 }
 
-export function updateAction(model: PureModel, key: string, value: any) {
-  const patchData = storage.getModelMetaKey(model, 'patch') || { count: 0, oldValue: { }, newValue: { } };
-  if (model[key] === value) {
+export function updateAction(
+  model: PureModel,
+  key: string,
+  value: any,
+  oldValue?: { value: any },
+): void {
+  const patchData = getMeta(model, MetaModelField.Patch, {
+    count: 0,
+    newValue: {},
+    oldValue: {},
+  });
+
+  if ((model[key] === value && !oldValue) || (oldValue && value === oldValue.value)) {
     return;
   }
+  const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
+
   if (!(key in patchData.oldValue)) {
-    patchData.oldValue[key] = model[key];
+    if (oldValue) {
+      patchData.oldValue[key] = oldValue.value;
+    } else if (key in fields && fields[key].referenceDef) {
+      patchData.oldValue[key] = getModelRef(model[key]);
+    } else {
+      patchData.oldValue[key] = model[key];
+    }
   }
-  patchData.newValue[key] = value;
-  storage.setModelMetaKey(model, 'patch', patchData);
+  patchData.newValue[key] = key in fields && fields[key].referenceDef ? getModelRef(value) : value;
+  setMeta(model, MetaModelField.Patch, patchData);
 }
 
-export function endAction(model: PureModel, patchType: PatchType = PatchType.UPDATE) {
-  const patchData = storage.getModelMetaKey(model, 'patch') || { count: 0, oldValue: { }, newValue: { } };
+export function endAction(model: PureModel, patchType: PatchType = PatchType.UPDATE): void {
+  const patchData = getMeta(model, MetaModelField.Patch, {
+    count: 0,
+    newValue: {},
+    oldValue: {},
+  });
+
   patchData.count--;
   if (patchData.count === 0) {
-    const newValue = toJS(patchData.newValue);
-    const oldValue = toJS(patchData.oldValue);
+    const newValue = mobx.toJS(patchData.newValue);
+    const oldValue = mobx.toJS(patchData.oldValue);
+
     if (!isEmptyObject(newValue) || !isEmptyObject(oldValue)) {
       triggerAction({ newValue, oldValue, patchType }, model);
     }
-    storage.setModelMetaKey(model, 'patch', { count: 0, oldValue: { }, newValue: { } });
+    setMeta(model, MetaModelField.Patch, { count: 0, oldValue: {}, newValue: {} });
   } else {
-    storage.setModelMetaKey(model, 'patch', patchData);
+    setMeta(model, MetaModelField.Patch, patchData);
   }
+}
+
+export function updateSingleAction(
+  model: PureModel,
+  key: string,
+  value: any,
+  oldValue?: { value: any },
+): void {
+  startAction(model);
+  updateAction(model, key, value, oldValue);
+  endAction(model);
 }

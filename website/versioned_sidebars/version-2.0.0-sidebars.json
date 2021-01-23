@@ -1,0 +1,69 @@
+{
+  "version-2.0.0-docs": {
+    "Getting started": [
+      "version-2.0.0-getting-started/installation",
+      "version-2.0.0-getting-started/defining-models",
+      "version-2.0.0-getting-started/references",
+      "version-2.0.0-getting-started/configuring-the-collection",
+      "version-2.0.0-getting-started/using-the-collection",
+      "version-2.0.0-getting-started/persisting-data-locally"
+    ],
+    "Mixins": [
+      "version-2.0.0-mixins/what-are-mixis",
+      "version-2.0.0-mixins/with-actions",
+      "version-2.0.0-mixins/with-meta",
+      "version-2.0.0-mixins/with-patches",
+      "version-2.0.0-mixins/jsonapi-mixin",
+      "version-2.0.0-mixins/building-your-own-mixin"
+    ],
+    "API Reference": [
+      "version-2.0.0-api-reference/collection",
+      "version-2.0.0-api-reference/model",
+      "version-2.0.0-api-reference/view",
+      "version-2.0.0-api-reference/attribute",
+      "version-2.0.0-api-reference/bucket",
+      "version-2.0.0-api-reference/pure-model",
+      "version-2.0.0-api-reference/model-utils",
+      "version-2.0.0-api-reference/lib-utils",
+      "version-2.0.0-api-reference/typescript-interfaces"
+    ],
+    "JSON API": [
+      "version-2.0.0-jsonapi/jsonapi-getting-started",
+      "version-2.0.0-jsonapi/jsonapi-basic-configuration",
+      "version-2.0.0-jsonapi/jsonapi-network-configuration",
+      "version-2.0.0-jsonapi/jsonapi-network-usage",
+      "version-2.0.0-jsonapi/jsonapi-spec-compliance",
+      "version-2.0.0-jsonapi/jsonapi-model",
+      "version-2.0.0-jsonapi/jsonapi-collection",
+      "version-2.0.0-jsonapi/jsonapi-view",
+      "version-2.0.0-jsonapi/jsonapi-response",
+      "version-2.0.0-jsonapi/jsonapi-config",
+      "version-2.0.0-jsonapi/jsonapi-utils",
+      "version-2.0.0-jsonapi/jsonapi-typescript-interfaces"
+    ],
+    "JSON API Angular": [
+      "version-2.0.0-jsonapi-angular/mixin",
+      "version-2.0.0-jsonapi-angular/base-fetch"
+    ],
+    "Migration guide": [
+      "version-2.0.0-migration-guide/breaking-changes",
+      "version-2.0.0-migration-guide/deprecations",
+      "version-2.0.0-migration-guide/whats-new",
+      "version-2.0.0-migration-guide/from-v1"
+    ],
+    "Troubleshooting": [
+      "version-2.0.0-troubleshooting/known-issues"
+    ]
+  },
+  "version-2.0.0-examples": {
+    "Setup": [
+      "version-2.0.0-examples/basic-setup",
+      "version-2.0.0-examples/react-setup",
+      "version-2.0.0-examples/nextjs-setup",
+      "version-2.0.0-examples/angular-setup"
+    ],
+    "Collection": [
+      "version-2.0.0-examples/adding-models"
+    ]
+  }
+}
