@@ -1,5 +1,5 @@
-import { IModelConstructor, PureModel } from 'datx';
-import { IRequestOptions } from 'datx-jsonapi';
+import { IModelConstructor, PureModel } from '@datx/core';
+import { IRequestOptions } from '@datx/jsonapi';
 import { Observable } from 'rxjs';
 
 import { IJsonapiModel } from './interfaces/IJsonapiModel';

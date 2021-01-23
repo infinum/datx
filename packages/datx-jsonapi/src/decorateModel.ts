@@ -1,5 +1,5 @@
-import { PureCollection, PureModel } from 'datx';
-import { IRawModel, META_FIELD, setMeta } from 'datx-utils';
+import { PureCollection, PureModel } from '@datx/core';
+import { IRawModel, META_FIELD, setMeta } from '@datx/utils';
 
 import {
   MODEL_LINKS_FIELD,

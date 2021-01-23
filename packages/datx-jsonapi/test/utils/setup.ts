@@ -1,4 +1,4 @@
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 
 import { jsonapi } from '../../src';
 import { Event } from './models/Event';

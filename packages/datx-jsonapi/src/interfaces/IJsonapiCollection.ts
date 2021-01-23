@@ -1,4 +1,4 @@
-import { IModelConstructor, IType, PureCollection, PureModel } from 'datx';
+import { IModelConstructor, IType, PureCollection, PureModel } from '@datx/core';
 
 import { Response } from '../Response';
 import { IJsonapiModel } from './IJsonapiModel';

@@ -1,4 +1,4 @@
-import { View } from 'datx';
+import { View } from '@datx/core';
 
 import { IJsonapiCollection } from './IJsonapiCollection';
 import { IRequestOptions } from './IRequestOptions';

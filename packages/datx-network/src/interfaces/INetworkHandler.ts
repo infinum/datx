@@ -1,5 +1,5 @@
 import { IFetchOptions } from './IFetchOptions';
-import { PureModel } from 'datx';
+import { PureModel } from '@datx/core';
 
 import { Response } from '../Response';
 

@@ -1,4 +1,4 @@
-import { View, IViewConstructor, PureModel } from 'datx';
+import { View, IViewConstructor, PureModel } from '@datx/core';
 import * as fetch from 'isomorphic-fetch';
 
 import { IJsonapiView, jsonapi, config } from '../src';

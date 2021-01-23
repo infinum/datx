@@ -56,4 +56,4 @@ export {
   IResponseObject,
   clearAllCache,
   clearCacheByType,
-} from 'datx-network';
+} from '@datx/network';

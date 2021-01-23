@@ -8,7 +8,7 @@ Bellow is a basic example using `localStorage`, but the same concept can be appl
 
 ```javascript
 import { autorun } from 'mobx';
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 
 class AppStore extends Collection {
   constructor(data = []) {

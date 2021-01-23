@@ -1,5 +1,5 @@
-import { Collection } from 'datx';
-import { jsonapi } from 'datx-jsonapi';
+import { Collection } from '@datx/core';
+import { jsonapi } from '@datx/jsonapi';
 
 import { Event, Person, Pet } from './models';
 

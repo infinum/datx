@@ -1,4 +1,4 @@
-import { IType, prop } from 'datx';
+import { IType, prop } from '@datx/core';
 
 import { Image } from './Image';
 import { User } from './User';

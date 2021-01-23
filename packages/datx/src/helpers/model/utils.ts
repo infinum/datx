@@ -9,7 +9,7 @@ import {
   mapItems,
   isArrayLike,
   mobx,
-} from 'datx-utils';
+} from '@datx/utils';
 
 import { IModelRef } from '../../interfaces/IModelRef';
 import { IType } from '../../interfaces/IType';

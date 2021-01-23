@@ -1,4 +1,4 @@
-import { View, PureCollection, IType, PureModel } from 'datx';
+import { View, PureCollection, IType, PureModel } from '@datx/core';
 
 import { IRequestOptions } from './IRequestOptions';
 import { HttpMethod } from '../enums/HttpMethod';

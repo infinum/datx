@@ -4,7 +4,7 @@ import { CachingStrategy } from './enums/CachingStrategy';
 import { HttpMethod } from './enums/HttpMethod';
 import { BodyType } from './enums/BodyType';
 import { ParamArrayType } from './enums/ParamArrayType';
-import { PureCollection, IType, PureModel } from 'datx';
+import { PureCollection, IType, PureModel } from '@datx/core';
 import { cacheInterceptor } from './interceptors/cache';
 import { IResponseObject } from './interfaces/IResponseObject';
 import { IFetchOptions } from './interfaces/IFetchOptions';

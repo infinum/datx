@@ -12,8 +12,8 @@ import {
   ReferenceType,
   updateModel,
   commitModel,
-} from 'datx';
-import { getMeta, IRawModel, mapItems, deprecated, isArrayLike } from 'datx-utils';
+} from '@datx/core';
+import { getMeta, IRawModel, mapItems, deprecated, isArrayLike } from '@datx/utils';
 
 import {
   clearAllCache,
@@ -33,7 +33,7 @@ import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IDefinition, IRecord, IRelationship, IRequest, IResponse } from './interfaces/JsonApi';
 import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
-import { CachingStrategy } from 'datx-network';
+import { CachingStrategy } from '@datx/network';
 
 type TSerialisedStore = IRawCollection & { cache?: Array<Omit<ICacheInternal, 'collection'>> };
 

@@ -8,11 +8,11 @@ title: Installation
 To install, use `npm` or `yarn`. The lib has a peer dependency of `mobx` 4.2.0 or later.
 
 ```bash
-npm install datx@2 mobx --save
+npm install @datx/core mobx --save
 ```
 
 ```bash
-yarn add datx@2 mobx
+yarn add @datx/core mobx
 ```
 
 Since the lib is exposed as a set of CommonJS modules, you'll need something like [webpack](https://webpack.js.org/) or browserify in order to use it in the browser.

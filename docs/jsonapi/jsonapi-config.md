@@ -10,7 +10,7 @@ The library is exposing a config for some networking related options:
 The base URL used for the networking. By default, this is `"/"`, but can be changed to something like `"https://example.com/api/"`
 
 ```javascript
-import { config } from 'datx-jsonapi';
+import { config } from '@datx/jsonapi';
 
 config.baseUrl = 'https://example.com/api/';
 
@@ -22,7 +22,7 @@ config.baseUrl = 'https://example.com/api/';
 If you want to use the [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch), but need to use a different implementation, like [`isomorphic-fetch`](https://www.npmjs.com/package/isomorphic-fetch), you can set the new reference here.
 
 ```javascript
-import { config } from 'datx-jsonapi';
+import { config } from '@datx/jsonapi';
 import fetch from 'isomorphic-fetch';
 
 config.fetchReference = fetch;
@@ -35,7 +35,7 @@ config.fetchReference = fetch;
 If needed, you can define default options that are passed to the fetch method. Keep in mind that the body and method properties will be overridden.
 
 ```javascript
-import { config } from 'datx-jsonapi';
+import { config } from '@datx/jsonapi';
 
 config.defaultFetchOptions = {
   credentials: 'same-origin',
@@ -52,7 +52,7 @@ config.defaultFetchOptions = {
 URL query string isn't encoded by default, so you have to manually encode query params which may contain URL-unsafe characters (for example, user input), to ensure the URL is valid. This option enables encoding of all params handled by the lib.
 
 ```javascript
-import { config } from 'datx-jsonapi';
+import { config } from '@datx/jsonapi';
 
 config.encodeQueryString = true;
 ```

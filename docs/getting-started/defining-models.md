@@ -10,7 +10,7 @@ title: Defining models
 The models can be defined by extending the [`Model`](../api-reference/model) class. When extending the [`Model`](../api-reference/model) class, the minimal thing you should do is to define a unique [`type`](../api-reference/model#static-type) (can be either a number or a string):
 
 ```typescript
-import { Model } from 'datx';
+import { Model } from '@datx/core';
 
 class Person extends Model {
   static type = 'person';
@@ -20,7 +20,7 @@ class Person extends Model {
 Other things that should be defined are attributes and their default values or [References](references):
 
 ```typescript
-import { Model, Attribute } from 'datx';
+import { Model, Attribute } from '@datx/core';
 
 class Pet extends Model {
   static type = 'pet';
@@ -45,7 +45,7 @@ Most of the code can remain the same, but the attributes need to be defined sepa
 #### TypeScript
 
 ```typescript
-import { Model, prop } from 'datx';
+import { Model, prop } from '@datx/core';
 
 class Pet extends Model {
   static type = 'pet';
@@ -63,7 +63,7 @@ Attribute({ toOne: Person })(Pet, 'owner');
 #### JavaScript
 
 ```javascript
-import { Model, Attribute } from 'datx';
+import { Model, Attribute } from '@datx/core';
 
 class Pet extends Model {
   static type = 'pet';

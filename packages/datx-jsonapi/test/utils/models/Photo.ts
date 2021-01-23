@@ -1,4 +1,4 @@
-import { IType, Model, prop } from 'datx';
+import { IType, Model, prop } from '@datx/core';
 
 import { jsonapi } from '../../../src';
 

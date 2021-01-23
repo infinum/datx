@@ -10,7 +10,7 @@ title: Basic setup
 
 ```typescript
 // /models/index.ts
-import { Model, Attribute } from 'datx';
+import { Model, Attribute } from '@datx/core';
 import { computed } from 'mobx';
 
 export class Dog extends Model {
@@ -58,7 +58,7 @@ export class Person extends Model {
 
 ```js
 // /models/index.js
-import { Model, Attribute } from 'datx';
+import { Model, Attribute } from '@datx/core';
 import { computed } from 'mobx';
 
 class Dog extends Model {
@@ -103,7 +103,7 @@ export class Person extends Model {
 
 ```js
 // /models/index.js
-import { Model, Attribute } from 'datx';
+import { Model, Attribute } from '@datx/core';
 import { computed, decorate } from 'mobx';
 
 export class Dog extends Model {
@@ -149,7 +149,7 @@ decorate(Person, {
 <!--TypeScript-->
 
 ```typescript
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 import { computed } from 'mobx';
 
 import { Person, Dog } from './models';
@@ -177,7 +177,7 @@ export default class Family extends Collection {
 <!--JavaScript-->
 
 ```js
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 import { computed } from 'mobx';
 
 import { Person, Dog } from './models';
@@ -205,7 +205,7 @@ export default class Family extends Collection {
 <!--JavaScript (No decorators)-->
 
 ```js
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 import { computed, decorate } from 'mobx';
 
 import { Person, Dog } from './models';

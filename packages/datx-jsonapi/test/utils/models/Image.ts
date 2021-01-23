@@ -1,5 +1,5 @@
-import { IType, Model, prop } from 'datx';
-import { mobx } from 'datx-utils';
+import { IType, Model, prop } from '@datx/core';
+import { mobx } from '@datx/utils';
 
 import { jsonapi } from '../../../src';
 import { Event } from './Event';

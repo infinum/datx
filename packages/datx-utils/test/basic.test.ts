@@ -5,7 +5,7 @@ import { assignComputed, mapItems, setMeta, getMeta, isArrayLike, mobx, replaceI
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });
 
-describe('datx-utils', () => {
+describe('@datx/utils', () => {
   describe('mapItems', () => {
     it('should work for null', () => {
       expect(mapItems(null, () => 1)).toBe(null);

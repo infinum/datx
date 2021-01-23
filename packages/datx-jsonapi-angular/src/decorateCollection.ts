@@ -1,5 +1,5 @@
-import { ICollectionConstructor, PureCollection, IModelConstructor, IType, PureModel, getModelType, getModelId } from 'datx';
-import { IRequestOptions, clearCacheByType } from 'datx-jsonapi';
+import { ICollectionConstructor, PureCollection, IModelConstructor, IType, PureModel, getModelType, getModelId } from '@datx/core';
+import { IRequestOptions, clearCacheByType } from '@datx/jsonapi';
 import { Observable, empty } from 'rxjs';
 
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';

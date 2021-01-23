@@ -13,7 +13,7 @@ import {
   INetworkHandler,
   Response,
 } from '../src';
-import { PureModel, Attribute, Collection } from 'datx';
+import { PureModel, Attribute, Collection } from '@datx/core';
 import { clearAllCache } from '../src/interceptors/cache';
 
 describe('Request', () => {

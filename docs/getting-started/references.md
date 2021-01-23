@@ -123,7 +123,7 @@ In this example, we define that the Person model has a reference to all Pet mode
 If you need to add an reference that is specific only to one instance of the model, you can use the `initModelRef` method:
 
 ```javascript
-import { initModelRef, ReferenceType } from 'datx';
+import { initModelRef, ReferenceType } from '@datx/core';
 
 initModelRef(bob, 'siblings', { model: Person, type: ReferenceType.TO_MANY }, [john]);
 ```

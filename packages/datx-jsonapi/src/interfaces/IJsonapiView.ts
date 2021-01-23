@@ -1,4 +1,4 @@
-import { View } from 'datx';
+import { View } from '@datx/core';
 
 import { Response } from '../Response';
 import { IJsonapiModel } from './IJsonapiModel';

@@ -3,7 +3,7 @@ import testMobx from '../mobx';
 import { Collection, PureModel, Attribute } from '../../src';
 import { withMeta } from '../../src/mixins/withMeta';
 import { cloneModel, getModelRef, revertModel } from '../../src/helpers/model/utils';
-import { mobx } from 'datx-utils';
+import { mobx } from '@datx/utils';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });

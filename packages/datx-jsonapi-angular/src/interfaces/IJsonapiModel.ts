@@ -1,4 +1,4 @@
-import { IRequestOptions } from 'datx-jsonapi';
+import { IRequestOptions } from '@datx/jsonapi';
 import { Observable } from 'rxjs';
 
 export interface IJsonapiModel {

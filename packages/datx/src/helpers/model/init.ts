@@ -7,7 +7,7 @@ import {
   META_FIELD,
   isArrayLike,
   mobx,
-} from 'datx-utils';
+} from '@datx/utils';
 
 import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';

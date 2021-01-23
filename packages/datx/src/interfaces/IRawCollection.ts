@@ -1,4 +1,4 @@
-import { IRawModel } from 'datx-utils';
+import { IRawModel } from '@datx/utils';
 
 import { IRawView } from './IRawView';
 

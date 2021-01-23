@@ -1,4 +1,4 @@
-import { Model, Attribute } from 'datx';
+import { Model, Attribute } from '@datx/core';
 
 import { Event } from './Event';
 import { Pet } from './Pet';

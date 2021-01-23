@@ -1,5 +1,5 @@
-import { View } from 'datx';
-import { IResponseHeaders } from 'datx-utils';
+import { View } from '@datx/core';
+import { IResponseHeaders } from '@datx/utils';
 
 import { IHeaders } from './IHeaders';
 import { IRequestOptions } from './IRequestOptions';

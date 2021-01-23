@@ -1,4 +1,4 @@
-import { isArrayLike, mobx } from 'datx-utils';
+import { isArrayLike, mobx } from '@datx/utils';
 
 import { IModelRef } from '../interfaces/IModelRef';
 import { PureCollection } from '../PureCollection';

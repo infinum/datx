@@ -1,4 +1,4 @@
-import { isArrayLike, mobx, IObservableArray, IReactionDisposer, replaceInArray } from 'datx-utils';
+import { isArrayLike, mobx, IObservableArray, IReactionDisposer, replaceInArray } from '@datx/utils';
 
 import { error } from '../helpers/format';
 import { getModelCollection, getModelRef, isReference } from '../helpers/model/utils';

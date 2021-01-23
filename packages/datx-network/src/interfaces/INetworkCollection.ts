@@ -1,4 +1,4 @@
-import { PureModel, PureCollection, IType } from 'datx';
+import { PureModel, PureCollection, IType } from '@datx/core';
 
 import { IRequestOptions } from './IRequestOptions';
 import { Response } from '../Response';

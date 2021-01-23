@@ -1,5 +1,5 @@
-import { Model, Attribute } from 'datx';
-import { jsonapi } from 'datx-jsonapi';
+import { Model, Attribute } from '@datx/core';
+import { jsonapi } from '@datx/jsonapi';
 
 import { Person } from './Person';
 

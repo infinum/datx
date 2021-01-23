@@ -1,4 +1,4 @@
-import { error } from 'datx-utils';
+import { error } from '@datx/utils';
 
 import { ReferenceType } from '../enums/ReferenceType';
 import { ToMany } from './ToMany';

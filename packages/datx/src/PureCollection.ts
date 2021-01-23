@@ -1,4 +1,4 @@
-import { IRawModel, getMeta, setMeta, isArrayLike, mobx, IObservable, IObservableArray, removeFromArray, replaceInArray } from 'datx-utils';
+import { IRawModel, getMeta, setMeta, isArrayLike, mobx, IObservable, IObservableArray, removeFromArray, replaceInArray } from '@datx/utils';
 
 import { PureModel } from './PureModel';
 import { IType } from './interfaces/IType';

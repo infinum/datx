@@ -1,4 +1,4 @@
-import { Model, Attribute } from 'datx';
+import { Model, Attribute } from '@datx/core';
 
 import { Person } from './Person';
 

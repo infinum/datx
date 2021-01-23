@@ -1,4 +1,4 @@
-import { View } from 'datx';
+import { View } from '@datx/core';
 
 import { IRequestOptions } from './IRequestOptions';
 import { Response } from '../Response';

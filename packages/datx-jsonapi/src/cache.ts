@@ -1,5 +1,5 @@
-import { getModelType, IType } from 'datx';
-import { mapItems } from 'datx-utils';
+import { getModelType, IType } from '@datx/core';
+import { mapItems } from '@datx/utils';
 
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { Response } from './Response';

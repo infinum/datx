@@ -1,4 +1,4 @@
-import { isArrayLike, mobx } from 'datx-utils';
+import { isArrayLike, mobx } from '@datx/utils';
 
 import { error } from '../helpers/format';
 import { getModelRef, isModelReference } from '../helpers/model/utils';

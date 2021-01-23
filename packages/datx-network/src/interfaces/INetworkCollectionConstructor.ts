@@ -1,4 +1,4 @@
-import { PureCollection, IRawModel, IRawCollection } from 'datx';
+import { PureCollection, IRawModel, IRawCollection } from '@datx/core';
 
 import { INetworkCollection } from './INetworkCollection';
 

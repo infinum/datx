@@ -8,12 +8,12 @@ import {
   updateModel,
   modelToJSON,
   updateModelId,
-} from 'datx';
+} from '@datx/core';
 import { IHeaders } from './interfaces/IHeaders';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 import { IResponseObject } from './interfaces/IResponseObject';
-import { mapItems, mobx, Headers, IResponseHeaders } from 'datx-utils';
+import { mapItems, mobx, Headers, IResponseHeaders } from '@datx/utils';
 
 function serializeHeaders(
   headers: Array<[string, string]> | IResponseHeaders,

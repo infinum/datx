@@ -1,4 +1,4 @@
-import { Response as PromiseResponse, fetchLink } from 'datx-jsonapi';
+import { Response as PromiseResponse, fetchLink } from '@datx/jsonapi';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { Observable } from 'rxjs';
 import { observableWrapper } from './helpers/wrapper';

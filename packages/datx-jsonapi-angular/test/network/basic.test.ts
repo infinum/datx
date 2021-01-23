@@ -5,7 +5,7 @@ import {
   config,
   CachingStrategy,
   getModelLinks,
-} from 'datx-jsonapi';
+} from '@datx/jsonapi';
 
 import { setRequest, setupNetwork, confirmNetwork } from '../utils/api';
 import { Event, TestStore } from '../utils/setup';

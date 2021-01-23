@@ -1,5 +1,5 @@
-import { Collection } from 'datx';
-import { IResponseHeaders } from 'datx-utils';
+import { Collection } from '@datx/core';
+import { IResponseHeaders } from '@datx/utils';
 
 import { IHeaders } from './IHeaders';
 import { IJsonApiObject, IResponse } from './JsonApi';

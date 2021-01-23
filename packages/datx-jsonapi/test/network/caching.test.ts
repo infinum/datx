@@ -1,4 +1,4 @@
-import { mobx } from 'datx-utils';
+import { mobx } from '@datx/utils';
 
 import { setupNetwork, setRequest } from '../utils/api';
 import { Event, TestStore } from '../utils/setup';

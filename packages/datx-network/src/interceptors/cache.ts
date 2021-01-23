@@ -1,5 +1,5 @@
-import { getModelType, IType, PureModel, PureCollection } from 'datx';
-import { mapItems } from 'datx-utils';
+import { getModelType, IType, PureModel, PureCollection } from '@datx/core';
+import { mapItems } from '@datx/utils';
 
 import { Response } from '../Response';
 import { IResponseSnapshot } from '../interfaces/IResponseSnapshot';

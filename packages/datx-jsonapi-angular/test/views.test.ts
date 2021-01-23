@@ -1,9 +1,9 @@
-import { View, IViewConstructor, PureModel } from 'datx';
+import { View, IViewConstructor, PureModel } from '@datx/core';
 
 import { jsonapiAngular } from '../src';
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
 import { Event, TestStore } from './utils/setup';
-import { config, CachingStrategy } from 'datx-jsonapi';
+import { config, CachingStrategy } from '@datx/jsonapi';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;

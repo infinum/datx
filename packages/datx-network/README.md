@@ -1,16 +1,16 @@
-# datx-network
+# @datx/network
 
 DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
 
-`datx-network` is a datx mixin that adds a networking layer support. It can be used with any REST-like API and probably also other types of an API.
+`@datx/network` is a datx mixin that adds a networking layer support. It can be used with any REST-like API and probably also other types of an API.
 
 ---
 
 ## Basic usage
 
 ```tsx
-import { Collection, Model, Attribute } from 'datx';
-import { BaseRequest, collection, setUrl } from 'datx-network';
+import { Collection, Model, Attribute } from '@datx/core';
+import { BaseRequest, collection, setUrl } from '@datx/network';
 
 class Person extends Model {
   public static type = 'person'; // Unique name of the model class
@@ -63,10 +63,10 @@ const PersonInfo = ({ userId }) => {
 
 ## Getting started
 
-Note: `datx-network` has a peer dependency to `mobx@^4.2.0` or `mobx@^5.5.0`, so don't forget to install the latest MobX version:
+Note: `@datx/network` has a peer dependency to `mobx@^4.2.0` or `mobx@^5.5.0`, so don't forget to install the latest MobX version:
 
 ```bash
-npm install --save datx-network mobx
+npm install --save @datx/network mobx
 ```
 
 ### Polyfilling
@@ -100,9 +100,9 @@ Having issues with the library? Check out the [troubleshooting](https://datx.dev
 ---
 
 [![Build Status](https://travis-ci.org/infinum/datx.svg?branch=master)](https://travis-ci.org/infinum/datx)
-[![npm version](https://badge.fury.io/js/datx-network.svg)](https://badge.fury.io/js/datx-network)
-[![Dependency Status](https://david-dm.org/infinum/datx.svg?path=packages/datx-network)](https://david-dm.org/infinum/datx?path=packages/datx-network)
-[![devDependency Status](https://david-dm.org/infinum/datx/dev-status.svg?path=packages/datx-network)](https://david-dm.org/infinum/datx?path=packages/datx-network#info=devDependencies)
+[![npm version](https://badge.fury.io/js/@datx/network.svg)](https://badge.fury.io/js/@datx/network)
+[![Dependency Status](https://david-dm.org/infinum/datx.svg?path=packages/@datx/network)](https://david-dm.org/infinum/datx?path=packages/@datx/network)
+[![devDependency Status](https://david-dm.org/infinum/datx/dev-status.svg?path=packages/@datx/network)](https://david-dm.org/infinum/datx?path=packages/@datx/network#info=devDependencies)
 
 ## License
 
@@ -110,7 +110,7 @@ The [MIT License](LICENSE)
 
 ## Credits
 
-datx-network is maintained and sponsored by
+@datx/network is maintained and sponsored by
 [Infinum](https://www.infinum.com).
 
 <img src="https://infinum.com/infinum.png" width="264">

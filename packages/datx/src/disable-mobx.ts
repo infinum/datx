@@ -1,4 +1,4 @@
-import { mobx } from 'datx-utils';
+import { mobx } from '@datx/utils';
 
 mobx.useMobx(false);
 

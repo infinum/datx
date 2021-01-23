@@ -6,8 +6,8 @@ title: Network usage TODO
 ## `getOne` example
 
 ```typescript
-import { Collection, Model } from 'datx';
-import { config, jsonapi } from 'datx-jsonapi';
+import { Collection, Model } from '@datx/core';
+import { config, jsonapi } from '@datx/jsonapi';
 config.baseUrl = 'https://example.com/';
 
 class MyCollection extends jsonapi(Collection) {}
@@ -24,8 +24,8 @@ collection
 ## `getMany` example
 
 ```typescript
-import { Collection, Model } from 'datx';
-import { config, jsonapi } from 'datx-jsonapi';
+import { Collection, Model } from '@datx/core';
+import { config, jsonapi } from '@datx/jsonapi';
 config.baseUrl = 'https://example.com/';
 
 class MyCollection extends jsonapi(Collection) {}
@@ -45,8 +45,8 @@ collection
 The request method can be used if something (url, method, etc.) is not standard:
 
 ```typescript
-import { Collection, Model } from 'datx';
-import { config, jsonapi } from 'datx-jsonapi';
+import { Collection, Model } from '@datx/core';
+import { config, jsonapi } from '@datx/jsonapi';
 config.baseUrl = 'https://example.com/';
 
 class MyCollection extends jsonapi(Collection) {}
@@ -63,8 +63,8 @@ collection
 ## Pagination example
 
 ```typescript
-import { Collection, Model } from 'datx';
-import { config, jsonapi } from 'datx-jsonapi';
+import { Collection, Model } from '@datx/core';
+import { config, jsonapi } from '@datx/jsonapi';
 
 config.baseUrl = 'https://example.com/';
 

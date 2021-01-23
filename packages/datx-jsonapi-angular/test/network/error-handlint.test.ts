@@ -1,6 +1,6 @@
-import { config, CachingStrategy } from "datx-jsonapi";
-import { setupNetwork, confirmNetwork, setRequest } from "../utils/api";
-import { TestStore } from "../utils/setup";
+import { config, CachingStrategy } from '@datx/jsonapi';
+import { setupNetwork, confirmNetwork, setRequest } from '../utils/api';
+import { TestStore } from '../utils/setup';
 
 describe('error handling', () => {
   beforeEach(() => {

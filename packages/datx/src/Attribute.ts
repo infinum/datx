@@ -1,4 +1,4 @@
-import { getMeta, setMeta, deprecated } from 'datx-utils';
+import { getMeta, setMeta, deprecated } from '@datx/utils';
 
 import { PureModel } from './PureModel';
 import { IType } from './interfaces/IType';

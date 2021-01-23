@@ -17,7 +17,7 @@ import {
   isModel,
   PureCollection,
   PureModel,
-} from 'datx';
+} from '@datx/core';
 
 import { decorateCollection } from './decorateCollection';
 import { decorateModel } from './decorateModel';
@@ -46,7 +46,7 @@ export function myAwesome<T extends PureModel | PureCollection>(
 ### Model only (or collection only)
 
 ```typescript
-import { IModelConstructor, isModel, PureModel } from 'datx';
+import { IModelConstructor, isModel, PureModel } from '@datx/core';
 
 export function myAwesome<T extends PureModel>(Base: IModelConstructor<T>) {
   const BaseClass = Base as typeof PureModel;
@@ -80,7 +80,7 @@ export function decorateModel(BaseClass: typeof PureModel) {
 ## Applying a mixin
 
 ```typescript
-import { Model } from 'datx';
+import { Model } from '@datx/core';
 import myAwesomeMixin from 'my-awesome-mixin';
 
 class Person extends myAwesomeMixin(Model) {
@@ -138,9 +138,9 @@ Set a meta data of the model.
 
 **Note:** If you need to save any data about a model, please prefix your keys in order to avoid collisions with other mixins.
 
-## datx-utils
+## @datx/utils
 
-The `datx-utils` plugin contains some helper methods that could be useful for mixin development:
+The `@datx/utils` plugin contains some helper methods that could be useful for mixin development:
 
 ### mapItems
 

@@ -1,4 +1,4 @@
-import { PureCollection, IType, PureModel, View } from 'datx';
+import { PureCollection, IType, PureModel, View } from '@datx/core';
 
 import { ParamArrayType } from '../enums/ParamArrayType';
 import { IFetchOptions } from './IFetchOptions';

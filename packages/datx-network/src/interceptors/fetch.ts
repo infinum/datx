@@ -1,5 +1,5 @@
-import { PureModel } from 'datx';
-import { IResponseHeaders } from 'datx-utils';
+import { PureModel } from '@datx/core';
+import { IResponseHeaders } from '@datx/utils';
 
 import { IFetchOptions } from '../interfaces/IFetchOptions';
 import { INetworkHandler } from '../interfaces/INetworkHandler';

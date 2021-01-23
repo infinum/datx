@@ -1,6 +1,6 @@
 import { ParamArrayType } from '../enums/ParamArrayType';
-import { PureModel, IFieldDefinition, IReferenceDefinition } from 'datx';
-import { getMeta } from 'datx-utils';
+import { PureModel, IFieldDefinition, IReferenceDefinition } from '@datx/core';
+import { getMeta } from '@datx/utils';
 
 export const isBrowser: boolean = typeof window !== 'undefined';
 

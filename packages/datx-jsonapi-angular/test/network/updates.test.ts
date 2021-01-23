@@ -1,4 +1,4 @@
-import { modelToJsonApi, config, CachingStrategy } from 'datx-jsonapi';
+import { modelToJsonApi, config, CachingStrategy } from '@datx/jsonapi';
 import { switchMap } from 'rxjs/operators';
 
 import { setupNetwork, setRequest, confirmNetwork } from '../utils/api';

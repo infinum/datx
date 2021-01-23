@@ -17,7 +17,7 @@ import {
   revertModel,
   modelToDirtyJSON,
 } from '../src/helpers/model/utils';
-import { mobx } from 'datx-utils';
+import { mobx } from '@datx/utils';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });

@@ -1,4 +1,4 @@
-import { META_FIELD } from 'datx-utils';
+import { META_FIELD } from '@datx/utils';
 import testMobx from './mobx';
 
 import { Collection, Model, Attribute } from '../src';

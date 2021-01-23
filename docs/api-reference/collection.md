@@ -36,7 +36,7 @@ A current plain JS value of the collection. The value is always immutable - a ne
 The static `types` property should be an array of all custom model classes.
 
 ```typescript
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 
 import { Person, Pet } from './models';
 

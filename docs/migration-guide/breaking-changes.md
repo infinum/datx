@@ -3,6 +3,14 @@ id: breaking-changes
 title: Breaking changes since v1
 ---
 
+## Updated package names
+
+The packages are now scoped:
+
+- `datx-utils` => `@datx/utils`
+- `datx` => `@datx/core`
+- `datx-jsonapi` => `@datx/jsonapi`
+
 ## `id` and `type` fields
 
 In v1, `id` and `type` fields weren't consistent - in some cases `id` and `type` were used to define the model, but in some other cases they had to be defined separately. In v2, this will be consistent and it will need to be defined explicitly.

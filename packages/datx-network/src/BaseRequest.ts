@@ -1,4 +1,4 @@
-import { PureModel } from 'datx';
+import { PureModel } from '@datx/core';
 
 import { getDefaultConfig } from './defaults';
 import { IConfigType } from './interfaces/IConfigType';

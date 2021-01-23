@@ -1,4 +1,4 @@
-import { DEFAULT_TYPE, IRawModel } from 'datx-utils';
+import { DEFAULT_TYPE, IRawModel } from '@datx/utils';
 
 import { PureCollection } from './PureCollection';
 import { initModel } from './helpers/model/init';

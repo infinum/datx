@@ -1,6 +1,6 @@
 import { MockBaseRequest } from './mock/MockBaseRequest';
 import { setUrl, cache, CachingStrategy, Response, BaseRequest } from '../src';
-import { PureModel } from 'datx';
+import { PureModel } from '@datx/core';
 import {
   getCacheByCollection,
   saveCacheForCollection,

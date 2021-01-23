@@ -1,6 +1,6 @@
-import { View, PureCollection } from 'datx';
-import { Response as BaseResponse, IResponseObject } from 'datx-network';
-import { assignComputed } from 'datx-utils';
+import { View, PureCollection } from '@datx/core';
+import { Response as BaseResponse, IResponseObject } from '@datx/network';
+import { assignComputed } from '@datx/utils';
 
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IJsonApiObject, ILink } from './interfaces/JsonApi';

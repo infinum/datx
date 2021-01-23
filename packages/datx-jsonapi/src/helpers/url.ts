@@ -1,4 +1,4 @@
-import { getModelType, IType, PureCollection, PureModel } from 'datx';
+import { getModelType, IType, PureCollection, PureModel } from '@datx/core';
 
 import { URL_REGEX } from '../consts';
 import { IFilters } from '../interfaces/IFilters';
@@ -7,7 +7,7 @@ import { IJsonapiModel } from '../interfaces/IJsonapiModel';
 import { IRequestOptions } from '../interfaces/IRequestOptions';
 import { IRequest } from '../interfaces/JsonApi';
 import { config } from '../NetworkUtils';
-import { ParamArrayType } from 'datx-network';
+import { ParamArrayType } from '@datx/network';
 
 function parametrize(params: object, scope = ''): Array<{ key: string; value: string }> {
   const list: Array<{ key: string; value: string }> = [];

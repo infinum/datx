@@ -71,7 +71,7 @@ john.lastName = 'Smith';
 assignModel(john, 'age', 42);
 
 // Assign a new dynamic reference to a model
-import { ReferenceType } from 'datx';
+import { ReferenceType } from '@datx/core';
 initModelRef(john, 'spouse', { model: Person, type: ReferenceType.TO_ONE }, jane);
 
 // Update multiple values

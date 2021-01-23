@@ -3,10 +3,10 @@ id: jsonapi-getting-started
 title: Getting started with JSON API
 ---
 
-If you're using the JSON API specification for your API, you can install `datx-jsonapi` to take the full advantage of the `datx` library:
+If you're using the JSON API specification for your API, you can install `@datx/jsonapi` to take the full advantage of the `datx` library:
 
 ```bash
-npm install --save datx@2 datx-jsonapi@2 mobx
+npm install --save @datx/core @datx/jsonapi mobx
 ```
 
 ## Polyfilling

@@ -2,8 +2,8 @@ import { IConfigType } from './interfaces/IConfigType';
 import { ParamArrayType } from './enums/ParamArrayType';
 import { isBrowser } from './helpers/utils';
 import { fetchInterceptor } from './interceptors/fetch';
-import { mapItems } from 'datx-utils';
-import { PureModel, modelToJSON } from 'datx';
+import { mapItems } from '@datx/utils';
+import { PureModel, modelToJSON } from '@datx/core';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { Response } from './Response';
 

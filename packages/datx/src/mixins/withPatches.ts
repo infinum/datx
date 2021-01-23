@@ -1,4 +1,4 @@
-import { setMeta, getMeta, IRawModel } from 'datx-utils';
+import { setMeta, getMeta, IRawModel } from '@datx/utils';
 
 import { PatchType } from '../enums/PatchType';
 import { error } from '../helpers/format';

@@ -1,4 +1,4 @@
-import { IRawModel, META_FIELD, getMeta } from 'datx-utils';
+import { IRawModel, META_FIELD, getMeta } from '@datx/utils';
 
 import { IType } from '../interfaces/IType';
 import { PureCollection } from '../PureCollection';

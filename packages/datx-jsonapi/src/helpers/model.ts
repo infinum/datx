@@ -10,8 +10,8 @@ import {
   PureModel,
   ReferenceType,
   modelToDirtyJSON,
-} from 'datx';
-import { getMeta, IRawModel, mapItems, META_FIELD, setMeta } from 'datx-utils';
+} from '@datx/core';
+import { getMeta, IRawModel, mapItems, META_FIELD, setMeta } from '@datx/utils';
 
 import { clearCacheByType } from '../cache';
 import {

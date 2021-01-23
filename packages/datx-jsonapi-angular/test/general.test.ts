@@ -1,7 +1,7 @@
-import { Collection, getModelId, getModelType, Model } from 'datx';
-import { mobx } from 'datx-utils';
+import { Collection, getModelId, getModelType, Model } from '@datx/core';
+import { mobx } from '@datx/utils';
 
-import { getModelRefLinks, modelToJsonApi } from 'datx-jsonapi';
+import { getModelRefLinks, modelToJsonApi } from '@datx/jsonapi';
 import { Event, Image, Photo, TestStore, User } from './utils/setup';
 import { jsonapiAngular } from '../src';
 

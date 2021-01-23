@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as nodeUrl from 'url';
 import { v1 } from 'uuid';
 
-import { config, IHeaders, IRawResponse } from 'datx-jsonapi';
+import { config, IHeaders, IRawResponse } from '@datx/jsonapi';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

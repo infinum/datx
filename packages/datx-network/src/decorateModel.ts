@@ -1,5 +1,5 @@
-import { PureModel, PureCollection } from 'datx';
-import { META_FIELD, IRawModel, setMeta } from 'datx-utils';
+import { PureModel, PureCollection } from '@datx/core';
+import { META_FIELD, IRawModel, setMeta } from '@datx/utils';
 
 import { IRequestOptions } from './interfaces/IRequestOptions';
 import { INetworkModel } from './interfaces/INetworkModel';

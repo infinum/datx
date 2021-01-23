@@ -1,4 +1,4 @@
-import { isCollection, isModel, PureCollection, PureModel, View } from 'datx';
+import { isCollection, isModel, PureCollection, PureModel, View } from '@datx/core';
 
 import { decorateCollection } from './decorateCollection';
 import { decorateModel } from './decorateModel';

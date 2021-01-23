@@ -1,7 +1,7 @@
 import testMobx from './mobx';
 
 import { Bucket, Collection, Model, Attribute, PureCollection } from '../src';
-import { mobx } from 'datx-utils';
+import { mobx } from '@datx/utils';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });

@@ -1,4 +1,4 @@
-import { Collection } from 'datx';
+import { Collection } from '@datx/core';
 
 import { Event, Person, Pet } from './models';
 

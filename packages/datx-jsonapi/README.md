@@ -1,16 +1,16 @@
-# datx-jsonapi
+# @datx/jsonapi
 
 DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
 
-`datx-jsonapi` is a datx mixin that adds [JSON API](https://jsonapi.org/) support.
+`@datx/jsonapi` is a datx mixin that adds [JSON API](https://jsonapi.org/) support.
 
 ---
 
 ## Basic usage
 
 ```typescript
-import { Collection, Model, Attribute } from 'datx';
-import { jsonapi } from 'datx-jsonapi';
+import { Collection, Model, Attribute } from '@datx/core';
+import { jsonapi } from '@datx/jsonapi';
 import { computed } from 'mobx';
 
 class Person extends jsonapi(Model) {
@@ -46,10 +46,10 @@ const people = await store.fetchAll(Person); // Get all people from the server
 
 ## Getting started
 
-Note: `datx-jsonapi` has a peer dependency to `mobx@^4.2.0` or `mobx@^5.5.0`, so don't forget to install the latest MobX version:
+Note: `@datx/jsonapi` has a peer dependency to `mobx@^4.2.0` or `mobx@^5.5.0`, so don't forget to install the latest MobX version:
 
 ```bash
-npm install --save datx-jsonapi mobx
+npm install --save @datx/jsonapi mobx
 ```
 
 - [Basic configuration](https://datx.dev/docs/jsonapi/jsonapi-basic-configuration)
@@ -87,9 +87,9 @@ Having issues with the library? Check out the [troubleshooting](https://datx.dev
 ---
 
 [![Build Status](https://travis-ci.org/infinum/datx.svg?branch=master)](https://travis-ci.org/infinum/datx)
-[![npm version](https://badge.fury.io/js/datx-jsonapi.svg)](https://badge.fury.io/js/datx-jsonapi)
-[![Dependency Status](https://david-dm.org/infinum/datx.svg?path=packages/datx-jsonapi)](https://david-dm.org/infinum/datx?path=packages/datx-jsonapi)
-[![devDependency Status](https://david-dm.org/infinum/datx/dev-status.svg?path=packages/datx-jsonapi)](https://david-dm.org/infinum/datx?path=packages/datx-jsonapi#info=devDependencies)
+[![npm version](https://badge.fury.io/js/@datx/jsonapi.svg)](https://badge.fury.io/js/@datx/jsonapi)
+[![Dependency Status](https://david-dm.org/infinum/datx.svg?path=packages/@datx/jsonapi)](https://david-dm.org/infinum/datx?path=packages/@datx/jsonapi)
+[![devDependency Status](https://david-dm.org/infinum/datx/dev-status.svg?path=packages/@datx/jsonapi)](https://david-dm.org/infinum/datx?path=packages/@datx/jsonapi#info=devDependencies)
 
 ## License
 

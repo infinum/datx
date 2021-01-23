@@ -1,5 +1,5 @@
-import { View, commitModel } from 'datx';
-import { setMeta, mobx, IResponseHeaders } from 'datx-utils';
+import { View, commitModel } from '@datx/core';
+import { setMeta, mobx, IResponseHeaders } from '@datx/utils';
 
 import {
   MODEL_PERSISTED_FIELD,
@@ -16,7 +16,7 @@ import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
 import { ILink, IResponse } from './interfaces/JsonApi';
 import { Response as LibResponse } from './Response';
-import { CachingStrategy, ParamArrayType } from 'datx-network';
+import { CachingStrategy, ParamArrayType } from '@datx/network';
 import { saveCache, getCache } from './cache';
 
 export type FetchType = (

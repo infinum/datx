@@ -1,5 +1,5 @@
-import { PureCollection, IType, PureModel } from 'datx';
-import { IResponseHeaders } from 'datx-utils';
+import { PureCollection, IType, PureModel } from '@datx/core';
+import { IResponseHeaders } from '@datx/utils';
 
 import { IHeaders } from './IHeaders';
 

@@ -1,4 +1,4 @@
-import { META_FIELD } from 'datx-utils';
+import { META_FIELD } from '@datx/utils';
 
 import { PureModel } from './PureModel';
 import { withMeta } from './mixins/withMeta';

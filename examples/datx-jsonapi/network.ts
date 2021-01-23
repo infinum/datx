@@ -1,4 +1,4 @@
-import { config } from 'datx-jsonapi';
+import { config } from '@datx/jsonapi';
 import * as fetch from 'isomorphic-fetch'; // Or any other fetch lib
 
 // Don't need if fetch is polyfilled before the lib is loaded

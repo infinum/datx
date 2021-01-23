@@ -9,7 +9,7 @@ DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) 
 ## Basic usage
 
 ```typescript
-import { Collection, Model, prop } from 'datx';
+import { Collection, Model, prop } from '@datx/core';
 import { computed } from 'mobx';
 
 class Person extends Model {

@@ -7,6 +7,14 @@ title: Migration from v1
 
 In order to migrate from v1, those are the minimal changes. If you're using TypeScript, it should report errors in most of those cases.
 
+### Update package names and imports
+
+The packages are now scoped:
+
+- `datx-utils` => `@datx/utils`
+- `datx` => `@datx/core`
+- `datx-jsonapi` => `@datx/jsonapi`
+
 ### `CompatCollection` and `CompatModel`
 
 You'll first need to migrate to v1 Collection and model by following the [v1 migration guide](https://datx.dev/docs/migration-guide/mobx-collection-store).

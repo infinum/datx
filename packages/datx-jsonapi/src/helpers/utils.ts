@@ -1,5 +1,5 @@
-import { IFieldDefinition, IReferenceDefinition, PureModel } from 'datx';
-import { getMeta } from 'datx-utils';
+import { IFieldDefinition, IReferenceDefinition, PureModel } from '@datx/core';
+import { getMeta } from '@datx/utils';
 
 // eslint-disable-next-line no-var
 declare var window: object;

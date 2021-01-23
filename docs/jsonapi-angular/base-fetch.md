@@ -14,7 +14,7 @@ Here is an example of the implementation, but you might have some other needs:
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { config, IResponseObject } from 'datx-jsonapi';
+import { config, IResponseObject } from '@datx/jsonapi';
 import { IResponseHeaders } from 'datx-jsonapi/dist/interfaces/IResponseHeaders';
 import { Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
@@ -79,7 +79,7 @@ The last step is to initialize all the settings:
 
 import { APP_INITIALIZER } from '@angular/core';
 import { CustomFetchService } from './services/custom-fetch.service';
-import { CachingStrategy, config } from 'datx-jsonapi';
+import { CachingStrategy, config } from '@datx/jsonapi';
 
 function initDatx(customFetch: CustomFetchService): () => Promise<void> {
   return async () => {

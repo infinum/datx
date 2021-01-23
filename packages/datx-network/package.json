@@ -1,5 +1,5 @@
 {
-  "name": "datx-network",
+  "name": "@datx/network",
   "version": "2.0.0-beta.14",
   "description": "DatX network layer",
   "main": "dist/index.cjs.js",
@@ -64,7 +64,7 @@
     ]
   },
   "dependencies": {
-    "datx": "^2.0.0-beta.12",
-    "datx-utils": "^2.0.0-beta.13"
+    "@datx/core": "^2.0.0-beta.12",
+    "@datx/utils": "^2.0.0-beta.13"
   }
 }

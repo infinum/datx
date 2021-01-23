@@ -7,8 +7,8 @@ import {
   updateModel,
   updateModelId,
   View,
-} from 'datx';
-import { assignComputed, Headers, IResponseHeaders } from 'datx-utils';
+} from '@datx/core';
+import { assignComputed, Headers, IResponseHeaders } from '@datx/utils';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';

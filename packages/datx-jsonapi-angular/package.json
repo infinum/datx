@@ -1,5 +1,5 @@
 {
-  "name": "datx-jsonapi-angular",
+  "name": "@datx/jsonapi-angular",
   "version": "2.0.0-beta.12",
   "description": "DatX mixin for Angular JSON API support",
   "main": "dist/index.cjs.js",
@@ -74,7 +74,8 @@
     ]
   },
   "dependencies": {
-    "datx": "^2.0.0-beta.12",
-    "datx-jsonapi": "^2.0.0-beta.13"
+    "@datx/core": "^2.0.0-beta.12",
+    "@datx/jsonapi": "^2.0.0-beta.13",
+    "@datx/utils": "^2.0.0-beta.13"
   }
 }

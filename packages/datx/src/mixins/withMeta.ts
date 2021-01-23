@@ -1,4 +1,4 @@
-import { getMeta, IRawModel, mobx } from 'datx-utils';
+import { getMeta, IRawModel, mobx } from '@datx/utils';
 
 import { error } from '../helpers/format';
 import { isModel } from '../helpers/mixin';

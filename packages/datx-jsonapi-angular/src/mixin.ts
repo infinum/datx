@@ -7,8 +7,8 @@ import {
   IViewConstructor,
   PureCollection,
   PureModel,
-} from 'datx';
-import { jsonapi } from 'datx-jsonapi';
+} from '@datx/core';
+import { jsonapi } from '@datx/jsonapi';
 
 import { decorateCollection } from './decorateCollection';
 import { decorateModel } from './decorateModel';

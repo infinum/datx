@@ -11,7 +11,7 @@ import {
 } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId } from '../src/helpers/model/utils';
-import { mobx } from 'datx-utils';
+import { mobx } from '@datx/utils';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });

@@ -1,4 +1,4 @@
-import { PureCollection, PureModel, IType, getModelType, IRawModel, IRawCollection } from 'datx';
+import { PureCollection, PureModel, IType, getModelType, IRawModel, IRawCollection } from '@datx/core';
 
 import { IRequestOptions } from './interfaces/IRequestOptions';
 import { INetworkCollection } from './interfaces/INetworkCollection';

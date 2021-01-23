@@ -1,4 +1,4 @@
-import { getMeta, setMeta, mobx } from 'datx-utils';
+import { getMeta, setMeta, mobx } from '@datx/utils';
 import { PatchType } from '../enums/PatchType';
 import { IPatch } from '../interfaces/IPatch';
 import { PureModel } from '../PureModel';

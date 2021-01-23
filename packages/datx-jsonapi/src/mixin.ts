@@ -7,7 +7,7 @@ import {
   IViewConstructor,
   PureCollection,
   PureModel,
-} from 'datx';
+} from '@datx/core';
 
 import { decorateCollection } from './decorateCollection';
 import { decorateModel } from './decorateModel';

@@ -20,7 +20,7 @@ export {
   upsertInterceptor,
 } from './operators';
 
-export { IResponseHeaders } from 'datx-utils';
+export { IResponseHeaders } from '@datx/utils';
 
 export { clearAllCache, clearCacheByType } from './interceptors/cache';
 

@@ -1,5 +1,5 @@
 import { BaseRequest, fetchReference } from '../../src';
-import { PureModel } from 'datx';
+import { PureModel } from '@datx/core';
 
 export class MockBaseRequest<T extends PureModel = PureModel> extends BaseRequest<T> {
   constructor(baseUrl: string) {

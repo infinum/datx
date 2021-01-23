@@ -1,4 +1,4 @@
-import { IArraySplice, IRawModel, mapItems, mobx, removeFromArray, replaceInArray } from 'datx-utils';
+import { IArraySplice, IRawModel, mapItems, mobx, removeFromArray, replaceInArray } from '@datx/utils';
 
 import { ToMany } from './buckets/ToMany';
 import { error } from './helpers/format';

@@ -6,7 +6,7 @@ import {
   Model,
   prop,
   ReferenceType,
-} from 'datx';
+} from '@datx/core';
 import * as fetch from 'isomorphic-fetch';
 
 import { fetchModelLink, jsonapi, modelToJsonApi, saveRelationship, config } from '../../src';

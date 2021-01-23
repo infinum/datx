@@ -1,5 +1,5 @@
-import { IRequestOptions, IResponse } from 'datx-jsonapi';
-import { View } from 'datx';
+import { IRequestOptions, IResponse } from '@datx/jsonapi';
+import { View } from '@datx/core';
 import { Observable } from 'rxjs';
 
 import { IJsonapiModel } from './IJsonapiModel';

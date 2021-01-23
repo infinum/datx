@@ -3,7 +3,7 @@ import testMobx from './mobx';
 import { Collection, Model, View, Attribute } from '../src';
 import { updateModelId } from '../src/helpers/model/fields';
 import { ViewAttribute } from '../src/Attribute';
-import { mobx } from 'datx-utils';
+import { mobx } from '@datx/utils';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });

@@ -1,6 +1,6 @@
 import { ToMany, ToOne, ToOneOrMany } from './buckets';
 
-export { IRawModel } from 'datx-utils';
+export { IRawModel } from '@datx/utils';
 
 export const Bucket = { ToMany, ToOne, ToOneOrMany };
 

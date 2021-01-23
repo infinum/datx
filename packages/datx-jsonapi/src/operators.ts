@@ -9,10 +9,10 @@ import {
   paramArrayType,
   ParamArrayType,
   encodeQueryString,
-} from 'datx-network';
+} from '@datx/network';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
-import { mapItems } from 'datx-utils';
-import { PureModel } from 'datx';
+import { mapItems } from '@datx/utils';
+import { PureModel } from '@datx/core';
 import { modelToJsonApi } from './helpers/model';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { NetworkResponse } from './NetworkResponse';

@@ -1,4 +1,4 @@
-import { getMeta, setMeta, warn, mapItems, isArrayLike, mobx, IArraySplice, IObservableArray } from 'datx-utils';
+import { getMeta, setMeta, warn, mapItems, isArrayLike, mobx, IArraySplice, IObservableArray } from '@datx/utils';
 
 import { PureModel } from '../../PureModel';
 import { IBucket } from '../../interfaces/IBucket';
