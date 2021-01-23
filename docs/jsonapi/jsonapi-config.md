@@ -1,6 +1,6 @@
 ---
 id: jsonapi-config
-title: Config TODO
+title: Config
 ---
 
 The library is exposing a config for some networking related options:
@@ -122,4 +122,4 @@ cache: CachingStrategy;
 maxCacheAge: number; // seconds
 ```
 
-Options for caching of requests. This can be overridden on a collection or request level.
+Options for caching of requests. This can be overridden on a collection or request level. The default caching strategy is `NetworkOnly` (no caching).

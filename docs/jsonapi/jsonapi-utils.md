@@ -1,6 +1,6 @@
 ---
 id: jsonapi-utils
-title: Utils TODO
+title: Utils
 ---
 
 ## Model utils

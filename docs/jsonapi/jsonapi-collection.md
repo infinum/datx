@@ -1,17 +1,9 @@
 ---
 id: jsonapi-collection
-title: Collection TODO
+title: Collection
 ---
 
 The JSON API Collection enhances the `datx` collection with the following properties and methods:
-
-## cache
-
-```typescript
-static cache: boolean;
-```
-
-Should the `GET` network calls be cached (default is `true` for browser and `false` for server).
 
 ## defaultModel
 

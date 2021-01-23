@@ -1,6 +1,6 @@
 ---
 id: jsonapi-typescript-interfaces
-title: Typescript interfaces TODO
+title: Typescript interfaces
 ---
 
 ## IJsonapiCollection

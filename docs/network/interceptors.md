@@ -1,6 +1,6 @@
 ---
 id: interceptors
-title: Interceptors TODO
+title: Interceptors
 ---
 
 The library is using a concept of interceptors to handle use cases like authentication or other flows. This is conceptually similar to [Angular interceptors](https://angular.io/api/common/http/HttpInterceptor) or [Express middleware](https://expressjs.com/en/guide/using-middleware.html).
@@ -51,7 +51,27 @@ The cache interceptor is responsible for caching of the network request. This im
 
 Options:
 
-- The default caching strategy in the browser is `CachingStrategy.CacheFirst` and on the server it's `CachingStrategy.NetworkOnly`.
+- The default caching strategy is `CachingStrategy.NetworkOnly`.
 - Besides the caching strategy, you can also set the `maxAge` value, which is a number of seconds a response will be cached for. The default maxAge is `Infinity`.
 
 You can find more about the caching and configuration details on the [caching page](./caching).
+
+## Example of usage
+
+In this example, we will handle auth headers:
+
+```ts
+import { getAuthHeaders, setAuthHeaders } from './auth';
+
+async function casingInterceptor(request: IFetchOptions, next?: INetworkHandler) {
+  request.options.networkConfig.headers.Authentication = getAuthHeaders();
+
+  const response = await next(request);
+
+  if (response.headers.get('Authentication')) {
+    setAuthHeaders(response.headers.get('Authentication'));
+  }
+
+  return response;
+}
+```

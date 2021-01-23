@@ -1,6 +1,6 @@
 ---
 id: jsonapi-response
-title: Response TODO
+title: Response
 ---
 
 ## constructor

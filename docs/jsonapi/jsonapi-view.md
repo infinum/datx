@@ -1,6 +1,6 @@
 ---
 id: jsonapi-view
-title: View TODO
+title: View
 ---
 
 The JSON API View enhances the `datx` view with the following properties and methods:

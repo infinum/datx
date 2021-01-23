@@ -1,6 +1,6 @@
 ---
 id: jsonapi-model
-title: Model TODO
+title: Model
 ---
 
 The JSON API model enhances the `datx` model with the following properties and methods:

@@ -1,6 +1,6 @@
 ---
 id: jsonapi-spec-compliance
-title: Spec compliance TODO
+title: Spec compliance
 ---
 
 Based on the official v1.0 [specification](http://jsonapi.org/format/), all the features should be implemented. If something is missing or not behaving correctly, feel free to [open an issue](https://github.com/infinum/datx/issues/new).
@@ -78,9 +78,7 @@ The `meta` property will be available directly on the [`Response`](jsonapi-respo
 
 - The `links` property is supported, and exposes all links directly on the [`Response`](jsonapi-response) object
 - They are also available in raw form as a `links` property on the [`Response`](jsonapi-response) object
-- `response[linkName]` is a Promise that will resolve to a [`Response`](jsonapi-response) with either the `data` or `error` property set
-  - The link is lazily evaluated, so the request won't be made until you access the property
-  - The link can be a string with an URL
+- `response[linkName]` is a function that returns Promise that will resolve to a [`Response`](jsonapi-response) with either the `data` or `error` property set. The link can be a string with an URL.
 
 ### JSON API Object
 

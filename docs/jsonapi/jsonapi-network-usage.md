@@ -1,6 +1,6 @@
 ---
 id: jsonapi-network-usage
-title: Network usage TODO
+title: Network usage
 ---
 
 ## `getOne` example

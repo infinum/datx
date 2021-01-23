@@ -1,6 +1,6 @@
 ---
 id: typescript-interfaces
-title: Typescript interfaces TODO
+title: Typescript interfaces
 ---
 
 ## IRawModel
