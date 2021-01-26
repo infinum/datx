@@ -67,6 +67,38 @@ describe('Model', () => {
       }).toThrowError('You should save this value as a reference.');
     });
 
+    it('should work with array properties', () => {
+      class Foo extends Model {
+        @Attribute()
+        public list!: Array<number>;
+      }
+
+      const foo1 = new Foo({ list: [1, 2, 3] });
+      const foo2 = new Foo();
+      foo2.list = [3, 2, 1];
+
+      expect(foo1.list.map).toBeTruthy();
+      expect(foo2.list.map).toBeTruthy();
+    });
+
+    it('should work with array assignment', () => {
+      class Foo extends Model {
+        @Attribute()
+        public list!: Array<number>;
+      }
+
+      class Bar extends Model {}
+
+      const foo = new Foo();
+      const bar = new Bar();
+
+      foo.list = [3, 2, 1];
+      bar.assign('list', [1, 2, 3]);
+
+      expect(foo.list.map).toBeTruthy();
+      expect(bar['list'].map).toBeTruthy();
+    });
+
     it('should work with property parsers/serializers', () => {
       class Foo extends Model {
         @Attribute({
@@ -1014,36 +1046,36 @@ describe('Model', () => {
           foo3.backFoos.push(foo4);
           expect(foo4.foos).toHaveLength(1);
           expect(foo4.foos).toContain(foo3);
-  
+
           foo3.backFoos.shift();
           expect(foo1.foos).toHaveLength(1);
           expect(foo1.foos).toContain(foo2);
-  
+
           foo3.fooRef = [foo4];
           expect(foo4.fooBackRef).toHaveLength(1);
           expect(foo4.fooBackRef).toContain(foo3);
-  
+
           foo3.fooRef.push(foo1);
           foo3.fooRef.shift();
           expect(foo3.fooRef).toHaveLength(1);
           expect(foo3.fooRef).toContain(foo1);
-  
+
           foo4.fooBackRef.push(foo1);
           expect(foo1.fooRef).toBe(foo4);
           foo4.fooBackRef.pop();
           expect(foo1.fooRef).toBeNull();
-  
+
           foo4.fooRef = foo1;
           foo3.fooRef = foo1;
           foo2.fooRef = foo1;
           expect(foo1.fooBackRef).toHaveLength(3);
-  
+
           const toRemove = foo1.fooBackRef[1];
-  
+
           // @ts-expect-error
           foo1.fooBackRef[1] = undefined;
           expect(foo1.fooBackRef).not.toContain(toRemove);
-  
+
           foo1.fooBackRef[1] = foo1;
           expect(foo1.fooRef).toBe(foo1);
         }
