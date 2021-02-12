@@ -8,7 +8,7 @@ import { IResponseObject } from './IResponseObject';
 export interface IResponseInternal {
   headers?: IResponseHeaders;
   requestHeaders?: IHeaders;
-  error?: Array<string | object> | Error;
+  error?: Array<string | Record<string, unknown>> | Error;
   status?: number;
   options?: IRequestOptions;
   response: IResponseObject;

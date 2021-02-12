@@ -6,8 +6,8 @@ import { HttpMethod } from '../enums/HttpMethod';
 export interface IFetchOptions {
   url: string;
   options?: IRequestOptions;
-  params?: object | null;
-  data?: string | object | FormData;
+  params?: Record<string, unknown> | null;
+  data?: string | Record<string, unknown> | FormData;
   method: HttpMethod;
   collection?: PureCollection;
   skipCache?: boolean;

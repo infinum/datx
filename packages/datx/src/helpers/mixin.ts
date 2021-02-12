@@ -13,7 +13,7 @@ import { View } from '../View';
  * @param {Function} type Type to check
  * @returns {boolean} Class is of the given type
  */
-function isOfType<T>(obj: any, type: T): obj is T {
+function isOfType<T>(obj: unknown, type: T): obj is T {
   let model = obj;
 
   while (model) {
@@ -30,12 +30,12 @@ function isOfType<T>(obj: any, type: T): obj is T {
  * Check if a class is a model
  *
  * @export
- * @param {any} obj Class to check
+ * @param {unknown} obj Class to check
  * @returns {boolean} Class is a model
  */
-export function isModel(obj: typeof PureModel | IModelConstructor<any>): true;
-export function isModel(obj: any): false;
-export function isModel(obj: any): boolean {
+export function isModel(obj: typeof PureModel | IModelConstructor<unknown>): true;
+export function isModel(obj: unknown): false;
+export function isModel(obj: unknown): boolean {
   return isOfType(obj, PureModel);
 }
 
@@ -43,12 +43,12 @@ export function isModel(obj: any): boolean {
  * Check if a class is a collection
  *
  * @export
- * @param {any} obj Class to check
+ * @param {unknown} obj Class to check
  * @returns {boolean} Class is a collection
  */
-export function isCollection(obj: typeof PureCollection | ICollectionConstructor<any>): true;
-export function isCollection(obj: any): false;
-export function isCollection(obj: any): boolean {
+export function isCollection(obj: typeof PureCollection | ICollectionConstructor<unknown>): true;
+export function isCollection(obj: unknown): false;
+export function isCollection(obj: unknown): boolean {
   return isOfType(obj, PureCollection);
 }
 
@@ -56,11 +56,48 @@ export function isCollection(obj: any): boolean {
  * Check if a class is a collection
  *
  * @export
- * @param {any} obj Class to check
+ * @param {unknown} obj Class to check
  * @returns {boolean} Class is a collection
  */
-export function isView(obj: typeof View | IViewConstructor<any, any>): true;
-export function isView(obj: any): false;
-export function isView(obj: any): boolean {
+export function isView(obj: typeof View | IViewConstructor<unknown, unknown>): true;
+export function isView(obj: unknown): false;
+export function isView(obj: unknown): boolean {
   return isOfType(obj, View);
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function mixinBuilder<TModel extends PureModel, TExtendedModel, TCollection extends PureCollection, TExtendedCollection, TView extends View, TExtendedView>(
+  modelBuilder?: (BaseClass: IModelConstructor<TModel>) => IModelConstructor<TModel, TExtendedModel>,
+  collectionBuilder?: (BaseClass: ICollectionConstructor<TCollection>) => ICollectionConstructor<TCollection, TExtendedCollection>,
+  viewBuilder?: (BaseClass: IViewConstructor<TModel, TView>) => IViewConstructor<TModel, TView, TExtendedView>,
+) {
+
+  function decorate(BaseClass: IModelConstructor<TModel>): IModelConstructor<TModel, TExtendedModel>;
+  function decorate(BaseClass: ICollectionConstructor<TCollection>): ICollectionConstructor<TCollection, TExtendedCollection>;
+  function decorate(BaseClass: IViewConstructor<TModel, TView>): IViewConstructor<TModel, TView, TExtendedView>;
+  function decorate(BaseClass) {
+    if (isModel(BaseClass)) {
+      if (modelBuilder) {
+        return modelBuilder(BaseClass);
+      } else {
+        throw new Error('The instance can\'t be a model');
+      }
+    } else if (isCollection(BaseClass)) {
+      if (collectionBuilder) {
+        return collectionBuilder(BaseClass);
+      } else {
+        throw new Error('The instance can\'t be a collection');
+      }
+    } else if (isView(BaseClass)) {
+      if (viewBuilder) {
+        return viewBuilder(BaseClass);
+      } else {
+        throw new Error('The instance can\'t be a view');
+      }
+    }
+
+    throw new Error('The instance needs to be a model, collection or a view');
+  }
+
+  return decorate;
 }

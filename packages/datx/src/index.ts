@@ -39,7 +39,7 @@ export {
   modelToDirtyJSON,
 } from './helpers/model/utils';
 
-export { isCollection, isModel, isView } from './helpers/mixin';
+export { isCollection, isModel, isView, mixinBuilder } from './helpers/mixin';
 
 export { IModelRef } from './interfaces/IModelRef';
 export { ICollectionConstructor } from './interfaces/ICollectionConstructor';

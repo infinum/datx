@@ -4,7 +4,7 @@ import { IResponseHeaders } from '@datx/utils';
 import { IHeaders } from './IHeaders';
 
 export interface IResponseObject {
-  data?: object;
+  data?: Record<string, unknown>;
   error?: Error;
   headers?: IResponseHeaders;
   requestHeaders?: IHeaders;

@@ -49,6 +49,7 @@ export function getCache(url: string, maxAge: number): ICache | undefined {
     const data = cache.response;
 
     return {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore Array headers that are supported but shouldn't be exposed in types
       response: new Response(data.response, cache.collection, data.options),
       time: cache.time,

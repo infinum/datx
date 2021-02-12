@@ -14,7 +14,7 @@ export class PureModel {
 
   public static enableAutoId = true;
 
-  public static preprocess(data: object): object {
+  public static preprocess(data: Record<string, unknown>): Record<string, unknown> {
     return data;
   }
 

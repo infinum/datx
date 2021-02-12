@@ -66,7 +66,7 @@ function iterateEntries<T extends IJsonapiModel>(
 
 export function decorateCollection(
   BaseClass: typeof PureCollection,
-): ICollectionConstructor<PureCollection & IJsonapiCollection> {
+): ICollectionConstructor<PureCollection, IJsonapiCollection> {
   class JsonapiCollection extends BaseClass {
     public static types =
       BaseClass.types && BaseClass.types.length
@@ -328,5 +328,5 @@ export function decorateCollection(
     }
   }
 
-  return JsonapiCollection as ICollectionConstructor<PureCollection & IJsonapiCollection>;
+  return JsonapiCollection as ICollectionConstructor<PureCollection, IJsonapiCollection>;
 }

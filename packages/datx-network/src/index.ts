@@ -10,11 +10,8 @@ export {
   query,
   header,
   params,
-  fetchReference,
   encodeQueryString,
   paramArrayType,
-  serializer,
-  parser,
   collection,
   requestOptions,
   upsertInterceptor,
@@ -35,9 +32,4 @@ export { INetworkHandler } from './interfaces/INetworkHandler';
 export { IPipeOperator } from './interfaces/IPipeOperator';
 export { IResponseObject } from './interfaces/IResponseObject';
 
-export { withNetwork } from './withNetwork';
-
-export { INetworkCollection } from './interfaces/INetworkCollection';
-export { INetworkCollectionConstructor } from './interfaces/INetworkCollectionConstructor';
-export { INetworkModel } from './interfaces/INetworkModel';
-export { INetworkModelConstructor } from './interfaces/INetworkModelConstructor';
+export { appendQueryParams } from './helpers/utils';

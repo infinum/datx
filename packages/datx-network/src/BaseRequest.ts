@@ -7,25 +7,29 @@ import { IInterceptor } from './interfaces/IInterceptor';
 import { IPipeOperator } from './interfaces/IPipeOperator';
 import { Response } from './Response';
 import { IFetchOptions } from './interfaces/IFetchOptions';
-import { deepCopy, interpolateParams, appendQueryParams, isBrowser } from './helpers/utils';
+import { deepCopy, interpolateParams, appendQueryParams } from './helpers/utils';
 import { HttpMethod } from './enums/HttpMethod';
-import { cacheInterceptor } from './interceptors/cache';
 import { BodyType } from './enums/BodyType';
-import { CachingStrategy } from './enums/CachingStrategy';
-import { fetchInterceptor } from './interceptors/fetch';
 import { body as bodyOperator } from './operators';
 
 interface IRequestOptions {
   method: HttpMethod;
   url?: string;
   params: Record<string, string>;
-  query: Record<string, string | Array<string> | object | undefined>;
+  query: Record<string, string | Array<string> | Record<string, unknown> | undefined>;
   headers: IHeaders;
-  body?: any;
+  body?: unknown;
   bodyType: BodyType;
 }
 
-export class BaseRequest<TModel extends PureModel = PureModel, TParams extends object = {}> {
+interface IInterceptorObject<TInterceptor> {
+  name: string;
+  fn: TInterceptor;
+}
+
+type IInterceptorsList<TModel> = Array<IInterceptorObject<IInterceptor<TModel>>>;
+
+export class BaseRequest<TModel extends PureModel = PureModel, TParams extends Record<string, unknown> = Record<string, unknown>> {
   private _config: IConfigType = getDefaultConfig();
   private _options: IRequestOptions = {
     method: HttpMethod.Get,
@@ -35,18 +39,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     bodyType: BodyType.Json,
   };
 
-  public interceptors: Array<{ name: string; fn: IInterceptor<TModel> }> = [
-    {
-      fn: fetchInterceptor(this._config.fetchReference, this._config.serialize, this._config.parse),
-      name: 'fetch',
-    },
-    {
-      fn: cacheInterceptor<TModel>(
-        isBrowser ? CachingStrategy.CacheFirst : CachingStrategy.NetworkOnly,
-      ),
-      name: 'cache',
-    },
-  ];
+  public interceptors: IInterceptorsList<TModel> = [];
 
   constructor(baseUrl: string) {
     this._config.baseUrl = baseUrl;
@@ -54,7 +47,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
 
   public pipe<
     TNewModel extends PureModel | Array<PureModel> = TModel,
-    TNewParams extends object = TParams
+    TNewParams extends Record<string, unknown> = TParams
   >(...operators: Array<IPipeOperator | undefined>): BaseRequest<TNewModel, TNewParams> {
     const destinationPipeline = this.clone<TNewModel, TNewParams>();
     operators
@@ -64,7 +57,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     return destinationPipeline as BaseRequest<TNewModel, TNewParams>;
   }
 
-  private processBody(): object | string | FormData | undefined {
+  private processBody(): Record<string, unknown> | string | FormData | undefined {
     if (!this._options.body) {
       return;
     }
@@ -72,7 +65,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     if (this._options.bodyType === BodyType.Json) {
       this._options.headers['content-type'] =
         this._options.headers['content-type'] || 'application/json';
-      return this._options.body;
+      return this._options.body as Record<string, unknown>;
     } else if (this._options.bodyType === BodyType.Urlencoded) {
       this._options.headers['content-type'] =
         this._options.headers['content-type'] || 'application/x-www-form-urlencoded';
@@ -80,7 +73,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
         ? this._options.body
         : appendQueryParams(
             '',
-            this._options.body,
+            this._options.body as Record<string, string>,
             this._config.paramArrayType,
             this._config.encodeQueryString,
           ).slice(1);
@@ -89,16 +82,16 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
         this._options.headers['content-type'] || 'multipart/form-data';
       return this._options.body instanceof FormData
         ? this._options.body
-        : new FormData(this._options.body);
+        : new FormData(this._options.body as any);
     } else {
-      return this._options.body;
+      return this._options.body as string;
     }
   }
 
   public fetch(
     params?: TParams | null,
-    queryParams?: Record<string, string | Array<string> | object> | null,
-    body?: any,
+    queryParams?: Record<string, string | Array<string> | Record<string, unknown>> | null,
+    body?: unknown,
     bodyType?: BodyType,
   ): Promise<Response<TModel>> {
     const request = body === undefined ? this : this.pipe(bodyOperator(body, bodyType));
@@ -141,7 +134,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     return interceptorChain(requestRef);
   }
 
-  public clone<TNewModel extends PureModel = TModel, TNewParams extends object = TParams>(
+  public clone<TNewModel extends PureModel = TModel, TNewParams extends Record<string, unknown> = TParams>(
     BaseRequestConstructor: typeof BaseRequest = this.constructor as typeof BaseRequest,
   ): BaseRequest<TNewModel, TNewParams> {
     // Can't use `new BaseRequest`, because we would lose the overridden methods

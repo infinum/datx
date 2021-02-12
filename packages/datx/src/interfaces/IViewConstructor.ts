@@ -5,10 +5,10 @@ import { IIdentifier } from './IIdentifier';
 import { IModelConstructor } from './IModelConstructor';
 import { IType } from './IType';
 
-export type IViewConstructor<T, V = View> = new (
+export type IViewConstructor<T, V = View, TExtendedView = unknown> = new (
   modelType: IModelConstructor<T> | IType,
   collection: PureCollection,
-  sortMethod?: string | ((item: T) => any),
+  sortMethod?: string | ((item: T) => unknown),
   models?: Array<IIdentifier | PureModel>,
   unique?: boolean,
-) => View<T> & V;
+) => View<T> & V & TExtendedView;

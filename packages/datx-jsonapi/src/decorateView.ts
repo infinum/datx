@@ -8,18 +8,19 @@ import { IResponse } from './interfaces/JsonApi';
 import { Response } from './Response';
 
 export function decorateView<U>(
-  BaseClass: typeof View,
-): IViewConstructor<IJsonapiModel, U & IJsonapiView> {
+  BaseClass: IViewConstructor<View>,
+): IViewConstructor<IJsonapiModel, U, IJsonapiView> {
   class JsonapiView<M extends IJsonapiModel = IJsonapiModel> extends BaseClass {
     protected __collection: IJsonapiCollection & PureCollection;
 
     constructor(
       modelType: IModelConstructor<M> | IType,
       collection: IJsonapiCollection & PureCollection,
-      sortMethod?: string | ((item: M) => any),
+      sortMethod?: string | ((item: M) => unknown),
       models: Array<string | PureModel> = [],
       unique = false,
     ) {
+      // @ts-ignore
       super(modelType, collection, sortMethod, models, unique);
       this.__collection = collection;
     }
@@ -70,5 +71,5 @@ export function decorateView<U>(
   }
 
   // @ts-ignore
-  return JsonapiView as IViewConstructor<IJsonapiModel, U & IJsonapiView>;
+  return JsonapiView as IViewConstructor<IJsonapiModel, U, IJsonapiView>;
 }

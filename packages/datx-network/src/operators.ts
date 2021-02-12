@@ -6,8 +6,6 @@ import { BodyType } from './enums/BodyType';
 import { ParamArrayType } from './enums/ParamArrayType';
 import { PureCollection, IType, PureModel } from '@datx/core';
 import { cacheInterceptor } from './interceptors/cache';
-import { IResponseObject } from './interfaces/IResponseObject';
-import { IFetchOptions } from './interfaces/IFetchOptions';
 import { IRequestOptions } from './interfaces/IRequestOptions';
 
 export function setUrl(url: string, type: IType | typeof PureModel = PureModel) {
@@ -77,14 +75,14 @@ export function body(body: unknown, bodyType?: BodyType) {
 
 export function query(
   name: string,
-  value: string | Array<string> | object | undefined,
+  value: string | Array<string> | Record<string, unknown> | undefined,
 ): (pipeline: BaseRequest) => void;
 export function query(
-  params: Record<string, string | Array<string> | object | undefined>,
+  params: Record<string, string | Array<string> | Record<string, unknown> | undefined>,
 ): (pipeline: BaseRequest) => void;
 export function query(
-  name: string | Record<string, string | Array<string> | object | undefined>,
-  value?: string | Array<string> | object | undefined,
+  name: string | Record<string, string | Array<string> | Record<string, unknown> | undefined>,
+  value?: string | Array<string> | Record<string, unknown> | undefined,
 ) {
   return (pipeline: BaseRequest): void => {
     if (typeof name === 'string') {
@@ -128,54 +126,6 @@ export function encodeQueryString(encodeQueryString: boolean) {
 export function paramArrayType(paramArrayType: ParamArrayType) {
   return (pipeline: BaseRequest): void => {
     pipeline['_config'].paramArrayType = paramArrayType;
-  };
-}
-
-export function fetchReference(fetchReference: typeof fetch) {
-  return (pipeline: BaseRequest): void => {
-    const config = pipeline['_config'];
-    config.fetchReference = fetchReference;
-    upsertInterceptor(
-      config.fetchInterceptor(
-        config.fetchReference,
-        config.serialize,
-        config.parse,
-        config.Response,
-      ),
-      'fetch',
-    )(pipeline);
-  };
-}
-
-export function serializer(serialize: (request: IFetchOptions) => IFetchOptions) {
-  return (pipeline: BaseRequest): void => {
-    const config = pipeline['_config'];
-    config.serialize = serialize;
-    upsertInterceptor(
-      config.fetchInterceptor(
-        config.fetchReference,
-        config.serialize,
-        config.parse,
-        config.Response,
-      ),
-      'fetch',
-    )(pipeline);
-  };
-}
-
-export function parser(parse: (data: object, response: IResponseObject) => object) {
-  return (pipeline: BaseRequest): void => {
-    const config = pipeline['_config'];
-    config.parse = parse;
-    upsertInterceptor(
-      config.fetchInterceptor(
-        config.fetchReference,
-        config.serialize,
-        config.parse,
-        config.Response,
-      ),
-      'fetch',
-    )(pipeline);
   };
 }
 

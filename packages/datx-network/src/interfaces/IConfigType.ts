@@ -2,8 +2,8 @@ import { PureCollection, IType, PureModel, View } from '@datx/core';
 
 import { ParamArrayType } from '../enums/ParamArrayType';
 import { IFetchOptions } from './IFetchOptions';
+import { IFinalInterceptor } from './IFinalInterceptor';
 import { IResponseObject } from './IResponseObject';
-import { fetchInterceptor } from '../interceptors/fetch';
 import { Response } from '../Response';
 
 export interface IConfigType {
@@ -15,7 +15,7 @@ export interface IConfigType {
   views?: Array<View>;
   fetchReference?: typeof fetch;
   serialize?: (options: IFetchOptions) => IFetchOptions;
-  parse?: (data: object, options: IResponseObject) => object;
-  fetchInterceptor: typeof fetchInterceptor;
+  parse?: (data: Record<string, unknown>, options: IResponseObject) => Record<string, unknown>;
+  fetchInterceptor?: IFinalInterceptor;
   Response: typeof Response;
 }

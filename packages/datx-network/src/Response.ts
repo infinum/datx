@@ -62,10 +62,10 @@ function initData<T extends PureModel | Array<PureModel>>(
     return { value: data };
   }
 
-  return new Bucket.ToOneOrMany<T>(data, collection as any, true);
+  return new Bucket.ToOneOrMany<T>(data, collection as unknown as PureCollection, true);
 }
 
-export class Response<T extends PureModel | Array<PureModel>> {
+export class Response<T extends TModel | Array<TModel>, TModel extends PureModel = PureModel> {
   protected __data;
 
   protected __internal: IResponseInternal = {
@@ -99,7 +99,7 @@ export class Response<T extends PureModel | Array<PureModel>> {
    * @type {(Array<JsonApi.IError>|Error)}
    * @memberOf Response
    */
-  public get error(): Array<string | object> | Error | undefined {
+  public get error(): Array<string | Record<string, unknown>> | Error | undefined {
     return this.__internal.error;
   }
 
@@ -231,7 +231,7 @@ export class Response<T extends PureModel | Array<PureModel>> {
 
   public get snapshot(): IResponseSnapshot {
     return {
-      response: Object.assign({}, this.__internal.response, {
+      response: Object.assign({} as Record<string, unknown>, this.__internal.response, {
         headers:
           this.__internal.response.headers && serializeHeaders(this.__internal.response.headers),
         collection: undefined,
