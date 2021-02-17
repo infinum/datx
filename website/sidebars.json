@@ -13,6 +13,7 @@
       "mixins/with-actions",
       "mixins/with-meta",
       "mixins/with-patches",
+      "mixins/network-mixin",
       "mixins/jsonapi-mixin",
       "mixins/building-your-own-mixin"
     ],

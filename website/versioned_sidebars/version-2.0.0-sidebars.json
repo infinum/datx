@@ -13,6 +13,7 @@
       "version-2.0.0-mixins/with-actions",
       "version-2.0.0-mixins/with-meta",
       "version-2.0.0-mixins/with-patches",
+      "version-2.0.0-mixins/network-mixin",
       "version-2.0.0-mixins/jsonapi-mixin",
       "version-2.0.0-mixins/building-your-own-mixin"
     ],
