@@ -27,6 +27,16 @@
       "api-reference/lib-utils",
       "api-reference/typescript-interfaces"
     ],
+    "Network": [
+      "network/getting-started",
+      "network/base-request",
+      "network/caching",
+      "network/fetching",
+      "network/interceptors",
+      "network/operators",
+      "network/response",
+      "network/typescript-interfaces"
+    ],
     "JSON API": [
       "jsonapi/jsonapi-getting-started",
       "jsonapi/jsonapi-basic-configuration",
@@ -41,10 +51,7 @@
       "jsonapi/jsonapi-utils",
       "jsonapi/jsonapi-typescript-interfaces"
     ],
-    "JSON API Angular": [
-      "jsonapi-angular/mixin",
-      "jsonapi-angular/base-fetch"
-    ],
+    "JSON API Angular": ["jsonapi-angular/mixin", "jsonapi-angular/base-fetch"],
     "Migration guide": [
       "migration-guide/breaking-changes",
       "migration-guide/deprecations",
@@ -54,7 +61,12 @@
     "Troubleshooting": ["troubleshooting/known-issues"]
   },
   "examples": {
-    "Setup": ["examples/basic-setup", "examples/react-setup", "examples/nextjs-setup", "examples/angular-setup"],
+    "Setup": [
+      "examples/basic-setup",
+      "examples/react-setup",
+      "examples/nextjs-setup",
+      "examples/angular-setup"
+    ],
     "Collection": ["examples/adding-models"]
   }
 }
