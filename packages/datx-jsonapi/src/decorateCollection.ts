@@ -181,7 +181,7 @@ export function decorateCollection(
 
       const data: Array<T> = [];
       const responses: Array<Response<T>> = [];
-      let lastMeta = response.meta;
+      let lastResponse = response;
 
       data.push(...(response.data as Array<T>));
       responses.push(response);
@@ -190,13 +190,13 @@ export function decorateCollection(
         response = await response.next();
         responses.push(response);
         data.push(...(response.data as Array<T>));
-        lastMeta = response.meta;
+        lastResponse = response;
       }
 
       return {
         data,
         responses,
-        lastMeta,
+        lastResponse,
       };
     }
 

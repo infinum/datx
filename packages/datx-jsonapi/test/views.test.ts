@@ -5,6 +5,7 @@ import { IJsonapiView, jsonapi, config } from '../src';
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
 import { Event, TestStore } from './utils/setup';
 import { clearAllCache } from '../src/cache';
+import { Response } from '../src/Response';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;
@@ -164,6 +165,8 @@ describe('Views', () => {
 
       expect(store.eventsView.length).toBe(6);
       expect(store.eventsView.list[store.eventsView.length - 1]['title']).toBe('Test 6');
+
+      expect(events.lastResponse).toBeInstanceOf(Response);
     });
   });
 });

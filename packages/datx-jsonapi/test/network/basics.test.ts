@@ -15,6 +15,7 @@ import { clearAllCache } from '../../src/cache';
 
 import { setRequest, setupNetwork, confirmNetwork } from '../utils/api';
 import { Event, Image, TestStore } from '../utils/setup';
+import { Response } from '../../src/Response';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;
@@ -283,9 +284,10 @@ describe('Network basics', () => {
 
     expect(events.responses).toBeInstanceOf(Array);
     expect(events.responses.length).toBe(2);
-    expect(events.responses[events.responses.length - 1].next).toBeUndefined();
 
-    expect(events.lastMeta).toBeInstanceOf(Object);
+    expect(events.lastResponse).toBeInstanceOf(Response);
+    expect(events.lastResponse).toEqual(events.responses[events.responses.length - 1]);
+    expect(events.lastResponse.next).toBeUndefined();
   });
 
   it('should support record links', async () => {

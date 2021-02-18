@@ -72,7 +72,7 @@ export function decorateView<U>(
 
       const data: Array<M> = [];
       const responses: Array<Response<M>> = [];
-      let lastMeta = response.meta;
+      let lastResponse = response;
 
       data.push(...(response.data as Array<M>));
       responses.push(response);
@@ -81,13 +81,13 @@ export function decorateView<U>(
         response = await response.next();
         responses.push(response);
         data.push(...(response.data as Array<M>));
-        lastMeta = response.meta;
+        lastResponse = response;
       }
 
       return {
         data,
         responses,
-        lastMeta,
+        lastResponse,
       };
     }
 
