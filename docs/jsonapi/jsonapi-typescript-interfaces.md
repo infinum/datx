@@ -75,7 +75,7 @@ Interface defining return type for `getAll` method on [collections](jsonapi-coll
 ```typescript
 interface IGetAllResponse<T extends IJsonapiModel = IJsonapiModel> {
   data: Array<T>;
-  responses: Array<Response>;
-  lastResponse: Response;
+  responses: Array<Response<T>>;
+  lastResponse: Response<T>;
 }
 ```
