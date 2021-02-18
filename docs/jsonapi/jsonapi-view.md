@@ -40,7 +40,7 @@ If an error happens, the function will reject with the [`Response`](jsonapi-resp
 ## getAll
 
 ```typescript
-getAll<T extends IJsonapiModel = IjsonapiModel>(type: IType | IModelConstructor<T>, options?: IRequestOptions): Promise<IGetAllResponse<T>>
+getAll<T extends IJsonapiModel = IJsonapiModel>(type: IType | IModelConstructor<T>, options?: IRequestOptions): Promise<IGetAllResponse<T>>
 ```
 
 Fetches all records of the given type from the server and saves it into the view.
