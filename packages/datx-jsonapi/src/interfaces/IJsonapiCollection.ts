@@ -49,7 +49,7 @@ export interface IJsonapiCollection extends PureCollection {
   getAll<T extends IJsonapiModel = IJsonapiModel>(
     type: IType | IModelConstructor<T>,
     options?: IRequestOptions,
-  ): IGetAllResponse<T>;
+  ): Promise<IGetAllResponse<T>>;
 
   request<T extends IJsonapiModel = IJsonapiModel>(
     url: string,

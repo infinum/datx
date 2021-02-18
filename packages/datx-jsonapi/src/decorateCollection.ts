@@ -34,6 +34,7 @@ import { IDefinition, IRecord, IRelationship, IRequest, IResponse } from './inte
 import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
 import { CachingStrategy } from '@datx/network';
+import { IGetAllResponse } from './interfaces/IGetAllResponse';
 
 type TSerialisedStore = IRawCollection & { cache?: Array<Omit<ICacheInternal, 'collection'>> };
 
@@ -175,15 +176,8 @@ export function decorateCollection(
     public async getAll<T extends IJsonapiModel = IJsonapiModel>(
       type: IType | IModelConstructor<T>,
       options?: IRequestOptions,
-    ) {
-      const modelType = getModelType(type);
-      const query = this.__prepareQuery(modelType, undefined, undefined, options);
-      const reqOptions = options || {};
-
-      reqOptions.networkConfig = reqOptions.networkConfig || {};
-      reqOptions.networkConfig.headers = query.headers;
-
-      let response = await read<T>(query.url, this, reqOptions).then(handleErrors);
+    ): Promise<IGetAllResponse<T>> {
+      let response = await this.getMany(type, options);
 
       const data: Array<T> = [];
       const responses: Array<Response<T>> = [];
