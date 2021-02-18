@@ -49,7 +49,7 @@ Unlike other view methods that return a `Response` instance, `getAll` returns an
 
 - data: array of all models
 - responses: array of all responses that came from the server
-- latestResponse: `Response` instance for easy acces to all `Response` properties
+- lastResponse: `Response` instance for easy acces to all `Response` properties
 
 See [`IGetAllResponse`](jsonapi-typescript-interfaces#igetallresponse) interface for detailed info.
 
