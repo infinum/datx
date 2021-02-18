@@ -45,6 +45,27 @@ The options can be used to send additional parameters to the server.
 
 If an error happens, the function will reject with the [`Response`](jsonapi-response) object with the `error` property set.
 
+## getAll
+
+```typescript
+getAll<T extends IJsonapiModel = IJsonapiModel>(type: IType | IModelConstructor<T>, options?: IRequestOptions): Promise<IGetAllResponse<T>>
+```
+
+Fetch all records of the given type from the server.
+
+Unlike other collection methods that return a `Response` instance, `getAll` returns an object that contains:
+
+- data: array of all models
+- responses: array of all responses that came from the server
+- latestResponse: `Response` instance for easy acces to all `Response` properties
+
+See [`IGetAllResponse`](jsonapi-typescript-interfaces#igetallresponse) interface for detailed info.
+
+The options can be used to send additional parameters to the server.
+
+If an error happens, the function will reject with the [`Response`](jsonapi-response) object with the `error` property set.
+
+
 ## request
 
 ```typescript
