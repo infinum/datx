@@ -131,5 +131,39 @@ describe('Views', () => {
         expect(store.test.length).toBe(6);
       }
     });
+
+    it('should support getting all records', async () => {
+      setRequest({
+        name: 'events-1',
+        url: 'event',
+      });
+      setRequest({
+        name: 'events-2',
+        query: {
+          page: '2',
+        },
+        url: 'event',
+      });
+
+      class NewStore extends TestStore {
+        public static views = {
+          eventsView: {
+            mixins: [jsonapi],
+            modelType: Event,
+          },
+        };
+
+        public eventsView!: IJsonapiView;
+      }
+
+      const store = new NewStore();
+      const events = await store.eventsView.getAll();
+
+      expect(events.data.length).toBe(6);
+      expect(events.data[events.data.length - 1]['title']).toBe('Test 6');
+
+      expect(store.eventsView.length).toBe(6);
+      expect(store.eventsView.list[store.eventsView.length - 1]['title']).toBe('Test 6');
+    });
   });
 });
