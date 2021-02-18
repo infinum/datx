@@ -260,6 +260,34 @@ describe('Network basics', () => {
     }
   });
 
+  it('should fetch all pages', async () => {
+    setRequest({
+      name: 'events-1',
+      url: 'event',
+    });
+
+    setRequest({
+      name: 'events-2',
+      query: {
+        page: 2,
+      },
+      url: 'event',
+    });
+
+    const store = new TestStore();
+    const events = await store.getAll(Event);
+
+    expect(events.data).toBeInstanceOf(Array);
+    expect(events.data.length).toBe(6);
+    expect(events.data[events.data.length - 1].title).toBe('Test 6');
+
+    expect(events.responses).toBeInstanceOf(Array);
+    expect(events.responses.length).toBe(2);
+    expect(events.responses[events.responses.length - 1].next).toBeUndefined();
+
+    expect(events.lastMeta).toBeInstanceOf(Object);
+  });
+
   it('should support record links', async () => {
     setRequest({
       name: 'event-1',

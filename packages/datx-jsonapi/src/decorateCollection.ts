@@ -50,10 +50,7 @@ function iterateEntries<T extends IJsonapiModel>(
   fn: (item: IRecord) => T,
 ): T | Array<T>;
 
-function iterateEntries(
-  body: IResponse,
-  fn: (item: IRecord) => void,
-): void;
+function iterateEntries(body: IResponse, fn: (item: IRecord) => void): void;
 
 function iterateEntries<T extends IJsonapiModel>(
   body: IResponse,
@@ -173,6 +170,40 @@ export function decorateCollection(
       reqOptions.networkConfig.headers = query.headers;
 
       return read<T>(query.url, this, reqOptions).then(handleErrors);
+    }
+
+    public async getAll<T extends IJsonapiModel = IJsonapiModel>(
+      type: IType | IModelConstructor<T>,
+      options?: IRequestOptions,
+    ) {
+      const modelType = getModelType(type);
+      const query = this.__prepareQuery(modelType, undefined, undefined, options);
+      const reqOptions = options || {};
+
+      reqOptions.networkConfig = reqOptions.networkConfig || {};
+      reqOptions.networkConfig.headers = query.headers;
+
+      let response = await read<T>(query.url, this, reqOptions).then(handleErrors);
+
+      const data: Array<T> = [];
+      const responses: Array<Response<T>> = [];
+      let lastMeta = response.meta;
+
+      data.push(...(response.data as Array<T>));
+      responses.push(response);
+
+      while (response.next) {
+        response = await response.next();
+        responses.push(response);
+        data.push(...(response.data as Array<T>));
+        lastMeta = response.meta;
+      }
+
+      return {
+        data,
+        responses,
+        lastMeta,
+      };
     }
 
     public request<T extends IJsonapiModel = IJsonapiModel>(
