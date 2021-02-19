@@ -6,6 +6,7 @@ import {
   PureModel,
   View,
 } from '@datx/core';
+import { getAllResponses } from './helpers/utils';
 import { IGetAllResponse } from './interfaces/IGetAllResponse';
 
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
@@ -68,27 +69,9 @@ export function decorateView<U>(
     }
 
     public async getAll(options?: IRequestOptions): Promise<IGetAllResponse<M>> {
-      let response = await this.getMany(options);
+      const response = await this.getMany(options);
 
-      const data: Array<M> = [];
-      const responses: Array<Response<M>> = [];
-      let lastResponse = response;
-
-      data.push(...(response.data as Array<M>));
-      responses.push(response);
-
-      while (response.next) {
-        response = await response.next();
-        responses.push(response);
-        data.push(...(response.data as Array<M>));
-        lastResponse = response;
-      }
-
-      return {
-        data,
-        responses,
-        lastResponse,
-      };
+      return getAllResponses(response);
     }
 
     protected __addFromResponse(response: Response<M>): Response<M> {

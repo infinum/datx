@@ -1,5 +1,8 @@
 import { IFieldDefinition, IReferenceDefinition, PureModel } from '@datx/core';
 import { getMeta } from '@datx/utils';
+import { IGetAllResponse } from '../interfaces/IGetAllResponse';
+import { IJsonapiModel } from '../interfaces/IJsonapiModel';
+import { Response } from '../Response';
 
 // eslint-disable-next-line no-var
 declare var window: object;
@@ -41,4 +44,29 @@ export function getModelClassRefs(
   });
 
   return refs;
+}
+
+export async function getAllResponses<M extends IJsonapiModel = IJsonapiModel>(
+  response: Response<M>,
+): Promise<IGetAllResponse<M>> {
+  const data: Array<M> = [];
+  const responses: Array<Response<M>> = [];
+  let lastResponse = response;
+
+  data.push(...(response.data as Array<M>));
+  responses.push(response);
+
+  while (response.next) {
+    response = await response.next();
+    responses.push(response);
+    data.push(...(response.data as Array<M>));
+  }
+
+  lastResponse = responses[responses.length - 1];
+
+  return {
+    data,
+    responses,
+    lastResponse,
+  };
 }

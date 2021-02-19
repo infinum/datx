@@ -25,7 +25,7 @@ import {
 import { GenericModel } from './GenericModel';
 import { flattenModel, removeModel } from './helpers/model';
 import { buildUrl, prepareQuery } from './helpers/url';
-import { getModelClassRefs, isBrowser } from './helpers/utils';
+import { getAllResponses, getModelClassRefs, isBrowser } from './helpers/utils';
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -177,27 +177,9 @@ export function decorateCollection(
       type: IType | IModelConstructor<T>,
       options?: IRequestOptions,
     ): Promise<IGetAllResponse<T>> {
-      let response = await this.getMany(type, options);
+      const response = await this.getMany(type, options);
 
-      const data: Array<T> = [];
-      const responses: Array<Response<T>> = [];
-      let lastResponse = response;
-
-      data.push(...(response.data as Array<T>));
-      responses.push(response);
-
-      while (response.next) {
-        response = await response.next();
-        responses.push(response);
-        data.push(...(response.data as Array<T>));
-        lastResponse = response;
-      }
-
-      return {
-        data,
-        responses,
-        lastResponse,
-      };
+      return getAllResponses(response);
     }
 
     public request<T extends IJsonapiModel = IJsonapiModel>(
