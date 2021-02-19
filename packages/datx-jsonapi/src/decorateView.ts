@@ -72,15 +72,8 @@ export function decorateView<U>(
       if (maxRequests < 1) {
         throw new Error('Please enter a meaningful amount of max requests.');
       }
-      const response = await this.getMany(options);
 
-      if (maxRequests === 1) {
-        return {
-          data: response.data as Array<M>,
-          responses: [response],
-          lastResponse: response,
-        };
-      }
+      const response = await this.getMany(options);
 
       return getAllResponses(response, maxRequests);
     }

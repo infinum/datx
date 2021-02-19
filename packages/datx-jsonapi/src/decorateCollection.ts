@@ -181,15 +181,8 @@ export function decorateCollection(
       if (maxRequests < 1) {
         throw Error('Please enter a meaningful amount of max requests.');
       }
-      const response = await this.getMany(type, options);
 
-      if (maxRequests === 1) {
-        return {
-          data: response.data as Array<T>,
-          responses: [response],
-          lastResponse: response,
-        };
-      }
+      const response = await this.getMany(type, options);
 
       return getAllResponses(response, maxRequests);
     }

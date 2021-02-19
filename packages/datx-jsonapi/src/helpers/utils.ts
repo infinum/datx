@@ -59,11 +59,11 @@ export async function getAllResponses<M extends IJsonapiModel = IJsonapiModel>(
   responses.push(response);
 
   while (response.next) {
+    requests++;
     if (requests > maxRequests) {
       break;
     }
     response = await response.next();
-    requests++;
     responses.push(response);
     data.push(...(response.data as Array<M>));
   }
