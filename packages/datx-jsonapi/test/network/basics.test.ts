@@ -290,6 +290,22 @@ describe('Network basics', () => {
     expect(events.lastResponse.next).toBeUndefined();
   });
 
+  it('should throw an error if getAll maxRequests is less than 1', async () => {
+    const store = new TestStore();
+
+    try {
+      await store.getAll(Event, undefined, -1);
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+    }
+
+    try {
+      await store.getAll(Event, undefined, 0);
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+    }
+  });
+
   it('should support record links', async () => {
     setRequest({
       name: 'event-1',

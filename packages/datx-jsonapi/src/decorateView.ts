@@ -68,10 +68,21 @@ export function decorateView<U>(
         .then(this.__addFromResponse.bind(this));
     }
 
-    public async getAll(options?: IRequestOptions): Promise<IGetAllResponse<M>> {
+    public async getAll(options?: IRequestOptions, maxRequests = 50): Promise<IGetAllResponse<M>> {
+      if (maxRequests < 1) {
+        throw new Error('Please enter a meaningful amount of max requests.');
+      }
       const response = await this.getMany(options);
 
-      return getAllResponses(response);
+      if (maxRequests === 1) {
+        return {
+          data: response.data as Array<M>,
+          responses: [response],
+          lastResponse: response,
+        };
+      }
+
+      return getAllResponses(response, maxRequests);
     }
 
     protected __addFromResponse(response: Response<M>): Response<M> {

@@ -176,10 +176,22 @@ export function decorateCollection(
     public async getAll<T extends IJsonapiModel = IJsonapiModel>(
       type: IType | IModelConstructor<T>,
       options?: IRequestOptions,
+      maxRequests = 50,
     ): Promise<IGetAllResponse<T>> {
+      if (maxRequests < 1) {
+        throw Error('Please enter a meaningful amount of max requests.');
+      }
       const response = await this.getMany(type, options);
 
-      return getAllResponses(response);
+      if (maxRequests === 1) {
+        return {
+          data: response.data as Array<T>,
+          responses: [response],
+          lastResponse: response,
+        };
+      }
+
+      return getAllResponses(response, maxRequests);
     }
 
     public request<T extends IJsonapiModel = IJsonapiModel>(

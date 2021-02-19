@@ -48,16 +48,22 @@ export function getModelClassRefs(
 
 export async function getAllResponses<M extends IJsonapiModel = IJsonapiModel>(
   response: Response<M>,
+  maxRequests = 50,
 ): Promise<IGetAllResponse<M>> {
   const data: Array<M> = [];
   const responses: Array<Response<M>> = [];
   let lastResponse = response;
+  let requests = 1;
 
   data.push(...(response.data as Array<M>));
   responses.push(response);
 
   while (response.next) {
+    if (requests > maxRequests) {
+      break;
+    }
     response = await response.next();
+    requests++;
     responses.push(response);
     data.push(...(response.data as Array<M>));
   }

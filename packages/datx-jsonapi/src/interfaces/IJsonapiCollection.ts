@@ -49,6 +49,7 @@ export interface IJsonapiCollection extends PureCollection {
   getAll<T extends IJsonapiModel = IJsonapiModel>(
     type: IType | IModelConstructor<T>,
     options?: IRequestOptions,
+    maxRequests?: number,
   ): Promise<IGetAllResponse<T>>;
 
   request<T extends IJsonapiModel = IJsonapiModel>(

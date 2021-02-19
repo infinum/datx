@@ -168,5 +168,57 @@ describe('Views', () => {
 
       expect(events.lastResponse).toBeInstanceOf(Response);
     });
+
+    it('should support limiting the getAll requests', async () => {
+      setRequest({
+        name: 'events-1',
+        url: 'event',
+      });
+
+      class NewStore extends TestStore {
+        public static views = {
+          eventsView: {
+            mixins: [jsonapi],
+            modelType: Event,
+          },
+        };
+
+        public eventsView!: IJsonapiView;
+      }
+
+      const store = new NewStore();
+      const events = await store.eventsView.getAll(undefined, 1);
+
+      expect(events.data.length).toBe(4);
+      expect(events.data[events.data.length - 1]['title']).toBe('Test 4');
+      expect(events.responses.length).toBe(1);
+    });
+
+    it('should throw an error if maxRequests is less than 1', async () => {
+      class NewStore extends TestStore {
+        public static views = {
+          eventsView: {
+            mixins: [jsonapi],
+            modelType: Event,
+          },
+        };
+
+        public eventsView!: IJsonapiView;
+      }
+
+      const store = new NewStore();
+
+      try {
+        await store.eventsView.getAll(undefined, -1);
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+      }
+
+      try {
+        await store.eventsView.getAll(undefined, 0);
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+      }
+    });
   });
 });
