@@ -422,6 +422,11 @@ export class PureCollection {
     const modelId = id || getModelId(model);
     const stringType = modelType.toString();
 
+    const collectionTypes = (this.constructor as typeof PureCollection).types.map(getModelType);
+    if (!collectionTypes.includes(modelType)) {
+      throw new Error(`The model type ${modelType} was not found. Did you forget to add it to collection types?`);
+    }
+
     const existingModel = this.findOne(modelType, modelId);
 
     if (existingModel) {
