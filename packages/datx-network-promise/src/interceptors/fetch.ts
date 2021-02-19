@@ -1,9 +1,11 @@
 import { PureModel } from '@datx/core';
+import { IFetchOptions, IHeaders, IResponseObject, INetworkHandler } from '@datx/network';
 import { IResponseHeaders } from '@datx/utils';
+import { Response as ResponseClass } from '../Response';
 
 function parseResponse(
   response: IResponseObject,
-  parse: (data: object, options: IResponseObject) => object,
+  parse: (data: Record<string, unknown>, options: IResponseObject) => Record<string, unknown>,
 ): IResponseObject {
   if (response.data) {
     return {
@@ -17,8 +19,8 @@ function parseResponse(
 
 export function fetchInterceptor<T extends PureModel>(
   fetchReference?: typeof fetch,
-  serialize: (options: IFetchOptions) => IFetchOptions = (options): IFetchOptions => options,
-  parse: (data: object, options: IResponseObject) => object = (data): object => data,
+  serialize: (options: IFetchOptions) => IFetchOptions = (options: IFetchOptions): IFetchOptions => options,
+  parse: (data: Record<string, unknown>, options: IResponseObject) => Record<string, unknown> = (data): Record<string, unknown> => data,
   Response: typeof ResponseClass = ResponseClass,
 ) {
   return (request: IFetchOptions, _next?: INetworkHandler): Promise<ResponseClass<T>> => {
@@ -28,7 +30,7 @@ export function fetchInterceptor<T extends PureModel>(
 
     const payload = serialize ? serialize(request) : request;
 
-    let data: object;
+    let data: Record<string, unknown>;
     let status = 0;
     let headers: IResponseHeaders;
 

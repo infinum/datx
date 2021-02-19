@@ -3,7 +3,6 @@ export { Response } from './Response';
 
 export {
   addInterceptor,
-  cache,
   method,
   setUrl,
   body,
@@ -31,5 +30,7 @@ export { IInterceptor } from './interfaces/IInterceptor';
 export { INetworkHandler } from './interfaces/INetworkHandler';
 export { IPipeOperator } from './interfaces/IPipeOperator';
 export { IResponseObject } from './interfaces/IResponseObject';
+export { IInterceptorsList } from './interfaces/IInterceptorsList';
 
 export { appendQueryParams } from './helpers/utils';
+export { saveModel } from './helpers/model';

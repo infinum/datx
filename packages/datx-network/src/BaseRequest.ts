@@ -2,36 +2,18 @@ import { PureModel } from '@datx/core';
 
 import { getDefaultConfig } from './defaults';
 import { IConfigType } from './interfaces/IConfigType';
-import { IHeaders } from './interfaces/IHeaders';
-import { IInterceptor } from './interfaces/IInterceptor';
 import { IPipeOperator } from './interfaces/IPipeOperator';
-import { Response } from './Response';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { deepCopy, interpolateParams, appendQueryParams } from './helpers/utils';
 import { HttpMethod } from './enums/HttpMethod';
 import { BodyType } from './enums/BodyType';
 import { body as bodyOperator } from './operators';
+import { IRequestConfig } from './interfaces/IRequestConfig';
+import { IInterceptorsList } from './interfaces/IInterceptorsList';
 
-interface IRequestOptions {
-  method: HttpMethod;
-  url?: string;
-  params: Record<string, string>;
-  query: Record<string, string | Array<string> | Record<string, unknown> | undefined>;
-  headers: IHeaders;
-  body?: unknown;
-  bodyType: BodyType;
-}
-
-interface IInterceptorObject<TInterceptor> {
-  name: string;
-  fn: TInterceptor;
-}
-
-type IInterceptorsList<TModel> = Array<IInterceptorObject<IInterceptor<TModel>>>;
-
-export class BaseRequest<TModel extends PureModel = PureModel, TParams extends Record<string, unknown> = Record<string, unknown>> {
-  private _config: IConfigType = getDefaultConfig();
-  private _options: IRequestOptions = {
+export class BaseRequest<TResponseType, TModel extends PureModel = PureModel, TParams extends Record<string, unknown> = Record<string, unknown>> {
+  protected _config: IConfigType = getDefaultConfig();
+  protected _options: IRequestConfig = {
     method: HttpMethod.Get,
     headers: {},
     query: {},
@@ -39,7 +21,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends R
     bodyType: BodyType.Json,
   };
 
-  public interceptors: IInterceptorsList<TModel> = [];
+  public interceptors: IInterceptorsList<TResponseType> = [];
 
   constructor(baseUrl: string) {
     this._config.baseUrl = baseUrl;
@@ -48,13 +30,13 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends R
   public pipe<
     TNewModel extends PureModel | Array<PureModel> = TModel,
     TNewParams extends Record<string, unknown> = TParams
-  >(...operators: Array<IPipeOperator | undefined>): BaseRequest<TNewModel, TNewParams> {
+  >(...operators: Array<IPipeOperator | undefined>): BaseRequest<TResponseType, TNewModel, TNewParams> {
     const destinationPipeline = this.clone<TNewModel, TNewParams>();
     operators
       .filter(Boolean)
       .forEach((operator) => (operator as IPipeOperator)(destinationPipeline));
 
-    return destinationPipeline as BaseRequest<TNewModel, TNewParams>;
+    return destinationPipeline as BaseRequest<TResponseType, TNewModel, TNewParams>;
   }
 
   private processBody(): Record<string, unknown> | string | FormData | undefined {
@@ -93,8 +75,8 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends R
     queryParams?: Record<string, string | Array<string> | Record<string, unknown>> | null,
     body?: unknown,
     bodyType?: BodyType,
-  ): Promise<Response<TModel>> {
-    const request = body === undefined ? this : this.pipe(bodyOperator(body, bodyType));
+  ): TResponseType {
+    const request = body === undefined ? this : this.pipe(bodyOperator(body, bodyType)) as this;
 
     if (!request._options.url) {
       throw new Error('URL should be defined');
@@ -124,7 +106,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends R
     };
 
     const interceptorChain = request.interceptors.reduce((next, interceptor) => {
-      return (options: IFetchOptions): Promise<Response<TModel>> => interceptor.fn(options, next);
+      return (options: IFetchOptions): TResponseType => interceptor.fn(options, next);
     }, undefined);
 
     if (!interceptorChain) {
@@ -136,11 +118,11 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends R
 
   public clone<TNewModel extends PureModel = TModel, TNewParams extends Record<string, unknown> = TParams>(
     BaseRequestConstructor: typeof BaseRequest = this.constructor as typeof BaseRequest,
-  ): BaseRequest<TNewModel, TNewParams> {
+  ): BaseRequest<TResponseType, TNewModel, TNewParams> {
     // Can't use `new BaseRequest`, because we would lose the overridden methods
-    const clone = new BaseRequestConstructor<TNewModel, TNewParams>(this._config.baseUrl);
+    const clone = new BaseRequestConstructor<TResponseType, TNewModel, TNewParams>(this._config.baseUrl);
 
-    clone.interceptors = deepCopy(this.interceptors) as unknown as Array<{ name: string, fn: IInterceptor<TNewModel> }>;
+    clone.interceptors = deepCopy(this.interceptors) as IInterceptorsList<TResponseType>;
 
     clone._config = deepCopy(this._config);
     clone._options = deepCopy(this._options);
@@ -152,6 +134,6 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends R
     clone._config.Response = this._config.Response;
     clone._config.type = this._config.type;
 
-    return clone as BaseRequest<TNewModel, TNewParams>;
+    return clone as BaseRequest<TResponseType, TNewModel, TNewParams>;
   }
 }
