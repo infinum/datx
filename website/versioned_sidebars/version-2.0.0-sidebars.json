@@ -13,6 +13,7 @@
       "version-2.0.0-mixins/with-actions",
       "version-2.0.0-mixins/with-meta",
       "version-2.0.0-mixins/with-patches",
+      "version-2.0.0-mixins/network-mixin",
       "version-2.0.0-mixins/jsonapi-mixin",
       "version-2.0.0-mixins/building-your-own-mixin"
     ],
@@ -26,6 +27,16 @@
       "version-2.0.0-api-reference/model-utils",
       "version-2.0.0-api-reference/lib-utils",
       "version-2.0.0-api-reference/typescript-interfaces"
+    ],
+    "Network": [
+      "version-2.0.0-network/getting-started",
+      "version-2.0.0-network/base-request",
+      "version-2.0.0-network/caching",
+      "version-2.0.0-network/fetching",
+      "version-2.0.0-network/interceptors",
+      "version-2.0.0-network/operators",
+      "version-2.0.0-network/response",
+      "version-2.0.0-network/typescript-interfaces"
     ],
     "JSON API": [
       "version-2.0.0-jsonapi/jsonapi-getting-started",
@@ -51,9 +62,7 @@
       "version-2.0.0-migration-guide/whats-new",
       "version-2.0.0-migration-guide/from-v1"
     ],
-    "Troubleshooting": [
-      "version-2.0.0-troubleshooting/known-issues"
-    ]
+    "Troubleshooting": ["version-2.0.0-troubleshooting/known-issues"]
   },
   "version-2.0.0-examples": {
     "Setup": [
@@ -62,8 +71,6 @@
       "version-2.0.0-examples/nextjs-setup",
       "version-2.0.0-examples/angular-setup"
     ],
-    "Collection": [
-      "version-2.0.0-examples/adding-models"
-    ]
+    "Collection": ["version-2.0.0-examples/adding-models"]
   }
 }
