@@ -48,10 +48,11 @@ If an error happens, the function will reject with the [`Response`](jsonapi-resp
 ## getAll
 
 ```typescript
-getAll<T extends IJsonapiModel = IJsonapiModel>(type: IType | IModelConstructor<T>, options?: IRequestOptions): Promise<IGetAllResponse<T>>
+getAll<T extends IJsonapiModel = IJsonapiModel>(type: IType | IModelConstructor<T>, options?: IRequestOptions, maxRequests?: number = 50): Promise<IGetAllResponse<T>>
 ```
 
-Fetch all records of the given type from the server.
+Fetches all records within the request limit of the given type from the server. 
+Generally you don't want to use this function if you are trying to load **a lot** of pages at once since it could lead to the huge response time.
 
 Unlike other collection methods that return a `Response` instance, `getAll` returns an object that contains:
 
