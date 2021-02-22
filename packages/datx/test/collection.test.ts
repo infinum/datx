@@ -10,7 +10,7 @@ import {
   modelToJSON,
 } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
-import { getModelCollection, getModelId } from '../src/helpers/model/utils';
+import { getModelCollection, getModelId, getModelType } from '../src/helpers/model/utils';
 import { mobx } from '@datx/utils';
 
 // @ts-ignore
@@ -585,6 +585,43 @@ describe('Collection', () => {
       const foo = store.findOne<Foo>(Foo, '0');
       expect(foo?.name).toBe('foo1');
       expect(foo?.children).toEqual([]);
+    });
+
+    it('should throw on invalid model add', () => {
+      class Foo extends Model {
+        static type = 'foo';
+      }
+
+      class Bar extends Model {
+        static type = 'bar';
+      }
+
+      class Store extends Collection {
+        static types = [Bar];
+      }
+
+      const store = new Store();
+
+      expect(() => {
+        store.add({}, Foo);
+      }).toThrowError(`The model type foo was not found. Did you forget to add it to collection types?`);
+    });
+
+    it('should not throw on invalid model add', () => {
+      class Bar extends Model {
+        static type = 'bar';
+      }
+
+      class Store extends Collection {
+        static types = [Bar];
+      }
+
+      const store = new Store();
+
+      const foo = store.add({}, 'foo');
+
+      expect(foo).toBeInstanceOf(Model);
+      expect(getModelType(foo)).toBe('foo');
     });
   });
 
