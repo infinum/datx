@@ -30,6 +30,10 @@ Example: If you have made a change in `@datx/utils` and need to use the new chan
 
 To test a specific package, run `yarn test` in its folder. If you want to run all tests, you can run `lerna run test` in the root folder. This will run tests in one of the variants. Once you push the code to the repository, GHA will run tests on all variants (mobx version combinations).
 
+## Writing docs
+
+When writing docs, make sure your updates are writtern in  `versioned_docs/{version}` and `versioned_sidebars/{version}` to be visible once docs are generated and published. Otherwise, only `next` version on the docs website will be updated and published.
+
 ## Publishing
 
 1. `lerna publish`
