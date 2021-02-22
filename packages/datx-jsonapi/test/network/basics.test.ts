@@ -15,6 +15,7 @@ import { clearAllCache } from '../../src/cache';
 
 import { setRequest, setupNetwork, confirmNetwork } from '../utils/api';
 import { Event, Image, TestStore } from '../utils/setup';
+import { Response } from '../../src/Response';
 
 const baseTransformRequest = config.transformRequest;
 const baseTransformResponse = config.transformResponse;
@@ -257,6 +258,51 @@ describe('Network basics', () => {
         expect(events1.snapshot).toEqual(events.snapshot);
         expect(events1.snapshot).toEqual(events1b?.snapshot);
       }
+    }
+  });
+
+  it('should fetch all pages', async () => {
+    setRequest({
+      name: 'events-1',
+      url: 'event',
+    });
+
+    setRequest({
+      name: 'events-2',
+      query: {
+        page: 2,
+      },
+      url: 'event',
+    });
+
+    const store = new TestStore();
+    const events = await store.getAll(Event);
+
+    expect(events.data).toBeInstanceOf(Array);
+    expect(events.data.length).toBe(6);
+    expect(events.data[events.data.length - 1].title).toBe('Test 6');
+
+    expect(events.responses).toBeInstanceOf(Array);
+    expect(events.responses.length).toBe(2);
+
+    expect(events.lastResponse).toBeInstanceOf(Response);
+    expect(events.lastResponse).toEqual(events.responses[events.responses.length - 1]);
+    expect(events.lastResponse.next).toBeUndefined();
+  });
+
+  it('should throw an error if getAll maxRequests is less than 1', async () => {
+    const store = new TestStore();
+
+    try {
+      await store.getAll(Event, undefined, -1);
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+    }
+
+    try {
+      await store.getAll(Event, undefined, 0);
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
     }
   });
 
