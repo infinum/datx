@@ -33,14 +33,9 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     );
     this.modelType = getModelType(modelType);
     this.sortMethod = sortMethod;
-    mobx.makeObservable(this, {
-      sortMethod: mobx.observable,
-      length: mobx.computed,
-      list: mobx.computed,
-    });
+    mobx.makeObservable(this);
   }
 
-  @mobx.computed
   public get length(): number {
     return this.value.length;
   }

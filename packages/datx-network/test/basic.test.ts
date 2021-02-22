@@ -358,7 +358,7 @@ describe('Request', () => {
         public title!: string;
       }
       class TestStore extends Collection {
-        public static types = [Foo];
+        public static types = [Foo, PureModel];
       }
 
       const store = new TestStore();
@@ -395,7 +395,7 @@ describe('Request', () => {
         public title!: string;
       }
       class TestStore extends Collection {
-        public static types = [Foo];
+        public static types = [Foo, PureModel];
       }
 
       const store = new TestStore();

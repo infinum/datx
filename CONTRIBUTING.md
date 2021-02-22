@@ -15,3 +15,22 @@ Please note we have a code of conduct, please follow it in all your interactions
    Pull Request would represent. The versioning scheme we use is [SemVer](https://semver.org/).
 4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you 
    do not have permission to do that, you may request the second reviewer to merge it for you.
+   
+## Project setup
+
+1. Install lerna globally `yarn global add lerna`
+2. Run `lerna bootstrap`
+3. If you're getting errors for other datx package imports, also run `lerna run build` and `lerna link`
+
+## Updating local dependencies
+
+Example: If you have made a change in `@datx/utils` and need to use the new change in `@datx/core`, it should be enough to run `yarn build` in the `datx-utils` folder. If the editor doesn't detect the changes, you can try to cmd+click on the error (forcing the editor to reload the typings).
+
+## Testing
+
+To test a specific package, run `yarn test` in its folder. If you want to run all tests, you can run `lerna run test` in the root folder. This will run tests in one of the variants. Once you push the code to the repository, GHA will run tests on all variants (mobx version combinations).
+
+## Publishing
+
+1. `lerna publish`
+

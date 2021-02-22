@@ -152,7 +152,14 @@ describe('patch', () => {
       });
 
       const modelMeta = { type: model.meta.type, id: model.meta.id };
-      const store = new Collection();
+
+      class Foo extends Model {
+        static type = 'foo';
+      }
+      class Store extends Collection {
+        static types = [Model, Foo];
+      }
+      const store = new Store();
 
       store.onPatch((patch) => patches.push(patch));
 
@@ -225,7 +232,14 @@ describe('patch', () => {
       });
       const modelMeta = { id: model.meta.id, type: model.meta.type };
 
-      const store = new Collection();
+
+      class Foo extends Model {
+        static type = 'foo';
+      }
+      class Store extends Collection {
+        static types = [Model, Foo];
+      }
+      const store = new Store();
 
       const patches: Array<IPatch> = [
         {
@@ -280,7 +294,14 @@ describe('patch', () => {
     it('should trigger on add, replace and remove', () => {
       const patches: Array<IPatch> = [];
 
-      const store = new Collection([
+      class Foo extends Model {
+        static type = 'foo';
+      }
+      class Store extends Collection {
+        static types = [Model, Foo];
+      }
+
+      const store = new Store([
         {
           [META_FIELD]: { type: 'foo', id: 1 },
           name: 'Foo',
@@ -314,7 +335,14 @@ describe('patch', () => {
     });
 
     it('should be able to apply patches', () => {
-      const store = new Collection([
+      class Foo extends Model {
+        static type = 'foo';
+      }
+      class Store extends Collection {
+        static types = [Model, Foo];
+      }
+
+      const store = new Store([
         {
           [META_FIELD]: { type: 'foo' },
           id: 1,
@@ -394,7 +422,7 @@ describe('patch', () => {
       }
 
       class TestCollection extends Collection {
-        public static types = [FooModel];
+        public static types = [FooModel, BarModel];
 
         public foo!: Array<FooModel>;
       }
@@ -444,7 +472,7 @@ describe('patch', () => {
       }
 
       class TestCollection extends Collection {
-        public static types = [FooModel];
+        public static types = [FooModel, BarModel];
 
         public foo!: Array<FooModel>;
       }

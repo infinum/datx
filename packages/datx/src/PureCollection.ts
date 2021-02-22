@@ -345,6 +345,11 @@ export class PureCollection {
     const type = getModelType(model as IType | typeof PureModel);
     const modelInstance = upsertModel(data, type, this);
 
+    const collectionTypes = (this.constructor as typeof PureCollection).types.map(getModelType);
+    if (!collectionTypes.includes(type) && (typeof model === 'object' || typeof model === 'function')) {
+      throw new Error(`The model type ${type} was not found. Did you forget to add it to collection types?`);
+    }
+
     this.__insertModel(modelInstance, type);
 
     return modelInstance;
