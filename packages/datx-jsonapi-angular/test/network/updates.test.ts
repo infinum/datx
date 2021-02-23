@@ -1,3 +1,4 @@
+import { getModelCollection } from '@datx/core';
 import { modelToJsonApi, config, CachingStrategy } from '@datx/jsonapi';
 import { switchMap } from 'rxjs/operators';
 
@@ -40,11 +41,13 @@ describe('updates', () => {
       expect(data.type).toBe('event');
       expect(data.attributes && data.attributes.id).toBeUndefined();
       expect(data.attributes && data.attributes.type).toBeUndefined();
+      expect(getModelCollection(record)).toBe(store);
 
       record.save().subscribe((updated) => {
         try {
           expect(updated['title']).toBe('Test 1');
           expect(updated).toBe(record);
+          expect(getModelCollection(record)).toBe(store);
           done();
         } catch(e) {
           done(e);
