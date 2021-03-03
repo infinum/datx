@@ -17,7 +17,7 @@
     "outDir": "./dist",
     "strict": true,
     "strictFunctionTypes": false,
-    "target": "es5",
+    "target": "es6",
     "resolveJsonModule": true
   },
   "exclude": ["node_modules", "examples"],

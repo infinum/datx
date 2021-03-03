@@ -39,7 +39,7 @@ describe('Network basics', () => {
         expect(events.data).toHaveLength(4);
         if (events.data instanceof Array) {
           const event = events.data[0];
-    
+
           expect(event['title']).toBe('Test 1');
           expect(getModelMeta(event).createdAt).toBe('2017-03-19T16:00:00.000Z');
           expect(event.meta.refs.images).toBeInstanceOf(Array);
@@ -48,9 +48,9 @@ describe('Network basics', () => {
           }
           expect(event.meta.refs.images).toHaveLength(1);
           expect(getModelRefMeta(event).images.foo).toBe('bar');
-    
+
           const data = modelToJsonApi(event);
-    
+
           expect(data.id).toBe('1');
           expect(data.type).toBe('event');
           expect(data.attributes && data.attributes.title).toBe('Test 1');
@@ -93,7 +93,7 @@ describe('Network basics', () => {
     store.getOne(Event, '1').subscribe((events) => {
       try {
         const record = events.data;
-    
+
         expect(record).toBeInstanceOf(Object);
         if (record) {
           expect(record['title']).toBe('Test 1');
@@ -131,7 +131,7 @@ describe('Network basics', () => {
             expect(events.links.next.meta.foo).toBe('bar');
           }
         }
-    
+
         setRequest({
           name: 'events-2',
           query: {
@@ -154,7 +154,7 @@ describe('Network basics', () => {
             name: 'events-1',
             url: 'event',
           });
-    
+
           return events2.prev?.() as any;
         }
       }),
@@ -170,7 +170,7 @@ describe('Network basics', () => {
             name: 'events-1',
             url: 'event',
           });
-    
+
           return events2.prev?.() as any;
         }
       }),
