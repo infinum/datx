@@ -15,6 +15,7 @@ export function observableWrapper<T extends IJsonapiModel = IJsonapiModel, U = R
       },
     }) as Promise<U>).then((response: U) => {
       subscriber.next(response);
+      subscriber.complete();
     }, (error) => {
       subscriber.error(error);
     });
