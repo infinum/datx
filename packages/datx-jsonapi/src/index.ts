@@ -22,6 +22,11 @@ export {
   clearCacheByType,
 } from './cache';
 
+export {
+  prepareQuery,
+  buildUrl
+} from './helpers/url';
+
 export { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
 export { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 export { IJsonapiModel } from './interfaces/IJsonapiModel';
