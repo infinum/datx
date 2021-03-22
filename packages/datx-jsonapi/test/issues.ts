@@ -2,7 +2,7 @@
 import { Collection, Model, prop } from 'datx';
 import * as fetch from 'isomorphic-fetch';
 import { computed } from 'mobx';
-import { config, getModelMeta, getModelRefMeta, jsonapi } from '../src';
+import { buildUrl, config, getModelMeta, getModelRefMeta, jsonapi } from '../src';
 import { clearAllCache } from '../src/cache';
 
 import mockApi from './utils/api';
@@ -218,5 +218,13 @@ describe('Issues', () => {
 
     const lineItem2 = new LineItem({ }, store);
     await lineItem2.save();
+  });
+
+  it('should not prefix url with base url if it\'s already absolute and contains a port', async () => {
+    const url = 'http://localhost:3000/books';
+
+    const query = buildUrl(url)
+
+    expect(query.url).toBe(url);
   });
 });
