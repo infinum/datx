@@ -1,0 +1,10 @@
+{
+  "data": {
+    "id": 1,
+    "type": "foo",
+    "attributes": {
+      "id": 123,
+      "type": "some-type"
+    }
+  }
+}

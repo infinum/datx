@@ -4,7 +4,7 @@ import { configure } from 'mobx';
 
 configure({ enforceActions: 'observed' });
 
-import { Collection, prop, PureModel } from '../src';
+import { Collection, prop, PureModel, Model } from '../src';
 
 describe('issues', () => {
   it('should remove references on collection remove', () => {
@@ -45,6 +45,7 @@ describe('issues', () => {
       public fooName!: string;
     }
 
+    // @ts-ignore
     class Bar extends BaseModel {
       public static type = 'bar';
 
@@ -54,5 +55,37 @@ describe('issues', () => {
 
     const foo = new Foo();
     expect('barName' in foo).toBe(false);
+  });
+
+  it('should init the correct type', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+
+      @prop
+      public id!: number;
+
+      @prop
+      public type!: string;
+    }
+    class MockStore extends Collection {
+      public static types = [Foo];
+    }
+    const store = new MockStore();
+
+    const foo = store.add(
+      {
+        id: 123,
+        type: 'some-type',
+        __META__: {
+          id: 1,
+          type: 'foo',
+        },
+      },
+      Foo,
+    );
+
+    expect(foo).toBeInstanceOf(Foo);
+    expect(foo.type).toBe('some-type');
+    expect(foo.meta.type).toBe('foo');
   });
 });

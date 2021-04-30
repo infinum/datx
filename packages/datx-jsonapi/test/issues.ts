@@ -44,7 +44,7 @@ describe('Issues', () => {
       class EventRecord extends jsonapi(Model) {
         public static type = 'event';
         @prop.toOneOrMany(ImageRecord)
-        public image!: ImageRecord|Array<ImageRecord>;
+        public image!: ImageRecord | Array<ImageRecord>;
       }
 
       class ApiStore extends jsonapi(Collection) {
@@ -106,7 +106,7 @@ describe('Issues', () => {
       class EventRecord extends jsonapi(Model) {
         public static type = 'event';
         @prop.toOneOrMany(ImageRecord)
-        public image!: ImageRecord|Array<ImageRecord>;
+        public image!: ImageRecord | Array<ImageRecord>;
       }
 
       class ApiStore extends jsonapi(Collection) {
@@ -207,7 +207,7 @@ describe('Issues', () => {
       url: 'line_items',
     });
 
-    const lineItem1 = new LineItem({ }, store);
+    const lineItem1 = new LineItem({}, store);
     await lineItem1.save();
 
     mockApi({
@@ -216,15 +216,70 @@ describe('Issues', () => {
       url: 'line_items',
     });
 
-    const lineItem2 = new LineItem({ }, store);
+    const lineItem2 = new LineItem({}, store);
     await lineItem2.save();
   });
 
-  it('should not prefix url with base url if it\'s already absolute and contains a port', async () => {
+  it("should not prefix url with base url if it's already absolute and contains a port", async () => {
     const url = 'http://localhost:3000/books';
 
-    const query = buildUrl(url)
+    const query = buildUrl(url);
 
     expect(query.url).toBe(url);
+  });
+
+  it('should work with type property', () => {
+    class Foo extends jsonapi(Model) {
+      public static type = 'foo';
+
+      @prop
+      public id!: number;
+
+      @prop
+      public type!: string;
+    }
+    class MockStore extends jsonapi(Collection) {
+      public static types = [Foo];
+    }
+    const store = new MockStore();
+    const foo = store.sync({
+      data: {
+        id: 1,
+        type: 'foo',
+        attributes: {
+          id: 123,
+          type: 'some-type',
+        },
+      },
+    }) as Foo;
+
+    expect(foo.type).toBe('some-type');
+    expect(foo.meta.type).toBe('foo');
+  });
+
+  it('should work with network type property', async () => {
+    class Foo extends jsonapi(Model) {
+      public static type = 'foo';
+
+      @prop
+      public id!: number;
+
+      @prop
+      public type!: string;
+    }
+    class MockStore extends jsonapi(Collection) {
+      public static types = [Foo];
+    }
+    const store = new MockStore();
+
+    mockApi({
+      name: 'issue-attr-id-type',
+      url: 'foo/1',
+    });
+    const fooResp = await store.fetch(Foo, 1);
+    const foo = fooResp.data as Foo;
+
+    expect(foo.type).toBe('some-type');
+    expect(foo.meta.type).toBe('foo');
   });
 });
