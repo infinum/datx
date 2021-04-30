@@ -1,0 +1,1 @@
+export type IAsync<T> = Promise<T> | Observable<T, T>;
