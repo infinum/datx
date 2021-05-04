@@ -288,7 +288,7 @@ describe('Issues', () => {
       public static type = 'foo';
 
       @prop
-      public bar!: string;
+      public type!: string;
 
       @prop
       public baz!: string;
@@ -303,8 +303,16 @@ describe('Issues', () => {
       data: {
         id: 1,
         type: 'foo',
+        attributes: {},
+      },
+    });
+
+    store.sync({
+      data: {
+        id: 1,
+        type: 'foo',
         attributes: {
-          bar: '123',
+          type: '123',
         },
       },
     });
@@ -330,7 +338,7 @@ describe('Issues', () => {
     const foos = store.findAll(Foo);
     expect(foos).toHaveLength(1);
     const foo = foos[0];
-    expect(foo.bar).toBe('123');
+    expect(foo.type).toBe('123');
     expect(foo.baz).toBe('321');
   });
 
@@ -339,7 +347,7 @@ describe('Issues', () => {
       public static type = 'foo';
 
       @prop
-      public bar!: string;
+      public type!: string;
 
       @prop
       public baz!: string;
@@ -349,6 +357,13 @@ describe('Issues', () => {
       public static types = [Foo];
     }
     const store = new MockStore();
+
+    mockApi({
+      name: 'sparse-3',
+      url: 'foo/1',
+    });
+
+    await store.fetch(Foo, 1, { skipCache: true });
 
     mockApi({
       name: 'sparse-1',
@@ -364,17 +379,10 @@ describe('Issues', () => {
 
     await store.fetch(Foo, 1, { skipCache: true });
 
-    mockApi({
-      name: 'sparse-3',
-      url: 'foo/1',
-    });
-
-    await store.fetch(Foo, 1, { skipCache: true });
-
     const foos = store.findAll(Foo);
     expect(foos).toHaveLength(1);
     const foo = foos[0];
-    expect(foo.bar).toBe('123');
     expect(foo.baz).toBe('321');
+    expect(foo.type).toBe('123');
   });
 });

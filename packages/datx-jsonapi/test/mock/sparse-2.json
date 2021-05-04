@@ -4,6 +4,7 @@
     "type": "foo",
     "attributes": {
       "baz": "321"
-    }
+    },
+    "relationships": {}
   }
 }

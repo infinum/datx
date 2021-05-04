@@ -3,7 +3,8 @@
     "id": "1",
     "type": "foo",
     "attributes": {
-      "bar": "123"
-    }
+      "type": "123"
+    },
+    "relationships": {}
   }
 }

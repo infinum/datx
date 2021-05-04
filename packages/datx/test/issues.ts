@@ -88,4 +88,25 @@ describe('issues', () => {
     expect(foo.type).toBe('some-type');
     expect(foo.meta.type).toBe('foo');
   });
+
+  it('should work for various updates', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+
+      @prop
+      public type!: string;
+
+      @prop
+      public baz!: string;
+    }
+
+    const foo = new Foo();
+
+    foo.update({ type: '123' });
+    foo.update({ baz: '321' });
+    foo.update({});
+
+    expect(foo.type).toBe('123');
+    expect(foo.baz).toBe('321');
+  });
 });
