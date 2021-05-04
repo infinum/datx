@@ -1,3 +1,7 @@
+export { NetworkClient } from './Client';
+import { PromiseNetwork } from './PromiseNetwork';
+import { RxNetwork } from './RxNetwork';
+
 export { BaseRequest } from './BaseRequest';
 export { Response } from './Response';
 
@@ -34,3 +38,26 @@ export { IInterceptorsList } from './interfaces/IInterceptorsList';
 
 export { appendQueryParams } from './helpers/utils';
 export { saveModel } from './helpers/model';
+
+export const Network = { Promise: PromiseNetwork, Rx: RxNetwork };
+
+////////////////////////////////////////////////
+
+import { Collection, Model, PureModel } from '@datx/core';
+import { NetworkClient } from './Client';
+import { Response } from './Response';
+import { IGeneralize } from './interfaces/IGeneralize';
+import { INetwork } from './interfaces/INetwork';
+class MyClient<TNetwork extends INetwork> extends NetworkClient<TNetwork> {
+  getOne<TModel extends typeof PureModel, TInstance = InstanceType<TModel>>(
+    type: TModel,
+    id: string,
+  ): IGeneralize<Response<TInstance>, ReturnType<TNetwork['exec']>> {
+    return null as any;
+  }
+}
+
+const pc = new MyClient(new Collection(), new Network.Promise());
+pc.getOne(Model, '1').then((a) => {
+  a.data;
+});
