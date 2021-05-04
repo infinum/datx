@@ -1,0 +1,9 @@
+{
+  "data": {
+    "id": "1",
+    "type": "foo",
+    "attributes": {
+      "baz": "321"
+    }
+  }
+}

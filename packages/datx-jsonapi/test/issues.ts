@@ -282,4 +282,99 @@ describe('Issues', () => {
     expect(foo.type).toBe('some-type');
     expect(foo.meta.type).toBe('foo');
   });
+
+  it("shouldn't override missing sparse fields", () => {
+    class Foo extends jsonapi(Model) {
+      public static type = 'foo';
+
+      @prop
+      public bar!: string;
+
+      @prop
+      public baz!: string;
+    }
+
+    class MockStore extends jsonapi(Collection) {
+      public static types = [Foo];
+    }
+    const store = new MockStore();
+
+    store.sync({
+      data: {
+        id: 1,
+        type: 'foo',
+        attributes: {
+          bar: '123',
+        },
+      },
+    });
+
+    store.sync({
+      data: {
+        id: 1,
+        type: 'foo',
+        attributes: {
+          baz: '321',
+        },
+      },
+    });
+
+    store.sync({
+      data: {
+        id: 1,
+        type: 'foo',
+        attributes: {},
+      },
+    });
+
+    const foos = store.findAll(Foo);
+    expect(foos).toHaveLength(1);
+    const foo = foos[0];
+    expect(foo.bar).toBe('123');
+    expect(foo.baz).toBe('321');
+  });
+
+  it("shouldn't override missing sparse fields after a network request", async () => {
+    class Foo extends jsonapi(Model) {
+      public static type = 'foo';
+
+      @prop
+      public bar!: string;
+
+      @prop
+      public baz!: string;
+    }
+
+    class MockStore extends jsonapi(Collection) {
+      public static types = [Foo];
+    }
+    const store = new MockStore();
+
+    mockApi({
+      name: 'sparse-1',
+      url: 'foo/1',
+    });
+
+    await store.fetch(Foo, 1, { skipCache: true });
+
+    mockApi({
+      name: 'sparse-2',
+      url: 'foo/1',
+    });
+
+    await store.fetch(Foo, 1, { skipCache: true });
+
+    mockApi({
+      name: 'sparse-3',
+      url: 'foo/1',
+    });
+
+    await store.fetch(Foo, 1, { skipCache: true });
+
+    const foos = store.findAll(Foo);
+    expect(foos).toHaveLength(1);
+    const foo = foos[0];
+    expect(foo.bar).toBe('123');
+    expect(foo.baz).toBe('321');
+  });
 });
