@@ -10,8 +10,13 @@ import { BodyType } from './enums/BodyType';
 import { body as bodyOperator } from './operators';
 import { IRequestConfig } from './interfaces/IRequestConfig';
 import { IInterceptorsList } from './interfaces/IInterceptorsList';
+import { IAsync } from './interfaces/IAsync';
 
-export class BaseRequest<TResponseType, TModel extends PureModel = PureModel, TParams extends Record<string, unknown> = Record<string, unknown>> {
+export class BaseRequest<
+  TAsync extends IAsync,
+  TModel extends PureModel = PureModel,
+  TParams extends Record<string, unknown> = Record<string, unknown>
+> {
   protected _config: IConfigType = getDefaultConfig();
   protected _options: IRequestConfig = {
     method: HttpMethod.Get,
@@ -21,7 +26,7 @@ export class BaseRequest<TResponseType, TModel extends PureModel = PureModel, TP
     bodyType: BodyType.Json,
   };
 
-  public interceptors: IInterceptorsList<TResponseType> = [];
+  public interceptors: IInterceptorsList<TAsync> = [];
 
   constructor(baseUrl: string) {
     this._config.baseUrl = baseUrl;
@@ -30,13 +35,13 @@ export class BaseRequest<TResponseType, TModel extends PureModel = PureModel, TP
   public pipe<
     TNewModel extends PureModel | Array<PureModel> = TModel,
     TNewParams extends Record<string, unknown> = TParams
-  >(...operators: Array<IPipeOperator | undefined>): BaseRequest<TResponseType, TNewModel, TNewParams> {
+  >(...operators: Array<IPipeOperator | undefined>): BaseRequest<TAsync, TNewModel, TNewParams> {
     const destinationPipeline = this.clone<TNewModel, TNewParams>();
     operators
       .filter(Boolean)
       .forEach((operator) => (operator as IPipeOperator)(destinationPipeline));
 
-    return destinationPipeline as BaseRequest<TResponseType, TNewModel, TNewParams>;
+    return destinationPipeline as BaseRequest<TAsync, TNewModel, TNewParams>;
   }
 
   private processBody(): Record<string, unknown> | string | FormData | undefined {
@@ -75,8 +80,8 @@ export class BaseRequest<TResponseType, TModel extends PureModel = PureModel, TP
     queryParams?: Record<string, string | Array<string> | Record<string, unknown>> | null,
     body?: unknown,
     bodyType?: BodyType,
-  ): TResponseType {
-    const request = body === undefined ? this : this.pipe(bodyOperator(body, bodyType)) as this;
+  ): TAsync {
+    const request = body === undefined ? this : (this.pipe(bodyOperator(body, bodyType)) as this);
 
     if (!request._options.url) {
       throw new Error('URL should be defined');
@@ -106,7 +111,7 @@ export class BaseRequest<TResponseType, TModel extends PureModel = PureModel, TP
     };
 
     const interceptorChain = request.interceptors.reduce((next, interceptor) => {
-      return (options: IFetchOptions): TResponseType => interceptor.fn(options, next);
+      return (options: IFetchOptions): TAsync => interceptor.fn(options, next);
     }, undefined);
 
     if (!interceptorChain) {
@@ -116,13 +121,16 @@ export class BaseRequest<TResponseType, TModel extends PureModel = PureModel, TP
     return interceptorChain(requestRef);
   }
 
-  public clone<TNewModel extends PureModel = TModel, TNewParams extends Record<string, unknown> = TParams>(
+  public clone<
+    TNewModel extends PureModel = TModel,
+    TNewParams extends Record<string, unknown> = TParams
+  >(
     BaseRequestConstructor: typeof BaseRequest = this.constructor as typeof BaseRequest,
-  ): BaseRequest<TResponseType, TNewModel, TNewParams> {
+  ): BaseRequest<TAsync, TNewModel, TNewParams> {
     // Can't use `new BaseRequest`, because we would lose the overridden methods
-    const clone = new BaseRequestConstructor<TResponseType, TNewModel, TNewParams>(this._config.baseUrl);
+    const clone = new BaseRequestConstructor<TAsync, TNewModel, TNewParams>(this._config.baseUrl);
 
-    clone.interceptors = deepCopy(this.interceptors) as IInterceptorsList<TResponseType>;
+    clone.interceptors = deepCopy(this.interceptors) as IInterceptorsList<TAsync>;
 
     clone._config = deepCopy(this._config);
     clone._options = deepCopy(this._options);
@@ -134,6 +142,6 @@ export class BaseRequest<TResponseType, TModel extends PureModel = PureModel, TP
     clone._config.Response = this._config.Response;
     clone._config.type = this._config.type;
 
-    return clone as BaseRequest<TResponseType, TNewModel, TNewParams>;
+    return clone as BaseRequest<TAsync, TNewModel, TNewParams>;
   }
 }
