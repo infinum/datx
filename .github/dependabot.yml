@@ -15,6 +15,7 @@ updates:
       interval: "daily"
     labels:
       - "maintenance"
+      - "documentation"
     assignees:
       - "DarkoKukovec"
     open-pull-requests-limit: 10
