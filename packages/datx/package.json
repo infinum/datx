@@ -17,7 +17,7 @@
   "author": "Infinum JavaScript Team <hello@infinum.com>",
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^11.1.0",
     "@types/jest": "^26.0.20",
     "@types/node": "^15.0.2",
