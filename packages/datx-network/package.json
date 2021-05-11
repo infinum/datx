@@ -22,7 +22,7 @@
   ],
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",
-    "@rollup/plugin-node-resolve": "^11.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
     "@types/jest": "^26.0.20",
     "@types/node": "^15.0.2",
     "@types/react": "^17.0.0",
