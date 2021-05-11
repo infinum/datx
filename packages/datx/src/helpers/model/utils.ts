@@ -70,7 +70,7 @@ export function isIdentifier(value: any): boolean {
   return typeof value === 'string' || typeof value === 'number';
 }
 
-export function peekNonNullish(...args: any[]): any {
+export function peekNonNullish(...args: Array<any>): any {
   if (args.length === 0) return null;
 
   let i = -1;
@@ -351,10 +351,10 @@ export function isAttributeDirty<T extends PureModel>(model: T, key: keyof T): b
     const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
     const field = fields[key as string];
 
-    if(field === undefined) {
+    if (field === undefined) {
       return false;
     }
-    
+
     const value = field.referenceDef ? mapItems(model[key], getModelRef) : model[key];
     return !isSame(value, prevCommit[key as string]);
   }

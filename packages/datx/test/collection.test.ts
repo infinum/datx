@@ -415,7 +415,7 @@ describe('Collection', () => {
       if (mobx.useRealMobX) {
         expect(autorunModelCount).toBe(2);
         expect(foo).toBe(foo2);
-  
+
         expect(autorunLengthCount).toBe(2);
         expect(fooLength).toBe(1);
       }
@@ -437,8 +437,8 @@ describe('Collection', () => {
         static type = 'person';
         @Attribute({ isIdentifier: true }) public id!: number;
         @Attribute({ toOne: Person }) public spouse!: Person;
-        @Attribute({ toMany: Pet }) public pets!: Pet[];
-        @Attribute({ toOneOrMany: Toy }) public toy!: Toy | Toy[];
+        @Attribute({ toMany: Pet }) public pets!: Array<Pet>;
+        @Attribute({ toOneOrMany: Toy }) public toy!: Toy | Array<Toy>;
       }
 
       class Store extends Collection {
@@ -469,7 +469,7 @@ describe('Collection', () => {
         static type = 'foo';
         @Attribute({ isIdentifier: true }) public id!: string;
         @Attribute({ toOne: Foo }) public parent!: Foo;
-        @Attribute({ toMany: Foo }) public children!: Foo[];
+        @Attribute({ toMany: Foo }) public children!: Array<Foo>;
       }
 
       class Store extends Collection {
@@ -489,7 +489,7 @@ describe('Collection', () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const refId = getRefId(foo1!, 'children');
       expect(refId).toBeInstanceOf(Array);
-      expect((refId as any[]).map((d) => d.id)).toEqual(['2', '3', '5']);
+      expect((refId as Array<any>).map((d) => d.id)).toEqual(['2', '3', '5']);
     });
 
     it('should initialize data with id is `0`', () => {
@@ -559,7 +559,7 @@ describe('Collection', () => {
         static type = 'foo';
         @Attribute({ isIdentifier: true }) public key!: string;
         @Attribute() public name!: string;
-        @Attribute({ toMany: Foo }) public children!: Foo[];
+        @Attribute({ toMany: Foo }) public children!: Array<Foo>;
       }
 
       class Store extends Collection {
@@ -604,7 +604,9 @@ describe('Collection', () => {
 
       expect(() => {
         store.add({}, Foo);
-      }).toThrowError(`The model type foo was not found. Did you forget to add it to collection types?`);
+      }).toThrowError(
+        `The model type foo was not found. Did you forget to add it to collection types?`,
+      );
     });
 
     it('should not throw on invalid model add', () => {
@@ -651,7 +653,7 @@ describe('Collection', () => {
       static type = 'toy';
 
       @Attribute() public name!: string;
-      @Attribute({ toMany: () => Person }) public owners!: Person[];
+      @Attribute({ toMany: () => Person }) public owners!: Array<Person>;
     }
 
     it('should be use model for indirect references', () => {
