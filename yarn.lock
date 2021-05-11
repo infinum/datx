@@ -299,9 +299,9 @@
   integrity sha512-eSBYXCav8vNERPCKmZ5abW/n/L1ptcXwALSIGtiFaqJmQjwXSvCBdB9MjytEycdsIjmEOHnZwSpB1h0vhNxdFw==
 
 "@infinumjs/eslint-config-core-ts@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@infinumjs/eslint-config-core-ts/-/eslint-config-core-ts-2.2.0.tgz#5fb96d244a656265016648b4d4bb7a1cba540d49"
-  integrity sha512-c4etdqFPaFkY64MLgrhrQo2Xnoz3b21tjONt2YoAq4whc6l59lfF5nMIjeEnNTJjwJa3uXOF70TYsHzGbv/0Cw==
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@infinumjs/eslint-config-core-ts/-/eslint-config-core-ts-2.4.0.tgz#495f5f1a88a7b10dea2cf1a9462b8aef9eab075a"
+  integrity sha512-d28qwxnyURhnfhzHJT8STv0AhvXcOiH465W6WbHQ6uL8VGuoK1n+kE5361e7j4rtYwJ8OtxUUnS2/rq0lgmSmg==
   dependencies:
     "@infinumjs/eslint-config-core-js" "^2.2.0"
     "@typescript-eslint/eslint-plugin" "~4.10.0"
