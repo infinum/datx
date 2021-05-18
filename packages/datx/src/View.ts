@@ -3,6 +3,7 @@ import { action, computed, intercept, IObservableArray, observable, reaction } f
 
 import { SORTED_NO_WRITE, UNIQUE_MODEL } from './errors';
 import { error } from './helpers/format';
+import { isPropertySelectorFn } from './helpers/view';
 import { getModelId, getModelType } from './helpers/model/utils';
 import { IIdentifier } from './interfaces/IIdentifier';
 import { IModelConstructor } from './interfaces/IModelConstructor';
@@ -11,17 +12,18 @@ import { IType } from './interfaces/IType';
 import { TChange } from './interfaces/TChange';
 import { PureCollection } from './PureCollection';
 import { PureModel } from './PureModel';
+import { SortMethod } from './types';
 
 export class View<T extends PureModel = PureModel> {
   public readonly modelType: IType;
-  @observable public sortMethod?: string|((item: T) => any);
+  @observable public sortMethod?: SortMethod<T>;
 
   private readonly __models: IObservableArray<T | IIdentifier> = observable.array([]);
 
   constructor(
     modelType: IModelConstructor<T>|IType,
     protected __collection: PureCollection,
-    sortMethod?: string|((item: T) => any),
+    sortMethod?: SortMethod<T>,
     models: Array<IIdentifier|T> = [],
     public unique: boolean = false,
   ) {
@@ -55,10 +57,14 @@ export class View<T extends PureModel = PureModel> {
       .filter(Boolean) as Array<T>;
 
     if (this.sortMethod) {
-      const sortFn = typeof this.sortMethod === 'string'
-        ? (item) => item[this.sortMethod as 'string']
-        : this.sortMethod;
-      list.sort((a: T, b: T) => sortFn(a) - sortFn(b));
+      const sortFn =
+        typeof this.sortMethod === 'string' ? (item) => item[this.sortMethod as 'string'] : this.sortMethod;
+
+      if (isPropertySelectorFn(sortFn)) {
+        list.sort((a: T, b: T) => sortFn(a) - sortFn(b));
+      } else {
+        list.sort(sortFn);
+      }
     }
 
     const instances = observable.array(list, { deep: false });
