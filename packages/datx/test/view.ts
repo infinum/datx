@@ -198,7 +198,7 @@ describe('view', () => {
     expect(item2b && item2b.key).toBe(2);
   });
 
-  it('should be able to sort with compare function and none unique props', () => {
+  it('should be able to sort with compare function and non-unique props', () => {
     class Foo extends Model {
       public static type = 'foo';
 
