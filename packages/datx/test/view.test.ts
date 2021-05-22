@@ -239,6 +239,44 @@ describe('View', () => {
     expect(item2b && item2b.key).toBe(2);
   });
 
+  it('should be able to sort with compare function and non-unique props', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+
+      @Attribute()
+      public notUnique!: number;
+      @Attribute()
+      public unique!: number;
+    }
+    class AppCollection extends Collection {
+      public static types = [Foo];
+    }
+
+    const collection = new AppCollection();
+    const foos = collection.add([{ notUnique: 2, unique: 3 }, { notUnique: 2, unique: 1 }, { notUnique: 1, unique: 2 }], Foo);
+
+    const compareFn = (a: Foo, b: Foo): number => {
+      if (a.notUnique === b.notUnique){
+        return a.unique < b.unique ? -1 : 1
+      } else {
+        return a.notUnique < b.notUnique ? -1 : 1
+      }
+    }
+
+    const viewInstance = new View(Foo, collection, compareFn, foos);
+
+    expect(viewInstance.length).toBe(3);
+    const item0a = viewInstance.list[0];
+    const item1a = viewInstance.list[1];
+    const item2a = viewInstance.list[2];
+    expect(item0a && item0a.notUnique).toBe(1);
+    expect(item0a && item0a.unique).toBe(2);
+    expect(item1a && item1a.notUnique).toBe(2);
+    expect(item1a && item1a.unique).toBe(1);
+    expect(item2a && item2a.notUnique).toBe(2);
+    expect(item2a && item2a.unique).toBe(3);
+  });
+
   it('should be able to remove models', () => {
     class Foo extends Model {
       public static type = 'foo';
@@ -277,19 +315,19 @@ describe('View', () => {
     if (mobx.useRealMobX) {
       viewInstance.list.push(foo1);
       expect(viewInstance).toHaveLength(4);
-  
+
       viewInstance.list.unshift(foo2);
       expect(viewInstance).toHaveLength(5);
-  
+
       viewInstance.list.splice(2, 2);
       expect(viewInstance).toHaveLength(3);
     } else {
       viewInstance.list = [...viewInstance.list, foo1];
       expect(viewInstance).toHaveLength(4);
-  
+
       viewInstance.list = [foo2, ...viewInstance.list];
       expect(viewInstance).toHaveLength(5);
-  
+
       viewInstance.list = [...viewInstance.list.slice(0, 2), ...viewInstance.list.slice(4)];
       expect(viewInstance).toHaveLength(3);
     }
