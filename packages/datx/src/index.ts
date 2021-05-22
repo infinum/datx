@@ -47,6 +47,7 @@ export { IReferenceOptions } from './interfaces/IReferenceOptions';
 export { IViewConstructor } from './interfaces/IViewConstructor';
 export { IActionsMixin } from './interfaces/IActionsMixin';
 export { IMetaMixin } from './interfaces/IMetaMixin';
+export { ISortMethod } from './interfaces/IView';
 
 export { PatchType } from './enums/PatchType';
 export { ReferenceType } from './enums/ReferenceType';

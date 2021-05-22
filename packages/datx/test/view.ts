@@ -222,8 +222,6 @@ describe('view', () => {
 
     const viewInstance = new View(Foo, collection, compareFn, foos);
 
-    console.log(JSON.stringify(viewInstance.list));
-
     expect(viewInstance.length).toBe(3);
     const item0a = viewInstance.list[0];
     const item1a = viewInstance.list[1];

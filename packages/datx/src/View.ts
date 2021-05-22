@@ -10,20 +10,20 @@ import { IModelConstructor } from './interfaces/IModelConstructor';
 import { IRawView } from './interfaces/IRawView';
 import { IType } from './interfaces/IType';
 import { TChange } from './interfaces/TChange';
+import { ISortMethod } from './interfaces/IView';
 import { PureCollection } from './PureCollection';
 import { PureModel } from './PureModel';
-import { SortMethod } from './types';
 
 export class View<T extends PureModel = PureModel> {
   public readonly modelType: IType;
-  @observable public sortMethod?: SortMethod<T>;
+  @observable public sortMethod?: ISortMethod<T>;
 
   private readonly __models: IObservableArray<T | IIdentifier> = observable.array([]);
 
   constructor(
     modelType: IModelConstructor<T>|IType,
     protected __collection: PureCollection,
-    sortMethod?: SortMethod<T>,
+    sortMethod?: ISortMethod<T>,
     models: Array<IIdentifier|T> = [],
     public unique: boolean = false,
   ) {
