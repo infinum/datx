@@ -1,6 +1,6 @@
 {
   "name": "@datx/jsonapi-angular",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "DatX mixin for Angular JSON API support",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -74,8 +74,8 @@
     ]
   },
   "dependencies": {
-    "@datx/core": "^2.1.0",
-    "@datx/jsonapi": "^2.2.0",
-    "@datx/utils": "^2.1.0"
+    "@datx/core": "^2.2.1",
+    "@datx/jsonapi": "^2.2.1",
+    "@datx/utils": "^2.2.1"
   }
 }

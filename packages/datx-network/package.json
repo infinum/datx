@@ -1,6 +1,6 @@
 {
   "name": "@datx/network",
-  "version": "2.1.0",
+  "version": "2.2.1",
   "description": "DatX network layer",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -64,7 +64,7 @@
     ]
   },
   "dependencies": {
-    "@datx/core": "^2.1.0",
-    "@datx/utils": "^2.1.0"
+    "@datx/core": "^2.2.1",
+    "@datx/utils": "^2.2.1"
   }
 }
