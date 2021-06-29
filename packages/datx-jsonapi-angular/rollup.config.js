@@ -1,4 +1,4 @@
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
@@ -15,8 +15,8 @@ export default [
       commonjs(),
       excludeDependenciesFromBundle(),
       typescript({
-        check: true,
         typescript: require('typescript'),
+        tslib: require('tslib'),
         tsconfig: './tsconfig.build.json',
       }),
       terser({
@@ -43,8 +43,8 @@ export default [
       commonjs(),
       excludeDependenciesFromBundle(),
       typescript({
-        check: true,
         typescript: require('typescript'),
+        tslib: require('tslib'),
         tsconfig: './tsconfig.build.json',
       }),
     ],
