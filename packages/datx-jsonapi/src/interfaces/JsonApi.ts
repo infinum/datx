@@ -1,16 +1,14 @@
-import { IDictionary } from 'datx-utils';
-
 interface IDefinition {
-  id?: number | string;
+  id?: string;
   type: string;
 }
 
 interface IJsonApiObject {
   version?: string;
-  meta?: IDictionary;
+  meta?: Record<string, any>;
 }
 
-type ILink = string | { href: string; meta: IDictionary };
+type ILink = string | { href: string; meta: Record<string, any> };
 
 interface IError {
   id?: string | number;
@@ -25,21 +23,21 @@ interface IError {
     pointer?: string;
     parameter?: string;
   };
-  meta?: IDictionary;
+  meta?: Record<string, any>;
 }
 
 interface IRelationship {
   data?: IDefinition | Array<IDefinition> | null;
-  links?: IDictionary<ILink>;
-  meta?: IDictionary;
+  links?: Record<string, ILink>;
+  meta?: Record<string, any>;
 }
 
 interface IRecord extends IDefinition {
-  attributes?: IDictionary;
+  attributes?: Record<string, any>;
 
-  relationships?: IDictionary<IRelationship>;
-  links?: IDictionary<ILink>;
-  meta?: IDictionary;
+  relationships?: Record<string, IRelationship>;
+  links?: Record<string, ILink>;
+  meta?: Record<string, any>;
 }
 
 interface IResponse {
@@ -48,20 +46,11 @@ interface IResponse {
 
   included?: Array<IRecord>;
 
-  meta?: IDictionary;
-  links?: IDictionary<ILink>;
+  meta?: Record<string, any>;
+  links?: Record<string, ILink>;
   jsonapi?: IJsonApiObject;
 }
 
 type IRequest = IResponse; // Not sure if this is correct, but it's ok for now
 
-export {
-  IDefinition,
-  IJsonApiObject,
-  ILink,
-  IError,
-  IRelationship,
-  IRecord,
-  IResponse,
-  IRequest,
-};
+export { IDefinition, IJsonApiObject, ILink, IError, IRelationship, IRecord, IResponse, IRequest };

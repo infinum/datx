@@ -1,6 +1,6 @@
 {
-  "name": "datx-utils",
-  "version": "1.0.0",
+  "name": "@datx/utils",
+  "version": "2.2.1",
   "description": "DatX lib utils for mixins",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -14,32 +14,30 @@
     "url": "https://github.com/infinum/datx/issues"
   },
   "homepage": "https://github.com/infinum/datx#readme",
-  "author": "Infinum JavaScript Team <hello@infinum.co>",
+  "author": "Infinum JavaScript Team <hello@infinum.com>",
   "license": "MIT",
   "keywords": [
     "datx",
     "mobx"
   ],
   "devDependencies": {
-    "@infinumjs/tslint-config": "^2.0.0-beta.6",
-    "@types/jest": "^24.0.11",
-    "@types/node": "^11.13.4",
-    "jest": "^24.7.1",
-    "mobx": "^5.9.4",
-    "rollup": "^1.10.0",
-    "rollup-plugin-typescript2": "^0.20.1",
-    "rollup-plugin-uglify": "^6.0.2",
-    "ts-jest": "^24.0.2",
-    "tslint": "^5.15.0",
-    "typescript": "^3.4.3"
-  },
-  "peerDependencies": {
-    "mobx": "^4.2.0 || ^5.5.0"
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^16.0.0",
+    "jest": "^26.6.3",
+    "mobx": "^6.0.4",
+    "rollup": "^2.38.0",
+    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.17",
+    "rollup-plugin-terser": "^7.0.2",
+    "ts-jest": "^26.4.4",
+    "tslib": "^2.3.0",
+    "typescript": "^4.1.3"
   },
   "scripts": {
     "test": "jest --coverage",
     "watch": "jest --watch --coverage",
-    "lint": "tslint --project .",
     "prepublish": "npm run build",
     "build": "rollup -c"
   },
@@ -52,7 +50,7 @@
       "ts",
       "js"
     ],
-    "testRegex": "test/(.*).ts$",
+    "testRegex": "test/(.*).test.ts$",
     "globals": {
       "ts-jest": {
         "diagnostics": {
@@ -61,6 +59,9 @@
       }
     },
     "preset": "ts-jest",
-    "testMatch": null
+    "testMatch": null,
+    "setupFilesAfterEnv": [
+      "./test/setup.ts"
+    ]
   }
 }

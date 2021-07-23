@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.build.json",
+  "include": ["src/**/*", "test/**/*"],
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  }
+}

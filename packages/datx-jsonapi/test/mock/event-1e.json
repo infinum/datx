@@ -1,6 +1,6 @@
 {
   "data": {
-    "id": 12345,
+    "id": "12345",
     "type": "event",
     "attributes": {
       "title": "Test 1",
@@ -12,13 +12,16 @@
     },
     "relationships": {
       "images": {
-        "data": [{
-          "type": "image",
-          "id": "1"
-        }, {
-          "type": "image",
-          "id": "2"
-        }],
+        "data": [
+          {
+            "type": "image",
+            "id": "1"
+          },
+          {
+            "type": "image",
+            "id": "2"
+          }
+        ],
         "links": {
           "self": "https://example.com/images/1"
         },

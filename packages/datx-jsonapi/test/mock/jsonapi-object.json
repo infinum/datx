@@ -5,38 +5,43 @@
       "foo": "bar"
     }
   },
-  "data": [{
-    "id": 1,
-    "type": "event",
-    "attributes": {
-      "title": "Test 1",
-      "date": "2017-03-19"
+  "data": [
+    {
+      "id": "1",
+      "type": "event",
+      "attributes": {
+        "title": "Test 1",
+        "date": "2017-03-19"
+      },
+      "meta": {
+        "createdAt": "2017-03-19T16:00:00.000Z"
+      }
     },
-    "meta": {
-      "createdAt": "2017-03-19T16:00:00.000Z"
+    {
+      "id": "2",
+      "type": "event",
+      "attributes": {
+        "title": "Test 2",
+        "date": "2017-03-20"
+      }
+    },
+    {
+      "id": "3",
+      "type": "event",
+      "attributes": {
+        "title": "Test 3",
+        "date": "2017-03-21"
+      }
+    },
+    {
+      "id": "4",
+      "type": "event",
+      "attributes": {
+        "title": "Test 4",
+        "date": "2017-03-22"
+      }
     }
-  }, {
-    "id": 2,
-    "type": "event",
-    "attributes": {
-      "title": "Test 2",
-      "date": "2017-03-20"
-    }
-  }, {
-    "id": 3,
-    "type": "event",
-    "attributes": {
-      "title": "Test 3",
-      "date": "2017-03-21"
-    }
-  }, {
-    "id": 4,
-    "type": "event",
-    "attributes": {
-      "title": "Test 4",
-      "date": "2017-03-22"
-    }
-  }],
+  ],
   "links": {
     "self": "https://example.com/event",
     "next": "https://example.com/event?page=2"

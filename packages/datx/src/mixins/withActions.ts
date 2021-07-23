@@ -1,10 +1,15 @@
-import { IDictionary } from 'datx-utils';
-
-import { DECORATE_MODEL } from '../errors';
 import { error } from '../helpers/format';
 import { isModel } from '../helpers/mixin';
 import { initModelRef } from '../helpers/model/init';
-import { assignModel, cloneModel, modelToJSON, updateModel } from '../helpers/model/utils';
+import {
+  assignModel,
+  cloneModel,
+  modelToJSON,
+  updateModel,
+  getModelType,
+  commitModel,
+  revertModel,
+} from '../helpers/model/utils';
 import { IActionsMixin } from '../interfaces/IActionsMixin';
 import { IModelConstructor } from '../interfaces/IModelConstructor';
 import { IReferenceOptions } from '../interfaces/IReferenceOptions';
@@ -19,15 +24,17 @@ import { PureModel } from '../PureModel';
  * @param {IModelConstructor<T>} Base Model to extend
  * @returns Extended model
  */
-export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
+export function withActions<T extends PureModel>(
+  Base: IModelConstructor<T>,
+): IModelConstructor<IActionsMixin<T> & T> {
   const BaseClass = Base as typeof PureModel;
 
   if (!isModel(Base)) {
-    throw error(DECORATE_MODEL);
+    throw error('This mixin can only decorate models');
   }
 
   class WithActions extends BaseClass implements IActionsMixin<T> {
-    public update(data: IDictionary) {
+    public update(data: Record<string, any>): void {
       updateModel(this, data);
     }
 
@@ -36,7 +43,7 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
       return cloneModel(this);
     }
 
-    public assign(key: string, value: any) {
+    public assign(key: string, value: any): void {
       assignModel(this, key, value);
     }
 
@@ -44,11 +51,27 @@ export function withActions<T extends PureModel>(Base: IModelConstructor<T>) {
       key: string,
       value: TRefValue<V>,
       options: IReferenceOptions<U>,
-    ) {
-      initModelRef(this, key, options, value);
+    ): void {
+      initModelRef(
+        this,
+        key,
+        {
+          type: options.type,
+          model: getModelType(options.model),
+        },
+        value,
+      );
     }
 
-    public toJSON() {
+    public commit(): void {
+      commitModel(this);
+    }
+
+    public revert(): void {
+      revertModel(this);
+    }
+
+    public toJSON(): any {
       return modelToJSON(this);
     }
   }

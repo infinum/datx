@@ -1,10 +1,12 @@
-import { setModelMetaKey, View } from 'datx';
-import { IDictionary } from 'datx-utils';
-import { action } from 'mobx';
+import { View, commitModel } from '@datx/core';
+import { setMeta, mobx, IResponseHeaders } from '@datx/utils';
 
-import { getCache, saveCache } from './cache';
-import { MODEL_PERSISTED_FIELD, MODEL_PROP_FIELD, MODEL_QUEUE_FIELD, MODEL_RELATED_FIELD } from './consts';
-import { ParamArrayType } from './enums/ParamArrayType';
+import {
+  MODEL_PERSISTED_FIELD,
+  MODEL_PROP_FIELD,
+  MODEL_QUEUE_FIELD,
+  MODEL_RELATED_FIELD,
+} from './consts';
 import { isBrowser } from './helpers/utils';
 import { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
 import { IHeaders } from './interfaces/IHeaders';
@@ -12,18 +14,22 @@ import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IResponseHeaders } from './interfaces/IResponseHeaders';
 import { ILink, IResponse } from './interfaces/JsonApi';
 import { Response as LibResponse } from './Response';
+import { CachingStrategy, ParamArrayType } from '@datx/network';
+import { saveCache, getCache } from './cache';
 
 export type FetchType = (
   method: string,
   url: string,
   body?: object,
   requestHeaders?: IHeaders,
+  fetchOptions?: object,
 ) => Promise<IRawResponse>;
 
-export type CollectionFetchType = <T extends IJsonapiModel>(options: ICollectionFetchOpts) => Promise<LibResponse<T>>;
+export type CollectionFetchType = <T extends IJsonapiModel>(
+  options: ICollectionFetchOpts,
+) => Promise<LibResponse<T>>;
 
 export interface IResponseObject {
   data: IResponse;
@@ -36,10 +42,12 @@ export interface IResponseObject {
 export interface IConfigType {
   baseFetch: FetchType;
   baseUrl: string;
-  cache: boolean;
-  defaultFetchOptions: IDictionary;
+  cache: CachingStrategy;
+  maxCacheAge: number;
+  defaultFetchOptions: Record<string, any>;
   fetchReference?: typeof fetch;
   paramArrayType: ParamArrayType;
+  encodeQueryString?: boolean;
   onError(IResponseObject): IResponseObject;
   transformRequest(options: ICollectionFetchOpts): ICollectionFetchOpts;
   transformResponse(response: IRawResponse): IRawResponse;
@@ -50,7 +58,8 @@ export const config: IConfigType = {
   baseUrl: '/',
 
   // Enable caching by default in the browser
-  cache: isBrowser,
+  cache: isBrowser ? CachingStrategy.CacheFirst : CachingStrategy.NetworkOnly,
+  maxCacheAge: Infinity,
 
   // Default options that will be passed to the fetch function
   defaultFetchOptions: {
@@ -59,12 +68,18 @@ export const config: IConfigType = {
     },
   },
 
+  encodeQueryString: false,
+
   // Reference of the fetch method that should be used
-  fetchReference: isBrowser && 'fetch' in window && typeof window.fetch === 'function' && window.fetch.bind(window)
-    || undefined,
+  fetchReference:
+    (isBrowser &&
+      'fetch' in window &&
+      typeof window.fetch === 'function' &&
+      window.fetch.bind(window)) ||
+    undefined,
 
   // Determines how will the request param arrays be stringified
-  paramArrayType: ParamArrayType.COMMA_SEPARATED, // As recommended by the spec
+  paramArrayType: ParamArrayType.CommaSeparated, // As recommended by the spec
 
   /**
    * Base implementation of the fetch function (can be overridden)
@@ -73,6 +88,7 @@ export const config: IConfigType = {
    * @param {string} url API call URL
    * @param {object} [body] API call body
    * @param {IHeaders} [requestHeaders] Headers that will be sent
+   * @param {object} [fetchOptions] Options that can be passed from the fetch function call
    * @returns {Promise<IRawResponse>} Resolves with a raw response object
    */
   baseFetch(
@@ -80,6 +96,7 @@ export const config: IConfigType = {
     url: string,
     body?: object,
     requestHeaders?: IHeaders,
+    _fetchOptions?: object,
   ): Promise<IRawResponse> {
     let data: IResponse;
     let status: number;
@@ -92,10 +109,10 @@ export const config: IConfigType = {
 
     return request
       .then(() => {
-        const defaultHeaders = config.defaultFetchOptions.headers || { };
-        const reqHeaders: IHeaders = Object.assign({ }, defaultHeaders, requestHeaders) as IHeaders;
-        const options = Object.assign({ }, config.defaultFetchOptions, {
-          body: isBodySupported && JSON.stringify(body) || undefined,
+        const defaultHeaders = config.defaultFetchOptions.headers || {};
+        const reqHeaders: IHeaders = Object.assign({}, defaultHeaders, requestHeaders) as IHeaders;
+        const options = Object.assign({}, config.defaultFetchOptions, {
+          body: (isBodySupported && JSON.stringify(body)) || undefined,
           headers: reqHeaders,
           method,
         });
@@ -146,49 +163,169 @@ export const config: IConfigType = {
   },
 };
 
+function getLocalNetworkError<T extends IJsonapiModel>(
+  message: string,
+  reqOptions: ICollectionFetchOpts,
+  collection?: IJsonapiCollection,
+): LibResponse<T> {
+  const ResponseConstructor: typeof LibResponse = reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
+  return new ResponseConstructor<T>(
+    {
+      error: new Error(message),
+      // collection,
+      requestHeaders: reqOptions.options?.networkConfig?.headers,
+    },
+    collection,
+    reqOptions.options,
+  );
+}
+
+function makeNetworkCall<T extends IJsonapiModel>(
+  params: ICollectionFetchOpts,
+  fetchOptions?: object,
+  doCacheResponse = false,
+  existingResponse?: LibResponse<T>,
+): Promise<LibResponse<T>> {
+  const ResponseConstructor: typeof LibResponse = fetchOptions?.['Response'] || LibResponse;
+  return config
+    .baseFetch(params.method, params.url, params.data, params?.options?.networkConfig?.headers, fetchOptions)
+    .then((response: IRawResponse) => {
+      const collectionResponse = Object.assign({}, response, { collection: params.collection });
+      const payload = config.transformResponse(collectionResponse);
+
+      if (existingResponse) {
+        existingResponse.update(payload, params.views);
+        return existingResponse;
+      }
+
+      return new ResponseConstructor<T>(
+        payload,
+        params.collection,
+        params.options,
+        undefined,
+        params.views,
+      );
+    })
+    .then((response: LibResponse<T>) => {
+      if (doCacheResponse) {
+        saveCache(params.url, response);
+      }
+      return response;
+    });
+}
+
 /**
  * Base implementation of the stateful fetch function (can be overridden)
  *
  * @param {ICollectionFetchOpts} reqOptions API request options
  * @returns {Promise<Response>} Resolves with a response object
  */
-function collectionFetch<T extends IJsonapiModel>(reqOptions: ICollectionFetchOpts): Promise<LibResponse<T>> {
-  const {
-    url,
-    options,
-    data,
-    method = 'GET',
-    collection,
-    views,
-  } = config.transformRequest(reqOptions);
+function collectionFetch<T extends IJsonapiModel>(
+  reqOptions: ICollectionFetchOpts,
+): Promise<LibResponse<T>> {
+  const ResponseConstructor: typeof LibResponse = reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
+  
+  const params = config.transformRequest(reqOptions);
+  // const { url, options, data, method = 'GET', collection, views } = params;
 
-  const staticCollection = collection && collection.constructor as { cache?: boolean };
+  const staticCollection = (params?.collection?.constructor as unknown) as {
+    maxCacheAge?: number;
+    cache: CachingStrategy;
+  };
   const collectionCache = staticCollection && staticCollection.cache;
-  const isCacheSupported = method.toUpperCase() === 'GET';
-  const skipCache = reqOptions.options && reqOptions.options.skipCache;
+  const isCacheSupported = params.method.toUpperCase() === 'GET';
 
-  if (config.cache && isCacheSupported && collectionCache && !skipCache) {
-    const cache = getCache(url);
-    if (cache) {
-      return Promise.resolve(cache.response) as Promise<LibResponse<T>>;
-    }
+  const cacheStrategy =
+    reqOptions.options?.cacheOptions?.skipCache || !isCacheSupported
+      ? CachingStrategy.NetworkOnly
+      : reqOptions.options?.cacheOptions?.cachingStrategy || collectionCache || config.cache;
+
+  let maxCacheAge: number = config.maxCacheAge || Infinity;
+
+  if (staticCollection && staticCollection.maxCacheAge !== undefined) {
+    maxCacheAge = staticCollection.maxCacheAge;
+  }
+  if (reqOptions.options?.cacheOptions?.maxAge !== undefined) {
+    maxCacheAge = reqOptions.options?.cacheOptions?.maxAge;
   }
 
-  return config.baseFetch(method, url, data, options && options.headers)
-    .then((response: IRawResponse) => {
-      const collectionResponse = Object.assign(response, { collection });
-      const resp = new LibResponse<T>(
-        config.transformResponse(collectionResponse), collection, options, undefined, views,
-      );
-      if (config.cache && isCacheSupported) {
-        saveCache(url, resp);
-      }
+  // NetworkOnly - Ignore cache
+  if (cacheStrategy === CachingStrategy.NetworkOnly) {
+    return makeNetworkCall<T>(params, reqOptions.options?.fetchOptions);
+  }
 
-      return resp;
+  const cacheContent: { response: LibResponse<T> } | undefined = (getCache(
+    params.url,
+    maxCacheAge,
+    ResponseConstructor,
+  ) as unknown) as { response: LibResponse<T> } | undefined;
+
+  // NetworkFirst - Fallback to cache only on network error
+  if (cacheStrategy === CachingStrategy.NetworkFirst) {
+    return makeNetworkCall<T>(params, reqOptions.options?.fetchOptions, true).catch((errorResponse) => {
+      if (cacheContent) {
+        return cacheContent.response;
+      }
+      throw errorResponse;
     });
+  }
+
+  // StaleWhileRevalidate - Use cache and update it in background
+  if (cacheStrategy === CachingStrategy.StaleWhileRevalidate) {
+    const network = makeNetworkCall<T>(params, reqOptions.options?.fetchOptions, true);
+
+    if (cacheContent) {
+      network.catch(() => {
+        // Ignore the failure
+      });
+      return Promise.resolve(cacheContent.response);
+    }
+
+    return network;
+  }
+
+  // CacheOnly - Fail if nothing in cache
+  if (cacheStrategy === CachingStrategy.CacheOnly) {
+    if (cacheContent) {
+      return Promise.resolve(cacheContent.response);
+    }
+
+    return Promise.reject(
+      getLocalNetworkError('No cache for this request', reqOptions, params?.collection),
+    );
+  }
+
+  // PREFER_CACHE - Use cache if available
+  if (cacheStrategy === CachingStrategy.CacheFirst) {
+    return cacheContent
+      ? Promise.resolve(cacheContent.response)
+      : makeNetworkCall<T>(params, reqOptions.options?.fetchOptions, true);
+  }
+
+  // StaleAndUpdate - Use cache and update response once network is complete
+  if (cacheStrategy === CachingStrategy.StaleAndUpdate) {
+    const existingResponse = cacheContent?.response?.clone() as LibResponse<T>;
+
+    const network = makeNetworkCall<T>(params, reqOptions.options?.fetchOptions, true, existingResponse);
+
+    if (existingResponse) {
+      network.catch(() => {
+        // Ignore the failure
+      });
+      return Promise.resolve(existingResponse);
+    }
+
+    return network;
+  }
+
+  return Promise.reject(
+    getLocalNetworkError('Invalid caching strategy', reqOptions, params?.collection),
+  );
 }
 
-export function libFetch<T extends IJsonapiModel = IJsonapiModel>(options: ICollectionFetchOpts) {
+export function libFetch<T extends IJsonapiModel = IJsonapiModel>(
+  options: ICollectionFetchOpts,
+): Promise<LibResponse<T>> {
   return collectionFetch<T>(options);
 }
 
@@ -198,7 +335,6 @@ export function libFetch<T extends IJsonapiModel = IJsonapiModel>(options: IColl
  * @export
  * @param {IJsonapiCollection} collection Related collection
  * @param {string} url API call URL
- * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @param {Array<View>} [views] Request view
  * @returns {Promise<Response>} Resolves with a Response object
@@ -206,7 +342,6 @@ export function libFetch<T extends IJsonapiModel = IJsonapiModel>(options: IColl
 export function read<T extends IJsonapiModel = IJsonapiModel>(
   url: string,
   collection?: IJsonapiCollection,
-  headers?: IHeaders,
   options?: IRequestOptions,
   views?: Array<View>,
 ): Promise<LibResponse<T>> {
@@ -214,7 +349,7 @@ export function read<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data: undefined,
     method: 'GET',
-    options: { ...options, headers },
+    options,
     url,
     views,
   });
@@ -227,7 +362,6 @@ export function read<T extends IJsonapiModel = IJsonapiModel>(
  * @param {IJsonapiCollection} collection Related collection
  * @param {string} url API call URL
  * @param {object} [data] Request body
- * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @param {Array<View>} [views] Request view
  * @returns {Promise<Response>} Resolves with a Response object
@@ -236,7 +370,6 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
   url: string,
   data?: object,
   collection?: IJsonapiCollection,
-  headers?: IHeaders,
   options?: IRequestOptions,
   views?: Array<View>,
 ): Promise<LibResponse<T>> {
@@ -244,7 +377,7 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data,
     method: 'POST',
-    options: { ...options, headers },
+    options,
     url,
     views,
   });
@@ -257,7 +390,6 @@ export function create<T extends IJsonapiModel = IJsonapiModel>(
  * @param {IJsonapiCollection} collection Related collection
  * @param {string} url API call URL
  * @param {object} [data] Request body
- * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @param {Array<View>} [views] Request view
  * @returns {Promise<Response>} Resolves with a Response object
@@ -266,7 +398,6 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
   url: string,
   data?: object,
   collection?: IJsonapiCollection,
-  headers?: IHeaders,
   options?: IRequestOptions,
   views?: Array<View>,
 ): Promise<LibResponse<T>> {
@@ -274,7 +405,7 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data,
     method: 'PATCH',
-    options: { ...options, headers },
+    options,
     url,
     views,
   });
@@ -286,7 +417,6 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
  * @export
  * @param {IJsonapiCollection} collection Related collection
  * @param {string} url API call URL
- * @param {IHeaders} [headers] Headers to be sent
  * @param {IRequestOptions} [options] Server options
  * @param {Array<View>} [views] Request view
  * @returns {Promise<Response>} Resolves with a Response object
@@ -294,7 +424,6 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
 export function remove<T extends IJsonapiModel = IJsonapiModel>(
   url: string,
   collection?: IJsonapiCollection,
-  headers?: IHeaders,
   options?: IRequestOptions,
   views?: Array<View>,
 ): Promise<LibResponse<T>> {
@@ -302,7 +431,7 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data: undefined,
     method: 'DELETE',
-    options: { ...options, headers },
+    options,
     url,
     views,
   });
@@ -314,7 +443,6 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
  * @export
  * @param {JsonApi.ILink} link Link URL or a link object
  * @param {IJsonapiCollection} collection Store that will be used to save the response
- * @param {IDictionary<string>} [requestHeaders] Request headers
  * @param {IRequestOptions} [options] Server options
  * @param {Array<View>} [views] Request view
  * @returns {Promise<LibResponse>} Response promise
@@ -322,45 +450,53 @@ export function remove<T extends IJsonapiModel = IJsonapiModel>(
 export function fetchLink<T extends IJsonapiModel = IJsonapiModel>(
   link: ILink,
   collection?: IJsonapiCollection,
-  requestHeaders?: IDictionary<string>,
   options?: IRequestOptions,
   views?: Array<View>,
+  ResponseConstructor: typeof LibResponse = LibResponse,
 ): Promise<LibResponse<T>> {
   if (link) {
     const href: string = typeof link === 'object' ? link.href : link;
 
     if (href) {
-      return read<T>(href, collection, requestHeaders, options, views);
+      return read<T>(href, collection, options, views);
     }
   }
 
-  return Promise.resolve(new LibResponse({ data: undefined }, collection));
+  return Promise.resolve(new ResponseConstructor({ data: undefined }, collection));
 }
 
 export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
   record: T,
   prop?: string,
 ): (response: LibResponse<T>) => T {
-  return action((response: LibResponse<T>): T => {
-    if (response.error) {
-      throw response.error;
-    }
+  return mobx.action(
+    (response: LibResponse<T>): T => {
+      if (response.error) {
+        throw response.error;
+      }
 
-    if (response.status === 204) {
-      setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
+      if (response.status === 204) {
+        setMeta(record, MODEL_PERSISTED_FIELD, true);
 
-      return record;
-    } else if (response.status === 202) {
-      const responseRecord = response.data as T;
-      setModelMetaKey(responseRecord, MODEL_PROP_FIELD, prop);
-      setModelMetaKey(responseRecord, MODEL_QUEUE_FIELD, true);
-      setModelMetaKey(responseRecord, MODEL_RELATED_FIELD, record);
+        return record;
+      }
 
-      return responseRecord;
-    } else {
-      setModelMetaKey(record, MODEL_PERSISTED_FIELD, true);
+      if (response.status === 202) {
+        const responseRecord = response.data as T;
 
-      return response.replaceData(record).data as T;
-    }
-  });
+        setMeta(responseRecord, MODEL_PROP_FIELD, prop);
+        setMeta(responseRecord, MODEL_QUEUE_FIELD, true);
+        setMeta(responseRecord, MODEL_RELATED_FIELD, record);
+
+        return responseRecord;
+      }
+      setMeta(record, MODEL_PERSISTED_FIELD, true);
+
+      const data = response.replaceData(record).data as T;
+
+      commitModel(data);
+
+      return data;
+    },
+  );
 }

@@ -1,4 +1,4 @@
-import { IDictionary, IRawModel } from 'datx-utils';
+import { IRawModel } from '@datx/utils';
 
 import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
@@ -10,9 +10,9 @@ export interface IModelConstructor<T = PureModel> {
   autoIdValue: IIdentifier;
   enableAutoId: boolean;
 
-  new(data?: IRawModel, collection?: PureCollection): T;
+  new (data?: IRawModel, collection?: PureCollection): T;
 
   preprocess(data: object, collection?: PureCollection): object;
   getAutoId(): IIdentifier;
-  toJSON(): IIdentifier;
+  toJSON(): IType;
 }

@@ -1,0 +1,73 @@
+{
+  "docs": {
+    "Getting started": [
+      "getting-started/installation",
+      "getting-started/defining-models",
+      "getting-started/references",
+      "getting-started/configuring-the-collection",
+      "getting-started/using-the-collection",
+      "getting-started/persisting-data-locally"
+    ],
+    "Mixins": [
+      "mixins/what-are-mixis",
+      "mixins/with-actions",
+      "mixins/with-meta",
+      "mixins/with-patches",
+      "mixins/network-mixin",
+      "mixins/jsonapi-mixin",
+      "mixins/building-your-own-mixin"
+    ],
+    "API Reference": [
+      "api-reference/collection",
+      "api-reference/model",
+      "api-reference/view",
+      "api-reference/attribute",
+      "api-reference/bucket",
+      "api-reference/pure-model",
+      "api-reference/model-utils",
+      "api-reference/lib-utils",
+      "api-reference/typescript-interfaces"
+    ],
+    "Network": [
+      "network/getting-started",
+      "network/base-request",
+      "network/caching",
+      "network/fetching",
+      "network/interceptors",
+      "network/operators",
+      "network/response",
+      "network/typescript-interfaces"
+    ],
+    "JSON API": [
+      "jsonapi/jsonapi-getting-started",
+      "jsonapi/jsonapi-basic-configuration",
+      "jsonapi/jsonapi-network-configuration",
+      "jsonapi/jsonapi-network-usage",
+      "jsonapi/jsonapi-spec-compliance",
+      "jsonapi/jsonapi-model",
+      "jsonapi/jsonapi-collection",
+      "jsonapi/jsonapi-view",
+      "jsonapi/jsonapi-response",
+      "jsonapi/jsonapi-config",
+      "jsonapi/jsonapi-utils",
+      "jsonapi/jsonapi-typescript-interfaces"
+    ],
+    "JSON API Angular": ["jsonapi-angular/mixin", "jsonapi-angular/base-fetch"],
+    "Migration guide": [
+      "migration-guide/breaking-changes",
+      "migration-guide/deprecations",
+      "migration-guide/whats-new",
+      "migration-guide/from-v1"
+    ],
+    "Troubleshooting": ["troubleshooting/known-issues"]
+  },
+  "examples": {
+    "Setup": [
+      "examples/basic-setup",
+      "examples/react-setup",
+      "examples/nextjs-setup",
+      "examples/angular-setup"
+    ],
+    "Collection": ["examples/adding-models"]
+  }
+}

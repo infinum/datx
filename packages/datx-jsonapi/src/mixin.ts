@@ -7,7 +7,7 @@ import {
   IViewConstructor,
   PureCollection,
   PureModel,
-} from 'datx';
+} from '@datx/core';
 
 import { decorateCollection } from './decorateCollection';
 import { decorateModel } from './decorateModel';
@@ -29,15 +29,22 @@ export function jsonapi<T extends PureModel>(
 ): IViewConstructor<IJsonapiModel, T & IJsonapiView>;
 
 export function jsonapi<T>(
-  Base: IModelConstructor<T>|ICollectionConstructor<T>|IViewConstructor<T>,
-) {
+  Base: IModelConstructor<T> | ICollectionConstructor<T> | IViewConstructor<T>,
+):
+  | IModelConstructor<T & IJsonapiModel>
+  | ICollectionConstructor<T & IJsonapiCollection>
+  | IViewConstructor<IJsonapiModel, T & IJsonapiView> {
   if (isModel(Base)) {
     // @ts-ignore
     return decorateModel(Base);
-  } else if (isCollection(Base)) {
+  }
+
+  if (isCollection(Base)) {
     // @ts-ignore
     return decorateCollection(Base);
-  } else if (isView(Base)) {
+  }
+
+  if (isView(Base)) {
     // @ts-ignore
     return decorateView<T>(Base);
   }
