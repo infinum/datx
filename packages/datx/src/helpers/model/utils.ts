@@ -165,6 +165,29 @@ function fromEntries(entries: Array<[string, any]>): Record<string, any> {
   return data;
 }
 
+function getRawData(input: object | Array<object>) {
+  if (Array.isArray(input)) return input.map(getRawData);
+
+  try {
+    const data = {};
+
+    for (const key in input) {
+      // skip parent properties
+      if (!Object.prototype.hasOwnProperty.call(input, key)) continue;
+
+      if (typeof input[key] === 'object' && input[key]) {
+        data[key] = getRawData(input[key]);
+      } else {
+        data[key] = input[key];
+      }
+    }
+
+    return Object.setPrototypeOf(data, null);
+  } catch (e) {
+    return input;
+  }
+}
+
 export function modelToJSON(model: PureModel): IRawModel {
   const meta = getMetaObj(model);
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
@@ -191,7 +214,8 @@ export function modelToJSON(model: PureModel): IRawModel {
     }
   });
 
-  return mobx.toJS(raw);
+  // return mobx.toJS(raw);
+  return getRawData(raw);
 }
 
 export function cloneModel<T extends PureModel>(model: T): T {
