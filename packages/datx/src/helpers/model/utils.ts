@@ -165,25 +165,26 @@ function fromEntries(entries: Array<[string, any]>): Record<string, any> {
   return data;
 }
 
-function getRawData(input: object) {
+function getRawData(input: object | object[]) {
+  if (Array.isArray(input)) return input.map(getRawData);
+
   try {
     const data = {};
 
-    for(let key in input) {
+    for (const key in input) {
       // skip parent properties
-      if(!Object.prototype.hasOwnProperty.call(input, key)) continue;
-  
-      if(typeof input[key] === 'object' && input[key]) {
-        data[key] = getRawData(input[key])
+      if (!Object.prototype.hasOwnProperty.call(input, key)) continue;
+
+      if (typeof input[key] === 'object' && input[key]) {
+        data[key] = getRawData(input[key]);
       } else {
-        data[key] = input[key]
+        data[key] = input[key];
       }
     }
 
-    return Object.setPrototypeOf(data, null)
-
-  } catch(e) {
-    return input
+    return Object.setPrototypeOf(data, null);
+  } catch (e) {
+    return input;
   }
 }
 
@@ -213,7 +214,8 @@ export function modelToJSON(model: PureModel): IRawModel {
     }
   });
 
-  return getRawData(mobx.toJS(raw));
+  // return mobx.toJS(raw);
+  return getRawData(raw);
 }
 
 export function cloneModel<T extends PureModel>(model: T): T {
