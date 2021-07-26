@@ -165,7 +165,7 @@ function fromEntries(entries: Array<[string, any]>): Record<string, any> {
   return data;
 }
 
-function getRawData(input: object | object[]) {
+function getRawData(input: object | Array<object>) {
   if (Array.isArray(input)) return input.map(getRawData);
 
   try {
