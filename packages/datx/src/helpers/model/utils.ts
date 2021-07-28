@@ -165,24 +165,32 @@ function fromEntries(entries: Array<[string, any]>): Record<string, any> {
   return data;
 }
 
-function getRawData(input: object | Array<object>) {
-  if (Array.isArray(input)) return input.map(getRawData);
-
+function getRawData(input: unknown) {
   try {
-    const data = {};
-
-    for (const key in input) {
-      // skip parent properties
-      if (!Object.prototype.hasOwnProperty.call(input, key)) continue;
-
-      if (typeof input[key] === 'object' && input[key]) {
-        data[key] = getRawData(input[key]);
-      } else {
-        data[key] = input[key];
-      }
+    if (Array.isArray(input)) {
+      return input.map(getRawData);
     }
 
-    return Object.setPrototypeOf(data, null);
+    if (typeof input === 'object') {
+      const data = {};
+
+      for (const key in input) {
+        // skip parent properties
+        if (!Object.prototype.hasOwnProperty.call(input, key)) continue;
+
+        const isParsable = typeof input[key] === 'object' || Array.isArray(input[key]);
+
+        if (input[key] && isParsable) {
+          data[key] = getRawData(input[key]);
+        } else {
+          data[key] = input[key];
+        }
+      }
+
+      return Object.setPrototypeOf(data, null);
+    }
+
+    return input;
   } catch (e) {
     return input;
   }
@@ -285,7 +293,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
       if (shouldBeReference && !fields[key].referenceDef) {
         throw error('You should save this value as a reference.');
       }
-      model[key] = value;
+      model[key] = shouldBeReference ? value : getRawData(value);
     } else {
       if (shouldBeReference) {
         mobx.extendObservable(fields, {
