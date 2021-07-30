@@ -1,6 +1,6 @@
 {
   "name": "@datx/jsonapi",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "DatX mixin for JSON API support",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -70,8 +70,8 @@
     ]
   },
   "dependencies": {
-    "@datx/core": "^2.2.2",
-    "@datx/network": "^2.2.2",
-    "@datx/utils": "^2.2.2"
+    "@datx/core": "^2.2.3",
+    "@datx/network": "^2.2.3",
+    "@datx/utils": "^2.2.3"
   }
 }
