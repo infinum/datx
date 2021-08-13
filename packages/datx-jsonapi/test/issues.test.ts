@@ -263,7 +263,8 @@ describe('Issues', () => {
     const foo1 = store.add({ bar: bar1 }, Foo);
     bar1.foo = foo1;
 
-    expect(foo1.bars).toEqual([bar1]);
+    expect(foo1.bars).toContain(bar1);
+    expect(foo1.bars).toHaveLength(1);
 
     const jsonapiData = modelToJsonApi(foo1);
     expect(jsonapiData.relationships?.bar).toEqual({ data: { id: bar1.meta.id, type: 'bar' } });

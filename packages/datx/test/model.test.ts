@@ -1341,7 +1341,9 @@ describe('Model', () => {
       expect(isAttributeDirty(foo1, 'one')).toBe(false);
       expect(isAttributeDirty(foo1, 'many')).toBe(false);
       expect(foo1.one).toBe(foo4);
-      expect(foo1.many).toEqual([foo2, foo3]);
+      expect(foo1.many).toContain(foo2);
+      expect(foo1.many).toContain(foo3);
+      expect(foo1.many).toHaveLength(2);
     });
   });
 });
