@@ -83,9 +83,10 @@ class MobXProxy {
   private hasMobX = false;
 
   constructor() {
+    let mobx: any;
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const mobx = require('mobx');
+      mobx = require('mobx');
       this.hasMobX = Boolean(mobx?.observable);
     } catch {
       // Nothing to do
@@ -109,7 +110,7 @@ class MobXProxy {
 
           mobxProxyInstance.access = true;
           if (mobxProxyInstance.useRealMobX) {
-            return require('mobx')[key];
+            return mobx[key];
           }
           // @ts-ignore
           return noopMobX[key];
