@@ -165,6 +165,37 @@ function fromEntries(entries: Array<[string, any]>): Record<string, any> {
   return data;
 }
 
+function getRawData(input: unknown) {
+  try {
+    if (Array.isArray(input)) {
+      return input.map(getRawData);
+    }
+
+    if (typeof input === 'object') {
+      const data = {};
+
+      for (const key in input) {
+        // skip parent properties
+        if (!Object.prototype.hasOwnProperty.call(input, key)) continue;
+
+        const isParsable = typeof input[key] === 'object' || Array.isArray(input[key]);
+
+        if (input[key] && isParsable) {
+          data[key] = getRawData(input[key]);
+        } else {
+          data[key] = input[key];
+        }
+      }
+
+      return Object.setPrototypeOf(data, null);
+    }
+
+    return input;
+  } catch (e) {
+    return input;
+  }
+}
+
 export function modelToJSON(model: PureModel): IRawModel {
   const meta = getMetaObj(model);
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
@@ -191,7 +222,8 @@ export function modelToJSON(model: PureModel): IRawModel {
     }
   });
 
-  return mobx.toJS(raw);
+  // return mobx.toJS(raw);
+  return getRawData(raw);
 }
 
 export function cloneModel<T extends PureModel>(model: T): T {
@@ -261,6 +293,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
       if (shouldBeReference && !fields[key].referenceDef) {
         throw error('You should save this value as a reference.');
       }
+      // model[key] = shouldBeReference ? value : getRawData(value);
       model[key] = value;
     } else {
       if (shouldBeReference) {
@@ -287,22 +320,21 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
 
 export function updateModel<T extends PureModel>(model: T, data: Record<string, any>): T {
   startAction(model);
+  const rawData = getRawData(data);
   const modelId = getMeta(model.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD);
   const modelType = getMeta(model.constructor, MetaClassField.TypeField, DEFAULT_TYPE_FIELD);
 
-  const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
+  mergeMeta(model, omitKeys(rawData[META_FIELD] || {}, READ_ONLY_META));
 
-  mergeMeta(model, omitKeys(data[META_FIELD] || {}, READ_ONLY_META));
-
-  keys.forEach((key) => {
+  Object.keys(rawData).forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
-      assignModel(model, key, data[key]);
+      assignModel(model, key, rawData[key]);
     } else if (key === META_FIELD) {
-      const metaKeys = Object.keys(data[key] || {});
+      const metaKeys = Object.keys(rawData[key] || {});
 
       metaKeys.forEach((metaKey) => {
         if (!READ_ONLY_META.includes(metaKey)) {
-          setMeta(model, metaKey, data[key][metaKey]);
+          setMeta(model, metaKey, rawData[key][metaKey]);
         }
       });
     }
