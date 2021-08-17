@@ -50,14 +50,20 @@ import { IGeneralize } from './interfaces/IGeneralize';
 import { INetwork } from './interfaces/INetwork';
 class MyClient<TNetwork extends INetwork> extends NetworkClient<TNetwork> {
   getOne<TModel extends typeof PureModel, TInstance = InstanceType<TModel>>(
-    type: TModel,
-    id: string,
+    _type: TModel,
+    _id: string,
   ): IGeneralize<Response<TInstance>, ReturnType<TNetwork['exec']>> {
     return null as any;
   }
 }
 
-const pc = new MyClient(new Collection(), new Network.Promise());
+const pc = new MyClient(new Collection(), new Network.Promise(window.fetch));
+const rc = new MyClient(new Collection(), new Network.Rx());
+
 pc.getOne(Model, '1').then((a) => {
+  a.data;
+});
+
+rc.getOne(Model, '1').subscribe((a) => {
   a.data;
 });

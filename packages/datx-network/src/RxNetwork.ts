@@ -3,10 +3,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { IFetchOptions } from './interfaces/IFetchOptions';
-import { INetwork } from './interfaces/INetwork';
+import { Network } from './Network';
 import { Response } from './Response';
 
-export class RxNetwork implements INetwork<Observable<any>> {
+export class RxNetwork extends Network<Observable<any>> {
   public exec<T, U = any>(asyncVal: Observable<U>, mapFn: (value: U) => T): Observable<T> {
     return asyncVal.pipe(map(mapFn));
   }

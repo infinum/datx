@@ -5,15 +5,16 @@ import { BodyType } from './enums/BodyType';
 import { ParamArrayType } from './enums/ParamArrayType';
 import { PureCollection, IType, PureModel } from '@datx/core';
 import { IRequestOptions } from './interfaces/IRequestOptions';
+import { IAsync } from './interfaces/IAsync';
 
-export function setUrl<TResponseType>(url: string, type: IType | typeof PureModel = PureModel) {
+export function setUrl<TResponseType extends IAsync>(url: string, type: IType | typeof PureModel = PureModel) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     pipeline['_options'].url = url;
     pipeline['_config'].type = type;
   };
 }
 
-export function addInterceptor<TResponseType>(fn: IInterceptor<TResponseType>, name: string = fn.name) {
+export function addInterceptor<TResponseType extends IAsync>(fn: IInterceptor<TResponseType>, name: string = fn.name) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     pipeline.interceptors = pipeline.interceptors.filter(
       (interceptor) => interceptor.name !== name,
@@ -23,7 +24,7 @@ export function addInterceptor<TResponseType>(fn: IInterceptor<TResponseType>, n
   };
 }
 
-export function upsertInterceptor<TResponseType>(fn: IInterceptor<TResponseType>, name: string = fn.name) {
+export function upsertInterceptor<TResponseType extends IAsync>(fn: IInterceptor<TResponseType>, name: string = fn.name) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     const interceptor = pipeline.interceptors.find((interceptor) => interceptor.name === name);
 
@@ -35,7 +36,7 @@ export function upsertInterceptor<TResponseType>(fn: IInterceptor<TResponseType>
   };
 }
 
-export function removeInterceptor<TResponseType>(name: string) {
+export function removeInterceptor<TResponseType extends IAsync>(name: string) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     pipeline.interceptors = pipeline.interceptors.filter(
       (interceptor) => interceptor.name !== name,
@@ -43,13 +44,13 @@ export function removeInterceptor<TResponseType>(name: string) {
   };
 }
 
-export function method<TResponseType>(method: HttpMethod) {
+export function method<TResponseType extends IAsync>(method: HttpMethod) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     pipeline['_options'].method = method;
   };
 }
 
-export function body<TResponseType>(body: unknown, bodyType?: BodyType) {
+export function body<TResponseType extends IAsync>(body: unknown, bodyType?: BodyType) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     if (bodyType || bodyType === 0) {
       pipeline['_options'].bodyType = bodyType;
@@ -64,14 +65,14 @@ export function body<TResponseType>(body: unknown, bodyType?: BodyType) {
   };
 }
 
-export function query<TResponseType>(
+export function query<TResponseType extends IAsync>(
   name: string,
   value: string | Array<string> | Record<string, unknown> | undefined,
 ): (pipeline: BaseRequest<TResponseType>) => void;
-export function query<TResponseType>(
+export function query<TResponseType extends IAsync>(
   params: Record<string, string | Array<string> | Record<string, unknown> | undefined>,
 ): (pipeline: BaseRequest<TResponseType>) => void;
-export function query<TResponseType>(
+export function query<TResponseType extends IAsync>(
   name: string | Record<string, string | Array<string> | Record<string, unknown> | undefined>,
   value?: string | Array<string> | Record<string, unknown> | undefined,
 ) {
@@ -84,9 +85,9 @@ export function query<TResponseType>(
   };
 }
 
-export function header<TResponseType>(name: string, value: string): (pipeline: BaseRequest<TResponseType>) => void;
-export function header<TResponseType>(params: Record<string, string>): (pipeline: BaseRequest<TResponseType>) => void;
-export function header<TResponseType>(name: string | Record<string, string>, value?: string) {
+export function header<TResponseType extends IAsync>(name: string, value: string): (pipeline: BaseRequest<TResponseType>) => void;
+export function header<TResponseType extends IAsync>(params: Record<string, string>): (pipeline: BaseRequest<TResponseType>) => void;
+export function header<TResponseType extends IAsync>(name: string | Record<string, string>, value?: string) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     if (typeof name === 'string') {
       pipeline['_options'].headers[name] = value || '';
@@ -96,9 +97,9 @@ export function header<TResponseType>(name: string | Record<string, string>, val
   };
 }
 
-export function params<TResponseType>(name: string, value: string): (pipeline: BaseRequest<TResponseType>) => void;
-export function params<TResponseType>(params: Record<string, string>): (pipeline: BaseRequest<TResponseType>) => void;
-export function params<TResponseType>(name: string | Record<string, string>, value?: string) {
+export function params<TResponseType extends IAsync>(name: string, value: string): (pipeline: BaseRequest<TResponseType>) => void;
+export function params<TResponseType extends IAsync>(params: Record<string, string>): (pipeline: BaseRequest<TResponseType>) => void;
+export function params<TResponseType extends IAsync>(name: string | Record<string, string>, value?: string) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     if (typeof name === 'string') {
       pipeline['_options'].params[name] = value as string;
@@ -108,25 +109,25 @@ export function params<TResponseType>(name: string | Record<string, string>, val
   };
 }
 
-export function encodeQueryString<TResponseType>(encodeQueryString: boolean) {
+export function encodeQueryString<TResponseType extends IAsync>(encodeQueryString: boolean) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     pipeline['_config'].encodeQueryString = encodeQueryString;
   };
 }
 
-export function paramArrayType<TResponseType>(paramArrayType: ParamArrayType) {
+export function paramArrayType<TResponseType extends IAsync>(paramArrayType: ParamArrayType) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     pipeline['_config'].paramArrayType = paramArrayType;
   };
 }
 
-export function collection<TResponseType>(collection?: PureCollection) {
+export function collection<TResponseType extends IAsync>(collection?: PureCollection) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     pipeline['_config'].collection = collection;
   };
 }
 
-export function requestOptions<TResponseType>(options?: IRequestOptions) {
+export function requestOptions<TResponseType extends IAsync>(options?: IRequestOptions) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     if (options?.query) {
       query(options?.query)(pipeline);
