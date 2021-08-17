@@ -6,7 +6,7 @@ original_id: base-fetch
 
 By default, the library will use the FetchAPI to do all the networking. This is not ideal when using Angular as it would remove some useful features like interceptors and request cancellation.
 
-`datx-jsonapi-angular` implements some hooks which can be used in combination with a custom `baseFetch` implementation to get those features back.
+`@datx/jsonapi-angular` implements some hooks which can be used in combination with a custom `baseFetch` implementation to get those features back.
 
 Here is an example of the implementation, but you might have some other needs:
 
