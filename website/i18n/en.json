@@ -389,6 +389,9 @@
       "version-2.0.0/mixins/version-2.0.0-building-your-own-mixin": {
         "title": "Build your own mixin"
       },
+      "version-2.0.0/mixins/version-2.0.0-jsonapi-angular-mixin": {
+        "title": "JSONAPI Angular Mixin"
+      },
       "version-2.0.0/mixins/version-2.0.0-network-mixin": {
         "title": "Network Mixin"
       },
