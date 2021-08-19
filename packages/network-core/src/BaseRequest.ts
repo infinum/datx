@@ -32,6 +32,10 @@ export class BaseRequest<
     this._config.baseUrl = baseUrl;
   }
 
+  public update(...operators: Array<IPipeOperator | undefined>): void {
+    operators.filter(Boolean).forEach((operator) => (operator as IPipeOperator)(this));
+  }
+
   public pipe<
     TNewModel extends PureModel | Array<PureModel> = TModel,
     TNewParams extends Record<string, unknown> = TParams

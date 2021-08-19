@@ -12,7 +12,7 @@ interface IClientConfig<TAsync extends IAsync> {
   interceptors?: Array<IInterceptorsList<TAsync>>;
 }
 
-export abstract class NetworkClient<TNetwork extends INetwork> {
+export class NetworkClient<TNetwork extends INetwork> {
   protected __request: BaseRequest<ReturnType<TNetwork['exec']>>;
 
   constructor(
@@ -40,10 +40,10 @@ export abstract class NetworkClient<TNetwork extends INetwork> {
     return this.__request.fetch() as IGeneralize<Response<T>, ReturnType<TNetwork['exec']>>;
   }
 
-  abstract getOne<TModel extends typeof PureModel, TInstance = InstanceType<TModel>>(
-    type: TModel,
-    id: string,
-  ): IGeneralize<Response<TInstance>, ReturnType<TNetwork['exec']>>;
+  // abstract getOne<TModel extends typeof PureModel, TInstance = InstanceType<TModel>>(
+  //   type: TModel,
+  //   id: string,
+  // ): IGeneralize<Response<TInstance>, ReturnType<TNetwork['exec']>>;
 
   // getMany(type)
   // save(model)

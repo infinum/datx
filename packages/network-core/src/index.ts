@@ -1,4 +1,5 @@
 export { NetworkClient } from './Client';
+import { MockPromiseNetwork } from './MockPromiseNetwork';
 import { PromiseNetwork } from './PromiseNetwork';
 import { RxNetwork } from './RxNetwork';
 
@@ -39,7 +40,11 @@ export { IInterceptorsList } from './interfaces/IInterceptorsList';
 export { appendQueryParams } from './helpers/utils';
 export { saveModel } from './helpers/model';
 
-export const Network = { Promise: PromiseNetwork, Rx: RxNetwork };
+export const Network = {
+  Promise: PromiseNetwork,
+  Rx: RxNetwork,
+  Mock: { Promise: MockPromiseNetwork },
+};
 
 ////////////////////////////////////////////////
 
