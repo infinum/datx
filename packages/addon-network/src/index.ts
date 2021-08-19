@@ -43,27 +43,27 @@ export const Network = { Promise: PromiseNetwork, Rx: RxNetwork };
 
 ////////////////////////////////////////////////
 
-import { Collection, Model, PureModel } from '@datx/core';
-import { NetworkClient } from './Client';
-import { Response } from './Response';
-import { IGeneralize } from './interfaces/IGeneralize';
-import { INetwork } from './interfaces/INetwork';
-class MyClient<TNetwork extends INetwork> extends NetworkClient<TNetwork> {
-  getOne<TModel extends typeof PureModel, TInstance = InstanceType<TModel>>(
-    _type: TModel,
-    _id: string,
-  ): IGeneralize<Response<TInstance>, ReturnType<TNetwork['exec']>> {
-    return null as any;
-  }
-}
+// import { Collection, Model, PureModel } from '@datx/core';
+// import { NetworkClient } from './Client';
+// import { Response } from './Response';
+// import { IGeneralize } from './interfaces/IGeneralize';
+// import { INetwork } from './interfaces/INetwork';
+// class MyClient<TNetwork extends INetwork> extends NetworkClient<TNetwork> {
+//   getOne<TModel extends typeof PureModel, TInstance = InstanceType<TModel>>(
+//     _type: TModel,
+//     _id: string,
+//   ): IGeneralize<Response<TInstance>, ReturnType<TNetwork['exec']>> {
+//     return null as any;
+//   }
+// }
 
-const pc = new MyClient(new Collection(), new Network.Promise(window.fetch));
-const rc = new MyClient(new Collection(), new Network.Rx());
+// const pc = new MyClient(new Collection(), new Network.Promise(window.fetch));
+// const rc = new MyClient(new Collection(), new Network.Rx());
 
-pc.getOne(Model, '1').then((a) => {
-  a.data;
-});
+// pc.getOne(Model, '1').then((a) => {
+//   a.data;
+// });
 
-rc.getOne(Model, '1').subscribe((a) => {
-  a.data;
-});
+// rc.getOne(Model, '1').subscribe((a) => {
+//   a.data;
+// });
