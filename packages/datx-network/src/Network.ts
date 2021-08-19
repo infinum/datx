@@ -5,13 +5,20 @@ import { IGeneralize } from './interfaces/IGeneralize';
 import { Response } from './Response';
 
 interface IChainable<IA extends IAsync<U> = IAsync<any>, U = any> {
-  value: IGeneralize<U, IA>;
-  then<TNext>(successFn: (data: U) => TNext, failFn?: (err: Error) => TNext): IChainable<IGeneralize<TNext, IA>, TNext>;
-  catch<TNext>(failFn?: (err: Error) => TNext): IChainable<IGeneralize<TNext, IA>, TNext>;
+  value: IA;
+  then<TNext>(
+    successFn: (data: U) => TNext,
+    failFn?: (err: Error) => TNext,
+  ): IChainable<IGeneralize<TNext, IA>, TNext>;
+  catch<TNext>(failFn?: (err: Error) => TNext): IChainable<IA, U>;
 }
 
 export abstract class Network<IA extends IAsync<any> = IAsync<any>> {
-  abstract exec<T, U = any>(asyncVal: IGeneralize<U, IA>, successFn?: (value: U) => T, failureFn?: (error: Error) => T): IGeneralize<T, IA>;
+  abstract exec<T, U = any>(
+    asyncVal: IGeneralize<U, IA>,
+    successFn?: (value: U) => T,
+    failureFn?: (error: Error) => T,
+  ): IGeneralize<T, IA>;
 
   abstract baseFetch<T extends TModel | Array<TModel>, TModel extends PureModel = PureModel>(
     request: IFetchOptions,
@@ -24,10 +31,10 @@ export abstract class Network<IA extends IAsync<any> = IAsync<any>> {
     return {
       value: asyncVal,
       then<TNext>(successFn: (data: U) => TNext, failFn?: (err: Error) => TNext) {
-        return network.chain(network.exec<TNext, U>(asyncVal, successFn, failFn));
+        return network.chain(network.exec<TNext, U>(asyncVal, successFn, failFn)) as any;
       },
       catch<TNext>(failFn?: (err: Error) => TNext) {
-        return network.chain(network.exec<TNext, U>(asyncVal, undefined, failFn));
+        return network.chain(network.exec<TNext, U>(asyncVal, (data) => data, failFn)) as any;
       },
     };
   }

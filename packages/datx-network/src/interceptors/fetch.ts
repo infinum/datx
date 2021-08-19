@@ -7,10 +7,11 @@ import { IResponseObject } from '../interfaces/IResponseObject';
 import { IHeaders } from '../interfaces/IHeaders';
 import { Response as ResponseClass } from '../Response';
 import { INetwork } from '../interfaces/INetwork';
+import { IAsync } from '../interfaces/IAsync';
 
 function parseResponse(
   response: IResponseObject,
-  parse: (data: object, options: IResponseObject) => object,
+  parse: (data: Record<string, unknown>, options: IResponseObject) => Record<string, unknown>,
 ): IResponseObject {
   if (response.data) {
     return {
@@ -25,13 +26,15 @@ function parseResponse(
 export function fetchInterceptor<TNetwork extends INetwork, T extends PureModel>(
   Network: TNetwork,
   serialize: (options: IFetchOptions) => IFetchOptions = (options): IFetchOptions => options,
-  parse: (data: object, options: IResponseObject) => object = (data): object => data,
+  parse: (data: Record<string, unknown>, options: IResponseObject) => Record<string, unknown> = (
+    data,
+  ): Record<string, unknown> => data,
   Response: typeof ResponseClass = ResponseClass,
 ) {
-  return (request: IFetchOptions, _next?: INetworkHandler): Promise<ResponseClass<T>> => {
+  return (request: IFetchOptions, _next?: INetworkHandler): IAsync<ResponseClass<T>> => {
     const payload = serialize ? serialize(request) : request;
 
-    let data: object;
+    let data: Record<string, unknown>;
     let status = 0;
     let headers: IResponseHeaders;
 
@@ -53,12 +56,17 @@ export function fetchInterceptor<TNetwork extends INetwork, T extends PureModel>
       method: payload.method,
     });
 
-    return Network.chain(Network.baseFetch(payload.url, options))
+    const fetchOptions = {
+      ...payload,
+      ...options,
+    };
+
+    return Network.chain(Network.baseFetch(fetchOptions))
       .then((response: globalThis.Response) => {
         status = response.status;
         headers = response.headers;
 
-        return response.json();
+        return (response.json() as unknown) as Record<string, unknown>;
       })
       .catch((error: Error) => {
         if (status === 204) {
@@ -69,7 +77,7 @@ export function fetchInterceptor<TNetwork extends INetwork, T extends PureModel>
         }
         throw error;
       })
-      .then((responseData: object) => {
+      .then((responseData: Record<string, unknown>) => {
         data = responseData;
         if (status >= 400) {
           throw {
@@ -105,7 +113,6 @@ export function fetchInterceptor<TNetwork extends INetwork, T extends PureModel>
           parse,
         );
         throw new Response<T>(response, request.collection, undefined, request.views);
-      })
-      .value;
+      }).value;
   };
 }
