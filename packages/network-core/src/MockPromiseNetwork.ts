@@ -1,16 +1,25 @@
 import { PromiseNetwork } from './PromiseNetwork';
 
-type IAssertion = (input: RequestInfo, init?: RequestInit | undefined) => Promise<Response>;
+type IAssertion = (
+  input: RequestInfo,
+  init?: RequestInit | undefined,
+) => Promise<[body?: Record<string, unknown> | null | undefined, init?: ResponseInit | undefined]>;
 
 export class MockPromiseNetwork extends PromiseNetwork {
   constructor() {
-    const fetchReference = (input: RequestInfo, init?: RequestInit | undefined) => {
+    const fetchReference = async (input: RequestInfo, init?: RequestInit | undefined) => {
       if (!this.assertion) {
         throw new Error('No assertion defined');
       }
-      const response = this.assertion(input, init);
+      const [bodyData, responseInit] = await this.assertion(input, init);
       this.assertion = undefined;
-      return response;
+      const body = new ReadableStream({
+        async pull(controller) {
+          controller.enqueue(JSON.stringify(bodyData));
+          controller.close();
+        },
+      });
+      return new Response(body, responseInit);
     };
 
     super(fetchReference);

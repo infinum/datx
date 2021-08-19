@@ -1,6 +1,6 @@
 import { Collection } from '@datx/core';
 import { clearAllCache } from '../src/interceptors/cache';
-import { Network, NetworkClient, Response as DatxResponse, setUrl } from '../src';
+import { Network, NetworkClient, setUrl } from '../src';
 
 describe('Request', () => {
   describe('Mock Promise', () => {
@@ -32,9 +32,7 @@ describe('Request', () => {
     const store = new Collection();
     const client = new NetworkClient(store, network);
     client.request.update(setUrl('/'));
-    network.setAssertion(() => {
-      throw new Response(null, { status: 0 });
-    });
+    network.setAssertion(async () => [{}, { status: 404 }]);
     expect(() => client.request.fetch()).toThrowError('No assertion set');
 
     // const store = new Collection();
