@@ -166,7 +166,7 @@ describe('Collection', () => {
       class Foo extends PureModel {
         public static type = 'foo';
 
-        static preprocess(data: object): object {
+        static preprocess(data: Record<string, unknown>): Record<string, unknown> {
           return {
             ...data,
             baz: 100,
@@ -415,7 +415,7 @@ describe('Collection', () => {
       if (mobx.useRealMobX) {
         expect(autorunModelCount).toBe(2);
         expect(foo).toBe(foo2);
-  
+
         expect(autorunLengthCount).toBe(2);
         expect(fooLength).toBe(1);
       }
