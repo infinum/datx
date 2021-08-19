@@ -9,8 +9,12 @@ export class PromiseNetwork extends Network<Promise<any>> {
     // Add fetch interceptor
   }
 
-  public exec<T, U = any>(asyncVal: Promise<U>, mapFn: (value: U) => T): Promise<T> {
-    return asyncVal.then(mapFn);
+  public exec<T, U = unknown>(
+    asyncVal: Promise<U>,
+    successFn?: (value: U) => T,
+    failureFn?: (error: Error) => T,
+  ): Promise<T> {
+    return asyncVal.then(successFn, failureFn);
   }
 
   public baseFetch<T extends TModel | Array<TModel>, TModel extends PureModel = PureModel>(
