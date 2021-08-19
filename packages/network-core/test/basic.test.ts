@@ -1,39 +1,30 @@
 import { Collection } from '@datx/core';
+import * as nock from 'nock';
+import fetch from 'node-fetch';
 import { clearAllCache } from '../src/interceptors/cache';
-import { Network, NetworkClient, setUrl } from '../src';
+import { Network, NetworkClient, Response, setUrl } from '../src';
 
 describe('Request', () => {
-  describe('Mock Promise', () => {
-    it('should initialize', () => {
-      const network = new Network.Mock.Promise();
-      const store = new Collection();
-      const client = new NetworkClient(store, network);
-      expect(client).toBeTruthy();
-    });
-
-    it('should fail without an assertion', () => {
-      const network = new Network.Mock.Promise();
-      const store = new Collection();
-      const client = new NetworkClient(store, network);
-      client.request.update(setUrl('/'));
-      expect(() => client.request.fetch()).toThrowError('No assertion set');
-    });
+  it('should initialize', () => {
+    const network = new Network.Promise(fetch);
+    const store = new Collection();
+    const client = new NetworkClient(store, network);
+    expect(client).toBeTruthy();
   });
 
   it('throw if no url is set', async () => {
-    const network = new Network.Mock.Promise();
+    const network = new Network.Promise(fetch);
     const store = new Collection();
     const client = new NetworkClient(store, network);
     expect(() => client.request.fetch()).toThrowError('URL should be defined');
   });
 
   it('throw on server error', async () => {
-    const network = new Network.Mock.Promise();
+    const network = new Network.Promise(fetch);
     const store = new Collection();
     const client = new NetworkClient(store, network);
     client.request.update(setUrl('/'));
-    network.setAssertion(async () => [{}, { status: 404 }]);
-    expect(() => client.request.fetch()).toThrowError('No assertion set');
+    nock('/').get('/').reply(404);
 
     // const store = new Collection();
     // const request = new MockBaseRequest('foobar').pipe(setUrl('foobar'), collection(store));
@@ -41,13 +32,14 @@ describe('Request', () => {
     //   status: 404,
     //   json: async () => ({}),
     // });
-    // try {
-    //   await request.fetch();
-    //   expect(true).toBe(false);
-    // } catch (e) {
-    //   expect(store.length).toBe(0);
-    //   expect(e.error).toEqual({ message: 'Invalid HTTP status: 404', status: 404 });
-    // }
+    try {
+      await client.request.fetch();
+      expect(true).toBe(false);
+    } catch (e) {
+      expect(store.length).toBe(0);
+      expect(e).toBeInstanceOf(Response);
+      expect(e.error).toEqual({ message: 'Invalid HTTP status: 404', status: 404 });
+    }
   });
 
   it('should clone the request', () => {
