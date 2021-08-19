@@ -1,4 +1,11 @@
-import { IArraySplice, IRawModel, mapItems, mobx, removeFromArray, replaceInArray } from '@datx/utils';
+import {
+  IArraySplice,
+  IRawModel,
+  mapItems,
+  mobx,
+  removeFromArray,
+  replaceInArray,
+} from '@datx/utils';
 
 import { ToMany } from './buckets/ToMany';
 import { error } from './helpers/format';
@@ -35,17 +42,10 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     this.sortMethod = sortMethod;
     mobx.makeObservable(this, {
       sortMethod: mobx.observable,
-      length: mobx.computed,
       list: mobx.computed,
     });
   }
 
-  @mobx.computed
-  public get length(): number {
-    return this.value.length;
-  }
-
-  @mobx.computed
   public get list(): Array<T> {
     const list: Array<T> = this.value.slice();
 
@@ -66,14 +66,14 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
   }
 
   public set list(list: Array<T>) {
-    this.__partialListUpdate({
+    this.__partialListUpdate(({
       type: 'splice',
       index: 0,
       removed: this.list,
       removedCount: this.__rawList.length,
       added: list,
       addedCount: list.length,
-    } as unknown as IArraySplice<PureModel>);
+    } as unknown) as IArraySplice<PureModel>);
   }
 
   public toJSON(): IRawView {
