@@ -69,7 +69,7 @@ export class BaseRequest<
         this._options.headers['content-type'] || 'multipart/form-data';
       return this._options.body instanceof FormData
         ? this._options.body
-        : new FormData(this._options.body as any);
+        : new FormData(this._options.body as HTMLFormElement);
     } else {
       return this._options.body as string;
     }

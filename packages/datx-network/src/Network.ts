@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { PureModel } from '@datx/core';
 import { IAsync } from './interfaces/IAsync';
 import { IFetchOptions } from './interfaces/IFetchOptions';
