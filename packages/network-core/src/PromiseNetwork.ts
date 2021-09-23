@@ -1,13 +1,11 @@
-import { PureModel } from '@datx/core';
+import { Headers, IResponseHeaders } from '@datx/utils';
+import { BaseRequest } from './BaseRequest';
 import { IFetchOptions } from './interfaces/IFetchOptions';
+import { IResponseObject } from './interfaces/IResponseObject';
 import { Network } from './Network';
-import { Response } from './Response';
 
 export class PromiseNetwork extends Network<Promise<any>> {
-  constructor(private readonly fetchReference: typeof fetch) {
-    super();
-    // Add fetch interceptor
-  }
+  public readonly baseRequest!: BaseRequest<Promise<any>>;
 
   public exec<T, U = unknown>(
     asyncVal: Promise<U>,
@@ -17,19 +15,23 @@ export class PromiseNetwork extends Network<Promise<any>> {
     return asyncVal.then(successFn, failureFn);
   }
 
-  public baseFetch<T extends TModel | Array<TModel>, TModel extends PureModel = PureModel>(
-    request: IFetchOptions,
-  ): Promise<Response<T>> {
+  public baseFetch(request: IFetchOptions): Promise<IResponseObject> {
+    let status = 0;
+    let headers: IResponseHeaders = new Headers([]);
     return this.fetchReference(request.url)
       .then((res) => {
+        status = res.status || status;
+        headers = res.headers || headers;
         if (!res.status) {
           throw new Error('Network error');
         }
-        return res.json();
+        const contentType = headers.get('Content-Type');
+        if (contentType && contentType.includes('application/json')) {
+          return res.json();
+        }
+        return res.text();
       })
-      .then((data) => new Response<T, TModel>(data))
-      .catch(
-        (error) => new Response<T, TModel>({ error }),
-      );
+      .then((data) => ({ status, headers, data }))
+      .catch((error) => ({ status, headers, error }));
   }
 }

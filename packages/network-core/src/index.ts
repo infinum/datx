@@ -19,6 +19,8 @@ export {
   collection,
   requestOptions,
   upsertInterceptor,
+  serializer,
+  parser,
 } from './operators';
 
 export { IResponseHeaders } from '@datx/utils';

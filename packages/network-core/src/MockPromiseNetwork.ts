@@ -6,7 +6,7 @@ type IAssertion = (
 ) => Promise<[body?: Record<string, unknown> | null | undefined, init?: ResponseInit | undefined]>;
 
 export class MockPromiseNetwork extends PromiseNetwork {
-  constructor() {
+  constructor(baseUrl: string) {
     const fetchReference = async (input: RequestInfo, init?: RequestInit | undefined) => {
       if (!this.assertion) {
         throw new Error('No assertion defined');
@@ -22,7 +22,7 @@ export class MockPromiseNetwork extends PromiseNetwork {
       return new Response(body, responseInit);
     };
 
-    super(fetchReference);
+    super(baseUrl, fetchReference);
   }
 
   private assertion?: IAssertion;

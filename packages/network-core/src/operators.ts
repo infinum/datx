@@ -6,15 +6,25 @@ import { ParamArrayType } from './enums/ParamArrayType';
 import { PureCollection, IType, PureModel } from '@datx/core';
 import { IRequestOptions } from './interfaces/IRequestOptions';
 import { IAsync } from './interfaces/IAsync';
+import { IFetchOptions } from './interfaces/IFetchOptions';
+import { IResponseObject } from './interfaces/IResponseObject';
+import { IFinalInterceptor } from './interfaces/IFinalInterceptor';
+import { fetchInterceptor } from './interceptors/fetch';
 
-export function setUrl<TResponseType extends IAsync>(url: string, type: IType | typeof PureModel = PureModel) {
+export function setUrl<TResponseType extends IAsync>(
+  url: string,
+  type: IType | typeof PureModel = PureModel,
+) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     pipeline['_options'].url = url;
     pipeline['_config'].type = type;
   };
 }
 
-export function addInterceptor<TResponseType extends IAsync>(fn: IInterceptor<TResponseType>, name: string = fn.name) {
+export function addInterceptor<TResponseType extends IAsync>(
+  fn: IInterceptor<TResponseType>,
+  name: string = fn.name,
+) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     pipeline.interceptors = pipeline.interceptors.filter(
       (interceptor) => interceptor.name !== name,
@@ -24,7 +34,10 @@ export function addInterceptor<TResponseType extends IAsync>(fn: IInterceptor<TR
   };
 }
 
-export function upsertInterceptor<TResponseType extends IAsync>(fn: IInterceptor<TResponseType>, name: string = fn.name) {
+export function upsertInterceptor<TResponseType extends IAsync>(
+  fn: IInterceptor<TResponseType> | IFinalInterceptor,
+  name: string = fn.name,
+) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     const interceptor = pipeline.interceptors.find((interceptor) => interceptor.name === name);
 
@@ -85,9 +98,17 @@ export function query<TResponseType extends IAsync>(
   };
 }
 
-export function header<TResponseType extends IAsync>(name: string, value: string): (pipeline: BaseRequest<TResponseType>) => void;
-export function header<TResponseType extends IAsync>(params: Record<string, string>): (pipeline: BaseRequest<TResponseType>) => void;
-export function header<TResponseType extends IAsync>(name: string | Record<string, string>, value?: string) {
+export function header<TResponseType extends IAsync>(
+  name: string,
+  value: string,
+): (pipeline: BaseRequest<TResponseType>) => void;
+export function header<TResponseType extends IAsync>(
+  params: Record<string, string>,
+): (pipeline: BaseRequest<TResponseType>) => void;
+export function header<TResponseType extends IAsync>(
+  name: string | Record<string, string>,
+  value?: string,
+) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     if (typeof name === 'string') {
       pipeline['_options'].headers[name] = value || '';
@@ -97,9 +118,17 @@ export function header<TResponseType extends IAsync>(name: string | Record<strin
   };
 }
 
-export function params<TResponseType extends IAsync>(name: string, value: string): (pipeline: BaseRequest<TResponseType>) => void;
-export function params<TResponseType extends IAsync>(params: Record<string, string>): (pipeline: BaseRequest<TResponseType>) => void;
-export function params<TResponseType extends IAsync>(name: string | Record<string, string>, value?: string) {
+export function params<TResponseType extends IAsync>(
+  name: string,
+  value: string,
+): (pipeline: BaseRequest<TResponseType>) => void;
+export function params<TResponseType extends IAsync>(
+  params: Record<string, string>,
+): (pipeline: BaseRequest<TResponseType>) => void;
+export function params<TResponseType extends IAsync>(
+  name: string | Record<string, string>,
+  value?: string,
+) {
   return (pipeline: BaseRequest<TResponseType>): void => {
     if (typeof name === 'string') {
       pipeline['_options'].params[name] = value as string;
@@ -136,5 +165,31 @@ export function requestOptions<TResponseType extends IAsync>(options?: IRequestO
     if (options?.networkConfig?.headers) {
       header(options?.networkConfig?.headers)(pipeline);
     }
+  };
+}
+
+export function serializer<TResponseType extends IAsync>(
+  serialize: (request: IFetchOptions) => IFetchOptions,
+) {
+  return (pipeline: BaseRequest<TResponseType>): void => {
+    const config = pipeline['_config'];
+    config.serialize = serialize;
+    upsertInterceptor(
+      fetchInterceptor(config.network, config.serialize, config.parse, config.Response) as any,
+      'fetch',
+    )(pipeline);
+  };
+}
+
+export function parser<TResponseType extends IAsync>(
+  parse: (data: Record<string, unknown>, response: IResponseObject) => Record<string, unknown>,
+) {
+  return (pipeline: BaseRequest<TResponseType>): void => {
+    const config = pipeline['_config'];
+    config.parse = parse;
+    upsertInterceptor(
+      fetchInterceptor(config.network, config.serialize, config.parse, config.Response) as any,
+      'fetch',
+    )(pipeline);
   };
 }

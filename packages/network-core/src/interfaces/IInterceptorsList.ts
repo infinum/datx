@@ -1,3 +1,4 @@
+import { IFinalInterceptor } from './IFinalInterceptor';
 import { IInterceptor } from './IInterceptor';
 
 interface IInterceptorObject<TInterceptor> {
@@ -5,4 +6,6 @@ interface IInterceptorObject<TInterceptor> {
   fn: TInterceptor;
 }
 
-export type IInterceptorsList<TResponseType> = Array<IInterceptorObject<IInterceptor<TResponseType>>>;
+export type IInterceptorsList<TResponseType> = Array<
+  IInterceptorObject<IInterceptor<TResponseType> | IFinalInterceptor>
+>;

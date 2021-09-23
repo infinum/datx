@@ -15,7 +15,7 @@ import { IAsync } from './interfaces/IAsync';
 export class BaseRequest<
   TAsync extends IAsync,
   TModel extends PureModel = PureModel,
-  TParams extends Record<string, unknown> = Record<string, unknown>
+  TParams extends Record<string, unknown> = Record<string, unknown>,
 > {
   protected _config: IConfigType = getDefaultConfig();
   protected _options: IRequestConfig = {
@@ -38,7 +38,7 @@ export class BaseRequest<
 
   public pipe<
     TNewModel extends PureModel | Array<PureModel> = TModel,
-    TNewParams extends Record<string, unknown> = TParams
+    TNewParams extends Record<string, unknown> = TParams,
   >(...operators: Array<IPipeOperator | undefined>): BaseRequest<TAsync, TNewModel, TNewParams> {
     const destinationPipeline = this.clone<TNewModel, TNewParams>();
     operators
@@ -115,7 +115,7 @@ export class BaseRequest<
     };
 
     const interceptorChain = request.interceptors.reduce((next, interceptor) => {
-      return (options: IFetchOptions): TAsync => interceptor.fn(options, next);
+      return (options: IFetchOptions): TAsync => interceptor.fn(options, next) as any;
     }, undefined);
 
     if (!interceptorChain) {
@@ -127,7 +127,7 @@ export class BaseRequest<
 
   public clone<
     TNewModel extends PureModel = TModel,
-    TNewParams extends Record<string, unknown> = TParams
+    TNewParams extends Record<string, unknown> = TParams,
   >(
     BaseRequestConstructor: typeof BaseRequest = this.constructor as typeof BaseRequest,
   ): BaseRequest<TAsync, TNewModel, TNewParams> {

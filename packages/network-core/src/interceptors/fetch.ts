@@ -1,5 +1,5 @@
 import { PureModel } from '@datx/core';
-import { IResponseHeaders } from '@datx/utils';
+import { Headers, IResponseHeaders } from '@datx/utils';
 
 import { IFetchOptions } from '../interfaces/IFetchOptions';
 import { INetworkHandler } from '../interfaces/INetworkHandler';
@@ -36,7 +36,7 @@ export function fetchInterceptor<TNetwork extends INetwork, T extends PureModel>
 
     let data: Record<string, unknown>;
     let status = 0;
-    let headers: IResponseHeaders;
+    let headers: IResponseHeaders = new Headers([]);
 
     const uppercaseMethod = payload.method.toUpperCase();
     const isBodySupported = uppercaseMethod !== 'GET' && uppercaseMethod !== 'HEAD';
@@ -62,26 +62,35 @@ export function fetchInterceptor<TNetwork extends INetwork, T extends PureModel>
     };
 
     return Network.chain(Network.baseFetch(fetchOptions))
-      .then((response: globalThis.Response) => {
-        status = response.status;
-        headers = response.headers;
-
-        return (response.json() as unknown) as Record<string, unknown>;
+      .then((response: IResponseObject) => {
+        status = response.status || status;
+        headers = response.headers || headers;
+        return response.data;
       })
-      .catch((error: Error) => {
+      .catch((error: Error | IResponseObject) => {
+        status = error instanceof Error ? status : error.status || status;
+        headers = error instanceof Error ? headers : error.headers || headers;
         if (status === 204) {
           return null;
         }
         if (status === 0) {
           throw new Error('Network not available');
         }
-        throw error;
+        if (error instanceof Error) {
+          throw error;
+        }
+        throw error.error;
       })
       .then((responseData: Record<string, unknown>) => {
         data = responseData;
         if (status >= 400) {
           throw {
             message: `Invalid HTTP status: ${status}`,
+            status,
+          };
+        } else if (typeof data !== 'object') {
+          throw {
+            message: 'The response is in an unexpected format',
             status,
           };
         }

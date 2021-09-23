@@ -5,6 +5,8 @@ import { IFetchOptions } from './IFetchOptions';
 import { IFinalInterceptor } from './IFinalInterceptor';
 import { IResponseObject } from './IResponseObject';
 import { Response } from '../Response';
+import { IAsync } from './IAsync';
+import { Network } from '../Network';
 
 export interface IConfigType {
   baseUrl: string;
@@ -18,4 +20,5 @@ export interface IConfigType {
   parse?: (data: Record<string, unknown>, options: IResponseObject) => Record<string, unknown>;
   fetchInterceptor?: IFinalInterceptor;
   Response: typeof Response;
+  network: Network<IAsync<any>>;
 }
