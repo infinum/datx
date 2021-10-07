@@ -1,6 +1,6 @@
 ---
 id: version-2.0.0-mixin
-title: Angular JSON:API mixin
+title: Mixin
 original_id: mixin
 ---
 
