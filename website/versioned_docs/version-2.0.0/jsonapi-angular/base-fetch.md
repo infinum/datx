@@ -1,6 +1,6 @@
 ---
 id: version-2.0.0-base-fetch
-title: Angular JSON:API baseFetch
+title: baseFetch
 original_id: base-fetch
 ---
 
