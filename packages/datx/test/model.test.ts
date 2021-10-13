@@ -110,6 +110,7 @@ describe('Model', () => {
         @Attribute({
           map: 'some_value',
           parse: (value: string) => parseInt(value, 10),
+          serialize: (value: number) => `TEST:${value}`,
         })
         public someValue!: number;
 
@@ -127,12 +128,14 @@ describe('Model', () => {
       expect(foo.double).toBe(246);
 
       foo.value = 321;
+      foo.someValue = 456;
       expect(foo.value).toBe(321);
       expect(foo.double).toBe(246);
 
       const snapshot = foo.toJSON();
 
       expect(snapshot.value).toBe('TEST:321');
+      expect(snapshot.some_value).toBe('TEST:456');
       expect(snapshot.double).toBe('TEST:246:321');
     });
 
@@ -147,6 +150,7 @@ describe('Model', () => {
         @Attribute({
           map: 'some_value',
           parse: (value: string) => parseInt(value, 10),
+          serialize: (value: number) => `TEST:${value}`,
         })
         public someValue!: number;
 
@@ -170,12 +174,14 @@ describe('Model', () => {
       expect(foo.double).toBe(246);
 
       foo.value = 321;
+      foo.someValue = 456;
       expect(foo.value).toBe(321);
       expect(foo.double).toBe(246);
 
       const snapshot = foo.toJSON();
 
       expect(snapshot.value).toBe('TEST:321');
+      expect(snapshot.some_value).toBe('TEST:456');
       expect(snapshot.double).toBe('TEST:246:321');
     });
 
