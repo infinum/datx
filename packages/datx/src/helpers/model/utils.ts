@@ -29,6 +29,13 @@ import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 const defaultParseSerializeFn = (value: any, _data: any): any => value;
 
 export function modelMapParse(modelClass: typeof PureModel, data: object, key: string): any {
+  const mapField = getMeta(
+    modelClass,
+    `${MetaClassField.MapField}_${key}`,
+    null,
+    true,
+  );
+
   const parseFn = getMeta(
     modelClass,
     `${MetaClassField.MapParse}_${key}`,
@@ -36,7 +43,7 @@ export function modelMapParse(modelClass: typeof PureModel, data: object, key: s
     true,
   );
 
-  return parseFn(data[key], data);
+  return parseFn(mapField ? data[mapField] : data[key], data);
 }
 
 export function modelMapSerialize(modelClass: typeof PureModel, data: object, key: string): any {
