@@ -41,6 +41,7 @@ interface IAttributeFieldOptions {
   defaultValue?: any;
   isIdentifier?: true;
   isType?: true;
+  map?: string;
   parse?: (value: any, data: object) => any;
   serialize?: (value: any, data: object) => any;
 }
@@ -141,6 +142,7 @@ export function Attribute<T extends PureModel>({
   toOneOrMany,
   toMany,
   referenceProperty,
+  map,
   parse,
   serialize,
 }: IAttributeOptions = {}) {
@@ -159,6 +161,7 @@ export function Attribute<T extends PureModel>({
       defaultValue,
     };
     setMeta(modelClass, MetaClassField.Fields, modelClassFields);
+    setMeta(modelClass, `${MetaClassField.MapField}_${key}`, map);
     setMeta(modelClass, `${MetaClassField.MapParse}_${key}`, parse);
     setMeta(modelClass, `${MetaClassField.MapSerialize}_${key}`, serialize);
 

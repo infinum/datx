@@ -99,13 +99,20 @@ describe('Model', () => {
       expect(bar['list'].map).toBeTruthy();
     });
 
-    it('should work with property parsers/serializers', () => {
+    it('should work with property parsers/serializers/map', () => {
       class Foo extends Model {
         @Attribute({
           parse: (value: string) => parseInt(value, 10),
           serialize: (value: number) => `TEST:${value}`,
         })
         public value!: number;
+
+        @Attribute({
+          map: 'some_value',
+          parse: (value: string) => parseInt(value, 10),
+          serialize: (value: number) => `TEST:${value}`,
+        })
+        public someValue!: number;
 
         @Attribute({
           parse: (_value: string, data: Record<string, string>) => parseInt(data.value, 10) * 2,
@@ -114,28 +121,38 @@ describe('Model', () => {
         public double!: number;
       }
 
-      const foo = new Foo({ value: '123' });
+      const foo = new Foo({ value: '123', some_value: '321' });
 
       expect(foo.value).toBe(123);
+      expect(foo.someValue).toBe(321);
       expect(foo.double).toBe(246);
 
       foo.value = 321;
+      foo.someValue = 456;
       expect(foo.value).toBe(321);
       expect(foo.double).toBe(246);
 
       const snapshot = foo.toJSON();
 
       expect(snapshot.value).toBe('TEST:321');
+      expect(snapshot.some_value).toBe('TEST:456');
       expect(snapshot.double).toBe('TEST:246:321');
     });
 
-    it('should work with property parsers/serializers for extended classes', () => {
+    it('should work with property parsers/serializers/map for extended classes', () => {
       class Foo extends Model {
         @Attribute({
           parse: (value: string) => parseInt(value, 10),
           serialize: (value: number) => `TEST:${value}`,
         })
         public value!: number;
+
+        @Attribute({
+          map: 'some_value',
+          parse: (value: string) => parseInt(value, 10),
+          serialize: (value: number) => `TEST:${value}`,
+        })
+        public someValue!: number;
 
         @Attribute({
           parse: (_value: string, data: Record<string, string>) => parseInt(data.value, 10) * 2,
@@ -149,19 +166,22 @@ describe('Model', () => {
 
       class Bar extends Foo {}
 
-      const foo = new Bar({ value: '123' });
+      const foo = new Bar({ value: '123', some_value: '321' });
 
       expect(foo.one).toBe(1);
       expect(foo.value).toBe(123);
+      expect(foo.someValue).toBe(321);
       expect(foo.double).toBe(246);
 
       foo.value = 321;
+      foo.someValue = 456;
       expect(foo.value).toBe(321);
       expect(foo.double).toBe(246);
 
       const snapshot = foo.toJSON();
 
       expect(snapshot.value).toBe('TEST:321');
+      expect(snapshot.some_value).toBe('TEST:456');
       expect(snapshot.double).toBe('TEST:246:321');
     });
 
