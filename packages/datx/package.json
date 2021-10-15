@@ -1,6 +1,6 @@
 {
   "name": "@datx/core",
-  "version": "2.2.3",
+  "version": "2.3.0",
   "description": "A MobX data store",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -19,9 +19,9 @@
     "@rollup/plugin-commonjs": "^21.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
-    "jest": "^27.0.5",
     "@types/jest": "^27.0.0",
     "@types/node": "^16.0.0",
+    "jest": "^27.0.5",
     "rollup": "^2.38.0",
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.17",
     "ts-jest": "^27.0.3",
@@ -59,6 +59,6 @@
     ]
   },
   "dependencies": {
-    "@datx/utils": "^2.2.3"
+    "@datx/utils": "^2.3.0"
   }
 }
