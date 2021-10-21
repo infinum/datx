@@ -76,8 +76,8 @@
     ]
   },
   "dependencies": {
-    "@datx/core": "^2.3.0",
-    "@datx/jsonapi": "^2.3.0",
-    "@datx/utils": "^2.3.0"
+    "@datx/core": "2.3.0",
+    "@datx/jsonapi": "2.3.0",
+    "@datx/utils": "2.3.0"
   }
 }
