@@ -8,5 +8,6 @@
   "useWorkspaces": true,
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "exact": true
 }
