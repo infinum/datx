@@ -3,6 +3,7 @@
   "include": ["src/**/*", "test/**/*"],
   "compilerOptions": {
     "moduleResolution": "node",
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "outDir": "./dist"
   }
 }

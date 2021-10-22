@@ -14,7 +14,7 @@
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "noUnusedParameters": true,
-    "outDir": "./dist",
+    "outDir": ".",
     "strict": true,
     "strictFunctionTypes": false,
     "target": "es5",

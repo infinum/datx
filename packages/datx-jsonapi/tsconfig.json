@@ -4,6 +4,7 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "noUnusedLocals": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "outDir": "./dist"
   }
 }
