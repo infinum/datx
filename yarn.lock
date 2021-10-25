@@ -348,17 +348,17 @@
   resolved "https://registry.yarnpkg.com/@hutson/parse-repository-url/-/parse-repository-url-3.0.2.tgz#98c23c950a3d9b6c8f0daed06da6c3af06981340"
   integrity sha512-H9XAx3hc0BQHY6l+IFSWHDySypcXsvsuLhgYLUGywmJ5pswRVQJUHpOsobnLYp2ZUaUlKiKDrgWWhosOwAEM8Q==
 
-"@infinumjs/eslint-config-core-js@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@infinumjs/eslint-config-core-js/-/eslint-config-core-js-2.2.0.tgz#b02e731d31c29a4107fb25a149ef351d72af36e1"
-  integrity sha512-eSBYXCav8vNERPCKmZ5abW/n/L1ptcXwALSIGtiFaqJmQjwXSvCBdB9MjytEycdsIjmEOHnZwSpB1h0vhNxdFw==
+"@infinumjs/eslint-config-core-js@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@infinumjs/eslint-config-core-js/-/eslint-config-core-js-2.6.0.tgz#07b51432294ffcc241146016fc3479e564c6a0a3"
+  integrity sha512-XufIMjV7krVX1Zvd5rudCowJa2ZMNLkpSKjvg/vE+LesXx5l8Z50iTFsWZSCuEvGnlLTBYG3MIDo/ncLikdYng==
 
 "@infinumjs/eslint-config-core-ts@^2.2.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@infinumjs/eslint-config-core-ts/-/eslint-config-core-ts-2.4.0.tgz#495f5f1a88a7b10dea2cf1a9462b8aef9eab075a"
-  integrity sha512-d28qwxnyURhnfhzHJT8STv0AhvXcOiH465W6WbHQ6uL8VGuoK1n+kE5361e7j4rtYwJ8OtxUUnS2/rq0lgmSmg==
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@infinumjs/eslint-config-core-ts/-/eslint-config-core-ts-2.6.0.tgz#30247174847bd26c82bb09ae210f427978c2b2a4"
+  integrity sha512-4Ga8SMwXiqA6DX56XBfYok6TXFc4Vglgs4Mb0pDbMCMBCGYZZODWZSW+b3NosA19cW39vrsg5b72pxNi+0MhZA==
   dependencies:
-    "@infinumjs/eslint-config-core-js" "^2.2.0"
+    "@infinumjs/eslint-config-core-js" "^2.6.0"
     "@typescript-eslint/eslint-plugin" "~4.10.0"
     "@typescript-eslint/parser" "~4.10.0"
 
