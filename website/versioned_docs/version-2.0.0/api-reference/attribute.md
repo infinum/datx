@@ -133,6 +133,20 @@ public createdBy: string;
 
 ```
 
+## Compoind IDs
+
+Altrough there is no out-of-the-box solution for compound IDs in DatX, it is easy to achieve them using the `Attribute` features defined above:
+
+```typescript
+@Attribute({
+  // Set it as an identifier
+  isIdentifier: true,
+  // Combine two (userId, companyId) IDs into a single compound ID
+  parse: (_: never, data: Record<string, string>) => `${data.userId}-${data.companyId}`
+})
+public id: string;
+```
+
 ## Using `Attribute` without decorators
 
 [In some cases](https://github.com/infinum/datx/issues/92), you might not be able to use the `@Attribute()` decorator, but you can still use it as a function. The function has two arguments: the class you're decorating and name of the property you're decorating. You can find the example in the [defining models](https://github.com/infinum/datx/wiki/Defining-models) section.
