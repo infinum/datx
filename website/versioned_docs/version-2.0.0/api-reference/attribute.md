@@ -133,7 +133,7 @@ public createdBy: string;
 
 ```
 
-## Compoind IDs
+## Compound IDs
 
 Altrough there is no out-of-the-box solution for compound IDs in DatX, it is easy to achieve them using the `Attribute` features defined above:
 
