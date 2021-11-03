@@ -31,7 +31,7 @@ export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseRe
           return observableWrapper((rxOptions): any => {
             return fetchLink<any>(link, this.collection, Object.assign({}, options, rxOptions), this.views, ResponseConstructor as any);
           });
-        }
+        };
       }
     }
 
