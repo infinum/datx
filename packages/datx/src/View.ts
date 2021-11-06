@@ -3,6 +3,7 @@ import { IArraySplice, IRawModel, mapItems, mobx, removeFromArray, replaceInArra
 import { ToMany } from './buckets/ToMany';
 import { error } from './helpers/format';
 import { getModelId, getModelType, isReference } from './helpers/model/utils';
+import { isPropertySelectorFn } from './helpers/view';
 import { IIdentifier } from './interfaces/IIdentifier';
 import { IModelConstructor } from './interfaces/IModelConstructor';
 import { IModelRef } from './interfaces/IModelRef';
@@ -11,17 +12,18 @@ import { IType } from './interfaces/IType';
 import { TChange } from './interfaces/TChange';
 import { PureCollection } from './PureCollection';
 import { PureModel } from './PureModel';
+import { SortMethod } from './types';
 
 export class View<T extends PureModel = PureModel> extends ToMany<T> {
   public readonly modelType: IType;
 
   @mobx.observable
-  public sortMethod?: string | ((item: T) => any);
+  public sortMethod?: SortMethod<T>;
 
   constructor(
     modelType: IModelConstructor<T> | IType,
     protected __collection: PureCollection,
-    sortMethod?: string | ((item: T) => any),
+    sortMethod?: SortMethod<T>,
     models: Array<IIdentifier | T> = [],
     public unique: boolean = false,
   ) {
@@ -50,7 +52,11 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
           ? (item): any => item[this.sortMethod as 'string']
           : this.sortMethod;
 
-      list.sort((a: T, b: T) => (sortFn(a) === sortFn(b) ? 0 : sortFn(a) > sortFn(b) ? 1 : -1));
+      if (isPropertySelectorFn(sortFn)) {
+        list.sort((a: T, b: T) => (sortFn(a) === sortFn(b) ? 0 : sortFn(a) > sortFn(b) ? 1 : -1));
+      } else {
+        list.sort(sortFn);
+      }
     }
 
     const instances = mobx.observable.array(list, { deep: false });
