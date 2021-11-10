@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 export function decorateView<U>(
   BaseClass: IViewConstructor<IJsonapiModel, IJsonapiView>,
 ): IViewConstructor<IJsonapiModel, U & IJsonapiView> {
-  class JsonapiView<M extends IJsonapiModel = IJsonapiModel>  extends BaseClass {
+  class JsonapiView<M extends IJsonapiModel = IJsonapiModel> extends BaseClass {
     protected __collection!: IJsonapiCollection & PureCollection;
 
     /**

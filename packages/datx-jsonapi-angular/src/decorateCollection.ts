@@ -1,4 +1,12 @@
-import { ICollectionConstructor, PureCollection, IModelConstructor, IType, PureModel, getModelType, getModelId } from '@datx/core';
+import {
+  ICollectionConstructor,
+  PureCollection,
+  IModelConstructor,
+  IType,
+  PureModel,
+  getModelType,
+  getModelId,
+} from '@datx/core';
 import { IRequestOptions, clearCacheByType } from '@datx/jsonapi';
 import { Observable, empty } from 'rxjs';
 
@@ -12,26 +20,42 @@ export function decorateCollection(
   BaseClass: ICollectionConstructor<PureCollection & IJsonapiCollection>,
 ): ICollectionConstructor<PureCollection & IJsonapiCollection> {
   class JsonapiCollection extends BaseClass {
-    public getOne<T extends IJsonapiModel = IJsonapiModel>(type: IType | IModelConstructor<T>, id: string, options?: IRequestOptions): Observable<Response<T>> {
+    public getOne<T extends IJsonapiModel = IJsonapiModel>(
+      type: IType | IModelConstructor<T>,
+      id: string,
+      options?: IRequestOptions,
+    ): Observable<Response<T>> {
       return observableWrapper<T, Response<T>>((rxOptions: IRxFetchOptions) => {
         return super.getOne<any>(type, id, Object.assign({}, options, rxOptions));
       });
     }
 
-    public getMany<T extends IJsonapiModel = IJsonapiModel>(type: IType | IModelConstructor<T>, options?: IRequestOptions): Observable<Response<T>> {
+    public getMany<T extends IJsonapiModel = IJsonapiModel>(
+      type: IType | IModelConstructor<T>,
+      options?: IRequestOptions,
+    ): Observable<Response<T>> {
       return observableWrapper<T, Response<T>>((rxOptions: IRxFetchOptions) => {
         return super.getMany<any>(type, Object.assign({}, options, rxOptions));
       });
     }
 
-    public request<T extends IJsonapiModel = IJsonapiModel>(url: string, method?: string, data?: object, options?: IRequestOptions): Observable<Response<T>> {
+    public request<T extends IJsonapiModel = IJsonapiModel>(
+      url: string,
+      method?: string,
+      data?: object,
+      options?: IRequestOptions,
+    ): Observable<Response<T>> {
       return observableWrapper<T, Response<T>>((rxOptions: IRxFetchOptions) => {
         return super.request<any>(url, method, data, Object.assign({}, options, rxOptions));
       });
     }
 
     public removeOne(model: PureModel, options?: boolean | IRequestOptions): Observable<void>;
-    public removeOne(type: IType | typeof PureModel, id: string, options?: boolean | IRequestOptions): Observable<void>;
+    public removeOne(
+      type: IType | typeof PureModel,
+      id: string,
+      options?: boolean | IRequestOptions,
+    ): Observable<void>;
     public removeOne(
       obj: IType | typeof PureModel | PureModel,
       id?: string | boolean | IRequestOptions,
@@ -64,5 +88,7 @@ export function decorateCollection(
     }
   }
 
-  return JsonapiCollection as unknown as ICollectionConstructor<PureCollection & IJsonapiCollection>;
+  return JsonapiCollection as unknown as ICollectionConstructor<
+    PureCollection & IJsonapiCollection
+  >;
 }

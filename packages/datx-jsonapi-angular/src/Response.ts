@@ -7,7 +7,10 @@ import { IJsonapiModel } from './interfaces/IJsonapiModel';
 type ILink = string | { href: string; meta: Record<string, any> };
 type IAsync<T extends IJsonapiModel> = Observable<Response<T>>;
 
-export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseResponse<any, IAsync<T>> {
+export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseResponse<
+  any,
+  IAsync<T>
+> {
   /**
    * Function called when a link is being fetched. The returned value is cached
    *
@@ -29,7 +32,13 @@ export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseRe
         options.networkConfig.headers = this.requestHeaders;
         this.__cache[name] = (): Observable<Response<T>> => {
           return observableWrapper((rxOptions): any => {
-            return fetchLink<any>(link, this.collection, Object.assign({}, options, rxOptions), this.views, ResponseConstructor as any);
+            return fetchLink<any>(
+              link,
+              this.collection,
+              Object.assign({}, options, rxOptions),
+              this.views,
+              ResponseConstructor as any,
+            );
           });
         };
       }
