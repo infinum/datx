@@ -21,7 +21,7 @@ interface IChainable<IA extends IAsync<U> = IAsync<any>, U = any> {
 export abstract class Network<IA extends IAsync<any> = IAsync<any>> {
   public readonly baseRequest: BaseRequest<IAsync<any>>;
 
-  constructor(baseUrl: string, protected readonly fetchReference: typeof fetch) {
+  constructor(baseUrl: string) {
     this.baseRequest = new BaseRequest<IAsync<any>>(baseUrl);
     this.baseRequest.update(
       upsertInterceptor(fetchInterceptor(this, getDefaultConfig().serialize), 'fetch'),

@@ -1,5 +1,8 @@
 import { Headers, IResponseHeaders } from '@datx/utils';
+import { upsertInterceptor } from '.';
 import { BaseRequest } from './BaseRequest';
+import { getDefaultConfig } from './defaults';
+import { fetchInterceptor } from './interceptors/fetch';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { IResponseObject } from './interfaces/IResponseObject';
 import { Network } from './Network';
@@ -13,6 +16,14 @@ export class PromiseNetwork extends Network<Promise<any>> {
     failureFn?: (error: Error) => T,
   ): Promise<T> {
     return asyncVal.then(successFn, failureFn);
+  }
+
+  constructor(baseUrl: string, protected readonly fetchReference: typeof fetch) {
+    super(baseUrl);
+
+    this.baseRequest.update(
+      upsertInterceptor(fetchInterceptor(this, getDefaultConfig().serialize), 'fetch'),
+    );
   }
 
   public baseFetch(request: IFetchOptions): Promise<IResponseObject> {

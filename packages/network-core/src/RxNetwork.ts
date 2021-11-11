@@ -9,6 +9,14 @@ import { Network } from './Network';
 export class RxNetwork extends Network<Observable<any>> {
   public readonly baseRequest!: BaseRequest<Observable<any>>;
 
+  constructor(baseUrl: string) {
+    super(baseUrl);
+
+    // this.baseRequest.update(
+    //   upsertInterceptor(rxInterceptor(...)),
+    // );
+  }
+
   public exec<T, U = any>(asyncVal: Observable<U>, mapFn: (value: U) => T): Observable<T> {
     return asyncVal.pipe(map(mapFn));
   }
