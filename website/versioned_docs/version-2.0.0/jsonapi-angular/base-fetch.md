@@ -1,12 +1,12 @@
 ---
 id: version-2.0.0-base-fetch
-title: Angular JSON:API baseFetch
+title: baseFetch
 original_id: base-fetch
 ---
 
 By default, the library will use the FetchAPI to do all the networking. This is not ideal when using Angular as it would remove some useful features like interceptors and request cancellation.
 
-`datx-jsonapi-angular` implements some hooks which can be used in combination with a custom `baseFetch` implementation to get those features back.
+`@datx/jsonapi-angular` implements some hooks which can be used in combination with a custom `baseFetch` implementation to get those features back.
 
 Here is an example of the implementation, but you might have some other needs:
 
@@ -16,7 +16,7 @@ Here is an example of the implementation, but you might have some other needs:
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { config, IResponseObject } from '@datx/jsonapi';
-import { IResponseHeaders } from 'datx-jsonapi/dist/interfaces/IResponseHeaders';
+import { IResponseHeaders } from '@datx/jsonapi/dist/interfaces/IResponseHeaders';
 import { Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
@@ -50,7 +50,7 @@ export class CustomFetchService {
           headers: response.headers as unknown as IResponseHeaders, // The interface actually matches
           requestHeaders,
           status: response.status,
-        };
+        } as IResponseObject;
       }),
     );
 

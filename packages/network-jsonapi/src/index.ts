@@ -17,6 +17,11 @@ export {
   saveModel,
 } from './helpers/model';
 
+export {
+  prepareQuery,
+  buildUrl
+} from './helpers/url';
+
 export { BaseJsonapiRequest } from './BaseRequest';
 
 export { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';

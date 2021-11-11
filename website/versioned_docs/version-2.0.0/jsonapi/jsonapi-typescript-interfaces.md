@@ -68,3 +68,15 @@ interface IRequestOptions {
   };
 }
 ```
+
+## IGetAllResponse
+
+Interface defining return type for `getAll` method on [collections](jsonapi-collection#getall) and [views](jsonapi-view#getall)
+
+```typescript
+interface IGetAllResponse<T extends IJsonapiModel = IJsonapiModel> {
+  data: Array<T>;
+  responses: Array<Response<T>>;
+  lastResponse: Response<T>;
+}
+```

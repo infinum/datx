@@ -27,6 +27,6 @@ The lib makes use of the following features that are not yet available everywher
 - [operators](../network/operators)
 - [caching](../network/caching)
 - [interceptors](../network/interceptors)
-- [parse/serialize](../network/parse-serialize)
+- [parser](../network/operators#parser) / [serializer](../network/operators#serializer)
 - [fetching](../network/fetching)
 - [TypeScript Interfaces](../network/typescript-interfaces)

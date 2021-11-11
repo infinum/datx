@@ -4,4 +4,5 @@ export enum MetaClassField {
   TypeField = 'typeField',
   MapParse = 'parse',
   MapSerialize = 'serialize',
+  MapField = 'map',
 }

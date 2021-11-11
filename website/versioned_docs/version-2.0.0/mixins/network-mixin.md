@@ -4,13 +4,13 @@ title: Network Mixin
 original_id: network-mixin
 ---
 
-If you're using an API for your application, you can install `datx-network` to take the full advantage of the `datx` library:
+If you're using an API for your application, you can install `@datx/network` to take the full advantage of the `@datx/core` library:
 
 ```bash
-npm install --save datx datx-network mobx
+npm install --save @datx/core @datx/network mobx
 ```
 
-**Note** If you're using the [JSON API specification](https://jsonapi.org/), check out [datx-jsonapi](./jsonapi-mixin) instead.
+**Note** If you're using the [JSON API specification](https://jsonapi.org/), check out [@datx/jsonapi](./jsonapi-mixin) instead. Additionally, there is [@datx/jsonapi-angular] which works with RxJS [Observables](https://rxjs.dev/guide/observable).
 
 ## Polyfilling
 

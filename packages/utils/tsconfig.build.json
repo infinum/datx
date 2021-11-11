@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "allowJs": false,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
     "alwaysStrict": true,
     "declaration": true,
     "experimentalDecorators": true,
@@ -9,9 +11,14 @@
     "inlineSources": true,
     "lib": ["es2015", "es2016", "es2017"],
     "module": "esnext",
-    "outDir": "./dist",
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "noUnusedParameters": true,
+    "outDir": ".",
     "strict": true,
-    "target": "es5"
+    "strictFunctionTypes": false,
+    "target": "es5",
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "examples"],
   "include": ["src/**/*"]

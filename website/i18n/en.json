@@ -5,6 +5,12 @@
     "previous": "Previous",
     "tagline": "A mobx data store",
     "docs": {
+      "api-reference/attribute": {
+        "title": "Attribute"
+      },
+      "api-reference/bucket": {
+        "title": "Bucket"
+      },
       "api-reference/collection": {
         "title": "Collection"
       },
@@ -17,9 +23,6 @@
       "api-reference/model": {
         "title": "Model"
       },
-      "api-reference/prop": {
-        "title": "Prop"
-      },
       "api-reference/pure-model": {
         "title": "Pure Model"
       },
@@ -31,6 +34,9 @@
       },
       "examples/adding-models": {
         "title": "Adding models"
+      },
+      "examples/angular-setup": {
+        "title": "Angular JSON:API setup"
       },
       "examples/basic-setup": {
         "title": "Basic setup"
@@ -59,6 +65,12 @@
       "getting-started/using-the-collection": {
         "title": "Using the collection"
       },
+      "jsonapi-angular/base-fetch": {
+        "title": "Angular JSON:API baseFetch"
+      },
+      "jsonapi-angular/mixin": {
+        "title": "Angular JSON:API mixin"
+      },
       "jsonapi/jsonapi-basic-configuration": {
         "title": "Basic configuration"
       },
@@ -69,7 +81,7 @@
         "title": "Config"
       },
       "jsonapi/jsonapi-getting-started": {
-        "title": "Getting started with JSON Api"
+        "title": "Getting started with JSON API"
       },
       "jsonapi/jsonapi-model": {
         "title": "Model"
@@ -95,23 +107,26 @@
       "jsonapi/jsonapi-view": {
         "title": "View"
       },
-      "migration-guide/compat-collection": {
-        "title": "CompatCollection"
+      "migration-guide/breaking-changes": {
+        "title": "Breaking changes since v1"
       },
-      "migration-guide/compat-model": {
-        "title": "CompatModel"
+      "migration-guide/deprecations": {
+        "title": "Deprecations in v2"
       },
-      "migration-guide/mobx-collection-store": {
-        "title": "Mobx collection store"
+      "migration-guide/from-v1": {
+        "title": "Migration from v1"
       },
-      "migration-guide/mobx-jsonapi-store": {
-        "title": "Mobx jsonapi store"
+      "migration-guide/whats-new": {
+        "title": "What's new"
       },
       "mixins/building-your-own-mixin": {
         "title": "Build your own mixin"
       },
       "mixins/jsonapi-mixin": {
         "title": "JSONAPI Mixin"
+      },
+      "mixins/network-mixin": {
+        "title": "Network Mixin"
       },
       "mixins/what-are-mixins": {
         "title": "What are mixins"
@@ -124,6 +139,30 @@
       },
       "mixins/with-patches": {
         "title": "withPatches"
+      },
+      "network/base-request": {
+        "title": "BaseRequest"
+      },
+      "network/caching": {
+        "title": "Caching"
+      },
+      "network/fetching": {
+        "title": "Fetching"
+      },
+      "network/getting-started": {
+        "title": "Getting started with DatX Network"
+      },
+      "network/interceptors": {
+        "title": "Interceptors"
+      },
+      "network/operators": {
+        "title": "Operators"
+      },
+      "network/response": {
+        "title": "Response"
+      },
+      "network/typescript-interfaces": {
+        "title": "TypeScript interfaces"
       },
       "troubleshooting/known-issues": {
         "title": "Known issues"
@@ -244,6 +283,156 @@
       },
       "version-1.0.0/troubleshooting/version-1.0.0-known-issues": {
         "title": "Known issues"
+      },
+      "version-2.0.0/api-reference/version-2.0.0-attribute": {
+        "title": "Attribute"
+      },
+      "version-2.0.0/api-reference/version-2.0.0-bucket": {
+        "title": "Bucket"
+      },
+      "version-2.0.0/api-reference/version-2.0.0-collection": {
+        "title": "Collection"
+      },
+      "version-2.0.0/api-reference/version-2.0.0-lib-utils": {
+        "title": "Lib utils"
+      },
+      "version-2.0.0/api-reference/version-2.0.0-model": {
+        "title": "Model"
+      },
+      "version-2.0.0/api-reference/version-2.0.0-typescript-interfaces": {
+        "title": "Typescript interfaces"
+      },
+      "version-2.0.0/examples/version-2.0.0-adding-models": {
+        "title": "Adding models"
+      },
+      "version-2.0.0/examples/version-2.0.0-angular-setup": {
+        "title": "Angular JSON:API setup"
+      },
+      "version-2.0.0/examples/version-2.0.0-basic-setup": {
+        "title": "Basic setup"
+      },
+      "version-2.0.0/examples/version-2.0.0-react-setup": {
+        "title": "React setup"
+      },
+      "version-2.0.0/getting-started/version-2.0.0-configuring-the-collection": {
+        "title": "Configuring the collection"
+      },
+      "version-2.0.0/getting-started/version-2.0.0-defining-models": {
+        "title": "Defining models"
+      },
+      "version-2.0.0/getting-started/version-2.0.0-installation": {
+        "title": "Installation"
+      },
+      "version-2.0.0/getting-started/version-2.0.0-persisting-data-locally": {
+        "title": "Persisting data locally"
+      },
+      "version-2.0.0/getting-started/version-2.0.0-references": {
+        "title": "References"
+      },
+      "version-2.0.0/getting-started/version-2.0.0-using-the-collection": {
+        "title": "Using the collection"
+      },
+      "version-2.0.0/jsonapi-angular/version-2.0.0-base-fetch": {
+        "title": "baseFetch"
+      },
+      "version-2.0.0/jsonapi-angular/version-2.0.0-example-repo": {
+        "title": "Example repo"
+      },
+      "version-2.0.0/jsonapi-angular/version-2.0.0-mixin": {
+        "title": "Mixin"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-basic-configuration": {
+        "title": "Basic configuration"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-collection": {
+        "title": "Collection"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-config": {
+        "title": "Config"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-getting-started": {
+        "title": "Getting started with JSON API"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-model": {
+        "title": "Model"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-network-configuration": {
+        "title": "Network configuration"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-network-usage": {
+        "title": "Network usage"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-response": {
+        "title": "Response"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-spec-compliance": {
+        "title": "Spec compliance"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-typescript-interfaces": {
+        "title": "Typescript interfaces"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-utils": {
+        "title": "Utils"
+      },
+      "version-2.0.0/jsonapi/version-2.0.0-jsonapi-view": {
+        "title": "View"
+      },
+      "version-2.0.0/migration-guide/version-2.0.0-breaking-changes": {
+        "title": "Breaking changes since v1"
+      },
+      "version-2.0.0/migration-guide/version-2.0.0-deprecations": {
+        "title": "Deprecations in v2"
+      },
+      "version-2.0.0/migration-guide/version-2.0.0-from-v1": {
+        "title": "Migration from v1"
+      },
+      "version-2.0.0/migration-guide/version-2.0.0-whats-new": {
+        "title": "What's new"
+      },
+      "version-2.0.0/mixins/version-2.0.0-building-your-own-mixin": {
+        "title": "Build your own mixin"
+      },
+      "version-2.0.0/mixins/version-2.0.0-jsonapi-angular-mixin": {
+        "title": "JSONAPI Angular Mixin"
+      },
+      "version-2.0.0/mixins/version-2.0.0-jsonapi-mixin": {
+        "title": "JSONAPI Mixin"
+      },
+      "version-2.0.0/mixins/version-2.0.0-network-mixin": {
+        "title": "Network Mixin"
+      },
+      "version-2.0.0/mixins/version-2.0.0-with-actions": {
+        "title": "withActions"
+      },
+      "version-2.0.0/mixins/version-2.0.0-with-meta": {
+        "title": "withMeta"
+      },
+      "version-2.0.0/network/version-2.0.0-base-request": {
+        "title": "BaseRequest"
+      },
+      "version-2.0.0/network/version-2.0.0-caching": {
+        "title": "Caching"
+      },
+      "version-2.0.0/network/version-2.0.0-fetching": {
+        "title": "Fetching"
+      },
+      "version-2.0.0/network/version-2.0.0-getting-started": {
+        "title": "Getting started with DatX Network"
+      },
+      "version-2.0.0/network/version-2.0.0-interceptors": {
+        "title": "Interceptors"
+      },
+      "version-2.0.0/network/version-2.0.0-operators": {
+        "title": "Operators"
+      },
+      "version-2.0.0/network/version-2.0.0-response": {
+        "title": "Response"
+      },
+      "version-2.0.0/network/version-2.0.0-typescript-interfaces": {
+        "title": "TypeScript interfaces"
+      },
+      "version-2.0.0/troubleshooting/version-2.0.0-known-issues": {
+        "title": "Known issues"
       }
     },
     "links": {
@@ -255,7 +444,9 @@
       "Getting started": "Getting started",
       "Mixins": "Mixins",
       "API Reference": "API Reference",
+      "Network": "Network",
       "JSON API": "JSON API",
+      "JSON API Angular": "JSON API Angular",
       "Migration guide": "Migration guide",
       "Troubleshooting": "Troubleshooting",
       "Setup": "Setup",

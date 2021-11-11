@@ -299,7 +299,11 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
       this.collection.add(data);
     }
 
-    updateModel(data, modelToJSON(record));
+    const rawData = modelToJSON(record);
+    delete rawData?.['__META__']?.collection;
+
+    updateModel(data, rawData);
+
     updateModelId(data, newId);
 
     this.views.forEach((view, index) => {
