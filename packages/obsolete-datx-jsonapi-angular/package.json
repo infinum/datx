@@ -43,7 +43,7 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "rxjs": "^6.6.3"
+    "rxjs": "^6.0.0 | ^7.0.0"
   },
   "scripts": {
     "test": "jest --coverage",
