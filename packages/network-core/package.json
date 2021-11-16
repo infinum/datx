@@ -49,6 +49,7 @@
       "ts",
       "js"
     ],
+    "testEnvironment": "jsdom",
     "testRegex": "test/(.*).test.ts$",
     "globals": {
       "ts-jest": {

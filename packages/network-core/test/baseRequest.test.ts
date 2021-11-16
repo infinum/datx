@@ -16,7 +16,7 @@ import { PureModel, Attribute, Collection, Model } from '@datx/core';
 import { clearAllCache } from '../src/interceptors/cache';
 import { Headers } from '@datx/utils';
 
-describe('Request', () => {
+fdescribe('Request', () => {
   it('should initialize', () => {
     const request = new MockBaseRequest('foobar');
     expect(request).toBeTruthy();

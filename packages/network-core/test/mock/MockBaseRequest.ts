@@ -1,4 +1,5 @@
 import { PureModel } from '@datx/core';
+import { Headers } from '@datx/utils';
 import { BaseRequest, upsertInterceptor } from '../../src';
 import { fetchInterceptor } from '../../src/interceptors/fetch';
 import { IAsync } from '../../src/interfaces/IAsync';

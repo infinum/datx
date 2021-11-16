@@ -1,7 +1,7 @@
-import { IConfigType } from './interfaces/IConfigType';
-import { ParamArrayType } from './enums/ParamArrayType';
+import { modelToJSON, PureModel } from '@datx/core';
 import { mapItems } from '@datx/utils';
-import { PureModel, modelToJSON } from '@datx/core';
+import { ParamArrayType } from './enums/ParamArrayType';
+import { IConfigType } from './interfaces/IConfigType';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { Response } from './Response';
 
@@ -25,5 +25,7 @@ export function getDefaultConfig(): IConfigType {
     },
 
     Response,
+
+    network: new MockPromiseNetwork('/'), // causes Maximum call stack size exceeded
   };
 }
