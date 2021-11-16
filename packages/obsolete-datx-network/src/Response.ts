@@ -154,7 +154,7 @@ export class Response<T extends PureModel | Array<PureModel>> {
       try {
         this.__data = initData(response, collection, overrideData);
       } catch (e) {
-        this.__internal.error = e as any;
+        this.__internal.error = e;
       }
 
       this.views.forEach((view) => {
