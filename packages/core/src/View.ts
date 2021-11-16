@@ -4,9 +4,8 @@ import {
   mapItems,
   mobx,
   removeFromArray,
-  replaceInArray,
+  replaceInArray
 } from '@datx/utils';
-
 import { ToMany } from './buckets/ToMany';
 import { error } from './helpers/format';
 import { getModelId, getModelType, isReference } from './helpers/model/utils';
@@ -40,12 +39,14 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     );
     this.modelType = getModelType(modelType);
     this.sortMethod = sortMethod;
-    mobx.makeObservable(this, {
-      sortMethod: mobx.observable,
-      list: mobx.computed,
-    });
+    mobx.makeObservable(this);
   }
 
+  public get length(): number {
+    return this.value.length;
+  }
+
+  @mobx.computed
   public get list(): Array<T> {
     const list: Array<T> = this.value.slice();
 
@@ -55,6 +56,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
           ? (item): any => item[this.sortMethod as 'string']
           : this.sortMethod;
 
+      // eslint-disable-next-line no-nested-ternary
       list.sort((a: T, b: T) => (sortFn(a) === sortFn(b) ? 0 : sortFn(a) > sortFn(b) ? 1 : -1));
     }
 

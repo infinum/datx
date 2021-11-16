@@ -1,4 +1,13 @@
-import { IModelConstructor, IType, IViewConstructor, PureCollection, PureModel, View } from '@datx/core';
+import {
+  IModelConstructor,
+  IType,
+  IViewConstructor,
+  PureCollection,
+  PureModel,
+  View,
+} from '@datx/core';
+import { getAllResponses } from './helpers/utils';
+import { IGetAllResponse } from './interfaces/IGetAllResponse';
 
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -58,6 +67,16 @@ export function decorateView<U>(
       return this.__collection
         .getMany(this.modelType, options)
         .then(this.__addFromResponse.bind(this));
+    }
+
+    public async getAll(options?: IRequestOptions, maxRequests = 50): Promise<IGetAllResponse<M>> {
+      if (maxRequests < 1) {
+        throw new Error('Please enter a meaningful amount of max requests.');
+      }
+
+      const response = await this.getMany(options);
+
+      return getAllResponses(response, maxRequests);
     }
 
     protected __addFromResponse(response: Response<M>): Response<M> {

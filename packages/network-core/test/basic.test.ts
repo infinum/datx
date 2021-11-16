@@ -3,6 +3,8 @@ import * as nock from 'nock';
 import fetch from 'node-fetch';
 import { Network, NetworkClient, Response, setUrl } from '../src';
 
+console.log(nock('aaa'));
+
 describe('Request', () => {
   it('should initialize', () => {
     const network = new Network.Promise('http://example.com/', fetch);

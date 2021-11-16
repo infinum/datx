@@ -29,6 +29,8 @@ import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 const defaultParseSerializeFn = (value: any, _data: any): any => value;
 
 export function modelMapParse(modelClass: typeof PureModel, data: object, key: string): any {
+  const mapField = getMeta(modelClass, `${MetaClassField.MapField}_${key}`, null, true);
+
   const parseFn = getMeta(
     modelClass,
     `${MetaClassField.MapParse}_${key}`,
@@ -36,7 +38,7 @@ export function modelMapParse(modelClass: typeof PureModel, data: object, key: s
     true,
   );
 
-  return parseFn(data[key], data);
+  return parseFn(mapField ? data[mapField] : data[key], data);
 }
 
 export function modelMapSerialize(modelClass: typeof PureModel, data: object, key: string): any {
@@ -70,7 +72,7 @@ export function isIdentifier(value: any): boolean {
   return typeof value === 'string' || typeof value === 'number';
 }
 
-export function peekNonNullish(...args: any[]): any {
+export function peekNonNullish(...args: Array<any>): any {
   if (args.length === 0) return null;
 
   let i = -1;
@@ -165,6 +167,37 @@ function fromEntries(entries: Array<[string, any]>): Record<string, any> {
   return data;
 }
 
+function getRawData(input: unknown) {
+  try {
+    if (Array.isArray(input)) {
+      return input.map(getRawData);
+    }
+
+    if (typeof input === 'object') {
+      const data = {};
+
+      for (const key in input) {
+        // skip parent properties
+        if (!Object.prototype.hasOwnProperty.call(input, key)) continue;
+
+        const isParsable = typeof input[key] === 'object' || Array.isArray(input[key]);
+
+        if (input[key] && isParsable) {
+          data[key] = getRawData(input[key]);
+        } else {
+          data[key] = input[key];
+        }
+      }
+
+      return Object.setPrototypeOf(data, null);
+    }
+
+    return input;
+  } catch (e) {
+    return input;
+  }
+}
+
 export function modelToJSON(model: PureModel): IRawModel {
   const meta = getMetaObj(model);
   const fields = getMeta<Record<string, IFieldDefinition>>(model, MetaModelField.Fields, {});
@@ -185,13 +218,18 @@ export function modelToJSON(model: PureModel): IRawModel {
     if (fieldDef.referenceDef) {
       const bucket = getMeta<IBucket<PureModel>>(model, `ref_${fieldName}`);
 
-      raw[fieldName] = bucket?.snapshot || null;
+      raw[fieldName] = raw[fieldName] || bucket?.snapshot || null;
     } else {
-      raw[fieldName] = modelMapSerialize(model.constructor as typeof PureModel, model, fieldName);
+      const modelClass = model.constructor as typeof PureModel;
+      const mapField = getMeta(modelClass, `${MetaClassField.MapField}_${fieldName}`, null, true);
+      const key = mapField ? mapField : fieldName;
+      // Make sure to use an existing value if the attribute is used multiple times
+      raw[key] = raw[key] || modelMapSerialize(modelClass, model, fieldName);
     }
   });
 
-  return mobx.toJS(raw);
+  // return mobx.toJS(raw);
+  return getRawData(raw);
 }
 
 export function cloneModel<T extends PureModel>(model: T): T {
@@ -261,6 +299,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
       if (shouldBeReference && !fields[key].referenceDef) {
         throw error('You should save this value as a reference.');
       }
+      // model[key] = shouldBeReference ? value : getRawData(value);
       model[key] = value;
     } else {
       if (shouldBeReference) {
@@ -287,22 +326,21 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
 
 export function updateModel<T extends PureModel>(model: T, data: Record<string, any>): T {
   startAction(model);
+  const rawData = getRawData(data);
   const modelId = getMeta(model.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD);
   const modelType = getMeta(model.constructor, MetaClassField.TypeField, DEFAULT_TYPE_FIELD);
 
-  const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
+  mergeMeta(model, omitKeys(rawData[META_FIELD] || {}, READ_ONLY_META));
 
-  mergeMeta(model, omitKeys(data[META_FIELD] || {}, READ_ONLY_META));
-
-  keys.forEach((key) => {
+  Object.keys(rawData).forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
-      assignModel(model, key, data[key]);
+      assignModel(model, key, rawData[key]);
     } else if (key === META_FIELD) {
-      const metaKeys = Object.keys(data[key] || {});
+      const metaKeys = Object.keys(rawData[key] || {});
 
       metaKeys.forEach((metaKey) => {
         if (!READ_ONLY_META.includes(metaKey)) {
-          setMeta(model, metaKey, data[key][metaKey]);
+          setMeta(model, metaKey, rawData[key][metaKey]);
         }
       });
     }
@@ -351,10 +389,10 @@ export function isAttributeDirty<T extends PureModel>(model: T, key: keyof T): b
     const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
     const field = fields[key as string];
 
-    if(field === undefined) {
+    if (field === undefined) {
       return false;
     }
-    
+
     const value = field.referenceDef ? mapItems(model[key], getModelRef) : model[key];
     return !isSame(value, prevCommit[key as string]);
   }

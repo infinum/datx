@@ -1,11 +1,8 @@
-import { Model } from '@datx/core';
 import { Response } from '@datx/jsonapi';
+import { useStores } from '@hooks/useStores';
 import useSWR, { ConfigInterface } from 'swr';
 import { fetcherFn } from 'swr/dist/types';
 
-import { useStores } from '@hooks/useStores';
-import { IQueryResource } from './interfaces/IQueryResource';
-import { IQueryResources } from './interfaces/IQueryResources';
 
 export function useResource<TModel extends Resource = Resource, TMeta extends object = object>(
   queryResource: QueryResource<TModel>,

@@ -9,20 +9,20 @@ export interface IObservableArray<T = any> extends Array<T> {
 
 interface IArrayBaseChange<T> {
   object: IObservableArray<T>;
-  observableKind: "array";
+  observableKind: 'array';
   debugObjectName: string;
   index: number;
 }
 
 export interface IArraySplice<T = any> extends IArrayBaseChange<T> {
-  type: "splice";
-  added: T[];
+  type: 'splice';
+  added: Array<T>;
   addedCount: number;
-  removed: T[];
+  removed: Array<T>;
   removedCount: number;
 }
 export interface IArrayChange<T = any> extends IArrayBaseChange<T> {
-  type: "change";
+  type: 'change';
   newValue: T;
   index: number;
 }

@@ -100,6 +100,17 @@ Example:
 
 Sometimes, you'll need to map your data in a way that might not be compatible with your API (or maybe for some other reason specific to your use case). This could range from renaming properties to converting them to other types (e.g. from a date string to a date object). This is where parsers and serializers can be used. The functions are passed as options to the `@Attribute` decorator.
 
+### map
+
+The map property maps a single property from the input object to the model (before the parse call) and back (after the serialize call).
+
+Example:
+
+```typescript
+@Attribute({ map: 'first_name' })
+public firstName: string;
+```
+
 ### parse
 
 The parse function rceives the raw value (first argument is the eact property and the second value is the whole model). It should return the value which should be used to initialize the model.
@@ -119,6 +130,20 @@ public createdAt: Date;
 @Attribute({ parse: (value: any, data: object) => data.created_by })
 public createdBy: string;
 
+```
+
+## Compound IDs
+
+Altrough there is no out-of-the-box solution for compound IDs in DatX, it is easy to achieve them using the `Attribute` features defined above:
+
+```typescript
+@Attribute({
+  // Set it as an identifier
+  isIdentifier: true,
+  // Combine two (userId, companyId) IDs into a single compound ID
+  parse: (_: never, data: Record<string, string>) => `${data.userId}-${data.companyId}`
+})
+public id: string;
 ```
 
 ## Using `Attribute` without decorators
