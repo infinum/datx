@@ -1,21 +1,21 @@
 # Contributing
 
 When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change. 
+email, or any other method with the owners of this repository before making a change.
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
 ## Pull Request Process
 
-1. Ensure any install or build dependencies are removed before the end of the layer when doing a 
+1. Ensure any install or build dependencies are removed before the end of the layer when doing a
    build.
-2. Update the README.md with details of changes to the interface, this includes new environment 
+2. Update the README.md with details of changes to the interface, this includes new environment
    variables, exposed ports, useful file locations and container parameters.
 3. Increase the version numbers in any examples files and the README.md to the new version that this
    Pull Request would represent. The versioning scheme we use is [SemVer](https://semver.org/).
-4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you 
+4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you
    do not have permission to do that, you may request the second reviewer to merge it for you.
-   
+
 ## Project setup
 
 1. Install lerna globally `yarn global add lerna`
@@ -24,7 +24,7 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 ## Updating local dependencies
 
-Example: If you have made a change in `@datx/utils` and need to use the new change in `@datx/core`, it should be enough to run `yarn build` in the `datx-utils` folder. If the editor doesn't detect the changes, you can try to cmd+click on the error (forcing the editor to reload the typings).
+Example: If you have made a change in `@datx/utils` and need to use the new change in `@datx/core`, it should be enough to run `yarn build` in the `packages/utils` folder. If the editor doesn't detect the changes, you can try to cmd+click on the error (forcing the editor to reload the typings).
 
 ## Testing
 
@@ -37,4 +37,3 @@ When writing docs, make sure your updates are writtern in  `versioned_docs/{vers
 ## Publishing
 
 1. `lerna publish`
-

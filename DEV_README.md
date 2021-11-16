@@ -6,7 +6,7 @@
 
 # Updating local dependencies
 
-Example: If you have made a change in `@datx/utils` and need to use the new change in `@datx/core`, it should be enough to run `yarn build` in the `datx-utils` folder. If the editor doesn't detect the changes, you can try to cmd+click on the error (forcing the editor to reload the typings).
+Example: If you have made a change in `@datx/utils` and need to use the new change in `@datx/core`, it should be enough to run `yarn build` in the `packages/utils` folder. If the editor doesn't detect the changes, you can try to cmd+click on the error (forcing the editor to reload the typings).
 
 # Testing
 
