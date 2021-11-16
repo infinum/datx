@@ -1,9 +1,7 @@
 import { Collection } from '@datx/core';
-import * as nock from 'nock';
+import nock from 'nock';
 import fetch from 'node-fetch';
 import { Network, NetworkClient, Response, setUrl } from '../src';
-
-console.log(nock('aaa'));
 
 describe('Request', () => {
   it('should initialize', () => {
