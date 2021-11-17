@@ -138,7 +138,12 @@ export class BaseRequest<
 
     clone.interceptors = deepCopy(this.interceptors) as IInterceptorsList<TAsync>;
 
+    const network = this._config.network;
+    delete (this._config as Partial<IConfigType>).network;
+
     clone._config = deepCopy(this._config);
+    clone._config.network = network;
+
     clone._options = deepCopy(this._options);
 
     // Manually copy complex objects
