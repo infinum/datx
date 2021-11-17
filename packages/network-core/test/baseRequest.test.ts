@@ -464,7 +464,7 @@ fdescribe('Request', () => {
     expect(response.data?.['title']).toBe('Test');
   });
 
-  it('should work with serializers', async () => {
+  fit('should work with serializers', async () => {
     const request1 = new MockBaseRequest('foobar');
 
     const request2 = request1.pipe(

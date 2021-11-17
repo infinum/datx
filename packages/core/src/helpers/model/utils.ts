@@ -228,7 +228,6 @@ export function modelToJSON(model: PureModel): IRawModel {
     }
   });
 
-  // return mobx.toJS(raw);
   return getRawData(raw);
 }
 

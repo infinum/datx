@@ -5,7 +5,7 @@ import { IConfigType } from './interfaces/IConfigType';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { Response } from './Response';
 
-export function getDefaultConfig(): IConfigType {
+export function getDefaultConfig(): Omit<IConfigType, 'network'> {
   return {
     // Base URL for all API calls
     baseUrl: '/',
@@ -25,7 +25,5 @@ export function getDefaultConfig(): IConfigType {
     },
 
     Response,
-
-    network: new MockPromiseNetwork('/'), // causes Maximum call stack size exceeded
   };
 }

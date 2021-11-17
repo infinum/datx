@@ -3,6 +3,7 @@ import { Headers } from '@datx/utils';
 import { BaseRequest, upsertInterceptor } from '../../src';
 import { fetchInterceptor } from '../../src/interceptors/fetch';
 import { IAsync } from '../../src/interfaces/IAsync';
+import { MockPromiseNetwork } from '../../src/MockPromiseNetwork';
 import { PromiseNetwork } from '../../src/PromiseNetwork';
 
 export class MockBaseRequest<
@@ -10,7 +11,7 @@ export class MockBaseRequest<
   TModel extends PureModel = PureModel,
 > extends BaseRequest<TAsync, TModel> {
   constructor(baseUrl: string) {
-    super(baseUrl);
+    super(baseUrl, new MockPromiseNetwork('/'));
     this.resetMock({
       status: 200,
       headers: new Headers([['Content-Type', 'application/json']]),
@@ -43,6 +44,7 @@ export class MockBaseRequest<
   }
 
   protected get lastBody(): string | FormData | undefined {
+    console.log(this.lastRequest);
     return this.lastRequest[1].body;
   }
 
