@@ -1,0 +1,81 @@
+{
+  "name": "@datx/react",
+  "version": "0.0.1",
+  "description": "DatX hooks for your React Applications",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infinum/datx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/infinum/datx/issues"
+  },
+  "homepage": "https://github.com/infinum/datx#readme",
+  "author": "Infinum JavaScript Team <hello@infinum.com>",
+  "license": "MIT",
+  "keywords": [
+    "datx",
+    "swr",
+    "jsonapi"
+  ],
+  "scripts": {
+    "test": "jest --coverage",
+    "watch": "jest --watch --coverage",
+    "prepublish": "npm run build",
+    "build": "rollup -c"
+  },
+  "dependencies": {
+    "@datx/core": "2.3.1",
+    "@datx/jsonapi": "2.3.1",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@types/jest": "^27.0.0",
+    "@types/lodash": "^4.14.168",
+    "@types/node": "^16.0.0",
+    "@types/uuid": "^8.3.0",
+    "jest": "^27.0.5",
+    "rollup": "^2.38.0",
+    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.17",
+    "rollup-plugin-terser": "^7.0.2",
+    "swr": "^1.0.1",
+    "ts-jest": "^27.0.3",
+    "tslib": "^2.3.0",
+    "typescript": "^4.1.3",
+    "uuid": "^8.3.2"
+  },
+  "peerDependencies": {
+    "react": ">=16",
+    "swr": "1.x"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "/test/",
+      "/node_modules/"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "testEnvironment": "jsdom",
+    "testRegex": "test/(.*).test.ts$",
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "warnOnly": true
+        }
+      }
+    },
+    "preset": "ts-jest",
+    "testMatch": null,
+    "setupFilesAfterEnv": [
+      "./test/setup.ts"
+    ]
+  }
+}

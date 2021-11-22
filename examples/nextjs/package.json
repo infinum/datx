@@ -1,0 +1,30 @@
+{
+  "name": "nextjs",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "12.0.4",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "swr": "^1.0.1",
+    "@datx/react": "../../packages/react"
+  },
+  "devDependencies": {
+    "@types/node": "16.11.9",
+    "@types/react": "17.0.36",
+    "eslint": "7.32.0",
+    "eslint-config-next": "12.0.4",
+    "typescript": "4.5.2"
+  },
+  "resolutions": {
+    "@datx/core": "../../packages/datx",
+    "@datx/jsonapi": "../../packages/datx-jsonapi",
+    "@datx/network": "../../packages/datx-network",
+    "@datx/utils": "../../packages/datx-utils"
+  }
+}
