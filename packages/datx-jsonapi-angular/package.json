@@ -23,8 +23,14 @@
     "angular"
   ],
   "devDependencies": {
+    "@angular-devkit/build-angular": "^12.0.0",
+    "@angular/cli": "^12.0.0",
     "@angular/common": "^12.0.0",
+    "@angular/compiler": "^12.0.0",
+    "@angular/compiler-cli": "^12.0.0",
     "@angular/core": "^12.0.0",
+    "@angular/forms": "^12.0.0",
+    "@angular/router": "^12.0.0",
     "@rollup/plugin-commonjs": "^21.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",

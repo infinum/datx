@@ -10,6 +10,7 @@ export class DatxModule {
     return {
       ngModule: DatxModule,
       providers: [
+        CustomFetchService,
         {
           provide: APP_INITIALIZER,
           useFactory: initDatxFactory(staticConfig),

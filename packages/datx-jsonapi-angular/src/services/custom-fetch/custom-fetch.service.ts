@@ -5,7 +5,7 @@ import { IResponseHeaders } from '@datx/utils/dist/interfaces/IResponseHeaders';
 import { Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class CustomFetchService {
   constructor(private httpClient: HttpClient) {}
 
