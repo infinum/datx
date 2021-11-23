@@ -10,13 +10,22 @@
   },
   "scripts": {
     "precommit": "npm run lint & lerna run test",
-    "lint": "eslint packages/**/*.ts"
+    "lint": "eslint packages/**/*.ts",
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build --no-private",
+    "watch": "lerna run --parallel watch --no-private",
+    "watch:react": "lerna run --parallel watch --scope @datx/react",
+    "clean": "lerna clean && yarn clean:dist",
+    "clean:dist": "lerna exec -- rm -rf ./node_modules"
   },
   "dependencies": {},
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "examples/*"
+    ]
+  },
   "husky": {
     "hooks": {
       "pre-commit": "npm run precommit"

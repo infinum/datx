@@ -51,3 +51,21 @@ export function jsonapi<T>(
 
   throw new Error('The instance needs to be a model, collection or a view');
 }
+
+export function jsonapiModel<T>(
+  Base: IModelConstructor<T>,
+) {
+  return decorateModel(Base as any) as IModelConstructor<T & IJsonapiModel>;
+}
+
+export function jsonapiCollection<T>(
+  Base: ICollectionConstructor<T>,
+) {
+  return decorateCollection(Base as any) as ICollectionConstructor<T & IJsonapiCollection>;
+}
+
+export function jsonapiView<T>(
+  Base: IViewConstructor<T>,
+) {
+  return decorateView(Base as any) as IViewConstructor<IJsonapiModel, T & IJsonapiView>;
+}

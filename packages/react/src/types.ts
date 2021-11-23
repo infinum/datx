@@ -1,10 +1,10 @@
 
-import { Collection, IModelConstructor, IType } from '@datx/core';
+import { IModelConstructor, IType, PureCollection } from '@datx/core';
 import { IJsonapiModel, IJsonapiCollection, IRequestOptions, Response } from '@datx/jsonapi';
 import { SWRConfiguration } from 'swr';
 import { Fetcher } from 'swr/dist/types';
 
-export type JsonapiCollection = Collection & IJsonapiCollection;
+export type JsonapiCollection = PureCollection & IJsonapiCollection;
 
 export type _QueryResource<TModel> = [IType | IModelConstructor<TModel>, number | string, IRequestOptions?];
 export type _QueryResourceFn<TModel> = () => _QueryResource<TModel>;

@@ -5,6 +5,10 @@
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "sideEffects": false,
   "repository": {
     "type": "git",
@@ -23,9 +27,10 @@
   ],
   "scripts": {
     "test": "jest --coverage",
-    "watch": "jest --watch --coverage",
+    "test:watch": "jest --watch --coverage",
     "prepublish": "npm run build",
-    "build": "rollup -c"
+    "build": "rollup --config",
+    "watch": "rollup --config --watch"
   },
   "dependencies": {
     "@datx/core": "2.3.1",

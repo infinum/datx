@@ -1,6 +1,7 @@
-import { Collection } from '@datx/core';
+import { Response } from '@datx/jsonapi';
+import { JsonapiCollection } from './types';
 
-export const hydrate = (store: Collection, fallback: Record<string, any>) => {
+export const hydrate = (store: JsonapiCollection, fallback: Record<string, any>) => {
   return Object.keys(fallback).reduce((previousValue, currentValue) => {
     const data = fallback[currentValue];
 
@@ -8,13 +9,11 @@ export const hydrate = (store: Collection, fallback: Record<string, any>) => {
       if (Array.isArray(data)) {
         previousValue[currentValue] = data.map(
           (rowResponse) => {
-            // TODO - figure out hot wo abstract json:api Response
-            // new Response({ data: rowResponse, status: 200 }, store)
+            new Response({ data: rowResponse, status: 200 }, store)
           }
         );
       }
-      // TODO - figure out hot wo abstract json:api Response
-      // previousValue[currentValue] = new Response({ data, status: 200 }, store);
+      previousValue[currentValue] = new Response({ data, status: 200 }, store);
     }
 
     return previousValue;

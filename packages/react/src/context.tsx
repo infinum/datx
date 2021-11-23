@@ -15,7 +15,6 @@ export function DatxProvider({ store, children }: PropsWithChildren<IDatxProvide
     <DatxContext.Provider value={store}>
       <SWRConfig
         value={{
-          // fetcher: store?.fetcher,
           // fallback: hydrate(store, fallback),
         }}
       >

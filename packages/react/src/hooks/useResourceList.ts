@@ -1,7 +1,6 @@
 import { getModelType } from '@datx/core';
-import { IJsonapiModel, prepareQuery, Response } from 'datx-jsonapi';
+import { IJsonapiModel, prepareQuery, Response } from '@datx/jsonapi';
 import isFunction from 'lodash/isFunction';
-import { useMemo } from 'react';
 import useSWR  from 'swr';
 
 import { useDatx } from './useDatx';
@@ -39,27 +38,5 @@ export function useResourceList<TModel extends IJsonapiModel, TMeta extends Meta
     return response;
   };
 
-  const swr = useSWR<Response<TModel>, Response<TModel>>(getKey, fetcher, config);
-
-  // TODO: implement data select with getters
-
-  const handlers = useMemo(
-    () => ({
-      nextPage: () => {
-        if (swr.data?.links?.next) {
-          swr.mutate(swr.data?.next, false);
-        }
-      },
-    }),
-    [swr]
-  );
-
-  return {
-    ...swr,
-    data: swr.data?.data as Array<TModel>,
-    error: swr.error?.error,
-    meta: swr.data?.meta as TMeta,
-    nextPage: handlers.nextPage,
-    hasNextPage: Boolean(swr.data?.links?.next),
-  };
+  return useSWR<Response<TModel>, Response<TModel>>(getKey, fetcher, config);
 }

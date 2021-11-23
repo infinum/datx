@@ -47,9 +47,10 @@
   },
   "scripts": {
     "test": "jest --coverage",
-    "watch": "jest --watch --coverage",
+    "test:watch": "jest --watch --coverage",
     "prepublish": "npm run build",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "watch": "rollup --config --watch"
   },
   "jest": {
     "coveragePathIgnorePatterns": [

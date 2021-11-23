@@ -8,7 +8,7 @@ import { useDatx } from './useDatx';
 import { Meta, QueryConfig, QueryResource, _QueryResourceFn, _QueryResourcesFn } from '../types';
 import { pickRequestOptions } from '../utils';
 
-function useResource<TModel extends IJsonapiModel, TMeta extends Meta = Meta>(
+export function useResource<TModel extends IJsonapiModel, TMeta extends Meta = Meta>(
   queryResource: QueryResource<TModel>,
   config?: QueryConfig<TModel>
 ) {
@@ -38,16 +38,5 @@ function useResource<TModel extends IJsonapiModel, TMeta extends Meta = Meta>(
     return response;
   };
 
-  const swr = useSWR<Response<TModel>, Response<TModel>>(getKey, fetcher, config);
-
-  // TODO: implement data select with getters
-
-  return {
-    ...swr,
-    data: swr.data?.data as TModel,
-    error: swr.error?.error,
-    meta: swr.data?.meta as TMeta,
-  };
+  return useSWR<Response<TModel>, Response<TModel>>(getKey, fetcher, config);
 }
-
-export default useResource;
