@@ -65,7 +65,6 @@
     "coveragePathIgnorePatterns": [
       "/test/",
       "/node_modules/",
-      "(.*).spec.ts$",
       "(.*).testing.(.*)$"
     ],
     "moduleFileExtensions": [
