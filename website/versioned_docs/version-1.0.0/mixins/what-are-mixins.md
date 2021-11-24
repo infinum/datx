@@ -12,4 +12,4 @@ Other mixins that can be installed separately:
 
 There are some other mixins that are [planned](https://github.com/infinum/datx/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Amixins).
 
-Have an idea for a mixin? [Open an issue](https://github.com/infinum/datx/issues/new) or [create your own](building-your-own-mixin).
+Have an idea for a mixin? [Open an issue](https://github.com/infinum/datx/issues/new/choose) or [create your own](building-your-own-mixin).

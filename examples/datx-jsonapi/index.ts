@@ -55,4 +55,4 @@ import state from './store';
   await party2.destroy(); // Remove the model from the server and local store
 })();
 
-// Want more examples? Please open an issue with suggestions: https://github.com/infinum/datx/issues/new
+// Want more examples? Please open an issue with suggestions: https://github.com/infinum/datx/issues/new/choose
