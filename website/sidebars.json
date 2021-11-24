@@ -52,7 +52,12 @@
       "jsonapi/jsonapi-utils",
       "jsonapi/jsonapi-typescript-interfaces"
     ],
-    "JSON API Angular": ["jsonapi-angular/mixin", "jsonapi-angular/base-fetch"],
+    "JSON API Angular": [
+      "jsonapi-angular/mixin",
+      "jsonapi-angular/datx-module",
+      "jsonapi-angular/collection-service",
+      "jsonapi-angular/example-repo"
+    ],
     "Migration guide": [
       "migration-guide/breaking-changes",
       "migration-guide/deprecations",

@@ -65,11 +65,14 @@
       "getting-started/using-the-collection": {
         "title": "Using the collection"
       },
-      "jsonapi-angular/base-fetch": {
-        "title": "Angular JSON:API baseFetch"
+      "jsonapi-angular/collection-service": {
+        "title": "Collection service"
+      },
+      "jsonapi-angular/datx-module": {
+        "title": "DatX module"
       },
       "jsonapi-angular/mixin": {
-        "title": "Angular JSON:API mixin"
+        "title": "Mixin"
       },
       "jsonapi/jsonapi-basic-configuration": {
         "title": "Basic configuration"
@@ -332,8 +335,11 @@
       "version-2.0.0/getting-started/version-2.0.0-using-the-collection": {
         "title": "Using the collection"
       },
-      "version-2.0.0/jsonapi-angular/version-2.0.0-base-fetch": {
-        "title": "baseFetch"
+      "version-2.0.0/jsonapi-angular/version-2.0.0-collection-service": {
+        "title": "Collection service"
+      },
+      "version-2.0.0/jsonapi-angular/version-2.0.0-datx-module": {
+        "title": "DatX module"
       },
       "version-2.0.0/jsonapi-angular/version-2.0.0-example-repo": {
         "title": "Example repo"
