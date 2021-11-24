@@ -1,32 +1,23 @@
 import { config } from '@datx/jsonapi';
-import { DEFAULT_DATX_CONFIG, IDatxConfig } from '../interfaces/IDatxConfig';
+import { IConfigType } from '@datx/jsonapi/dist/NetworkUtils';
+import { DEFAULT_DATX_CONFIG } from '../datx.module';
 import { CustomFetchService } from '../services/custom-fetch/custom-fetch.service';
 
-export function initDatxFactory(staticConfig: Partial<IDatxConfig> = {}) {
+export function initDatxFactory(staticConfig: Partial<IConfigType> = {}) {
   return (
     customFetch: CustomFetchService,
-    dynamicConfig: Partial<IDatxConfig>,
+    dynamicConfig: Partial<IConfigType>,
   ): (() => Promise<void>) => {
-    const mergedConfig: IDatxConfig = {
+    const mergedConfig: Partial<IConfigType> = {
       ...DEFAULT_DATX_CONFIG,
       ...staticConfig,
       ...dynamicConfig,
     };
 
     return async () => {
+      Object.assign(config, mergedConfig);
+
       config.baseFetch = customFetch.fetch.bind(customFetch);
-
-      config.defaultFetchOptions = {
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/vnd.api+json',
-          ...mergedConfig.additionalHeaders,
-        },
-      };
-
-      config.baseUrl = mergedConfig.baseUrl;
-      config.maxCacheAge = mergedConfig.maxCacheAge;
-      config.cache = mergedConfig.cache;
     };
   };
 }
