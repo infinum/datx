@@ -1,11 +1,12 @@
 import {
   HttpClient,
   HttpContext,
+  HttpErrorResponse,
   HttpHeaders,
   HttpParams,
   HttpResponse,
 } from '@angular/common/http';
-import { EMPTY, Observable, of } from 'rxjs';
+import { EMPTY, Observable, of, Subject, throwError } from 'rxjs';
 import { CustomFetchService } from './custom-fetch.service';
 
 class HttpClientMock {
@@ -71,5 +72,56 @@ describe('CustomFetchService', () => {
       responseType: 'json',
     });
     expect(response).toBeTruthy();
+  });
+
+  it('should re-throw any errors', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+
+    jest.spyOn(httpClient, 'request').mockImplementation(() => {
+      return throwError(new HttpErrorResponse({ status: 500 }));
+    });
+
+    const method = 'GET';
+    const url = 'https://api.com';
+
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
+
+    let error: unknown;
+    try {
+      await service.fetch(method, url);
+    } catch (e) {
+      error = e;
+    }
+
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    expect(error).toBeTruthy();
+  });
+
+  it('should use takeUntil$ from fetch options if it is set', (done) => {
+    // A bit stupid test, we can maybe remove takeUntil$ completely (even in v2, and in v3 for sure)
+
+    const takeUntil$ = new Subject<void>();
+
+    jest.spyOn(httpClient, 'request').mockImplementation(() => {
+      return of({
+        body: { foo: 'bar' },
+        headers: new HttpHeaders(),
+        status: 200,
+      });
+    });
+
+    const method = 'GET';
+    const url = 'https://api.com';
+
+    service
+      .fetch(method, url, undefined, undefined, {
+        takeUntil$,
+      })
+      .then(() => {
+        done();
+      });
+
+    takeUntil$.next();
+    takeUntil$.complete();
   });
 });

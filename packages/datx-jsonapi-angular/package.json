@@ -56,15 +56,16 @@
     "rxjs": "^6.0.0"
   },
   "scripts": {
-    "test": "jest --coverage",
-    "watch": "jest --watch --coverage",
+    "test": "jest",
+    "watch": "jest --watchAll",
     "prepublish": "npm run build",
     "build": "rollup -c"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
       "/test/",
-      "/node_modules/"
+      "/node_modules/",
+      "(.*).spec.ts$"
     ],
     "moduleFileExtensions": [
       "ts",
@@ -86,6 +87,10 @@
     "testMatch": null,
     "setupFilesAfterEnv": [
       "./test/setup.ts"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.ts"
     ]
   },
   "dependencies": {
