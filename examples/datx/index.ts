@@ -35,4 +35,4 @@ console.log(john.organizing); // [Party]
 party.organizers.pop();
 console.log(john.organizing); // []
 
-// Want more examples? Please open an issue with suggestions: https://github.com/infinum/datx/issues/new
+// Want more examples? Please open an issue with suggestions: https://github.com/infinum/datx/issues/new/choose

@@ -95,7 +95,7 @@ Note: Fetch API is not included in the polyfills mentioned in the Troubleshootin
 
 ## Troubleshooting
 
-Having issues with the library? Check out the [troubleshooting](https://datx.dev/docs/troubleshooting/known-issues) page or [open](https://github.com/infinum/datx/issues/new) an issue.
+Having issues with the library? Check out the [troubleshooting](https://datx.dev/docs/troubleshooting/known-issues) page or [open](https://github.com/infinum/datx/issues/new/choose) an issue.
 
 ---
 

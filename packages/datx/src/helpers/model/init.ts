@@ -146,6 +146,10 @@ function isPojo(val: any): boolean {
   return typeof val === 'object' && val !== null && !(val instanceof PureModel);
 }
 
+function observablePojo(value: object) {
+  return isArrayLike(value) ? mobx.observable.array(value) : mobx.observable.object(value);
+}
+
 export function initModelField<T extends PureModel>(model: T, key: string, value: any): void {
   const fields = getMeta(model, MetaModelField.Fields, {});
   const fieldDef = fields[key];
@@ -185,11 +189,7 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
       () => getMeta(model, `data__${key}`),
       (newValue: any) => {
         // Make sure nested properties are observable
-        const packedValue = isPojo(newValue)
-          ? isArrayLike(newValue)
-            ? mobx.observable.array(newValue)
-            : mobx.observable.object(newValue)
-          : newValue;
+        const packedValue = isPojo(newValue) ? observablePojo(newValue) : newValue;
 
         updateSingleAction(model, key, newValue);
         setMeta(model, `data__${key}`, packedValue);

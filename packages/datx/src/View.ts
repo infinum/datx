@@ -1,4 +1,11 @@
-import { IArraySplice, IRawModel, mapItems, mobx, removeFromArray, replaceInArray } from '@datx/utils';
+import {
+  IArraySplice,
+  IRawModel,
+  mapItems,
+  mobx,
+  removeFromArray,
+  replaceInArray,
+} from '@datx/utils';
 
 import { ToMany } from './buckets/ToMany';
 import { error } from './helpers/format';
@@ -11,6 +18,18 @@ import { IType } from './interfaces/IType';
 import { TChange } from './interfaces/TChange';
 import { PureCollection } from './PureCollection';
 import { PureModel } from './PureModel';
+
+function sortWrapperFn<T extends PureModel = PureModel>(sortFn: (a: T) => number) {
+  return (a: T, b: T) => {
+    if (sortFn(a) === sortFn(b)) {
+      return 0;
+    }
+    if (sortFn(a) > sortFn(b)) {
+      return 1;
+    }
+    return -1;
+  };
+}
 
 export class View<T extends PureModel = PureModel> extends ToMany<T> {
   public readonly modelType: IType;
@@ -50,7 +69,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
           ? (item): any => item[this.sortMethod as 'string']
           : this.sortMethod;
 
-      list.sort((a: T, b: T) => (sortFn(a) === sortFn(b) ? 0 : sortFn(a) > sortFn(b) ? 1 : -1));
+      list.sort(sortWrapperFn(sortFn));
     }
 
     const instances = mobx.observable.array(list, { deep: false });

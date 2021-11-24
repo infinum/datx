@@ -28,4 +28,4 @@ This can happen if you have an existing model instance, but want to update it wi
 
 ## Having other issues?
 
-Feel free to [open an issue](https://github.com/infinum/datx/issues/new).
+Feel free to [open an issue](https://github.com/infinum/datx/issues/new/choose).
