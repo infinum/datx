@@ -3,14 +3,18 @@ import { Injectable } from '@angular/core';
 import { IModelConstructor, IRawModel, IType } from '@datx/core';
 import { IRequestOptions } from '@datx/jsonapi';
 import { IRecord } from '@datx/jsonapi/dist/interfaces/JsonApi';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { asyncData } from '../../../test/utils/async-data';
 import { IJsonapiCollection } from '../../interfaces/IJsonapiCollection';
 import { IJsonapiModel } from '../../interfaces/IJsonapiModel';
+import { Response } from '../../Response';
 import { ExtractPublic } from '../../types/extract-public';
 import { CollectionService } from './collection.service';
-import { Response } from '../../Response';
+
+// TODO: share this helper somehow (the build will break if it is imported from ../../../test/utils and if test dir is not in listed in tsconfig include array)
+function asyncData<TData>(data: TData): Observable<TData> {
+  return of(data).pipe(delay(0));
+}
 
 @Injectable()
 export abstract class CollectionTestingService<

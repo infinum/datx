@@ -1,4 +1,4 @@
-import { Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { IModelConstructor, IRawModel, IType } from '@datx/core';
 import { IRequestOptions } from '@datx/jsonapi';
 import { IRecord } from '@datx/jsonapi/dist/interfaces/JsonApi';
@@ -9,6 +9,7 @@ import { IJsonapiCollection } from '../../interfaces/IJsonapiCollection';
 import { IJsonapiModel } from '../../interfaces/IJsonapiModel';
 import { Response } from '../../Response';
 
+@Injectable()
 export abstract class CollectionService<
   TModel extends IJsonapiModel,
   TCollection extends IJsonapiCollection,
