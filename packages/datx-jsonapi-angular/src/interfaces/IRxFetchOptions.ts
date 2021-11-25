@@ -4,6 +4,6 @@ import { Response } from '../Response';
 export interface IRxFetchOptions {
   fetchOptions: {
     takeUntil$: Subject<void>;
-    Response?: typeof Response,
-  }
+    Response?: typeof Response;
+  };
 }
