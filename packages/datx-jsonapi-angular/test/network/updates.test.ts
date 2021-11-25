@@ -49,11 +49,10 @@ describe('updates', () => {
           expect(updated).toBe(record);
           expect(getModelCollection(record)).toBe(store);
           done();
-        } catch(e) {
-          done(e);
+        } catch (e) {
+          done.fail(e);
         }
       });
-
     });
 
     it('should add a record if not in store', (done) => {
@@ -83,8 +82,8 @@ describe('updates', () => {
           expect(updated['title']).toBe('Test 1');
           expect(updated).toBe(record);
           done();
-        } catch(e) {
-          done(e);
+        } catch (e) {
+          done.fail(e);
         }
       });
     });
@@ -100,49 +99,52 @@ describe('updates', () => {
       let record;
 
       const store = new TestStore();
-      store.getOne('event', '12345').pipe(
-        switchMap((events: Response<Event>) => {
-          record = events.data;
-    
-          expect(record).toBeInstanceOf(Event);
-          if (record instanceof Event) {
-            setRequest({
-              data: JSON.stringify({
-                data: {
-                  attributes: {
-                    title: 'Updated title',
+      store
+        .getOne('event', '12345')
+        .pipe(
+          switchMap((events: Response<Event>) => {
+            record = events.data;
+
+            expect(record).toBeInstanceOf(Event);
+            if (record instanceof Event) {
+              setRequest({
+                data: JSON.stringify({
+                  data: {
+                    attributes: {
+                      title: 'Updated title',
+                    },
+                    id: '12345',
+                    type: 'event',
+                    relationships: {
+                      organizers: { data: [] },
+                      images: { data: [] },
+                      image: { data: null },
+                    },
                   },
-                  id: '12345',
-                  type: 'event',
-                  relationships: {
-                    organizers: { data: [] },
-                    images: { data: [] },
-                    image: { data: null },
-                  },
-                },
-              }),
-              method: 'PATCH',
-              name: 'event-1b',
-              url: 'event/12345',
-            });
-    
-            record.title = 'Updated title';
-            expect(record.meta.dirty.title).toBe(true);
-    
-            return record.save();
+                }),
+                method: 'PATCH',
+                name: 'event-1b',
+                url: 'event/12345',
+              });
+
+              record.title = 'Updated title';
+              expect(record.meta.dirty.title).toBe(true);
+
+              return record.save();
+            }
+            return throwError(new Error('Wrong path'));
+          }),
+        )
+        .subscribe((updated) => {
+          try {
+            expect(record.meta.dirty.title).toBe(false);
+            expect(updated['title']).toBe('Test 1');
+            expect(updated).toBe(record);
+            done();
+          } catch (e) {
+            done.fail(e);
           }
-          return throwError(new Error('Wrong path'));
-        }),
-      ).subscribe((updated) => {
-        try {
-          expect(record.meta.dirty.title).toBe(false);
-          expect(updated['title']).toBe('Test 1');
-          expect(updated).toBe(record);
-          done();
-        } catch(e) {
-          done(e);
-        }
-      });
+        });
     });
   });
 
@@ -156,33 +158,36 @@ describe('updates', () => {
       const store = new TestStore();
 
       store.add({ id: '1' }, Event);
-      store.getOne(Event, '12345').pipe(
-        switchMap((events) => {
-          store.add({ id: '2' }, Event);
-    
-          const record = events.data as Event;
-    
-          setRequest({
-            method: 'DELETE',
-            name: 'event-1',
-            url: 'event/12345',
-          });
-    
-          expect(store.findAll(Event).length).toBe(3);
-          return record.destroy();
-        }),
-      ).subscribe(() => {
-        try {
-          const remainingEvents = store.findAll(Event);
-          expect(remainingEvents.length).toBe(2);
-    
-          expect(remainingEvents[0] && remainingEvents[0].meta.id).toBe('1');
-          expect(remainingEvents[1] && remainingEvents[1].meta.id).toBe('2');
-          done();
-        } catch(e) {
-          done(e);
-        }
-      });
+      store
+        .getOne(Event, '12345')
+        .pipe(
+          switchMap((events) => {
+            store.add({ id: '2' }, Event);
+
+            const record = events.data as Event;
+
+            setRequest({
+              method: 'DELETE',
+              name: 'event-1',
+              url: 'event/12345',
+            });
+
+            expect(store.findAll(Event).length).toBe(3);
+            return record.destroy();
+          }),
+        )
+        .subscribe(() => {
+          try {
+            const remainingEvents = store.findAll(Event);
+            expect(remainingEvents.length).toBe(2);
+
+            expect(remainingEvents[0] && remainingEvents[0].meta.id).toBe('1');
+            expect(remainingEvents[1] && remainingEvents[1].meta.id).toBe('2');
+            done();
+          } catch (e) {
+            done.fail(e);
+          }
+        });
     });
 
     it('should remove a record from store', (done) => {
@@ -194,33 +199,36 @@ describe('updates', () => {
       const store = new TestStore();
 
       store.add({ id: '1' }, Event);
-      store.getOne(Event, '12345').pipe(
-        switchMap((events) => {
-          store.add({ id: '2' }, Event);
-    
-          const record = events.data as Event;
-    
-          setRequest({
-            method: 'DELETE',
-            name: 'event-1',
-            url: 'event/12345',
-          });
-    
-          expect(store.findAll(Event).length).toBe(3);
-          return store.removeOne(record, true);
-        }),
-      ).subscribe(() => {
-        try {
-          const remainingEvents = store.findAll(Event);
-          expect(remainingEvents.length).toBe(2);
-    
-          expect(remainingEvents[0] && remainingEvents[0].meta.id).toBe('1');
-          expect(remainingEvents[1] && remainingEvents[1].meta.id).toBe('2');
-          done();
-        } catch(e) {
-          done(e);
-        }
-      });
+      store
+        .getOne(Event, '12345')
+        .pipe(
+          switchMap((events) => {
+            store.add({ id: '2' }, Event);
+
+            const record = events.data as Event;
+
+            setRequest({
+              method: 'DELETE',
+              name: 'event-1',
+              url: 'event/12345',
+            });
+
+            expect(store.findAll(Event).length).toBe(3);
+            return store.removeOne(record, true);
+          }),
+        )
+        .subscribe(() => {
+          try {
+            const remainingEvents = store.findAll(Event);
+            expect(remainingEvents.length).toBe(2);
+
+            expect(remainingEvents[0] && remainingEvents[0].meta.id).toBe('1');
+            expect(remainingEvents[1] && remainingEvents[1].meta.id).toBe('2');
+            done();
+          } catch (e) {
+            done.fail(e);
+          }
+        });
     });
   });
 });

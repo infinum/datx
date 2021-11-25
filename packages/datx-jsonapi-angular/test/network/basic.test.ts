@@ -63,7 +63,7 @@ describe('Network basics', () => {
         }
         done();
       } catch (e) {
-        done(e);
+        done.fail(e);
       }
     });
   });
@@ -80,7 +80,7 @@ describe('Network basics', () => {
         expect(events.data).toBeNull();
         done();
       } catch (e) {
-        done(e);
+        done.fail(e);
       }
     });
   });
@@ -104,7 +104,7 @@ describe('Network basics', () => {
         }
         done();
       } catch (e) {
-        done(e);
+        done.fail(e);
       }
     });
   });
@@ -185,7 +185,7 @@ describe('Network basics', () => {
           expect(events1.snapshot).toEqual(events1b?.snapshot);
           done();
         } catch (e) {
-          done(e);
+          done.fail(e);
         }
       });
   });

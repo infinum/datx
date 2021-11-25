@@ -54,11 +54,10 @@ describe('Views', () => {
           expect(events.data).toHaveLength(4);
           expect(view.length).toBe(4);
           done();
-        } catch(e) {
-          done(e);
+        } catch (e) {
+          done.fail(e);
         }
       });
-
     });
 
     // it('should support pagination', async () => {

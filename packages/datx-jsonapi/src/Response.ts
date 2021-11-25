@@ -332,7 +332,6 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
   }
 
   public get snapshot(): IResponseSnapshot {
-    console.log(this.__internal);
     return {
       response: Object.assign({}, this.__internal.response, {
         headers:
