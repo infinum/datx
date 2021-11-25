@@ -1,6 +1,6 @@
 import { config } from '@datx/jsonapi';
 import { IConfigType } from '@datx/jsonapi/dist/NetworkUtils';
-import { DEFAULT_DATX_CONFIG } from '../datx.module';
+import { DEFAULT_DATX_ANGULAR_JSON_API_CONFIG } from '../datx.module';
 import { CustomFetchService } from '../services/custom-fetch/custom-fetch.service';
 
 export function initDatxFactory(staticConfig: Partial<IConfigType> = {}) {
@@ -9,7 +9,7 @@ export function initDatxFactory(staticConfig: Partial<IConfigType> = {}) {
     dynamicConfig: Partial<IConfigType>,
   ): (() => Promise<void>) => {
     const mergedConfig: Partial<IConfigType> = {
-      ...DEFAULT_DATX_CONFIG,
+      ...DEFAULT_DATX_ANGULAR_JSON_API_CONFIG,
       ...staticConfig,
       ...dynamicConfig,
     };
@@ -17,7 +17,9 @@ export function initDatxFactory(staticConfig: Partial<IConfigType> = {}) {
     return async () => {
       Object.assign(config, mergedConfig);
 
-      config.baseFetch = customFetch.fetch.bind(customFetch);
+      if (!config.baseFetch) {
+        config.baseFetch = customFetch.fetch.bind(customFetch);
+      }
     };
   };
 }

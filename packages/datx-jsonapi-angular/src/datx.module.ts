@@ -5,7 +5,7 @@ import { initDatxFactory } from './helpers/init-datx-factory';
 import { DATX_CONFIG } from './injection-tokens';
 import { CustomFetchService } from './services/custom-fetch/custom-fetch.service';
 
-export const DEFAULT_DATX_CONFIG: Partial<IConfigType> = {
+export const DEFAULT_DATX_ANGULAR_JSON_API_CONFIG: Partial<IConfigType> = {
   baseUrl: '/',
   cache: CachingStrategy.NetworkOnly,
   defaultFetchOptions: {
@@ -19,7 +19,7 @@ export const DEFAULT_DATX_CONFIG: Partial<IConfigType> = {
 @NgModule()
 export class DatxModule {
   static forRoot(
-    config: Partial<IConfigType> = DEFAULT_DATX_CONFIG,
+    config: Partial<IConfigType> = DEFAULT_DATX_ANGULAR_JSON_API_CONFIG,
   ): ModuleWithProviders<DatxModule> {
     return {
       ngModule: DatxModule,
