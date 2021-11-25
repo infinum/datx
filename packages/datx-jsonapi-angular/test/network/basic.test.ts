@@ -55,12 +55,14 @@ describe('Network basics', () => {
           expect(data.type).toBe('event');
           expect(data.attributes && data.attributes.title).toBe('Test 1');
           expect(
-            data.relationships && data.relationships.images.data && data.relationships.images.data[0],
+            data.relationships &&
+              data.relationships.images.data &&
+              data.relationships.images.data[0],
           ).toEqual({ type: 'image', id: '1' });
           expect(data.attributes && 'images' in data.attributes).toBe(false);
         }
         done();
-      } catch(e) {
+      } catch (e) {
         done(e);
       }
     });
@@ -77,7 +79,7 @@ describe('Network basics', () => {
       try {
         expect(events.data).toBeNull();
         done();
-      } catch(e) {
+      } catch (e) {
         done(e);
       }
     });
@@ -101,7 +103,7 @@ describe('Network basics', () => {
           expect(getModelLinks(record).self).toBe('https://example.com/event/1234');
         }
         done();
-      } catch(e) {
+      } catch (e) {
         done(e);
       }
     });
@@ -118,70 +120,73 @@ describe('Network basics', () => {
     let events1;
 
     const store = new TestStore();
-    store.getMany(Event).pipe(
-      switchMap((ev) => {
-        events = ev;
-        expect(events.data).toBeInstanceOf(Array);
-        expect(events.data).toHaveLength(4);
-        if (events.data instanceof Array) {
-          expect(events.data instanceof Array && events.data[0]['title']).toBe('Test 1');
-          expect(events.links).toBeInstanceOf(Object);
-          if (events.links instanceof Object && typeof events.links.next === 'object') {
-            expect(events.links.next.href).toBe('https://example.com/event?page=2');
-            expect(events.links.next.meta.foo).toBe('bar');
+    store
+      .getMany(Event)
+      .pipe(
+        switchMap((ev) => {
+          events = ev;
+          expect(events.data).toBeInstanceOf(Array);
+          expect(events.data).toHaveLength(4);
+          if (events.data instanceof Array) {
+            expect(events.data instanceof Array && events.data[0]['title']).toBe('Test 1');
+            expect(events.links).toBeInstanceOf(Object);
+            if (events.links instanceof Object && typeof events.links.next === 'object') {
+              expect(events.links.next.href).toBe('https://example.com/event?page=2');
+              expect(events.links.next.meta.foo).toBe('bar');
+            }
           }
-        }
-
-        setRequest({
-          name: 'events-2',
-          query: {
-            page: 2,
-          },
-          url: 'event',
-        });
-
-        return events.next?.() as any;
-      }),
-      switchMap((ev2: Response<IJsonapiModel>) => {
-        events2 = ev2;
-        expect(events2).toBeInstanceOf(Object);
-        if (events2) {
-          expect(events2.data).toBeInstanceOf(Array);
-          expect(events2.data).toHaveLength(2);
-          expect(events2.data instanceof Array && events2.data[0]['title']).toBe('Test 5');
 
           setRequest({
-            name: 'events-1',
+            name: 'events-2',
+            query: {
+              page: 2,
+            },
             url: 'event',
           });
 
-          return events2.prev?.() as any;
-        }
-      }),
-      switchMap((ev1: Response<IJsonapiModel>) => {
-        events1 = ev1;
-        expect(events1).toBeInstanceOf(Object);
-        if (events1) {
-          expect(events1.data).toBeInstanceOf(Array);
-          expect(events1.data).toHaveLength(4);
-          expect(events1.data instanceof Array && events1.data[0]['title']).toBe('Test 1');
+          return events.next?.() as any;
+        }),
+        switchMap((ev2: Response<IJsonapiModel>) => {
+          events2 = ev2;
+          expect(events2).toBeInstanceOf(Object);
+          if (events2) {
+            expect(events2.data).toBeInstanceOf(Array);
+            expect(events2.data).toHaveLength(2);
+            expect(events2.data instanceof Array && events2.data[0]['title']).toBe('Test 5');
 
-          setRequest({
-            name: 'events-1',
-            url: 'event',
-          });
+            setRequest({
+              name: 'events-1',
+              url: 'event',
+            });
 
-          return events2.prev?.() as any;
+            return events2.prev?.() as any;
+          }
+        }),
+        switchMap((ev1: Response<IJsonapiModel>) => {
+          events1 = ev1;
+          expect(events1).toBeInstanceOf(Object);
+          if (events1) {
+            expect(events1.data).toBeInstanceOf(Array);
+            expect(events1.data).toHaveLength(4);
+            expect(events1.data instanceof Array && events1.data[0]['title']).toBe('Test 1');
+
+            setRequest({
+              name: 'events-1',
+              url: 'event',
+            });
+
+            return events2.prev?.() as any;
+          }
+        }),
+      )
+      .subscribe((events1b: Response<IJsonapiModel>) => {
+        try {
+          expect(events1.snapshot).toEqual(events.snapshot);
+          expect(events1.snapshot).toEqual(events1b?.snapshot);
+          done();
+        } catch (e) {
+          done(e);
         }
-      }),
-    ).subscribe((events1b: Response<IJsonapiModel>) => {
-      try {
-        expect(events1.snapshot).toEqual(events.snapshot);
-        expect(events1.snapshot).toEqual(events1b?.snapshot);
-        done();
-      } catch(e) {
-        done(e);
-      }
-    });
+      });
   });
 });
