@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { Attribute, Collection, Model } from '@datx/core';
 import { IRequestOptions } from '@datx/jsonapi';
-import { jsonapiAngular, Response } from '@datx/jsonapi-angular';
 import { of } from 'rxjs';
 import { APP_COLLECTION } from '../../injection-tokens';
+import { jsonapiAngular } from '../../mixin';
+import { Response } from '../../Response';
 import { CollectionService } from './collection.service';
 
 export class User extends jsonapiAngular(Model) {

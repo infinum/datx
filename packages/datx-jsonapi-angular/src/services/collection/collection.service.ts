@@ -1,11 +1,13 @@
 import { Inject } from '@angular/core';
 import { IModelConstructor, IRawModel, IType } from '@datx/core';
 import { IRequestOptions } from '@datx/jsonapi';
-import { IJsonapiCollection, IJsonapiModel, Response } from '@datx/jsonapi-angular';
 import { IRecord } from '@datx/jsonapi/dist/interfaces/JsonApi';
 import { EMPTY, Observable } from 'rxjs';
 import { expand, map, mapTo, reduce } from 'rxjs/operators';
 import { APP_COLLECTION } from '../../injection-tokens';
+import { IJsonapiCollection } from '../../interfaces/IJsonapiCollection';
+import { IJsonapiModel } from '../../interfaces/IJsonapiModel';
+import { Response } from '../../Response';
 
 export abstract class CollectionService<
   TModel extends IJsonapiModel,

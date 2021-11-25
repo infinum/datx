@@ -2,13 +2,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IModelConstructor, IRawModel, IType } from '@datx/core';
 import { IRequestOptions } from '@datx/jsonapi';
-import { IJsonapiCollection, IJsonapiModel, Response } from '@datx/jsonapi-angular';
 import { IRecord } from '@datx/jsonapi/dist/interfaces/JsonApi';
 import { Observable, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { asyncData } from '../../../test/utils/async-data';
+import { IJsonapiCollection } from '../../interfaces/IJsonapiCollection';
+import { IJsonapiModel } from '../../interfaces/IJsonapiModel';
 import { ExtractPublic } from '../../types/extract-public';
 import { CollectionService } from './collection.service';
+import { Response } from '../../Response';
 
 @Injectable()
 export abstract class CollectionTestingService<
