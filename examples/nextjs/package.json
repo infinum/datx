@@ -18,6 +18,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@infinumjs/eslint-config-react-ts": "^2.9.0",
     "@types/node": "16.11.9",
     "@types/react": "17.0.36",
     "@types/uuid": "^8.3.3",

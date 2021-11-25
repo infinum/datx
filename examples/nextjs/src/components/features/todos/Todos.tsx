@@ -1,4 +1,4 @@
-import { getModelEndpointUrl, IJsonapiModel, modelToJsonApi } from '@datx/jsonapi';
+import { getModelEndpointUrl, modelToJsonApi } from '@datx/jsonapi';
 import { MutationFn, QueryFn, useMutation, useQuery } from '@datx/react';
 import { FC, useRef } from 'react';
 
