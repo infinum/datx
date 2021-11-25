@@ -1,25 +1,17 @@
 import React, { createContext, PropsWithChildren } from 'react';
-import { Collection } from '@datx/core';
 import { IJsonapiCollection } from '@datx/jsonapi';
-import { SWRConfig } from 'swr';
 import { JsonapiCollection } from './types';
 
-export const DatxContext = createContext<Collection & IJsonapiCollection | null>(null);
+export const DatxContext = createContext(null);
 
-export interface IDatxProviderProps{
-  store: JsonapiCollection;
+export interface IDatxProviderProps<TStore extends JsonapiCollection> {
+  store: TStore;
 }
 
-export function DatxProvider({ store, children }: PropsWithChildren<IDatxProviderProps>) {
+export function DatxProvider<TStore extends JsonapiCollection>({ store, children }: PropsWithChildren<IDatxProviderProps<TStore>>) {
   return (
     <DatxContext.Provider value={store}>
-      <SWRConfig
-        value={{
-          // fallback: hydrate(store, fallback),
-        }}
-      >
-        {children}
-      </SWRConfig>
+      {children}
     </DatxContext.Provider>
   );
 }

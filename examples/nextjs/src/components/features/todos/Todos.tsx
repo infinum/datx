@@ -1,26 +1,34 @@
-import { getModelEndpointUrl, modelToJsonApi } from '@datx/jsonapi';
-import { MutationFn, useMutation, useResourceList } from '@datx/react';
+import { getModelEndpointUrl, IJsonapiModel, modelToJsonApi } from '@datx/jsonapi';
+import { MutationFn, QueryFn, useMutation, useQuery } from '@datx/react';
 import { FC, useRef } from 'react';
 
 import { Todo } from '../../../models/Todo';
 
-const createTodo: MutationFn<string | undefined, any> = (message, store) => {
-  const todo = new Todo({ message });
+const queryTodo: QueryFn<any, any> = (store, variables) => {
+  const model = new Todo();
+  const url = getModelEndpointUrl(model);
 
-  const url = getModelEndpointUrl(todo);
-  const data = modelToJsonApi(todo);
+  return {
+    key: url,
+    fetcher: () => store.request(url, 'GET'),
+  }
+}
+
+const createTodo: MutationFn<any, any> = (store, message) => {
+  const model = new Todo({ message });
+  const url = getModelEndpointUrl(model);
+  const data = modelToJsonApi(model);
 
   return store.request(url, 'POST', { data });
 };
 
 export const Todos: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { data, error, mutate } = useResourceList([Todo]);
+  const { data, error, mutate } = useQuery(queryTodo);
   const [create, { status }] = useMutation(createTodo, {
-    onSuccess: () => {
+    onSuccess: async () => {
       const input = inputRef.current;
       if (input) input.value = '';
-      debugger;
       mutate();
     },
   });

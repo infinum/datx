@@ -20,16 +20,17 @@ export type QueryResourcesFn<TModel> = (variables: object) => QueryResources<TMo
 
 export type QuerySelectFn<TModel> = (data: TModel) => any;
 
-type QuerySelectConfig<TModel extends IJsonapiModel> = {
+type QueryConfiguration<TModel extends IJsonapiModel, TVariables> = {
   select?: QuerySelectFn<TModel>;
   sideload?: (response: Response<TModel>) => Promise<Response<TModel>>;
+  variables?: TVariables;
 };
 
-export type QueryConfig<TModel extends IJsonapiModel> = SWRConfiguration<
+export type QueryConfig<TModel extends IJsonapiModel, TVariables = {}> = SWRConfiguration<
   Response<TModel>,
   Response<TModel>,
   Fetcher<Response<TModel>>
 > &
-  QuerySelectConfig<TModel>;
+QueryConfiguration<TModel, TVariables>;
 
 export type Meta = Record<string, unknown>;

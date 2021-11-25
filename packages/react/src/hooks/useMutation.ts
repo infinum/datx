@@ -112,7 +112,7 @@ type Action<TData, TError> =
   | { type: 'SUCCESS'; data: TData }
   | { type: 'FAILURE'; error: TError };
 
-export type MutationFn<TInput, TData> = (input: TInput, store: JsonapiCollection) => Promise<TData> | TData;
+export type MutationFn<TInput, TData> = (store: JsonapiCollection, input: TInput, ) => Promise<TData> | TData;
 
 export function useMutation<TInput = any, TData = any, TError = unknown>(
   mutationFn: MutationFn<TInput, TData>,
@@ -150,7 +150,7 @@ export function useMutation<TInput = any, TData = any, TError = unknown>(
     const rollback = (await onMutate({ input })) ?? noop;
 
     try {
-      const data = await getMutationFn()(input, store);
+      const data = await getMutationFn()(store, input);
 
       if (latestMutation.current === mutation) {
         dispatch({ type: 'SUCCESS', data });
