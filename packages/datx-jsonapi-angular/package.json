@@ -1,6 +1,6 @@
 {
   "name": "@datx/jsonapi-angular",
-  "version": "0.0.0",
+  "version": "2.3.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
