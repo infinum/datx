@@ -1,101 +1,36 @@
 {
   "name": "@datx/jsonapi-angular",
-  "version": "2.3.1",
-  "description": "DatX mixin for Angular JSON API support",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "typings": "dist/index.d.ts",
-  "sideEffects": false,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/infinum/datx.git"
-  },
-  "bugs": {
-    "url": "https://github.com/infinum/datx/issues"
-  },
-  "homepage": "https://github.com/infinum/datx#readme",
-  "author": "Infinum JavaScript Team <hello@infinum.com>",
-  "license": "MIT",
-  "keywords": [
-    "datx",
-    "mobx",
-    "jsonapi",
-    "angular"
-  ],
-  "devDependencies": {
-    "@angular-devkit/build-angular": "^12.0.0",
-    "@angular/cli": "^12.0.0",
-    "@angular/common": "^12.0.0",
-    "@angular/compiler": "^12.0.0",
-    "@angular/compiler-cli": "^12.0.0",
-    "@angular/core": "^12.0.0",
-    "@angular/forms": "^12.0.0",
-    "@angular/router": "^12.0.0",
-    "@rollup/plugin-commonjs": "^21.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "@rollup/plugin-typescript": "^8.2.1",
-    "@types/jest": "^27.0.0",
-    "@types/lodash": "^4.14.168",
-    "@types/node": "^16.0.0",
-    "@types/uuid": "^8.3.0",
-    "isomorphic-fetch": "^3.0.0",
-    "jest": "^27.0.5",
-    "lodash": "^4.17.20",
-    "rollup": "^2.38.0",
-    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.17",
-    "rollup-plugin-terser": "^7.0.2",
-    "rxjs": "^6.0.0",
-    "ts-jest": "^27.0.3",
-    "tslib": "2.3.0",
-    "typescript": "4.2.3",
-    "uuid": "^8.3.2"
-  },
-  "peerDependencies": {
-    "@angular/common": "*",
-    "@angular/core": "*",
-    "rxjs": "^6.0.0"
-  },
+  "version": "0.0.0",
   "scripts": {
-    "test": "jest",
-    "watch": "jest --watchAll",
-    "prepublish": "npm run build",
-    "build": "rollup -c"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build datx-jsonapi-angular",
+    "watch": "ng build --watch --configuration development",
+    "test": "jest"
   },
-  "jest": {
-    "coveragePathIgnorePatterns": [
-      "/test/",
-      "/node_modules/",
-      "(.*).testing.(.*)$"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
-    "testEnvironment": "jsdom",
-    "testRegex": [
-      "test/(.*).test.ts$",
-      "src/(.*).spec.ts$"
-    ],
-    "globals": {
-      "ts-jest": {
-        "diagnostics": {
-          "warnOnly": true
-        }
-      }
-    },
-    "preset": "ts-jest",
-    "testMatch": null,
-    "setupFilesAfterEnv": [
-      "./test/setup.ts"
-    ],
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ]
-  },
+  "private": true,
   "dependencies": {
-    "@datx/core": "2.3.1",
-    "@datx/jsonapi": "2.3.1",
-    "@datx/utils": "2.3.1"
+    "@angular/animations": "~12.2.0",
+    "@angular/common": "~12.2.0",
+    "@angular/compiler": "~12.2.0",
+    "@angular/core": "~12.2.0",
+    "@angular/forms": "~12.2.0",
+    "@angular/platform-browser": "~12.2.0",
+    "@angular/platform-browser-dynamic": "~12.2.0",
+    "@angular/router": "~12.2.0",
+    "rxjs": "~6.6.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~12.2.13",
+    "@angular/cli": "~12.2.13",
+    "@angular/compiler-cli": "~12.2.0",
+    "@types/jest": "^27.0.3",
+    "@types/node": "^12.11.1",
+    "jest": "^27.3.1",
+    "jest-preset-angular": "^11.0.1",
+    "ng-packagr": "^12.1.1",
+    "typescript": "~4.3.5"
   }
 }
