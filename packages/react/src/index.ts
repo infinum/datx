@@ -6,3 +6,5 @@ export * from './hooks/useMutation';
 export * from './types';
 export * from './hydrate';
 export * from './context';
+export * from './createQuery';
+export * from './createMutation';

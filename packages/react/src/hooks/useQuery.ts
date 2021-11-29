@@ -1,21 +1,16 @@
-import { IJsonapiModel, Response } from "@datx/jsonapi";
-import useSWR, { Fetcher, Key } from "swr";
-import { JsonapiCollection } from "..";
+import { IJsonapiModel } from '@datx/jsonapi';
+import useSWR from 'swr';
 
-import { useDatx } from "../hooks/useDatx";
-import { QueryConfig } from "../types";
+import { QueryFn, QueryConfig } from '../types';
+import { useDatx } from '../hooks/useDatx';
 
-export interface IQueryResult<TModel extends IJsonapiModel> {
-  key: Key;
-  fetcher: Fetcher<Response<TModel>>;
-}
-
-export type QueryFn<TModel extends IJsonapiModel, TVariables> = (store: JsonapiCollection, variables?: TVariables) => IQueryResult<TModel>;
-
-export function useQuery<TModel extends IJsonapiModel, TVariables>(query: QueryFn<TModel, TVariables>, config: QueryConfig<TModel, TVariables> = {}) {
-  const store = useDatx();
+export function useQuery<TModel extends IJsonapiModel, TVariables>(
+  query: QueryFn<TModel, TVariables>,
+  config: QueryConfig<TModel, TVariables> = {},
+) {
+  const client = useDatx();
   const { variables, ...swrConfig } = config;
-  const { key, fetcher } = query(store, variables);
+  const { key, fetcher } = query(client, variables);
 
   return useSWR(key, fetcher, swrConfig);
 }

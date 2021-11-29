@@ -1,70 +1,10 @@
+import { IJsonapiModel } from '@datx/jsonapi';
 import { Reducer, useCallback, useReducer, useRef } from 'react';
-import { JsonapiCollection } from '../types';
+import { IMutationOptions, MutationAction, MutationFn, MutationResult } from '..';
+import { MutationState } from '../types';
 import { useDatx } from './useDatx';
 
-export type rollbackFn = () => void;
-
-export interface Options<TInput, TData, TError> {
-  /**
-   * A function to be executed before the mutation runs.
-   *
-   * It receives the same input as the mutate function.
-   *
-   * It can be an async or sync function, in both cases if it returns a function
-   * it will keep it as a way to rollback the changed applied inside onMutate.
-   */
-  onMutate?(params: { input: TInput }): Promise<rollbackFn | void> | rollbackFn | void;
-  /**
-   * A function to be executed after the mutation resolves successfully.
-   *
-   * It receives the result of the mutation.
-   *
-   * If a Promise is returned, it will be awaited before proceeding.
-   */
-  onSuccess?(params: { data: TData; input: TInput }): Promise<void> | void;
-  /**
-   * A function to be executed after the mutation failed to execute.
-   *
-   * If a Promise is returned, it will be awaited before proceeding.
-   */
-  onFailure?(params: {
-    error: TError;
-    rollback: rollbackFn | void;
-    input: TInput;
-  }): Promise<void> | void;
-  /**
-   * A function to be executed after the mutation has resolves, either
-   * successfully or as failure.
-   *
-   * This function receives the error or the result of the mutation.
-   * It follow the normal Node.js callback style.
-   *
-   * If a Promise is returned, it will be awaited before proceeding.
-   */
-  onSettled?(
-    params:
-      | { status: 'success'; data: TData; input: TInput }
-      | {
-          status: 'failure';
-          error: TError;
-          rollback: rollbackFn | void;
-          input: TInput;
-        },
-  ): Promise<void> | void;
-  /**
-   * If defined as `true`, a failure in the mutation will cause the `mutate`
-   * function to throw. Disabled by default.
-   */
-  throwOnFailure?: boolean;
-  /**
-   * If defined as `true`, a failure in the mutation will cause the Hook to
-   * throw in render time, making error boundaries catch the error.
-   */
-  useErrorBoundary?: boolean;
-}
-
-export type Status = 'idle' | 'running' | 'success' | 'failure';
-
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 function noop() {}
 
 /**
@@ -78,9 +18,9 @@ function useGetLatest<Value>(value: Value): () => Value {
   return useCallback(() => ref.current, []);
 }
 
-const initialState: State<never, never> = { status: 'idle' };
+const initialState: MutationState<never, never> = { status: 'idle' };
 
-const reducer = <TData, TError>(_, action): State<TData, TError> => {
+const reducer = <TData, TError>(_, action): MutationState<TData, TError> => {
   if (action.type === 'RESET') {
     return { status: 'idle' };
   }
@@ -95,27 +35,10 @@ const reducer = <TData, TError>(_, action): State<TData, TError> => {
   }
 
   throw Error('Invalid action');
-}
+};
 
-export type Reset = () => void;
-
-export type MutationResult<TInput, TData, TError> = [
-  (input: TInput) => Promise<TData | undefined>,
-  { status: Status; data?: TData; error?: TError; reset: Reset },
-];
-
-type State<TData, TError> = { status: Status; data?: TData; error?: TError };
-
-type Action<TData, TError> =
-  | { type: 'RESET' }
-  | { type: 'MUTATE' }
-  | { type: 'SUCCESS'; data: TData }
-  | { type: 'FAILURE'; error: TError };
-
-export type MutationFn<TInput, TData> = (store: JsonapiCollection, input: TInput, ) => Promise<TData> | TData;
-
-export function useMutation<TInput = any, TData = any, TError = unknown>(
-  mutationFn: MutationFn<TInput, TData>,
+export function useMutation<TInput = any, TData extends IJsonapiModel = any, TError = unknown>(
+  mutationFn: MutationFn<TData, TInput>,
   {
     onMutate = () => noop,
     onSuccess = noop,
@@ -123,14 +46,13 @@ export function useMutation<TInput = any, TData = any, TError = unknown>(
     onSettled = noop,
     throwOnFailure = false,
     useErrorBoundary = false,
-  }: Options<TInput, TData, TError> = {},
+  }: IMutationOptions<TInput, TData, TError> = {},
 ): MutationResult<TInput, TData, TError> {
-  const store = useDatx();
+  const client = useDatx();
 
-  const [{ status, data, error }, dispatch] = useReducer<Reducer<State<TData, TError>, Action<TData, TError>>>(
-    reducer,
-    initialState,
-  );
+  const [{ status, data, error }, dispatch] = useReducer<
+    Reducer<MutationState<TData, TError>, MutationAction<TData, TError>>
+  >(reducer, initialState);
 
   const getMutationFn = useGetLatest(mutationFn);
   const latestMutation = useRef(0);
@@ -141,7 +63,7 @@ export function useMutation<TInput = any, TData = any, TError = unknown>(
    */
   const mutate = useCallback(async function mutate(
     input: TInput,
-    config: Omit<Options<TInput, TData, TError>, 'onMutate' | 'useErrorBoundary'> = {},
+    config: Omit<IMutationOptions<TInput, TData, TError>, 'onMutate' | 'useErrorBoundary'> = {},
   ) {
     const mutation = Date.now();
     latestMutation.current = mutation;
@@ -150,7 +72,7 @@ export function useMutation<TInput = any, TData = any, TError = unknown>(
     const rollback = (await onMutate({ input })) ?? noop;
 
     try {
-      const data = await getMutationFn()(store, input);
+      const data = await getMutationFn()(client, input);
 
       if (latestMutation.current === mutation) {
         dispatch({ type: 'SUCCESS', data });

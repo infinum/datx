@@ -5,10 +5,10 @@ import useSWR from 'swr';
 
 import { useDatx } from './useDatx';
 
-import { Meta, QueryConfig, QueryResource, _QueryResourceFn, _QueryResourcesFn } from '../types';
+import { QueryConfig, QueryResource } from '../types';
 import { pickRequestOptions } from '../utils';
 
-export function useResource<TModel extends IJsonapiModel, TMeta extends Meta = Meta>(
+export function useResource<TModel extends IJsonapiModel>(
   queryResource: QueryResource<TModel>,
   config?: QueryConfig<TModel>
 ) {

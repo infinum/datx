@@ -3,7 +3,7 @@ import { Todo } from '../../../models/Todo';
 
 export const config = {
   api: {
-    externalResolver: true,
+    externalResolver: false,
   },
 }
 

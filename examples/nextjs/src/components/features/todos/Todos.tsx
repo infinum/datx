@@ -1,26 +1,31 @@
 import { getModelEndpointUrl, modelToJsonApi } from '@datx/jsonapi';
-import { MutationFn, QueryFn, useMutation, useQuery } from '@datx/react';
+import {
+  createMutation,
+  createQuery,
+  useMutation,
+  useQuery,
+} from '@datx/react';
 import { FC, useRef } from 'react';
 
 import { Todo } from '../../../models/Todo';
 
-const queryTodo: QueryFn<any, any> = (store, variables) => {
+const queryTodo = createQuery((client) => {
   const model = new Todo();
-  const url = getModelEndpointUrl(model);
+  const key = getModelEndpointUrl(model);
 
   return {
-    key: url,
-    fetcher: () => store.request(url, 'GET'),
-  }
-}
+    key,
+    fetcher: (url) => client.request<Todo>(url, 'GET'),
+  };
+});
 
-const createTodo: MutationFn<any, any> = (store, message) => {
+const createTodo = createMutation((client, message: string | undefined) => {
   const model = new Todo({ message });
   const url = getModelEndpointUrl(model);
   const data = modelToJsonApi(model);
 
-  return store.request(url, 'POST', { data });
-};
+  return client.request<Todo>(url, 'POST', { data });
+});
 
 export const Todos: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
