@@ -15,7 +15,7 @@ const queryTodo = createQuery((client) => {
 
   return {
     key,
-    fetcher: (url) => client.request<Todo>(url, 'GET'),
+    fetcher: (url) => client.request<Array<Todo>>(url, 'GET'),
   };
 });
 
@@ -53,7 +53,7 @@ export const Todos: FC = () => {
         add
       </button>
 
-      {data.data.map((todo) => (
+      {data.data?.map((todo) => (
         <div key={todo.id}>{todo.message}</div>
       ))}
     </div>

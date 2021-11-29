@@ -1,5 +1,5 @@
 import { IModelConstructor, IType, PureCollection } from '@datx/core';
-import { IJsonapiModel, IJsonapiCollection, IRequestOptions, Response } from '@datx/jsonapi';
+import { IJsonapiModel, IJsonapiCollection, IRequestOptions, Response, IResponseData } from '@datx/jsonapi';
 import { SWRConfiguration, Fetcher, Key } from 'swr';
 
 export type JsonapiCollection = PureCollection & IJsonapiCollection;
@@ -22,13 +22,13 @@ export type QueryResourcesFn<TData> = (variables: object) => QueryResources<TDat
 
 export type QuerySelectFn<TData> = (data: TData) => any;
 
-type QueryConfiguration<TData extends IJsonapiModel, TVariables> = {
+type QueryConfiguration<TData extends IResponseData, TVariables> = {
   select?: QuerySelectFn<TData>;
   sideload?: (response: Response<TData>) => Promise<Response<TData>>;
   variables?: TVariables;
 };
 
-export type QueryConfig<TData extends IJsonapiModel, TVariables> = SWRConfiguration<
+export type QueryConfig<TData extends IResponseData, TVariables> = SWRConfiguration<
   Response<TData>,
   Response<TData>,
   Fetcher<Response<TData>>
@@ -37,12 +37,12 @@ export type QueryConfig<TData extends IJsonapiModel, TVariables> = SWRConfigurat
 
 export type Meta = Record<string, unknown>;
 
-export interface IQueryResult<TData extends IJsonapiModel> {
+export interface IQueryResult<TData extends IResponseData> {
   key: Key;
   fetcher: Fetcher<Response<TData>>;
 }
 
-export type QueryFn<TData extends IJsonapiModel, TVariables> = (
+export type QueryFn<TData extends IResponseData, TVariables> = (
   client: JsonapiCollection,
   variables?: TVariables,
 ) => IQueryResult<TData>;
@@ -116,7 +116,7 @@ export type Status = 'idle' | 'running' | 'success' | 'failure';
 
 export type Reset = () => void;
 
-export type MutationResult<TInput, TData extends IJsonapiModel, TError> = [
+export type MutationResult<TInput, TData extends IResponseData, TError> = [
   (input: TInput) => Promise<Response<TData> | undefined>,
   { status: Status; data?: TData; error?: TError; reset: Reset },
 ];
@@ -127,12 +127,12 @@ export type MutationState<TData, TError> = {
   error?: TError;
 };
 
-export type MutationFn<TData extends IJsonapiModel, TInput> = (
+export type MutationFn<TData extends IResponseData, TInput> = (
   client: JsonapiCollection,
   input: TInput,
 ) => Promise<Response<TData>> | Response<TData>;
 
-export type MutationAction<TData extends IJsonapiModel, TError> =
+export type MutationAction<TData extends IResponseData, TError> =
   | { type: 'RESET' }
   | { type: 'MUTATE' }
   | { type: 'SUCCESS'; data: Response<TData> }
