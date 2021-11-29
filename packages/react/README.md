@@ -22,9 +22,17 @@ npm install --save @datx/react swr
 
 #### useDatx
 
+#### useQuery
+
+#### useMutation
+
 #### useResource
 
 #### useResourceList
+
+## createQuery
+
+## createMutation
 
 ### SSR
 
