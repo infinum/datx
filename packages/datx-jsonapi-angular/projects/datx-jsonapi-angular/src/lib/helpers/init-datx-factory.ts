@@ -14,8 +14,6 @@ export function initDatxFactory(staticConfig: Partial<IConfigType> = {}) {
       ...dynamicConfig,
     };
 
-    console.log(mergedConfig);
-
     return () => {
       Object.assign(config, mergedConfig);
 
