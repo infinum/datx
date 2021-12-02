@@ -7,7 +7,7 @@ import { map, takeUntil } from 'rxjs/operators';
 
 @Injectable()
 export class CustomFetchService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   public async fetch(
     method: string,
