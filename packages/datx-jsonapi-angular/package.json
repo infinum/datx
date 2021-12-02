@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build datx-jsonapi-angular",
+    "build": "ng build datx-jsonapi-angular && npm run copy-license",
+    "copy-license": "cp ./LICENSE ./dist/LICENSE",
     "watch": "ng build --watch --configuration development",
     "test": "jest"
   },
