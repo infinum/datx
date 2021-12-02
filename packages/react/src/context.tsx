@@ -4,15 +4,15 @@ import { JsonapiCollection } from './types';
 
 export const DatxContext = createContext<IJsonapiCollection | null>(null);
 
-export interface IDatxProviderProps<TStore extends JsonapiCollection> {
-  store: TStore;
+export interface IDatxProviderProps<TClient extends JsonapiCollection> {
+  client: TClient;
 }
 
-export function DatxProvider<TStore extends JsonapiCollection>({
-  store,
+export function DatxProvider<TClient extends JsonapiCollection>({
+  client,
   children,
-}: PropsWithChildren<IDatxProviderProps<TStore>>) {
-  return <DatxContext.Provider value={store}>{children}</DatxContext.Provider>;
+}: PropsWithChildren<IDatxProviderProps<TClient>>) {
+  return <DatxContext.Provider value={client}>{children}</DatxContext.Provider>;
 }
 
 export default DatxContext;

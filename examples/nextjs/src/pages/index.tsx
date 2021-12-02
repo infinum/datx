@@ -1,10 +1,15 @@
 import type { NextPage } from 'next';
-
-import { Todos } from '../components/features/todos/Todos';
+import NextLink from 'next/link';
 
 const Home: NextPage = () => {
   return (
-    <Todos />
+    <ul>
+      <li>
+        <NextLink href="/todos/csr">
+          <a>Client side rendering</a>
+        </NextLink>
+      </li>
+    </ul>
   )
 }
 

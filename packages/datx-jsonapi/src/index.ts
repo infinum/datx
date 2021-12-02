@@ -32,6 +32,7 @@ export { IRawResponse } from './interfaces/IRawResponse';
 export { IRequestOptions } from './interfaces/IRequestOptions';
 export { IResponse } from './interfaces/JsonApi';
 export { IResponseData } from './interfaces/IResponseData';
+export { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 
 export { config, fetchLink } from './NetworkUtils';
 

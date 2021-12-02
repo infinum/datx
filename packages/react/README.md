@@ -20,6 +20,8 @@ npm install --save @datx/react swr
 
 ### hooks
 
+#### useSafeClient
+
 #### useDatx
 
 #### useQuery

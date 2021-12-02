@@ -1,11 +1,15 @@
 import type { AppProps } from 'next/app';
-import { DatxProvider } from '@datx/react';
+import { DatxProvider, useSafeClient } from '@datx/react';
 import { createClient } from '../datx/createClient';
 
-const store = createClient();
+function ExampleApp({ Component, pageProps }: AppProps) {
+  const client = useSafeClient(createClient);
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <DatxProvider store={store}><Component {...pageProps} /></DatxProvider>
+  return (
+    <DatxProvider client={client}>
+      <Component {...pageProps} />
+    </DatxProvider>
+  );
 }
 
-export default MyApp
+export default ExampleApp;

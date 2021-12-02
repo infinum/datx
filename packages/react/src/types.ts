@@ -1,8 +1,10 @@
 import { IModelConstructor, IType, PureCollection } from '@datx/core';
 import { IJsonapiModel, IJsonapiCollection, IRequestOptions, Response, IResponseData } from '@datx/jsonapi';
-import { SWRConfiguration, Fetcher, Key } from 'swr';
+import { SWRConfiguration, Fetcher } from 'swr';
 
 export type JsonapiCollection = PureCollection & IJsonapiCollection;
+
+export type CreateClientFn = () => JsonapiCollection;
 
 export type _QueryResource<TData> = [
   IType | IModelConstructor<TData>,
@@ -37,7 +39,7 @@ export type QueryConfig<TModel extends IJsonapiModel, TData extends IResponseDat
 export type Meta = Record<string, unknown>;
 
 export interface IQueryResult<TModel extends IJsonapiModel, TData extends IResponseData> {
-  key: Key;
+  key: string;
   fetcher: Fetcher<Response<TModel, TData>>;
 }
 
