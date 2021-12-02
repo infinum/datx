@@ -16,7 +16,7 @@
     "watch": "lerna run --parallel watch --no-private",
     "watch:react": "lerna run --parallel watch --scope @datx/react",
     "clean": "lerna clean && yarn clean:dist",
-    "clean:dist": "lerna exec -- rm -rf ./node_modules"
+    "clean:dist": "lerna exec -- rm -rf ./dist"
   },
   "dependencies": {},
   "private": true,
