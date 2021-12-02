@@ -214,7 +214,7 @@ export function removeFromArray<T = any>(arr: Array<T>, item: T): Array<T> {
 }
 
 export class Headers implements IResponseHeaders {
-  constructor(private headers: Array<[string, string]>) {}
+  public constructor(private readonly headers: Array<[string, string]>) {}
 
   public get(name: string): string | null {
     const matches = this.headers.filter(([key, _value]) => key === name);
