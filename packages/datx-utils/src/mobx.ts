@@ -80,9 +80,10 @@ noopMobX.observable.array = (obj: T): T => obj;
 class MobXProxy {
   private _useRealMobX = true;
   private access = false;
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly
   private hasMobX = false;
 
-  constructor() {
+  public constructor() {
     let mobx: any;
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -119,7 +120,7 @@ class MobXProxy {
     });
   }
 
-  useMobx(enabled: boolean): void {
+  public useMobx(enabled: boolean): void {
     if (this.access) {
       throw new Error(
         '[datx] MobX was already used. Please move this function call to somewhere earlier.',
