@@ -20,11 +20,10 @@ export type QueryResources<TData> = _QueryResources<TData> | _QueryResourcesFn<T
 
 export type QueryResourcesFn<TData> = (variables: object) => QueryResources<TData>;
 
-export type QuerySelectFn<TData> = (data: TData) => any;
+export type QuerySelectFn<TModel extends IJsonapiModel, TData extends IResponseData> = <TSelection>(data: Response<TModel, TData>) => TSelection;
 
 type QueryConfiguration<TModel extends IJsonapiModel, TData extends IResponseData, TVariables> = {
-  select?: QuerySelectFn<TData>;
-  sideload?: (response: Response<TModel, TData>) => Promise<Response<TModel, TData>>;
+  select?: QuerySelectFn<TModel, TData>;
   variables?: TVariables;
 };
 
@@ -53,7 +52,7 @@ export type QueryFn<TModel extends IJsonapiModel, TData extends IResponseData = 
 
 export type rollbackFn = () => void;
 
-export interface IMutationOptions<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>, TError = unknown> {
+export interface IMutationOptions<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>> {
   /**
    * A function to be executed before the mutation runs.
    *
@@ -77,7 +76,7 @@ export interface IMutationOptions<TInput, TModel extends IJsonapiModel = IJsonap
    * If a Promise is returned, it will be awaited before proceeding.
    */
   onFailure?(params: {
-    error: TError;
+    error: Response<TModel, TData>;
     rollback: rollbackFn | void;
     input: TInput;
   }): Promise<void> | void;
@@ -95,7 +94,7 @@ export interface IMutationOptions<TInput, TModel extends IJsonapiModel = IJsonap
       | { status: 'success'; data: Response<TModel, TData>; input: TInput }
       | {
           status: 'failure';
-          error: TError;
+          error: Response<TModel, TData>;
           rollback: rollbackFn | void;
           input: TInput;
         },
@@ -116,15 +115,15 @@ export type Status = 'idle' | 'running' | 'success' | 'failure';
 
 export type Reset = () => void;
 
-export type MutationResult<TInput, TModel extends IJsonapiModel, TData extends IResponseData, TError> = [
+export type MutationResult<TInput, TModel extends IJsonapiModel, TData extends IResponseData> = [
   (input: TInput) => Promise<Response<TModel, TData> | undefined>,
-  { status: Status; data?: TData; error?: TError; reset: Reset },
+  { status: Status; data?: Response<TModel, TData>; error?: Response<TModel, TData>; reset: Reset },
 ];
 
-export type MutationState<TData, TError> = {
+export type MutationState<TModel extends IJsonapiModel, TData extends IResponseData> = {
   status: Status;
-  data?: TData;
-  error?: TError;
+  data?: Response<TModel, TData>;
+  error?: Response<TModel, TData>;
 };
 
 export type MutationFn<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>> = (
@@ -132,8 +131,8 @@ export type MutationFn<TInput, TModel extends IJsonapiModel = IJsonapiModel, TDa
   input: TInput,
 ) => Promise<Response<TModel, TData>> | Response<TModel, TData>;
 
-export type MutationAction<TModel extends IJsonapiModel, TData extends IResponseData, TError> =
+export type MutationAction<TModel extends IJsonapiModel, TData extends IResponseData> =
   | { type: 'RESET' }
   | { type: 'MUTATE' }
   | { type: 'SUCCESS'; data: Response<TModel, TData> }
-  | { type: 'FAILURE'; error: TError };
+  | { type: 'FAILURE'; error: Response<TModel, TData> };

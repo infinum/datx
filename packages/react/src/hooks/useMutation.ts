@@ -1,26 +1,21 @@
-import { IJsonapiModel, IResponseData } from '@datx/jsonapi';
-import { Reducer, useCallback, useReducer, useRef } from 'react';
-import { IMutationOptions, MutationAction, MutationFn, MutationResult } from '..';
-import { MutationState } from '../types';
+import { IJsonapiModel, IResponseData, Response } from '@datx/jsonapi';
+import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
+import { IMutationOptions, MutationState, MutationAction, MutationFn, MutationResult } from '../types';
 import { useDatx } from './useDatx';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-function noop() {}
-
-/**
- * Get the latest value received as parameter, useful to be able to dynamically
- * read a value from params inside a callback or effect without cleaning and
- * running again the effect or recreating the callback.
- */
 function useGetLatest<Value>(value: Value): () => Value {
   const ref = useRef<Value>(value);
-  ref.current = value;
+
+  useEffect(() => {
+    ref.current = value;
+  });
+
   return useCallback(() => ref.current, []);
 }
 
 const initialState: MutationState<never, never> = { status: 'idle' };
 
-const reducer = <TData, TError>(_, action): MutationState<TData, TError> => {
+const reducer = <TModel extends IJsonapiModel, TData extends IResponseData>(_, action): MutationState<TModel, TData> => {
   if (action.type === 'RESET') {
     return { status: 'idle' };
   }
@@ -37,39 +32,35 @@ const reducer = <TData, TError>(_, action): MutationState<TData, TError> => {
   throw Error('Invalid action');
 };
 
-export function useMutation<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>, TError = unknown>(
+export function useMutation<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>>(
   mutationFn: MutationFn<TInput, TModel, TData>,
   {
-    onMutate = () => noop,
-    onSuccess = noop,
-    onFailure = noop,
-    onSettled = noop,
+    onMutate,
+    onSuccess,
+    onFailure,
+    onSettled,
     throwOnFailure = false,
     useErrorBoundary = false,
-  }: IMutationOptions<TInput, TModel, TData, TError> = {},
-): MutationResult<TInput, TModel, TData, TError> {
+  }: IMutationOptions<TInput, TModel, TData> = {},
+): MutationResult<TInput, TModel, TData> {
   const client = useDatx();
 
   const [{ status, data, error }, dispatch] = useReducer<
-    Reducer<MutationState<TData, TError>, MutationAction<TModel, TData, TError>>
+    Reducer<MutationState<TModel, TData>, MutationAction<TModel, TData>>
   >(reducer, initialState);
 
   const getMutationFn = useGetLatest(mutationFn);
   const latestMutation = useRef(0);
 
-  /**
-   * Run your mutation function, this function receives an input value and pass
-   * it directly to your mutation function.
-   */
   const mutate = useCallback(async function mutate(
     input: TInput,
-    config: Omit<IMutationOptions<TInput, TModel, TData, TError>, 'onMutate' | 'useErrorBoundary'> = {},
+    config: Omit<IMutationOptions<TInput, TModel, TData>, 'onMutate' | 'useErrorBoundary'> = {},
   ) {
     const mutation = Date.now();
     latestMutation.current = mutation;
 
     dispatch({ type: 'MUTATE' });
-    const rollback = (await onMutate({ input })) ?? noop;
+    const rollback = await onMutate?.({ input });
 
     try {
       const data = await getMutationFn()(client, input);
@@ -78,21 +69,21 @@ export function useMutation<TInput, TModel extends IJsonapiModel = IJsonapiModel
         dispatch({ type: 'SUCCESS', data });
       }
 
-      await onSuccess({ data, input });
-      await (config.onSuccess ?? noop)({ data, input });
+      await onSuccess?.({ data, input });
+      await config.onSuccess?.({ data, input });
 
-      await onSettled({ status: 'success', data, input });
-      await (config.onSettled ?? noop)({ status: 'success', data, input });
+      await onSettled?.({ status: 'success', data, input });
+      await config.onSettled?.({ status: 'success', data, input });
 
       return data;
     } catch (err) {
-      const error = err as TError;
+      const error = err as Response<TModel, TData>;
 
-      await onFailure({ error, rollback, input });
-      await (config.onFailure ?? noop)({ error, rollback, input });
+      await onFailure?.({ error, rollback, input });
+      await config.onFailure?.({ error, rollback, input });
 
-      await onSettled({ status: 'failure', error, input, rollback });
-      await (config.onSettled ?? noop)({
+      await onSettled?.({ status: 'failure', error, input, rollback });
+      await config.onSettled?.({
         status: 'failure',
         error,
         input,
@@ -103,18 +94,22 @@ export function useMutation<TInput, TModel extends IJsonapiModel = IJsonapiModel
         dispatch({ type: 'FAILURE', error });
       }
 
-      if (config.throwOnFailure ?? throwOnFailure) throw error;
+      if (config.throwOnFailure ?? throwOnFailure) {
+        throw error;
+      }
 
       return;
     }
   },
   []);
 
-  const reset = useCallback(function reset() {
+  const reset = useCallback(() => {
     dispatch({ type: 'RESET' });
   }, []);
 
-  if (useErrorBoundary && error) throw error;
+  if (useErrorBoundary && error) {
+    throw error;
+  }
 
   return [mutate, { status, data, error, reset }];
 }
