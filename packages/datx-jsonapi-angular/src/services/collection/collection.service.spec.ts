@@ -43,7 +43,7 @@ describe('CollectionService', () => {
       );
   });
 
-  fit('should be created', () => {
+  it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
