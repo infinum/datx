@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ModuleWithProviders, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ModuleWithProviders, NgModule, Optional } from '@angular/core';
 import { IConfigType } from '@datx/jsonapi/dist/NetworkUtils';
 import { CachingStrategy } from '@datx/network';
 import { initDatxFactory } from './helpers/init-datx-factory';
@@ -29,7 +29,7 @@ export class DatxModule {
           provide: APP_INITIALIZER,
           useFactory: initDatxFactory(config),
           multi: true,
-          deps: [CustomFetchService, DATX_CONFIG],
+          deps: [CustomFetchService, [new Optional(), DATX_CONFIG]],
         },
       ],
     };
