@@ -7,7 +7,7 @@ import { map, takeUntil } from 'rxjs/operators';
 
 @Injectable()
 export class CustomFetchService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   public async fetch(
     method: string,
@@ -34,7 +34,7 @@ export class CustomFetchService {
         map((response) => {
           return {
             data: response.body,
-            headers: response.headers as unknown as IResponseHeaders, // The interface actually matches
+            headers: (response.headers as unknown) as IResponseHeaders, // The interface actually matches
             requestHeaders,
             status: response.status,
           } as IRawResponse;
