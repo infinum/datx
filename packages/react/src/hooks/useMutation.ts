@@ -1,4 +1,4 @@
-import { IJsonapiModel } from '@datx/jsonapi';
+import { IJsonapiModel, IResponseData } from '@datx/jsonapi';
 import { Reducer, useCallback, useReducer, useRef } from 'react';
 import { IMutationOptions, MutationAction, MutationFn, MutationResult } from '..';
 import { MutationState } from '../types';
@@ -37,8 +37,8 @@ const reducer = <TData, TError>(_, action): MutationState<TData, TError> => {
   throw Error('Invalid action');
 };
 
-export function useMutation<TInput = any, TData extends IJsonapiModel = any, TError = unknown>(
-  mutationFn: MutationFn<TData, TInput>,
+export function useMutation<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>, TError = unknown>(
+  mutationFn: MutationFn<TInput, TModel, TData>,
   {
     onMutate = () => noop,
     onSuccess = noop,
@@ -46,12 +46,12 @@ export function useMutation<TInput = any, TData extends IJsonapiModel = any, TEr
     onSettled = noop,
     throwOnFailure = false,
     useErrorBoundary = false,
-  }: IMutationOptions<TInput, TData, TError> = {},
-): MutationResult<TInput, TData, TError> {
+  }: IMutationOptions<TInput, TModel, TData, TError> = {},
+): MutationResult<TInput, TModel, TData, TError> {
   const client = useDatx();
 
   const [{ status, data, error }, dispatch] = useReducer<
-    Reducer<MutationState<TData, TError>, MutationAction<TData, TError>>
+    Reducer<MutationState<TData, TError>, MutationAction<TModel, TData, TError>>
   >(reducer, initialState);
 
   const getMutationFn = useGetLatest(mutationFn);
@@ -63,7 +63,7 @@ export function useMutation<TInput = any, TData extends IJsonapiModel = any, TEr
    */
   const mutate = useCallback(async function mutate(
     input: TInput,
-    config: Omit<IMutationOptions<TInput, TData, TError>, 'onMutate' | 'useErrorBoundary'> = {},
+    config: Omit<IMutationOptions<TInput, TModel, TData, TError>, 'onMutate' | 'useErrorBoundary'> = {},
   ) {
     const mutation = Date.now();
     latestMutation.current = mutation;

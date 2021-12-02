@@ -15,7 +15,7 @@ const queryTodo = createQuery((client) => {
 
   return {
     key,
-    fetcher: (url) => client.request<Array<Todo>>(url, 'GET'),
+    fetcher: async (url) => client.request<Todo, Array<Todo>>(url, 'GET')
   };
 });
 

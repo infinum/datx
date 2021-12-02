@@ -22,6 +22,7 @@ import { flattenModel } from './helpers/model';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { fetchLink } from './NetworkUtils';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
+import { IResponseData } from '.';
 
 function serializeHeaders(
   headers: Array<[string, string]> | IResponseHeaders,
@@ -47,15 +48,15 @@ function initHeaders(headers: Array<[string, string]> | IResponseHeaders): IResp
   return headers;
 }
 
-function initData<T extends IJsonapiModel>(
+function initData<TModel extends IJsonapiModel>(
   response: IRawResponse,
   collection?: IJsonapiCollection,
-  overrideData?: T | Array<T>,
+  overrideData?: IResponseData<TModel>,
 ): any {
   if (collection && response.data) {
-    const data = overrideData || collection.sync<T>(response.data);
+    const data = overrideData || collection.sync<TModel>(response.data);
 
-    return new Bucket.ToOneOrMany<T>(data, collection as any, true);
+    return new Bucket.ToOneOrMany<TModel>(data, collection as any, true);
   }
 
   if (response.data) {
@@ -68,17 +69,17 @@ function initData<T extends IJsonapiModel>(
       }
 
       return {
-        value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T),
+        value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as TModel),
       };
     }
   }
 
-  return new Bucket.ToOneOrMany<T>(null, collection as any, true);
+  return new Bucket.ToOneOrMany<TModel>(null, collection as any, true);
 }
 
-type IAsync<T extends IJsonapiModel> = Promise<Response<T>>;
+type IAsync<TModel extends IJsonapiModel, TData extends IResponseData = IResponseData<TModel>> = Promise<Response<TModel, TData>>;
 
-export class Response<T extends IJsonapiModel, P = IAsync<T>> {
+export class Response<TModel extends IJsonapiModel, TData extends IResponseData = IResponseData<TModel>, TAsync = IAsync<TModel, TData>> {
   private __data;
 
   protected __internal: IResponseInternal = {
@@ -152,7 +153,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
    * @type {P<Response>}
    * @memberOf Response
    */
-  public first?: () => P; // Handled by the __fetchLink
+  public first?: () => TAsync; // Handled by the __fetchLink
 
   /**
    * Previous data page
@@ -160,7 +161,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
    * @type {P<Response>}
    * @memberOf Response
    */
-  public prev?: () => P; // Handled by the __fetchLink
+  public prev?: () => TAsync; // Handled by the __fetchLink
 
   /**
    * Next data page
@@ -168,7 +169,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
    * @type {P<Response>}
    * @memberOf Response
    */
-  public next?: () => P; // Handled by the __fetchLink
+  public next?: () => TAsync; // Handled by the __fetchLink
 
   /**
    * Last data page
@@ -176,7 +177,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
    * @type {P<Response>}
    * @memberOf Response
    */
-  public last?: () => P; // Handled by the __fetchLink
+  public last?: () => TAsync; // Handled by the __fetchLink
 
   /**
    * Received HTTP status
@@ -207,13 +208,13 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
    * @type {Record<string, P<Response>>}
    * @memberOf Response
    */
-  protected readonly __cache: Record<string, () => P> = {};
+  protected readonly __cache: Record<string, () => TAsync> = {};
 
   constructor(
     response: IRawResponse,
     collection?: IJsonapiCollection,
     options?: IRequestOptions,
-    overrideData?: T | Array<T>,
+    overrideData?: IResponseData<TModel>,
     views?: Array<View>,
   ) {
     this.collection = collection;
@@ -237,7 +238,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
     return !this.error;
   }
 
-  public get data(): T | Array<T> | null {
+  public get data(): TData {
     return this.__data.value;
   }
 
@@ -282,7 +283,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
    *
    * @memberOf Response
    */
-  public replaceData(data: T): Response<T, P> {
+  public replaceData(data: TModel): Response<TModel, TData, TAsync> {
     const record: PureModel = this.data as PureModel;
 
     if (record === data) {
@@ -316,7 +317,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
     return new ResponseConstructor(this.__internal.response, this.collection, this.__internal.options, data);
   }
 
-  public clone(): Response<T> {
+  public clone(): Response<TModel> {
     const ResponseConstructor: typeof Response = this.constructor as typeof Response;
     return new ResponseConstructor(
       this.__internal.response,
@@ -337,7 +338,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
     };
   }
 
-  public update(response: IRawResponse, views?: Array<View>): Response<T, P> {
+  public update(response: IRawResponse, views?: Array<View>): Response<TModel, TData, TAsync> {
     this.__updateInternal(response, undefined, views);
     const newData = initData(response, this.collection);
 
@@ -355,7 +356,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
    *
    * @memberOf Response
    */
-  protected __fetchLink(name: string): () => P {
+  protected __fetchLink(name: string): () => TAsync {
     const ResponseConstructor: typeof Response = this.constructor as typeof Response;
     if (!this.__cache[name]) {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
@@ -365,8 +366,8 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
 
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
-        this.__cache[name] = (): P =>
-          fetchLink<T>(link, this.collection, options, this.views, ResponseConstructor) as unknown as P;
+        this.__cache[name] = (): TAsync =>
+          fetchLink<TModel>(link, this.collection, options, this.views, ResponseConstructor) as unknown as TAsync;
       }
     }
 

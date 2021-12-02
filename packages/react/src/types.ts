@@ -22,30 +22,30 @@ export type QueryResourcesFn<TData> = (variables: object) => QueryResources<TDat
 
 export type QuerySelectFn<TData> = (data: TData) => any;
 
-type QueryConfiguration<TData extends IResponseData, TVariables> = {
+type QueryConfiguration<TModel extends IJsonapiModel, TData extends IResponseData, TVariables> = {
   select?: QuerySelectFn<TData>;
-  sideload?: (response: Response<TData>) => Promise<Response<TData>>;
+  sideload?: (response: Response<TModel, TData>) => Promise<Response<TModel, TData>>;
   variables?: TVariables;
 };
 
-export type QueryConfig<TData extends IResponseData, TVariables> = SWRConfiguration<
-  Response<TData>,
-  Response<TData>,
-  Fetcher<Response<TData>>
+export type QueryConfig<TModel extends IJsonapiModel, TData extends IResponseData, TVariables> = SWRConfiguration<
+  Response<TModel, TData>,
+  Response<TModel, TData>,
+  Fetcher<Response<TModel, TData>>
 > &
-  QueryConfiguration<TData, TVariables>;
+  QueryConfiguration<TModel, TData, TVariables>;
 
 export type Meta = Record<string, unknown>;
 
-export interface IQueryResult<TData extends IResponseData> {
+export interface IQueryResult<TModel extends IJsonapiModel, TData extends IResponseData> {
   key: Key;
-  fetcher: Fetcher<Response<TData>>;
+  fetcher: Fetcher<Response<TModel, TData>>;
 }
 
-export type QueryFn<TData extends IResponseData, TVariables> = (
+export type QueryFn<TModel extends IJsonapiModel, TData extends IResponseData = IResponseData<TModel>, TVariables = Record<string, any>> = (
   client: JsonapiCollection,
   variables?: TVariables,
-) => IQueryResult<TData>;
+) => IQueryResult<TModel, TData>;
 
 /**
  * Mutation
@@ -53,7 +53,7 @@ export type QueryFn<TData extends IResponseData, TVariables> = (
 
 export type rollbackFn = () => void;
 
-export interface IMutationOptions<TInput, TData extends IJsonapiModel, TError> {
+export interface IMutationOptions<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>, TError = unknown> {
   /**
    * A function to be executed before the mutation runs.
    *
@@ -70,7 +70,7 @@ export interface IMutationOptions<TInput, TData extends IJsonapiModel, TError> {
    *
    * If a Promise is returned, it will be awaited before proceeding.
    */
-  onSuccess?(params: { data: Response<TData>; input: TInput }): Promise<void> | void;
+  onSuccess?(params: { data: Response<TModel, TData>; input: TInput }): Promise<void> | void;
   /**
    * A function to be executed after the mutation failed to execute.
    *
@@ -92,7 +92,7 @@ export interface IMutationOptions<TInput, TData extends IJsonapiModel, TError> {
    */
   onSettled?(
     params:
-      | { status: 'success'; data: Response<TData>; input: TInput }
+      | { status: 'success'; data: Response<TModel, TData>; input: TInput }
       | {
           status: 'failure';
           error: TError;
@@ -116,8 +116,8 @@ export type Status = 'idle' | 'running' | 'success' | 'failure';
 
 export type Reset = () => void;
 
-export type MutationResult<TInput, TData extends IResponseData, TError> = [
-  (input: TInput) => Promise<Response<TData> | undefined>,
+export type MutationResult<TInput, TModel extends IJsonapiModel, TData extends IResponseData, TError> = [
+  (input: TInput) => Promise<Response<TModel, TData> | undefined>,
   { status: Status; data?: TData; error?: TError; reset: Reset },
 ];
 
@@ -127,13 +127,13 @@ export type MutationState<TData, TError> = {
   error?: TError;
 };
 
-export type MutationFn<TData extends IResponseData, TInput> = (
+export type MutationFn<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>> = (
   client: JsonapiCollection,
   input: TInput,
-) => Promise<Response<TData>> | Response<TData>;
+) => Promise<Response<TModel, TData>> | Response<TModel, TData>;
 
-export type MutationAction<TData extends IResponseData, TError> =
+export type MutationAction<TModel extends IJsonapiModel, TData extends IResponseData, TError> =
   | { type: 'RESET' }
   | { type: 'MUTATE' }
-  | { type: 'SUCCESS'; data: Response<TData> }
+  | { type: 'SUCCESS'; data: Response<TModel, TData> }
   | { type: 'FAILURE'; error: TError };

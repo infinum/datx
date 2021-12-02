@@ -35,6 +35,7 @@ import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
 import { CachingStrategy } from '@datx/network';
 import { IGetAllResponse } from './interfaces/IGetAllResponse';
+import { IResponseData } from '.';
 
 type TSerialisedStore = IRawCollection & { cache?: Array<Omit<ICacheInternal, 'collection'>> };
 
@@ -187,15 +188,15 @@ export function decorateCollection(
       return getAllResponses(response, maxRequests);
     }
 
-    public request<T extends IJsonapiModel = IJsonapiModel>(
+    public request<TModel extends IJsonapiModel = IJsonapiModel, IData extends IResponseData = IResponseData<TModel>>(
       url: string,
       method = 'GET',
       data?: object,
       options?: IRequestOptions,
-    ): Promise<Response<T>> {
+    ): Promise<Response<TModel, IData>> {
       const query = buildUrl(url, data, options);
 
-      return libFetch<T>({ url: query.url, options, data, method, collection: this });
+      return libFetch<TModel, IData>({ url: query.url, options, data, method, collection: this });
     }
 
     public removeOne(
