@@ -1,11 +1,13 @@
-import { fetchQuery } from '@datx/react';
-import type { NextPage, GetServerSideProps } from 'next';
+import { fetchQuery, Hydrate } from '@datx/react';
+import type { NextPage, InferGetServerSidePropsType } from 'next';
 
 import { Todos } from '../../components/features/todos/Todos';
 import { queryTodo } from '../../components/features/todos/Todos.queries';
 import { createClient } from '../../datx/createClient';
 
-const SSR: NextPage = ({ fallback }) => {
+type SSRProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const SSR: NextPage<SSRProps> = ({ fallback }) => {
   return (
     <Hydrate fallback={fallback}>
       <Todos />
@@ -13,7 +15,7 @@ const SSR: NextPage = ({ fallback }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps = async () => {
   const client = createClient();
 
   const todo = await fetchQuery(client, queryTodo);

@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Response, IResponseSnapshot } from '@datx/jsonapi';
+import { Response, IResponseSnapshot, IRawResponse } from '@datx/jsonapi';
 import { SWRConfig } from 'swr';
 import { JsonapiCollection } from './types';
 import { useDatx } from './hooks/useDatx';
@@ -8,15 +8,10 @@ type Fallback = Record<string, IResponseSnapshot>;
 
 export const hydrate = (client: JsonapiCollection, fallback: Fallback) => {
   return Object.keys(fallback).reduce((previousValue, currentValue) => {
-    const data = fallback[currentValue];
+    const {response, options} = fallback[currentValue];
 
-    if (client && data) {
-      if (Array.isArray(data)) {
-        previousValue[currentValue] = data.map((rowResponse) => {
-          new Response({ data: rowResponse, status: 200 }, client);
-        });
-      }
-      previousValue[currentValue] = new Response({ data, status: 200 }, client);
+    if (client && response) {
+      previousValue[currentValue] = new Response(response as IRawResponse, client, options);
     }
 
     return previousValue;

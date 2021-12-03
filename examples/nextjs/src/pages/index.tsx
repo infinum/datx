@@ -9,6 +9,11 @@ const Home: NextPage = () => {
           <a>Client side rendering</a>
         </NextLink>
       </li>
+      <li>
+        <NextLink href="/todos/ssr">
+          <a>Server side rendering</a>
+        </NextLink>
+      </li>
     </ul>
   )
 }

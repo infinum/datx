@@ -1,5 +1,5 @@
 import { IJsonapiModel, IResponseData } from '@datx/jsonapi';
-import { JsonapiCollection, QueryFn } from '..';
+import { JsonapiCollection, QueryFn } from '../types';
 
 export async function fetchQuery<
   TModel extends IJsonapiModel,
