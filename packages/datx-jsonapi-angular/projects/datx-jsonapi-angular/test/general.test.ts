@@ -86,10 +86,10 @@ describe('General', () => {
     }) as Event;
 
     expect(event.name).toBe('Demo');
-    if (event.meta.refs['image'] instanceof Array) {
-      expect(event.meta.refs['image']).not.toBeInstanceOf(Array);
+    if (event.meta.refs.image instanceof Array) {
+      expect(event.meta.refs.image).not.toBeInstanceOf(Array);
     } else {
-      expect(event.meta.refs['image']?.id).toBe('1');
+      expect(event.meta.refs.image?.id).toBe('1');
     }
     expect(event.image).toBeNull();
   });
@@ -520,7 +520,7 @@ describe('General', () => {
 
     if (event) {
       expect(event.name).toBe('Demo');
-      expect(getModelRefLinks(event)['images']).toEqual({
+      expect(getModelRefLinks(event).images).toEqual({
         self: 'https://example.com/events/1/relationships/images',
       });
     }
@@ -556,7 +556,7 @@ describe('General', () => {
 
     if (event) {
       expect(event.name).toBe('Demo');
-      expect(getModelRefLinks(event)['images']).toEqual({
+      expect(getModelRefLinks(event).images).toEqual({
         self: 'https://example.com/events/1/relationships/images',
       });
     }
@@ -629,7 +629,6 @@ describe('General', () => {
     expect(user).not.toBeNull();
 
     if (user) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(user['selected']).toBeUndefined();
     }
 
@@ -638,10 +637,8 @@ describe('General', () => {
     expect(photo1).not.toBeNull();
     if (photo1) {
       expect(photo1.selected).toBe(false);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((photo1)['foo']).not.toBe(false);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((photo1)['foo']).toBeUndefined();
+      expect(photo1['foo']).not.toBe(false);
+      expect(photo1['foo']).toBeUndefined();
     }
 
     const photo2 = store.findOne(Photo, '2');
@@ -687,9 +684,7 @@ describe('General', () => {
     });
 
     if (user instanceof Model) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(user['name']).toBe('John');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(getModelId(user['self'])).toBe('1');
       expect(getModelType(user)).toBe('user');
       expect(store.findAll('user').length).toBe(1);
@@ -704,8 +699,8 @@ describe('General', () => {
     expect(data.attributes && 'id' in data.attributes).toBe(false);
     expect(data.relationships).not.toBeUndefined();
     if (data.relationships) {
-      expect(data.relationships['images'].data).toHaveLength(0);
-      expect(data.relationships['image'].data).toBeNull();
+      expect(data.relationships.images.data).toHaveLength(0);
+      expect(data.relationships.image.data).toBeNull();
     }
   });
 
@@ -716,8 +711,8 @@ describe('General', () => {
 
     expect(data.attributes && 'id' in data.attributes).toBe(false);
     if (data.relationships) {
-      expect(data.relationships['images'].data).toHaveLength(0);
-      expect(data.relationships['image'].data).toBeNull();
+      expect(data.relationships.images.data).toHaveLength(0);
+      expect(data.relationships.image.data).toBeNull();
     }
   });
 });

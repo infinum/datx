@@ -1,5 +1,4 @@
 import { config, IHeaders, IRawResponse } from '@datx/jsonapi';
-import { FetchType } from '@datx/jsonapi/dist/NetworkUtils';
 import * as fs from 'fs';
 import { isFunction } from 'lodash';
 import * as path from 'path';
@@ -130,7 +129,7 @@ function fetchInterceptor(
 export function setupNetwork(): void {
   expectedRequests.length = 0;
   executedRequests.length = 0;
-  config.baseFetch = fetchInterceptor as FetchType; // TODO check the types
+  config.baseFetch = fetchInterceptor;
 }
 
 export function confirmNetwork(): void {

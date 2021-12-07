@@ -79,8 +79,7 @@ describe('updates', () => {
 
       record.save().subscribe((updated) => {
         try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          expect((updated as any)['title']).toBe('Test 1');
+          expect(updated['title']).toBe('Test 1');
           expect(updated).toBe(record);
           done();
         } catch (e) {

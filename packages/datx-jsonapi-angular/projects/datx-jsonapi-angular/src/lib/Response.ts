@@ -50,8 +50,7 @@ export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseRe
   public get snapshot(): IResponseSnapshot {
     const snapshot = super.snapshot;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete (snapshot.options?.fetchOptions as any)['takeUntil$'];
+    delete snapshot.options?.fetchOptions?.['takeUntil$'];
 
     return snapshot;
   }

@@ -22,12 +22,9 @@ export function decorateView<U>(
      * @returns {Observable<Response>} Resolves with the Response object or rejects with an error
      */
     public getOne(id: string, options?: IRequestOptions): Observable<Response<M>> {
-      return (
-        this.__collection
-          .getOne(this.modelType, id, options)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .pipe(map(this['__addFromResponse'].bind(this)))
-      );
+      return this.__collection
+        .getOne(this.modelType, id, options)
+        .pipe(map(this['__addFromResponse'].bind(this)));
     }
 
     /**
@@ -37,12 +34,9 @@ export function decorateView<U>(
      * @returns {Observable<Response>} Resolves with the Response object or rejects with an error
      */
     public getMany(options?: IRequestOptions): Observable<Response<M>> {
-      return (
-        this.__collection
-          .getMany(this.modelType, options)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .pipe(map(this['__addFromResponse'].bind(this)))
-      );
+      return this.__collection
+        .getMany(this.modelType, options)
+        .pipe(map(this['__addFromResponse'].bind(this)));
     }
   }
 
