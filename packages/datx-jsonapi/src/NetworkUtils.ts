@@ -77,7 +77,7 @@ export const config: IConfigType = {
       'fetch' in window &&
       typeof window.fetch === 'function' &&
       window.fetch.bind(window)) ||
-    undefined,
+    globalThis?.fetch,
 
   // Determines how will the request param arrays be stringified
   paramArrayType: ParamArrayType.CommaSeparated, // As recommended by the spec
