@@ -11,6 +11,7 @@
   "scripts": {
     "precommit": "npm run lint & lerna run test",
     "lint": "eslint packages/**/*.ts",
+    "test": "lerna run --parallel test",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --no-private",
     "watch": "lerna run --parallel watch --no-private",
