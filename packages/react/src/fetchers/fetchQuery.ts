@@ -1,5 +1,6 @@
-import { IJsonapiModel, IResponseData } from '@datx/jsonapi';
+import { IJsonapiModel, IResponseData, Response } from '@datx/jsonapi';
 import { JsonapiCollection, QueryFn } from '../types';
+import { undefinedToNull } from '../utils';
 
 export async function fetchQuery<
   TModel extends IJsonapiModel,
@@ -12,7 +13,15 @@ export async function fetchQuery<
 ) {
   const { key, fetcher } = query(client, variables);
 
-  const response = await fetcher(key);
+  try {
+    const response = await fetcher(key);
 
-  return { [key]: response.snapshot };
+    return { [key]: undefinedToNull(response.snapshot) };
+  } catch (error) {
+    if (error instanceof Response) {
+      throw error.error;
+    }
+
+    throw error;
+  }
 }

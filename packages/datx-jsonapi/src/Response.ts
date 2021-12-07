@@ -79,7 +79,7 @@ function initData<TModel extends IJsonapiModel>(
 
 type IAsync<TModel extends IJsonapiModel, TData extends IResponseData = IResponseData<TModel>> = Promise<Response<TModel, TData>>;
 
-export class Response<TModel extends IJsonapiModel, TData extends IResponseData = IResponseData<TModel>, TAsync = IAsync<TModel, TData>> {
+export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>, TAsync = IAsync<TModel, TData>> {
   private __data;
 
   protected __internal: IResponseInternal = {

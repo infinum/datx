@@ -6,8 +6,8 @@ import { useDatx } from './hooks/useDatx';
 
 type Fallback = Record<string, IResponseSnapshot>;
 
-export const hydrate = (client: JsonapiCollection, fallback: Fallback) => {
-  return Object.keys(fallback).reduce((previousValue, currentValue) => {
+export const hydrate = (client: JsonapiCollection, fallback: Fallback | undefined) => {
+  return fallback && Object.keys(fallback).reduce((previousValue, currentValue) => {
     const {response, options} = fallback[currentValue];
 
     if (client && response) {
@@ -19,7 +19,7 @@ export const hydrate = (client: JsonapiCollection, fallback: Fallback) => {
 };
 
 export interface IHydrateProps {
-  fallback: Fallback;
+  fallback: Fallback | undefined;
 }
 
 export function Hydrate({ children, fallback }: PropsWithChildren<IHydrateProps>) {

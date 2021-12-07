@@ -12,8 +12,8 @@ const SSR: NextPage<SSRProps> = ({ fallback }) => {
     <Hydrate fallback={fallback}>
       <Todos />
     </Hydrate>
-  )
-}
+  );
+};
 
 export const getServerSideProps = async () => {
   const client = createClient();
@@ -23,10 +23,10 @@ export const getServerSideProps = async () => {
   return {
     props: {
       fallback: {
-        ...todo
+        ...todo,
       },
     },
-  }
-}
+  };
+};
 
 export default SSR;

@@ -11,3 +11,6 @@ export function pickRequestOptions({ networkConfig, cacheOptions }: IRequestOpti
 export function isQueryOne<TModel>(queryArray: any): queryArray is _QueryResource<TModel> {
   return isString(queryArray[1]) || isNumber(queryArray[1]);
 }
+
+export const undefinedToNull = <TProps>(props: TProps): TProps =>
+  JSON.parse(JSON.stringify(props)) as TProps;

@@ -3,6 +3,7 @@ import {
   useQuery,
 } from '@datx/react';
 import { FC, useRef } from 'react';
+import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
 
 import { createTodo } from './Todos.mutations';
 import { queryTodo } from './Todos.queries';
@@ -19,7 +20,7 @@ export const Todos: FC = () => {
   });
 
   if (error) {
-    return <div>{JSON.stringify(error)}</div>;
+    return <ErrorFallback error={error} />;
   }
 
   if (!data) {
