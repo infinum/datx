@@ -10,13 +10,13 @@ export function decorateModel(
   BaseClass: IModelConstructor<PureModel & IJsonapiModel>,
 ): IModelConstructor<PureModel & IJsonapiModel> {
   class JsonapiModel extends BaseClass {
-    public override save(options?: IRequestOptions): Observable<IJsonapiModel> {
+    public save(options?: IRequestOptions): Observable<IJsonapiModel> {
       return observableWrapper<IJsonapiModel, IJsonapiModel>((rxOptions: IRxFetchOptions) => {
         return super.save(Object.assign({}, options, rxOptions));
       });
     }
 
-    public override destroy(options?: IRequestOptions): Observable<void> {
+    public destroy(options?: IRequestOptions): Observable<void> {
       return observableWrapper<any, void>((rxOptions: IRxFetchOptions) => {
         return super.destroy(Object.assign({}, options, rxOptions)) as any;
       });

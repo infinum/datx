@@ -20,7 +20,7 @@ export function decorateCollection(
   BaseClass: ICollectionConstructor<PureCollection & IJsonapiCollection>,
 ): ICollectionConstructor<PureCollection & IJsonapiCollection> {
   class JsonapiCollection extends BaseClass {
-    public override getOne<T extends IJsonapiModel = IJsonapiModel>(
+    public getOne<T extends IJsonapiModel = IJsonapiModel>(
       type: IType | IModelConstructor<T>,
       id: string,
       options?: IRequestOptions,
@@ -30,7 +30,7 @@ export function decorateCollection(
       });
     }
 
-    public override getMany<T extends IJsonapiModel = IJsonapiModel>(
+    public getMany<T extends IJsonapiModel = IJsonapiModel>(
       type: IType | IModelConstructor<T>,
       options?: IRequestOptions,
     ): Observable<Response<T>> {
@@ -39,7 +39,7 @@ export function decorateCollection(
       });
     }
 
-    public override request<T extends IJsonapiModel = IJsonapiModel>(
+    public request<T extends IJsonapiModel = IJsonapiModel>(
       url: string,
       method?: string,
       data?: object,
@@ -50,13 +50,13 @@ export function decorateCollection(
       });
     }
 
-    public override removeOne(model: PureModel, options?: boolean | IRequestOptions): Observable<void>;
-    public override removeOne(
+    public removeOne(model: PureModel, options?: boolean | IRequestOptions): Observable<void>;
+    public removeOne(
       type: IType | typeof PureModel,
       id: string,
       options?: boolean | IRequestOptions,
     ): Observable<void>;
-    public override removeOne(
+    public removeOne(
       obj: IType | typeof PureModel | PureModel,
       id?: string | boolean | IRequestOptions,
       options?: boolean | IRequestOptions,

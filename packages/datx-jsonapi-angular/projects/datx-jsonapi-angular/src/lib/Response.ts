@@ -20,7 +20,7 @@ export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseRe
    *
    * @memberOf Response
    */
-  protected override __fetchLink(name: string): () => Observable<Response<T>> {
+  protected __fetchLink(name: string): () => Observable<Response<T>> {
     const ResponseConstructor: typeof Response = this.constructor as typeof Response;
     if (!this.__cache[name]) {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
@@ -47,7 +47,7 @@ export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseRe
     return this.__cache[name];
   }
 
-  public override get snapshot(): IResponseSnapshot {
+  public get snapshot(): IResponseSnapshot {
     const snapshot = super.snapshot;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

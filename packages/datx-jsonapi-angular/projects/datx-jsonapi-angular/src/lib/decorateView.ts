@@ -12,7 +12,7 @@ export function decorateView<U>(
   BaseClass: IViewConstructor<IJsonapiModel, IJsonapiView>,
 ): IViewConstructor<IJsonapiModel, U & IJsonapiView> {
   class JsonapiView<M extends IJsonapiModel = IJsonapiModel> extends BaseClass {
-    protected override __collection!: IJsonapiCollection & PureCollection;
+    protected __collection!: IJsonapiCollection & PureCollection;
 
     /**
      * Fetch the records with the given type and id
@@ -21,12 +21,12 @@ export function decorateView<U>(
      * @param {IRequestOptions} [options] Server options
      * @returns {Observable<Response>} Resolves with the Response object or rejects with an error
      */
-    public override getOne(id: string, options?: IRequestOptions): Observable<Response<M>> {
+    public getOne(id: string, options?: IRequestOptions): Observable<Response<M>> {
       return (
         this.__collection
           .getOne(this.modelType, id, options)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .pipe(map((this as any)['__addFromResponse'].bind(this)))
+          .pipe(map(this['__addFromResponse'].bind(this)))
       );
     }
 
@@ -36,12 +36,12 @@ export function decorateView<U>(
      * @param {IRequestOptions} [options] Server options
      * @returns {Observable<Response>} Resolves with the Response object or rejects with an error
      */
-    public override getMany(options?: IRequestOptions): Observable<Response<M>> {
+    public getMany(options?: IRequestOptions): Observable<Response<M>> {
       return (
         this.__collection
           .getMany(this.modelType, options)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .pipe(map((this as any)['__addFromResponse'].bind(this)))
+          .pipe(map(this['__addFromResponse'].bind(this)))
       );
     }
   }
