@@ -6,7 +6,8 @@
     "umdModuleIds": {
       "@datx/core": "@datx/core",
       "@datx/jsonapi": "@datx/jsonapi",
-      "@datx/network": "@datx/network"
+      "@datx/network": "@datx/network",
+      "@datx/utils": "@datx/utils"
     }
   }
 }

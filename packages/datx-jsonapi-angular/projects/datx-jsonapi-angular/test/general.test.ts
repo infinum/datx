@@ -630,7 +630,7 @@ describe('General', () => {
 
     if (user) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((user as any)['selected']).toBeUndefined();
+      expect(user['selected']).toBeUndefined();
     }
 
     const photo1 = store.findOne(Photo, '1');
@@ -639,9 +639,9 @@ describe('General', () => {
     if (photo1) {
       expect(photo1.selected).toBe(false);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((photo1 as any)['foo']).not.toBe(false);
+      expect((photo1)['foo']).not.toBe(false);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((photo1 as any)['foo']).toBeUndefined();
+      expect((photo1)['foo']).toBeUndefined();
     }
 
     const photo2 = store.findOne(Photo, '2');
@@ -688,9 +688,9 @@ describe('General', () => {
 
     if (user instanceof Model) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((user as any)['name']).toBe('John');
+      expect(user['name']).toBe('John');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(getModelId(user as any['self'])).toBe('1');
+      expect(getModelId(user['self'])).toBe('1');
       expect(getModelType(user)).toBe('user');
       expect(store.findAll('user').length).toBe(1);
     }

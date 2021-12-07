@@ -19,7 +19,7 @@ export class CustomFetchService {
     const takeUntil$: Observable<void> | undefined = fetchOptions?.takeUntil$;
 
     const requestHeaders = {
-      ...config.defaultFetchOptions['headers'],
+      ...config.defaultFetchOptions.headers,
       ...headers,
     };
 
