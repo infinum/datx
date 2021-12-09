@@ -1,5 +1,12 @@
 import {
-  assignComputed, getMeta, IRawModel, isArrayLike, mapItems, META_FIELD, mobx, setMeta
+  assignComputed,
+  getMeta,
+  IRawModel,
+  isArrayLike,
+  mapItems,
+  META_FIELD,
+  mobx,
+  setMeta,
 } from '@datx/utils';
 import { IFieldDefinition, IReferenceDefinition, ParsedRefModel } from '../../Attribute';
 import { getBucketConstructor } from '../../buckets';
@@ -16,11 +23,14 @@ import { error } from '../format';
 import { updateSingleAction } from '../patch';
 import { getBackRef, getRef, updateBackRef, updateRef } from './fields';
 import {
-  commitModel, getModelCollection,
-  getModelId, getModelType, isModelReference,
-  modelMapParse, peekNonNullish
+  commitModel,
+  getModelCollection,
+  getModelId,
+  getModelType,
+  isModelReference,
+  modelMapParse,
+  peekNonNullish,
 } from './utils';
-
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
@@ -135,6 +145,12 @@ function isPojo(val: any): boolean {
   return typeof val === 'object' && val !== null && !(val instanceof PureModel);
 }
 
+function observablePojo(value: object) {
+  return isArrayLike(value)
+    ? mobx.observable.array(value)
+    : mobx.observable.object({ value }).value;
+}
+
 export function initModelField<T extends PureModel>(model: T, key: string, value: any): void {
   const fields = getMeta(model, MetaModelField.Fields, {});
   const fieldDef = fields[key];
@@ -175,11 +191,7 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
       (newValue: any) => {
         // Make sure nested properties are observable
         // eslint-disable-next-line no-nested-ternary
-        const packedValue = isPojo(newValue)
-          ? isArrayLike(newValue)
-            ? mobx.observable.array(newValue)
-            : mobx.observable.object(newValue)
-          : newValue;
+        const packedValue = isPojo(newValue) ? observablePojo(newValue) : newValue;
 
         updateSingleAction(model, key, newValue);
         setMeta(model, `data__${key}`, packedValue);

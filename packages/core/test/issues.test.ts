@@ -1,6 +1,6 @@
 import testMobx from './mobx';
 
-import { Collection, PureModel, Attribute } from '../src';
+import { Collection, PureModel, Attribute, modelToJSON } from '../src';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });
@@ -33,5 +33,27 @@ describe('issues', () => {
     store.removeOne(toRemove);
     expect(store.length).toBe(2);
     expect(foo.bar).toHaveLength(1);
+  });
+
+  it('should work with Date property parser', () => {
+    class Foo extends PureModel {
+      @Attribute({
+        parse: (value: string) => new Date(value),
+        serialize: (value: Date) => value.toISOString(),
+      })
+      public value!: Date;
+    }
+
+    const foo = new Foo({ value: '2022-01-01T00:00:00.000Z' });
+
+    expect(foo.value).toBeInstanceOf(Date);
+    expect(foo.value.getFullYear()).toBe(2022);
+
+    foo.value = new Date('2021-07-31T00:00:00.000Z');
+    expect(foo.value).toBeInstanceOf(Date);
+
+    const snapshot = modelToJSON(foo);
+
+    expect(snapshot.value).toBe('2021-07-31T00:00:00.000Z');
   });
 });
