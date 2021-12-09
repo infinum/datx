@@ -147,7 +147,9 @@ function isPojo(val: any): boolean {
 }
 
 function observablePojo(value: object) {
-  return isArrayLike(value) ? mobx.observable.array(value) : mobx.observable.object(value);
+  return isArrayLike(value)
+    ? mobx.observable.array(value)
+    : mobx.observable.object({ value }).value;
 }
 
 export function initModelField<T extends PureModel>(model: T, key: string, value: any): void {
