@@ -15,6 +15,8 @@ module.exports = {
       },
     ],
   },
+  automock: false,
+  resetMocks: false,
   coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/test/'],
   coverageProvider: 'v8',
   coverageReporters: ['text'],

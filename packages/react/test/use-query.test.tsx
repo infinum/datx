@@ -1,43 +1,33 @@
-import { getModelEndpointUrl } from '@datx/jsonapi';
 import React from 'react';
-import { createQuery, useQuery } from '../src';
-import { Todo } from './models/Todo';
+import { screen } from '@testing-library/react';
+import { server } from './mocks/server';
+
 import { renderWithConfig } from './utils';
+import { todosError, todosErrorDetails } from './mocks/todos';
+import { message } from './mocks/handlers';
+import { loadingMessage, Todos } from './components/Todos';
+
 
 describe('useQuery', () => {
-  it.skip('should render data', async () => {
-    // todo
+  it('should render data', async () => {
+    renderWithConfig(<Todos />);
+    screen.getByText(loadingMessage);
+
+    await screen.findByText(message);
   });
 
-  it.skip('should conditionally fetch data', async () => {
-    // todo
+  it('should conditionally fetch data', async () => {
+    renderWithConfig(<Todos shouldFetch={false} />);
+
+    await screen.getByText(loadingMessage);
   });
 
-  it.skip('should handle errors', async () => {
-    const queryTodo = createQuery((client) => {
-      const model = new Todo();
-      const key = getModelEndpointUrl(model);
+  it('should handle errors', async () => {
+    server.use(todosError);
 
-      return {
-        key,
-        fetcher: (url: string) => client.request<Todo, Array<Todo>>(url, 'GET'),
-      };
-    });
+    renderWithConfig(<Todos />);
+    screen.getByText(loadingMessage);
 
-    function Page() {
-      const { data, error } = useQuery(queryTodo);
-
-      if (error) {
-        return <div>{error.error.message}</div>;
-      }
-
-      return <div>hello, {data}</div>;
-    }
-
-    renderWithConfig(<Page />);
-    screen.getByText('hello,');
-
-    // mount
-    await screen.findByText('error!');
+    await screen.findByText(todosErrorDetails);
   });
 });

@@ -1,3 +1,4 @@
+import { Response } from '@datx/jsonapi';
 import { act, render } from '@testing-library/react';
 import React from 'react';
 import { SWRConfig } from 'swr';
@@ -27,4 +28,18 @@ export const renderWithConfig = (
   };
 
   return render(element, { wrapper: TestSWRConfig });
+};
+
+export const getErrorMessage = (response: Response) => {
+  const { error, status } = response;
+
+  if (error instanceof Error) {
+    return `status: ${status}; error: ${error.message}; stack: ${error.stack}`;
+  }
+
+  if (error instanceof Array) {
+    return error.map((error) => error.detail);
+  }
+
+  return JSON.stringify(error);
 };

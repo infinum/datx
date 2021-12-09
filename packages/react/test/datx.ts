@@ -1,6 +1,7 @@
 import { Collection } from "@datx/core";
 import { jsonapiCollection, config } from "@datx/jsonapi";
 
+import { BASE_URL } from "./constants";
 import { Todo } from "./models/Todo";
 
 class Client extends jsonapiCollection(Collection) {
@@ -8,7 +9,7 @@ class Client extends jsonapiCollection(Collection) {
 }
 
 export function createClient() {
-  config.baseUrl = 'https://example.com/';
+  config.baseUrl = BASE_URL;
   config.cache = 1;
 
   return new Client();
