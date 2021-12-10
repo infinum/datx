@@ -1,5 +1,5 @@
-import { warn } from "./helpers";
-import { IObservableArray, IReactionDisposer } from "./interfaces/IMobX";
+import { warn } from './helpers';
+import { IObservableArray, IReactionDisposer } from './interfaces/IMobX';
 
 const noop = (): void => {
   // Nothing to do
@@ -25,7 +25,7 @@ const noopMobX = {
 
   extendObservable<T extends object, U extends object>(obj: T, prop: U): T & U {
     const desc = Object.getOwnPropertyDescriptors(prop);
-    return Object.defineProperties(obj, desc);
+    return Object.defineProperties(obj, desc) as T & U;
   },
 
   observable<T extends object>(_obj: T, ..._params: Array<any>): void {
@@ -61,7 +61,11 @@ const noopMobX = {
     return noop;
   },
 
-  intercept<T>(target: T, propertyName: keyof T | Function, _interceptor?: Function): IReactionDisposer {
+  intercept<T>(
+    target: T,
+    propertyName: keyof T | Function,
+    _interceptor?: Function,
+  ): IReactionDisposer {
     Object.freeze(typeof propertyName === 'string' ? target[propertyName] : target);
     return noop;
   },
@@ -79,9 +83,10 @@ class MobXProxy {
   private hasMobX = false;
 
   constructor() {
+    let mobx: any;
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const mobx = require('mobx');
+      mobx = require('mobx');
       this.hasMobX = Boolean(mobx?.observable);
     } catch {
       // Nothing to do
@@ -98,23 +103,27 @@ class MobXProxy {
         get() {
           /* eslint-disable @typescript-eslint/no-var-requires */
           if (!mobxProxyInstance.hasMobX && mobxProxyInstance._useRealMobX) {
-            warn('MobX not installed. Falling back to the static approach. Import `datx/disable-mobx` before the first `datx` import to disable this warning');
+            warn(
+              'MobX not installed. Falling back to the static approach. Import `datx/disable-mobx` before the first `datx` import to disable this warning',
+            );
           }
 
           mobxProxyInstance.access = true;
           if (mobxProxyInstance.useRealMobX) {
-            return require('mobx')[key];
+            return mobx[key];
           }
           // @ts-ignore
           return noopMobX[key];
-        }
+        },
       });
     });
   }
 
   useMobx(enabled: boolean): void {
     if (this.access) {
-      throw new Error('[datx] MobX was already used. Please move this function call to somewhere earlier.');
+      throw new Error(
+        '[datx] MobX was already used. Please move this function call to somewhere earlier.',
+      );
     }
     this._useRealMobX = enabled;
   }
@@ -144,4 +153,8 @@ type TObservable = {
   array: <T = any>(obj: Array<T>, decorators?: object, opts?: object) => IObservableArray<T>;
 } & TObservableDecorator;
 
-export const mobx = new MobXProxy() as unknown as typeof noopMobX & { useRealMobX: boolean, useMobx: (enabled: boolean) => void, observable: TObservable };
+export const mobx = new MobXProxy() as unknown as typeof noopMobX & {
+  useRealMobX: boolean;
+  useMobx: (enabled: boolean) => void;
+  observable: TObservable;
+};

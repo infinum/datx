@@ -14,11 +14,10 @@
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "noUnusedParameters": true,
-    "outDir": "./dist",
+    "outDir": ".",
     "strict": true,
     "strictFunctionTypes": false,
-    "target": "es5",
-    "resolveJsonModule": true
+    "target": "es5"
   },
   "exclude": ["node_modules", "examples"],
   "include": ["src/**/*"]

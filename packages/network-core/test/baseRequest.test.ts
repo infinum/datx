@@ -16,7 +16,7 @@ import { PureModel, Attribute, Collection, Model } from '@datx/core';
 import { clearAllCache } from '../src/interceptors/cache';
 import { Headers } from '@datx/utils';
 
-describe('Request', () => {
+fdescribe('Request', () => {
   it('should initialize', () => {
     const request = new MockBaseRequest('foobar');
     expect(request).toBeTruthy();
@@ -464,7 +464,7 @@ describe('Request', () => {
     expect(response.data?.['title']).toBe('Test');
   });
 
-  it('should work with serializers', async () => {
+  fit('should work with serializers', async () => {
     const request1 = new MockBaseRequest('foobar');
 
     const request2 = request1.pipe(

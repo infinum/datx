@@ -1,4 +1,4 @@
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
@@ -15,9 +15,10 @@ export default [
       commonjs(),
       excludeDependenciesFromBundle(),
       typescript({
-        check: true,
         typescript: require('typescript'),
+        tslib: require('tslib'),
         tsconfig: './tsconfig.build.json',
+        sourceMap: true,
       }),
       terser({
         toplevel: true,
@@ -43,9 +44,10 @@ export default [
       commonjs(),
       excludeDependenciesFromBundle(),
       typescript({
-        check: true,
         typescript: require('typescript'),
+        tslib: require('tslib'),
         tsconfig: './tsconfig.build.json',
+        sourceMap: true,
       }),
     ],
     onwarn(warning, rollupWarn) {
@@ -62,9 +64,9 @@ export default [
       commonjs(),
       excludeDependenciesFromBundle(),
       typescript({
-        check: true,
         typescript: require('typescript'),
-        tsconfig: './tsconfig.mobx.json',
+        tslib: require('tslib'),
+        tsconfig: './tsconfig.disable-mobx.json'
       }),
       terser({
         toplevel: true,

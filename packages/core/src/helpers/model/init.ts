@@ -1,37 +1,26 @@
 import {
-  assignComputed,
-  IRawModel,
-  getMeta,
-  mapItems,
-  setMeta,
-  META_FIELD,
-  isArrayLike,
-  mobx,
+  assignComputed, getMeta, IRawModel, isArrayLike, mapItems, META_FIELD, mobx, setMeta
 } from '@datx/utils';
-
-import { PureModel } from '../../PureModel';
-import { PureCollection } from '../../PureCollection';
+import { IFieldDefinition, IReferenceDefinition, ParsedRefModel } from '../../Attribute';
+import { getBucketConstructor } from '../../buckets';
+import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { MetaModelField } from '../../enums/MetaModelField';
-import { IFieldDefinition, IReferenceDefinition, ParsedRefModel } from '../../Attribute';
 import { ReferenceType } from '../../enums/ReferenceType';
-import {
-  getModelType,
-  getModelCollection,
-  getModelId,
-  isModelReference,
-  modelMapParse,
-  commitModel,
-  peekNonNullish,
-} from './utils';
-import { getBucketConstructor } from '../../buckets';
-import { getRef, updateRef, getBackRef, updateBackRef } from './fields';
-import { TRefValue } from '../../interfaces/TRefValue';
-import { error } from '../format';
-import { DEFAULT_ID_FIELD, DEFAULT_TYPE_FIELD } from '../../consts';
-import { updateSingleAction } from '../patch';
 import { IModelRef } from '../../interfaces/IModelRef';
 import { IType } from '../../interfaces/IType';
+import { TRefValue } from '../../interfaces/TRefValue';
+import { PureCollection } from '../../PureCollection';
+import { PureModel } from '../../PureModel';
+import { error } from '../format';
+import { updateSingleAction } from '../patch';
+import { getBackRef, getRef, updateBackRef, updateRef } from './fields';
+import {
+  commitModel, getModelCollection,
+  getModelId, getModelType, isModelReference,
+  modelMapParse, peekNonNullish
+} from './utils';
+
 
 type ModelFieldDefinitions = Record<string, IFieldDefinition>;
 
@@ -185,6 +174,7 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
       () => getMeta(model, `data__${key}`),
       (newValue: any) => {
         // Make sure nested properties are observable
+        // eslint-disable-next-line no-nested-ternary
         const packedValue = isPojo(newValue)
           ? isArrayLike(newValue)
             ? mobx.observable.array(newValue)

@@ -11,13 +11,14 @@ import { body as bodyOperator } from './operators';
 import { IRequestConfig } from './interfaces/IRequestConfig';
 import { IInterceptorsList } from './interfaces/IInterceptorsList';
 import { IAsync } from './interfaces/IAsync';
+import { Network } from './Network';
 
 export class BaseRequest<
   TAsync extends IAsync,
   TModel extends PureModel = PureModel,
   TParams extends Record<string, unknown> = Record<string, unknown>,
 > {
-  protected _config: IConfigType = getDefaultConfig();
+  protected _config: IConfigType = getDefaultConfig() as IConfigType;
   protected _options: IRequestConfig = {
     method: HttpMethod.Get,
     headers: {},
@@ -28,8 +29,9 @@ export class BaseRequest<
 
   public interceptors: IInterceptorsList<TAsync> = [];
 
-  constructor(baseUrl: string) {
+  constructor(baseUrl: string, network: Network<IAsync<any>>) {
     this._config.baseUrl = baseUrl;
+    this._config.network = network;
   }
 
   public update(...operators: Array<IPipeOperator | undefined>): void {
@@ -132,11 +134,16 @@ export class BaseRequest<
     BaseRequestConstructor: typeof BaseRequest = this.constructor as typeof BaseRequest,
   ): BaseRequest<TAsync, TNewModel, TNewParams> {
     // Can't use `new BaseRequest`, because we would lose the overridden methods
-    const clone = new BaseRequestConstructor<TAsync, TNewModel, TNewParams>(this._config.baseUrl);
+    const clone = new BaseRequestConstructor<TAsync, TNewModel, TNewParams>(this._config.baseUrl, this._config.network);
 
     clone.interceptors = deepCopy(this.interceptors) as IInterceptorsList<TAsync>;
 
+    const network = this._config.network;
+    delete (this._config as Partial<IConfigType>).network;
+
     clone._config = deepCopy(this._config);
+    clone._config.network = network;
+
     clone._options = deepCopy(this._options);
 
     // Manually copy complex objects

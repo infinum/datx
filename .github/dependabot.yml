@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "maintenance"
+    assignees:
+      - "DarkoKukovec"
+    open-pull-requests-limit: 10
+  - package-ecosystem: "npm"
+    directory: "/website"
+    schedule:
+      interval: "daily"
+    labels:
+      - "maintenance"
+      - "documentation"
+    assignees:
+      - "DarkoKukovec"
+    open-pull-requests-limit: 10

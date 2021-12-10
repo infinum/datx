@@ -25,7 +25,7 @@ import {
 import { GenericModel } from './GenericModel';
 import { flattenModel, removeModel } from './helpers/model';
 import { buildUrl, prepareQuery } from './helpers/url';
-import { getModelClassRefs, isBrowser } from './helpers/utils';
+import { getAllResponses, getModelClassRefs, isBrowser } from './helpers/utils';
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -34,6 +34,7 @@ import { IDefinition, IRecord, IRelationship, IRequest, IResponse } from './inte
 import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
 import { CachingStrategy } from '@datx/network';
+import { IGetAllResponse } from './interfaces/IGetAllResponse';
 
 type TSerialisedStore = IRawCollection & { cache?: Array<Omit<ICacheInternal, 'collection'>> };
 
@@ -50,10 +51,7 @@ function iterateEntries<T extends IJsonapiModel>(
   fn: (item: IRecord) => T,
 ): T | Array<T>;
 
-function iterateEntries(
-  body: IResponse,
-  fn: (item: IRecord) => void,
-): void;
+function iterateEntries(body: IResponse, fn: (item: IRecord) => void): void;
 
 function iterateEntries<T extends IJsonapiModel>(
   body: IResponse,
@@ -173,6 +171,20 @@ export function decorateCollection(
       reqOptions.networkConfig.headers = query.headers;
 
       return read<T>(query.url, this, reqOptions).then(handleErrors);
+    }
+
+    public async getAll<T extends IJsonapiModel = IJsonapiModel>(
+      type: IType | IModelConstructor<T>,
+      options?: IRequestOptions,
+      maxRequests = 50,
+    ): Promise<IGetAllResponse<T>> {
+      if (maxRequests < 1) {
+        throw Error('Please enter a meaningful amount of max requests.');
+      }
+
+      const response = await this.getMany(type, options);
+
+      return getAllResponses(response, maxRequests);
     }
 
     public request<T extends IJsonapiModel = IJsonapiModel>(

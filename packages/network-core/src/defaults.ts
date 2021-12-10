@@ -1,11 +1,11 @@
-import { IConfigType } from './interfaces/IConfigType';
-import { ParamArrayType } from './enums/ParamArrayType';
+import { modelToJSON, PureModel } from '@datx/core';
 import { mapItems } from '@datx/utils';
-import { PureModel, modelToJSON } from '@datx/core';
+import { ParamArrayType } from './enums/ParamArrayType';
+import { IConfigType } from './interfaces/IConfigType';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { Response } from './Response';
 
-export function getDefaultConfig(): IConfigType {
+export function getDefaultConfig(): Omit<IConfigType, 'network'> {
   return {
     // Base URL for all API calls
     baseUrl: '/',

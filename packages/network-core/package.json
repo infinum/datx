@@ -17,20 +17,19 @@
   "author": "Infinum JavaScript Team <hello@infinum.com>",
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.1.0",
-    "@rollup/plugin-node-resolve": "^11.1.1",
-    "@types/jest": "^26.0.20",
-    "@types/nock": "^11.1.0",
-    "@types/node": "^14.14.27",
-    "jest": "^26.6.3",
-    "nock": "^13.1.1",
+    "@rollup/plugin-commonjs": "^21.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@types/jest": "^27.0.0",
+    "@types/node": "^16.0.0",
+    "jest": "^27.0.5",
+    "nock": "13.1.1",
     "node-fetch": "^2.6.1",
     "rollup": "^2.38.5",
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.17",
-    "rollup-plugin-typescript2": "^0.29.0",
     "rxjs": "^7.0.0",
-    "ts-jest": "^26.5.1",
-    "typescript": "^4.1.5"
+    "ts-jest": "^27.0.3",
+    "typescript": "4.2.2"
   },
   "peerDependencies": {
     "rxjs": "^6.0.0 | ^7.0.0"
@@ -50,6 +49,7 @@
       "ts",
       "js"
     ],
+    "testEnvironment": "jsdom",
     "testRegex": "test/(.*).test.ts$",
     "globals": {
       "ts-jest": {

@@ -1,5 +1,6 @@
 import {
   Collection,
+  getModelCollection,
   getModelId,
   getModelType,
   initModelRef,
@@ -50,9 +51,11 @@ describe('updates', () => {
       expect(data.type).toBe('event');
       expect(data.attributes && data.attributes.id).toBeUndefined();
       expect(data.attributes && data.attributes.type).toBeUndefined();
+      expect(getModelCollection(record)).toBe(store);
 
       const updated = await record.save();
 
+      expect(getModelCollection(record)).toBe(store);
       expect(updated['title']).toBe('Test 1');
       expect(updated).toBe(record);
     });
