@@ -5,24 +5,8 @@ import { server } from './mocks/server';
 import { getErrorMessage, renderWithConfig } from './utils';
 import { todosError, todosErrorDetails } from './mocks/todos';
 import { message } from './mocks/handlers';
-
-import { getModelEndpointUrl } from "@datx/jsonapi";
-import { createQuery } from "@datx/react";
-import { Todo } from './models/Todo';
 import { useQuery } from '../src';
-
-
-interface IQueryTodoVariables { shouldFetch?: boolean }
-
-export const queryTodos = createQuery((client, variables: IQueryTodoVariables) => {
-  const model = new Todo();
-  const key = variables.shouldFetch ? getModelEndpointUrl(model) : null;
-
-  return {
-    key,
-    fetcher: (url: string) => client.request<Todo, Array<Todo>>(url, 'GET')
-  };
-});
+import { queryTodos } from './queries';
 
 const loadingMessage = 'Loading...';
 
