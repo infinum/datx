@@ -1,27 +1,10 @@
-export { NetworkClient } from './Client';
+export { Client } from './Client';
 import { MockPromiseNetwork } from './MockPromiseNetwork';
 import { PromiseNetwork } from './PromiseNetwork';
 import { RxNetwork } from './RxNetwork';
 
-export { BaseRequest } from './BaseRequest';
+export { Request } from './Request';
 export { Response } from './Response';
-
-export {
-  addInterceptor,
-  method,
-  setUrl,
-  body,
-  query,
-  header,
-  params,
-  encodeQueryString,
-  paramArrayType,
-  collection,
-  requestOptions,
-  upsertInterceptor,
-  serializer,
-  parser,
-} from './operators';
 
 export { IResponseHeaders } from '@datx/utils';
 
@@ -35,7 +18,6 @@ export { IFetchOptions } from './interfaces/IFetchOptions';
 export { IHeaders } from './interfaces/IHeaders';
 export { IInterceptor } from './interfaces/IInterceptor';
 export { INetworkHandler } from './interfaces/INetworkHandler';
-export { IPipeOperator } from './interfaces/IPipeOperator';
 export { IResponseObject } from './interfaces/IResponseObject';
 export { IInterceptorsList } from './interfaces/IInterceptorsList';
 
@@ -50,27 +32,39 @@ export const Network = {
 
 ////////////////////////////////////////////////
 
-// import { Collection, Model, PureModel } from '@datx/core';
-// import { NetworkClient } from './Client';
-// import { Response } from './Response';
-// import { IGeneralize } from './interfaces/IGeneralize';
-// import { INetwork } from './interfaces/INetwork';
-// class MyClient<TNetwork extends INetwork> extends NetworkClient<TNetwork> {
-//   getOne<TModel extends typeof PureModel, TInstance = InstanceType<TModel>>(
-//     _type: TModel,
-//     _id: string,
-//   ): IGeneralize<Response<TInstance>, ReturnType<TNetwork['exec']>> {
-//     return null as any;
-//   }
-// }
+import { Collection, Model } from '@datx/core';
+import { Client } from './Client';
+import { Request, SwrRequest } from './Request';
+import { QueryBuilder } from './QueryBuilder';
 
-// const pc = new MyClient(new Collection(), new Network.Promise(window.fetch));
-// const rc = new MyClient(new Collection(), new Network.Rx());
+const pc = new Client({
+  QueryBuilder,
+  collection: new Collection(),
+  network: new Network.Promise('', window.fetch),
+  request: SwrRequest,
+});
 
-// pc.getOne(Model, '1').then((a) => {
-//   a.data;
-// });
+const rc = new Client({
+  QueryBuilder,
+  collection: new Collection(),
+  network: new Network.Rx(''),
+  request: Request,
+});
 
-// rc.getOne(Model, '1').subscribe((a) => {
-//   a.data;
-// });
+pc.from(Model)
+  .id('1')
+  .request()
+  .fetch()
+  .then((a) => {
+    a.data;
+  });
+
+pc.from(Model).id('1').request().swr();
+
+rc.from(Model)
+  .id('1')
+  .request()
+  .fetch()
+  .subscribe((a) => {
+    a.data;
+  });

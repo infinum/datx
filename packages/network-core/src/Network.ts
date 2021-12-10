@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { BaseRequest } from './BaseRequest';
-import { getDefaultConfig } from './defaults';
-import { fetchInterceptor } from './interceptors/fetch';
 import { IAsync } from './interfaces/IAsync';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { IGeneralize } from './interfaces/IGeneralize';
 import { IResponseObject } from './interfaces/IResponseObject';
-import { upsertInterceptor } from './operators';
 
 interface IChainable<IA extends IAsync<U> = IAsync<any>, U = any> {
   value: IA;
@@ -19,13 +15,8 @@ interface IChainable<IA extends IAsync<U> = IAsync<any>, U = any> {
 }
 
 export abstract class Network<IA extends IAsync<any> = IAsync<any>> {
-  public readonly baseRequest: BaseRequest<IAsync<any>>;
-
-  constructor(baseUrl: string, protected readonly fetchReference: typeof fetch) {
-    this.baseRequest = new BaseRequest<IAsync<any>>(baseUrl, this);
-    this.baseRequest.update(
-      upsertInterceptor(fetchInterceptor(this, getDefaultConfig().serialize), 'fetch'),
-    );
+  constructor(baseUrl: string, protected readonly fetchReference?: typeof fetch) {
+    //
   }
 
   abstract exec<T, U = any>(
@@ -33,6 +24,8 @@ export abstract class Network<IA extends IAsync<any> = IAsync<any>> {
     successFn?: (value: U) => T,
     failureFn?: (error: Error) => T,
   ): IGeneralize<T, IA>;
+
+  abstract execAll<T>(...asyncVal: Array<IGeneralize<T, IA>>): IGeneralize<Array<T>, IA>;
 
   abstract baseFetch(request: IFetchOptions): IGeneralize<IResponseObject, IA>;
 

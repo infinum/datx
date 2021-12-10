@@ -1,11 +1,12 @@
 import { Headers, IResponseHeaders } from '@datx/utils';
-import { BaseRequest } from './BaseRequest';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { IResponseObject } from './interfaces/IResponseObject';
 import { Network } from './Network';
 
 export class PromiseNetwork extends Network<Promise<any>> {
-  public readonly baseRequest!: BaseRequest<Promise<any>>;
+  constructor(baseUrl: string, protected readonly fetchReference: typeof fetch) {
+    super(baseUrl);
+  }
 
   public exec<T, U = unknown>(
     asyncVal: Promise<U>,
@@ -13,6 +14,10 @@ export class PromiseNetwork extends Network<Promise<any>> {
     failureFn?: (error: Error) => T,
   ): Promise<T> {
     return asyncVal.then(successFn, failureFn);
+  }
+
+  public execAll<T>(...asyncVal: Array<Promise<T>>): Promise<Array<T>> {
+    return Promise.all(asyncVal);
   }
 
   public baseFetch(request: IFetchOptions): Promise<IResponseObject> {

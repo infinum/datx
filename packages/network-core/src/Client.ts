@@ -1,31 +1,56 @@
-import { IGeneralize } from './interfaces/IGeneralize';
+import { Model, Collection } from '@datx/core';
+import { Request } from './Request';
+import { QueryBuilder } from './QueryBuilder';
 import { INetwork } from './interfaces/INetwork';
-import { PureCollection, PureModel } from '@datx/core';
-import { BaseRequest } from './BaseRequest';
-import { Response } from './Response';
 
-export class NetworkClient<TNetwork extends INetwork> {
-  constructor(public readonly store: PureCollection, public readonly Network: TNetwork) {}
+export class Client<TNetwork extends INetwork, TRequest extends typeof Request = typeof Request> {
+  private QueryBuilderConstructor: typeof QueryBuilder;
+  private network: TNetwork;
+  private collection: Collection;
+  private request: TRequest;
 
-  public get request(): BaseRequest<ReturnType<TNetwork['exec']>> {
-    return this.Network.baseRequest as BaseRequest<ReturnType<TNetwork['exec']>>;
+  constructor({
+    QueryBuilder: QueryBuilderConstructor,
+    network,
+    collection,
+    request,
+  }: {
+    QueryBuilder: typeof QueryBuilder;
+    network: TNetwork;
+    collection: Collection;
+    request: TRequest;
+  }) {
+    this.QueryBuilderConstructor = QueryBuilderConstructor;
+    this.network = network;
+    this.collection = collection;
+    this.request = request;
   }
 
-  public fetch<T extends PureModel = PureModel>(): IGeneralize<
-    Response<T>,
-    ReturnType<TNetwork['exec']>
-  > {
-    return this.request.fetch() as IGeneralize<Response<T>, ReturnType<TNetwork['exec']>>;
+  from(type: typeof Model): QueryBuilder<typeof Model, Array<Model>, TRequest, TNetwork> {
+    return new this.QueryBuilderConstructor({
+      model: type,
+      match: [],
+      headers: {},
+      request: this.request,
+      refs: {
+        client: this,
+        network: this.network,
+        collection: this.collection,
+      },
+    });
   }
 
-  // abstract getOne<TModel extends typeof PureModel, TInstance = InstanceType<TModel>>(
-  //   type: TModel,
-  //   id: string,
-  // ): IGeneralize<Response<TInstance>, ReturnType<TNetwork['exec']>>;
-
-  // getMany(type)
-  // save(model)
-  // destroy(model)
-  // request(url, options);
-  // request(options);
+  fromInstance(model: Model): QueryBuilder<typeof Model, Model, TRequest, TNetwork> {
+    return new this.QueryBuilderConstructor({
+      model: model.constructor as typeof Model,
+      match: [],
+      headers: {},
+      request: this.request,
+      refs: {
+        client: this,
+        network: this.network,
+        collection: this.collection,
+      },
+    }).id(model.meta.id as string);
+  }
 }

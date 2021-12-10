@@ -1,16 +1,17 @@
-import { Observable } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { BaseRequest } from './BaseRequest';
 import { IFetchOptions } from './interfaces/IFetchOptions';
 import { IResponseObject } from './interfaces/IResponseObject';
 import { Network } from './Network';
 
 export class RxNetwork extends Network<Observable<any>> {
-  public readonly baseRequest!: BaseRequest<Observable<any>>;
-
   public exec<T, U = any>(asyncVal: Observable<U>, mapFn: (value: U) => T): Observable<T> {
     return asyncVal.pipe(map(mapFn));
+  }
+
+  public execAll<T>(...asyncVal: Array<Observable<T>>): Observable<Array<T>> {
+    return zip(...asyncVal);
   }
 
   public baseFetch(request: IFetchOptions): Observable<IResponseObject> {

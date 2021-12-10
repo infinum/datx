@@ -2,6 +2,6 @@ import { Observable } from 'rxjs';
 
 import { IAsync } from './IAsync';
 
-export type IGeneralize<T, A extends IAsync<any>> = A extends Promise<any>
-  ? Promise<T>
-  : Observable<T>;
+export type IGeneralize<TDataType, TAsync extends IAsync<any>> = TAsync extends Promise<any>
+  ? Promise<TDataType>
+  : Observable<TDataType>;
