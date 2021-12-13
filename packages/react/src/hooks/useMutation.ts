@@ -1,6 +1,10 @@
 import { IJsonapiModel, IResponseData, Response } from '@datx/jsonapi';
 import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
-import { IMutationOptions, MutationState, MutationAction, MutationFn, MutationResult } from '../types';
+import { IMutationOptions } from '../interfaces/IMutationOptions';
+import { MutationFn } from '../interfaces/MutaionFn';
+import { MutationAction } from '../interfaces/MutationAction';
+import { MutationResult } from '../interfaces/MutationResult';
+import { MutationState } from '../interfaces/MutationState';
 import { useDatx } from './useDatx';
 
 function useGetLatest<Value>(value: Value): () => Value {

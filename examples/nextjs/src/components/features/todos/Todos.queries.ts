@@ -1,9 +1,9 @@
-import { getModelEndpointUrl } from "@datx/jsonapi";
-import { createQuery } from "@datx/react";
+import { getModelEndpointUrl, IJsonapiCollection } from "@datx/jsonapi";
+import { Client } from "@datx/react";
 
 import { Todo } from "../../../models/Todo";
 
-export const queryTodo = createQuery((client) => {
+export const queryTodo = (client: Client) => {
   const model = new Todo();
   const key = getModelEndpointUrl(model);
 
@@ -11,4 +11,4 @@ export const queryTodo = createQuery((client) => {
     key,
     fetcher: (url: string) => client.request<Todo, Array<Todo>>(url, 'GET')
   };
-});
+};

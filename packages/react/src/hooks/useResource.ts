@@ -5,8 +5,8 @@ import useSWR from 'swr';
 
 import { useDatx } from './useDatx';
 
-import { QueryConfig, QueryResource } from '../types';
 import { pickRequestOptions } from '../utils';
+import { QueryResource } from '..';
 
 export function useResource<TModel extends IJsonapiModel>(
   queryResource: QueryResource<TModel>,

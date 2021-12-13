@@ -1,12 +1,13 @@
 import { IJsonapiModel, IResponseData } from '@datx/jsonapi';
 import useSWR from 'swr';
 
-import { QueryFn, QueryConfig } from '../types';
 import { useDatx } from '../hooks/useDatx';
+import { QueryConfiguration } from '../interfaces/QueryConfiguration';
+import { QueryFn } from '../interfaces/QueryFn';
 
 export function useQuery<TModel extends IJsonapiModel, TData extends IResponseData, TVariables>(
   query: QueryFn<TModel, TData, TVariables>,
-  config: QueryConfig<TModel, TData, TVariables> = {},
+  config: QueryConfiguration<TModel, TData, TVariables> = {},
 ) {
   const client = useDatx();
   const { variables, ...swrConfig } = config;

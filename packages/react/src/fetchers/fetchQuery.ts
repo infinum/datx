@@ -1,5 +1,6 @@
 import { IJsonapiModel, IResponseData, Response } from '@datx/jsonapi';
-import { JsonapiCollection, QueryFn } from '../types';
+import { Client } from '../interfaces/Client';
+import { QueryFn } from '../interfaces/QueryFn';
 import { getUrl, undefinedToNull } from '../utils';
 
 export async function fetchQuery<
@@ -7,7 +8,7 @@ export async function fetchQuery<
   TData extends IResponseData,
   TVariables,
 >(
-  client: JsonapiCollection,
+  client: Client,
   query: QueryFn<TModel, TData, TVariables>,
   variables?: TVariables,
 ) {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CreateClientFn } from "../types";
+import { CreateClientFn } from "../interfaces/CreateClientFn";
 
 let client;
 

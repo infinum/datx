@@ -1,14 +1,13 @@
 import React, { createContext, PropsWithChildren } from 'react';
-import { IJsonapiCollection } from '@datx/jsonapi';
-import { JsonapiCollection } from './types';
+import { Client } from './interfaces/Client';
 
-export const DatxContext = createContext<IJsonapiCollection | null>(null);
+export const DatxContext = createContext<Client | null>(null);
 
-export interface IDatxProviderProps<TClient extends JsonapiCollection> {
+export interface IDatxProviderProps<TClient extends Client> {
   client: TClient;
 }
 
-export function DatxProvider<TClient extends JsonapiCollection>({
+export function DatxProvider<TClient extends Client>({
   client,
   children,
 }: PropsWithChildren<IDatxProviderProps<TClient>>) {
