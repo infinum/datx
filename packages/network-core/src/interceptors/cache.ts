@@ -26,6 +26,7 @@ export interface ICacheInternal {
 let cacheStorage: Array<ICacheInternal> = [];
 
 export function saveCache(url: string, response: Response<PureModel>): void {
+  // @ts-ignore
   if (response && response.isSuccess && (response.data || response.data === null)) {
     const types = mapItems(response.data || [], getModelType) as IType | Array<IType>;
 
@@ -33,6 +34,7 @@ export function saveCache(url: string, response: Response<PureModel>): void {
 
     cacheStorage.unshift({
       response: response.snapshot,
+      // @ts-ignore
       collection: response.collection,
       time: Date.now(),
       types: ([] as Array<IType>).concat(types),
@@ -97,6 +99,7 @@ function makeNetworkCall<T extends PureModel>(
     (response: Response<T>) => {
       let finalResponse = response;
       if (existingResponse) {
+        // @ts-ignore
         finalResponse = existingResponse.update(response, params.views);
       }
       if (doCacheResponse) {
@@ -117,6 +120,7 @@ function getLocalNetworkError<T extends PureModel>(
 ): Response<T> {
   return new Response<T>(
     {
+      // @ts-ignore
       error: new Error(message),
       collection,
       requestHeaders: reqOptions.options?.networkConfig?.headers,
@@ -146,10 +150,10 @@ export function cacheInterceptor<T extends PureModel>(
       return makeNetworkCall<T>(request, next);
     }
 
-    const cacheContent: { response: Response<T> } | undefined = (getCache(
+    const cacheContent: { response: Response<T> } | undefined = getCache(
       request.url,
       maxCacheAge,
-    ) as unknown) as { response: Response<T> } | undefined;
+    ) as unknown as { response: Response<T> } | undefined;
 
     // NetworkFirst - Fallback to cache only on network error
     if (cacheStrategy === CachingStrategy.NetworkFirst) {
@@ -195,6 +199,7 @@ export function cacheInterceptor<T extends PureModel>(
 
     // StaleAndUpdate - Use cache and update response once network is complete
     if (cacheStrategy === CachingStrategy.StaleAndUpdate) {
+      // @ts-ignore
       const existingResponse = cacheContent?.response?.clone();
 
       const network = makeNetworkCall<T>(request, next, true, existingResponse);

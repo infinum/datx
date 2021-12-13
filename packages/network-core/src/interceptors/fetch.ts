@@ -106,6 +106,7 @@ export function fetchInterceptor<TNetwork extends INetwork, T extends PureModel>
           },
           parse,
         );
+        // @ts-ignore
         return new Response<T>(response, request.collection, undefined, request.views);
       })
       .catch((error) => {
@@ -121,6 +122,7 @@ export function fetchInterceptor<TNetwork extends INetwork, T extends PureModel>
           },
           parse,
         );
+        // @ts-ignore
         throw new Response<T>(response, request.collection, undefined, request.views);
       }).value;
   };
