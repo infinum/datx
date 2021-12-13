@@ -3,7 +3,7 @@ import { Client } from "@datx/react";
 
 import { Todo } from "../../../models/Todo";
 
-export const queryTodo = (client: Client) => {
+export const queryTodos = (client: Client) => {
   const model = new Todo();
   const key = getModelEndpointUrl(model);
 

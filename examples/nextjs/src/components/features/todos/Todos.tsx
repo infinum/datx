@@ -4,15 +4,20 @@ import {
 } from '@datx/react';
 import { FC, useRef } from 'react';
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
+import NextLink from 'next/link';
 
 import { createTodo } from './Todos.mutations';
-import { queryTodo } from './Todos.queries';
+import { queryTodos } from './Todos.queries';
+
+export interface ITodosProps {
+
+}
 
 export const Todos: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { data, error, mutate } = useQuery(queryTodo);
+  const { data, error, mutate } = useQuery(queryTodos);
   const [create, { status }] = useMutation(createTodo, {
-    onSuccess: async ({data}) => {
+    onSuccess: async () => {
       const input = inputRef.current;
       if (input) input.value = '';
       mutate();
@@ -35,7 +40,9 @@ export const Todos: FC = () => {
       </button>
 
       {data.data?.map((todo) => (
-        <div key={todo.id}>{todo.message}</div>
+        <NextLink href={`./todos/${todo.id}`} key={todo.id}>
+          <a style={{ display: 'block' }}>{todo.message}</a>
+        </NextLink>
       ))}
     </div>
   );

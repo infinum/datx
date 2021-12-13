@@ -1,12 +1,12 @@
 import React, { PropsWithChildren } from 'react';
 import { Response, IResponseSnapshot, IRawResponse } from '@datx/jsonapi';
 import { SWRConfig } from 'swr';
-import { JsonapiCollection } from './types';
 import { useDatx } from './hooks/useDatx';
+import { Client } from './interfaces/Client';
 
 type Fallback = Record<string, IResponseSnapshot>;
 
-export const hydrate = (client: JsonapiCollection, fallback: Fallback | undefined) => {
+const hydrate = (client: Client, fallback: Fallback | undefined) => {
   return fallback && Object.keys(fallback).reduce((previousValue, currentValue) => {
     const {response, options} = fallback[currentValue];
 
