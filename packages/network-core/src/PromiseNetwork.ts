@@ -4,8 +4,8 @@ import { IResponseObject } from './interfaces/IResponseObject';
 import { Network } from './Network';
 
 export class PromiseNetwork extends Network<Promise<any>> {
-  constructor(baseUrl: string, protected readonly fetchReference: typeof fetch) {
-    super(baseUrl);
+  constructor(protected readonly fetchReference: typeof fetch) {
+    super();
   }
 
   public exec<T, U = unknown>(

@@ -40,14 +40,14 @@ import { QueryBuilder } from './QueryBuilder';
 const pc = new Client({
   QueryBuilder,
   collection: new Collection(),
-  network: new Network.Promise('', window.fetch),
+  network: new Network.Promise(window.fetch),
   request: SwrRequest,
 });
 
 const rc = new Client({
   QueryBuilder,
   collection: new Collection(),
-  network: new Network.Rx(''),
+  network: new Network.Rx(),
   request: Request,
 });
 
@@ -62,17 +62,35 @@ pc.from(ModelA)
   .id('1')
   .request()
   .fetch()
-  .then((a) => {
-    console.log(a.data?.a);
+  .then((resp) => {
+    console.log(resp.data?.a);
   });
 
-pc.from(ModelB).id('1').request().swr();
+pc.from(ModelB)
+  .id('1')
+  .request((client, respB) => respB.data && client.from(ModelA).id(respB.data.b).request())
+  .swr();
 
 rc.from(ModelA)
   .id('1')
   .request()
   .fetch()
-  .subscribe((a) => {
+  .subscribe((resp) => {
     // @ts-expect-error
-    console.log(a.data?.b);
+    console.log(resp.data?.b);
+  });
+
+rc.from(ModelA)
+  .match({ a: 2 })
+  .request(
+    (client, respA) =>
+      respA.data &&
+      client
+        .from(ModelA)
+        .match({ a: respA.data?.map((a) => a.a).join(',') })
+        .request(),
+  )
+  .fetch()
+  .subscribe((resp) => {
+    console.log(resp.data?.a);
   });

@@ -1,4 +1,4 @@
-import { Model } from '@datx/core';
+import { PureModel } from '@datx/core';
 import { IAsync } from './interfaces/IAsync';
 import { IGeneralize } from './interfaces/IGeneralize';
 import { INetwork } from './interfaces/INetwork';
@@ -10,7 +10,7 @@ import { Response } from './Response';
 // SWR is integrated on this level
 export class Request<
   TNetwork extends INetwork,
-  TModel extends typeof Model,
+  TModel extends typeof PureModel,
   TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>> =
     | InstanceType<TModel>
     | Array<InstanceType<TModel>>,
@@ -20,7 +20,7 @@ export class Request<
   constructor(
     protected readonly refs: IRefs<TNetwork>,
     protected readonly requestData: IRequestDetails,
-    protected readonly subrequests: Array<ISubrequest<TResponse, TNetwork>> = [],
+    protected readonly subrequests: Array<ISubrequest<TResponse, TNetwork, typeof Request>> = [],
   ) {}
 
   public fetch(): IGeneralize<Response<InstanceType<TModel>>, IA> {
@@ -50,7 +50,7 @@ export class Request<
 
 export class SwrRequest<
   TNetwork extends INetwork,
-  TModel extends typeof Model,
+  TModel extends typeof PureModel,
   TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
   IA extends IAsync<InstanceType<TModel>> = IAsync<any>,
 > extends Request<TNetwork, TModel, TResponse, IA> {

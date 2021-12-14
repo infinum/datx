@@ -1,4 +1,4 @@
-import { Model } from '@datx/core';
+import { PureModel } from '@datx/core';
 import { INetwork } from './interfaces/INetwork';
 import { IQueryConfig } from './interfaces/IQueryConfig';
 import { IRequestDetails } from './interfaces/IRequestDetails';
@@ -8,7 +8,7 @@ import { Request } from './Request';
 // JSON:API is integrated on this level
 // Custom API is integrated on this level
 export class QueryBuilder<
-  TModel extends typeof Model,
+  TModel extends typeof PureModel,
   TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
   TRequestClass extends typeof Request,
   TNetwork extends INetwork,
@@ -40,7 +40,7 @@ export class QueryBuilder<
   }
 
   public request(
-    ...chained: Array<ISubrequest<TResponse, TNetwork>>
+    ...chained: Array<ISubrequest<TResponse, TNetwork, TRequestClass>>
   ): Request<TNetwork, TModel, TResponse> & InstanceType<TRequestClass> {
     // @ts-ignore
     return new this.config.request(this.config.refs, this.build(), chained);
@@ -48,7 +48,7 @@ export class QueryBuilder<
 }
 
 export class JsonApiQueryBuilder<
-  TModel extends typeof Model,
+  TModel extends typeof PureModel,
   TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
   TRequestClass extends typeof Request,
   TNetwork extends INetwork,
