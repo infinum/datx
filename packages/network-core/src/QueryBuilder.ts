@@ -9,27 +9,27 @@ import { Request } from './Request';
 // Custom API is integrated on this level
 export class QueryBuilder<
   TModel extends typeof Model,
-  TResponse,
-  TRequest extends typeof Request,
+  TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
+  TRequestClass extends typeof Request,
   TNetwork extends INetwork,
 > {
-  public constructor(public readonly config: IQueryConfig<TNetwork, TRequest>) {
+  public constructor(public readonly config: IQueryConfig<TNetwork, TRequestClass>) {
     console.log(this.config);
   }
 
-  public extend<TNewResponse>(
-    config: Partial<IQueryConfig<TNetwork, TRequest>>,
-  ): QueryBuilder<TModel, TNewResponse, TRequest, TNetwork> {
+  public extend<TNewResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>>(
+    config: Partial<IQueryConfig<TNetwork, TRequestClass>>,
+  ): QueryBuilder<TModel, TNewResponse, TRequestClass, TNetwork> {
     return new (this.constructor as any)(Object.assign({}, this.config, config));
   }
 
-  public id(modelId: string): QueryBuilder<TModel, InstanceType<TModel>, TRequest, TNetwork> {
+  public id(modelId: string): QueryBuilder<TModel, InstanceType<TModel>, TRequestClass, TNetwork> {
     return this.extend<InstanceType<TModel>>({ id: modelId });
   }
 
   public match(
     options: Record<string, any>,
-  ): QueryBuilder<TModel, Array<InstanceType<TModel>>, TRequest, TNetwork> {
+  ): QueryBuilder<TModel, Array<InstanceType<TModel>>, TRequestClass, TNetwork> {
     return this.extend<Array<InstanceType<TModel>>>({
       match: [...this.config.match, options],
     });
@@ -39,17 +39,20 @@ export class QueryBuilder<
     throw new Error('The build method needs to be implemented');
   }
 
-  public request(...chained: Array<ISubrequest<TResponse, TNetwork>>) {
-    return new this.config.request<any, TNetwork>(this.config.refs, this.build(), chained);
+  public request(
+    ...chained: Array<ISubrequest<TResponse, TNetwork>>
+  ): Request<TNetwork, TModel, TResponse> & InstanceType<TRequestClass> {
+    // @ts-ignore
+    return new this.config.request(this.config.refs, this.build(), chained);
   }
 }
 
 export class JsonApiQueryBuilder<
   TModel extends typeof Model,
-  TResponse,
-  TRequest extends typeof Request,
+  TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
+  TRequestClass extends typeof Request,
   TNetwork extends INetwork,
-> extends QueryBuilder<TModel, TResponse, TRequest, TNetwork> {
+> extends QueryBuilder<TModel, TResponse, TRequestClass, TNetwork> {
   // build method is a custom implementation that, generates an generic IRequestDetails object with all data required for the API call
   public build(): IRequestDetails {
     return {

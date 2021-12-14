@@ -9,9 +9,13 @@ import { Response } from './Response';
 
 // SWR is integrated on this level
 export class Request<
-  TResponse extends Model | Array<Model>,
   TNetwork extends INetwork,
-  IA extends IAsync<Model> = IAsync<any>,
+  TModel extends typeof Model,
+  TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>> =
+    | InstanceType<TModel>
+    | Array<InstanceType<TModel>>,
+  // @ts-ignore
+  IA extends IAsync<InstanceType<TModel>> = ReturnType<TNetwork['execAll']>,
 > {
   constructor(
     protected readonly refs: IRefs<TNetwork>,
@@ -19,8 +23,8 @@ export class Request<
     protected readonly subrequests: Array<ISubrequest<TResponse, TNetwork>> = [],
   ) {}
 
-  public fetch(): IGeneralize<Response<Model>, IA> {
-    let response: Response<Model>;
+  public fetch(): IGeneralize<Response<InstanceType<TModel>>, IA> {
+    let response: Response<InstanceType<TModel>>;
     // TODO: Return value should be some kind of a Response object
     return this.refs.network
       .chain(this.refs.network.baseFetch(this.requestData as any)) // TODO
@@ -28,14 +32,13 @@ export class Request<
         response = new Response(data, this.refs.collection);
         return this.refs.network.execAll(
           ...this.subrequests.map((subrequest) =>
-            this.refs.network.exec(
-              subrequest(this.refs.client, data).fetch(),
-              (subdata: Array<Model>) => this.refs.collection.add(subdata),
+            this.refs.network.exec(subrequest(this.refs.client, data).fetch(), (subdata: any) =>
+              this.refs.collection.add(subdata.data),
             ),
           ),
         );
       })
-      .then(() => response).value as IGeneralize<Response<Model>, IA>;
+      .then(() => response).value as IGeneralize<Response<InstanceType<TModel>>, IA>;
   }
 
   public getKey(_parentKey = ''): string {
@@ -46,11 +49,12 @@ export class Request<
 }
 
 export class SwrRequest<
-  TResponse extends Model | Array<Model>,
   TNetwork extends INetwork,
-  IA extends IAsync<Model> = IAsync<any>,
-> extends Request<TResponse, TNetwork, IA> {
-  public swr(): { key: string; fetcher: () => IGeneralize<Response<Model>, IA> } {
+  TModel extends typeof Model,
+  TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
+  IA extends IAsync<InstanceType<TModel>> = IAsync<any>,
+> extends Request<TNetwork, TModel, TResponse, IA> {
+  public swr(): { key: string; fetcher: () => IGeneralize<Response<InstanceType<TModel>>, IA> } {
     return {
       key: this.getKey(),
       fetcher: this.fetch,

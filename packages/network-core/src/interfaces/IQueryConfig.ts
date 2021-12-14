@@ -4,7 +4,7 @@ import { IRefs } from './IRefs';
 import { Request } from '../Request';
 import { INetwork } from './INetwork';
 
-export interface IQueryConfig<TNetwork extends INetwork, TRequest extends typeof Request> {
+export interface IQueryConfig<TNetwork extends INetwork, TRequestClass extends typeof Request> {
   model: typeof Model;
   id?: string;
   // query: Record<string, any>;
@@ -13,6 +13,6 @@ export interface IQueryConfig<TNetwork extends INetwork, TRequest extends typeof
   body?: any;
   url?: string;
   method?: string;
-  request: TRequest;
+  request: TRequestClass;
   refs: IRefs<TNetwork>;
 }

@@ -51,20 +51,28 @@ const rc = new Client({
   request: Request,
 });
 
-pc.from(Model)
+class ModelA extends Model {
+  public a = 'a';
+}
+class ModelB extends Model {
+  public b = 'b';
+}
+
+pc.from(ModelA)
   .id('1')
   .request()
   .fetch()
   .then((a) => {
-    a.data;
+    console.log(a.data?.a);
   });
 
-pc.from(Model).id('1').request().swr();
+pc.from(ModelB).id('1').request().swr();
 
-rc.from(Model)
+rc.from(ModelA)
   .id('1')
   .request()
   .fetch()
   .subscribe((a) => {
-    a.data;
+    // @ts-expect-error
+    console.log(a.data?.b);
   });

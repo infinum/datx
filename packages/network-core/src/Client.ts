@@ -3,11 +3,11 @@ import { Request } from './Request';
 import { QueryBuilder } from './QueryBuilder';
 import { INetwork } from './interfaces/INetwork';
 
-export class Client<TNetwork extends INetwork, TRequest extends typeof Request = typeof Request> {
+export class Client<TNetwork extends INetwork, TRequestClass extends typeof Request> {
   private QueryBuilderConstructor: typeof QueryBuilder;
   private network: TNetwork;
   private collection: Collection;
-  private request: TRequest;
+  private request: TRequestClass;
 
   constructor({
     QueryBuilder: QueryBuilderConstructor,
@@ -18,7 +18,7 @@ export class Client<TNetwork extends INetwork, TRequest extends typeof Request =
     QueryBuilder: typeof QueryBuilder;
     network: TNetwork;
     collection: Collection;
-    request: TRequest;
+    request: TRequestClass;
   }) {
     this.QueryBuilderConstructor = QueryBuilderConstructor;
     this.network = network;
@@ -26,7 +26,10 @@ export class Client<TNetwork extends INetwork, TRequest extends typeof Request =
     this.request = request;
   }
 
-  from(type: typeof Model): QueryBuilder<typeof Model, Array<Model>, TRequest, TNetwork> {
+  from<TModelClass extends typeof Model>(
+    type: TModelClass,
+  ): QueryBuilder<TModelClass, Array<InstanceType<TModelClass>>, TRequestClass, TNetwork> {
+    // @ts-ignore
     return new this.QueryBuilderConstructor({
       model: type,
       match: [],
@@ -40,9 +43,12 @@ export class Client<TNetwork extends INetwork, TRequest extends typeof Request =
     });
   }
 
-  fromInstance(model: Model): QueryBuilder<typeof Model, Model, TRequest, TNetwork> {
+  fromInstance<TModelClass extends typeof Model>(
+    model: InstanceType<TModelClass>,
+  ): QueryBuilder<TModelClass, InstanceType<TModelClass>, TRequestClass, TNetwork> {
+    // @ts-ignore
     return new this.QueryBuilderConstructor({
-      model: model.constructor as typeof Model,
+      model: model.constructor as TModelClass,
       match: [],
       headers: {},
       request: this.request,
