@@ -1,42 +1,15 @@
-import { getModelType } from '@datx/core';
-import { IJsonapiModel, prepareQuery, Response } from '@datx/jsonapi';
-import isFunction from 'lodash/isFunction';
-import useSWR  from 'swr';
-
-import { useDatx } from './useDatx';
-
-import { QueryConfig, QueryResources } from '../types';
-import { pickRequestOptions } from '../utils';
+import { IJsonapiModel, Response } from '@datx/jsonapi';
+import useSWR from 'swr';
+import { DatxConfiguration } from '../interfaces/DatxConfiguration';
+import { ResourceListKey } from '../interfaces/ResourceListKey';
+import { resourceListMiddleware } from '../middlewares';
 
 export function useResourceList<TModel extends IJsonapiModel>(
-  queryResources: QueryResources<TModel>,
-  config?: QueryConfig<TModel>
+  key: ResourceListKey<TModel>,
+  config?: DatxConfiguration<TModel, Array<TModel>>,
 ) {
-  const store = useDatx();
-
-  const getKey = () => {
-    const [type, options] = isFunction(queryResources) ? queryResources() : queryResources;
-    const modelType = getModelType(type);
-
-    const query = prepareQuery(modelType, undefined, undefined, options);
-
-    return query.url;
-  };
-
-  const fetcher = async (url: string) => {
-    // TODO: this is suboptimal because we are doing the same thing in getKey
-    const [_, options] = isFunction(queryResources) ? queryResources() : queryResources;
-
-    const requestOptions = pickRequestOptions(options);
-
-    const response = await store.request<TModel>(url, 'GET', undefined, requestOptions);
-
-    if (config?.sideload) {
-      return await config.sideload(response);
-    }
-
-    return response;
-  };
-
-  return useSWR<Response<TModel>, Response<TModel>>(getKey, fetcher, config);
+  return useSWR<
+    Response<TModel, Array<TModel>>,
+    Response<TModel, Array<TModel>>
+  >(key, { use: [resourceListMiddleware], ...config });
 }

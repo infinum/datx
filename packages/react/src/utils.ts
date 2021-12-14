@@ -1,16 +1,11 @@
-import { IRequestOptions } from '@datx/jsonapi';
 import isNumber from 'lodash/isNumber';
 import isString from 'lodash/isString';
-
-import { _QueryResource, Key } from './types';
+import { Key } from './interfaces/Key';
+import { ResourceArguments } from './interfaces/ResourceArguments';
 
 export const isFunction = (value: any): value is Function => typeof value == 'function';
 
-export function pickRequestOptions({ networkConfig, cacheOptions }: IRequestOptions = {}) {
-  return { networkConfig, cacheOptions };
-}
-
-export function isQueryOne<TModel>(queryArray: any): queryArray is _QueryResource<TModel> {
+export function isQueryOne<TModel>(queryArray: any): queryArray is ResourceArguments<TModel> {
   return isString(queryArray[1]) || isNumber(queryArray[1]);
 }
 
