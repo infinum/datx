@@ -98,7 +98,7 @@ describe('CustomFetchService', () => {
   });
 
   it('should use takeUntil$ from fetch options if it is set', (done) => {
-    // A bit stupid test, we can maybe remove takeUntil$ completely (even in v2, and in v3 for sure)
+    // TODO: We can maybe remove takeUntil$ completely, even in v2 (in v3 for sure)
 
     const takeUntil$ = new Subject<void>();
 
