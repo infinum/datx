@@ -1,4 +1,4 @@
-import { useQuery } from '@datx/react';
+import { useQuery } from '@datx/swr';
 import { FC } from 'react';
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
 

@@ -1,4 +1,4 @@
-# @datx/react
+# @datx/swr
 
 React Hooks for DatX
 
@@ -7,7 +7,7 @@ React Hooks for DatX
 ## Install
 
 ```bash
-npm install --save @datx/react swr
+npm install --save swr @datx/swr
 ```
 
 ## Basic usage with Next.js
@@ -40,7 +40,7 @@ export function createClient() {
 // src/pages/_app.tsx
 
 import type { AppProps } from 'next/app';
-import { DatxProvider, useSafeClient } from '@datx/react';
+import { DatxProvider, useSafeClient } from '@datx/swr';
 import { createClient } from '../datx/createClient';
 
 function ExampleApp({ Component, pageProps }: AppProps) {
@@ -174,7 +174,7 @@ The [MIT License](LICENSE)
 
 ## Credits
 
-@datx/react is maintained and sponsored by
+@datx/swr is maintained and sponsored by
 [Infinum](https://www.infinum.com).
 
 <img src="https://infinum.com/infinum.png" width="264">

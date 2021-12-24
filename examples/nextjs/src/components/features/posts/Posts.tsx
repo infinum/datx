@@ -1,6 +1,6 @@
 import {
   useResourceList,
-} from '@datx/react';
+} from '@datx/swr';
 import { FC, useState } from 'react';
 import NextLink from 'next/link';
 

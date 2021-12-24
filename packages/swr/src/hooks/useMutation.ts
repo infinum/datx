@@ -36,6 +36,9 @@ const reducer = <TModel extends IJsonapiModel, TData extends IResponseData>(_, a
   throw Error('Invalid action');
 };
 
+/**
+ * Replace with useSWRMutation when it's released https://github.com/vercel/swr/pull/1450
+ */
 export function useMutation<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>>(
   mutationFn: MutationFn<TInput, TModel, TData>,
   {

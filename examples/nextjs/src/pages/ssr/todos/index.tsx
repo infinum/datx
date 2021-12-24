@@ -1,4 +1,4 @@
-import { fetchQuery, Hydrate } from '@datx/react';
+import { fetchQuery, Hydrate } from '@datx/swr';
 import type { NextPage, InferGetServerSidePropsType } from 'next';
 
 import { Todos } from '../../../components/features/todos/Todos';

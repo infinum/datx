@@ -1,5 +1,5 @@
 import { getModelEndpointUrl, modelToJsonApi } from "@datx/jsonapi";
-import { Client } from "@datx/react";
+import { Client } from "@datx/swr";
 
 import { Todo } from "../../../models/Todo";
 

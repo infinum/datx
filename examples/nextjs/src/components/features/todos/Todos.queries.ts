@@ -1,14 +1,9 @@
-import { getModelEndpointUrl, IJsonapiCollection } from "@datx/jsonapi";
-import { Client } from "@datx/react";
+import { GetManyQueryExpression } from '@datx/swr';
 
-import { Todo } from "../../../models/Todo";
+import { Todo } from '../../../models/Todo';
 
-export const queryTodos = (client: Client) => {
-  const model = new Todo();
-  const key = getModelEndpointUrl(model);
-
-  return {
-    key,
-    fetcher: (url: string) => client.request<Todo, Array<Todo>>(url, 'GET')
-  };
+export const queryTodos: GetManyQueryExpression<Todo> = {
+  op: 'getMany',
+  type: Todo,
+  options: { queryParams: { include: 'test' } },
 };
