@@ -100,7 +100,7 @@ Want to make your own mixin? Check out [the guide](https://datx.dev/docs/mixins/
 
 ## Troubleshooting
 
-Having issues with the library? Check out the [troubleshooting](https://datx.dev/docs/troubleshooting/known-issues) page or [open](https://github.com/infinum/datx/issues/new) an issue.
+Having issues with the library? Check out the [troubleshooting](https://datx.dev/docs/troubleshooting/known-issues) page or [open](https://github.com/infinum/datx/issues/new/choose) an issue.
 
 ---
 

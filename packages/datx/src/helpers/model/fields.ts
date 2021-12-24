@@ -194,7 +194,7 @@ function backRefChange(
   }
 
   warn(
-    `This shouldn't have happened. Please open an issue: https://github.com/infinum/datx/issues/new`,
+    `This shouldn't have happened. Please open an issue: https://github.com/infinum/datx/issues/new/choose`,
   );
 
   return null;

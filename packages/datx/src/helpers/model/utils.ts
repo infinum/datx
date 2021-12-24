@@ -307,7 +307,9 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
           [key]: {
             referenceDef: {
               type: ReferenceType.TO_ONE_OR_MANY,
-              models: Array.from(new Set<IType>(mapItems<PureModel, IType>(value, getModelType))),
+              models: Array.from(
+                new Set<IType>(mapItems<PureModel, IType>(value as Array<PureModel>, getModelType)),
+              ),
             },
           },
         });

@@ -20,4 +20,4 @@ The easiest way is to add a generic polyfill:
 
 ## Having other issues?
 
-Feel free to [open an issue](https://github.com/infinum/datx/issues/new).
+Feel free to [open an issue](https://github.com/infinum/datx/issues/new/choose).

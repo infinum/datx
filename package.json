@@ -1,8 +1,8 @@
 {
   "name": "datx",
   "devDependencies": {
-    "@infinumjs/eslint-config-core-ts": "^2.2.0",
-    "eslint": "^7.18.0",
+    "@infinumjs/eslint-config-core-ts": "^3.0.0",
+    "eslint": "^8.3.0",
     "husky": "^4.3.8",
     "lerna": "^4.0.0",
     "prettier": "^2.2.1",
@@ -15,7 +15,7 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --no-private",
     "watch": "lerna run --parallel watch --no-private",
-    "watch:react": "lerna run --parallel watch --scope @datx/react",
+    "watch:swr": "lerna run --parallel watch --scope @datx/swr",
     "clean": "lerna clean && yarn clean:dist",
     "clean:dist": "lerna exec -- rm -rf ./dist"
   },
