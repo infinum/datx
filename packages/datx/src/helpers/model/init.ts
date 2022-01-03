@@ -147,7 +147,9 @@ function isPojo(val: any): boolean {
 }
 
 function observablePojo(value: object) {
-  return isArrayLike(value) ? mobx.observable.array(value) : mobx.observable.object(value);
+  return isArrayLike(value)
+    ? mobx.observable.array(value)
+    : mobx.observable.object({ value }).value;
 }
 
 export function initModelField<T extends PureModel>(model: T, key: string, value: any): void {
@@ -240,6 +242,12 @@ export function initModel(
 
   setMeta(instance, MetaModelField.OriginalId, modelMeta?.originalId);
 
+  const skipMapped = Object.keys(fields).map((fieldName) => {
+    return getMeta<string>(modelClass, `${MetaClassField.MapField}_${fieldName}`, '', true);
+  });
+
+  const mappedFields = {};
+
   Object.keys(rawData)
     .filter((field) => field !== META_FIELD)
     .filter((field) => !(field in fields)) // Only new fields
@@ -252,7 +260,9 @@ export function initModel(
           (value[0] instanceof PureModel || isModelReference(value[0]))) ||
         isModelReference(value);
 
-      fields[field] = {
+      const container = skipMapped.includes(field) ? mappedFields : fields;
+
+      container[field] = {
         referenceDef: isRef
           ? {
               type: ReferenceType.TO_ONE_OR_MANY,
