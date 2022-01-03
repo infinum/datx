@@ -32,8 +32,8 @@
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.17",
     "rollup-plugin-terser": "^7.0.2",
     "ts-jest": "^27.0.3",
-    "tslib": "2.3.0",
-    "typescript": "4.2.3"
+    "tslib": "~2.3.0",
+    "typescript": "~4.2.3"
   },
   "scripts": {
     "test": "jest --coverage",
