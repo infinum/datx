@@ -1,28 +1,25 @@
-import { IJsonapiModel, IResponseData, Response } from '@datx/jsonapi';
+import { IJsonapiModel, IRequestOptions, Response } from '@datx/jsonapi';
+import { createFetcher, QueryExpression } from '..';
 import { Client } from '../interfaces/Client';
-import { QueryFn } from '../interfaces/QueryFn';
-import { getUrl, undefinedToNull } from '../utils';
+import { isFunction, undefinedToNull } from '../utils';
 
 export async function fetchQuery<
-  TModel extends IJsonapiModel,
-  TData extends IResponseData,
-  TVariables,
+  TModel extends IJsonapiModel
 >(
   client: Client,
-  query: QueryFn<TModel, TData, TVariables>,
-  variables?: TVariables,
+  queryExpression: QueryExpression<TModel>,
+  config?: Pick<IRequestOptions, 'networkConfig'>
 ) {
-  const { key, fetcher } = query(client, variables);
-
   try {
-    const url = getUrl(key);
+    const expression = isFunction(queryExpression) ? queryExpression() : queryExpression;
 
-    if (!url) {
-      throw Error(`fetchQuery Error - Missing variables. URL can't be constructed form provided variables: ${JSON.stringify(variables)}`);
+    if (!expression) {
+      throw Error('Expression is missing some dependencies!');
     }
 
-    const response = await fetcher(url);
+    const response = await createFetcher(client)(expression, config);
 
+    // TODO figure how to create key the same way as SWR
     return { [url]: undefinedToNull(response.snapshot) };
   } catch (error) {
     if (error instanceof Response) {

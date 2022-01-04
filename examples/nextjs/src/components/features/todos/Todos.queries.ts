@@ -1,9 +1,11 @@
-import { GetManyQueryExpression } from '@datx/swr';
+import { Response } from '@datx/jsonapi';
+import { GetManyExpression } from '@datx/swr';
 
 import { Todo } from '../../../models/Todo';
 
-export const queryTodos: GetManyQueryExpression<Todo> = {
+export type TodosResponse = Response<Todo, Array<Todo>>;
+
+export const queryTodos: GetManyExpression<Todo> = {
   op: 'getMany',
   type: Todo,
-  options: { queryParams: { include: 'test' } },
 };

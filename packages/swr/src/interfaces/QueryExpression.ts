@@ -1,24 +1,39 @@
-import { IModelConstructor, IType } from '@datx/core';
+import { IModelConstructor } from '@datx/core';
 import { IRequestOptions, IJsonapiModel } from '@datx/jsonapi';
 
-type Operations = 'getOne' | 'getMany' | 'getAll';
+export type Operation = 'getOne' | 'getMany' | 'getAll';
 
-export interface GetManyQueryExpression<TModel> {
-  op: Operations;
-  type: IType | IModelConstructor<TModel>;
-  options?: IRequestOptions;
+export type ExpressionLike = {
+  op: Operation;
 };
 
-export interface GetOneQueryExpression<TModel> extends GetManyQueryExpression<TModel> {
+export type GetOneExpression<TModel extends IJsonapiModel> = {
+  op: 'getOne';
+  type: IModelConstructor<TModel>;
   id: string;
+  queryParams?: IRequestOptions['queryParams'];
 };
 
-
-export interface GetAllQueryExpression<TModel> extends GetManyQueryExpression<TModel> {
-  maxRequests: number;
+export type GetManyExpression<TModel extends IJsonapiModel> = {
+  op: 'getMany';
+  type: IModelConstructor<TModel>;
+  id: never;
+  queryParams?: IRequestOptions['queryParams'];
 };
 
-export type QueryExpression<TModel extends IJsonapiModel = IJsonapiModel> =
-  | GetOneQueryExpression<TModel>
-  | GetManyQueryExpression<TModel>
-  | GetAllQueryExpression<TModel>;
+export type GetAllExpression<TModel extends IJsonapiModel> = {
+  op: 'getAll';
+  type: IModelConstructor<TModel>;
+  id: never;
+  queryParams?: IRequestOptions['queryParams'];
+  maxRequests?: number | undefined;
+};
+
+export type Expression<TModel extends IJsonapiModel> =
+  | GetOneExpression<TModel>
+  | GetManyExpression<TModel>
+  | GetAllExpression<TModel>;
+
+export type QueryExpression<TModel extends IJsonapiModel> =
+  | Expression<TModel>
+  | (() => Expression<TModel>);

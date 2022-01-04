@@ -1,5 +1,5 @@
 import {
-  useResourceList,
+  useQuery,
 } from '@datx/swr';
 import { FC, useState } from 'react';
 import NextLink from 'next/link';
@@ -10,7 +10,7 @@ import { Post } from '../../../models/Post';
 export const Posts: FC = () => {
   const [pageIndex, setPageIndex] = useState(0);
 
-  const { data, error } = useResourceList<Post>([Post]);
+  const { data, error } = useQuery({ op: 'getMany', type: Post });
 
   if (error) {
     return <ErrorFallback error={error} />;

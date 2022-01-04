@@ -7,7 +7,7 @@ const CSR: NextPage = () => {
   return (
     <Layout>
       <Todos />
-      <Posts />
+      {/* <Posts /> */}
     </Layout>
   );
 };
