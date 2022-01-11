@@ -4895,9 +4895,9 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
 mobx@^6.0.4:
-  version "6.3.10"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.3.10.tgz#c3bc715c8f03717b9a2329f9697d42b7998d42e0"
-  integrity sha512-lfuIN5TGXBNy/5s3ggr1L+IbD+LvfZVlj5q1ZuqyV9AfMtunYQvE8G0WfewS9tgIR3I1q8HJEEbcAOsxEgLwRw==
+  version "6.3.12"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-6.3.12.tgz#2ceb4f632081a8bf8757ba7e5e01b5810800022f"
+  integrity sha512-5Hx2IjhBtySVQlSFe+sHczKgOQ+cCyi8hN2wEvWzpJEEMRflQoDzDwJJ+m7SBWBQhfrWMWb1RGZNk4X1XtxJkQ==
 
 modify-values@^1.0.0:
   version "1.0.1"
