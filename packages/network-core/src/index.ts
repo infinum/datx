@@ -8,18 +8,13 @@ export { Response } from './Response';
 
 export { IResponseHeaders } from '@datx/utils';
 
-export { clearAllCache, clearCacheByType } from './interceptors/cache';
-
-export { CachingStrategy } from './enums/CachingStrategy';
 export { HttpMethod } from './enums/HttpMethod';
 export { ParamArrayType } from './enums/ParamArrayType';
 
 export { IFetchOptions } from './interfaces/IFetchOptions';
 export { IHeaders } from './interfaces/IHeaders';
-export { IInterceptor } from './interfaces/IInterceptor';
 export { INetworkHandler } from './interfaces/INetworkHandler';
 export { IResponseObject } from './interfaces/IResponseObject';
-export { IInterceptorsList } from './interfaces/IInterceptorsList';
 
 export { appendQueryParams } from './helpers/utils';
 export { saveModel } from './helpers/model';
@@ -32,10 +27,19 @@ export const Network = {
 
 ////////////////////////////////////////////////
 
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { HttpClient } from '@angular/common/http';
+
 import { Collection, Model } from '@datx/core';
 import { Client } from './Client';
 import { Request, SwrRequest } from './Request';
 import { QueryBuilder } from './QueryBuilder';
+
+TestBed.configureTestingModule({
+  imports: [HttpClientTestingModule],
+});
+const httpMock = TestBed.inject(HttpClient);
 
 const pc = new Client({
   QueryBuilder,
@@ -47,7 +51,7 @@ const pc = new Client({
 const rc = new Client({
   QueryBuilder,
   collection: new Collection(),
-  network: new Network.Rx(),
+  network: new Network.Rx(httpMock),
   request: Request,
 });
 
@@ -60,7 +64,7 @@ class ModelB extends Model {
 
 pc.from(ModelA)
   .id('1')
-  .request()
+  .buildRequest()
   .fetch()
   .then((resp) => {
     console.log(resp.data?.a);
@@ -68,12 +72,14 @@ pc.from(ModelA)
 
 pc.from(ModelB)
   .id('1')
-  .request((client, respB) => respB.data && client.from(ModelA).id(respB.data.b).request())
+  .buildRequest(
+    (client, respB) => respB.data && client.from(ModelA).id(respB.data.b).buildRequest(),
+  )
   .swr();
 
 rc.from(ModelA)
   .id('1')
-  .request()
+  .buildRequest()
   .fetch()
   .subscribe((resp) => {
     // @ts-expect-error
@@ -82,13 +88,13 @@ rc.from(ModelA)
 
 rc.from(ModelA)
   .match({ a: 2 })
-  .request(
+  .buildRequest(
     (client, respA) =>
       respA.data &&
       client
         .from(ModelA)
         .match({ a: respA.data?.map((a) => a.a).join(',') })
-        .request(),
+        .buildRequest(),
   )
   .fetch()
   .subscribe((resp) => {

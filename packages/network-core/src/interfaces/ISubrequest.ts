@@ -9,6 +9,6 @@ export type ISubrequest<
   TRequestClass extends typeof Request,
 > = (
   client: Client<TNetwork, TRequestClass>,
-  parentData: Response<TResponse>,
+  parentData: Response<TResponse, TResponse>,
   // @ts-ignore
 ) => Request<TNetwork>;

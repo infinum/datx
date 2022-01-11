@@ -1,4 +1,4 @@
-import { Model, Collection } from '@datx/core';
+import { PureModel, Collection, getModelId } from '@datx/core';
 import { Request } from './Request';
 import { QueryBuilder } from './QueryBuilder';
 import { INetwork } from './interfaces/INetwork';
@@ -26,10 +26,9 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
     this.request = request;
   }
 
-  from<TModelClass extends typeof Model>(
+  from<TModelClass extends typeof PureModel>(
     type: TModelClass,
   ): QueryBuilder<TModelClass, Array<InstanceType<TModelClass>>, TRequestClass, TNetwork> {
-    // @ts-ignore
     return new this.QueryBuilderConstructor({
       model: type,
       match: [],
@@ -43,11 +42,15 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
     });
   }
 
-  fromInstance<TModelClass extends typeof Model>(
+  fromInstance<TModelClass extends typeof PureModel>(
     model: InstanceType<TModelClass>,
   ): QueryBuilder<TModelClass, InstanceType<TModelClass>, TRequestClass, TNetwork> {
-    // @ts-ignore
-    return new this.QueryBuilderConstructor({
+    return new this.QueryBuilderConstructor<
+      TModelClass,
+      InstanceType<TModelClass>,
+      TRequestClass,
+      TNetwork
+    >({
       model: model.constructor as TModelClass,
       match: [],
       headers: {},
@@ -57,6 +60,6 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
         network: this.network,
         collection: this.collection,
       },
-    }).id(model.meta.id as string);
+    }).id(getModelId(model) as string);
   }
 }

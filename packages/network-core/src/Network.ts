@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { IAsync } from './interfaces/IAsync';
-import { IFetchOptions } from './interfaces/IFetchOptions';
+import { IRequestDetails } from './interfaces/IRequestDetails';
 import { IGeneralize } from './interfaces/IGeneralize';
 import { IResponseObject } from './interfaces/IResponseObject';
 
@@ -15,9 +15,7 @@ interface IChainable<IA extends IAsync<U> = IAsync<any>, U = any> {
 }
 
 export abstract class Network<IA extends IAsync<any> = IAsync<any>> {
-  constructor(baseUrl: string, protected readonly fetchReference?: typeof fetch) {
-    //
-  }
+  constructor(protected readonly fetchReference?: typeof fetch) {}
 
   abstract exec<T, U = any>(
     asyncVal: IGeneralize<U, IA>,
@@ -27,7 +25,10 @@ export abstract class Network<IA extends IAsync<any> = IAsync<any>> {
 
   abstract execAll<T>(...asyncVal: Array<IGeneralize<T, IA>>): IGeneralize<Array<T>, IA>;
 
-  abstract baseFetch(request: IFetchOptions): IGeneralize<IResponseObject, IA>;
+  abstract baseFetch(request: IRequestDetails): {
+    response: IGeneralize<IResponseObject, IA>;
+    abort?: () => void;
+  };
 
   public chain<U = any>(asyncVal: IGeneralize<U, IA>): IChainable<IGeneralize<U, IA>> {
     // eslint-disable-next-line @typescript-eslint/no-this-alias

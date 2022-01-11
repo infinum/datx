@@ -23,28 +23,38 @@ export class Request<
     protected readonly subrequests: Array<ISubrequest<TResponse, TNetwork, typeof Request>> = [],
   ) {}
 
-  public fetch(): IGeneralize<Response<InstanceType<TModel>>, IA> {
-    let response: Response<InstanceType<TModel>>;
-    // TODO: Return value should be some kind of a Response object
+  public fetch(): IGeneralize<Response<InstanceType<TModel>, InstanceType<TModel>>, IA> {
+    let response: Response<InstanceType<TModel>, InstanceType<TModel>>;
+
+    const { response: asyncResponse, abort } = this.refs.network.baseFetch(this.requestData);
+
+    this.abort = abort || this.abort;
+
     return this.refs.network
-      .chain(this.refs.network.baseFetch(this.requestData as any)) // TODO
+      .chain(asyncResponse)
       .then((data) => {
         response = new Response(data, this.refs.collection);
         return this.refs.network.execAll(
           ...this.subrequests.map((subrequest) =>
-            this.refs.network.exec(subrequest(this.refs.client, data).fetch(), (subdata: any) =>
-              this.refs.collection.add(subdata.data),
+            this.refs.network.exec(
+              subrequest(this.refs.client, data).fetch(),
+              (subdata: Response) => response.include(this.getKey(), subdata),
             ),
           ),
         );
       })
-      .then(() => response).value as IGeneralize<Response<InstanceType<TModel>>, IA>;
+      .then(() => response).value as IGeneralize<
+      Response<InstanceType<TModel>, InstanceType<TModel>>,
+      IA
+    >;
   }
 
-  public getKey(_parentKey = ''): string {
-    const key = this.requestData.cachingKey;
-    const keys = this.subrequests.map((subrequest) => subrequest.toString());
-    return [key, ...keys].join(',');
+  public abort(): void {
+    throw new Error('Abort not supported');
+  }
+
+  public getKey(): string {
+    return this.requestData.cachingKey;
   }
 }
 
@@ -52,7 +62,7 @@ export class SwrRequest<
   TNetwork extends INetwork,
   TModel extends typeof PureModel,
   TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
-  IA extends IAsync<InstanceType<TModel>> = IAsync<any>,
+  IA extends IAsync<InstanceType<TModel>> = IAsync<InstanceType<TModel>>,
 > extends Request<TNetwork, TModel, TResponse, IA> {
   public swr(): { key: string; fetcher: () => IGeneralize<Response<InstanceType<TModel>>, IA> } {
     return {

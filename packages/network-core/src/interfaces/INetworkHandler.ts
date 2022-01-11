@@ -5,4 +5,4 @@ import { Response } from '../Response';
 
 export type INetworkHandler<T extends PureModel = PureModel> = (
   request: IFetchOptions,
-) => Promise<Response<T>>;
+) => Promise<Response<T, T>>;

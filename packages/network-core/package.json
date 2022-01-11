@@ -17,6 +17,8 @@
   "author": "Infinum JavaScript Team <hello@infinum.com>",
   "license": "MIT",
   "devDependencies": {
+    "@angular/common": "^13.1.1",
+    "@angular/core": "^13.1.1",
     "@rollup/plugin-commonjs": "^21.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",

@@ -13,14 +13,12 @@ export class QueryBuilder<
   TRequestClass extends typeof Request,
   TNetwork extends INetwork,
 > {
-  public constructor(public readonly config: IQueryConfig<TNetwork, TRequestClass>) {
-    console.log(this.config);
-  }
+  public constructor(public readonly config: IQueryConfig<TNetwork, TRequestClass>) {}
 
   public extend<TNewResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>>(
     config: Partial<IQueryConfig<TNetwork, TRequestClass>>,
   ): QueryBuilder<TModel, TNewResponse, TRequestClass, TNetwork> {
-    return new (this.constructor as any)(Object.assign({}, this.config, config));
+    return this.constructor(Object.assign({}, this.config, config));
   }
 
   public id(modelId: string): QueryBuilder<TModel, InstanceType<TModel>, TRequestClass, TNetwork> {
@@ -28,7 +26,7 @@ export class QueryBuilder<
   }
 
   public match(
-    options: Record<string, any>,
+    options: Record<string, unknown>,
   ): QueryBuilder<TModel, Array<InstanceType<TModel>>, TRequestClass, TNetwork> {
     return this.extend<Array<InstanceType<TModel>>>({
       match: [...this.config.match, options],
@@ -39,7 +37,7 @@ export class QueryBuilder<
     throw new Error('The build method needs to be implemented');
   }
 
-  public request(
+  public buildRequest(
     ...chained: Array<ISubrequest<TResponse, TNetwork, TRequestClass>>
   ): Request<TNetwork, TModel, TResponse> & InstanceType<TRequestClass> {
     // @ts-ignore
@@ -56,9 +54,10 @@ export class JsonApiQueryBuilder<
   // build method is a custom implementation that, generates an generic IRequestDetails object with all data required for the API call
   public build(): IRequestDetails {
     return {
-      url: this.config.url as any,
-      method: this.config.method as any,
+      url: this.config.url ?? this.config.model.type.toString(), // TODO
+      method: this.config.method || 'GET',
       headers: this.config.headers,
+      body: null,
       cachingKey: `${this.config.model.type}/${
         this.config.id ? this.config.id : JSON.stringify(this.config.match)
       }`,
