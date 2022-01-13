@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist",
+  "lib": {
+    "entryFile": "src/public-api.ts",
+    "umdModuleIds": {
+      "@datx/core": "@datx/core",
+      "@datx/jsonapi": "@datx/jsonapi",
+      "@datx/network": "@datx/network",
+      "@datx/utils": "@datx/utils"
+    }
+  }
+}
