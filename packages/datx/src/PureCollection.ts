@@ -1,4 +1,14 @@
-import { IRawModel, getMeta, setMeta, isArrayLike, mobx, IObservable, IObservableArray, removeFromArray, replaceInArray } from '@datx/utils';
+import {
+  IRawModel,
+  getMeta,
+  setMeta,
+  isArrayLike,
+  mobx,
+  IObservable,
+  IObservableArray,
+  removeFromArray,
+  replaceInArray,
+} from '@datx/utils';
 
 import { PureModel } from './PureModel';
 import { IType } from './interfaces/IType';
@@ -46,13 +56,21 @@ export class PureCollection {
 
   private readonly __views: Array<string> = [];
 
-  private __dataMap: Record<string, Record<string, PureModel>> = (mobx.observable.object({}, undefined, {
-    deep: false,
-  }) as unknown) as Record<string, Record<string, PureModel>>;
+  private __dataMap: Record<string, Record<string, PureModel>> = mobx.observable.object(
+    {},
+    undefined,
+    {
+      deep: false,
+    },
+  ) as unknown as Record<string, Record<string, PureModel>>;
 
-  private __dataList: Record<string, IObservableArray<PureModel>> = (mobx.observable.object({}, undefined, {
-    deep: false,
-  }) as unknown) as Record<string, IObservableArray<PureModel>>;
+  private __dataList: Record<string, IObservableArray<PureModel>> = mobx.observable.object(
+    {},
+    undefined,
+    {
+      deep: false,
+    },
+  ) as unknown as Record<string, IObservableArray<PureModel>>;
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
     mobx.extendObservable(this, {});
@@ -242,9 +260,9 @@ export class PureCollection {
       );
     });
     replaceInArray(this.__data, []);
-    this.__dataList = (mobx.observable.object({}, {}, { deep: false }) as unknown) as IObservable &
+    this.__dataList = mobx.observable.object({}, {}, { deep: false }) as unknown as IObservable &
       Record<string, IObservableArray<PureModel>>;
-    this.__dataMap = (mobx.observable.object({}, {}, { deep: false }) as unknown) as IObservable &
+    this.__dataMap = mobx.observable.object({}, {}, { deep: false }) as unknown as IObservable &
       Record<string, Record<string, PureModel>>;
   }
 
@@ -346,8 +364,13 @@ export class PureCollection {
     const modelInstance = upsertModel(data, type, this);
 
     const collectionTypes = (this.constructor as typeof PureCollection).types.map(getModelType);
-    if (!collectionTypes.includes(type) && (typeof model === 'object' || typeof model === 'function')) {
-      throw new Error(`The model type ${type} was not found. Did you forget to add it to collection types?`);
+    if (
+      !collectionTypes.includes(type) &&
+      (typeof model === 'object' || typeof model === 'function')
+    ) {
+      throw new Error(
+        `The model type ${type} was not found. Did you forget to add it to collection types?`,
+      );
     }
 
     this.__insertModel(modelInstance, type);
@@ -355,7 +378,11 @@ export class PureCollection {
     return modelInstance;
   }
 
-  protected __removeModel(model: PureModel | Array<PureModel>, type?: IType, id?: IIdentifier): void {
+  protected __removeModel(
+    model: PureModel | Array<PureModel>,
+    type?: IType,
+    id?: IIdentifier,
+  ): void {
     if (isArrayLike(model)) {
       (model as Array<PureModel>).forEach((item) => {
         this.__removeModel(item, type, id);
@@ -467,7 +494,9 @@ export class PureCollection {
 
   // @ts-ignore - Used outside of the class, but marked as private to avoid undocumented use
   private __changeModelId(oldId: IIdentifier, newId: IIdentifier, type: IType): void {
-    this.__dataMap[type][newId] = this.__dataMap[type][oldId];
-    delete this.__dataMap[type][oldId];
+    if (type !== 'proto' && newId !== 'proto' && oldId !== 'proto') {
+      this.__dataMap[type][newId] = this.__dataMap[type][oldId];
+      delete this.__dataMap[type][oldId];
+    }
   }
 }
