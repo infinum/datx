@@ -28,6 +28,7 @@
   "scripts": {
     "ng": "ng",
     "build": "ng build datx-jsonapi-angular",
+    "prepublish": "npm run build",
     "test": "jest"
   },
   "dependencies": {
