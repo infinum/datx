@@ -14,7 +14,7 @@ export class Request<
   TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>> =
     | InstanceType<TModel>
     | Array<InstanceType<TModel>>,
-  // @ts-ignore
+  // @ts-ignore No way to avoid this :( But the final type is correct
   IA extends IAsync<InstanceType<TModel>> = ReturnType<TNetwork['execAll']>,
 > {
   constructor(

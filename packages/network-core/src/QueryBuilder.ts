@@ -40,7 +40,7 @@ export class QueryBuilder<
   public buildRequest(
     ...chained: Array<ISubrequest<TResponse, TNetwork, TRequestClass>>
   ): Request<TNetwork, TModel, TResponse> & InstanceType<TRequestClass> {
-    // @ts-ignore
+    // @ts-ignore No way to avoid this :( But the final type is correct
     return new this.config.request(this.config.refs, this.build(), chained);
   }
 }
