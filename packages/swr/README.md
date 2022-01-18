@@ -17,14 +17,14 @@ npm install --save swr @datx/swr
 ```ts
 // src/datx/createClient.ts
 
-import { Collection } from "@datx/core";
-import { jsonapiCollection, config, CachingStrategy } from "@datx/jsonapi";
+import { Collection } from '@datx/core';
+import { jsonapiCollection, config } from '@datx/jsonapi';
 
-import { Todo } from "../models/Todo";
+import { Todo } from '../models/Todo';
 
 class Client extends jsonapiCollection(Collection) {
   public static types = [Todo];
-};
+}
 
 export function createClient() {
   config.baseUrl = process.env.NEXT_PUBLIC_JSONAPI_URL as string;
@@ -40,15 +40,22 @@ export function createClient() {
 // src/pages/_app.tsx
 
 import type { AppProps } from 'next/app';
-import { DatxProvider, useSafeClient } from '@datx/swr';
+import { createFetcher, DatxProvider, useSafeClient } from '@datx/swr';
 import { createClient } from '../datx/createClient';
+import { SWRConfig } from 'swr';
 
 function ExampleApp({ Component, pageProps }: AppProps) {
   const client = useSafeClient(createClient);
 
   return (
     <DatxProvider client={client}>
-      <Component {...pageProps} />
+      <SWRConfig
+        value={{
+          fetcher: createFetcher(client),
+        }}
+      >
+        <Component {...pageProps} />
+      </SWRConfig>
     </DatxProvider>
   );
 }
@@ -61,15 +68,17 @@ export default ExampleApp;
 ```ts
 // src/components/features/todos/Todos.queries.ts
 
-export const queryTodo = createQuery((client) => {
-  const model = new Todo();
-  const key = getModelEndpointUrl(model);
+import { Response } from '@datx/jsonapi';
+import { GetManyExpression } from '@datx/swr';
 
-  return {
-    key,
-    fetcher: (url: string) => client.request<Todo, Array<Todo>>(url, 'GET')
-  };
-});
+import { Todo } from '../../../models/Todo';
+
+export type TodosResponse = Response<Todo, Array<Todo>>;
+
+export const queryTodos: GetManyExpression<Todo> = {
+  op: 'getMany',
+  type: Todo,
+};
 ```
 
 ```ts
@@ -82,7 +91,6 @@ export const createTodo = createMutation((client, message: string | undefined) =
 
   return client.request<Todo>(url, 'POST', { data });
 });
-
 ```
 
 ### Use hook to fetch data
@@ -92,7 +100,7 @@ export const createTodo = createMutation((client, message: string | undefined) =
 
 export const Todos: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { data, error, mutate } = useQuery(queryTodo);
+  const { data, error, mutate } = useQuery(queryTodos);
   const [create, { status }] = useMutation(createTodo, {
     onSuccess: async () => {
       const input = inputRef.current;
@@ -102,7 +110,7 @@ export const Todos: FC = () => {
   });
 
   if (error) {
-    return <div>{JSON.stringify(error)}</div>;
+    return <ErrorFallback error={error} />;
   }
 
   if (!data) {
@@ -117,12 +125,13 @@ export const Todos: FC = () => {
       </button>
 
       {data.data?.map((todo) => (
-        <div key={todo.id}>{todo.message}</div>
+        <NextLink href={`/todos/${todo.id}`} key={todo.id}>
+          <a style={{ display: 'block' }}>{todo.message}</a>
+        </NextLink>
       ))}
     </div>
   );
 };
-
 ```
 
 ## API
@@ -140,22 +149,126 @@ const client = useSafeClient(() => new Client());
 
 #### useDatx
 
+For accessing `Client` instance from the context. It's made mainly for internal usage.
+
+```ts
+const client = useDatx();
+```
+
 #### useQuery
+
+```ts
+const queryExpression: GetManyExpression<Todo> = {
+  op: 'getMany',
+  type: Todo,
+};
+
+const config: DatxConfiguration<Todo, Array<Todo>> = {
+  shouldRetryOnError: false
+};
+
+const = useQuery(queryExpression, config);
+```
+
+##### Expression signature
+
+```ts
+export type Operation = 'getOne' | 'getMany' | 'getAll';
+
+export type ExpressionLike = {
+  op: Operation;
+};
+
+export type GetOneExpression<TModel extends IJsonapiModel> = {
+  op: 'getOne';
+  type: IModelConstructor<TModel>;
+  id: string;
+  queryParams?: IRequestOptions['queryParams'];
+};
+
+export type GetManyExpression<TModel extends IJsonapiModel> = {
+  op: 'getMany';
+  type: IModelConstructor<TModel>;
+  id: never;
+  queryParams?: IRequestOptions['queryParams'];
+};
+
+export type GetAllExpression<TModel extends IJsonapiModel> = {
+  op: 'getAll';
+  type: IModelConstructor<TModel>;
+  id: never;
+  queryParams?: IRequestOptions['queryParams'];
+  maxRequests?: number | undefined;
+};
+```
+
+##### Query config
+
+It's the [SWR config](https://swr.vercel.app/docs/options#options) extended with `networkConfig` prop.
+
+```ts
+export type DatxConfiguration<
+  TModel extends IJsonapiModel,
+  TData extends IResponseData,
+> = SWRConfiguration<
+  Response<TModel, TData>,
+  Response<TModel, TData>,
+  Fetcher<Response<TModel, TData>>
+> & {
+  networkConfig: IRequestOptions['networkConfig']
+};
+```
 
 #### useMutation
 
-#### useResource
+A hook for remote mutations
+This is a helper hook until [this](https://github.com/vercel/swr/pull/1450) is merged to SWR core!
 
-#### useResourceList
-
-## createQuery
-
-## createMutation
+// TODO example
 
 ### SSR
 
+```tsx
+type SSRProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const SSR: NextPage<SSRProps> = ({ fallback }) => {
+  return (
+    <Hydrate fallback={fallback}>
+      <Layout>
+        <Todos />
+      </Layout>
+    </Hydrate>
+  );
+};
+
+export const getServerSideProps = async () => {
+  const client = createClient();
+
+  const todo = await fetchQuery(client, queryTodos);
+
+  return {
+    props: {
+      fallback: {
+        ...todo,
+      },
+    },
+  };
+};
+
+export default SSR;
+```
+
 #### hydrate
 
+```tsx
+type Fallback = Record<string, IResponseSnapshot>
+
+const fallback = {
+  './api/v1/todos': responseSnapshot
+}
+
+<Hydrate fallback={fallback}>
+```
 
 ## Troubleshooting
 
