@@ -55,7 +55,7 @@ describe('Views', () => {
           expect(view.length).toBe(4);
           done();
         } catch (e) {
-          done.fail(e);
+          done.fail(e as Error);
         }
       });
     });
