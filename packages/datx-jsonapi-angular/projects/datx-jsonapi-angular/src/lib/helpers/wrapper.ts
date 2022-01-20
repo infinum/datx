@@ -19,7 +19,7 @@ export function observableWrapper<T extends IJsonapiModel = IJsonapiModel, U = R
 
     if (req instanceof Observable) {
       // Not sure if this is needed, maybe the types are incorrect and req is actually always a Promise
-      req = req.toPromise();
+      req = req.toPromise() as Promise<U>;
     }
 
     req.then(
