@@ -90,6 +90,6 @@ describe('CollectionService', () => {
     expect(appCollection.add).toHaveBeenCalledTimes(1);
     expect(service.update).toHaveBeenCalledTimes(1);
     expect(savedModel).toBeInstanceOf(User);
-    expect(savedModel.name).toBe(name);
+    expect(savedModel?.name).toBe(name);
   });
 });
