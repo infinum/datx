@@ -1,4 +1,5 @@
-import { PureModel } from '@datx/core';
+import { PureCollection, PureModel } from '@datx/core';
+import { DEFAULT_TYPE } from '@datx/utils';
 import { INetwork } from './interfaces/INetwork';
 import { IQueryConfig } from './interfaces/IQueryConfig';
 import { IRequestDetails } from './interfaces/IRequestDetails';
@@ -37,6 +38,12 @@ export class QueryBuilder<
     throw new Error('The build method needs to be implemented');
   }
 
+  public withCollection(
+    collection?: PureCollection,
+  ): QueryBuilder<TModel, TResponse, TRequestClass, TNetwork> {
+    return this.extend({ refs: { ...this.config.refs, collection } });
+  }
+
   public buildRequest(
     ...chained: Array<ISubrequest<TResponse, TNetwork, TRequestClass>>
   ): Request<TNetwork, TModel, TResponse> & InstanceType<TRequestClass> {
@@ -46,19 +53,32 @@ export class QueryBuilder<
 }
 
 export class JsonApiQueryBuilder<
-  TModel extends typeof PureModel,
-  TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
-  TRequestClass extends typeof Request,
-  TNetwork extends INetwork,
-> extends QueryBuilder<TModel, TResponse, TRequestClass, TNetwork> {
+    TModel extends typeof PureModel,
+    TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
+    TRequestClass extends typeof Request,
+    TNetwork extends INetwork,
+  >
+  extends QueryBuilder<TModel, TResponse, TRequestClass, TNetwork>
+  implements QueryBuilder<TModel, TResponse, TRequestClass, TNetwork>
+{
   // build method is a custom implementation that, generates an generic IRequestDetails object with all data required for the API call
   public build(): IRequestDetails {
+    let url =
+      this.config.url ||
+      this.config.refs.modelConstructor['endpoint'] ||
+      this.config.refs.modelConstructor.type;
+    if (typeof url === 'function') {
+      url = url(this.config.url);
+    }
+    if (!url || url === DEFAULT_TYPE) {
+      throw new Error('URL should be defined');
+    }
     return {
-      url: this.config.url ?? this.config.model.type.toString(), // TODO
+      url,
       method: this.config.method || 'GET',
       headers: this.config.headers,
       body: null,
-      cachingKey: `${this.config.model.type}/${
+      cachingKey: `${this.config.refs.modelConstructor.type}/${
         this.config.id ? this.config.id : JSON.stringify(this.config.match)
       }`,
     };

@@ -2,7 +2,6 @@ import { View } from '@datx/core';
 import { IResponseHeaders } from '@datx/utils';
 
 import { IHeaders } from './IHeaders';
-import { IRequestOptions } from './IRequestOptions';
 import { IResponseObject } from './IResponseObject';
 
 export interface IResponseInternal {
@@ -10,7 +9,6 @@ export interface IResponseInternal {
   requestHeaders?: IHeaders;
   error?: Array<string | Record<string, unknown>> | Error;
   status?: number;
-  options?: IRequestOptions;
   response: IResponseObject;
   views: Array<View>;
 }

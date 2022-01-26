@@ -10,24 +10,24 @@ function initData<
   T extends PureModel | Array<PureModel>,
 >(
   response: IResponseSnapshot,
-  collection?: PureCollection,
+  collection: PureCollection,
   overrideData?: T,
 ): { value: TResponse | null } {
   let data: TResponse | null = null;
-  const responseData = response.response.data;
+  const responseData = response.response;
   const hasData = Boolean(responseData && Object.keys(responseData).length);
-  if (collection && responseData && hasData) {
+  if (responseData && hasData) {
     // @ts-ignore
     data =
       overrideData ||
       (response.type ? collection.add(responseData, response.type) : collection.add(responseData));
   } else if (hasData) {
     const ModelConstructor =
-      (collection &&
-        (collection.constructor as typeof PureCollection).types.find(
-          ({ type }) => type === response.type,
-        )) ||
-      PureModel;
+      (collection.constructor as typeof PureCollection).types.find(
+        ({ type }) => type === response.type,
+      ) || PureModel;
+
+    console.log(ModelConstructor);
 
     // @ts-ignore
     data = overrideData || mapItems(responseData, (item) => new ModelConstructor(item));
@@ -53,13 +53,14 @@ export class Response<
 
   constructor(
     public readonly snapshot: IResponseSnapshot,
-    private readonly collection?: PureCollection,
+    private readonly collection: PureCollection,
   ) {
     // this._data = (this.collection?.add(snapshot.response) as TResponse) ?? null;
 
     try {
       this.__data = initData(this.snapshot, this.collection);
     } catch (e) {
+      console.log(e);
       this.__internal.error = e as Error;
     }
   }
