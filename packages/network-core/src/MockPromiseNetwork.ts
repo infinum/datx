@@ -3,7 +3,12 @@ import { PromiseNetwork } from './PromiseNetwork';
 type IAssertion = (
   input: RequestInfo,
   init?: RequestInit | undefined,
-) => Promise<[body?: Record<string, unknown> | null | undefined, init?: ResponseInit | undefined]>;
+) => Promise<
+  [
+    body?: Array<Record<string, unknown>> | Record<string, unknown> | null | undefined,
+    init?: ResponseInit | undefined,
+  ]
+>;
 
 export class MockPromiseNetwork extends PromiseNetwork {
   constructor() {

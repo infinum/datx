@@ -1,7 +1,8 @@
-import { Collection, Model } from '@datx/core';
+import { Collection, PureCollection, Model } from '@datx/core';
 // import nock from 'nock';
 import fetch from 'node-fetch';
-import { Network, Client, JsonApiQueryBuilder, Request, Response } from '../src';
+import { Network, Client, Request, Response } from '../src';
+import { MockQueryBuilder } from './mock/MockQueryBuilder';
 
 describe('Request', () => {
   it('should initialize', () => {
@@ -11,7 +12,7 @@ describe('Request', () => {
       collection,
       network,
       // @ts-ignore
-      QueryBuilder: JsonApiQueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     expect(client).toBeTruthy();
@@ -24,7 +25,7 @@ describe('Request', () => {
       collection,
       network,
       // @ts-ignore
-      QueryBuilder: JsonApiQueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     expect(() => client.from(Model).buildRequest()).toThrowError('URL should be defined');
@@ -37,7 +38,7 @@ describe('Request', () => {
       collection,
       network,
       // @ts-ignore
-      QueryBuilder: JsonApiQueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
       baseUrl: 'https://example.com',
     });
@@ -51,45 +52,11 @@ describe('Request', () => {
       collection,
       network,
       // @ts-ignore
-      QueryBuilder: JsonApiQueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
       static type = 'test';
-    }
-    expect(client.from(TestModel).buildRequest()).toBeInstanceOf(Request);
-  });
-
-  it('not to throw if endpoint function is set', async () => {
-    const network = new Network.Promise(fetch);
-    const collection = new Collection();
-    const client = new Client({
-      collection,
-      network,
-      // @ts-ignore
-      QueryBuilder: JsonApiQueryBuilder,
-      request: Request,
-    });
-    class TestModel extends Model {
-      static endpoint() {
-        return 'test';
-      }
-    }
-    expect(client.from(TestModel).buildRequest()).toBeInstanceOf(Request);
-  });
-
-  it('not to throw if endpoint string is set', async () => {
-    const network = new Network.Promise(fetch);
-    const collection = new Collection();
-    const client = new Client({
-      collection,
-      network,
-      // @ts-ignore
-      QueryBuilder: JsonApiQueryBuilder,
-      request: Request,
-    });
-    class TestModel extends Model {
-      static endpoint = 'test';
     }
     expect(client.from(TestModel).buildRequest()).toBeInstanceOf(Request);
   });
@@ -105,7 +72,7 @@ describe('Request', () => {
       collection,
       network,
       // @ts-ignore
-      QueryBuilder: JsonApiQueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -119,16 +86,14 @@ describe('Request', () => {
 
   it('should work with the MockPromiseNetwork and no collection', async () => {
     const network = new Network.Mock.Promise();
-    const collection = new Collection();
     network.setAssertion((url, _options) => {
       expect(url).toBe('test-endpoint');
-      return Promise.resolve([{ foo: 123 }, { headers: { 'content-type': 'application/json' } }]);
+      return Promise.resolve([[{ foo: 123 }], { headers: { 'content-type': 'application/json' } }]);
     });
     const client = new Client({
-      collection,
       network,
       // @ts-ignore
-      QueryBuilder: JsonApiQueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -137,15 +102,44 @@ describe('Request', () => {
       public foo!: number;
     }
     const resp = await client.from(TestModel).buildRequest().fetch();
-    console.log(resp.data);
     expect(resp).toBeInstanceOf(Response);
-    expect(resp.data?.foo).toBe(123);
+    expect(resp.data[0]?.foo).toBe(123);
+    expect(resp.collection).toBeInstanceOf(PureCollection);
+    expect(resp.collection.length).toBe(1);
+    expect(resp.collection.findAll(TestModel)).toHaveLength(1);
+  });
+
+  it('should work with the MockPromiseNetwork and collection', async () => {
+    const network = new Network.Mock.Promise();
+    const collection = new Collection();
+    network.setAssertion((url, _options) => {
+      expect(url).toBe('test-endpoint');
+      return Promise.resolve([[{ foo: 123 }], { headers: { 'content-type': 'application/json' } }]);
+    });
+    const client = new Client({
+      collection,
+      network,
+      // @ts-ignore
+      QueryBuilder: MockQueryBuilder,
+      request: Request,
+    });
+    class TestModel extends Model {
+      static endpoint = 'test-endpoint';
+
+      public foo!: number;
+    }
+    const resp = await client.from(TestModel).buildRequest().fetch();
+    expect(resp).toBeInstanceOf(Response);
+    expect(resp.data[0]?.foo).toBe(123);
+    expect(resp.collection).toBe(collection);
+    expect(resp.collection.length).toBe(1);
+    expect(resp.collection.findAll(TestModel)).toHaveLength(1);
   });
 
   // it('throw on server error', async () => {
   //   const network = new Network.Promise(fetch);
   //   const collection = new Collection();
-  //   const client = new Client({ collection, network, QueryBuilder: JsonApiQueryBuilder, request: Request });
+  //   const client = new Client({ collection, network, QueryBuilder: MockQueryBuilder, request: Request });
   //   client.request.update(setUrl('/'));
   //   nock('http://example.com').get('/').reply(404, {});
 
@@ -179,7 +173,7 @@ describe('Request', () => {
   // it('throw on non-json success response', async () => {
   //   const network = new Network.Promise(fetch);
   //   const collection = new Collection();
-  //   const client = new Client({ collection, network, QueryBuilder: JsonApiQueryBuilder, request: Request });
+  //   const client = new Client({ collection, network, QueryBuilder: MockQueryBuilder, request: Request });
   //   client.request.update(setUrl('/'));
   //   nock('http://example.com').get('/').reply(200, 'Not valid JSON');
 

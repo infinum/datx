@@ -14,8 +14,10 @@ export { ParamArrayType } from './enums/ParamArrayType';
 
 export { IFetchOptions } from './interfaces/IFetchOptions';
 export { IHeaders } from './interfaces/IHeaders';
+export { INetwork } from './interfaces/INetwork';
 export { INetworkHandler } from './interfaces/INetworkHandler';
 export { IResponseObject } from './interfaces/IResponseObject';
+export { IRequestDetails } from './interfaces/IRequestDetails';
 
 export { appendQueryParams } from './helpers/utils';
 export { saveModel } from './helpers/model';

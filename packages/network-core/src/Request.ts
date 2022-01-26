@@ -27,8 +27,8 @@ export class Request<
 
   public fetch(
     fetchCollection?: PureCollection,
-  ): IGeneralize<Response<InstanceType<TModel>, InstanceType<TModel>>, IA> {
-    let response: Response<InstanceType<TModel>, InstanceType<TModel>>;
+  ): IGeneralize<Response<InstanceType<TModel>, TResponse>, IA> {
+    let response: Response<InstanceType<TModel>, TResponse>;
 
     const { response: asyncResponse, abort } = this.refs.network.baseFetch(this.requestData);
 
@@ -57,10 +57,7 @@ export class Request<
           ),
         );
       })
-      .then(() => response).value as IGeneralize<
-      Response<InstanceType<TModel>, InstanceType<TModel>>,
-      IA
-    >;
+      .then(() => response).value as IGeneralize<Response<InstanceType<TModel>, TResponse>, IA>;
   }
 
   public abort(): void {

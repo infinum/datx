@@ -1,5 +1,4 @@
 import { Bucket, PureCollection, PureModel } from '@datx/core';
-import { mapItems } from '@datx/utils';
 
 import { IResponseInternal } from './interfaces/IResponseInternal';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
@@ -8,29 +7,18 @@ function initData<
   TModel extends PureModel,
   TResponse extends TModel | Array<TModel>,
   T extends PureModel | Array<PureModel>,
->(
-  response: IResponseSnapshot,
-  collection: PureCollection,
-  overrideData?: T,
-): { value: TResponse | null } {
-  let data: TResponse | null = null;
-  const responseData = response.response;
+>(response: IResponseSnapshot, collection: PureCollection, overrideData?: T): { value: TResponse } {
+  let data: TResponse;
+  const responseData = response.response.data;
   const hasData = Boolean(responseData && Object.keys(responseData).length);
   if (responseData && hasData) {
-    // @ts-ignore
-    data =
-      overrideData ||
-      (response.type ? collection.add(responseData, response.type) : collection.add(responseData));
-  } else if (hasData) {
     const ModelConstructor =
       (collection.constructor as typeof PureCollection).types.find(
         ({ type }) => type === response.type,
       ) || PureModel;
 
-    console.log(ModelConstructor);
-
     // @ts-ignore
-    data = overrideData || mapItems(responseData, (item) => new ModelConstructor(item));
+    data = overrideData || collection.add(responseData, ModelConstructor);
     return { value: data };
   }
 
@@ -44,7 +32,7 @@ export class Response<
 > {
   public readonly included: Record<string, Response> = {};
 
-  private __data: { value: TResponse | null } | null = null;
+  private __data!: { value: TResponse };
 
   protected __internal: IResponseInternal = {
     response: {},
@@ -53,7 +41,7 @@ export class Response<
 
   constructor(
     public readonly snapshot: IResponseSnapshot,
-    private readonly collection: PureCollection,
+    public readonly collection: PureCollection,
   ) {
     // this._data = (this.collection?.add(snapshot.response) as TResponse) ?? null;
 
@@ -65,8 +53,8 @@ export class Response<
     }
   }
 
-  public get data(): TResponse | null {
-    return this.__data?.value || null;
+  public get data(): TResponse {
+    return this.__data.value;
   }
 
   public include(key: string, response: Response): void {
