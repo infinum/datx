@@ -17,7 +17,7 @@
     "outDir": ".",
     "strict": true,
     "strictFunctionTypes": false,
-    "target": "es5",
+    "target": "es2017",
     "esModuleInterop": true
   },
   "exclude": ["node_modules", "examples"],

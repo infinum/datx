@@ -1,3 +1,4 @@
+import 'jest-preset-angular/setup-jest';
 import { Response } from 'node-fetch';
 
 window.Response = Response;

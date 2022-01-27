@@ -18,22 +18,29 @@
   "license": "MIT",
   "devDependencies": {
     "@angular/common": "^13.1.1",
+    "@angular/compiler": "^13.2.0",
+    "@angular/compiler-cli": "^13.2.0",
     "@angular/core": "^13.1.1",
+    "@angular/platform-browser": "^13.2.0",
+    "@angular/platform-browser-dynamic": "^13.2.0",
     "@rollup/plugin-commonjs": "^21.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
     "@types/jest": "^27.0.0",
     "@types/node": "^16.0.0",
     "jest": "^27.0.5",
+    "jest-preset-angular": "^11.1.0",
     "nock": "13.1.1",
     "node-fetch": "^2.6.1",
     "rollup": "^2.38.5",
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.17",
     "rxjs": "^7.0.0",
     "ts-jest": "^27.0.3",
-    "typescript": "4.2.2"
+    "typescript": "4.2.2",
+    "zone.js": "^0.11.4"
   },
   "peerDependencies": {
+    "@angular/common": "^*",
     "rxjs": "^6.0.0 | ^7.0.0"
   },
   "scripts": {
@@ -47,20 +54,14 @@
       "/test/",
       "/node_modules/"
     ],
+    "globalSetup": "jest-preset-angular/global-setup",
     "moduleFileExtensions": [
       "ts",
       "js"
     ],
     "testEnvironment": "jsdom",
     "testRegex": "test/(.*).test.ts$",
-    "globals": {
-      "ts-jest": {
-        "diagnostics": {
-          "warnOnly": true
-        }
-      }
-    },
-    "preset": "ts-jest",
+    "preset": "jest-preset-angular",
     "testMatch": null,
     "setupFilesAfterEnv": [
       "./test/setup.ts"

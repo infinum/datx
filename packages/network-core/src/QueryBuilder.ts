@@ -19,7 +19,7 @@ export class QueryBuilder<
   public extend<TNewResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>>(
     config: Partial<IQueryConfig<TNetwork, TRequestClass>>,
   ): QueryBuilder<TModel, TNewResponse, TRequestClass, TNetwork> {
-    return this.constructor(Object.assign({}, this.config, config));
+    return new (this.constructor as typeof QueryBuilder)(Object.assign({}, this.config, config));
   }
 
   public id(modelId: string): QueryBuilder<TModel, InstanceType<TModel>, TRequestClass, TNetwork> {

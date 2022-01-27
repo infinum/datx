@@ -47,8 +47,16 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
     });
   }
 
+  fromInstance<TModelClass extends typeof PureModel, TModel extends InstanceType<TModelClass>>(
+    model: TModel,
+  ): QueryBuilder<TModelClass, TModel, TRequestClass, TNetwork>;
   fromInstance<TModelClass extends typeof PureModel>(
-    model: InstanceType<TModelClass>,
+    type: TModelClass,
+    id: string,
+  ): QueryBuilder<TModelClass, InstanceType<TModelClass>, TRequestClass, TNetwork>;
+  fromInstance<TModelClass extends typeof PureModel>(
+    model: InstanceType<TModelClass> | TModelClass,
+    id?: string,
   ): QueryBuilder<TModelClass, InstanceType<TModelClass>, TRequestClass, TNetwork> {
     return new this.QueryBuilderConstructor<
       TModelClass,
@@ -64,8 +72,8 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
         client: this,
         network: this.network,
         collection: this.collection,
-        modelConstructor: model.constructor as TModelClass,
+        modelConstructor: model instanceof PureModel ? (model.constructor as TModelClass) : model,
       },
-    }).id(getModelId(model) as string);
+    }).id(id ?? (getModelId(model) as string));
   }
 }

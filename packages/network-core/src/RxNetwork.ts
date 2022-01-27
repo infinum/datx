@@ -1,5 +1,5 @@
 import { Observable, zip } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import type { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { IRequestDetails } from './interfaces/IRequestDetails';
@@ -27,6 +27,9 @@ export class RxNetwork extends Network<Observable<unknown>> {
           headers: request?.headers,
         })
         .pipe(
+          tap((response) => {
+            console.log(response);
+          }),
           map((resp: HttpResponse<Record<string, unknown>>) => ({
             status: resp.status,
             headers: resp.headers,
