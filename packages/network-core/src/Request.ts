@@ -12,12 +12,13 @@ import { Response } from './Response';
 // SWR is integrated on this level
 export class Request<
   TNetwork extends INetwork,
-  TModel extends typeof PureModel,
-  TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>> =
-    | InstanceType<TModel>
-    | Array<InstanceType<TModel>>,
+  TModelClass extends typeof PureModel = typeof PureModel,
+  TResponse extends TModelInstance | Array<TModelInstance> =  // @ts-ignore
+    | InstanceType<TModelClass>
+    | Array<InstanceType<TModelClass>>,
   // @ts-ignore No way to avoid this :( But the final type is correct
-  IA extends IAsync<InstanceType<TModel>> = ReturnType<TNetwork['execAll']>,
+  IA extends IAsync<TModelInstance> = ReturnType<TNetwork['execAll']>,
+  TModelInstance extends InstanceType<TModelClass> & PureModel = InstanceType<TModelClass>,
 > {
   constructor(
     protected readonly refs: IRefs<TNetwork, typeof Request>,
@@ -27,8 +28,8 @@ export class Request<
 
   public fetch(
     fetchCollection?: PureCollection,
-  ): IGeneralize<Response<InstanceType<TModel>, TResponse>, IA> {
-    let response: Response<InstanceType<TModel>, TResponse>;
+  ): IGeneralize<Response<TModelInstance, TResponse>, IA> {
+    let response: Response<TModelInstance, TResponse>;
 
     const { response: asyncResponse, abort } = this.refs.network.baseFetch(this.requestData);
 
@@ -57,7 +58,7 @@ export class Request<
           ),
         );
       })
-      .then(() => response).value as IGeneralize<Response<InstanceType<TModel>, TResponse>, IA>;
+      .then(() => response).value as IGeneralize<Response<TModelInstance, TResponse>, IA>;
   }
 
   public abort(): void {

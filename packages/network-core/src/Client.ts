@@ -31,9 +31,10 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
     this.options = options;
   }
 
-  from<TModelClass extends typeof PureModel>(
-    type: TModelClass,
-  ): QueryBuilder<TModelClass, Array<InstanceType<TModelClass>>, TRequestClass, TNetwork> {
+  from<
+    TModelClass extends typeof PureModel,
+    TModelInstance extends InstanceType<TModelClass> & PureModel = InstanceType<TModelClass>,
+  >(type: TModelClass): QueryBuilder<Array<TModelInstance>, TRequestClass, TNetwork, TModelClass> {
     return new this.QueryBuilderConstructor({
       match: [],
       headers: {},
@@ -48,33 +49,28 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
     });
   }
 
-  fromInstance<TModelClass extends typeof PureModel, TModel extends InstanceType<TModelClass>>(
-    model: TModel,
-  ): QueryBuilder<TModelClass, TModel, TRequestClass, TNetwork>;
-  fromInstance<TModelClass extends typeof PureModel>(
+  fromInstance<
+    TModelClass extends typeof PureModel,
+    TModelInstance extends InstanceType<TModelClass> & PureModel = InstanceType<TModelClass>,
+  >(model: TModelInstance): QueryBuilder<TModelInstance, TRequestClass, TNetwork, TModelClass>;
+  fromInstance<
+    TModelClass extends typeof PureModel,
+    TModelInstance extends InstanceType<TModelClass> & PureModel = InstanceType<TModelClass>,
+  >(
     type: TModelClass,
     id: string,
-  ): QueryBuilder<TModelClass, InstanceType<TModelClass>, TRequestClass, TNetwork>;
-  fromInstance<TModelClass extends typeof PureModel>(
-    model: InstanceType<TModelClass> | TModelClass,
+  ): QueryBuilder<TModelInstance, TRequestClass, TNetwork, TModelClass>;
+  fromInstance<
+    TModelClass extends typeof PureModel,
+    TModelInstance extends InstanceType<TModelClass> & PureModel = InstanceType<TModelClass>,
+  >(
+    model: TModelInstance | TModelClass,
     id?: string,
-  ): QueryBuilder<TModelClass, InstanceType<TModelClass>, TRequestClass, TNetwork> {
-    return new this.QueryBuilderConstructor<
-      TModelClass,
-      InstanceType<TModelClass>,
-      TRequestClass,
-      TNetwork
-    >({
-      match: [],
-      headers: {},
-      request: this.request,
-      url: this.options.baseUrl,
-      refs: {
-        client: this,
-        network: this.network,
-        collection: this.collection,
-        modelConstructor: model instanceof PureModel ? (model.constructor as TModelClass) : model,
-      },
-    }).id(id ?? (getModelId(model) as string));
+  ): QueryBuilder<TModelInstance, TRequestClass, TNetwork, TModelClass> {
+    const modelConstructor =
+      model instanceof PureModel ? (model.constructor as TModelClass) : model;
+    return this.from<TModelClass, TModelInstance>(modelConstructor).id(
+      id ?? (getModelId(model) as string),
+    ) as QueryBuilder<TModelInstance, TRequestClass, TNetwork, TModelClass>;
   }
 }

@@ -10,7 +10,6 @@ describe('Request', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
       QueryBuilder: MockQueryBuilder,
       request: Request,
     });
@@ -23,7 +22,6 @@ describe('Request', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
       QueryBuilder: MockQueryBuilder,
       request: Request,
     });
@@ -36,7 +34,6 @@ describe('Request', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
       QueryBuilder: MockQueryBuilder,
       request: Request,
       options: {
@@ -52,7 +49,6 @@ describe('Request', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
       QueryBuilder: MockQueryBuilder,
       request: Request,
     });

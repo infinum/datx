@@ -3,7 +3,10 @@ import { PureCollection, PureModel } from '@datx/core';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 
-function initData<TModel extends PureModel, TResponse extends TModel | Array<TModel>>(
+function initData<
+  TModelInstance extends PureModel,
+  TResponse extends TModelInstance | Array<TModelInstance>,
+>(
   response: IResponseSnapshot,
   collection: PureCollection,
   overrideData?: TResponse,
@@ -37,8 +40,8 @@ function initData<TModel extends PureModel, TResponse extends TModel | Array<TMo
 }
 
 export class Response<
-  TModel extends PureModel = PureModel,
-  TResponse extends TModel | Array<TModel> = TModel | Array<TModel>,
+  TModelInstance extends PureModel = PureModel,
+  TResponse extends TModelInstance | Array<TModelInstance> = TModelInstance | Array<TModelInstance>,
 > {
   public readonly included: Record<string, Response> = {};
 
@@ -56,7 +59,7 @@ export class Response<
     // this._data = (this.collection?.add(snapshot.response) as TResponse) ?? null;
 
     try {
-      this.__data = initData<TModel, TResponse>(this.snapshot, this.collection);
+      this.__data = initData<TModelInstance, TResponse>(this.snapshot, this.collection);
     } catch (e) {
       this.__internal.error = e as Error;
     }

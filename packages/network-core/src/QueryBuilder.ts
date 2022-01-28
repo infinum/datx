@@ -9,27 +9,28 @@ import { Request } from './Request';
 // JSON:API is integrated on this level
 // Custom API is integrated on this level
 export class QueryBuilder<
-  TModel extends typeof PureModel,
-  TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
+  TResponse extends TModelInstance | Array<TModelInstance>,
   TRequestClass extends typeof Request,
   TNetwork extends INetwork,
+  TModelClass extends typeof PureModel = typeof PureModel,
+  TModelInstance extends InstanceType<TModelClass> & PureModel = InstanceType<TModelClass>,
 > {
   public constructor(public readonly config: IQueryConfig<TNetwork, TRequestClass>) {}
 
-  public extend<TNewResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>>(
+  public extend<TNewResponse extends TModelInstance | Array<TModelInstance>>(
     config: Partial<IQueryConfig<TNetwork, TRequestClass>>,
-  ): QueryBuilder<TModel, TNewResponse, TRequestClass, TNetwork> {
+  ): QueryBuilder<TNewResponse, TRequestClass, TNetwork, TModelClass> {
     return new (this.constructor as typeof QueryBuilder)(Object.assign({}, this.config, config));
   }
 
-  public id(modelId: string): QueryBuilder<TModel, InstanceType<TModel>, TRequestClass, TNetwork> {
-    return this.extend<InstanceType<TModel>>({ id: modelId });
+  public id(modelId: string): QueryBuilder<TModelInstance, TRequestClass, TNetwork, TModelClass> {
+    return this.extend<TModelInstance>({ id: modelId });
   }
 
   public match(
     options: Record<string, unknown>,
-  ): QueryBuilder<TModel, Array<InstanceType<TModel>>, TRequestClass, TNetwork> {
-    return this.extend<Array<InstanceType<TModel>>>({
+  ): QueryBuilder<Array<TModelInstance>, TRequestClass, TNetwork, TModelClass> {
+    return this.extend<Array<TModelInstance>>({
       match: [...this.config.match, options],
     });
   }
@@ -40,13 +41,13 @@ export class QueryBuilder<
 
   public withCollection(
     collection?: PureCollection,
-  ): QueryBuilder<TModel, TResponse, TRequestClass, TNetwork> {
+  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass> {
     return this.extend({ refs: { ...this.config.refs, collection } });
   }
 
   public buildRequest(
     ...chained: Array<ISubrequest<TResponse, TNetwork, TRequestClass>>
-  ): Request<TNetwork, TModel, TResponse> & InstanceType<TRequestClass> {
+  ): Request<TNetwork, TModelClass, TResponse> & InstanceType<TRequestClass> {
     // @ts-ignore No way to avoid this :( But the final type is correct
     return new this.config.request(this.config.refs, this.build(), chained);
   }
