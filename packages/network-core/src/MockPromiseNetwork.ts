@@ -5,7 +5,7 @@ type IAssertion = (
   init?: RequestInit | undefined,
 ) => Promise<
   [
-    body?: Array<Record<string, unknown>> | Record<string, unknown> | null | undefined,
+    body?: Array<Record<string, unknown>> | Record<string, unknown> | string | null | undefined,
     init?: ResponseInit | undefined,
   ]
 >;
@@ -17,8 +17,12 @@ export class MockPromiseNetwork extends PromiseNetwork {
       if (!assertion) {
         throw new Error('No assertion defined');
       }
-      const [bodyData, responseInit] = await assertion(input, init);
-      return new Response(JSON.stringify(bodyData), responseInit);
+      const [bodyData, initData] = await assertion(input, init);
+      const responseInit = { headers: { 'content-type': 'application/json' }, ...initData };
+      return new Response(
+        typeof bodyData === 'string' ? bodyData : JSON.stringify(bodyData),
+        responseInit,
+      );
     };
 
     super(fetchReference);
@@ -29,5 +33,12 @@ export class MockPromiseNetwork extends PromiseNetwork {
 
   public setAssertion(assertion: IAssertion): void {
     this.assertions.push(assertion);
+  }
+
+  public verify(): boolean {
+    if (this.assertions.length === 0) {
+      return true;
+    }
+    throw new Error('Not all assertions were called');
   }
 }
