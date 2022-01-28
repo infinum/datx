@@ -1,21 +1,13 @@
 import { PureModel } from '@datx/core';
 import { DEFAULT_TYPE } from '@datx/utils';
-import { QueryBuilder, Request, INetwork, IRequestDetails } from '../../src';
-
-function parametrize(obj: Record<string, unknown>, prefix = ''): Array<string> {
-  const params: Array<string> = [];
-  for (const [key, value] of Object.entries(obj)) {
-    const paramKey = prefix ? `${prefix}[${key}]` : key;
-    if (Array.isArray(value)) {
-      params.push(...value.map((v) => `${paramKey}=${v}`));
-    } else if (typeof value === 'object') {
-      params.push(...parametrize(value as Record<string, unknown>, paramKey));
-    } else {
-      params.push(`${paramKey}=${value}`);
-    }
-  }
-  return params;
-}
+import {
+  QueryBuilder,
+  Request,
+  INetwork,
+  IRequestDetails,
+  appendQueryParams,
+  ParamArrayType,
+} from '../../src';
 
 export class MockQueryBuilder<
   TModel extends typeof PureModel,
@@ -35,8 +27,22 @@ export class MockQueryBuilder<
       throw new Error('URL should be defined');
     }
     if (Object.keys(this.config.match).length > 0) {
-      const params = this.config.match.map((item) => parametrize(item)).flat(1);
-      url += '?' + params.join('&');
+      const params = this.config.match.reduce((acc, curr) => {
+        const data = { ...acc };
+
+        Object.keys(curr).forEach((key) => {
+          const value = curr[key];
+          const dataValue = data[key];
+          if (dataValue) {
+            data[key] = [...(Array.isArray(dataValue) ? dataValue : [dataValue]), value];
+          } else {
+            data[key] = value;
+          }
+        });
+
+        return data;
+      }, {});
+      url = appendQueryParams(url, params, ParamArrayType.MultipleParams, true);
     }
 
     return {

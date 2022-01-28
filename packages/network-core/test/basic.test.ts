@@ -39,7 +39,9 @@ describe('Request', () => {
       // @ts-ignore
       QueryBuilder: MockQueryBuilder,
       request: Request,
-      baseUrl: 'https://example.com',
+      options: {
+        baseUrl: 'https://example.com',
+      },
     });
     expect(client.from(Model).buildRequest()).toBeInstanceOf(Request);
   });

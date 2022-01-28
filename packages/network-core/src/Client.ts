@@ -2,32 +2,33 @@ import { PureModel, Collection, getModelId } from '@datx/core';
 import { Request } from './Request';
 import { QueryBuilder } from './QueryBuilder';
 import { INetwork } from './interfaces/INetwork';
+import { IClientOptions } from './interfaces/IClientOptions';
 
 export class Client<TNetwork extends INetwork, TRequestClass extends typeof Request> {
   private QueryBuilderConstructor: typeof QueryBuilder;
   private network: TNetwork;
   private collection?: Collection;
   private request: TRequestClass;
-  private baseUrl?: string;
+  private options: IClientOptions;
 
   constructor({
     QueryBuilder: QueryBuilderConstructor,
     network,
     collection,
     request,
-    baseUrl,
+    options = {},
   }: {
     QueryBuilder: typeof QueryBuilder;
     network: TNetwork;
     collection?: Collection;
     request: TRequestClass;
-    baseUrl?: string;
+    options: IClientOptions;
   }) {
     this.QueryBuilderConstructor = QueryBuilderConstructor;
     this.network = network;
     this.collection = collection;
     this.request = request;
-    this.baseUrl = baseUrl;
+    this.options = options;
   }
 
   from<TModelClass extends typeof PureModel>(
@@ -37,7 +38,7 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
       match: [],
       headers: {},
       request: this.request,
-      url: this.baseUrl,
+      url: this.options.baseUrl,
       refs: {
         client: this,
         network: this.network,
@@ -67,7 +68,7 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
       match: [],
       headers: {},
       request: this.request,
-      url: this.baseUrl,
+      url: this.options.baseUrl,
       refs: {
         client: this,
         network: this.network,

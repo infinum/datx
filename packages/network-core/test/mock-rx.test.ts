@@ -26,7 +26,9 @@ describe('RxNetwork mocking tests', () => {
       // @ts-ignore
       QueryBuilder: MockQueryBuilder,
       request: Request,
-      baseUrl: 'http://example.com/test-endpoint',
+      options: {
+        baseUrl: 'http://example.com/test-endpoint',
+      },
     });
     class TestModel extends Model {
       public foo!: number;
