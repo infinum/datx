@@ -52,7 +52,7 @@
     "@angular/compiler-cli": "~12.2.0",
     "@angular/core": "~13.1.2",
     "@angular/forms": "~13.1.3",
-    "@angular/platform-browser": "~13.1.3",
+    "@angular/platform-browser": "~13.2.0",
     "@angular/platform-browser-dynamic": "~13.1.3",
     "@angular/router": "~13.1.3",
     "@types/jest": "^27.0.3",
