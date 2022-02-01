@@ -50,7 +50,7 @@ describe('updates', () => {
           expect(getModelCollection(record)).toBe(store);
           done();
         } catch (e) {
-          done.fail(e);
+          done.fail(e as Error);
         }
       });
     });
@@ -83,7 +83,7 @@ describe('updates', () => {
           expect(updated).toBe(record);
           done();
         } catch (e) {
-          done.fail(e);
+          done.fail(e as Error);
         }
       });
     });
@@ -146,7 +146,7 @@ describe('updates', () => {
             expect(updated).toBe(record);
             done();
           } catch (e) {
-            done.fail(e);
+            done.fail(e as Error);
           }
         });
     });
@@ -189,7 +189,7 @@ describe('updates', () => {
             expect(remainingEvents[1] && remainingEvents[1].meta.id).toBe('2');
             done();
           } catch (e) {
-            done.fail(e);
+            done.fail(e as Error);
           }
         });
     });
@@ -230,7 +230,7 @@ describe('updates', () => {
             expect(remainingEvents[1] && remainingEvents[1].meta.id).toBe('2');
             done();
           } catch (e) {
-            done.fail(e);
+            done.fail(e as Error);
           }
         });
     });
