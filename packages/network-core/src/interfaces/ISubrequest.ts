@@ -10,5 +10,4 @@ export type ISubrequest<
 > = (
   client: Client<TNetwork, TRequestClass>,
   parentData: Response<TResponse, TResponse>,
-  // @ts-ignore TODO: Check why other parts of code fail without this (with typeof PureModel)
 ) => Request<TNetwork>;

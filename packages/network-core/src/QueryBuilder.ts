@@ -1,19 +1,18 @@
 import { PureCollection, PureModel } from '@datx/core';
-// import { DEFAULT_TYPE } from '@datx/utils';
 import { INetwork } from './interfaces/INetwork';
 import { IQueryConfig } from './interfaces/IQueryConfig';
 import { IRequestDetails } from './interfaces/IRequestDetails';
 import { ISubrequest } from './interfaces/ISubrequest';
 import { Request } from './Request';
 
-// JSON:API is integrated on this level
-// Custom API is integrated on this level
 export class QueryBuilder<
-  TResponse extends TModelInstance | Array<TModelInstance>,
+  TResponse extends TModelInstance | Array<TModelInstance | unknown> | unknown,
   TRequestClass extends typeof Request,
   TNetwork extends INetwork,
   TModelClass extends typeof PureModel = typeof PureModel,
-  TModelInstance extends InstanceType<TModelClass> & PureModel = InstanceType<TModelClass>,
+  TModelInstance extends
+    | (InstanceType<TModelClass> & PureModel)
+    | unknown = InstanceType<TModelClass>,
 > {
   public constructor(public readonly config: IQueryConfig<TNetwork, TRequestClass>) {}
 
@@ -42,13 +41,22 @@ export class QueryBuilder<
   public withCollection(
     collection?: PureCollection,
   ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass> {
-    return this.extend({ refs: { ...this.config.refs, collection } });
+    return this.extend({ refs: { ...this.config.refs, collection } }) as QueryBuilder<
+      TResponse,
+      TRequestClass,
+      TNetwork,
+      TModelClass
+    >;
   }
 
   public buildRequest(
     ...chained: Array<ISubrequest<TResponse, TNetwork, TRequestClass>>
   ): Request<TNetwork, TModelClass, TResponse> & InstanceType<TRequestClass> {
-    // @ts-ignore No way to avoid this :( But the final type is correct
-    return new this.config.request(this.config.refs, this.build(), chained);
+    return new this.config.request(this.config.refs, this.build(), chained) as Request<
+      TNetwork,
+      TModelClass,
+      TResponse
+    > &
+      InstanceType<TRequestClass>;
   }
 }

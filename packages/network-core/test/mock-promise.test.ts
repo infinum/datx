@@ -1,5 +1,5 @@
 import { PureCollection, Collection, Model } from '@datx/core';
-import { Network, Client, Request, Response } from '../src';
+import { Network, Client, Request, Response, QueryBuilder } from '../src';
 import { MockQueryBuilder } from './mock/MockQueryBuilder';
 
 describe('MockPromiseNetwork tests', () => {
@@ -13,8 +13,7 @@ describe('MockPromiseNetwork tests', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -34,8 +33,7 @@ describe('MockPromiseNetwork tests', () => {
     });
     const client = new Client({
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -61,8 +59,7 @@ describe('MockPromiseNetwork tests', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -88,8 +85,7 @@ describe('MockPromiseNetwork tests', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -115,8 +111,7 @@ describe('MockPromiseNetwork tests', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -142,8 +137,7 @@ describe('MockPromiseNetwork tests', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {

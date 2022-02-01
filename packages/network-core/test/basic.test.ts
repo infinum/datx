@@ -1,6 +1,6 @@
 import { Collection, Model } from '@datx/core';
 import fetch from 'node-fetch';
-import { Network, Client, Request } from '../src';
+import { Network, Client, Request, QueryBuilder } from '../src';
 import { MockQueryBuilder } from './mock/MockQueryBuilder';
 
 describe('Request', () => {
@@ -10,7 +10,7 @@ describe('Request', () => {
     const client = new Client({
       collection,
       network,
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     expect(client).toBeTruthy();
@@ -22,7 +22,7 @@ describe('Request', () => {
     const client = new Client({
       collection,
       network,
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     expect(() => client.from(Model).buildRequest()).toThrowError('URL should be defined');
@@ -34,7 +34,7 @@ describe('Request', () => {
     const client = new Client({
       collection,
       network,
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
       options: {
         baseUrl: 'https://example.com',
@@ -49,7 +49,7 @@ describe('Request', () => {
     const client = new Client({
       collection,
       network,
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {

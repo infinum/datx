@@ -1,5 +1,5 @@
 import { Collection, Model } from '@datx/core';
-import { Network, Client, Request, Response } from '../src';
+import { Network, Client, Request, Response, QueryBuilder } from '../src';
 import { MockQueryBuilder } from './mock/MockQueryBuilder';
 
 describe('Network error handling', () => {
@@ -13,8 +13,7 @@ describe('Network error handling', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -40,8 +39,7 @@ describe('Network error handling', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {

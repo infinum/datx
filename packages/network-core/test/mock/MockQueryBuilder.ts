@@ -10,12 +10,14 @@ import {
 } from '../../src';
 
 export class MockQueryBuilder<
-  TResponse extends TModelInstance | Array<TModelInstance>,
+  TResponse extends TModelInstance | Array<TModelInstance | unknown> | unknown,
   TRequestClass extends typeof Request,
   TNetwork extends INetwork,
-  TModel extends typeof PureModel,
-  TModelInstance extends InstanceType<TModel> & PureModel = InstanceType<TModel>,
-> extends QueryBuilder<TResponse, TRequestClass, TNetwork, TModel> {
+  TModelClass extends typeof PureModel = typeof PureModel,
+  TModelInstance extends
+    | (InstanceType<TModelClass> & PureModel)
+    | unknown = InstanceType<TModelClass>,
+> extends QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
   public build(): IRequestDetails {
     let url =
       this.config.url ||

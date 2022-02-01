@@ -6,7 +6,7 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Model, PureCollection } from '@datx/core';
-import { Network, Client, Request, Response } from '../src';
+import { Network, Client, Request, Response, QueryBuilder } from '../src';
 import { MockQueryBuilder } from './mock/MockQueryBuilder';
 
 describe('RxNetwork mocking tests', () => {
@@ -23,8 +23,7 @@ describe('RxNetwork mocking tests', () => {
     const network = new Network.Rx(httpMock);
     const client = new Client({
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
       options: {
         baseUrl: 'http://example.com/test-endpoint',

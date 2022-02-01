@@ -9,16 +9,17 @@ import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 import { ISubrequest } from './interfaces/ISubrequest';
 import { Response } from './Response';
 
-// SWR is integrated on this level
 export class Request<
   TNetwork extends INetwork,
   TModelClass extends typeof PureModel = typeof PureModel,
-  TResponse extends TModelInstance | Array<TModelInstance> =  // @ts-ignore
+  TResponse extends TModelInstance | Array<TModelInstance | unknown> | unknown =
     | InstanceType<TModelClass>
     | Array<InstanceType<TModelClass>>,
   // @ts-ignore No way to avoid this :( But the final type is correct
   IA extends IAsync<TModelInstance> = ReturnType<TNetwork['execAll']>,
-  TModelInstance extends InstanceType<TModelClass> & PureModel = InstanceType<TModelClass>,
+  TModelInstance extends
+    | (InstanceType<TModelClass> & PureModel)
+    | unknown = InstanceType<TModelClass>,
 > {
   constructor(
     protected readonly refs: IRefs<TNetwork, typeof Request>,

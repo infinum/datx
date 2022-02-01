@@ -1,5 +1,5 @@
 import { Collection, Model } from '@datx/core';
-import { Network, Client, Request, Response } from '../src';
+import { Network, Client, Request, Response, QueryBuilder } from '../src';
 import { MockQueryBuilder } from './mock/MockQueryBuilder';
 
 describe('Querying', () => {
@@ -13,8 +13,7 @@ describe('Querying', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -36,8 +35,7 @@ describe('Querying', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -64,8 +62,7 @@ describe('Querying', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -92,8 +89,7 @@ describe('Querying', () => {
     const client = new Client({
       collection,
       network,
-      // @ts-ignore
-      QueryBuilder: MockQueryBuilder,
+      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
       request: Request,
     });
     class TestModel extends Model {

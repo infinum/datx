@@ -4,8 +4,8 @@ import { IResponseInternal } from './interfaces/IResponseInternal';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 
 function initData<
-  TModelInstance extends PureModel,
-  TResponse extends TModelInstance | Array<TModelInstance>,
+  TModelInstance extends PureModel | unknown,
+  TResponse extends TModelInstance | Array<TModelInstance | unknown> | unknown,
 >(
   response: IResponseSnapshot,
   collection: PureCollection,
@@ -34,14 +34,16 @@ function initData<
       ({ type }) => type === response.type,
     ) || PureModel;
 
-  // @ts-ignore
-  const data: TResponse = overrideData || collection.add(responseData, ModelConstructor);
+  const data: TResponse =
+    overrideData || (collection.add(responseData, ModelConstructor) as TResponse);
   return { value: data };
 }
 
 export class Response<
-  TModelInstance extends PureModel = PureModel,
-  TResponse extends TModelInstance | Array<TModelInstance> = TModelInstance | Array<TModelInstance>,
+  TModelInstance extends PureModel | unknown = PureModel,
+  TResponse extends TModelInstance | Array<TModelInstance | unknown> | unknown =
+    | TModelInstance
+    | Array<TModelInstance>,
 > {
   public readonly included: Record<string, Response> = {};
 
@@ -56,8 +58,6 @@ export class Response<
     public readonly snapshot: IResponseSnapshot,
     public readonly collection: PureCollection,
   ) {
-    // this._data = (this.collection?.add(snapshot.response) as TResponse) ?? null;
-
     try {
       this.__data = initData<TModelInstance, TResponse>(this.snapshot, this.collection);
     } catch (e) {
