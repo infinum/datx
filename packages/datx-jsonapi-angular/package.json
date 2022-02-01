@@ -48,7 +48,7 @@
     "@angular/animations": "~13.2.0",
     "@angular/cli": "~13.2.0",
     "@angular/common": "~13.2.0",
-    "@angular/compiler": "~12.2.0",
+    "@angular/compiler": "~13.2.0",
     "@angular/compiler-cli": "~12.2.0",
     "@angular/core": "~13.2.0",
     "@angular/forms": "~13.2.0",
