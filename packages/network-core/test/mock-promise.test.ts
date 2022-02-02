@@ -1,5 +1,5 @@
 import { PureCollection, Collection, Model } from '@datx/core';
-import { Network, Client, Request, Response, QueryBuilder } from '../src';
+import { Network, Client, Request, Response } from '../src';
 import { MockQueryBuilder } from './mock/MockQueryBuilder';
 
 describe('MockPromiseNetwork tests', () => {
@@ -13,7 +13,7 @@ describe('MockPromiseNetwork tests', () => {
     const client = new Client({
       collection,
       network,
-      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -33,7 +33,7 @@ describe('MockPromiseNetwork tests', () => {
     });
     const client = new Client({
       network,
-      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -59,7 +59,7 @@ describe('MockPromiseNetwork tests', () => {
     const client = new Client({
       collection,
       network,
-      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -85,7 +85,7 @@ describe('MockPromiseNetwork tests', () => {
     const client = new Client({
       collection,
       network,
-      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -111,7 +111,7 @@ describe('MockPromiseNetwork tests', () => {
     const client = new Client({
       collection,
       network,
-      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     class TestModel extends Model {
@@ -137,7 +137,7 @@ describe('MockPromiseNetwork tests', () => {
     const client = new Client({
       collection,
       network,
-      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
     class TestModel extends Model {

@@ -1,5 +1,5 @@
 import { Collection, Model, Attribute } from '@datx/core';
-import { Network, Client, Request, Response, QueryBuilder } from '../src';
+import { Network, Client, Request, Response } from '../src';
 import { MockQueryBuilder } from './mock/MockQueryBuilder';
 
 describe('Chaining', () => {
@@ -32,7 +32,7 @@ describe('Chaining', () => {
     const client = new Client({
       collection,
       network,
-      QueryBuilder: MockQueryBuilder as typeof QueryBuilder,
+      QueryBuilder: MockQueryBuilder,
       request: Request,
     });
 

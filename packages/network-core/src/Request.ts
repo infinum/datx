@@ -15,11 +15,11 @@ export class Request<
   TResponse extends TModelInstance | Array<TModelInstance | unknown> | unknown =
     | InstanceType<TModelClass>
     | Array<InstanceType<TModelClass>>,
-  // @ts-ignore No way to avoid this :( But the final type is correct
-  IA extends IAsync<TModelInstance> = ReturnType<TNetwork['execAll']>,
   TModelInstance extends
     | (InstanceType<TModelClass> & PureModel)
     | unknown = InstanceType<TModelClass>,
+  // @ts-ignore No way to avoid this :( But the final type is correct
+  IA extends IAsync<TModelInstance> = ReturnType<TNetwork['execAll']>,
 > {
   constructor(
     protected readonly refs: IRefs<TNetwork, typeof Request>,

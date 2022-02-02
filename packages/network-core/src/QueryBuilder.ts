@@ -40,23 +40,24 @@ export class QueryBuilder<
 
   public withCollection(
     collection?: PureCollection,
-  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass> {
+  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
     return this.extend({ refs: { ...this.config.refs, collection } }) as QueryBuilder<
       TResponse,
       TRequestClass,
       TNetwork,
-      TModelClass
+      TModelClass,
+      TModelInstance
     >;
   }
 
   public buildRequest(
     ...chained: Array<ISubrequest<TResponse, TNetwork, TRequestClass>>
-  ): Request<TNetwork, TModelClass, TResponse> & InstanceType<TRequestClass> {
+  ): Request<TNetwork, TModelClass, TResponse, TModelInstance> {
     return new this.config.request(this.config.refs, this.build(), chained) as Request<
       TNetwork,
       TModelClass,
-      TResponse
-    > &
-      InstanceType<TRequestClass>;
+      TResponse,
+      TModelInstance
+    >;
   }
 }
