@@ -1,0 +1,59 @@
+name: Bug report
+description: Report a bug with the library
+labels: bug
+assignees: DarkoKukovec
+body:
+  - type: input
+    id: libs
+    validations:
+      required: true
+    attributes:
+      label: Used libraries
+      description: Which @datx libraries are you using
+      placeholder: core, jsonapi, ...
+  - type: input
+    id: versions
+    validations:
+      required: true
+    attributes:
+      label: Library version(s)
+      description: Version of the @datx libraries you're using
+      placeholder: @datx/core 2.3.1, @datx/jsonapi 2.3.0
+  - type: textarea
+    id: api
+    attributes:
+      label: Sample API response (if relevant)
+      description: If the issue is network related, please provide a sample API response for the issue
+  - type: input
+    id: issue-envs
+    validations:
+      required: true
+    attributes:
+      label: Environments with the issue
+      description: Where does the issue happen
+      placeholder: iOS Safari 15, Node.js 14
+  - type: input
+    id: ok-envs
+    attributes:
+      label: Environments without the issue
+      description: Environments that you've checked and work fine
+      placeholder: Chrome 99, Firefox 96, Node.js 16
+  - type: textarea
+    id: current
+    attributes:
+      label: Current behavior
+      description: What is the issue - the behavior that you think doesn't work as expected
+    validations:
+      required: true
+  - type: textarea
+    id: ecpected
+    attributes:
+      label: Expected behavior
+      description: What do you expect to happen instead - the correct behavior
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Please try to describe steps required to reproduce the issue
