@@ -9,7 +9,7 @@ body:
       required: true
     attributes:
       label: Used libraries
-      description: Which @datx libraries are you using
+      description: Which `@datx` libraries are you using
       placeholder: core, jsonapi, ...
   - type: input
     id: versions
@@ -17,7 +17,7 @@ body:
       required: true
     attributes:
       label: Library version(s)
-      description: Version of the @datx libraries you're using
+      description: Version of the `@datx` libraries you're using
       placeholder: "@datx/core 2.3.1, @datx/jsonapi 2.3.0"
   - type: textarea
     id: api
