@@ -14,7 +14,7 @@ body:
         - label: 0.x
         - label: 1.x
         - label: 2.x
-  - type: chechboxes
+  - type: checkboxes
     id: libs
     validations:
       required: true
