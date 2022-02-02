@@ -55,5 +55,11 @@ body:
   - type: textarea
     id: steps
     attributes:
-      label: Steps to reproduce
-      description: Please try to describe steps required to reproduce the issue
+      label: Reproduction steps
+      description: "How do you trigger this bug? Please walk us through it step by step."
+      value: |
+        1.
+        2.
+        3.
+        ...
+      render: bash
