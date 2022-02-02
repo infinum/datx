@@ -27,15 +27,17 @@ body:
         - label: network
         - label: jsonapi
         - label: jsonapi-angular
-  - type: checkboxes
+  - type: dropdown
     id: breaking
+    validations:
+      required: true
     attributes:
-      label: Breaking chaneg
+      label: Breaking change
       description: Would this change cause a breaking change (where some existing feature would break)?
       options:
-        - label: "Yes"
-        - label: "No"
-        - label: I'm not sure
+        - "Yes"
+        - "No"
+        - I'm not sure
   - type: textarea
     id: description
     validations:
