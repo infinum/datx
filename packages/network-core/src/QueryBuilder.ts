@@ -2,6 +2,7 @@ import { PureCollection, PureModel } from '@datx/core';
 import { INetwork } from './interfaces/INetwork';
 import { IQueryConfig } from './interfaces/IQueryConfig';
 import { IRequestDetails } from './interfaces/IRequestDetails';
+import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 import { ISubrequest } from './interfaces/ISubrequest';
 import { Request } from './Request';
 
@@ -14,12 +15,21 @@ export class QueryBuilder<
     | (InstanceType<TModelClass> & PureModel)
     | unknown = InstanceType<TModelClass>,
 > {
-  public constructor(public readonly config: IQueryConfig<TNetwork, TRequestClass>) {}
+  protected parser: (response: IResponseSnapshot) => IResponseSnapshot = (response) => response;
+
+  public constructor(
+    public readonly config: IQueryConfig<TNetwork, TRequestClass>,
+    protected chained: Array<ISubrequest<TResponse, TNetwork, TRequestClass>> = [],
+  ) {}
 
   public extend<TNewResponse extends TModelInstance | Array<TModelInstance>>(
     config: Partial<IQueryConfig<TNetwork, TRequestClass>>,
+    chained: Array<ISubrequest<TResponse, TNetwork, TRequestClass>> = [],
   ): QueryBuilder<TNewResponse, TRequestClass, TNetwork, TModelClass> {
-    return new (this.constructor as typeof QueryBuilder)(Object.assign({}, this.config, config));
+    return new (this.constructor as typeof QueryBuilder)(Object.assign({}, this.config, config), [
+      ...this.chained,
+      ...chained,
+    ]) as QueryBuilder<TNewResponse, TRequestClass, TNetwork, TModelClass>;
   }
 
   public id(modelId: string): QueryBuilder<TModelInstance, TRequestClass, TNetwork, TModelClass> {
@@ -53,11 +63,11 @@ export class QueryBuilder<
   public buildRequest(
     ...chained: Array<ISubrequest<TResponse, TNetwork, TRequestClass>>
   ): Request<TNetwork, TModelClass, TResponse, TModelInstance> {
-    return new this.config.request(this.config.refs, this.build(), chained) as Request<
-      TNetwork,
-      TModelClass,
-      TResponse,
-      TModelInstance
-    >;
+    return new this.config.request(
+      this.config.refs,
+      this.build(),
+      [...this.chained, ...chained],
+      this.parser,
+    ) as Request<TNetwork, TModelClass, TResponse, TModelInstance>;
   }
 }

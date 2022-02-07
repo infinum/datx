@@ -1,5 +1,4 @@
 import {
-  getModelCollection,
   getModelId,
   getModelType,
   getRefId,
@@ -11,28 +10,19 @@ import {
   ReferenceType,
   modelToDirtyJSON,
 } from '@datx/core';
-import { getMeta, IRawModel, mapItems, META_FIELD, setMeta } from '@datx/utils';
+import { DEFAULT_TYPE, getMeta, IRawModel, mapItems, META_FIELD } from '@datx/utils';
+import { isModelPersisted } from '@datx/network';
 
-import { clearCacheByType } from '../cache';
 import {
   MODEL_LINKS_FIELD,
   MODEL_META_FIELD,
-  MODEL_PERSISTED_FIELD,
-  MODEL_PROP_FIELD,
-  MODEL_QUEUE_FIELD,
   MODEL_REF_LINKS_FIELD,
   MODEL_REF_META_FIELD,
-  MODEL_RELATED_FIELD,
 } from '../consts';
-import { IJsonapiCollection } from '../interfaces/IJsonapiCollection';
-import { IJsonapiModel } from '../interfaces/IJsonapiModel';
-import { IRequestOptions } from '../interfaces/IRequestOptions';
 import { IDefinition, ILink, IRecord, IRelationship } from '../interfaces/JsonApi';
-import { create, fetchLink, handleResponse, remove, update } from '../NetworkUtils';
-import { Response } from '../Response';
-import { prepareQuery } from './url';
-import { error, getModelClassRefs } from './utils';
-import { GenericModel } from '../GenericModel';
+// import { prepareQuery } from './url';
+import { getModelClassRefs } from './utils';
+import { IRequestOptions } from '../interfaces/IRequestOptions';
 
 export function flattenModel(classRefs): null;
 export function flattenModel(classRefs, data?: IRecord): IRawModel;
@@ -54,7 +44,7 @@ export function flattenModel(
       id: data.id,
       [MODEL_LINKS_FIELD]: data.links,
       [MODEL_META_FIELD]: data.meta,
-      [MODEL_PERSISTED_FIELD]: Boolean(data.id),
+      PERSISTED: Boolean(data.id),
       type: data.type,
     },
   };
@@ -74,8 +64,7 @@ export function flattenModel(
             refs[key] = {
               referenceDef: {
                 model:
-                  (ref.data instanceof Array ? ref.data[0].type : ref.data?.type) ||
-                  GenericModel.type,
+                  (ref.data instanceof Array ? ref.data[0].type : ref.data?.type) || DEFAULT_TYPE,
                 type: ref.data instanceof Array ? ReferenceType.TO_MANY : ReferenceType.TO_ONE,
               },
             };
@@ -108,94 +97,89 @@ export function getModelLinks(model: PureModel): Record<string, ILink> {
   return getMeta(model, MODEL_LINKS_FIELD, {});
 }
 
-export function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
-  model: PureModel,
-  key: string,
-  options?: IRequestOptions,
-): Promise<Response<T>> {
-  const collection = getModelCollection(model);
-  const links = getModelLinks(model);
-
-  if (!links || !(key in links)) {
-    throw error(`Link ${key} doesn't exist on the model`);
-  }
-  const link = links[key];
-  const responseObj = fetchLink<T>(link, (collection as unknown) as IJsonapiCollection, options);
-
-  if (getMeta(model, MODEL_QUEUE_FIELD)) {
-    return responseObj.then((response) => {
-      const related = getMeta(model, MODEL_RELATED_FIELD);
-      const prop = getMeta(model, MODEL_PROP_FIELD);
-      const record = response.data;
-      const recordType = record && getModelType(record);
-
-      if (record && recordType !== getModelType(model) && recordType === getModelType(related)) {
-        if (prop) {
-          related[prop] = record;
-
-          return response;
-        }
-        setMeta(related, MODEL_PERSISTED_FIELD, true);
-
-        return response.replaceData(related) as Response<T>;
-      }
-
-      return response;
-    });
-  }
-
-  return responseObj;
-}
-
 export function getModelRefLinks(model: PureModel): Record<string, Record<string, ILink>> {
   return getMeta(model, MODEL_REF_LINKS_FIELD, {});
-}
-
-function getLink(model: PureModel, ref: string, key: string): ILink {
-  const collection = getModelCollection(model);
-
-  if (!collection) {
-    throw error('The model needs to be in a collection');
-  }
-  const links = getModelRefLinks(model);
-
-  if (!links || !(ref in links)) {
-    throw error(`The reference ${ref} doesn't have any links`);
-  }
-  const refLinks = links[ref];
-
-  if (!refLinks || !(key in refLinks)) {
-    throw error(`Link ${key} doesn't exist on the model`);
-  }
-
-  return refLinks[key];
-}
-
-export function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>(
-  model: PureModel,
-  ref: string,
-  key: string,
-  options?: IRequestOptions,
-): Promise<Response<T>> {
-  const collection = getModelCollection(model);
-  const link = getLink(model, ref, key);
-
-  return fetchLink<T>(link, (collection as unknown) as IJsonapiCollection, options);
 }
 
 export function getModelRefMeta(model: PureModel): Record<string, any> {
   return getMeta(model, MODEL_REF_META_FIELD, {});
 }
 
-export function isModelPersisted(model: PureModel): boolean {
-  return getMeta(model, MODEL_PERSISTED_FIELD, false);
-}
+// TODO fetchModelLink
+// export function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
+//   model: PureModel,
+//   key: string,
+//   options?: IRequestOptions,
+// ): Promise<Response<T>> {
+//   const collection = getModelCollection(model);
+//   const links = getModelLinks(model);
 
-function setModelPersisted(model: PureModel, status: boolean): void {
-  setMeta(model, MODEL_PERSISTED_FIELD, status);
-}
+//   if (!links || !(key in links)) {
+//     throw error(`Link ${key} doesn't exist on the model`);
+//   }
+//   const link = links[key];
+//   const responseObj = fetchLink<T>(link, collection as unknown as IJsonapiCollection, options);
 
-export function modelToJsonApi(model: IJsonapiModel, onlyDirty?: boolean): IRecord {
+//   if (getMeta(model, MODEL_QUEUE_FIELD)) {
+//     return responseObj.then((response) => {
+//       const related = getMeta(model, MODEL_RELATED_FIELD);
+//       const prop = getMeta(model, MODEL_PROP_FIELD);
+//       const record = response.data;
+//       const recordType = record && getModelType(record);
+
+//       if (record && recordType !== getModelType(model) && recordType === getModelType(related)) {
+//         if (prop) {
+//           related[prop] = record;
+
+//           return response;
+//         }
+//         setMeta(related, MODEL_PERSISTED_FIELD, true);
+
+//         return response.replaceData(related) as Response<T>;
+//       }
+
+//       return response;
+//     });
+//   }
+
+//   return responseObj;
+// }
+
+// TODO getLink
+// function getLink(model: PureModel, ref: string, key: string): ILink {
+//   const collection = getModelCollection(model);
+
+//   if (!collection) {
+//     throw error('The model needs to be in a collection');
+//   }
+//   const links = getModelRefLinks(model);
+
+//   if (!links || !(ref in links)) {
+//     throw error(`The reference ${ref} doesn't have any links`);
+//   }
+//   const refLinks = links[ref];
+
+//   if (!refLinks || !(key in refLinks)) {
+//     throw error(`Link ${key} doesn't exist on the model`);
+//   }
+
+//   return refLinks[key];
+// }
+
+// TODO fetchModelRefLink
+// export function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>(
+//   model: PureModel,
+//   ref: string,
+//   key: string,
+//   options?: IRequestOptions,
+// ): Promise<Response<T>> {
+//   const collection = getModelCollection(model);
+//   const link = getLink(model, ref, key);
+
+//   return fetchLink<T>(link, collection as unknown as IJsonapiCollection, options);
+// }
+
+export function modelToJsonApi(model: PureModel, onlyDirty?: boolean): IRecord {
   const staticModel = model.constructor as typeof PureModel;
   const attributes: Record<string, any> = onlyDirty ? modelToDirtyJSON(model) : modelToJSON(model);
 
@@ -236,100 +220,49 @@ export function modelToJsonApi(model: IJsonapiModel, onlyDirty?: boolean): IReco
   return data;
 }
 
-export function getModelEndpointUrl(model: IJsonapiModel, options?: IRequestOptions): string {
-  const queryData = prepareQuery(
-    getModelType(model),
-    isModelPersisted(model) ? getModelId(model) : undefined,
-    undefined,
-    options,
-    undefined,
-    model,
-  );
+// TODO getModelEndpointUrl
+export function getModelEndpointUrl(_model: PureModel, _options?: IRequestOptions): string {
+  // 1. define the base url
+  // 2. define the endpoint
+  // 3. define the query params
 
-  return queryData.url;
+  return '';
+  // const queryData = prepareQuery(
+  //   getModelType(model),
+  //   isModelPersisted(model) ? getModelId(model) : undefined,
+  //   undefined,
+  //   options,
+  //   undefined,
+  //   model,
+  // );
+
+  // return queryData.url;
 }
 
-export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Promise<IJsonapiModel> {
-  const collection = (getModelCollection(model) as unknown) as IJsonapiCollection;
+// TODO saveRelationship
+// export function saveRelationship<T extends IJsonapiModel>(
+//   model: T,
+//   ref: string,
+//   options?: IRequestOptions,
+// ): Promise<T> {
+//   const collection = getModelCollection(model) as unknown as IJsonapiCollection;
+//   const link = getLink(model, ref, 'self');
+//   const href: string = typeof link === 'object' ? link.href : link;
 
-  const isPersisted = isModelPersisted(model);
-  const data: IRecord = modelToJsonApi(model, isPersisted);
-  const requestMethod = isPersisted ? update : create;
-  const url = getModelEndpointUrl(model, options);
+//   const modelRefs = getRefId(model, ref);
+//   const fields: IFieldDefinition = getMeta<IFieldDefinition>(model, 'fields')?.[ref];
+//   const type = fields?.referenceDef ? fields.referenceDef.model : null;
 
-  return requestMethod(
-    url,
-    { data },
-    collection,
-    options && options.networkConfig && options.networkConfig.headers,
-  )
-    .then(handleResponse(model))
-    .then((response) => {
-      clearCacheByType(getModelType(model));
+//   type ID = IDefinition | Array<IDefinition>;
+//   const data: ID = mapItems(modelRefs, (refItem: IModelRef) => ({
+//     id: refItem.id,
+//     type: refItem.type || type,
+//   })) as ID;
 
-      return response;
-    });
-}
-
-export function removeModel<T extends IJsonapiModel>(
-  model: T,
-  options?: IRequestOptions,
-): Promise<void> {
-  const collection = (getModelCollection(model) as unknown) as IJsonapiCollection;
-
-  const isPersisted = isModelPersisted(model);
-  const url = getModelEndpointUrl(model);
-
-  if (isPersisted) {
-    return remove(
-      url,
-      collection,
-      options && options.networkConfig && options.networkConfig.headers,
-    ).then((response: Response<T>) => {
-      if (response.error) {
-        throw response.error;
-      }
-
-      setModelPersisted(model, false);
-
-      if (collection) {
-        // @ts-ignore
-        collection.__removeModel(model);
-      }
-    });
-  }
-
-  if (collection) {
-    // @ts-ignore
-    collection.__removeModel(model);
-  }
-
-  return Promise.resolve();
-}
-
-export function saveRelationship<T extends IJsonapiModel>(
-  model: T,
-  ref: string,
-  options?: IRequestOptions,
-): Promise<T> {
-  const collection = (getModelCollection(model) as unknown) as IJsonapiCollection;
-  const link = getLink(model, ref, 'self');
-  const href: string = typeof link === 'object' ? link.href : link;
-
-  const modelRefs = getRefId(model, ref);
-  const fields: IFieldDefinition = getMeta<IFieldDefinition>(model, 'fields')?.[ref];
-  const type = fields?.referenceDef ? fields.referenceDef.model : null;
-
-  type ID = IDefinition | Array<IDefinition>;
-  const data: ID = mapItems(modelRefs, (refItem: IModelRef) => ({
-    id: refItem.id,
-    type: refItem.type || type,
-  })) as ID;
-
-  return update(
-    href,
-    { data },
-    collection,
-    options && options.networkConfig && options.networkConfig.headers,
-  ).then(handleResponse(model, ref));
-}
+//   return update(
+//     href,
+//     { data },
+//     collection,
+//     options && options.networkConfig && options.networkConfig.headers,
+//   ).then(handleResponse(model, ref));
+// }

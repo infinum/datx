@@ -41,7 +41,7 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
       match: [],
       headers: {},
       request: this.request,
-      url: this.options.baseUrl,
+      options: this.options,
       refs: {
         client: this,
         network: this.network,

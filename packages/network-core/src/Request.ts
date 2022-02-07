@@ -25,6 +25,7 @@ export class Request<
     protected readonly refs: IRefs<TNetwork, typeof Request>,
     protected readonly requestData: IRequestDetails,
     protected readonly subrequests: Array<ISubrequest<TResponse, TNetwork, typeof Request>> = [],
+    protected readonly parser: (response: IResponseSnapshot) => IResponseSnapshot,
   ) {}
 
   public fetch(
@@ -45,10 +46,10 @@ export class Request<
           types.push(this.refs.modelConstructor);
         }
 
-        const resp: IResponseSnapshot = {
+        const resp: IResponseSnapshot = this.parser({
           response: data,
           type: getModelType(this.refs.modelConstructor),
-        };
+        });
         response = new Response(resp, collection);
         return this.refs.network.execAll(
           ...this.subrequests.map((subrequest) =>

@@ -20,11 +20,11 @@ export class MockQueryBuilder<
 > extends QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
   public build(): IRequestDetails {
     let url =
-      this.config.url ||
+      this.config.options.baseUrl ||
       this.config.refs.modelConstructor['endpoint'] ||
       this.config.refs.modelConstructor.type;
     if (typeof url === 'function') {
-      url = url(this.config.url);
+      url = url(this.config.options.baseUrl);
     }
     if (!url || url === DEFAULT_TYPE) {
       throw new Error('URL should be defined');

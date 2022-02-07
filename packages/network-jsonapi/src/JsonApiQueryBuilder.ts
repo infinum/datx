@@ -1,30 +1,46 @@
 import { PureModel } from '@datx/core';
-import { INetwork, QueryBuilder, IRequestDetails, Request } from '@datx/network';
-import { DEFAULT_TYPE } from '@datx/utils';
+import {
+  INetwork,
+  QueryBuilder,
+  IRequestDetails,
+  Request,
+  isModelPersisted,
+  IQueryConfig,
+  IResponseSnapshot,
+} from '@datx/network';
+import { mapValues } from 'lodash';
+import { modelToJsonApi } from './helpers/model';
+import { getRequestUrl } from './helpers/url';
+import { IFilters } from './interfaces/IFilters';
 
 export class JsonApiQueryBuilder<
-    TModel extends typeof PureModel,
-    TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
-    TRequestClass extends typeof Request,
-    TNetwork extends INetwork,
-  >
-  extends QueryBuilder<TModel, TResponse, TRequestClass, TNetwork>
-  implements QueryBuilder<TModel, TResponse, TRequestClass, TNetwork>
-{
+  TResponse extends TModelInstance | Array<TModelInstance | unknown> | unknown,
+  TRequestClass extends typeof Request,
+  TNetwork extends INetwork,
+  TModelClass extends typeof PureModel = typeof PureModel,
+  TModelInstance extends
+    | (InstanceType<TModelClass> & PureModel)
+    | unknown = InstanceType<TModelClass>,
+> extends QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+  public constructor(public readonly config: IQueryConfig<TNetwork, TRequestClass>) {
+    super(config);
+    if (config.headers) {
+      this.config.headers = {
+        'Content-Type': 'application/vnd.api+json',
+        ...this.config.headers,
+      };
+    }
+
+    this.parser = (response: IResponseSnapshot) => {
+      // TODO: Parser
+      return response;
+    };
+  }
+
   // build method is a custom implementation that, generates an generic IRequestDetails object with all data required for the API call
   public build(): IRequestDetails {
-    let url =
-      this.config.url ||
-      this.config.refs.modelConstructor['endpoint'] ||
-      this.config.refs.modelConstructor.type;
-    if (typeof url === 'function') {
-      url = url(this.config.url);
-    }
-    if (!url || url === DEFAULT_TYPE) {
-      throw new Error('URL should be defined');
-    }
     return {
-      url,
+      url: getRequestUrl(this.config),
       method: this.config.method || 'GET',
       headers: this.config.headers,
       body: null,
@@ -32,5 +48,125 @@ export class JsonApiQueryBuilder<
         this.config.id ? this.config.id : JSON.stringify(this.config.match)
       }`,
     };
+  }
+
+  private get model(): TModelInstance | null {
+    return (
+      (this.config.id &&
+        (this.config.refs.collection?.findOne(
+          this.config.refs.modelConstructor,
+          this.config.id,
+        ) as TModelInstance)) ||
+      null
+    );
+  }
+
+  private persist(
+    data: Record<string, unknown>,
+  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+    if (!this.model) {
+      throw new Error('Model was not found');
+    }
+    const isPersisted = isModelPersisted(this.model as PureModel);
+    return this.extend({
+      method: isPersisted ? 'PATCH' : 'POST',
+      body: data,
+    }) as QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance>;
+  }
+
+  public save(): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+    if (!this.model) {
+      throw new Error('Model was not found');
+    }
+    return this.persist(
+      modelToJsonApi(this.model as PureModel, true) as unknown as Record<string, unknown>,
+    ) as QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance>;
+  }
+
+  public update(
+    data: Partial<TModelInstance>,
+  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+    return this.persist(data) as QueryBuilder<
+      TResponse,
+      TRequestClass,
+      TNetwork,
+      TModelClass,
+      TModelInstance
+    >;
+  }
+
+  public delete(): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+    return this.extend({ method: 'DELETE' }) as QueryBuilder<
+      TResponse,
+      TRequestClass,
+      TNetwork,
+      TModelClass,
+      TModelInstance
+    >;
+  }
+
+  public filter(
+    filter: IFilters,
+  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+    return this.extend({
+      match: [...this.config.match, { filter }],
+    }) as QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance>;
+  }
+
+  public sort(
+    sortField: string,
+    direction: 'asc' | 'desc' = 'asc',
+  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+    return this.extend({
+      match: [...this.config.match, { sort: direction === 'asc' ? sortField : `-${sortField}` }],
+    }) as QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance>;
+  }
+
+  public fields(
+    fieldList: Array<string> | Record<string, Array<string>>,
+  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+    const fields = Array.isArray(fieldList)
+      ? { [this.config.refs.modelConstructor.type]: fieldList }
+      : fieldList;
+    return this.extend({
+      match: [...this.config.match, { fields }],
+    }) as QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance>;
+  }
+
+  public pagination(
+    options: Record<string, string>,
+  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+    return this.extend({
+      match: [...this.config.match, { page: options }],
+    }) as QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance>;
+  }
+
+  public include(
+    keys: string | Array<string>,
+    chained = false,
+  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+    if (chained) {
+      // TODO: Chained include
+      const chain = ([] as Array<string>).concat(keys).map((key) => {
+        if (key.includes('.')) {
+          throw new Error('Nested include is not supported in the chained mode');
+        }
+        // return (client, response) => {
+        //   const data = [].concat(response.data);
+        //   client.from(key).where({ id: data.map((item) => getMo item.id) });
+        // };
+      });
+      // return this.extend(this.config, chained) as QueryBuilder<
+      //   TResponse,
+      //   TRequestClass,
+      //   TNetwork,
+      //   TModelClass,
+      //   TModelInstance
+      // >;
+    }
+
+    return this.extend({
+      match: [...this.config.match, { include: keys }],
+    }) as QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance>;
   }
 }
