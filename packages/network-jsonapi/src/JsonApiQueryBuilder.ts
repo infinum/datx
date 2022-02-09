@@ -7,11 +7,13 @@ import {
   isModelPersisted,
   IQueryConfig,
   IResponseSnapshot,
+  ISubrequest,
 } from '@datx/network';
-import { mapValues } from 'lodash';
-import { modelToJsonApi } from './helpers/model';
+import { getMeta, mapItems } from '@datx/utils';
+import { parseModel, getModelRefLinks, modelToJsonApi } from './helpers/model';
 import { getRequestUrl } from './helpers/url';
 import { IFilters } from './interfaces/IFilters';
+import { IRecord, IResponse } from './interfaces/JsonApi';
 
 export class JsonApiQueryBuilder<
   TResponse extends TModelInstance | Array<TModelInstance | unknown> | unknown,
@@ -32,7 +34,20 @@ export class JsonApiQueryBuilder<
     }
 
     this.parser = (response: IResponseSnapshot) => {
-      // TODO: Parser
+      const data = response.response.data as IResponse | null;
+      if (data && data.data) {
+        const mainData = ([] as Array<IRecord>).concat(data.data);
+        const includedData = data.included || [];
+        const classRefs = {};
+        const models = [...mainData, ...includedData].map(parseModel(classRefs));
+        return {
+          ...response,
+          response: {
+            ...response.response,
+            data: models,
+          },
+        } as IResponseSnapshot;
+      }
       return response;
     };
   }
@@ -146,27 +161,56 @@ export class JsonApiQueryBuilder<
     chained = false,
   ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
     if (chained) {
-      // TODO: Chained include
-      const chain = ([] as Array<string>).concat(keys).map((key) => {
-        if (key.includes('.')) {
-          throw new Error('Nested include is not supported in the chained mode');
-        }
-        // return (client, response) => {
-        //   const data = [].concat(response.data);
-        //   client.from(key).where({ id: data.map((item) => getMo item.id) });
-        // };
-      });
-      // return this.extend(this.config, chained) as QueryBuilder<
-      //   TResponse,
-      //   TRequestClass,
-      //   TNetwork,
-      //   TModelClass,
-      //   TModelInstance
-      // >;
+      const chain = ([] as Array<string>)
+        .concat(keys)
+        .map((key) => {
+          if (key.includes('.')) {
+            throw new Error('Nested include is not yet supported in the chained mode');
+          }
+
+          // TODO: This is error prone if the model is not yet added into the collection
+          // Add some error handling or a way to pass the model manually
+          const type = getMeta(this.config.refs.modelConstructor, 'fields', {}, true, true)[key]
+            .type;
+          const ModelClass =
+            this.config.refs.collection?.find((item: typeof PureModel) => item.type === type) ||
+            PureModel;
+          return (client, response) => {
+            return mapItems(response.data, (item) => {
+              return {
+                request: client
+                  .from(ModelClass)
+                  .request(getModelRefLinks(item)[key])
+                  .buildRequest(),
+                model: this.model,
+                key,
+              };
+            });
+          };
+        })
+        .flat() as Array<ISubrequest<TResponse, TNetwork, TRequestClass>>;
+      return this.extend(this.config, chain) as QueryBuilder<
+        TResponse,
+        TRequestClass,
+        TNetwork,
+        TModelClass,
+        TModelInstance
+      >;
     }
 
     return this.extend({
       match: [...this.config.match, { include: keys }],
+    }) as QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance>;
+  }
+
+  public request(
+    url: string,
+  ): QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance> {
+    return this.extend({
+      metadata: {
+        ...this.config.metadata,
+        url,
+      },
     }) as QueryBuilder<TResponse, TRequestClass, TNetwork, TModelClass, TModelInstance>;
   }
 }

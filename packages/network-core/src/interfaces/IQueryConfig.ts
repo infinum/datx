@@ -13,4 +13,5 @@ export interface IQueryConfig<TNetwork extends INetwork, TRequestClass extends t
   request: TRequestClass;
   refs: IRefs<TNetwork, TRequestClass>;
   options: IClientOptions;
+  metadata: Record<string, unknown>;
 }

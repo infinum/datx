@@ -14,7 +14,7 @@ interface IAngularHeaders {
 export type IResponseHeaders = INativeHeaders | IAngularHeaders;
 
 export interface IResponseObject {
-  data?: Record<string, unknown> | null;
+  data?: Array<Record<string, unknown>> | Record<string, unknown> | null;
   error?: Error;
   headers?: INativeHeaders | IAngularHeaders;
   requestHeaders?: IHeaders;

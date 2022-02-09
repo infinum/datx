@@ -1,4 +1,5 @@
 import { PureModel, PureCollection, getModelType } from '@datx/core';
+import { mapItems } from '@datx/utils';
 import { IResponseObject } from '.';
 import { IAsync } from './interfaces/IAsync';
 import { IGeneralize } from './interfaces/IGeneralize';
@@ -7,6 +8,7 @@ import { IRefs } from './interfaces/IRefs';
 import { IRequestDetails } from './interfaces/IRequestDetails';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 import { ISubrequest } from './interfaces/ISubrequest';
+import { ISubrequestData } from './interfaces/ISubrequestData';
 import { Response } from './Response';
 
 export class Request<
@@ -52,12 +54,20 @@ export class Request<
         });
         response = new Response(resp, collection);
         return this.refs.network.execAll(
-          ...this.subrequests.map((subrequest) =>
-            this.refs.network.exec(
-              subrequest(this.refs.client, response as any).fetch(collection),
-              (subdata: Response) => response.include(this.getKey(), subdata),
-            ),
-          ),
+          ...(this.subrequests
+            .map((subrequest: ISubrequest<TResponse, TNetwork, typeof Request>) => {
+              const requests = subrequest(this.refs.client, response);
+              return mapItems(requests, (data: ISubrequestData<TNetwork>) => {
+                return this.refs.network.exec(
+                  data.request.fetch(collection),
+                  (subdata: Response) => {
+                    response.include(this.getKey(), subdata);
+                    data.model[data.key] = subdata.data;
+                  },
+                );
+              });
+            })
+            .flat() as Array<IA>),
         );
       })
       .then(() => response).value as IGeneralize<Response<TModelInstance, TResponse>, IA>;

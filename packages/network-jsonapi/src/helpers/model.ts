@@ -24,6 +24,10 @@ import { IDefinition, ILink, IRecord, IRelationship } from '../interfaces/JsonAp
 import { getModelClassRefs } from './utils';
 import { IRequestOptions } from '../interfaces/IRequestOptions';
 
+export function parseModel(classRefs: Record<string, IReferenceOptions<PureModel>>) {
+  return (data?: IRecord): IRawModel => flattenModel(classRefs, data);
+}
+
 export function flattenModel(classRefs): null;
 export function flattenModel(classRefs, data?: IRecord): IRawModel;
 export function flattenModel(

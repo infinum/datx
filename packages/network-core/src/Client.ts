@@ -48,6 +48,7 @@ export class Client<TNetwork extends INetwork, TRequestClass extends typeof Requ
         collection: this.collection,
         modelConstructor: type,
       },
+      metadata: {},
     });
   }
 

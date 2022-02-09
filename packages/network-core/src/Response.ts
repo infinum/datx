@@ -45,7 +45,7 @@ export class Response<
     | TModelInstance
     | Array<TModelInstance>,
 > {
-  public readonly included: Record<string, Response> = {};
+  public readonly included: Record<string, Array<Response>> = {};
 
   private __data: { value: TResponse | null } = { value: null };
 
@@ -74,6 +74,6 @@ export class Response<
   }
 
   public include(key: string, response: Response): void {
-    this.included[key] = response;
+    this.included[key] = [...(this.included[key] || []), response];
   }
 }

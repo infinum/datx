@@ -2,6 +2,7 @@ import { Client } from '../Client';
 import { Request } from '../Request';
 import { Response } from '../Response';
 import { INetwork } from './INetwork';
+import { ISubrequestData } from './ISubrequestData';
 
 export type ISubrequest<
   TResponse,
@@ -10,4 +11,4 @@ export type ISubrequest<
 > = (
   client: Client<TNetwork, TRequestClass>,
   parentData: Response<TResponse, TResponse>,
-) => Request<TNetwork>;
+) => ISubrequestData<TNetwork> | Array<ISubrequestData<TNetwork>>;
