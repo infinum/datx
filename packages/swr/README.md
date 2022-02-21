@@ -84,13 +84,13 @@ export const queryTodos: GetManyExpression<Todo> = {
 ```ts
 // src/components/features/todos/Todos.mutations.ts
 
-export const createTodo = createMutation((client, message: string | undefined) => {
+export const createTodo = (client: Client, message: string | undefined) => {
   const model = new Todo({ message });
   const url = getModelEndpointUrl(model);
   const data = modelToJsonApi(model);
 
-  return client.request<Todo>(url, 'POST', { data });
-});
+  return client.request<Todo, Array<Todo>>(url, 'POST', { data });
+};
 ```
 
 ### Use hook to fetch data
