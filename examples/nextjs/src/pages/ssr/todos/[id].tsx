@@ -29,14 +29,24 @@ export const getServerSideProps = async ({ params }: GetServerSidePropsContext<{
 
   const client = createClient();
 
-  const todo = await fetchQuery(client, queryTodo, { id });
+  // const todo = await fetchQuery(client, queryTodo, { id });
+
+  // const response = await client.fetchQuery(() => queryTodo(id));
+  // await client.fetchQuery(() => queryProfile(response.data.id));
+
+  // Parallel example
+  // Promise.all([
+  //   client.fetchQuery(() => queryTodo(id)),
+  //   client.fetchQuery(() => queryTodo(id)),
+  //   client.fetchQuery(() => queryTodo(id))
+  // ]);
+
+  // const { fallback } = client;
 
   return {
     props: {
       id,
-      fallback: {
-        ...todo,
-      },
+      // fallback
     },
   };
 };

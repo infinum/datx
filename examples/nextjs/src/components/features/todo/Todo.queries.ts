@@ -8,6 +8,9 @@ export interface IQueryTodoVariables {
   id?: string;
 }
 
+/**
+ * @deprecated - this will not work. Rewrite to Expression syntax
+ */
 export const queryTodo = (client: Client, variables?: IQueryTodoVariables) => {
   const modelType = getModelType(Todo);
   const key = variables?.id ? prepareQuery(modelType, variables?.id) : null;

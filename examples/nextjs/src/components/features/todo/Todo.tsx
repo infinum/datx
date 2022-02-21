@@ -9,7 +9,7 @@ export interface ITodoProps {
 }
 
 export const Todo: FC<ITodoProps> = ({ id }) => {
-  const { data, error } = useQuery(queryTodo, { variables: { id } });
+  const { data, error } = useQuery(() => queryTodo(id));
 
   if (error) {
     return <ErrorFallback error={error} />;
