@@ -1,5 +1,6 @@
 import { IJsonapiModel, Response } from '@datx/jsonapi';
 import useSWR from 'swr';
+
 import { QueryExpression } from '../interfaces/QueryExpression';
 import { DatxConfiguration } from '../interfaces/DatxConfiguration';
 import { middleware } from '../middleware';

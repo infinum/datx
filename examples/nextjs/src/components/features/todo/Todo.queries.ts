@@ -2,7 +2,9 @@ import { GetOneExpression } from '@datx/swr';
 
 import { Todo } from '../../../models/Todo';
 
-export const queryTodo: (id: string) => GetOneExpression<Todo> = (id: string) => ({
+type Query = (id: string) => GetOneExpression<Todo>;
+
+export const queryTodo: Query = (id: string) => ({
   id,
   op: 'getOne',
   type: Todo,

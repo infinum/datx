@@ -17,14 +17,12 @@ export type GetOneExpression<TModel extends IJsonapiModel> = {
 export type GetManyExpression<TModel extends IJsonapiModel> = {
   op: 'getMany';
   type: IModelConstructor<TModel>;
-  id: never;
   queryParams?: IRequestOptions['queryParams'];
 };
 
 export type GetAllExpression<TModel extends IJsonapiModel> = {
   op: 'getAll';
   type: IModelConstructor<TModel>;
-  id: never;
   queryParams?: IRequestOptions['queryParams'];
   maxRequests?: number | undefined;
 };
@@ -32,7 +30,8 @@ export type GetAllExpression<TModel extends IJsonapiModel> = {
 export type Expression<TModel extends IJsonapiModel> =
   | GetOneExpression<TModel>
   | GetManyExpression<TModel>
-  | GetAllExpression<TModel>;
+  | GetAllExpression<TModel>
+  | null;
 
 export type QueryExpression<TModel extends IJsonapiModel> =
   | Expression<TModel>

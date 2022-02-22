@@ -1,5 +1,7 @@
 import { useQuery } from '@datx/swr';
 import { FC } from 'react';
+
+import { useDependantCall } from '../../../hooks/useDependantCall';
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
 
 import { queryTodo } from './Todo.queries';
@@ -9,15 +11,20 @@ export interface ITodoProps {
 }
 
 export const Todo: FC<ITodoProps> = ({ id }) => {
-  const { data, error } = useQuery(() => queryTodo(id));
+  const shouldFetch = useDependantCall();
+  const { data, error } = useQuery(shouldFetch ? queryTodo(id) : null);
 
   if (error) {
     return <ErrorFallback error={error} />;
   }
 
-  if (!data) {
-    return <div>Loading...</div>;
+  if (!shouldFetch) {
+    return <div>Waiting for dependant call...</div>;
   }
 
-  return <div>{data.data?.message}</div>;
+  if (!data && shouldFetch) {
+    return <div>Loading todo...</div>;
+  }
+
+  return <div>{data?.data?.message}</div>;
 };
