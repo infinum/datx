@@ -3,12 +3,10 @@ import { createFetcher, QueryExpression } from '..';
 import { Client } from '../interfaces/Client';
 import { isFunction, undefinedToNull } from '../utils';
 
-export async function fetchQuery<
-  TModel extends IJsonapiModel
->(
+export async function fetchQuery<TModel extends IJsonapiModel>(
   client: Client,
   queryExpression: QueryExpression<TModel>,
-  config?: Pick<IRequestOptions, 'networkConfig'>
+  config?: Pick<IRequestOptions, 'networkConfig'>,
 ) {
   try {
     const expression = isFunction(queryExpression) ? queryExpression() : queryExpression;
