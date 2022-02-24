@@ -10,7 +10,6 @@ import { createClient } from '../../../datx/createClient';
 type SSRProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const SSR: NextPage<SSRProps> = ({ fallback }) => {
-  console.log(JSON.parse(fallback));
   return (
     <Hydrate fallback={JSON.parse(fallback)}>
       <Layout>
@@ -22,14 +21,12 @@ const SSR: NextPage<SSRProps> = ({ fallback }) => {
 
 export const getServerSideProps = async () => {
   const client = createClient();
-  console.log(JSON.stringify(client, undefined, 2));
 
   await client.fetchQuery(queryTodos);
   await client.fetchQuery(queryPosts);
 
   // TODO - handle 404
 
-  console.log(client.fallback, JSON.stringify(client.fallback));
   return {
     props: {
       fallback: JSON.stringify(client.fallback),
