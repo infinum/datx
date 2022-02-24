@@ -1,4 +1,4 @@
-import { fetchQuery, Hydrate } from '@datx/swr';
+import { Hydrate } from '@datx/swr';
 import type { GetServerSidePropsContext, InferGetServerSidePropsType, NextPage } from 'next';
 
 import { Todo } from '../../../components/features/todo/Todo';
@@ -24,29 +24,17 @@ export const getServerSideProps = async ({ params }: GetServerSidePropsContext<{
   if (!id) {
     return {
       notFound: true,
-    }
+    };
   }
 
   const client = createClient();
 
-  // const todo = await fetchQuery(client, queryTodo, { id });
-
-  // const response = await client.fetchQuery(() => queryTodo(id));
-  // await client.fetchQuery(() => queryProfile(response.data.id));
-
-  // Parallel example
-  // Promise.all([
-  //   client.fetchQuery(() => queryTodo(id)),
-  //   client.fetchQuery(() => queryTodo(id)),
-  //   client.fetchQuery(() => queryTodo(id))
-  // ]);
-
-  // const { fallback } = client;
+  await client.fetchQuery(queryTodo(id));
 
   return {
     props: {
       id,
-      // fallback
+      fallback: JSON.stringify(client.fallback),
     },
   };
 };

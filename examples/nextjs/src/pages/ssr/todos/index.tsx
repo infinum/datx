@@ -22,8 +22,7 @@ const SSR: NextPage<SSRProps> = ({ fallback }) => {
 export const getServerSideProps = async () => {
   const client = createClient();
 
-  await client.fetchQuery(queryTodos);
-  await client.fetchQuery(queryPosts);
+  await Promise.all([client.fetchQuery(queryTodos), client.fetchQuery(queryPosts)]);
 
   // TODO - handle 404
 

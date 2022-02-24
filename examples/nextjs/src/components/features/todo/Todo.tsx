@@ -1,17 +1,16 @@
 import { useQuery } from '@datx/swr';
 import { FC } from 'react';
 
-import { useDependantCall } from '../../../hooks/useDependantCall';
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
 
 import { queryTodo } from './Todo.queries';
 
 export interface ITodoProps {
   id: string;
+  shouldFetch?: boolean;
 }
 
-export const Todo: FC<ITodoProps> = ({ id }) => {
-  const shouldFetch = useDependantCall();
+export const Todo: FC<ITodoProps> = ({ id, shouldFetch = true }) => {
   const { data, error } = useQuery(shouldFetch ? queryTodo(id) : null);
 
   if (error) {
