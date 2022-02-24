@@ -2,7 +2,7 @@ import { Response } from '@datx/jsonapi';
 import { act, render } from '@testing-library/react';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import { DatxProvider, useSafeClient } from '../src';
+import { createFetcher, DatxProvider, useSafeClient } from '../src';
 import { createClient } from './datx';
 
 export function sleep(time: number) {
@@ -22,7 +22,9 @@ export const renderWithConfig = (
 
     return (
       <DatxProvider client={client}>
-        <SWRConfig value={{ provider, ...config }}>{children}</SWRConfig>
+        <SWRConfig value={{ provider, fetcher: createFetcher(client), ...config }}>
+          {children}
+        </SWRConfig>
       </DatxProvider>
     );
   };
