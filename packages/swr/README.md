@@ -189,14 +189,12 @@ export type GetOneExpression<TModel extends IJsonapiModel> = {
 export type GetManyExpression<TModel extends IJsonapiModel> = {
   op: 'getMany';
   type: IModelConstructor<TModel>;
-  id: never;
   queryParams?: IRequestOptions['queryParams'];
 };
 
 export type GetAllExpression<TModel extends IJsonapiModel> = {
   op: 'getAll';
   type: IModelConstructor<TModel>;
-  id: never;
   queryParams?: IRequestOptions['queryParams'];
   maxRequests?: number | undefined;
 };
@@ -228,6 +226,39 @@ This is a helper hook until [this](https://github.com/vercel/swr/pull/1450) is m
 
 ### SSR
 
+When fetching data on the server, you'll have to setup your fetchQuery method on your Client class.
+Fallback responses will be held inside private Map which will be passed serialized to the component for hydrating.
+
+```ts
+export class Client extends jsonapi(Collection) {
+  private _fallback = new Map();
+  // ... models and other stuff
+
+  public async fetchQuery<TModel extends IJsonapiModel>(expression: Expression<TModel>) {
+    try {
+      const response = await createFetcher(this)(expression);
+      this._fallback.set(expression?.type.type, response);
+
+      return {
+        [expression?.type.type]: response,
+      };
+    } catch (error) {
+      if (error instanceof Response) {
+        throw error.error;
+      }
+
+      throw error;
+    }
+  }
+
+
+  public get fallback() {
+    return JSON.stringify(Object.fromEntries(this._fallback));
+  }
+}
+```
+
+Then, you will use the `fetchQuery` method inside `getServerSideProps` to fetch the data and pass the fallback to the page for hydration. 
 ```tsx
 type SSRProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
@@ -244,13 +275,11 @@ const SSR: NextPage<SSRProps> = ({ fallback }) => {
 export const getServerSideProps = async () => {
   const client = createClient();
 
-  const todo = await fetchQuery(client, queryTodos);
+  const todo = await client.fetchQuery(queryTodos);
 
   return {
     props: {
-      fallback: {
-        ...todo,
-      },
+      fallback: client.fallback,
     },
   };
 };
