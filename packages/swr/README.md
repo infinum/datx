@@ -36,7 +36,7 @@ export function createClient() {
 
 ### Client initialization
 
-```ts
+```tsx
 // src/pages/_app.tsx
 
 import type { AppProps } from 'next/app';
@@ -95,7 +95,7 @@ export const createTodo = (client: Client, message: string | undefined) => {
 
 ### Use hook to fetch data
 
-```ts
+```tsx
 // src/components/features/todos/Todos.ts
 
 export const Todos: FC = () => {
@@ -164,10 +164,20 @@ const queryExpression: GetManyExpression<Todo> = {
 };
 
 const config: DatxConfiguration<Todo, Array<Todo>> = {
-  shouldRetryOnError: false
+  shouldRetryOnError: false,
+  shouldFetch: false, // use this for dependant queries
 };
 
 const = useQuery(queryExpression, config);
+```
+
+#### DatxJsonapiModel type
+
+```ts
+import { IJsonapiModel } from '@datx/jsonapi';
+import { Model } from '@datx/core';
+
+export type DatxJsonApiModel = IJsonapiModel & Model;
 ```
 
 ##### Expression signature
@@ -179,22 +189,22 @@ export type ExpressionLike = {
   op: Operation;
 };
 
-export type GetOneExpression<TModel extends IJsonapiModel> = {
+export type GetOneExpression<TModel extends DatxJsonapiModel> = {
   op: 'getOne';
-  type: IModelConstructor<TModel>;
   id: string;
+  type: TModel['meta']['type'];
   queryParams?: IRequestOptions['queryParams'];
 };
 
-export type GetManyExpression<TModel extends IJsonapiModel> = {
+export type GetManyExpression<TModel extends DatxJsonapiModel> = {
   op: 'getMany';
-  type: IModelConstructor<TModel>;
+  type: TModel['meta']['type'];
   queryParams?: IRequestOptions['queryParams'];
 };
 
-export type GetAllExpression<TModel extends IJsonapiModel> = {
+export type GetAllExpression<TModel extends DatxJsonapiModel> = {
   op: 'getAll';
-  type: IModelConstructor<TModel>;
+  type: TModel['meta']['type'];
   queryParams?: IRequestOptions['queryParams'];
   maxRequests?: number | undefined;
 };
@@ -206,14 +216,15 @@ It's the [SWR config](https://swr.vercel.app/docs/options#options) extended with
 
 ```ts
 export type DatxConfiguration<
-  TModel extends IJsonapiModel,
+  TModel extends DatxJsonapiModel,
   TData extends IResponseData,
 > = SWRConfiguration<
   Response<TModel, TData>,
   Response<TModel, TData>,
   Fetcher<Response<TModel, TData>>
 > & {
-  networkConfig: IRequestOptions['networkConfig']
+  networkConfig?: IRequestOptions['networkConfig'],
+  shouldFetch?: boolean,
 };
 ```
 
