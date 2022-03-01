@@ -11,7 +11,7 @@ type SSRProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const SSR: NextPage<SSRProps> = ({ fallback }) => {
   return (
-    <Hydrate fallback={JSON.parse(fallback)}>
+    <Hydrate fallback={fallback}>
       <Layout>
         <Todos />
       </Layout>
@@ -28,7 +28,7 @@ export const getServerSideProps = async () => {
 
   return {
     props: {
-      fallback: client.fallback,
+      fallback: JSON.parse(client.fallback),
     },
   };
 };

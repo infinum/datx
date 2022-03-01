@@ -34,7 +34,7 @@ export const getServerSideProps = async ({ params }: GetServerSidePropsContext<{
   return {
     props: {
       id,
-      fallback: JSON.stringify(client.fallback),
+      fallback: JSON.parse(client.fallback),
     },
   };
 };
