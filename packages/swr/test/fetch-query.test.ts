@@ -22,11 +22,13 @@ describe('fetchQuery', () => {
 
   test('client stores fallback under the appropriate key', async () => {
     const key = Todo.type;
-    await client.fetchQuery(queryTodos);
 
-    expect(Object.keys(client.fallback)[0]).toBe(key);
-    expect(client.fallback[key]).toBeTruthy();
-    expect(client.fallback[key].length).toBe(1);
+    await client.fetchQuery(queryTodos);
+    const parsed = JSON.parse(client.fallback);
+
+    expect(Object.keys(parsed)[0]).toBe(key);
+    expect(parsed[key]).toBeTruthy();
+    expect(parsed[key].length).toBe(1);
   });
 
   test('should throw on API error', async () => {
