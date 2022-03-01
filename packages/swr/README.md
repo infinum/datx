@@ -14,6 +14,8 @@ npm install --save swr @datx/swr
 
 ### Datx Client initializer function
 
+For extra SSR setup, see [SSR Setup section](#ssr)
+
 ```ts
 // src/datx/createClient.ts
 
@@ -77,7 +79,7 @@ export type TodosResponse = Response<Todo, Array<Todo>>;
 
 export const queryTodos: GetManyExpression<Todo> = {
   op: 'getMany',
-  type: Todo,
+  type: Todo.type,
 };
 ```
 
@@ -160,7 +162,7 @@ const client = useDatx();
 ```ts
 const queryExpression: GetManyExpression<Todo> = {
   op: 'getMany',
-  type: Todo,
+  type: Todo.type,
 };
 
 const config: DatxConfiguration<Todo, Array<Todo>> = {
@@ -238,7 +240,7 @@ This is a helper hook until [this](https://github.com/vercel/swr/pull/1450) is m
 ### SSR
 
 When fetching data on the server, you'll have to setup your fetchQuery method on your Client class.
-Fallback responses will be held inside private Map which will be passed serialized to the component for hydrating.
+Fallback responses will be held inside private Map which will be passed stringified to the component for hydrating.
 
 ```ts
 export class Client extends jsonapi(Collection) {
@@ -275,7 +277,7 @@ type SSRProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const SSR: NextPage<SSRProps> = ({ fallback }) => {
   return (
-    <Hydrate fallback={fallback}>
+    <Hydrate fallback={JSON.parse(fallback)}>
       <Layout>
         <Todos />
       </Layout>
