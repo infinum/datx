@@ -28,7 +28,7 @@ export const getServerSideProps = async () => {
 
   return {
     props: {
-      fallback: JSON.stringify(client.fallback),
+      fallback: client.fallback,
     },
   };
 };

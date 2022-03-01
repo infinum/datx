@@ -29,7 +29,7 @@ export class Client extends jsonapiCollection(Collection) {
   }
 
   public get fallback() {
-    return Object.fromEntries(this._fallback);
+    return JSON.stringify(Object.fromEntries(this._fallback));
   }
 }
 
