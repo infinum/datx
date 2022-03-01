@@ -1,6 +1,6 @@
 import { Collection } from '@datx/core';
-import { jsonapiCollection, config, IJsonapiModel, Response } from '@datx/jsonapi';
-import { createFetcher, Expression } from '@datx/swr';
+import { jsonapiCollection, config, Response } from '@datx/jsonapi';
+import { createFetcher, DatxJsonapiModel, Expression } from '@datx/swr';
 
 import { Post } from '../models/Post';
 import { Todo } from '../models/Todo';
@@ -10,14 +10,13 @@ class Client extends jsonapiCollection(Collection) {
 
   private _fallback = new Map();
 
-  public async fetchQuery<TModel extends IJsonapiModel>(expression: Expression<TModel>) {
+  public async fetchQuery<TModel extends DatxJsonapiModel>(expression: Expression<TModel>) {
     try {
       const response = await createFetcher(this)(expression);
-      this._fallback.set(expression?.type.type, response);
+      this._fallback.set(expression.type, response);
 
       return {
-        // Fix this after #312 productive
-        [expression?.type.type as string]: response,
+        [expression.type]: response,
       };
     } catch (error) {
       if (error instanceof Response) {

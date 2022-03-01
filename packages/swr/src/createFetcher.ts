@@ -5,23 +5,24 @@ import {
   GetAllExpression,
 } from './interfaces/QueryExpression';
 import { Client } from './interfaces/Client';
-import { IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
+import { IRequestOptions } from '@datx/jsonapi';
+import { DatxJsonapiModel } from './interfaces/DatxJsonapiModel';
 
 function isGetOne(expression: Expression<any>): expression is GetOneExpression<any> {
-  return expression?.op === 'getOne';
+  return expression.op === 'getOne';
 }
 
 function isGetMany(expression: Expression<any>): expression is GetManyExpression<any> {
-  return expression?.op === 'getMany';
+  return expression.op === 'getMany';
 }
 
 function isGetAll(expression: Expression<any>): expression is GetAllExpression<any> {
-  return expression?.op === 'getAll';
+  return expression.op === 'getAll';
 }
 
 export const createFetcher =
   (client: Client) =>
-  <TModel extends IJsonapiModel>(
+  <TModel extends DatxJsonapiModel>(
     expression: Expression<TModel>,
     config?: Pick<IRequestOptions, 'networkConfig'>,
   ) => {

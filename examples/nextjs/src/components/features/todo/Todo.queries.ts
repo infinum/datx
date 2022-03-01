@@ -7,5 +7,5 @@ type Query = (id: string) => GetOneExpression<Todo>;
 export const queryTodo: Query = (id: string) => ({
   id,
   op: 'getOne',
-  type: Todo,
+  type: Todo.type,
 });

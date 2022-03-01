@@ -11,7 +11,7 @@ export interface ITodoProps {
 }
 
 export const Todo: FC<ITodoProps> = ({ id, shouldFetch = true }) => {
-  const { data, error } = useQuery(shouldFetch ? queryTodo(id) : null);
+  const { data, error } = useQuery(queryTodo(id), { shouldFetch });
 
   if (error) {
     return <ErrorFallback error={error} />;

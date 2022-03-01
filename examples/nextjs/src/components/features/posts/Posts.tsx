@@ -1,16 +1,13 @@
-import {
-  useQuery,
-} from '@datx/swr';
+import { useQuery } from '@datx/swr';
 import { FC, useState } from 'react';
-import NextLink from 'next/link';
 
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
-import { Post } from '../../../models/Post';
+import { queryPosts } from './Posts.queries';
 
 export const Posts: FC = () => {
   const [pageIndex, setPageIndex] = useState(0);
 
-  const { data, error } = useQuery({ op: 'getMany', type: Post });
+  const { data, error } = useQuery(queryPosts);
 
   if (error) {
     return <ErrorFallback error={error} />;
@@ -24,7 +21,9 @@ export const Posts: FC = () => {
     <div>
       {data.data?.map((post) => (
         // <NextLink href={`${base}/todos/${post.id}`} key={post.id}>
-          <a style={{ display: 'block' }} key={post.id}>{post.body}</a>
+        <a style={{ display: 'block' }} key={post.id}>
+          {post.body}
+        </a>
         // </NextLink>
       ))}
 

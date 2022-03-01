@@ -4,6 +4,7 @@ export * from './hooks/useMutation';
 export * from './hooks/useQuery';
 export * from './interfaces/Client';
 export * from './interfaces/QueryExpression';
+export * from './interfaces/DatxJsonapiModel';
 export * from './hydrate';
 export * from './context';
 export * from './createFetcher';

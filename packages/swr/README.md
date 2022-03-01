@@ -234,13 +234,13 @@ export class Client extends jsonapi(Collection) {
   private _fallback = new Map();
   // ... models and other stuff
 
-  public async fetchQuery<TModel extends IJsonapiModel>(expression: Expression<TModel>) {
+  public async fetchQuery<TModel extends DatxJsonapiModel>(expression: Expression<TModel>) {
     try {
       const response = await createFetcher(this)(expression);
-      this._fallback.set(expression?.type.type, response);
+      this._fallback.set(expression.type, response);
 
       return {
-        [expression?.type.type]: response,
+        [expression.type]: response,
       };
     } catch (error) {
       if (error instanceof Response) {

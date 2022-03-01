@@ -7,5 +7,5 @@ export type TodosResponse = Response<Todo, Array<Todo>>;
 
 export const queryTodos: GetManyExpression<Todo> = {
   op: 'getMany',
-  type: Todo,
+  type: Todo.type,
 };

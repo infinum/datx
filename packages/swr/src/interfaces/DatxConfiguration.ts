@@ -9,5 +9,6 @@ export type DatxConfiguration<
   Response<TModel, TData>,
   Fetcher<Response<TModel, TData>>
 > & {
-  networkConfig: IRequestOptions['networkConfig']
+  networkConfig?: IRequestOptions['networkConfig'];
+  shouldFetch?: boolean;
 };
