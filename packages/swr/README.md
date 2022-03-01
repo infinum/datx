@@ -214,7 +214,8 @@ export type GetAllExpression<TModel extends DatxJsonapiModel> = {
 
 ##### Query config
 
-It's the [SWR config](https://swr.vercel.app/docs/options#options) extended with `networkConfig` prop.
+It's the [SWR config](https://swr.vercel.app/docs/options#options) extended with `networkConfig` and `shouldFetch` props.
+
 
 ```ts
 export type DatxConfiguration<
@@ -229,6 +230,12 @@ export type DatxConfiguration<
   shouldFetch?: boolean,
 };
 ```
+
+`shouldFetch` is used when you have dependant query calls you want to wait before making the current query.
+
+[Here is an example](/examples/nextjs/src/pages/csr/todos/[id].tsx) where we mock dependant call before requesting a todo item.
+
+Inside [todo component](/examples/nextjs/src/components/features/todo/Todo.tsx) we constructed our query to depend on `shouldFetch` prop.
 
 #### useMutation
 
