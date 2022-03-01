@@ -9,6 +9,7 @@ import { useQuery } from '../src';
 import { queryTodos } from './queries';
 
 const loadingMessage = 'Loading...';
+const shouldFetchMessage = 'Waiting for dependant call...';
 
 interface ITesterProps {
   shouldFetch?: boolean;
@@ -21,11 +22,15 @@ const Tester: FC<ITesterProps> = ({ shouldFetch = true }) => {
     return <div>{getErrorMessage(error)}</div>;
   }
 
-  if (!data) {
+  if (!data && shouldFetch) {
     return <div>{loadingMessage}</div>;
   }
 
-  return <div>{data.data[0].message}</div>;
+  if (!shouldFetch) {
+    return <div>{shouldFetchMessage}</div>;
+  }
+
+  return <div>{data?.data[0].message}</div>;
 };
 
 describe('useQuery', () => {
@@ -37,9 +42,13 @@ describe('useQuery', () => {
   });
 
   it('should conditionally fetch data', async () => {
-    renderWithConfig(<Tester shouldFetch={false} />);
+    const renderResult = renderWithConfig(<Tester shouldFetch={false} />);
+    screen.getByText(shouldFetchMessage);
 
+    renderResult.rerender(<Tester />);
     screen.getByText(loadingMessage);
+
+    await screen.findByText(message);
   });
 
   it('should handle errors', async () => {
