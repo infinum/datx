@@ -10,6 +10,9 @@ export interface ITodoProps {
   shouldFetch?: boolean;
 }
 
+// 1. remove config object from useQuery
+// 2. move "shouldFetch" logic to the queryTodo expression
+
 export const Todo: FC<ITodoProps> = ({ id, shouldFetch = true }) => {
   const { data, error } = useQuery(queryTodo(id), { shouldFetch });
 

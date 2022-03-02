@@ -31,10 +31,12 @@ export const getServerSideProps = async ({ params }: GetServerSidePropsContext<{
 
   await client.fetchQuery(queryTodo(id));
 
+  const { fallback } = client;
+
   return {
     props: {
       id,
-      fallback: JSON.parse(client.fallback),
+      fallback,
     },
   };
 };

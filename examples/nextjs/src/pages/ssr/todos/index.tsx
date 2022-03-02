@@ -22,13 +22,15 @@ const SSR: NextPage<SSRProps> = ({ fallback }) => {
 export const getServerSideProps = async () => {
   const client = createClient();
 
-  await Promise.all([client.fetchQuery(queryTodos), client.fetchQuery(queryPosts)]);
+  await Promise.allSettled([client.fetchQuery(queryTodos), client.fetchQuery(queryPosts)]);
 
   // TODO - handle 404
 
+  const { fallback } = client;
+
   return {
     props: {
-      fallback: JSON.parse(client.fallback),
+      fallback,
     },
   };
 };

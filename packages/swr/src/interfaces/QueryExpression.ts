@@ -7,6 +7,10 @@ export type ExpressionLike = {
   op: Operation;
 };
 
+// 1. rewrite type to accept only string | number
+// 2. remove generics from expressions
+// 3. model type will be returned from the query function
+
 export type GetOneExpression<TModel extends DatxJsonapiModel> = {
   op: 'getOne';
   type: TModel['meta']['type'];

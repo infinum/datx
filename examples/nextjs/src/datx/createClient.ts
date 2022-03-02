@@ -5,6 +5,8 @@ import { createFetcher, DatxJsonapiModel, Expression } from '@datx/swr';
 import { Post } from '../models/Post';
 import { Todo } from '../models/Todo';
 
+// consider adding a new mixin for fallback and fetchQuery
+
 class Client extends jsonapiCollection(Collection) {
   public static types = [Todo, Post];
 
@@ -28,7 +30,8 @@ class Client extends jsonapiCollection(Collection) {
   }
 
   public get fallback() {
-    return JSON.stringify(Object.fromEntries(this._fallback));
+    // Investigate why next.js fails to serialize datx response class instance
+    return JSON.parse(JSON.stringify(Object.fromEntries(this._fallback)));
   }
 }
 
