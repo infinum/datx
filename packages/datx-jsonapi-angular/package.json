@@ -51,7 +51,7 @@
     "@angular/compiler-cli": "~13.2.0",
     "@angular/core": "~13.3.0",
     "@angular/forms": "~13.2.0",
-    "@angular/platform-browser": "~13.2.0",
+    "@angular/platform-browser": "~13.3.0",
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.2.0",
     "@types/jest": "^27.4.0",
