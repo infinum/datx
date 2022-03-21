@@ -43,7 +43,7 @@
     "rxjs": "6 || 7"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.2.1",
+    "@angular-devkit/build-angular": "~13.3.0",
     "@angular/animations": "~13.3.0",
     "@angular/cli": "~13.3.0",
     "@angular/common": "~13.2.0",
