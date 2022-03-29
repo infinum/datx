@@ -1,6 +1,6 @@
 {
   "name": "@datx/network",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-alpha.0",
   "description": "DatX mixin for networking",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -68,7 +68,7 @@
     ]
   },
   "dependencies": {
-    "@datx/core": "3.0.0-beta.1",
-    "@datx/utils": "3.0.0-beta.1"
+    "@datx/core": "3.0.0-alpha.0",
+    "@datx/utils": "3.0.0-alpha.0"
   }
 }
