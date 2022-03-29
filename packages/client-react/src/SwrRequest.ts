@@ -10,7 +10,7 @@ export class SwrRequest<
   public swr(): { key: string; fetcher: () => IGeneralize<Response<InstanceType<TModel>>, IA> } {
     return {
       key: this.getKey(),
-      fetcher: this.fetch,
+      fetcher: this.fetch as any, // TODO: fix this
     };
   }
 }

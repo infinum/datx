@@ -3,13 +3,13 @@ import { INetwork, QueryBuilder, IRequestDetails, Request } from '@datx/network'
 import { DEFAULT_TYPE } from '@datx/utils';
 
 export class JsonApiQueryBuilder<
-    TModel extends typeof PureModel,
     TResponse extends InstanceType<TModel> | Array<InstanceType<TModel>>,
     TRequestClass extends typeof Request,
     TNetwork extends INetwork,
+    TModel extends typeof PureModel,
   >
-  extends QueryBuilder<TModel, TResponse, TRequestClass, TNetwork>
-  implements QueryBuilder<TModel, TResponse, TRequestClass, TNetwork>
+  extends QueryBuilder<TResponse, TRequestClass, TNetwork, TModel>
+  implements QueryBuilder<TResponse, TRequestClass, TNetwork, TModel>
 {
   // build method is a custom implementation that, generates an generic IRequestDetails object with all data required for the API call
   public build(): IRequestDetails {

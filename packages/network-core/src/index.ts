@@ -18,6 +18,7 @@ export { IHeaders } from './interfaces/IHeaders';
 export { INetwork } from './interfaces/INetwork';
 export { IResponseObject } from './interfaces/IResponseObject';
 export { IRequestDetails } from './interfaces/IRequestDetails';
+export { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 
 export { appendQueryParams, parametrize, interpolateParams } from './helpers/utils';
 

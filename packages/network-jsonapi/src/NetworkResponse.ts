@@ -1,15 +1,15 @@
-import { View, PureCollection } from '@datx/core';
-import { Response as BaseResponse, IResponseObject } from '@datx/network';
-import { assignComputed } from '@datx/utils';
+import { View, PureCollection, PureModel } from '@datx/core';
+import { Response, IResponseSnapshot } from '@datx/network';
+// import { assignComputed } from '@datx/utils';
 
-import { IJsonapiModel } from './interfaces/IJsonapiModel';
+// import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IJsonApiObject, ILink } from './interfaces/JsonApi';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 
-import { fetchLink } from './NetworkUtils';
-import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
+// import { fetchLink } from './NetworkUtils';
+// import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 
-export class NetworkResponse<T extends IJsonapiModel> extends BaseResponse<T> {
+export class NetworkResponse<T extends PureModel> extends Response<T> {
   /**
    * API response metadata
    *
@@ -76,19 +76,14 @@ export class NetworkResponse<T extends IJsonapiModel> extends BaseResponse<T> {
     return this.__internal.views;
   }
 
-  constructor(
-    response: IResponseObject,
-    collection?: PureCollection,
-    overrideData?: T,
-    views?: Array<View>,
-  ) {
-    super(response, collection, overrideData, views);
+  constructor(snapshot: IResponseSnapshot, collection: PureCollection) {
+    super(snapshot, collection);
 
-    if (this.links) {
-      Object.keys(this.links).forEach((link: string) => {
-        assignComputed(this, link, () => this.__fetchLink(link));
-      });
-    }
+    // if (this.links) {
+    //   Object.keys(this.links).forEach((link: string) => {
+    //     assignComputed(this, link, () => this.__fetchLink(link));
+    //   });
+    // }
   }
 
   /**
@@ -100,28 +95,28 @@ export class NetworkResponse<T extends IJsonapiModel> extends BaseResponse<T> {
    *
    * @memberOf NetworkResponse
    */
-  private __fetchLink(name: string): () => Promise<NetworkResponse<T>> {
-    if (!this.__cache[name]) {
-      const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
+  // private __fetchLink(name: string): () => Promise<NetworkResponse<T>> {
+  //   if (!this.__cache[name]) {
+  //     const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 
-      if (link) {
-        const options = Object.assign({}, this.__internal.options);
+  //     if (link) {
+  //       const options = Object.assign({}, this.__internal.options);
 
-        options.networkConfig = options.networkConfig || {};
-        options.networkConfig.headers = this.requestHeaders;
-        this.__cache[name] = (): Promise<NetworkResponse<T>> =>
-          fetchLink<T>(link, this.collection as IJsonapiCollection, options, this.views).then(
-            (response) =>
-              new NetworkResponse<T>(
-                response['__internal'].response,
-                response.collection,
-                undefined,
-                response.views,
-              ),
-          );
-      }
-    }
+  //       options.networkConfig = options.networkConfig || {};
+  //       options.networkConfig.headers = this.requestHeaders;
+  //       this.__cache[name] = (): Promise<NetworkResponse<T>> =>
+  //         fetchLink<T>(link, this.collection as IJsonapiCollection, options, this.views).then(
+  //           (response) =>
+  //             new NetworkResponse<T>(
+  //               response['__internal'].response,
+  //               response.collection,
+  //               undefined,
+  //               response.views,
+  //             ),
+  //         );
+  //     }
+  //   }
 
-    return this.__cache[name] as () => Promise<NetworkResponse<T>>;
-  }
+  //   return this.__cache[name] as () => Promise<NetworkResponse<T>>;
+  // }
 }

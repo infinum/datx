@@ -1,8 +1,8 @@
-import { Response } from '../Response';
-import { IJsonapiModel } from './IJsonapiModel';
+import { PureModel } from '@datx/core';
+import { NetworkResponse } from '../NetworkResponse';
 
-export interface IGetAllResponse<T extends IJsonapiModel = IJsonapiModel> {
+export interface IGetAllResponse<T extends PureModel = PureModel> {
   data: Array<T>;
-  responses: Array<Response<T>>;
-  lastResponse: Response<T>;
+  responses: Array<NetworkResponse<T>>;
+  lastResponse: NetworkResponse<T>;
 }
