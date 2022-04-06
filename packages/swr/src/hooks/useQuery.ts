@@ -1,21 +1,21 @@
-import { Response } from '@datx/jsonapi';
+import { IJsonapiModel, Response } from '@datx/jsonapi';
 import useSWR from 'swr';
 
 import { QueryExpression } from '../interfaces/QueryExpression';
 import { DatxConfiguration } from '../interfaces/DatxConfiguration';
 import { middleware } from '../middleware';
-import { DatxJsonapiModel } from '../interfaces/DatxJsonapiModel';
 
 type ExtractExpression<TExpression> = TExpression extends (...args) => any
   ? ReturnType<TExpression>
   : TExpression;
+
 type Data<
-  TModel extends DatxJsonapiModel,
-  TExpression extends QueryExpression<TModel>,
+  TModel extends IJsonapiModel,
+  TExpression extends QueryExpression,
 > = ExtractExpression<TExpression> extends { op: 'getOne' } ? TModel : Array<TModel>;
 
-export function useQuery<TModel extends DatxJsonapiModel>(
-  queryExpression: QueryExpression<TModel>,
+export function useQuery<TModel extends IJsonapiModel>(
+  queryExpression: QueryExpression,
   config?: DatxConfiguration<TModel, any>,
 ) {
   return useSWR<

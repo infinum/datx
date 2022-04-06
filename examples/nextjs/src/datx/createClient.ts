@@ -1,38 +1,12 @@
 import { Collection } from '@datx/core';
-import { jsonapiCollection, config, Response } from '@datx/jsonapi';
-import { createFetcher, DatxJsonapiModel, Expression } from '@datx/swr';
+import { config } from '@datx/jsonapi';
+import { jsonapiSwrClient } from '@datx/swr';
 
 import { Post } from '../models/Post';
 import { Todo } from '../models/Todo';
 
-// consider adding a new mixin for fallback and fetchQuery
-
-class Client extends jsonapiCollection(Collection) {
+class Client extends jsonapiSwrClient(Collection) {
   public static types = [Todo, Post];
-
-  private _fallback = new Map();
-
-  public async fetchQuery<TModel extends DatxJsonapiModel>(expression: Expression<TModel>) {
-    try {
-      const response = await createFetcher(this)(expression);
-      this._fallback.set(expression.type, response);
-
-      return {
-        [expression.type]: response,
-      };
-    } catch (error) {
-      if (error instanceof Response) {
-        throw error.error;
-      }
-
-      throw error;
-    }
-  }
-
-  public get fallback() {
-    // Investigate why next.js fails to serialize datx response class instance
-    return JSON.parse(JSON.stringify(Object.fromEntries(this._fallback)));
-  }
 }
 
 export function createClient() {

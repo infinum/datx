@@ -167,19 +167,9 @@ const queryExpression: GetManyExpression<Todo> = {
 
 const config: DatxConfiguration<Todo, Array<Todo>> = {
   shouldRetryOnError: false,
-  shouldFetch: false, // use this for dependant queries
 };
 
 const = useQuery(queryExpression, config);
-```
-
-#### DatxJsonapiModel type
-
-```ts
-import { IJsonapiModel } from '@datx/jsonapi';
-import { Model } from '@datx/core';
-
-export type DatxJsonApiModel = IJsonapiModel & Model;
 ```
 
 ##### Expression signature
@@ -187,39 +177,44 @@ export type DatxJsonApiModel = IJsonapiModel & Model;
 ```ts
 export type Operation = 'getOne' | 'getMany' | 'getAll';
 
-export type ExpressionLike = {
+export interface IExpressionLike {
   op: Operation;
-};
+}
 
-export type GetOneExpression<TModel extends DatxJsonapiModel> = {
+export interface IGetOneExpression {
   op: 'getOne';
+  type: IType;
   id: string;
-  type: TModel['meta']['type'];
   queryParams?: IRequestOptions['queryParams'];
-};
+}
 
-export type GetManyExpression<TModel extends DatxJsonapiModel> = {
+export interface IGetManyExpression {
   op: 'getMany';
-  type: TModel['meta']['type'];
+  type: IType;
   queryParams?: IRequestOptions['queryParams'];
-};
+}
 
-export type GetAllExpression<TModel extends DatxJsonapiModel> = {
+export interface IGetAllExpression {
   op: 'getAll';
-  type: TModel['meta']['type'];
+  type: IType;
   queryParams?: IRequestOptions['queryParams'];
   maxRequests?: number | undefined;
-};
+}
+
+export type Expression =
+  | IGetOneExpression
+  | IGetManyExpression
+  | IGetAllExpression;
 ```
 
 ##### Query config
 
-It's the [SWR config](https://swr.vercel.app/docs/options#options) extended with `networkConfig` and `shouldFetch` props.
+It's the [SWR config](https://swr.vercel.app/docs/options#options) extended with `networkConfig` prop.
 
 
 ```ts
 export type DatxConfiguration<
-  TModel extends DatxJsonapiModel,
+  TModel extends IJsonapiModel,
   TData extends IResponseData,
 > = SWRConfiguration<
   Response<TModel, TData>,
@@ -227,15 +222,8 @@ export type DatxConfiguration<
   Fetcher<Response<TModel, TData>>
 > & {
   networkConfig?: IRequestOptions['networkConfig'],
-  shouldFetch?: boolean,
 };
 ```
-
-`shouldFetch` is used when you have dependant query calls you want to wait before making the current query.
-
-[Here is an example](/examples/nextjs/src/pages/csr/todos/[id].tsx) where we mock dependant call before requesting a todo item.
-
-Inside [todo component](/examples/nextjs/src/components/features/todo/Todo.tsx) we constructed our query to depend on `shouldFetch` prop.
 
 #### useMutation
 
@@ -246,39 +234,8 @@ This is a helper hook until [this](https://github.com/vercel/swr/pull/1450) is m
 
 ### SSR
 
-When fetching data on the server, you'll have to setup your fetchQuery method on your Client class.
-Fallback responses will be held inside private Map which will be passed stringified to the component for hydrating.
+You will use the `fetchQuery` method inside `getServerSideProps` to fetch the data and pass the fallback to the page for hydration. 
 
-```ts
-export class Client extends jsonapi(Collection) {
-  private _fallback = new Map();
-  // ... models and other stuff
-
-  public async fetchQuery<TModel extends DatxJsonapiModel>(expression: Expression<TModel>) {
-    try {
-      const response = await createFetcher(this)(expression);
-      this._fallback.set(expression.type, response);
-
-      return {
-        [expression.type]: response,
-      };
-    } catch (error) {
-      if (error instanceof Response) {
-        throw error.error;
-      }
-
-      throw error;
-    }
-  }
-
-
-  public get fallback() {
-    return JSON.stringify(Object.fromEntries(this._fallback));
-  }
-}
-```
-
-Then, you will use the `fetchQuery` method inside `getServerSideProps` to fetch the data and pass the fallback to the page for hydration. 
 ```tsx
 type SSRProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
@@ -310,10 +267,10 @@ export default SSR;
 #### hydrate
 
 ```tsx
-type Fallback = Record<string, IResponseSnapshot>
+type Fallback = Record<string, IRawResponse>
 
 const fallback = {
-  './api/v1/todos': responseSnapshot
+  './api/v1/todos': rawResponse
 }
 
 <Hydrate fallback={fallback}>

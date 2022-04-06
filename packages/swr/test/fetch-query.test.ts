@@ -1,3 +1,4 @@
+import { unstable_serialize } from 'swr';
 import { createClient, Client } from './datx';
 import { server } from './mocks/server';
 import { todosError } from './mocks/todos';
@@ -12,23 +13,21 @@ describe('fetchQuery', () => {
   });
 
   test('should fetch query', async () => {
-    const response = await client.fetchQuery(queryTodos);
+    const { data } = await client.fetchQuery(queryTodos);
 
-    const key = Todo.type;
-
-    expect(response[key].data).toBeTruthy();
-    expect((response[key].data as Todo[]).length).toBe(1);
+    expect(data).toBeTruthy();
+    expect((data.data as Array<Todo>).length).toBe(1);
   });
 
   test('client stores fallback under the appropriate key', async () => {
-    const key = Todo.type;
+    const key = unstable_serialize(queryTodos);
 
     await client.fetchQuery(queryTodos);
-    const parsed = JSON.parse(client.fallback);
+    const fallback = client.fallback;
 
-    expect(Object.keys(parsed)[0]).toBe(key);
-    expect(parsed[key]).toBeTruthy();
-    expect(parsed[key].length).toBe(1);
+    expect(Object.keys(fallback)[0]).toBe(key);
+    expect(fallback[key]).toBeTruthy();
+    expect((fallback[key].data as Array<Todo>).length).toBe(1);
   });
 
   test('should throw on API error', async () => {

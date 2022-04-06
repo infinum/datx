@@ -1,47 +1,43 @@
+import { IType } from '@datx/core';
 import { IRequestOptions } from '@datx/jsonapi';
-import { DatxJsonapiModel } from './DatxJsonapiModel';
 
 export type Operation = 'getOne' | 'getMany' | 'getAll';
 
-export type ExpressionLike = {
+export interface IExpressionLike {
   op: Operation;
-};
+}
 
-// 1. rewrite type to accept only string | number
-// 2. remove generics from expressions
-// 3. model type will be returned from the query function
-
-export type GetOneExpression<TModel extends DatxJsonapiModel> = {
+export interface IGetOneExpression {
   op: 'getOne';
-  type: TModel['meta']['type'];
+  type: IType;
   id: string;
   queryParams?: IRequestOptions['queryParams'];
-};
+}
 
-export type GetManyExpression<TModel extends DatxJsonapiModel> = {
+export interface IGetManyExpression {
   op: 'getMany';
-  type: TModel['meta']['type'];
+  type: IType;
   queryParams?: IRequestOptions['queryParams'];
-};
+}
 
-export type GetAllExpression<TModel extends DatxJsonapiModel> = {
+export interface IGetAllExpression {
   op: 'getAll';
-  type: TModel['meta']['type'];
+  type: IType;
   queryParams?: IRequestOptions['queryParams'];
   maxRequests?: number | undefined;
-};
+}
 
-export type Expression<TModel extends DatxJsonapiModel> =
-  | GetOneExpression<TModel>
-  | GetManyExpression<TModel>
-  | GetAllExpression<TModel>
+export type Expression =
+  | IGetOneExpression
+  | IGetManyExpression
+  | IGetAllExpression;
 
-export type ExpressionArgument<TModel extends DatxJsonapiModel> =
-  Expression<TModel>
+export type ExpressionArgument =
+  Expression
   | null
   | undefined
   | false;
 
-export type QueryExpression<TModel extends DatxJsonapiModel> =
-  | ExpressionArgument<TModel>
-  | (() => ExpressionArgument<TModel>);
+export type QueryExpression =
+  | ExpressionArgument
+  | (() => ExpressionArgument);
