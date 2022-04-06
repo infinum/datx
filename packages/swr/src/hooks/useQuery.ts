@@ -18,12 +18,10 @@ export function useQuery<TModel extends DatxJsonapiModel>(
   queryExpression: QueryExpression<TModel>,
   config?: DatxConfiguration<TModel, any>,
 ) {
-  const shouldFetch = config?.shouldFetch ?? true;
-
   return useSWR<
     Response<TModel, Data<TModel, typeof queryExpression>>,
     Response<TModel, Data<TModel, typeof queryExpression>>
-  >(shouldFetch ? queryExpression : null, {
+  >(queryExpression, {
     ...config,
     use: [middleware, ...(config?.use || [])],
   });

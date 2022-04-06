@@ -34,8 +34,14 @@ export type GetAllExpression<TModel extends DatxJsonapiModel> = {
 export type Expression<TModel extends DatxJsonapiModel> =
   | GetOneExpression<TModel>
   | GetManyExpression<TModel>
-  | GetAllExpression<TModel>;
+  | GetAllExpression<TModel>
+
+export type ExpressionArgument<TModel extends DatxJsonapiModel> =
+  Expression<TModel>
+  | null
+  | undefined
+  | false;
 
 export type QueryExpression<TModel extends DatxJsonapiModel> =
-  | Expression<TModel>
-  | (() => Expression<TModel>);
+  | ExpressionArgument<TModel>
+  | (() => ExpressionArgument<TModel>);

@@ -6,25 +6,17 @@ import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
 import { queryTodo } from './Todo.queries';
 
 export interface ITodoProps {
-  id: string;
-  shouldFetch?: boolean;
+  id?: string;
 }
 
-// 1. remove config object from useQuery
-// 2. move "shouldFetch" logic to the queryTodo expression
-
-export const Todo: FC<ITodoProps> = ({ id, shouldFetch = true }) => {
-  const { data, error } = useQuery(queryTodo(id), { shouldFetch });
+export const Todo: FC<ITodoProps> = ({ id }) => {
+  const { data, error } = useQuery(() => id ? queryTodo(id) : null);
 
   if (error) {
     return <ErrorFallback error={error} />;
   }
 
-  if (!shouldFetch) {
-    return <div>Waiting for dependant call...</div>;
-  }
-
-  if (!data && shouldFetch) {
+  if (!data) {
     return <div>Loading todo...</div>;
   }
 

@@ -2,11 +2,7 @@ import { GetOneExpression } from '@datx/swr';
 
 import { Todo } from '../../../models/Todo';
 
-type Query = (id: string) => GetOneExpression<Todo>;
-
-// Accept generic in queries for determining return value (model type)
-
-export const queryTodo: Query = (id: string) => ({
+export const queryTodo = (id: string): GetOneExpression<Todo> => ({
   id,
   op: 'getOne',
   type: Todo.type,
