@@ -1,17 +1,17 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/dist/client/router';
-import { useDependantCall } from 'src/hooks/useDependantCall';
+import { useSimulateDependantCall } from 'src/hooks/use-simulate-dependant-call';
 
 import { Todo } from '../../../components/features/todo/Todo';
 import { Layout } from '../../../components/shared/layouts/Layout/Layout';
 
 const CSRTodoPage: NextPage = () => {
   const { query } = useRouter();
-  const shouldFetch = useDependantCall();
+  const id = useSimulateDependantCall(String(query.id));
 
   return (
     <Layout>
-      <Todo id={query.id as string} shouldFetch={shouldFetch} />
+      <Todo id={id} />
     </Layout>
   );
 };
