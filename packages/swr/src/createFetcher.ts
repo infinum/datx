@@ -1,45 +1,48 @@
 import {
   Expression,
-  GetOneExpression,
-  GetManyExpression,
-  GetAllExpression,
+  IGetOneExpression,
+  IGetManyExpression,
+  IGetAllExpression,
 } from './interfaces/QueryExpression';
 import { Client } from './interfaces/Client';
 import { IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
 
-function isGetOne(expression: Expression<any>): expression is GetOneExpression<any> {
+function isGetOne(expression: Expression): expression is IGetOneExpression {
   return expression.op === 'getOne';
 }
 
-function isGetMany(expression: Expression<any>): expression is GetManyExpression<any> {
+function isGetMany(expression: Expression): expression is IGetManyExpression {
   return expression.op === 'getMany';
 }
 
-function isGetAll(expression: Expression<any>): expression is GetAllExpression<any> {
+function isGetAll(expression: Expression): expression is IGetAllExpression {
   return expression.op === 'getAll';
 }
 
-export const createFetcher = (client: Client) => <TModel extends IJsonapiModel>(expression: Expression<TModel>, config?: Pick<IRequestOptions, 'networkConfig'>) => {
-  const { networkConfig } = config || {};
+export const createFetcher =
+  (client: Client) => <TModel extends IJsonapiModel = IJsonapiModel>(
+    expression: Expression,
+    config?: Pick<IRequestOptions, 'networkConfig'>,
+  ) => {
+    const { networkConfig } = config || {};
 
-  if (isGetOne(expression)) {
-    const { type, id, queryParams } = expression;
+    if (isGetOne(expression)) {
+      const { type, id, queryParams } = expression;
 
-    return client.getOne(type, id, { queryParams, networkConfig });
-  }
+      return client.getOne<TModel>(type, id, { queryParams, networkConfig });
+    }
 
-  if (isGetMany(expression)) {
-    const { type, queryParams } = expression;
+    if (isGetMany(expression)) {
+      const { type, queryParams } = expression;
 
-    return client.getMany(type, { queryParams, networkConfig });
-  }
+      return client.getMany<TModel>(type, { queryParams, networkConfig });
+    }
 
-  if (isGetAll(expression)) {
-    const { type, queryParams, maxRequests } = expression;
+    if (isGetAll(expression)) {
+      const { type, queryParams, maxRequests } = expression;
 
-    return client.getAll(type, { queryParams, networkConfig }, maxRequests);
-  }
+      return client.getAll<TModel>(type, { queryParams, networkConfig }, maxRequests);
+    }
 
-
-  throw new Error('Invalid expression operation!');
-};
+    throw new Error('Invalid expression operation!');
+  };

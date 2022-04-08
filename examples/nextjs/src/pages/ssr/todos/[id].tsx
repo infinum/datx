@@ -1,8 +1,8 @@
-import { fetchQuery, Hydrate } from '@datx/swr';
+import { Hydrate } from '@datx/swr';
 import type { GetServerSidePropsContext, InferGetServerSidePropsType, NextPage } from 'next';
 
 import { Todo } from '../../../components/features/todo/Todo';
-import { queryTodo } from '../../../components/features/todo/Todo.queries';
+import { todoQuery } from '../../../components/features/todo/Todo.queries';
 import { Layout } from '../../../components/shared/layouts/Layout/Layout';
 import { createClient } from '../../../datx/createClient';
 
@@ -24,29 +24,19 @@ export const getServerSideProps = async ({ params }: GetServerSidePropsContext<{
   if (!id) {
     return {
       notFound: true,
-    }
+    };
   }
 
   const client = createClient();
 
-  // const todo = await fetchQuery(client, queryTodo, { id });
+  await client.fetchQuery(todoQuery(id));
 
-  // const response = await client.fetchQuery(() => queryTodo(id));
-  // await client.fetchQuery(() => queryProfile(response.data.id));
-
-  // Parallel example
-  // Promise.all([
-  //   client.fetchQuery(() => queryTodo(id)),
-  //   client.fetchQuery(() => queryTodo(id)),
-  //   client.fetchQuery(() => queryTodo(id))
-  // ]);
-
-  // const { fallback } = client;
+  const { fallback } = client;
 
   return {
     props: {
       id,
-      // fallback
+      fallback,
     },
   };
 };

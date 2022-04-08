@@ -6,6 +6,6 @@ export * from './interfaces/Client';
 export * from './interfaces/QueryExpression';
 export * from './hydrate';
 export * from './context';
-export * from './ssr/fetchQuery';
 export * from './createFetcher';
 export * from './middleware';
+export * from './mixin';

@@ -1,39 +1,46 @@
-import { IModelConstructor } from '@datx/core';
-import { IRequestOptions, IJsonapiModel } from '@datx/jsonapi';
+import { IType } from '@datx/core';
+import { IRequestOptions } from '@datx/jsonapi';
 
 export type Operation = 'getOne' | 'getMany' | 'getAll';
 
-export type ExpressionLike = {
+export interface IExpressionLike {
   op: Operation;
-};
+}
 
-export type GetOneExpression<TModel extends IJsonapiModel> = {
-  op: 'getOne';
-  type: IModelConstructor<TModel>;
+export interface IGetOneExpression {
+  op: 'getOne',
+  type: IType;
   id: string;
   queryParams?: IRequestOptions['queryParams'];
-};
+}
 
-export type GetManyExpression<TModel extends IJsonapiModel> = {
+export interface IGetManyExpression {
   op: 'getMany';
-  type: IModelConstructor<TModel>;
-  id: never;
+  type: IType;
   queryParams?: IRequestOptions['queryParams'];
-};
+}
 
-export type GetAllExpression<TModel extends IJsonapiModel> = {
+export interface IGetAllExpression {
   op: 'getAll';
-  type: IModelConstructor<TModel>;
-  id: never;
+  type: IType;
   queryParams?: IRequestOptions['queryParams'];
   maxRequests?: number | undefined;
-};
+}
 
-export type Expression<TModel extends IJsonapiModel> =
-  | GetOneExpression<TModel>
-  | GetManyExpression<TModel>
-  | GetAllExpression<TModel>;
+export type DeferredLike = null | undefined | false;
 
-export type QueryExpression<TModel extends IJsonapiModel> =
-  | Expression<TModel>
-  | (() => Expression<TModel>);
+export type ExpressionArgument =
+  | IGetOneExpression
+  | IGetManyExpression
+  | IGetAllExpression
+  | DeferredLike;
+
+export type Expression =
+  | ExpressionArgument
+  | (() => ExpressionArgument);
+
+export type RemoveDeferredLike<TType> = TType extends DeferredLike ? never : TType;
+
+export type ExtractDataType<TExpression> = TExpression extends () => infer R
+  ? RemoveDeferredLike<R>
+  : RemoveDeferredLike<TExpression>;

@@ -1,10 +1,11 @@
-import { Collection } from "@datx/core";
-import { jsonapiCollection, config } from "@datx/jsonapi";
+import { Collection } from '@datx/core';
+import { config } from '@datx/jsonapi';
+import { jsonapiSwrClient } from '@datx/swr';
 
-import { Post } from "../models/Post";
-import { Todo } from "../models/Todo";
+import { Post } from '../models/Post';
+import { Todo } from '../models/Todo';
 
-class Client extends jsonapiCollection(Collection) {
+class Client extends jsonapiSwrClient(Collection) {
   public static types = [Todo, Post];
 }
 

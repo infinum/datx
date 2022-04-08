@@ -9,36 +9,46 @@ import { useQuery } from '../src';
 import { queryTodos } from './queries';
 
 const loadingMessage = 'Loading...';
+const shouldFetchMessage = 'Waiting for dependant call...';
 
-interface ITesterProps { shouldFetch?: boolean }
+interface ITesterProps {
+  shouldFetch?: boolean;
+}
 
 const Tester: FC<ITesterProps> = ({ shouldFetch = true }) => {
-  const { data, error } = useQuery(queryTodos, { variables: { shouldFetch } });
+  const { data, error } = useQuery(queryTodos, { shouldFetch });
 
   if (error) {
     return <div>{getErrorMessage(error)}</div>;
   }
 
-  if (!data) {
+  if (!data && shouldFetch) {
     return <div>{loadingMessage}</div>;
   }
 
-  return <div>{data.data[0].message}</div>;
-};
+  if (!shouldFetch) {
+    return <div>{shouldFetchMessage}</div>;
+  }
 
+  return <div>{data?.data[0].message}</div>;
+};
 
 describe('useQuery', () => {
   it('should render data', async () => {
-    renderWithConfig(<Tester />);
+    renderWithConfig(<Tester shouldFetch />);
     screen.getByText(loadingMessage);
 
     await screen.findByText(message);
   });
 
   it('should conditionally fetch data', async () => {
-    renderWithConfig(<Tester shouldFetch={false} />);
+    const renderResult = renderWithConfig(<Tester shouldFetch={false} />);
+    screen.getByText(shouldFetchMessage);
 
-    await screen.getByText(loadingMessage);
+    renderResult.rerender(<Tester />);
+    screen.getByText(loadingMessage);
+
+    await screen.findByText(message);
   });
 
   it('should handle errors', async () => {

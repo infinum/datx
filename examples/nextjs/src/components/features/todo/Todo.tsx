@@ -1,23 +1,24 @@
 import { useQuery } from '@datx/swr';
 import { FC } from 'react';
+
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
 
-import { queryTodo } from './Todo.queries';
+import { todoQuery } from './Todo.queries';
 
 export interface ITodoProps {
-  id: string;
+  id?: string;
 }
 
 export const Todo: FC<ITodoProps> = ({ id }) => {
-  const { data, error } = useQuery(() => queryTodo(id));
+  const { data, error } = useQuery(todoQuery(id));
 
   if (error) {
     return <ErrorFallback error={error} />;
   }
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <div>Loading todo...</div>;
   }
 
-  return <div>{data.data?.message}</div>;
+  return <div>{data?.data?.message}</div>;
 };

@@ -7,13 +7,13 @@ import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
 import NextLink from 'next/link';
 
 import { createTodo } from './Todos.mutations';
-import { queryTodos } from './Todos.queries';
+import { todosQuery } from './Todos.queries';
 
 export interface ITodosProps {}
 
 export const Todos: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { data, error, mutate } = useQuery(queryTodos);
+  const { data, error, mutate } = useQuery(todosQuery);
   const [create, { status }] = useMutation(createTodo, {
     onSuccess: async () => {
       const input = inputRef.current;

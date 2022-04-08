@@ -13,5 +13,3 @@ export class Post extends jsonapiModel(Model) {
   @Attribute()
   body!: string;
 }
-
-

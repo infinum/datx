@@ -1,7 +1,8 @@
-import { fetchQuery, Client } from '../src';
-import { createClient } from './datx';
+import { unstable_serialize } from 'swr';
+import { createClient, Client } from './datx';
 import { server } from './mocks/server';
 import { todosError } from './mocks/todos';
+import { Todo } from './models/Todo';
 import { queryTodos } from './queries';
 
 describe('fetchQuery', () => {
@@ -12,39 +13,27 @@ describe('fetchQuery', () => {
   });
 
   test('should fetch query', async () => {
-    const todos = await fetchQuery(client, queryTodos, { shouldFetch: true });
+    const { data } = await client.fetchQuery(queryTodos);
 
-    const key = 'http://localhost:3000/todos';
-    const rawResponse = {
-      response: {
-        data: {
-          data: [
-            {
-              attributes: {
-                message: 'JSON:API paints my bikeshed!',
-              },
-              id: '1',
-              type: 'todos',
-            },
-          ],
-        },
-        headers: [
-          ['content-type', 'application/json'],
-          ['x-powered-by', 'msw'],
-        ],
-        status: 200,
-      },
-    };
+    expect(data).toBeTruthy();
+    expect((data.data as Array<Todo>).length).toBe(1);
+  });
 
-    expect(todos).toStrictEqual({
-      [key]: rawResponse,
-    });
+  test('client stores fallback under the appropriate key', async () => {
+    const key = unstable_serialize(queryTodos);
+
+    await client.fetchQuery(queryTodos);
+    const fallback = client.fallback;
+
+    expect(Object.keys(fallback)[0]).toBe(key);
+    expect(fallback[key]).toBeTruthy();
+    // expect((fallback[key].data as Array<Todo>).length).toBe(1);
   });
 
   test('should throw on API error', async () => {
     server.use(todosError);
 
-    await expect(fetchQuery(client, queryTodos, { shouldFetch: true })).rejects.toStrictEqual([
+    await expect(client.fetchQuery(queryTodos)).rejects.toStrictEqual([
       {
         detail: 'Not authorized on Sundays.',
         status: '403',
@@ -52,13 +41,13 @@ describe('fetchQuery', () => {
     ]);
   });
 
-  describe('Conditional Data Fetching', () => {
-    test('should throw if variables are used inside query but they are not provided', async () => {
-      await expect(fetchQuery(client, queryTodos)).rejects.toThrow();
-    });
+  // describe('Conditional Data Fetching', () => {
+  //   test('should throw if variables are used inside query but they are not provided', async () => {
+  //     await expect(client.fetchQuery(queryTodos)).rejects.toThrow();
+  //   });
 
-    test('should throw if variables are used inside query but properties are undefined', async () => {
-      await expect(fetchQuery(client, queryTodos, {})).rejects.toThrow();
-    });
-  });
+  //   test('should throw if variables are used inside query but properties are undefined', async () => {
+  //     await expect(client.fetchQuery(queryTodos)).rejects.toThrow();
+  //   });
+  // });
 });
