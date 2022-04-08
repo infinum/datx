@@ -26,11 +26,11 @@
     "angular"
   ],
   "scripts": {
-    "test": "jest --coverage",
-    "test:watch": "jest --watch --coverage",
+    "ng": "ng",
+    "build": "ng build datx-jsonapi-angular",
     "prepublish": "npm run build",
-    "build": "rollup -c",
-    "watch": "rollup --config --watch"
+    "test": "jest --coverage",
+    "test:watch": "jest --watch --coverage"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
