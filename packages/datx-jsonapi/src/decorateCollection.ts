@@ -313,7 +313,7 @@ export function decorateCollection(
           } else {
             const refsDef = getMeta(record, 'refs') as Record<string, IReferenceOptions>;
 
-            if (refsDef && ref in refsDef) {
+            if (refsDef && ref in refsDef && ref !== 'proto') {
               record[ref] = refsDef[ref].type === ReferenceType.TO_MANY ? [] : null;
             }
           }

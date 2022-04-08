@@ -314,7 +314,12 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
     });
 
     const ResponseConstructor: typeof Response = this.constructor as typeof Response;
-    return new ResponseConstructor(this.__internal.response, this.collection, this.__internal.options, data);
+    return new ResponseConstructor(
+      this.__internal.response,
+      this.collection,
+      this.__internal.options,
+      data,
+    );
   }
 
   public clone(): Response<TModel> {

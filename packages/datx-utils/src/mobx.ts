@@ -17,8 +17,10 @@ const noopMobX = {
 
   set(obj: Record<string, any>, key: string | Record<string, any>, value?: any): void {
     if (typeof key === 'string') {
-      obj[key] = value;
-    } else {
+      if (key !== 'props') {
+        obj[key] = value;
+      }
+    } else if (!('props' in obj)) {
       Object.assign(obj, key);
     }
   },

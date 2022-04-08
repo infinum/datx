@@ -1,0 +1,28 @@
+name: Support request
+description: Have a question that isn't answered in the docs? Have an issue you're not able to resolve?
+labels: support
+assignees: DarkoKukovec
+body:
+  - type: input
+    id: libs
+    validations:
+      required: true
+    attributes:
+      label: Used libraries
+      description: Which `@datx` libraries are you using
+      placeholder: core, jsonapi, ...
+  - type: input
+    id: versions
+    validations:
+      required: true
+    attributes:
+      label: Library version(s)
+      description: Version of the `@datx` libraries you're using
+      placeholder: "@datx/core 2.3.1, @datx/jsonapi 2.3.0"
+  - type: textarea
+    id: issue
+    attributes:
+      label: Issue description
+      description: Please describe your issue with as much details (and examples) as possible
+    validations:
+      required: true

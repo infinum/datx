@@ -1,0 +1,47 @@
+name: Feature request
+description: Describe a feature the lib is missing which you think should be added.
+labels: enhancement
+assignees: DarkoKukovec
+body:
+  - type: checkboxes
+    id: major-version
+    validations:
+      required: true
+    attributes:
+      label: Relevant version
+      description: Which major version of `@datx` is relevant for you?
+      options:
+        - label: 0.x
+        - label: 1.x
+        - label: 2.x
+  - type: checkboxes
+    id: libs
+    validations:
+      required: true
+    attributes:
+      label: Relevant libraries
+      description: Which `@datx` libraries are relevant for this change?
+      options:
+        - label: utils
+        - label: core
+        - label: network
+        - label: jsonapi
+        - label: jsonapi-angular
+  - type: dropdown
+    id: breaking
+    validations:
+      required: true
+    attributes:
+      label: Breaking change
+      description: Would this change cause a breaking change (where some existing feature would break)?
+      options:
+        - "Yes"
+        - "No"
+        - I'm not sure
+  - type: textarea
+    id: description
+    validations:
+      required: true
+    attributes:
+      label: Description
+      description: Please describe the feature you're suggesting with as many details as possible

@@ -52,7 +52,7 @@ function defaultSetter(): void {
 }
 
 export function getMetaObj(obj: Record<string, any>): Record<string, any> {
-  if (!Object.prototype.hasOwnProperty.call(obj, DATX_META)) {
+  if (!Object.prototype.hasOwnProperty.call(obj, DATX_META) && !('prop' in obj)) {
     Object.defineProperty(obj, DATX_META, {
       configurable: false,
       enumerable: false,
@@ -150,16 +150,18 @@ export function assignComputed<T = any>(
     },
   );
 
-  Object.defineProperty(obj, key, {
-    get() {
-      return computedObj.getter;
-    },
-    set(val: T) {
-      setter.call(obj, val);
-    },
-    enumerable: true,
-    configurable: true,
-  });
+  if (!('prop' in obj)) {
+    Object.defineProperty(obj, key, {
+      get() {
+        return computedObj.getter;
+      },
+      set(val: T) {
+        setter.call(obj, val);
+      },
+      enumerable: true,
+      configurable: true,
+    });
+  }
 }
 
 export function error(...args: Array<any>): void {

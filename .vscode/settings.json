@@ -1,4 +1,8 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "workbench.colorCustomizations": {}
+  "workbench.colorCustomizations": {},
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "angular.enable-strict-mode-prompt": false
 }
