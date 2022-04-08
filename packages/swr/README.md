@@ -20,12 +20,12 @@ For extra SSR setup, see [SSR Setup section](#ssr)
 // src/datx/createClient.ts
 
 import { Collection } from '@datx/core';
-import { jsonapiCollection, config } from '@datx/jsonapi';
+import { jsonapiSwrClient, config } from '@datx/jsonapi';
 
 import { Todo } from '../models/Todo';
 
-class Client extends jsonapiCollection(Collection) {
-  public static types = [Todo];
+class Client extends jsonapiSwrClient(Collection) {
+  public static types = [Todo, Post];
 }
 
 export function createClient() {
