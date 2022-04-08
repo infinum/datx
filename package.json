@@ -11,11 +11,11 @@
   "scripts": {
     "precommit": "npm run lint & lerna run test",
     "lint": "eslint packages/**/*.ts",
-    "test": "lerna run --parallel test",
+    "test": "lerna run test",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --no-private",
-    "watch": "lerna run --parallel watch --no-private",
-    "watch:swr": "lerna run --parallel watch --scope @datx/swr",
+    "watch": "lerna run watch --no-private",
+    "watch:swr": "lerna run watch --scope @datx/swr",
     "clean": "lerna clean && yarn clean:dist",
     "clean:dist": "lerna exec -- rm -rf ./dist"
   },
