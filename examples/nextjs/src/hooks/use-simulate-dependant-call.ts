@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-export const useSimulateDependantCall = (value: string | number, delay = 3000) => {
-  const [deferredValue, setDeferredValue] = useState<typeof value>();
+export const useSimulateDependantCall = <T>(value: T, delay = 3000) => {
+  const [deferredValue, setDeferredValue] = useState<T | undefined>();
 
   useEffect(() => {
     let timeout = setTimeout(() => {

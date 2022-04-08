@@ -8,7 +8,7 @@ export interface IExpressionLike {
 }
 
 export interface IGetOneExpression {
-  op: 'getOne';
+  op: 'getOne',
   type: IType;
   id: string;
   queryParams?: IRequestOptions['queryParams'];
@@ -27,17 +27,20 @@ export interface IGetAllExpression {
   maxRequests?: number | undefined;
 }
 
-export type Expression =
-  | IGetOneExpression
-  | IGetManyExpression
-  | IGetAllExpression;
+export type DeferredLike = null | undefined | false;
 
 export type ExpressionArgument =
-  Expression
-  | null
-  | undefined
-  | false;
+  | IGetOneExpression
+  | IGetManyExpression
+  | IGetAllExpression
+  | DeferredLike;
 
-export type QueryExpression =
+export type Expression =
   | ExpressionArgument
   | (() => ExpressionArgument);
+
+export type RemoveDeferredLike<TType> = TType extends DeferredLike ? never : TType;
+
+export type ExtractDataType<TExpression> = TExpression extends () => infer R
+  ? RemoveDeferredLike<R>
+  : RemoveDeferredLike<TExpression>;

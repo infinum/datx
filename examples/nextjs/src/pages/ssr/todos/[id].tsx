@@ -2,7 +2,7 @@ import { Hydrate } from '@datx/swr';
 import type { GetServerSidePropsContext, InferGetServerSidePropsType, NextPage } from 'next';
 
 import { Todo } from '../../../components/features/todo/Todo';
-import { queryTodo } from '../../../components/features/todo/Todo.queries';
+import { todoQuery } from '../../../components/features/todo/Todo.queries';
 import { Layout } from '../../../components/shared/layouts/Layout/Layout';
 import { createClient } from '../../../datx/createClient';
 
@@ -29,7 +29,7 @@ export const getServerSideProps = async ({ params }: GetServerSidePropsContext<{
 
   const client = createClient();
 
-  await client.fetchQuery(queryTodo(id));
+  await client.fetchQuery(todoQuery(id));
 
   const { fallback } = client;
 

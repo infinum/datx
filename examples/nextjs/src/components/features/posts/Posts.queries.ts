@@ -1,7 +1,7 @@
 import { Expression } from '@datx/swr';
 import { Post } from 'src/models/Post';
 
-export const queryPosts: Expression<Post> = {
+export const postsQuery: Expression = {
   op: 'getMany',
   type: Post.type,
 };
