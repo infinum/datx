@@ -1,9 +1,9 @@
 import { Hydrate } from '@datx/swr';
 import type { NextPage, InferGetServerSidePropsType } from 'next';
 
-import { queryPosts } from '../../../components/features/posts/Posts.queries';
+import { postsQuery } from '../../../components/features/posts/Posts.queries';
 import { Todos } from '../../../components/features/todos/Todos';
-import { queryTodos } from '../../../components/features/todos/Todos.queries';
+import { todosQuery } from '../../../components/features/todos/Todos.queries';
 import { Layout } from '../../../components/shared/layouts/Layout/Layout';
 import { createClient } from '../../../datx/createClient';
 
@@ -22,7 +22,7 @@ const SSR: NextPage<SSRProps> = ({ fallback }) => {
 export const getServerSideProps = async () => {
   const client = createClient();
 
-  await Promise.allSettled([client.fetchQuery(queryTodos), client.fetchQuery(queryPosts)]);
+  await Promise.allSettled([client.fetchQuery(todosQuery), client.fetchQuery(postsQuery)]);
 
   // TODO - handle 404
 

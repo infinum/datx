@@ -3,14 +3,14 @@ import { FC } from 'react';
 
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
 
-import { todoQuery } from './Todo.queries';
+import { getTodoQuery } from './Todo.queries';
 
 export interface ITodoProps {
   id?: string;
 }
 
 export const Todo: FC<ITodoProps> = ({ id }) => {
-  const { data, error } = useQuery(todoQuery(id));
+  const { data, error } = useQuery(getTodoQuery(id));
 
   if (error) {
     return <ErrorFallback error={error} />;
