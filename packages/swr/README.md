@@ -77,7 +77,7 @@ import { Todo } from '../../../models/Todo';
 
 export type TodosResponse = Response<Todo, Array<Todo>>;
 
-export const queryTodos: GetManyExpression<Todo> = {
+export const todosQuery: GetManyExpression<Todo> = {
   op: 'getMany',
   type: Todo.type,
 };
@@ -102,7 +102,7 @@ export const createTodo = (client: Client, message: string | undefined) => {
 
 export const Todos: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { data, error, mutate } = useQuery(queryTodos);
+  const { data, error, mutate } = useQuery(todosQuery);
   const [create, { status }] = useMutation(createTodo, {
     onSuccess: async () => {
       const input = inputRef.current;
@@ -201,16 +201,12 @@ export interface IGetAllExpression {
   maxRequests?: number | undefined;
 }
 
-export type Expression =
-  | IGetOneExpression
-  | IGetManyExpression
-  | IGetAllExpression;
+export type Expression = IGetOneExpression | IGetManyExpression | IGetAllExpression;
 ```
 
 ##### Query config
 
 It's the [SWR config](https://swr.vercel.app/docs/options#options) extended with `networkConfig` prop.
-
 
 ```ts
 export type DatxConfiguration<
@@ -221,7 +217,7 @@ export type DatxConfiguration<
   Response<TModel, TData>,
   Fetcher<Response<TModel, TData>>
 > & {
-  networkConfig?: IRequestOptions['networkConfig'],
+  networkConfig?: IRequestOptions['networkConfig'];
 };
 ```
 
@@ -234,14 +230,14 @@ This is a helper hook until [this](https://github.com/vercel/swr/pull/1450) is m
 
 ### SSR
 
-You will use the `fetchQuery` method inside `getServerSideProps` to fetch the data and pass the fallback to the page for hydration. 
+You will use the `fetchQuery` method inside `getServerSideProps` to fetch the data and pass the fallback to the page for hydration.
 
 ```tsx
-type SSRProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+type HomeProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const SSR: NextPage<SSRProps> = ({ fallback }) => {
+const Home: NextPage<SSRProps> = ({ fallback }) => {
   return (
-    <Hydrate fallback={JSON.parse(fallback)}>
+    <Hydrate fallback={fallback}>
       <Layout>
         <Todos />
       </Layout>
@@ -252,7 +248,7 @@ const SSR: NextPage<SSRProps> = ({ fallback }) => {
 export const getServerSideProps = async () => {
   const client = createClient();
 
-  const todo = await client.fetchQuery(queryTodos);
+  const todo = await client.fetchQuery(todosQuery);
 
   return {
     props: {
@@ -261,7 +257,7 @@ export const getServerSideProps = async () => {
   };
 };
 
-export default SSR;
+export default Home;
 ```
 
 #### hydrate
@@ -270,7 +266,7 @@ export default SSR;
 type Fallback = Record<string, IRawResponse>
 
 const fallback = {
-  './api/v1/todos': rawResponse
+  '/api/v1/todos': rawResponse
 }
 
 <Hydrate fallback={fallback}>
