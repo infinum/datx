@@ -6,5 +6,6 @@
     "noUnusedLocals": true,
     "resolveJsonModule": true,
     "outDir": "./dist",
+    "composite": true
   }
 }
