@@ -16,7 +16,7 @@ interface ITesterProps {
 }
 
 const Tester: FC<ITesterProps> = ({ shouldFetch = true }) => {
-  const { data, error } = useQuery(queryTodos, { shouldFetch });
+  const { data, error } = useQuery(shouldFetch && queryTodos);
 
   if (error) {
     return <div>{getErrorMessage(error)}</div>;
