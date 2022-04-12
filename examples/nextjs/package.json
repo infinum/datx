@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@datx/swr": "^0.0.1",
+    "@datx/swr": "^2.5.0-beta.0",
     "next": "12.0.4",
     "next-api-router": "^1.0.4",
     "react": "17.0.2",

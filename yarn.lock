@@ -1431,7 +1431,7 @@
   dependencies:
     postcss-value-parser "^4.2.0"
 
-"@datx/swr@^0.0.1":
+"@datx/swr@^2.5.0-beta.0":
   version "2.5.0-beta.0"
   dependencies:
     "@datx/core" "2.5.0-beta.0"
