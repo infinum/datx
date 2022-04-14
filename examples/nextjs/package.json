@@ -6,12 +6,19 @@
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "ANALYZE=true yarn build",
+    "analyze:sourcemap": "source-map-explorer .next/static/**/*.js"
   },
   "dependencies": {
+    "@datx/core": "^2.5.0-beta.0",
+    "@datx/jsonapi": "^2.5.0-beta.0",
     "@datx/swr": "^2.5.0-beta.0",
+    "@next/bundle-analyzer": "12.1.5",
+    "mobx": "6.5.0",
     "next": "12.0.4",
     "next-api-router": "^1.0.4",
+    "next-compose-plugins": "2.2.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "swr": "^1.1.0",
@@ -19,11 +26,13 @@
   },
   "devDependencies": {
     "@infinumjs/eslint-config-react-ts": "^2.9.0",
+    "@next/eslint-plugin-next": "12.1.5",
     "@types/node": "16.11.11",
     "@types/react": "17.0.37",
     "@types/uuid": "^8.3.3",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.4",
+    "source-map-explorer": "2.5.2",
     "typescript": "4.5.2"
   }
 }

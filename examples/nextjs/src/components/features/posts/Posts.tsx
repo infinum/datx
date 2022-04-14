@@ -2,12 +2,12 @@ import { useQuery } from '@datx/swr';
 import { FC, useState } from 'react';
 
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
-import { queryPosts } from './Posts.queries';
+import { postsQuery } from './Posts.queries';
 
 export const Posts: FC = () => {
   const [pageIndex, setPageIndex] = useState(0);
 
-  const { data, error } = useQuery(queryPosts);
+  const { data, error } = useQuery(postsQuery);
 
   if (error) {
     return <ErrorFallback error={error} />;

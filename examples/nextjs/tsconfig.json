@@ -16,10 +16,10 @@
     "incremental": true,
     "experimentalDecorators": true,
     "baseUrl": ".",
+    "paths": {
+      "mobx": ["./mobx.js"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"],
-  "references": [
-    { "path": "../../packages/swr" }
-  ]
+  "exclude": ["node_modules"]
 }

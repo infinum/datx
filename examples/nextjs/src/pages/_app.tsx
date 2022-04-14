@@ -1,3 +1,5 @@
+import '@datx/core/disable-mobx';
+
 import type { AppProps } from 'next/app';
 import { createFetcher, DatxProvider, useSafeClient } from '@datx/swr';
 import { createClient } from '../datx/createClient';
