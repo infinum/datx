@@ -1,28 +1,20 @@
-import { IJsonapiModel, Response } from '@datx/jsonapi';
+import { Response } from '@datx/jsonapi';
 import useSWR from 'swr';
 
-import { ExtractDataType, Expression } from '../interfaces/QueryExpression';
+import { Expression } from '../interfaces/QueryExpression';
 import { DatxConfiguration } from '../interfaces/DatxConfiguration';
 import { middleware } from '../middleware';
+import { Data, Model } from '../interfaces/UserQuery';
 
-type Data<
-  TModel extends IJsonapiModel,
-  TExpression extends Expression,
-> = ExtractDataType<TExpression> extends { op: 'getOne' } ? TModel : Array<TModel>;
-
-export function useQuery<TModel extends IJsonapiModel>(
-  queryExpression: Expression,
-  config?: DatxConfiguration<TModel, any>,
+export function useQuery(
+  expression: Expression,
+  config?: DatxConfiguration<Model<typeof expression>, Data<typeof expression>>,
 ) {
   return useSWR<
-    Response<TModel, Data<TModel, typeof queryExpression>>,
-    Response<TModel, Data<TModel, typeof queryExpression>>
-  >(queryExpression, {
+    Response<Model<typeof expression>, Data<typeof expression>>,
+    Response<Model<typeof expression>, Data<typeof expression>>
+  >(expression, {
     ...config,
     use: [middleware, ...(config?.use || [])],
   });
 }
-
-// const key: Expression = { op: 'getMany', type: 'test', id: '1' };
-
-// type Test = Data<IJsonapiModel, typeof key>

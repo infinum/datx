@@ -2,7 +2,7 @@ import { Model, Attribute } from '@datx/core';
 import { jsonapiModel } from '@datx/jsonapi';
 
 export class Post extends jsonapiModel(Model) {
-  static type = 'posts';
+  public static readonly type = 'posts';
 
   @Attribute({ isIdentifier: true })
   id!: number;

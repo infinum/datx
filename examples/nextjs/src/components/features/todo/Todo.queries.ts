@@ -1,11 +1,10 @@
-import { Expression } from '@datx/swr';
 import { Todo } from '../../../models/Todo';
 
-export const getTodoQuery = (id?: string): Expression =>
+export const getTodoQuery = (id?: string) =>
   id
-    ? {
+    ? ({
         id,
-        op: 'getOne' as const,
+        op: 'getOne',
         type: Todo.type,
-      }
+      } as const)
     : null;

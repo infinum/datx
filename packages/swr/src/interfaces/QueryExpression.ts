@@ -1,28 +1,23 @@
 import { IType } from '@datx/core';
 import { IRequestOptions } from '@datx/jsonapi';
-
-export type Operation = 'getOne' | 'getMany' | 'getAll';
-
-export interface IExpressionLike {
-  op: Operation;
-}
+import { ModelTypes } from './Client';
 
 export interface IGetOneExpression {
-  op: 'getOne',
-  type: IType;
+  readonly op: 'getOne' | Omit<string, 'getOne'>;
+  readonly type: ModelTypes['type'];
   id: string;
   queryParams?: IRequestOptions['queryParams'];
 }
 
 export interface IGetManyExpression {
-  op: 'getMany';
-  type: IType;
+  readonly op: 'getMany' | Omit<string, 'getMany'>;
+  readonly type: ModelTypes['type'];
   queryParams?: IRequestOptions['queryParams'];
 }
 
 export interface IGetAllExpression {
-  op: 'getAll';
-  type: IType;
+  readonly op: 'getAll' | Omit<string, 'getAll'>;
+  readonly type: ModelTypes['type'];
   queryParams?: IRequestOptions['queryParams'];
   maxRequests?: number | undefined;
 }
@@ -35,12 +30,17 @@ export type ExpressionArgument =
   | IGetAllExpression
   | DeferredLike;
 
-export type Expression =
-  | ExpressionArgument
-  | (() => ExpressionArgument);
+export type Expression = ExpressionArgument | (() => ExpressionArgument);
 
 export type RemoveDeferredLike<TType> = TType extends DeferredLike ? never : TType;
 
-export type ExtractDataType<TExpression> = TExpression extends () => infer R
-  ? RemoveDeferredLike<R>
-  : RemoveDeferredLike<TExpression>;
+export type ExactExpressionArgument<TExpression> =
+  TExpression extends () => infer RExpressionArgument
+    ? RemoveDeferredLike<RExpressionArgument>
+    : RemoveDeferredLike<TExpression>;
+
+export type FindModel<TTypeLiteral extends IType> = {
+  [TModel in ModelTypes as TModel['type']]: TModel['type'] extends TTypeLiteral
+    ? InstanceType<TModel>
+    : never;
+}[ModelTypes['type']];

@@ -2,7 +2,7 @@ import { Model, Attribute } from '@datx/core';
 import { jsonapiModel } from '@datx/jsonapi';
 
 export class Todo extends jsonapiModel(Model) {
-  static type = 'todos';
+  public static readonly type = 'todos';
 
   @Attribute({ isIdentifier: true })
   id!: number;
@@ -10,5 +10,3 @@ export class Todo extends jsonapiModel(Model) {
   @Attribute()
   message!: string;
 }
-
-
