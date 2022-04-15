@@ -12,32 +12,44 @@ interface IHandlerSettings {
   types: Array<IModelConstructor<PureModel>>;
 }
 
-export const createHandler = ({ types }: IHandlerSettings) => (req: NextApiRequest, res: NextApiResponse) => {
-  const { query: { slug } } = req;
+export const createHandler =
+  ({ types }: IHandlerSettings) =>
+  (req: NextApiRequest, res: NextApiResponse) => {
+    const {
+      query: { slug },
+    } = req;
 
-  const [type, id] = slug as Array<string>;
+    const [type, id] = slug as Array<string>;
 
-  const Model = types.find(findModel(type))
+    const Model = types.find(findModel(type));
 
-  if (Model) {
-    let records = db.get(type);
+    if (Model) {
+      let records = db.get(type);
 
-    if (id) {
-      const record = records.find((item: Record) => item.id === id);
+      if (id) {
+        const record = records.find((item: Record) => item.id === id);
 
-      res.status(200).json(serializeOne(record, type));
+        res.status(200).json(serializeOne(record, type));
+        return;
+      }
+
+      if (req.method === 'POST') {
+        const id = v4();
+        const {
+          data: { attributes },
+        } = JSON.parse(req.body);
+        const record = db
+          .set(type, [...records, { id, ...(attributes || {}) }])
+          .get(type)
+          .find(findRecord(id));
+
+        res.status(201).json(serializeOne(record, type));
+        return;
+      }
+
+      res.status(200).json(serializeMany(records, type));
+      return;
     }
 
-    if (req.method === 'POST') {
-      const id = v4();
-      const { data: { attributes }} = JSON.parse(req.body);
-      const record = db.set(type, [...records, { id, ...(attributes || {}) }]).get(type).find(findRecord(id));
-
-      res.status(201).json(serializeOne(record, type));
-    }
-
-    res.status(200).json(serializeMany(records, type));
-  }
-
-  res.status(404).json(serializeErrors([{ status: 404, title: 'Not Found '}]));
-};
+    res.status(404).json(serializeErrors([{ status: 404, title: 'Not Found ' }]));
+  };

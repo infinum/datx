@@ -1,7 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
-export const Layout: FC = ({ children }) => {
+export const Layout: FC<PropsWithChildren<unknown>> = ({ children }) => {
   const router = useRouter();
 
   return (
