@@ -1,11 +1,10 @@
 import { Response } from '@datx/jsonapi';
-import { Expression } from '@datx/swr';
 
 import { Todo } from '../../../models/Todo';
 
 export type TodosResponse = Response<Todo, Array<Todo>>;
 
-export const todosQuery: Expression = {
+export const todosQuery = {
   op: 'getMany',
-  type: Todo.type,
-};
+  type: 'todos',
+} as const;

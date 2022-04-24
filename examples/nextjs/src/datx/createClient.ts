@@ -5,7 +5,7 @@ import { jsonapiSwrClient } from '@datx/swr';
 import { Post } from '../models/Post';
 import { Todo } from '../models/Todo';
 
-class JsonapiSwrClient extends jsonapiSwrClient(Collection) {
+export class JsonapiSwrClient extends jsonapiSwrClient(Collection) {
   public static types = [Todo, Post];
 }
 
@@ -13,11 +13,9 @@ export function createClient() {
   config.baseUrl = process.env.NEXT_PUBLIC_JSONAPI_URL as string;
   config.cache = 1;
 
-  return new JsonapiSwrClient();
+  const client = new JsonapiSwrClient();
+
+  return client;
 }
 
-declare module '@datx/swr' {
-  export interface IClient {
-    types: typeof JsonapiSwrClient['types'][number];
-  }
-}
+export type Client = typeof JsonapiSwrClient;

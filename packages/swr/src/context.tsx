@@ -1,16 +1,13 @@
 import React, { createContext, PropsWithChildren } from 'react';
 import { Client } from './interfaces/Client';
 
-export const DatxContext = createContext<Client | null>(null);
+export const DatxContext = createContext<InstanceType<Client> | null>(null);
 
-export interface IDatxProviderProps<TClient extends Client> {
-  client: TClient;
+export interface IDatxProviderProps {
+  client: InstanceType<Client>;
 }
 
-export function DatxProvider<TClient extends Client>({
-  client,
-  children,
-}: PropsWithChildren<IDatxProviderProps<TClient>>) {
+export function DatxProvider({ client, children }: PropsWithChildren<IDatxProviderProps>) {
   return <DatxContext.Provider value={client}>{children}</DatxContext.Provider>;
 }
 

@@ -1,4 +1,3 @@
-import { IType } from '@datx/core';
 import { IRequestOptions } from '@datx/jsonapi';
 import { ModelTypes } from './Client';
 
@@ -34,12 +33,13 @@ export type Expression = ExpressionArgument | (() => ExpressionArgument);
 
 export type RemoveDeferredLike<TType> = TType extends DeferredLike ? never : TType;
 
-export type ExactExpressionArgument<TExpression> =
-  TExpression extends () => infer RExpressionArgument
+export type ExactExpressionArgument<TExpression> = TExpression extends () => infer RExpressionFn
+  ? RExpressionFn extends () => infer RExpressionArgument
     ? RemoveDeferredLike<RExpressionArgument>
-    : RemoveDeferredLike<TExpression>;
+    : RemoveDeferredLike<RExpressionFn>
+  : RemoveDeferredLike<TExpression>;
 
-export type FindModel<TTypeLiteral extends IType> = {
+export type FindModel<TTypeLiteral extends string> = {
   [TModel in ModelTypes as TModel['type']]: TModel['type'] extends TTypeLiteral
     ? InstanceType<TModel>
     : never;
