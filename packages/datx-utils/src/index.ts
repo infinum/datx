@@ -19,7 +19,3 @@ export {
   removeFromArray,
   Headers,
 } from './helpers';
-
-export { mobx } from './mobx';
-
-export * from './interfaces/IMobX';

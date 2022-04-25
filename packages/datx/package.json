@@ -53,10 +53,7 @@
       }
     },
     "preset": "ts-jest",
-    "testMatch": null,
-    "setupFilesAfterEnv": [
-      "./test/setup.ts"
-    ]
+    "testMatch": null
   },
   "dependencies": {
     "@datx/utils": "2.4.0"

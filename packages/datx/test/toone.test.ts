@@ -1,9 +1,4 @@
-import testMobx from './mobx';
-
 import { Bucket, Collection, Model, Attribute, PureCollection } from '../src';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('ToOne', () => {
   describe('static', () => {

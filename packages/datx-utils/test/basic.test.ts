@@ -1,9 +1,12 @@
-import testMobx from './mobx';
-
-import { assignComputed, mapItems, setMeta, getMeta, isArrayLike, mobx, replaceInArray, removeFromArray } from '../src';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
+import {
+  assignComputed,
+  mapItems,
+  setMeta,
+  getMeta,
+  isArrayLike,
+  replaceInArray,
+  removeFromArray,
+} from '../src';
 
 describe('@datx/utils', () => {
   describe('mapItems', () => {
@@ -22,18 +25,16 @@ describe('@datx/utils', () => {
 
   describe('assignComputed', () => {
     it('should set a computed prop', () => {
-      const expectedCount = mobx.useRealMobX ? 2 : 1;
+      const expectedCount = 1;
       const obj1 = {};
       const obj2 = {};
 
-      const data = testMobx.observable.object({
+      const data = {
         data: 1,
-      });
+      };
 
       assignComputed(obj1, 'foo', () => 1);
       expect(Object.prototype.propertyIsEnumerable.call(obj1, 'foo')).toBe(true);
-      // @ts-ignore
-      expect(testMobx.isComputedProp(obj1, 'foo')).toBe(false);
 
       assignComputed(obj2, 'foo', () => 2);
       expect(Object.prototype.propertyIsEnumerable.call(obj2, 'foo')).toBe(true);
@@ -85,28 +86,20 @@ describe('@datx/utils', () => {
       let autorunCounter3 = 0;
       let expectedData = 6;
 
-      testMobx.autorun(() => {
-        autorunCounter1++;
-        // @ts-ignore
-        expect(obj1.baz).toBe(expectedData);
-      });
+      autorunCounter1++;
+      // @ts-ignore
+      expect(obj1.baz).toBe(expectedData);
 
-      testMobx.autorun(() => {
-        autorunCounter2++;
-        // @ts-ignore
-        expect(obj2.bar.baz).toBe(expectedData);
-      });
+      autorunCounter2++;
+      // @ts-ignore
+      expect(obj2.bar.baz).toBe(expectedData);
 
-      testMobx.autorun(() => {
-        autorunCounter3++;
-        // @ts-ignore
-        expect(data.data).toBe(expectedData);
-      });
+      autorunCounter3++;
+      // @ts-ignore
+      expect(data.data).toBe(expectedData);
 
-      testMobx.runInAction(() => {
-        expectedData = 42;
-        data.data = 42;
-      });
+      expectedData = 42;
+      data.data = 42;
 
       expect(autorunCounter3).toBe(expectedCount);
       expect(autorunCounter1).toBe(expectedCount);
@@ -115,11 +108,10 @@ describe('@datx/utils', () => {
 
     it('should handle dynamic computed props', () => {
       let counter = 0;
-      const expectedCount1 = mobx.useRealMobX ? 2 : 106;
-      const expectedCount2 = mobx.useRealMobX ? 2 : 1;
+      const expectedCount1 = 106;
+      const expectedCount2 = 1;
 
       class Data {
-        @testMobx.observable
         public data = 1;
 
         public foo!: number;
@@ -127,7 +119,6 @@ describe('@datx/utils', () => {
         public bar!: number;
 
         constructor() {
-          mobx.makeObservable(this);
           assignComputed(
             this,
             'foo',
@@ -148,18 +139,14 @@ describe('@datx/utils', () => {
       }
       const data = new Data();
 
-      testMobx.autorun(() => {
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const tmp = data.foo;
-      });
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const tmp = data.foo;
 
       expect(data.foo).toBe(1);
       expect(data.bar).toBe(-1);
 
-      testMobx.runInAction(() => {
-        data.bar--;
-      });
+      data.bar--;
       expect(data.foo).toBe(2);
       expect(data.bar).toBe(-2);
 
@@ -172,15 +159,11 @@ describe('@datx/utils', () => {
       let autorunCounter = 0;
       let expectedData = 2;
 
-      testMobx.autorun(() => {
-        autorunCounter++;
-        expect(data.foo).toBe(expectedData);
-      });
+      autorunCounter++;
+      expect(data.foo).toBe(expectedData);
 
-      testMobx.runInAction(() => {
-        expectedData = 3;
-        data.foo++;
-      });
+      expectedData = 3;
+      data.foo++;
 
       expect(autorunCounter).toBe(expectedCount2);
       expect(Object.prototype.propertyIsEnumerable.call(data, 'foo')).toBe(true);
@@ -248,11 +231,6 @@ describe('@datx/utils', () => {
       expect(isArrayLike([1, true, 'three', {}])).toBe(true);
     });
 
-    it('should work with observable arrays', () => {
-      expect(isArrayLike(testMobx.observable.array([]))).toBe(true);
-      expect(isArrayLike(testMobx.observable.array([1, true, 'three', {}]))).toBe(true);
-    });
-
     it('should fail for sets', () => {
       expect(isArrayLike(new Set([]))).toBe(false);
       expect(isArrayLike(new Set([1, true, 'three', {}]))).toBe(false);
@@ -271,9 +249,9 @@ describe('@datx/utils', () => {
     it('should replace the values', () => {
       const test = [{}, {}, {}];
       const newTest = [{}, {}, {}];
-  
+
       replaceInArray(test, newTest);
-  
+
       expect(test[0]).toBe(newTest[0]);
       expect(test.length).toBe(newTest.length);
     });
@@ -285,7 +263,7 @@ describe('@datx/utils', () => {
       const toRemove = test[1];
 
       removeFromArray(test, toRemove);
-  
+
       expect(test).not.toContain(toRemove);
       expect(test.length).toBe(2);
     });

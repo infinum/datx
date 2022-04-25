@@ -1,12 +1,6 @@
-import testMobx from './mobx';
-
 import { Collection, Model, View, Attribute } from '../src';
 import { updateModelId } from '../src/helpers/model/fields';
 import { ViewAttribute } from '../src/Attribute';
-import { mobx } from '@datx/utils';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('View', () => {
   it('should init a view', () => {
@@ -71,15 +65,11 @@ describe('View', () => {
     let lengthAutorunCount = 0;
     let listAutorunCount = 0;
 
-    testMobx.autorun(() => {
-      expect(viewInstance).toHaveLength(expectedLength);
-      lengthAutorunCount++;
-    });
+    expect(viewInstance).toHaveLength(expectedLength);
+    lengthAutorunCount++;
 
-    testMobx.autorun(() => {
-      expect(viewInstance.list).toHaveLength(expectedLength);
-      listAutorunCount++;
-    });
+    expect(viewInstance.list).toHaveLength(expectedLength);
+    listAutorunCount++;
 
     expectedLength = foos.length;
     viewInstance.add(foos);
@@ -88,8 +78,8 @@ describe('View', () => {
     expect(viewInstance.list[0]).toBeInstanceOf(Foo);
     expect(viewInstance.list[1]).toBeInstanceOf(Foo);
     expect(viewInstance.list[0]).toBe(foos[0]);
-    expect(listAutorunCount).toBe(mobx.useRealMobX ? 2 : 1);
-    expect(lengthAutorunCount).toBe(mobx.useRealMobX ? 2 : 1);
+    expect(listAutorunCount).toBe(1);
+    expect(lengthAutorunCount).toBe(1);
   });
 
   it('should be able to sort models', () => {
@@ -181,29 +171,18 @@ describe('View', () => {
     expect(item2a && item2a.key).toBe(3);
 
     let keyList: Array<number | null> = [];
-    let autorunCount = 0;
 
-    testMobx.autorun(() => {
-      keyList = viewInstance.list.map((item) => item && item.key);
-      autorunCount++;
-    });
+    keyList = viewInstance.list.map((item) => item && item.key);
 
     expect(keyList[2]).toBe(3);
 
-    testMobx.runInAction(() => {
-      viewInstance.sortMethod = 'id';
-    });
+    viewInstance.sortMethod = 'id';
 
     const item0b = viewInstance.list[0];
     const item2b = viewInstance.list[2];
 
     expect(item0b && item0b.key).toBe(2);
     expect(item2b && item2b.key).toBe(1);
-
-    if (mobx.useRealMobX) {
-      expect(keyList[2]).toBe(1);
-      expect(autorunCount).toBe(2);
-    }
   });
 
   it('should be able to sort models by prop', () => {
@@ -274,25 +253,14 @@ describe('View', () => {
 
     expect(viewInstance).toHaveLength(3);
 
-    if (mobx.useRealMobX) {
-      viewInstance.list.push(foo1);
-      expect(viewInstance).toHaveLength(4);
-  
-      viewInstance.list.unshift(foo2);
-      expect(viewInstance).toHaveLength(5);
-  
-      viewInstance.list.splice(2, 2);
-      expect(viewInstance).toHaveLength(3);
-    } else {
-      viewInstance.list = [...viewInstance.list, foo1];
-      expect(viewInstance).toHaveLength(4);
-  
-      viewInstance.list = [foo2, ...viewInstance.list];
-      expect(viewInstance).toHaveLength(5);
-  
-      viewInstance.list = [...viewInstance.list.slice(0, 2), ...viewInstance.list.slice(4)];
-      expect(viewInstance).toHaveLength(3);
-    }
+    viewInstance.list = [...viewInstance.list, foo1];
+    expect(viewInstance).toHaveLength(4);
+
+    viewInstance.list = [foo2, ...viewInstance.list];
+    expect(viewInstance).toHaveLength(5);
+
+    viewInstance.list = [...viewInstance.list.slice(0, 2), ...viewInstance.list.slice(4)];
+    expect(viewInstance).toHaveLength(3);
   });
 
   it('should work with sorted list', () => {
@@ -315,52 +283,19 @@ describe('View', () => {
     expect(viewInstance).toHaveLength(3);
 
     expect(() => {
-      if (mobx.useRealMobX) {
-        viewInstance.list.push(foo1);
-      } else {
-        viewInstance.list = [...viewInstance.list, foo1];
-      }
-    }).toThrowError(
-      "New models can't be added directly to a sorted view list",
-    );
-
-    expect(() => {
-      if (mobx.useRealMobX) {
-        viewInstance.list.push(foo2);
-      } else {
-        viewInstance.list = [foo2, ...viewInstance.list];
-      }
-    }).toThrowError(
-      "New models can't be added directly to a sorted view list",
-    );
-
-    expect(() => {
-      if (mobx.useRealMobX) {
-        viewInstance.list[1] = foo1;
-      } else {
-        viewInstance.list = [
-          ...viewInstance.list.slice(0, 1),
-          foo1,
-          ...viewInstance.list.slice(2),
-        ];
-      }
-    }).toThrowError("New models can't be added directly to a sorted view list");
-    expect(() => {
-      if (mobx.useRealMobX) {
-        viewInstance.list[3] = foo1;
-      } else {
-        viewInstance.list = [
-          ...viewInstance.list.slice(0, 3),
-          foo1,
-          ...viewInstance.list.slice(4),
-        ];
-      }
+      viewInstance.list = [...viewInstance.list, foo1];
     }).toThrowError("New models can't be added directly to a sorted view list");
 
-    if (mobx.useRealMobX) {
-      viewInstance.list.splice(1, 2);
-      expect(viewInstance).toHaveLength(1);
-    }
+    expect(() => {
+      viewInstance.list = [foo2, ...viewInstance.list];
+    }).toThrowError("New models can't be added directly to a sorted view list");
+
+    expect(() => {
+      viewInstance.list = [...viewInstance.list.slice(0, 1), foo1, ...viewInstance.list.slice(2)];
+    }).toThrowError("New models can't be added directly to a sorted view list");
+    expect(() => {
+      viewInstance.list = [...viewInstance.list.slice(0, 3), foo1, ...viewInstance.list.slice(4)];
+    }).toThrowError("New models can't be added directly to a sorted view list");
   });
 
   it('should work with unique list', () => {
@@ -380,39 +315,19 @@ describe('View', () => {
 
     const [foo1] = foos;
 
-    if (mobx.useRealMobX) {
-      viewInstance.list[0] = foo1;
-    } else {
-      viewInstance.list = [foo1, ...viewInstance.list.slice(1)];
-    }
+    viewInstance.list = [foo1, ...viewInstance.list.slice(1)];
 
     expect(() => {
-      if (mobx.useRealMobX) {
-        viewInstance.list[1] = foo1;
-      } else {
-        viewInstance.list = [viewInstance.list[0], foo1, ...viewInstance.list.slice(2)];
-      }
+      viewInstance.list = [viewInstance.list[0], foo1, ...viewInstance.list.slice(2)];
     }).toThrowError('The models in this view need to be unique');
 
     expect(() => {
-      if (mobx.useRealMobX) {
-        viewInstance.list.push(foo1);
-      } else {
-        viewInstance.list = [...viewInstance.list, foo1];
-      }
-    }).toThrowError(
-      'The models in this view need to be unique',
-    );
+      viewInstance.list = [...viewInstance.list, foo1];
+    }).toThrowError('The models in this view need to be unique');
 
     expect(() => {
-      if (mobx.useRealMobX) {
-        viewInstance.list.splice(0, 0, foo1);
-      } else {
-        viewInstance.list = [foo1, ...viewInstance.list];
-      }
-    }).toThrowError(
-      'The models in this view need to be unique',
-    );
+      viewInstance.list = [foo1, ...viewInstance.list];
+    }).toThrowError('The models in this view need to be unique');
   });
 
   it('should be able to deserialize the view', () => {
@@ -575,19 +490,10 @@ describe('View', () => {
 
     const lengths: Array<number> = [];
 
-    testMobx.autorun(() => {
-      lengths.push(viewInstance.length);
-    });
+    lengths.push(viewInstance.length);
 
-    testMobx.runInAction(() => {
-      if (mobx.useRealMobX) {
-        // @ts-expect-error
-        viewInstance.list.push(876);
-      } else {
-        // @ts-expect-error
-        viewInstance.list = [...viewInstance.list, 876];
-      }
-    });
+    // @ts-expect-error
+    viewInstance.list = [...viewInstance.list, 876];
 
     // expect(collection).toHaveLength(2);
     // expect(viewInstance).toHaveLength(2);

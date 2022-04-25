@@ -1,5 +1,3 @@
-import testMobx from './mobx';
-
 import {
   Collection,
   PureModel,
@@ -11,10 +9,6 @@ import {
 } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId, getModelType } from '../src/helpers/model/utils';
-import { mobx } from '@datx/utils';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('Collection', () => {
   describe('Basic features', () => {
@@ -369,57 +363,6 @@ describe('Collection', () => {
       expect(foo1b).toBeNull();
       expect(foo1c).not.toBe(foo1);
       expect(foo1.foo).toBe(1);
-    });
-
-    it('should trigger autorun after a model is added', () => {
-      class Foo extends PureModel {
-        public static type = 'foo';
-
-        @Attribute({ isIdentifier: true })
-        public id!: number;
-
-        @Attribute()
-        public foo!: number;
-
-        @Attribute()
-        public bar!: number;
-
-        @Attribute()
-        public baz!: number;
-      }
-
-      class Store extends Collection {
-        public static types = [Foo];
-      }
-
-      const store = new Store();
-
-      let autorunLengthCount = 0;
-      let fooLength;
-
-      testMobx.autorun(() => {
-        autorunLengthCount++;
-        fooLength = store.findAll(Foo).length;
-      });
-
-      let autorunModelCount = 0;
-      let foo;
-
-      testMobx.autorun(() => {
-        autorunModelCount++;
-        foo = store.findOne(Foo, 123);
-      });
-
-      const foo2 = store.add({ id: 123 }, Foo);
-
-      if (mobx.useRealMobX) {
-        expect(autorunModelCount).toBe(2);
-        expect(foo).toBe(foo2);
-
-        expect(autorunLengthCount).toBe(2);
-        expect(fooLength).toBe(1);
-      }
-      // The test doesn't make sense if MobX is not used
     });
 
     it('should auto set ref value at be a model is added', () => {

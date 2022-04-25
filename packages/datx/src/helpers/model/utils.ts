@@ -7,8 +7,6 @@ import {
   mergeMeta,
   getMetaObj,
   mapItems,
-  isArrayLike,
-  mobx,
 } from '@datx/utils';
 
 import { IModelRef } from '../../interfaces/IModelRef';
@@ -55,7 +53,7 @@ export function modelMapSerialize(modelClass: typeof PureModel, data: object, ke
 export function isModelReference(value: IModelRef | Array<IModelRef>): true;
 export function isModelReference(value: unknown): false;
 export function isModelReference(value: unknown): boolean {
-  if (isArrayLike(value)) {
+  if (Array.isArray(value)) {
     return (value as Array<IModelRef>).every(isModelReference);
   }
 
@@ -286,44 +284,37 @@ function omitKeys(obj: object, keys: Array<string>): object {
 }
 
 export function assignModel<T extends PureModel>(model: T, key: string, value: any): void {
-  mobx.runInAction(() => {
-    if (!(model instanceof PureModel)) {
-      throw error('The given parameter is not a valid model');
-    }
-    const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
-    const shouldBeReference =
-      (isArrayLike(value) && value.length > 0 && value[0] instanceof PureModel) ||
-      value instanceof PureModel;
+  if (!(model instanceof PureModel)) {
+    throw error('The given parameter is not a valid model');
+  }
+  const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
+  const shouldBeReference =
+    (Array.isArray(value) && value.length > 0 && value[0] instanceof PureModel) ||
+    value instanceof PureModel;
 
-    if (key in fields) {
-      if (shouldBeReference && !fields[key].referenceDef) {
-        throw error('You should save this value as a reference.');
-      }
-      // model[key] = shouldBeReference ? value : getRawData(value);
-      model[key] = value;
-    } else {
-      if (shouldBeReference) {
-        mobx.extendObservable(fields, {
-          [key]: {
-            referenceDef: {
-              type: ReferenceType.TO_ONE_OR_MANY,
-              models: Array.from(
-                new Set<IType>(mapItems<PureModel, IType>(value as Array<PureModel>, getModelType)),
-              ),
-            },
-          },
-        });
-      } else {
-        mobx.extendObservable(fields, {
-          [key]: {
-            referenceDef: false,
-          },
-        });
-      }
-      setMeta(model, MetaModelField.Fields, fields);
-      initModelField(model, key, value);
+  if (key in fields) {
+    if (shouldBeReference && !fields[key].referenceDef) {
+      throw error('You should save this value as a reference.');
     }
-  });
+    // model[key] = shouldBeReference ? value : getRawData(value);
+    model[key] = value;
+  } else {
+    if (shouldBeReference) {
+      fields[key] = {
+        referenceDef: {
+          type: ReferenceType.TO_ONE_OR_MANY,
+          // @ts-ignore
+          models: Array.from(
+            new Set<IType>(mapItems<PureModel, IType>(value as Array<PureModel>, getModelType)),
+          ),
+        },
+      };
+    } else {
+      fields[key] = { referenceDef: false };
+    }
+    setMeta(model, MetaModelField.Fields, fields);
+    initModelField(model, key, value);
+  }
 }
 
 export function updateModel<T extends PureModel>(model: T, data: Record<string, any>): T {

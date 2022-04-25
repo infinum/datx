@@ -1,13 +1,4 @@
-import {
-  assignComputed,
-  IRawModel,
-  getMeta,
-  mapItems,
-  setMeta,
-  META_FIELD,
-  isArrayLike,
-  mobx,
-} from '@datx/utils';
+import { assignComputed, IRawModel, getMeta, mapItems, setMeta, META_FIELD } from '@datx/utils';
 
 import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';
@@ -142,16 +133,6 @@ export function initModelRef<T extends PureModel>(
   }
 }
 
-function isPojo(val: any): boolean {
-  return typeof val === 'object' && val !== null && !(val instanceof PureModel);
-}
-
-function observablePojo(value: object) {
-  return isArrayLike(value)
-    ? mobx.observable.array(value)
-    : mobx.observable.object({ value }).value;
-}
-
 export function initModelField<T extends PureModel>(model: T, key: string, value: any): void {
   const fields = getMeta(model, MetaModelField.Fields, {});
   const fieldDef = fields[key];
@@ -191,7 +172,7 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
       () => getMeta(model, `data__${key}`),
       (newValue: any) => {
         // Make sure nested properties are observable
-        const packedValue = isPojo(newValue) ? observablePojo(newValue) : newValue;
+        const packedValue = newValue;
 
         updateSingleAction(model, key, newValue);
         setMeta(model, `data__${key}`, packedValue);
@@ -255,7 +236,7 @@ export function initModel(
       const value = rawData[field];
       const isRef =
         value instanceof PureModel ||
-        (isArrayLike(value) &&
+        (Array.isArray(value) &&
           value.length &&
           (value[0] instanceof PureModel || isModelReference(value[0]))) ||
         isModelReference(value);

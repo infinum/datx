@@ -1,11 +1,4 @@
-import {
-  IArraySplice,
-  IRawModel,
-  mapItems,
-  mobx,
-  removeFromArray,
-  replaceInArray,
-} from '@datx/utils';
+import { IArraySplice, IRawModel, mapItems, removeFromArray, replaceInArray } from '@datx/utils';
 
 import { ToMany } from './buckets/ToMany';
 import { error } from './helpers/format';
@@ -34,7 +27,6 @@ function sortWrapperFn<T extends PureModel = PureModel>(sortFn: (a: T) => number
 export class View<T extends PureModel = PureModel> extends ToMany<T> {
   public readonly modelType: IType;
 
-  @mobx.observable
   public sortMethod?: string | ((item: T) => any);
 
   constructor(
@@ -52,14 +44,12 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     );
     this.modelType = getModelType(modelType);
     this.sortMethod = sortMethod;
-    mobx.makeObservable(this);
   }
 
   public get length(): number {
     return this.value.length;
   }
 
-  @mobx.computed
   public get list(): Array<T> {
     const list: Array<T> = this.value.slice();
 
@@ -72,9 +62,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
       list.sort(sortWrapperFn(sortFn));
     }
 
-    const instances = mobx.observable.array(list, { deep: false });
-
-    mobx.intercept(instances, this.__partialListUpdate.bind(this));
+    const instances = list.slice();
 
     return instances;
   }
@@ -109,12 +97,10 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
       | T
       | Array<T>;
 
-    mobx.runInAction(() => {
-      mapItems(models, (instance: T) => {
-        if (!this.unique || this.__indexOf(instance) === -1) {
-          this.__rawList.push(instance);
-        }
-      });
+    mapItems(models, (instance: T) => {
+      if (!this.unique || this.__indexOf(instance) === -1) {
+        this.__rawList.push(instance);
+      }
     });
 
     return models;
@@ -127,19 +113,15 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
   }
 
   public remove(model: IIdentifier | T): void {
-    mobx.runInAction(() => {
-      const item = this.__getModel(this.__normalizeModel(model));
+    const item = this.__getModel(this.__normalizeModel(model));
 
-      if (item) {
-        removeFromArray(this.__rawList, item);
-      }
-    });
+    if (item) {
+      removeFromArray(this.__rawList, item);
+    }
   }
 
   public removeAll(): void {
-    mobx.runInAction(() => {
-      replaceInArray(this.__rawList, []);
-    });
+    replaceInArray(this.__rawList, []);
   }
 
   private __partialListUpdate(change: TChange): null {
@@ -162,34 +144,30 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
         });
       }
 
-      mobx.runInAction(() => {
-        // eslint-disable-next-line prefer-spread
-        this.__rawList.splice.apply(
-          this.__rawList,
-          ([change.index, change.removedCount] as Array<any>).concat(added),
-        );
-      });
+      // eslint-disable-next-line prefer-spread
+      this.__rawList.splice.apply(
+        this.__rawList,
+        ([change.index, change.removedCount] as Array<any>).concat(added),
+      );
 
       return null;
     }
 
-    mobx.runInAction(() => {
-      if (this.sortMethod && change.newValue) {
-        throw error("New models can't be added directly to a sorted view list");
+    if (this.sortMethod && change.newValue) {
+      throw error("New models can't be added directly to a sorted view list");
+    }
+
+    const newModel = this.__getModel(this.__normalizeModel(change.newValue as any));
+
+    if (newModel) {
+      const idIndex = this.__indexOf(newModel);
+
+      if (this.unique && idIndex !== -1 && idIndex !== change.index) {
+        throw error('The models in this view need to be unique');
       }
 
-      const newModel = this.__getModel(this.__normalizeModel(change.newValue as any));
-
-      if (newModel) {
-        const idIndex = this.__indexOf(newModel);
-
-        if (this.unique && idIndex !== -1 && idIndex !== change.index) {
-          throw error('The models in this view need to be unique');
-        }
-
-        this.__rawList[change.index] = newModel;
-      }
-    });
+      this.__rawList[change.index] = newModel;
+    }
 
     return null;
   }

@@ -1,13 +1,9 @@
 import { META_FIELD } from '@datx/utils';
-import testMobx from './mobx';
 
 import { Collection, Model, Attribute } from '../src';
 import { IPatch } from '../src/interfaces/IPatch';
 import { PatchType } from '../src/enums/PatchType';
 import { getModelRef } from '../src/helpers/model/utils';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('patch', () => {
   describe('model', () => {
@@ -20,9 +16,7 @@ describe('patch', () => {
 
       const unregister = model.onPatch((patch) => patches.push(patch));
 
-      testMobx.runInAction(() => {
-        model['name'] = 'FooBar';
-      });
+      model['name'] = 'FooBar';
       model.assign('age', 42);
       model.assign('nick', undefined);
       model.update({
@@ -31,9 +25,7 @@ describe('patch', () => {
       });
 
       unregister();
-      testMobx.runInAction(() => {
-        model['height'] = 200;
-      });
+      model['height'] = 200;
 
       expect(patches).toMatchSnapshot();
 
@@ -127,16 +119,12 @@ describe('patch', () => {
 
       const unregister = model.onPatch((patch) => patches.push(patch));
 
-      testMobx.runInAction(() => {
-        model['name'] = 'Foo';
-      });
+      model['name'] = 'Foo';
       model.assign('age', 42);
       model.assign('nick', 'Bar');
 
       unregister();
-      testMobx.runInAction(() => {
-        model['height'] = 200;
-      });
+      model['height'] = 200;
 
       expect(patches).toMatchSnapshot();
     });
@@ -167,9 +155,7 @@ describe('patch', () => {
 
       store.add(model);
 
-      testMobx.runInAction(() => {
-        model['name'] = 'FooBar';
-      });
+      model['name'] = 'FooBar';
       model.assign('age', 42);
       model.assign('nick', undefined);
       model.update({
@@ -181,9 +167,7 @@ describe('patch', () => {
 
       store.removeOne('foo', 1);
 
-      testMobx.runInAction(() => {
-        model['height'] = 200;
-      });
+      model['height'] = 200;
 
       expect(patches).toEqual([
         {
@@ -231,7 +215,6 @@ describe('patch', () => {
         nick: 'Bar',
       });
       const modelMeta = { id: model.meta.id, type: model.meta.type };
-
 
       class Foo extends Model {
         static type = 'foo';
@@ -314,9 +297,7 @@ describe('patch', () => {
 
       expect(model).not.toBe(null);
       if (model) {
-        testMobx.runInAction(() => {
-          model['name'] = 'FooBar';
-        });
+        model['name'] = 'FooBar';
         model.assign('age', 42);
         model.assign('nick', undefined);
         model.update({
@@ -326,9 +307,7 @@ describe('patch', () => {
 
         store.removeOne('foo', 1);
 
-        testMobx.runInAction(() => {
-          model['height'] = 200;
-        });
+        model['height'] = 200;
 
         expect(patches).toMatchSnapshot();
       }
@@ -443,12 +422,10 @@ describe('patch', () => {
         'foo',
       );
 
-      testMobx.runInAction(() => {
-        model.bar = bar3;
-        model.meta.refs.bar = { id: 2, type: 'bar' };
-        model.bar = null;
-        model.bar = bar3;
-      });
+      model.bar = bar3;
+      model.meta.refs.bar = { id: 2, type: 'bar' };
+      model.bar = null;
+      model.bar = bar3;
 
       expect(patches).toMatchSnapshot();
     });

@@ -1,9 +1,4 @@
-import testMobx from './mobx';
-
 import { Collection, PureModel, Attribute, modelToJSON } from '../src';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('issues', () => {
   it('should remove references on collection remove', () => {

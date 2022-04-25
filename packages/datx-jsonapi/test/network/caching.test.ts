@@ -773,7 +773,7 @@ describe('caching', () => {
 
         expect(req.isDone()).toBe(true);
         expect(event3.id).toBe('1');
-        expect(autorunCounter2).toBe(mobx.useRealMobX ? 2 : 1);
+        expect(autorunCounter2).toBe(1);
       });
     });
 
