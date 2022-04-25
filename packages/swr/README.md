@@ -20,19 +20,41 @@ For extra SSR setup, see [SSR Setup section](#ssr)
 // src/datx/createClient.ts
 
 import { Collection } from '@datx/core';
-import { jsonapiSwrClient, config } from '@datx/jsonapi';
+import { CachingStrategy, config } from '@datx/jsonapi';
+import { jsonapiSwrClient } from '@datx/swr';
 
+import { Post } from '../models/Post';
 import { Todo } from '../models/Todo';
 
-class Client extends jsonapiSwrClient(Collection) {
+export class JsonapiSwrClient extends jsonapiSwrClient(Collection) {
   public static types = [Todo, Post];
 }
 
 export function createClient() {
   config.baseUrl = process.env.NEXT_PUBLIC_JSONAPI_URL as string;
-  config.cache = 1;
+  config.cache = CachingStrategy.NetworkOnly;
 
-  return new Client();
+  const client = new JsonapiSwrClient();
+
+  return client;
+}
+
+export type Client = typeof JsonapiSwrClient;
+```
+
+### Client types override
+
+To correctly infer types form expression in `useQuery` you need to globally override client typings.
+
+```tsx
+// /typings/datx.d.ts
+
+import { Client } from '../src/datx/createClient';
+
+declare module '@datx/swr' {
+  export interface IClient extends Client {
+    types: Client['types'];
+  }
 }
 ```
 
@@ -40,6 +62,8 @@ export function createClient() {
 
 ```tsx
 // src/pages/_app.tsx
+
+import '@datx/core/disable-mobx';
 
 import type { AppProps } from 'next/app';
 import { createFetcher, DatxProvider, useSafeClient } from '@datx/swr';
@@ -65,28 +89,90 @@ function ExampleApp({ Component, pageProps }: AppProps) {
 export default ExampleApp;
 ```
 
-### Define queries and mutations
+For more details how to disable Mobx see [Disable Mobx](#disable-mobx) section.
+
+### Define queries
+
+Using expression types (Preferred):
 
 ```ts
 // src/components/features/todos/Todos.queries.ts
 
-import { Response } from '@datx/jsonapi';
-import { GetManyExpression } from '@datx/swr';
+import { IGetManyExpression } from '@datx/swr';
 
 import { Todo } from '../../../models/Todo';
 
-export type TodosResponse = Response<Todo, Array<Todo>>;
-
-export const todosQuery: GetManyExpression<Todo> = {
+export const todosQuery: IGetManyExpression<typeof Todo> = {
   op: 'getMany',
-  type: Todo.type,
+  type: 'todos',
 };
 ```
 
+Using `as const`:
+
 ```ts
+// src/components/features/todos/Todos.queries.ts
+
+import { Todo } from '../../../models/Todo';
+
+export const todosQuery = {
+  op: 'getMany',
+  type: 'todos',
+} as const;
+```
+
+> It's important to use `as const` assertion. It tells the compiler to infer the narrowest or most specific type it can for an expression. If you leave it off, the compiler will use its default type inference behavior, which will possibly result in a wider or more general type.
+
+### Conditional data fetching
+
+```ts
+// conditionally fetch
+export const getTodoQuery = (id?: string) =>
+  id
+    ? ({
+        id,
+        op: 'getOne',
+        type: 'todos',
+      } as IGetOneExpression<typeof Todo>)
+    : null;
+
+const { data, error } = useQuery(getTodoQuery(id));
+
+// ...or return a falsy value, a.k.a currying
+export const getTodoQuery = (id?: string) => () =>
+  id
+    ? ({
+        id,
+        op: 'getOne',
+        type: 'todos',
+      } as IGetOneExpression<typeof Todo>)
+    : null;
+
+const { data, error } = useQuery(getTodoQuery(id));
+
+// ...or throw an error when property is not defined
+export const getTodoByUserQuery = (user?: User) => () =>
+  ({
+    id: user.todo.id, // id user is not defined this will throw an error
+    op: 'getOne',
+    type: 'todos',
+  } as IGetOneExpression<typeof Todo>);
+
+const { data: user } = useQuery(getUserQuery(id));
+const { data: todo } = useQuery(getTodoByUserQuery(user));
+```
+
+### Define mutations
+
+```tsx
 // src/components/features/todos/Todos.mutations.ts
 
-export const createTodo = (client: Client, message: string | undefined) => {
+import { getModelEndpointUrl, modelToJsonApi } from '@datx/jsonapi';
+import { ClientInstance } from '@datx/swr';
+
+import { Todo } from '../../../models/Todo';
+
+export const createTodo = (client: ClientInstance, message: string | undefined) => {
   const model = new Todo({ message });
   const url = getModelEndpointUrl(model);
   const data = modelToJsonApi(model);
@@ -95,14 +181,25 @@ export const createTodo = (client: Client, message: string | undefined) => {
 };
 ```
 
-### Use hook to fetch data
+### Use data fetching and mutations together
 
 ```tsx
 // src/components/features/todos/Todos.ts
 
+import { useMutation, useQuery } from '@datx/swr';
+import { FC, useRef } from 'react';
+import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
+import NextLink from 'next/link';
+
+import { createTodo } from './Todos.mutations';
+import { todosQuery } from './Todos.queries';
+
+export interface ITodosProps {}
+
 export const Todos: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { data, error, mutate } = useQuery(todosQuery);
+
   const [create, { status }] = useMutation(createTodo, {
     onSuccess: async () => {
       const input = inputRef.current;
@@ -127,7 +224,7 @@ export const Todos: FC = () => {
       </button>
 
       {data.data?.map((todo) => (
-        <NextLink href={`/todos/${todo.id}`} key={todo.id}>
+        <NextLink href={`./todos/${todo.id}`} key={todo.id}>
           <a style={{ display: 'block' }}>{todo.message}</a>
         </NextLink>
       ))}
@@ -149,79 +246,69 @@ Otherwise, your response to a request might include sensitive cached query resul
 const client = useSafeClient(() => new Client());
 ```
 
-#### useDatx
+#### useClient
 
 For accessing `Client` instance from the context. It's made mainly for internal usage.
 
 ```ts
-const client = useDatx();
+const client = useClient();
 ```
 
 #### useQuery
 
 ```ts
-const queryExpression: GetManyExpression<Todo> = {
+const expression: IGetManyExpression<typeof Todo> = {
   op: 'getMany',
-  type: Todo.type,
+  type: 'todos',
 };
 
 const config: DatxConfiguration<Todo, Array<Todo>> = {
-  shouldRetryOnError: false,
-};
+  // datx config
+  networkConfig: {
+    headers: {
+      'Accept-Language': 'en',
+    }
+  },
+  // SWR config
+  onSuccess: (data) => console.log(data.data[0].id),
+}
 
-const = useQuery(queryExpression, config);
+const = useQuery(expression, config);
 ```
+
+Second parameter of `useQuery` is for passing config options. It extends default SWR config prop with additional `networkConfig` property useful for passing custom headers.
 
 ##### Expression signature
 
+Currently we support 3 expressions for fetching resources `getOne`, `getMany` and `getAll`.
+Future plan is to support generic `request` operation and `getRelated`.
+
 ```ts
-export type Operation = 'getOne' | 'getMany' | 'getAll';
-
-export interface IExpressionLike {
-  op: Operation;
-}
-
-export interface IGetOneExpression {
-  op: 'getOne';
-  type: IType;
+// fetch single resource by id
+export interface IGetOneExpression<TModel extends JsonapiModelType = JsonapiModelType> {
+  readonly op: 'getOne';
+  readonly type: TModel['type'];
   id: string;
   queryParams?: IRequestOptions['queryParams'];
 }
 
-export interface IGetManyExpression {
-  op: 'getMany';
-  type: IType;
+// fetch resource collection
+export interface IGetManyExpression<TModel extends JsonapiModelType = JsonapiModelType> {
+  readonly op: 'getMany';
+  readonly type: TModel['type'];
   queryParams?: IRequestOptions['queryParams'];
 }
 
-export interface IGetAllExpression {
-  op: 'getAll';
-  type: IType;
+// fetch all the pages of resource collection
+export interface IGetAllExpression<TModel extends JsonapiModelType = JsonapiModelType> {
+  readonly op: 'getAll';
+  readonly type: TModel['type'];
   queryParams?: IRequestOptions['queryParams'];
   maxRequests?: number | undefined;
 }
-
-export type Expression = IGetOneExpression | IGetManyExpression | IGetAllExpression;
 ```
 
-##### Query config
-
-It's the [SWR config](https://swr.vercel.app/docs/options#options) extended with `networkConfig` prop.
-
-```ts
-export type DatxConfiguration<
-  TModel extends IJsonapiModel,
-  TData extends IResponseData,
-> = SWRConfiguration<
-  Response<TModel, TData>,
-  Response<TModel, TData>,
-  Fetcher<Response<TModel, TData>>
-> & {
-  networkConfig?: IRequestOptions['networkConfig'];
-};
-```
-
-#### useMutation
+#### useMutation (deprecated)
 
 A hook for remote mutations
 This is a helper hook until [this](https://github.com/vercel/swr/pull/1450) is merged to SWR core!
@@ -271,6 +358,35 @@ const fallback = {
 
 <Hydrate fallback={fallback}>
 ```
+
+## Disable Mobx
+
+Since we don't want to use Mobx, we need to add a little boilerplate to work around that. First we need to instruct DatX not to use Mobx, by adding `@datx/core/disable-mobx` before App bootstrap:
+
+```tsx
+// src/page/_app.tsx
+
+import '@datx/core/disable-mobx';
+```
+
+Next, we need to overwrite mobx path so that it can be resolved by datx:
+
+```json
+// /tsconfig.json
+
+{
+    ...
+    "compilerOptions": {
+        ...
+        "paths": {
+            ...
+            "mobx": ["./mobx.js"]
+        }
+    }
+}
+```
+
+> `./mobx.js` is an empty file!
 
 ## Troubleshooting
 
