@@ -1,7 +1,10 @@
 {
   "lerna": "2.5.1",
-  "packages": ["packages/*", "examples/*"],
-  "version": "2.5.0-beta.0",
+  "packages": [
+    "packages/*",
+    "examples/*"
+  ],
+  "version": "2.5.0-beta.1",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "publishConfig": {
