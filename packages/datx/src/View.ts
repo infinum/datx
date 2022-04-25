@@ -1,4 +1,4 @@
-import { IArraySplice, IRawModel, mapItems, removeFromArray, replaceInArray } from '@datx/utils';
+import { IRawModel, mapItems, removeFromArray, replaceInArray } from '@datx/utils';
 
 import { ToMany } from './buckets/ToMany';
 import { error } from './helpers/format';
@@ -8,7 +8,6 @@ import { IModelConstructor } from './interfaces/IModelConstructor';
 import { IModelRef } from './interfaces/IModelRef';
 import { IRawView } from './interfaces/IRawView';
 import { IType } from './interfaces/IType';
-import { TChange } from './interfaces/TChange';
 import { PureCollection } from './PureCollection';
 import { PureModel } from './PureModel';
 
@@ -75,7 +74,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
       removedCount: this.__rawList.length,
       added: list,
       addedCount: list.length,
-    } as unknown as IArraySplice<PureModel>);
+    });
   }
 
   public toJSON(): IRawView {
@@ -124,7 +123,7 @@ export class View<T extends PureModel = PureModel> extends ToMany<T> {
     replaceInArray(this.__rawList, []);
   }
 
-  private __partialListUpdate(change: TChange): null {
+  private __partialListUpdate(change: any): null {
     if (change.type === 'splice') {
       if (this.sortMethod && change.added.length > 0) {
         throw error("New models can't be added directly to a sorted view list");

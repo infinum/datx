@@ -135,20 +135,10 @@ export function assignComputed<T = any>(
   getter: Getter<T> = undefinedGetter,
   setter: Setter<T> = defaultSetter,
 ): void {
-  // TODO: check if the getter really works
-  const computedObj = Object.assign(
-    {},
-    {
-      get getter() {
-        return getter.call(obj);
-      },
-    },
-  );
-
   if (!('prop' in obj)) {
     Object.defineProperty(obj, key, {
       get() {
-        return computedObj.getter;
+        return getter.call(obj);
       },
       set(val: T) {
         setter.call(obj, val);

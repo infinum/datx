@@ -11,6 +11,10 @@ const sleep = (duration: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, duration));
 
 describe('caching', () => {
+  beforeEach(() => {
+    clearAllCache();
+  });
+
   it('should fail if no cache with CacheOnly strategy', async () => {
     const request1 = new MockBaseRequest('foobar');
 

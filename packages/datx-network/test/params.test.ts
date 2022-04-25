@@ -1,7 +1,12 @@
 import { MockBaseRequest } from './mock/MockBaseRequest';
 import { setUrl, params } from '../src';
+import { clearAllCache } from '../src/interceptors/cache';
 
 describe('params', () => {
+  beforeEach(() => {
+    clearAllCache();
+  });
+
   it('should work for a basic params case', async () => {
     const request = new MockBaseRequest('foobar').pipe(
       setUrl('/test/{testId}/{mockId}'),
