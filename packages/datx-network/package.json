@@ -17,8 +17,7 @@
   "author": "Infinum JavaScript Team <hello@infinum.com>",
   "license": "MIT",
   "keywords": [
-    "datx",
-    "mobx"
+    "datx"
   ],
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.0",

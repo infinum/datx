@@ -163,7 +163,7 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
   } else if (fieldDef.referenceDef) {
     initModelRef(model, key, undefined, value);
   } else {
-    // Make sure we have the value we can track (MobX 4)
+    // Make sure we have the value we can track
     setMeta(model, `data__${key}`, undefined);
 
     assignComputed(

@@ -21,7 +21,6 @@
   "license": "MIT",
   "keywords": [
     "datx",
-    "mobx",
     "jsonapi",
     "angular"
   ],

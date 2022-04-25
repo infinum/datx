@@ -1,6 +1,6 @@
 # @datx/jsonapi
 
-DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
+DatX is an opinionated data store. It features support for simple observable property definition, references to other models and first-class TypeScript support.
 
 `@datx/jsonapi` is a datx mixin that adds [JSON API](https://jsonapi.org/) support.
 
@@ -11,7 +11,6 @@ DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) 
 ```typescript
 import { Collection, Model, Attribute } from '@datx/core';
 import { jsonapi } from '@datx/jsonapi';
-import { computed } from 'mobx';
 
 class Person extends jsonapi(Model) {
   public static type = 'person'; // Unique name of the model class
@@ -25,9 +24,7 @@ class Person extends jsonapi(Model) {
   @Attribute({ toOne: Person })
   public spouse?: Person; // A reference to a Person model
 
-  @computed
   public get fullName() {
-    // Standard MobX computed props
     return `${this.name} ${this.surname}`;
   }
 }
@@ -46,10 +43,8 @@ const people = await store.fetchAll(Person); // Get all people from the server
 
 ## Getting started
 
-Note: `@datx/jsonapi` has a peer dependency to `mobx@^4.2.0` or `mobx@^5.5.0`, so don't forget to install the latest MobX version:
-
 ```bash
-npm install --save @datx/jsonapi mobx
+npm install --save @datx/jsonapi
 ```
 
 - [Basic configuration](https://datx.dev/docs/jsonapi/jsonapi-basic-configuration)

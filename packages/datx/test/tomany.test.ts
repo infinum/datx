@@ -79,41 +79,6 @@ describe('ToMany', () => {
       expect(bucketInstance.value[0]).toBe(foos[0]);
     });
 
-    it('should support array updates with real mobx', () => {
-      class Foo extends Model {
-        public static type = 'foo';
-      }
-      class Bar extends Model {
-        public static type = 'bar';
-      }
-      class AppCollection extends Collection {
-        public static types = [Foo, Bar];
-      }
-
-      const collection = new AppCollection();
-      const foos = collection.add([{}, {}], Foo);
-      const bars = collection.add([{}], Bar);
-      const bucketInstance = new Bucket.ToMany([...foos, ...bars], collection);
-
-      expect(bucketInstance.length).toBe(3);
-      expect(bucketInstance.value[0]).toBe(foos[0]);
-
-      bucketInstance.value = bucketInstance.value.slice(1);
-      expect(bucketInstance.length).toBe(2);
-      expect(bucketInstance.value[0]).toBe(foos[1]);
-
-      bucketInstance.value = bucketInstance.value.slice(0, -1);
-      expect(bucketInstance.length).toBe(1);
-      expect(bucketInstance.value[0]).toBe(foos[1]);
-
-      bucketInstance.value = foos;
-      expect(bucketInstance.length).toBe(2);
-      expect(bucketInstance.value[0]).toBe(foos[0]);
-
-      bucketInstance.value = [...bucketInstance.value, bars[0]];
-      expect(bucketInstance.length).toBe(3);
-    });
-
     it('should throw on readonly update', () => {
       class Foo extends Model {
         public static type = 'foo';

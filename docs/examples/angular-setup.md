@@ -7,7 +7,6 @@ title: Angular JSON:API setup
 
 Steps:
 
-- (Optional) Disable MobX by importing `datx/disable-mobx` before any other datx imports
 - Install `datx-jsonapi` and `datx-jsonapi-angular`
 - [Setup your collection and models](./basic-setup), use [`jsonapiAngular` mixin](../jsonapi-angular/mixin.md) when setting them up
 - Set up the [`baseFetch`](../jsonapi-angular/base-fetch.md)
@@ -18,16 +17,7 @@ In this section, we will show you a couple different ways of using your store:
 
 ### Setup your app
 
-First disable the MobX integration right away in the entrypoint:
-
-```ts
-// src/main.ts
-
-import 'datx/disable-mobx';
-// .. Rest of the file
-```
-
-Next, we need a special implementation of `baseFetch`. This is needed to integrate with Angular network features like interceptors and request canceling:
+First, we need a special implementation of `baseFetch`. This is needed to integrate with Angular network features like interceptors and request canceling:
 
 ```ts
 // src/app/services/custom-fetch.ts
@@ -57,21 +47,23 @@ export class CustomFetchService {
       ...headers,
     };
 
-    let request$ = this.httpClient.request(method, url, {
-      observe: 'response',
-      responseType: 'json',
-      headers: requestHeaders,
-      body,
-    }).pipe(
-      map((response) => {
-        return {
-          data: response.body,
-          headers: response.headers as unknown as IResponseHeaders, // The interface actually matches
-          requestHeaders,
-          status: response.status,
-        };
-      }),
-    );
+    let request$ = this.httpClient
+      .request(method, url, {
+        observe: 'response',
+        responseType: 'json',
+        headers: requestHeaders,
+        body,
+      })
+      .pipe(
+        map((response) => {
+          return {
+            data: response.body,
+            headers: response.headers as unknown as IResponseHeaders, // The interface actually matches
+            requestHeaders,
+            status: response.status,
+          };
+        }),
+      );
 
     if (takeUntil$) {
       request$ = request$.pipe(takeUntil(takeUntil$));
@@ -139,9 +131,7 @@ export class AppComponent implements OnInit {
   public results$: Observable<Response<Project>>;
   public search$: BehaviorSubject<string> = new BehaviorSubject('');
 
-  constructor(
-    private collection: AppCollection,
-  ) {}
+  constructor(private collection: AppCollection) {}
 
   public ngOnInit(): void {
     this.results$ = this.setupSearch().pipe(map((result: Response<Project>) => result.data));
@@ -151,7 +141,7 @@ export class AppComponent implements OnInit {
     return this.search$.pipe(
       switchMap((query: string) => {
         return this.collection.getMany({ queryParams: { filter: { query } } });
-      })
+      }),
     );
   }
 
@@ -163,10 +153,7 @@ export class AppComponent implements OnInit {
 
 ```html
 <!-- src/app/app.component.html -->
-<div *ngFor="let result of results$ | async">
-  {{ result.name }}
-  {{ result.meta.id }}
-</div>
+<div *ngFor="let result of results$ | async">{{ result.name }} {{ result.meta.id }}</div>
 ```
 
 ---

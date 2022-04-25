@@ -1,5 +1,5 @@
 import { View, commitModel } from '@datx/core';
-import { setMeta, mobx, IResponseHeaders } from '@datx/utils';
+import { setMeta, IResponseHeaders } from '@datx/utils';
 
 import {
   MODEL_PERSISTED_FIELD,
@@ -168,7 +168,8 @@ function getLocalNetworkError<T extends IJsonapiModel>(
   reqOptions: ICollectionFetchOpts,
   collection?: IJsonapiCollection,
 ): LibResponse<T> {
-  const ResponseConstructor: typeof LibResponse = reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
+  const ResponseConstructor: typeof LibResponse =
+    reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
   return new ResponseConstructor<T>(
     {
       error: new Error(message),
@@ -188,7 +189,13 @@ function makeNetworkCall<T extends IJsonapiModel>(
 ): Promise<LibResponse<T>> {
   const ResponseConstructor: typeof LibResponse = fetchOptions?.['Response'] || LibResponse;
   return config
-    .baseFetch(params.method, params.url, params.data, params?.options?.networkConfig?.headers, fetchOptions)
+    .baseFetch(
+      params.method,
+      params.url,
+      params.data,
+      params?.options?.networkConfig?.headers,
+      fetchOptions,
+    )
     .then((response: IRawResponse) => {
       const collectionResponse = Object.assign({}, response, { collection: params.collection });
       const payload = config.transformResponse(collectionResponse);
@@ -223,12 +230,13 @@ function makeNetworkCall<T extends IJsonapiModel>(
 function collectionFetch<T extends IJsonapiModel>(
   reqOptions: ICollectionFetchOpts,
 ): Promise<LibResponse<T>> {
-  const ResponseConstructor: typeof LibResponse = reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
-  
+  const ResponseConstructor: typeof LibResponse =
+    reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
+
   const params = config.transformRequest(reqOptions);
   // const { url, options, data, method = 'GET', collection, views } = params;
 
-  const staticCollection = (params?.collection?.constructor as unknown) as {
+  const staticCollection = params?.collection?.constructor as unknown as {
     maxCacheAge?: number;
     cache: CachingStrategy;
   };
@@ -254,20 +262,22 @@ function collectionFetch<T extends IJsonapiModel>(
     return makeNetworkCall<T>(params, reqOptions.options?.fetchOptions);
   }
 
-  const cacheContent: { response: LibResponse<T> } | undefined = (getCache(
+  const cacheContent: { response: LibResponse<T> } | undefined = getCache(
     params.url,
     maxCacheAge,
     ResponseConstructor,
-  ) as unknown) as { response: LibResponse<T> } | undefined;
+  ) as unknown as { response: LibResponse<T> } | undefined;
 
   // NetworkFirst - Fallback to cache only on network error
   if (cacheStrategy === CachingStrategy.NetworkFirst) {
-    return makeNetworkCall<T>(params, reqOptions.options?.fetchOptions, true).catch((errorResponse) => {
-      if (cacheContent) {
-        return cacheContent.response;
-      }
-      throw errorResponse;
-    });
+    return makeNetworkCall<T>(params, reqOptions.options?.fetchOptions, true).catch(
+      (errorResponse) => {
+        if (cacheContent) {
+          return cacheContent.response;
+        }
+        throw errorResponse;
+      },
+    );
   }
 
   // StaleWhileRevalidate - Use cache and update it in background
@@ -306,7 +316,12 @@ function collectionFetch<T extends IJsonapiModel>(
   if (cacheStrategy === CachingStrategy.StaleAndUpdate) {
     const existingResponse = cacheContent?.response?.clone() as LibResponse<T>;
 
-    const network = makeNetworkCall<T>(params, reqOptions.options?.fetchOptions, true, existingResponse);
+    const network = makeNetworkCall<T>(
+      params,
+      reqOptions.options?.fetchOptions,
+      true,
+      existingResponse,
+    );
 
     if (existingResponse) {
       network.catch(() => {
@@ -469,34 +484,32 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
   record: T,
   prop?: string,
 ): (response: LibResponse<T>) => T {
-  return mobx.action(
-    (response: LibResponse<T>): T => {
-      if (response.error) {
-        throw response.error;
-      }
+  return (response: LibResponse<T>): T => {
+    if (response.error) {
+      throw response.error;
+    }
 
-      if (response.status === 204) {
-        setMeta(record, MODEL_PERSISTED_FIELD, true);
-
-        return record;
-      }
-
-      if (response.status === 202) {
-        const responseRecord = response.data as T;
-
-        setMeta(responseRecord, MODEL_PROP_FIELD, prop);
-        setMeta(responseRecord, MODEL_QUEUE_FIELD, true);
-        setMeta(responseRecord, MODEL_RELATED_FIELD, record);
-
-        return responseRecord;
-      }
+    if (response.status === 204) {
       setMeta(record, MODEL_PERSISTED_FIELD, true);
 
-      const data = response.replaceData(record).data as T;
+      return record;
+    }
 
-      commitModel(data);
+    if (response.status === 202) {
+      const responseRecord = response.data as T;
 
-      return data;
-    },
-  );
+      setMeta(responseRecord, MODEL_PROP_FIELD, prop);
+      setMeta(responseRecord, MODEL_QUEUE_FIELD, true);
+      setMeta(responseRecord, MODEL_RELATED_FIELD, record);
+
+      return responseRecord;
+    }
+    setMeta(record, MODEL_PERSISTED_FIELD, true);
+
+    const data = response.replaceData(record).data as T;
+
+    commitModel(data);
+
+    return data;
+  };
 }

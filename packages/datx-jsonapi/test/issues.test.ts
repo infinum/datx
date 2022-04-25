@@ -1,5 +1,4 @@
 import { Collection, Model, prop, Attribute } from '@datx/core';
-import { mobx } from '@datx/utils';
 import * as fetch from 'isomorphic-fetch';
 import { getModelMeta, getModelRefMeta, jsonapi, modelToJsonApi, config } from '../src';
 
@@ -52,7 +51,6 @@ describe('Issues', () => {
       class ApiStore extends jsonapi(Collection) {
         public static types = [ImageRecord, EventRecord];
 
-        @mobx.computed
         get image(): Array<ImageRecord> {
           return this.findAll(ImageRecord);
         }
@@ -121,7 +119,6 @@ describe('Issues', () => {
       class ApiStore extends jsonapi(Collection) {
         public static types = [ImageRecord, EventRecord];
 
-        @mobx.computed
         get image(): Array<ImageRecord> {
           return this.findAll(ImageRecord);
         }

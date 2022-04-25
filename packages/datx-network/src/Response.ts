@@ -13,7 +13,7 @@ import { IHeaders } from './interfaces/IHeaders';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 import { IResponseObject } from './interfaces/IResponseObject';
-import { mapItems, mobx, Headers, IResponseHeaders } from '@datx/utils';
+import { mapItems, Headers, IResponseHeaders } from '@datx/utils';
 
 function serializeHeaders(
   headers: Array<[string, string]> | IResponseHeaders,
@@ -149,26 +149,24 @@ export class Response<T extends PureModel | Array<PureModel>> {
     views?: Array<View>,
   ) {
     this.collection = collection;
-    mobx.runInAction(() => {
-      this.__updateInternal(response, views);
-      try {
-        this.__data = initData(response, collection, overrideData);
-      } catch (e) {
-        this.__internal.error = e as any;
-      }
+    this.__updateInternal(response, views);
+    try {
+      this.__data = initData(response, collection, overrideData);
+    } catch (e) {
+      this.__internal.error = e as any;
+    }
 
-      this.views.forEach((view) => {
-        if (this.__data.value) {
-          view.add(this.__data.value);
-        }
-      });
-
-      Object.freeze(this);
-
-      if (this.error) {
-        throw this;
+    this.views.forEach((view) => {
+      if (this.__data.value) {
+        view.add(this.__data.value);
       }
     });
+
+    Object.freeze(this);
+
+    if (this.error) {
+      throw this;
+    }
   }
 
   private __updateInternal(response: IResponseObject, views?: Array<View>): void {
@@ -195,7 +193,6 @@ export class Response<T extends PureModel | Array<PureModel>> {
    *
    * @memberOf Response
    */
-  @mobx.action
   public replaceData(data: T): Response<T> {
     const record: PureModel = this.data as PureModel;
 
@@ -239,7 +236,6 @@ export class Response<T extends PureModel | Array<PureModel>> {
     };
   }
 
-  @mobx.action
   public update(response: IResponseObject | Response<T>, views?: Array<View>): Response<T> {
     const responseData = response instanceof Response ? response.__internal.response : response;
     this.__updateInternal(responseData, views);

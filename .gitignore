@@ -47,6 +47,3 @@ website/build
 
 website/.DS_Store
 .DS_Store
-
-disable-mobx.d.ts
-disable-mobx.js

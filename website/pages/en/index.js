@@ -99,7 +99,7 @@ class Index extends React.Component {
             content: 'Create simple and scalable state management system',
             image: `${baseUrl}img/undraw_store.svg`,
             imageAlign: 'top',
-            title: 'Based on mobx',
+            title: 'Inspired by Backbone Collections and Models',
           },
         ]}
       </Block>
