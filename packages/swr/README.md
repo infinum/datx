@@ -364,7 +364,7 @@ const fallback = {
 Since we don't want to use Mobx, we need to add a little boilerplate to work around that. First we need to instruct DatX not to use Mobx, by adding `@datx/core/disable-mobx` before App bootstrap:
 
 ```tsx
-// src/page/_app.tsx
+// src/pages/_app.tsx
 
 import '@datx/core/disable-mobx';
 ```
@@ -375,14 +375,14 @@ Next, we need to overwrite mobx path so that it can be resolved by datx:
 // /tsconfig.json
 
 {
-    ...
-    "compilerOptions": {
-        ...
-        "paths": {
-            ...
-            "mobx": ["./mobx.js"]
-        }
+  // ...
+  "compilerOptions": {
+    //...
+    "paths": {
+      // ...
+      "mobx": ["./mobx.js"]
     }
+  }
 }
 ```
 
