@@ -153,7 +153,7 @@ const { data, error } = useQuery(getTodoQuery(id));
 // ...or throw an error when property is not defined
 export const getTodoByUserQuery = (user?: User) => () =>
   ({
-    id: user.todo.id, // id user is not defined this will throw an error
+    id: user.todo.id, // if user is not defined this will throw an error
     op: 'getOne',
     type: 'todos',
   } as IGetOneExpression<typeof Todo>);
