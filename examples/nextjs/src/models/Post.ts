@@ -1,7 +1,7 @@
-import { Model, Attribute } from '@datx/core';
+import { Attribute, PureModel } from '@datx/core';
 import { jsonapiModel } from '@datx/jsonapi';
 
-export class Post extends jsonapiModel(Model) {
+export class Post extends jsonapiModel(PureModel) {
   public static readonly type = 'posts';
 
   @Attribute({ isIdentifier: true })

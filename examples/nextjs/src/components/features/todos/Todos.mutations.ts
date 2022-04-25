@@ -1,9 +1,9 @@
-import { getModelEndpointUrl, modelToJsonApi } from "@datx/jsonapi";
-import { Client } from "@datx/swr";
+import { getModelEndpointUrl, modelToJsonApi } from '@datx/jsonapi';
+import { ClientInstance } from '@datx/swr';
 
-import { Todo } from "../../../models/Todo";
+import { Todo } from '../../../models/Todo';
 
-export const createTodo = (client: Client, message: string | undefined) => {
+export const createTodo = (client: ClientInstance, message: string | undefined) => {
   const model = new Todo({ message });
   const url = getModelEndpointUrl(model);
   const data = modelToJsonApi(model);

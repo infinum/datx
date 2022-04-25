@@ -1,3 +1,4 @@
+import { IGetOneExpression } from '@datx/swr';
 import { Todo } from '../../../models/Todo';
 
 export const getTodoQuery = (id?: string) =>
@@ -5,6 +6,6 @@ export const getTodoQuery = (id?: string) =>
     ? ({
         id,
         op: 'getOne',
-        type: Todo.type,
-      } as const)
+        type: 'todos',
+      } as IGetOneExpression<typeof Todo>)
     : null;

@@ -1,5 +1,5 @@
 import { Collection } from '@datx/core';
-import { config } from '@datx/jsonapi';
+import { CachingStrategy, config } from '@datx/jsonapi';
 import { jsonapiSwrClient } from '@datx/swr';
 
 import { Post } from '../models/Post';
@@ -11,7 +11,7 @@ export class JsonapiSwrClient extends jsonapiSwrClient(Collection) {
 
 export function createClient() {
   config.baseUrl = process.env.NEXT_PUBLIC_JSONAPI_URL as string;
-  config.cache = 1;
+  config.cache = CachingStrategy.NetworkOnly;
 
   const client = new JsonapiSwrClient();
 

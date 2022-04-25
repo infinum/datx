@@ -1,5 +1,5 @@
 export * from './hooks/useSafeClient';
-export * from './hooks/useDatx';
+export * from './hooks/useClient';
 export * from './hooks/useMutation';
 export * from './hooks/useQuery';
 export * from './interfaces/Client';

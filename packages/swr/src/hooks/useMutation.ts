@@ -5,7 +5,7 @@ import { MutationFn } from '../interfaces/MutaionFn';
 import { MutationAction } from '../interfaces/MutationAction';
 import { MutationResult } from '../interfaces/MutationResult';
 import { MutationState } from '../interfaces/MutationState';
-import { useDatx } from './useDatx';
+import { useClient } from './useClient';
 
 function useGetLatest<Value>(value: Value): () => Value {
   const ref = useRef<Value>(value);
@@ -19,7 +19,10 @@ function useGetLatest<Value>(value: Value): () => Value {
 
 const initialState: MutationState<never, never> = { status: 'idle' };
 
-const reducer = <TModel extends IJsonapiModel, TData extends IResponseData>(_, action): MutationState<TModel, TData> => {
+const reducer = <TModel extends IJsonapiModel, TData extends IResponseData>(
+  _,
+  action,
+): MutationState<TModel, TData> => {
   if (action.type === 'RESET') {
     return { status: 'idle' };
   }
@@ -39,7 +42,11 @@ const reducer = <TModel extends IJsonapiModel, TData extends IResponseData>(_, a
 /**
  * Replace with useSWRMutation when it's released https://github.com/vercel/swr/pull/1450
  */
-export function useMutation<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>>(
+export function useMutation<
+  TInput,
+  TModel extends IJsonapiModel = IJsonapiModel,
+  TData extends IResponseData = IResponseData<TModel>,
+>(
   mutationFn: MutationFn<TInput, TModel, TData>,
   {
     onMutate,
@@ -50,7 +57,7 @@ export function useMutation<TInput, TModel extends IJsonapiModel = IJsonapiModel
     useErrorBoundary = false,
   }: IMutationOptions<TInput, TModel, TData> = {},
 ): MutationResult<TInput, TModel, TData> {
-  const client = useDatx();
+  const client = useClient();
 
   const [{ status, data, error }, dispatch] = useReducer<
     Reducer<MutationState<TModel, TData>, MutationAction<TModel, TData>>

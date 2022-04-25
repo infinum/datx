@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import DatxContext from '../context';
 
-export function useDatx() {
+export function useClient() {
   const context = useContext(DatxContext);
 
   if (!context) {

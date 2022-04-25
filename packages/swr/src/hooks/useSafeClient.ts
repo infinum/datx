@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { CreateClientFn } from "../interfaces/CreateClientFn";
+import { useState } from 'react';
+import { ClientInstance } from '../interfaces/Client';
+import { CreateClientFn } from '../interfaces/CreateClientFn';
 
-let client;
+let client: ClientInstance;
 
 /**
  * It's important to create an entirely new instance of Datx Client for each request.
@@ -22,7 +23,7 @@ const initialize = (createClient: CreateClientFn) => {
   return _client;
 };
 
-export function useSafeClient(createClient: CreateClientFn) {
+export function useSafeClient(createClient: CreateClientFn): ClientInstance {
   const [client] = useState(() => initialize(createClient));
 
   return client;

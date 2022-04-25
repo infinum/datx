@@ -1,27 +1,28 @@
 import {
-  Expression,
   IGetOneExpression,
   IGetManyExpression,
   IGetAllExpression,
+  FetcherExpressionArgument,
 } from './interfaces/QueryExpression';
-import { Client } from './interfaces/Client';
+import { ClientInstance } from './interfaces/Client';
 import { IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
 
-function isGetOne(expression: Expression): expression is IGetOneExpression {
+function isGetOne(expression: FetcherExpressionArgument): expression is IGetOneExpression {
   return expression.op === 'getOne';
 }
 
-function isGetMany(expression: Expression): expression is IGetManyExpression {
+function isGetMany(expression: FetcherExpressionArgument): expression is IGetManyExpression {
   return expression.op === 'getMany';
 }
 
-function isGetAll(expression: Expression): expression is IGetAllExpression {
+function isGetAll(expression: FetcherExpressionArgument): expression is IGetAllExpression {
   return expression.op === 'getAll';
 }
 
 export const createFetcher =
-  (client: Client) => <TModel extends IJsonapiModel = IJsonapiModel>(
-    expression: Expression,
+  (client: ClientInstance) =>
+  <TModel extends IJsonapiModel = IJsonapiModel>(
+    expression: FetcherExpressionArgument,
     config?: Pick<IRequestOptions, 'networkConfig'>,
   ) => {
     const { networkConfig } = config || {};

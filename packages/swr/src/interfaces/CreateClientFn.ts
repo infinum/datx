@@ -1,3 +1,3 @@
-import { Client } from "./Client";
+import { ClientInstance } from './Client';
 
-export type CreateClientFn = () => Client;
+export type CreateClientFn = () => ClientInstance;

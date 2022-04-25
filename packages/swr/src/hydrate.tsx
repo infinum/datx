@@ -1,11 +1,11 @@
 import React, { PropsWithChildren } from 'react';
 import { Response } from '@datx/jsonapi';
 import { SWRConfig } from 'swr';
-import { useDatx } from './hooks/useDatx';
-import { Client } from './interfaces/Client';
+import { useClient } from './hooks/useClient';
+import { ClientInstance } from './interfaces/Client';
 import { Fallback } from './interfaces/Fallback';
 
-const hydrate = (client: Client, fallback: Fallback | undefined) => {
+const hydrate = (client: ClientInstance, fallback: Fallback | undefined) => {
   return (
     fallback &&
     Object.keys(fallback).reduce((previousValue, currentValue) => {
@@ -25,7 +25,7 @@ export interface IHydrateProps {
 }
 
 export function Hydrate({ children, fallback }: PropsWithChildren<IHydrateProps>) {
-  const client = useDatx();
+  const client = useClient();
 
   return <SWRConfig value={{ fallback: hydrate(client, fallback) }}>{children}</SWRConfig>;
 }
