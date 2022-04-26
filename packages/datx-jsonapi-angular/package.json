@@ -1,6 +1,6 @@
 {
   "name": "@datx/jsonapi-angular",
-  "version": "2.4.2",
+  "version": "3.0.0-beta.0",
   "description": "DatX mixin for Angular JSON API support",
   "main": "dist/bundles/datx-jsonapi-angular.umd.js",
   "module": "dist/fesm2015/datx-jsonapi-angular.js",
@@ -31,10 +31,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "@datx/core": "2.4.0",
-    "@datx/jsonapi": "2.4.0",
-    "@datx/network": "2.4.0",
-    "@datx/utils": "2.4.0"
+    "@datx/core": "3.0.0-beta.0",
+    "@datx/jsonapi": "3.0.0-beta.0",
+    "@datx/network": "3.0.0-beta.0",
+    "@datx/utils": "3.0.0-beta.0"
   },
   "peerDependencies": {
     "@angular/common": ">=12",
