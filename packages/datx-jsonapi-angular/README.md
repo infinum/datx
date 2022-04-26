@@ -1,6 +1,6 @@
 # @datx/jsonapi-angular
 
-DatX is an opinionated data store. It features support for simple observable property definition, references to other models and first-class TypeScript support.
+DatX is an opinionated data store. It features support for references to other models and first-class TypeScript support.
 
 `@datx/jsonapi-angular` is a datx mixin that adds [JSON API](https://jsonapi.org/) support for Angular applications.
 

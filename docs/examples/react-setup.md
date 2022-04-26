@@ -77,13 +77,7 @@ export const useStores = () => useContext(storeContext);
 
 ## Use your store
 
-In this section, we will show you a couple different ways of observing your store changes in your components, and differences between them.
-
-- Using `observer` HOC
-- Using `<Observer>` component
-- Using `useObserver` hook
-
-But first, we will setup our app with `StoreProvider` and use our store in our component with `useStores` hook.
+In this section, we will setup our app with `StoreProvider` and use our store in our component with `useStores` hook.
 
 ### Setup your app
 

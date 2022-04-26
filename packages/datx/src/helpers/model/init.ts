@@ -171,11 +171,8 @@ export function initModelField<T extends PureModel>(model: T, key: string, value
       key,
       () => getMeta(model, `data__${key}`),
       (newValue: any) => {
-        // Make sure nested properties are observable
-        const packedValue = newValue;
-
         updateSingleAction(model, key, newValue);
-        setMeta(model, `data__${key}`, packedValue);
+        setMeta(model, `data__${key}`, newValue);
       },
     );
     model[key] = value;

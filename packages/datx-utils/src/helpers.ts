@@ -121,10 +121,10 @@ type Getter<T> = () => T;
 type Setter<T> = (value: T) => void;
 
 /**
- * Add a computed property to an observable object
+ * Add a computed property to an object
  *
  * @export
- * @param {Record<string, any>} obj Observable object
+ * @param {Record<string, any>} obj object
  * @param {string} key Property to add
  * @param {() => any} getter Getter function
  * @param {(value: any) => void} [setter] Setter function

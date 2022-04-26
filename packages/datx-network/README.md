@@ -1,6 +1,6 @@
 # @datx/network
 
-DatX is an opinionated data store. It features support for simple observable property definition, references to other models and first-class TypeScript support.
+DatX is an opinionated data store. It features support for references to other models and first-class TypeScript support.
 
 `@datx/network` is a datx mixin that adds a networking layer support. It can be used with any REST-like API and probably also other types of an API.
 
@@ -16,7 +16,7 @@ class Person extends Model {
   public static type = 'person'; // Unique name of the model class
 
   @Attribute()
-  public name: string; // A normal observable property without a default value
+  public name: string; // A normal attribute without a default value
 
   @Attribute()
   public surname: string;

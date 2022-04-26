@@ -1,6 +1,6 @@
 # @datx/jsonapi
 
-DatX is an opinionated data store. It features support for simple observable property definition, references to other models and first-class TypeScript support.
+DatX is an opinionated data store. It features support for references to other models and first-class TypeScript support.
 
 `@datx/jsonapi` is a datx mixin that adds [JSON API](https://jsonapi.org/) support.
 
@@ -16,7 +16,7 @@ class Person extends jsonapi(Model) {
   public static type = 'person'; // Unique name of the model class
 
   @Attribute()
-  public name: string; // A normal observable property without a default value
+  public name: string; // A normal attribute without a default value
 
   @Attribute()
   public surname: string;

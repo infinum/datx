@@ -398,7 +398,7 @@ describe('Model', () => {
         @Attribute()
         public foo!: number;
 
-        public bar!: number; // Not observable
+        public bar!: number;
       }
       class AppStore extends Collection {
         public static types = [Foo];
