@@ -8,6 +8,7 @@ import {
 } from '@datx/jsonapi';
 import { unstable_serialize } from 'swr';
 import { createFetcher } from './createFetcher';
+import { IFetchQueryConfiguration } from './interfaces/IFetchQueryConfiguration';
 import { IFetchQueryReturn } from './interfaces/IFetchQueryReturn';
 import { IJsonapiSwrClient } from './interfaces/IJsonapiSwrClient';
 import { Expression } from './interfaces/QueryExpression';
@@ -16,7 +17,10 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
   class JsonapiSwrClient extends jsonapiCollection(BaseClass) implements IJsonapiSwrClient {
     private __fallback: Record<string, unknown> = {};
 
-    public async fetchQuery<TModel extends IJsonapiModel = IJsonapiModel>(expression: Expression) {
+    public async fetchQuery<TModel extends IJsonapiModel = IJsonapiModel>(
+      expression: Expression,
+      config?: IFetchQueryConfiguration,
+    ) {
       try {
         const fetcher = createFetcher(this);
         const response = await fetcher<TModel>(expression);
@@ -32,6 +36,10 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
           data: response,
         } as IFetchQueryReturn<TModel>;
       } catch (error) {
+        if (config?.prefetch) {
+          return;
+        }
+
         if (error instanceof Response) {
           throw error.error;
         }
