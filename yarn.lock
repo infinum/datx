@@ -168,9 +168,9 @@
     tslib "^2.3.0"
 
 "@angular/compiler-cli@~13.3.0":
-  version "13.3.5"
-  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-13.3.5.tgz#93d759c5bda075efccf4f1d60110252f708e53bf"
-  integrity sha512-H7A+MZcbB4g5fa6O4giYgrCG1h5whJfIxr4txDtDfolygzwRzqH1PSMfjW/jYyIpaH6XqXMSDHvbXRFGKstboA==
+  version "13.3.6"
+  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-13.3.6.tgz#d2b11b27f9c593e9e14da7622c4f65f0d842249b"
+  integrity sha512-m3XKkMIfD6ERUNuIwsNpLkIQq/yHKyCBrCFb+V+XBVsEkpl9pfLGJEpg3ETa5y+EdRbIYnPSWmLQDM+taD1FDA==
   dependencies:
     "@babel/core" "^7.17.2"
     chokidar "^3.0.0"
