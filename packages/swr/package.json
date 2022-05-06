@@ -1,6 +1,6 @@
 {
   "name": "@datx/swr",
-  "version": "2.5.0-beta.1",
+  "version": "2.5.0-beta.2",
   "description": "DatX bindings for SWR",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -44,8 +44,8 @@
     "@swc-node/jest": "1.4.3",
     "@testing-library/jest-dom": "5.16.4",
     "@testing-library/react": "13.2.0",
-    "@testing-library/user-event": "14.1.1",
     "@testing-library/react-hooks": "8.0.0",
+    "@testing-library/user-event": "14.1.1",
     "@types/isomorphic-fetch": "0.0.35",
     "@types/jest": "^27.0.0",
     "@types/lodash": "^4.14.168",
