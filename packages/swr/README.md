@@ -44,7 +44,7 @@ export type Client = typeof JsonapiSwrClient;
 
 ### Client types override
 
-To correctly infer types form expression in `useQuery` you need to globally override client typings.
+To correctly infer types form expression in `useDatx` you need to globally override client typings.
 
 ```tsx
 // /typings/datx.d.ts
@@ -136,7 +136,7 @@ export const getTodoQuery = (id?: string) =>
       } as IGetOneExpression<typeof Todo>)
     : null;
 
-const { data, error } = useQuery(getTodoQuery(id));
+const { data, error } = useDatx(getTodoQuery(id));
 
 // ...or return a falsy value, a.k.a currying
 export const getTodoQuery = (id?: string) => () =>
@@ -148,7 +148,7 @@ export const getTodoQuery = (id?: string) => () =>
       } as IGetOneExpression<typeof Todo>)
     : null;
 
-const { data, error } = useQuery(getTodoQuery(id));
+const { data, error } = useDatx(getTodoQuery(id));
 
 // ...or throw an error when property is not defined
 export const getTodoByUserQuery = (user?: User) => () =>
@@ -158,8 +158,8 @@ export const getTodoByUserQuery = (user?: User) => () =>
     type: 'todos',
   } as IGetOneExpression<typeof Todo>);
 
-const { data: user } = useQuery(getUserQuery(id));
-const { data: todo } = useQuery(getTodoByUserQuery(user));
+const { data: user } = useDatx(getUserQuery(id));
+const { data: todo } = useDatx(getTodoByUserQuery(user));
 ```
 
 ### Define mutations
@@ -186,7 +186,7 @@ export const createTodo = (client: ClientInstance, message: string | undefined) 
 ```tsx
 // src/components/features/todos/Todos.ts
 
-import { useMutation, useQuery } from '@datx/swr';
+import { useMutation, useDatx } from '@datx/swr';
 import { FC, useRef } from 'react';
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
 import NextLink from 'next/link';
@@ -198,7 +198,7 @@ export interface ITodosProps {}
 
 export const Todos: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { data, error, mutate } = useQuery(todosQuery);
+  const { data, error, mutate } = useDatx(todosQuery);
 
   const [create, { status }] = useMutation(createTodo, {
     onSuccess: async () => {
@@ -254,7 +254,7 @@ For accessing `Client` instance from the context. It's made mainly for internal 
 const client = useClient();
 ```
 
-#### useQuery
+#### useDatx
 
 ```ts
 const expression: IGetManyExpression<typeof Todo> = {
@@ -273,10 +273,10 @@ const config: DatxConfiguration<Todo, Array<Todo>> = {
   onSuccess: (data) => console.log(data.data[0].id),
 }
 
-const = useQuery(expression, config);
+const = useDatx(expression, config);
 ```
 
-Second parameter of `useQuery` is for passing config options. It extends default SWR config prop with additional `networkConfig` property useful for passing custom headers.
+Second parameter of `useDatx` is for passing config options. It extends default SWR config prop with additional `networkConfig` property useful for passing custom headers.
 
 ##### Expression signature
 

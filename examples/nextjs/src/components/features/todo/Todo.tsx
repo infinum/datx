@@ -1,4 +1,4 @@
-import { useQuery } from '@datx/swr';
+import { useDatx } from '@datx/swr';
 import { FC } from 'react';
 
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
@@ -10,7 +10,7 @@ export interface ITodoProps {
 }
 
 export const Todo: FC<ITodoProps> = ({ id }) => {
-  const { data, error } = useQuery(getTodoQuery(id));
+  const { data, error } = useDatx(getTodoQuery(id));
 
   if (error) {
     return <ErrorFallback error={error} />;

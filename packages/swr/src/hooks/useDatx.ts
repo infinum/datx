@@ -4,9 +4,9 @@ import useSWR from 'swr';
 import { Expression } from '../interfaces/QueryExpression';
 import { DatxConfiguration } from '../interfaces/DatxConfiguration';
 import { middleware } from '../middleware';
-import { Data, Model } from '../interfaces/UseQuery';
+import { Data, Model } from '../interfaces/UseDatx';
 
-export function useQuery<
+export function useDatx<
   TExpression extends Expression,
   TModel extends IJsonapiModel = Model<TExpression>,
   TData extends IResponseData = Data<TExpression, TModel>,

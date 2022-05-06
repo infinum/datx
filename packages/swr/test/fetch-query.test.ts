@@ -1,12 +1,16 @@
 import { unstable_serialize } from 'swr';
-import { createClient, Client } from './datx';
+import { createClient, JsonapiSwrClient } from './datx';
 import { server } from './mocks/server';
 import { todosError } from './mocks/todos';
 import { Todo } from './models/Todo';
-import { queryTodos } from './queries';
+
+const queryTodos = {
+  op: 'getMany',
+  type: 'todos',
+} as const;
 
 describe('fetchQuery', () => {
-  let client: Client;
+  let client: JsonapiSwrClient;
 
   beforeEach(() => {
     client = createClient();

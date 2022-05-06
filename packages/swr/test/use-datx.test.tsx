@@ -5,56 +5,43 @@ import { server } from './mocks/server';
 import { getErrorMessage, renderWithConfig } from './utils';
 import { todosError, todosErrorDetails } from './mocks/todos';
 import { message } from './mocks/handlers';
-import { useQuery } from '../src';
-import { queryTodos } from './queries';
+import { useDatx } from '@datx/swr';
 
 const loadingMessage = 'Loading...';
-const shouldFetchMessage = 'Waiting for dependant call...';
 
-interface ITesterProps {
-  shouldFetch?: boolean;
-}
-
-const Tester: FC<ITesterProps> = ({ shouldFetch = true }) => {
-  const { data, error } = useQuery(shouldFetch && queryTodos);
+const Todos: FC = () => {
+  const { data, error } = useDatx({
+    op: 'getMany',
+    type: 'todos',
+  } as const);
 
   if (error) {
     return <div>{getErrorMessage(error)}</div>;
   }
 
-  if (!data && shouldFetch) {
+  if (!data) {
     return <div>{loadingMessage}</div>;
-  }
-
-  if (!shouldFetch) {
-    return <div>{shouldFetchMessage}</div>;
   }
 
   return <div>{data?.data[0].message}</div>;
 };
 
-describe('useQuery', () => {
+describe('useDatx', () => {
   it('should render data', async () => {
-    renderWithConfig(<Tester shouldFetch />);
+    renderWithConfig(<Todos />);
     screen.getByText(loadingMessage);
 
     await screen.findByText(message);
   });
 
   it('should conditionally fetch data', async () => {
-    const renderResult = renderWithConfig(<Tester shouldFetch={false} />);
-    screen.getByText(shouldFetchMessage);
-
-    renderResult.rerender(<Tester />);
-    screen.getByText(loadingMessage);
-
-    await screen.findByText(message);
+    // todo
   });
 
   it('should handle errors', async () => {
     server.use(todosError);
 
-    renderWithConfig(<Tester />);
+    renderWithConfig(<Todos />);
     screen.getByText(loadingMessage);
 
     await screen.findByText(todosErrorDetails);

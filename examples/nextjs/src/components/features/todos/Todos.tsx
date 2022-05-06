@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@datx/swr';
+import { useMutation, useDatx } from '@datx/swr';
 import { FC, useRef } from 'react';
 import { ErrorFallback } from '../../shared/errors/ErrorFallback/ErrorFallback';
 import NextLink from 'next/link';
@@ -10,7 +10,7 @@ export interface ITodosProps {}
 
 export const Todos: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { data, error, mutate } = useQuery(todosQuery, {
+  const { data, error, mutate } = useDatx(todosQuery, {
     onSuccess: (data) => console.log(data.data[0].id),
   });
   const [create, { status }] = useMutation(createTodo, {
