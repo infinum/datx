@@ -23,7 +23,7 @@ const initialize = (createClient: CreateClientFn) => {
   return _client;
 };
 
-export function useSafeClient(createClient: CreateClientFn): ClientInstance {
+export function useInitialize(createClient: CreateClientFn): ClientInstance {
   const [client] = useState(() => initialize(createClient));
 
   return client;

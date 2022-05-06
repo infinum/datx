@@ -2,7 +2,7 @@ import { Response } from '@datx/jsonapi';
 import { act, render } from '@testing-library/react';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import { createFetcher, DatxProvider, useSafeClient } from '../src';
+import { createFetcher, DatxProvider, useInitialize } from '../src';
 import { createClient } from './datx';
 
 export function sleep(time: number) {
@@ -18,7 +18,7 @@ export const renderWithConfig = (
   const provider = () => new Map();
 
   const TestSWRConfig = ({ children }: { children: React.ReactNode }) => {
-    const client = useSafeClient(createClient);
+    const client = useInitialize(createClient);
 
     return (
       <DatxProvider client={client}>

@@ -1,4 +1,4 @@
-export * from './hooks/useSafeClient';
+export * from './hooks/useInitialize';
 export * from './hooks/useClient';
 export * from './hooks/useMutation';
 export * from './hooks/useQuery';

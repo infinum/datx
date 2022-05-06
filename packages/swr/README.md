@@ -66,12 +66,12 @@ declare module '@datx/swr' {
 import '@datx/core/disable-mobx';
 
 import type { AppProps } from 'next/app';
-import { createFetcher, DatxProvider, useSafeClient } from '@datx/swr';
+import { createFetcher, DatxProvider, useInitialize } from '@datx/swr';
 import { createClient } from '../datx/createClient';
 import { SWRConfig } from 'swr';
 
 function ExampleApp({ Component, pageProps }: AppProps) {
-  const client = useSafeClient(createClient);
+  const client = useInitialize(createClient);
 
   return (
     <DatxProvider client={client}>
@@ -237,13 +237,13 @@ export const Todos: FC = () => {
 
 ### hooks
 
-#### useSafeClient
+#### useInitialize
 
 On the server side it is important to create an entirely new instance of Datx Client for each request.
 Otherwise, your response to a request might include sensitive cached query results from a previous request.
 
 ```ts
-const client = useSafeClient(() => new Client());
+const client = useInitialize(() => new Client());
 ```
 
 #### useClient
