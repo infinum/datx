@@ -177,9 +177,9 @@
     yargs "^17.2.1"
 
 "@angular/compiler@~13.3.0":
-  version "13.3.5"
-  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-13.3.5.tgz#0655d55e9727344bde1c3b775ba7f4df69081fb1"
-  integrity sha512-iSQlYevMk5glwZSXTXf2GytykqZWdK3Rr8heIvEPqd8n88MSB3w1KnDc1fnHLF950q/nUR9K+3r4wWPwc8J2IQ==
+  version "13.3.6"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-13.3.6.tgz#c9fee7d0d6d92139fbc1f785eea60dcce96f1cd7"
+  integrity sha512-HnAttP3Ds+0GwFAA4ZnY13Y29xURCZdZoljb7+ZZHDmtBesRwX8Y1TwLx6rNnqqakNr3WEXyf65bbFc7ICrXRg==
   dependencies:
     tslib "^2.3.0"
 
