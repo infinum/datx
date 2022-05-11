@@ -1,0 +1,1361 @@
+[
+  {
+    "email": "deni.stojmenov@infinum.hr",
+    "username": "Deni0",
+    "name": "Deni Stojmenov",
+    "role": "producer",
+    "admin": false,
+    "church": "",
+    "location": "",
+    "website": "",
+    "about": "",
+    "slug": "deni0",
+    "profilePicture": {
+      "facebookUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/68da2fc57a1679157419402f50d1490a.jpg",
+      "twitterUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/008369e6b8ac73383cf7b8bb61176da1.jpg",
+      "largeUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/ecfcad5f89d3ed5b38a41025d9bd7cdd.jpg",
+      "mediumUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/c8d672679cfe79c40a370c7b57978050.jpg",
+      "smallUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/8c1bf7a1591815f4487144689807daae.jpg",
+      "thumbnailUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/3e0a17e3989ca70e18ba1efb420cc4a0.jpg",
+      "preloaderUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/ae0b84393489eeda9d84ad515ab47bfa.jpg",
+      "originalUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/ba55d37c3bea79258478129663dea770.jpg"
+    },
+    "headerImage": {
+      "heroUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/567ece36387a77a9ca7a494c85f74e80.png",
+      "largeUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/57a2079775293009063086049cffa7c0.png",
+      "smallUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/13792259b3dd7516597a3f1ec2e7f6ba.png",
+      "originalUrl": "https://s3.us-east-2.amazonaws.com/web.loop.staging/store/b91f601bf4cb87099b373d0570e7634e.png"
+    },
+    "followed": null,
+    "artist": false,
+    "songwriter": false,
+    "commissionUser": true,
+    "invited": false,
+    "facebook": "",
+    "instagram": "",
+    "itunes": "",
+    "spotify": "",
+    "twitter": "",
+    "youtube": "",
+    "subscriptionPlanType": "pro_ultimate",
+    "currentStanding": 61,
+    "standingDifference": 60,
+    "notifyForComments": true,
+    "notifyForDiscussionComments": true,
+    "notifyWhenLowCredits": true,
+    "notifyOnCreditBundlePurchase": true,
+    "upgradableMultitracks": {},
+    "creditBalance": 177,
+    "storageUsage": 4,
+    "storageUsageLimit": 2000000,
+    "storageUsageWarningOffset": 10000,
+    "staffRole": "support",
+    "commissionAccountsCount": 10,
+    "emailDeliveryFailuresCount": 0,
+    "subscription": "347923",
+    "producerRequest": null,
+    "billingAddress": "116395",
+    "shippingAddress": "116397",
+    "followings": [],
+    "memberTeams": [],
+    "commissionAccounts": [
+      "2036",
+      "2038",
+      "2045",
+      "2043",
+      "2027",
+      "2023",
+      "2042",
+      "2029",
+      "2022",
+      "2040"
+    ],
+    "__META__": {
+      "fields": [
+        "email",
+        "username",
+        "name",
+        "role",
+        "admin",
+        "church",
+        "location",
+        "website",
+        "about",
+        "slug",
+        "profilePicture",
+        "headerImage",
+        "followed",
+        "artist",
+        "songwriter",
+        "commissionUser",
+        "invited",
+        "facebook",
+        "instagram",
+        "itunes",
+        "spotify",
+        "twitter",
+        "youtube",
+        "subscriptionPlanType",
+        "currentStanding",
+        "standingDifference",
+        "notifyForComments",
+        "notifyForDiscussionComments",
+        "notifyWhenLowCredits",
+        "notifyOnCreditBundlePurchase",
+        "upgradableMultitracks",
+        "creditBalance",
+        "storageUsage",
+        "storageUsageLimit",
+        "storageUsageWarningOffset",
+        "staffRole",
+        "commissionAccountsCount",
+        "emailDeliveryFailuresCount"
+      ],
+      "id": "552909",
+      "refs": {
+        "subscription": {
+          "model": "subscriptions",
+          "type": 0
+        },
+        "producerUpload": {
+          "model": "producer_uploads",
+          "type": 0
+        },
+        "multitrackUpload": {
+          "model": "multitrack_uploads",
+          "type": 0
+        },
+        "personalMultitrack": {
+          "model": "personal_multitracks",
+          "type": 0
+        },
+        "personalMultitrackUpload": {
+          "model": "personal_multitrack_uploads",
+          "type": 0
+        },
+        "producerRequest": {
+          "model": "producer_requests",
+          "type": 0
+        },
+        "billingAddress": {
+          "model": "addresses",
+          "type": 0
+        },
+        "shippingAddress": {
+          "model": "addresses",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        },
+        "loginDetails": {
+          "model": "login_details",
+          "type": 0
+        },
+        "followings": {
+          "model": "users",
+          "type": 1
+        },
+        "team": {
+          "model": "teams",
+          "type": 0
+        },
+        "memberTeams": {
+          "model": "teams",
+          "type": 1
+        },
+        "commissionAccounts": {
+          "model": "commission_accounts",
+          "type": 1
+        }
+      },
+      "type": "users",
+      "jsonapiMeta": {
+        "followersCount": 0,
+        "followedCount": 3,
+        "multitracksCount": 3,
+        "songsCount": 0,
+        "albumsCount": 0,
+        "patchesCount": 0,
+        "patchBundlesCount": 0,
+        "commentsCount": 0,
+        "compositionsCount": 0
+      },
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "producerUpload": {
+          "included": false
+        },
+        "personalMultitrack": {
+          "included": false
+        },
+        "personalMultitrackUpload": {
+          "included": false
+        },
+        "multitrackUpload": {
+          "included": false
+        },
+        "team": {
+          "included": false
+        },
+        "memberTeams": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "status": "cart",
+    "availablePaymentMethods": [
+      "paypal",
+      "credit_card"
+    ],
+    "paymentMethod": null,
+    "couponCode": null,
+    "couponErrorMessage": null,
+    "shippingRequired": true,
+    "currency": "USD",
+    "totalBasePriceCents": 74900,
+    "totalBasePrice": "$749.00",
+    "totalBaseCreditPrice": null,
+    "totalTaxAmountCents": 0,
+    "totalTaxAmount": "$0.00",
+    "totalTaxCreditAmount": null,
+    "discountAmountCents": 0,
+    "discountAmount": "$0.00",
+    "discountCreditAmount": null,
+    "shippingPriceCents": 12500,
+    "shippingPrice": "$125.00",
+    "shippingCreditPrice": null,
+    "totalPriceBeforeDiscountCents": 87400,
+    "totalPriceBeforeDiscount": "$874.00",
+    "totalPriceBeforeDiscountCredits": null,
+    "totalPriceCents": 87400,
+    "totalPrice": "$874.00",
+    "totalCreditPrice": null,
+    "createdAt": "2022-05-10T03:23:10.488-05:00",
+    "updatedAt": "2022-05-10T03:27:44.059-05:00",
+    "finalizeOrder": false,
+    "acceptedTerms": false,
+    "paymentOption": "new",
+    "paypalPaymentId": null,
+    "paypalBuyerId": null,
+    "stripeToken": null,
+    "saveCreditCard": false,
+    "billingAddress": "116395",
+    "shippingAddress": "116397",
+    "lineItems": [],
+    "__META__": {
+      "fields": [
+        "status",
+        "availablePaymentMethods",
+        "paymentMethod",
+        "couponCode",
+        "couponErrorMessage",
+        "shippingRequired",
+        "currency",
+        "totalBasePriceCents",
+        "totalBasePrice",
+        "totalBaseCreditPrice",
+        "totalTaxAmountCents",
+        "totalTaxAmount",
+        "totalTaxCreditAmount",
+        "discountAmountCents",
+        "discountAmount",
+        "discountCreditAmount",
+        "shippingPriceCents",
+        "shippingPrice",
+        "shippingCreditPrice",
+        "totalPriceBeforeDiscountCents",
+        "totalPriceBeforeDiscount",
+        "totalPriceBeforeDiscountCredits",
+        "totalPriceCents",
+        "totalPrice",
+        "totalCreditPrice",
+        "createdAt",
+        "updatedAt",
+        "finalizeOrder",
+        "acceptedTerms",
+        "paymentOption",
+        "paypalPaymentId",
+        "paypalBuyerId",
+        "stripeToken",
+        "saveCreditCard"
+      ],
+      "id": "10105567",
+      "refs": {
+        "user": {
+          "model": "users",
+          "type": 0
+        },
+        "billingAddress": {
+          "model": "addresses",
+          "type": 0
+        },
+        "shippingAddress": {
+          "model": "addresses",
+          "type": 0
+        },
+        "lineItems": {
+          "model": "line_items",
+          "type": 1
+        },
+        "creditCard": {
+          "model": "credit_cards",
+          "type": 0
+        }
+      },
+      "type": "carts",
+      "jsonapiLinks": {
+        "self": "https://loop-backend-staging.byinfinum.co/api/v1/carts/10105567"
+      },
+      "jsonapiMeta": {
+        "productsCount": 2
+      },
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "user": {
+          "included": false
+        },
+        "lineItems": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "status": "active",
+    "planType": "pro_ultimate",
+    "planLevel": 7,
+    "startedAt": "2022-03-15T05:18:31.000-05:00",
+    "canceledAt": null,
+    "cancelAt": null,
+    "endedAt": null,
+    "periodStartedAt": "2022-05-10T05:18:31.000-05:00",
+    "periodEndedAt": "2022-05-17T05:18:31.000-05:00",
+    "storage": true,
+    "storageLimit": 2000000,
+    "storageWarningOffset": 10000,
+    "teams": true,
+    "teamUsersLimit": 100,
+    "midiCues": true,
+    "sync": true,
+    "headerImage": true,
+    "canCancel": true,
+    "canRenew": false,
+    "canUpdatePaymentInfo": true,
+    "canSubscribe": false,
+    "canChangePlan": true,
+    "canUpgrade": false,
+    "canDowngrade": true,
+    "upgradedInBillingPeriod": false,
+    "createdAt": "2022-03-15T05:18:33.688-05:00",
+    "updatedAt": "2022-05-10T05:19:33.570-05:00",
+    "__META__": {
+      "fields": [
+        "status",
+        "planType",
+        "planLevel",
+        "startedAt",
+        "canceledAt",
+        "cancelAt",
+        "endedAt",
+        "periodStartedAt",
+        "periodEndedAt",
+        "storage",
+        "storageLimit",
+        "storageWarningOffset",
+        "teams",
+        "teamUsersLimit",
+        "midiCues",
+        "sync",
+        "headerImage",
+        "canCancel",
+        "canRenew",
+        "canUpdatePaymentInfo",
+        "canSubscribe",
+        "canChangePlan",
+        "canUpgrade",
+        "canDowngrade",
+        "upgradedInBillingPeriod",
+        "createdAt",
+        "updatedAt",
+        "event",
+        "stripeToken"
+      ],
+      "id": "347923",
+      "refs": {
+        "user": {
+          "model": "users",
+          "type": 0
+        },
+        "subscriptionPlan": {
+          "model": "subscription_plans",
+          "type": 0
+        },
+        "creditCard": {
+          "model": "credit_cards",
+          "type": 0
+        },
+        "subscriptionSchedule": {
+          "model": "subscription_schedules",
+          "type": 0
+        }
+      },
+      "type": "subscriptions",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "subscriptionSchedule": {
+          "included": false
+        },
+        "user": {
+          "included": false
+        },
+        "subscriptionPlan": {
+          "included": false
+        },
+        "creditCard": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "firstName": "Deni",
+    "lastName": "Stojmenov",
+    "payeeName": null,
+    "businessName": null,
+    "addressLine1": "Test Addressb",
+    "addressLine2": "",
+    "city": "Test Cityv",
+    "zipcode": "Test Zip 123v",
+    "email": "deni.stojmenov@infinum.hr",
+    "phoneNumber": "jsadoasd",
+    "addressType": "billing",
+    "createdAt": "2022-03-01T14:38:17.060-06:00",
+    "updatedAt": "2022-04-08T05:10:41.412-05:00",
+    "state": null,
+    "country": "MK",
+    "__META__": {
+      "fields": [
+        "firstName",
+        "lastName",
+        "payeeName",
+        "businessName",
+        "addressLine1",
+        "addressLine2",
+        "city",
+        "zipcode",
+        "email",
+        "phoneNumber",
+        "addressType",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "116395",
+      "refs": {
+        "user": {
+          "model": "users",
+          "type": 0
+        },
+        "state": {
+          "model": "states",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        }
+      },
+      "type": "addresses",
+      "jsonapiLinks": {
+        "self": "https://loop-backend-staging.byinfinum.co/api/v1/addresses/116395"
+      },
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "user": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "firstName": "Test Name",
+    "lastName": "Test last name",
+    "payeeName": null,
+    "businessName": null,
+    "addressLine1": "Test shipping Address 1",
+    "addressLine2": "Test shipping Address 2",
+    "city": "Test shipping City",
+    "zipcode": "Test shipping zip code 1234",
+    "email": "deni.stojmenov@infinum.hr",
+    "phoneNumber": "test 1231247120",
+    "addressType": "shipping",
+    "createdAt": "2022-03-07T02:49:15.805-06:00",
+    "updatedAt": "2022-03-07T02:55:51.066-06:00",
+    "state": "DE",
+    "country": "US",
+    "__META__": {
+      "fields": [
+        "firstName",
+        "lastName",
+        "payeeName",
+        "businessName",
+        "addressLine1",
+        "addressLine2",
+        "city",
+        "zipcode",
+        "email",
+        "phoneNumber",
+        "addressType",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "116397",
+      "refs": {
+        "user": {
+          "model": "users",
+          "type": 0
+        },
+        "state": {
+          "model": "states",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        }
+      },
+      "type": "addresses",
+      "jsonapiLinks": {
+        "self": "https://loop-backend-staging.byinfinum.co/api/v1/addresses/116397"
+      },
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "user": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "Test new tax info 10",
+    "location": null,
+    "preferredPayoutMethod": null,
+    "paypalEmail": "",
+    "payoutType": "by_request",
+    "taxId": "",
+    "accountType": null,
+    "accountNumber": "",
+    "routingNumber": "",
+    "swiftCode": "",
+    "countryOfBank": null,
+    "commissionBalance": "$0.00",
+    "commissionBalanceCents": 0,
+    "taxClassification": "in_prime",
+    "llcClassification": "s_corporation",
+    "taxExemptionCode": null,
+    "taxExemption": null,
+    "masterCommissions": false,
+    "publishingCommissions": false,
+    "createdAt": "2022-04-04T01:24:51.492-05:00",
+    "updatedAt": "2022-05-10T00:54:01.376-05:00",
+    "__META__": {
+      "fields": [
+        "name",
+        "location",
+        "preferredPayoutMethod",
+        "paypalEmail",
+        "payoutType",
+        "taxId",
+        "accountType",
+        "accountNumber",
+        "routingNumber",
+        "swiftCode",
+        "countryOfBank",
+        "commissionBalance",
+        "commissionBalanceCents",
+        "taxClassification",
+        "llcClassification",
+        "taxExemptionCode",
+        "taxExemption",
+        "masterCommissions",
+        "publishingCommissions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "2036",
+      "refs": {
+        "manager": {
+          "model": "users",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        }
+      },
+      "type": "commission_accounts",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "manager": {
+          "included": false
+        },
+        "payeeAddress": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "Tax Exemptions 2",
+    "location": null,
+    "preferredPayoutMethod": null,
+    "paypalEmail": "",
+    "payoutType": "by_request",
+    "taxId": "",
+    "accountType": null,
+    "accountNumber": "",
+    "routingNumber": "",
+    "swiftCode": "",
+    "countryOfBank": null,
+    "commissionBalance": "$0.00",
+    "commissionBalanceCents": 0,
+    "taxClassification": null,
+    "llcClassification": null,
+    "taxExemptionCode": 12,
+    "taxExemption": "A middleman known in the investment community as a nominee or custodian",
+    "masterCommissions": false,
+    "publishingCommissions": false,
+    "createdAt": "2022-04-04T01:44:15.201-05:00",
+    "updatedAt": "2022-05-10T00:54:00.967-05:00",
+    "__META__": {
+      "fields": [
+        "name",
+        "location",
+        "preferredPayoutMethod",
+        "paypalEmail",
+        "payoutType",
+        "taxId",
+        "accountType",
+        "accountNumber",
+        "routingNumber",
+        "swiftCode",
+        "countryOfBank",
+        "commissionBalance",
+        "commissionBalanceCents",
+        "taxClassification",
+        "llcClassification",
+        "taxExemptionCode",
+        "taxExemption",
+        "masterCommissions",
+        "publishingCommissions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "2038",
+      "refs": {
+        "manager": {
+          "model": "users",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        }
+      },
+      "type": "commission_accounts",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "manager": {
+          "included": false
+        },
+        "payeeAddress": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "Name 5 #4271 ",
+    "location": "us",
+    "preferredPayoutMethod": "paypal",
+    "paypalEmail": "test#4271@test.com",
+    "payoutType": "by_request",
+    "taxId": "12-3123121",
+    "accountType": "personal",
+    "accountNumber": "427132",
+    "routingNumber": "131212131",
+    "swiftCode": "1241323",
+    "countryOfBank": "us",
+    "commissionBalance": "$0.00",
+    "commissionBalanceCents": 0,
+    "taxClassification": "c_corporation",
+    "llcClassification": "c_corporation",
+    "taxExemptionCode": 3,
+    "taxExemption": "A state, the District of Columbia, a U.S. commonwealth or possession, or any of their political subdivisions, agencies, or instrumentalities",
+    "masterCommissions": false,
+    "publishingCommissions": false,
+    "createdAt": "2022-04-11T04:28:03.785-05:00",
+    "updatedAt": "2022-05-10T00:54:00.420-05:00",
+    "__META__": {
+      "fields": [
+        "name",
+        "location",
+        "preferredPayoutMethod",
+        "paypalEmail",
+        "payoutType",
+        "taxId",
+        "accountType",
+        "accountNumber",
+        "routingNumber",
+        "swiftCode",
+        "countryOfBank",
+        "commissionBalance",
+        "commissionBalanceCents",
+        "taxClassification",
+        "llcClassification",
+        "taxExemptionCode",
+        "taxExemption",
+        "masterCommissions",
+        "publishingCommissions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "2045",
+      "refs": {
+        "manager": {
+          "model": "users",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        }
+      },
+      "type": "commission_accounts",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "manager": {
+          "included": false
+        },
+        "payeeAddress": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "Name 2 #4271 ",
+    "location": "us",
+    "preferredPayoutMethod": "paypal",
+    "paypalEmail": "test#4271@test.com",
+    "payoutType": "quarterly",
+    "taxId": "12-3456789",
+    "accountType": null,
+    "accountNumber": "",
+    "routingNumber": "",
+    "swiftCode": "",
+    "countryOfBank": null,
+    "commissionBalance": "$0.00",
+    "commissionBalanceCents": 0,
+    "taxClassification": "c_corporation",
+    "llcClassification": "c_corporation",
+    "taxExemptionCode": 2,
+    "taxExemption": "The United States or any of its agencies or instrumentalities",
+    "masterCommissions": false,
+    "publishingCommissions": false,
+    "createdAt": "2022-04-11T04:09:19.390-05:00",
+    "updatedAt": "2022-05-10T00:53:59.988-05:00",
+    "__META__": {
+      "fields": [
+        "name",
+        "location",
+        "preferredPayoutMethod",
+        "paypalEmail",
+        "payoutType",
+        "taxId",
+        "accountType",
+        "accountNumber",
+        "routingNumber",
+        "swiftCode",
+        "countryOfBank",
+        "commissionBalance",
+        "commissionBalanceCents",
+        "taxClassification",
+        "llcClassification",
+        "taxExemptionCode",
+        "taxExemption",
+        "masterCommissions",
+        "publishingCommissions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "2043",
+      "refs": {
+        "manager": {
+          "model": "users",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        }
+      },
+      "type": "commission_accounts",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "manager": {
+          "included": false
+        },
+        "payeeAddress": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "Test new tax info 2",
+    "location": "us",
+    "preferredPayoutMethod": "paypal",
+    "paypalEmail": "test#4271@test.com",
+    "payoutType": "by_request",
+    "taxId": "12-3125121",
+    "accountType": null,
+    "accountNumber": "",
+    "routingNumber": "",
+    "swiftCode": "",
+    "countryOfBank": null,
+    "commissionBalance": "$0.00",
+    "commissionBalanceCents": 0,
+    "taxClassification": "c_corporation",
+    "llcClassification": null,
+    "taxExemptionCode": 3,
+    "taxExemption": "A state, the District of Columbia, a U.S. commonwealth or possession, or any of their political subdivisions, agencies, or instrumentalities",
+    "masterCommissions": false,
+    "publishingCommissions": false,
+    "createdAt": "2022-04-04T01:21:00.239-05:00",
+    "updatedAt": "2022-05-10T00:53:58.769-05:00",
+    "__META__": {
+      "fields": [
+        "name",
+        "location",
+        "preferredPayoutMethod",
+        "paypalEmail",
+        "payoutType",
+        "taxId",
+        "accountType",
+        "accountNumber",
+        "routingNumber",
+        "swiftCode",
+        "countryOfBank",
+        "commissionBalance",
+        "commissionBalanceCents",
+        "taxClassification",
+        "llcClassification",
+        "taxExemptionCode",
+        "taxExemption",
+        "masterCommissions",
+        "publishingCommissions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "2027",
+      "refs": {
+        "manager": {
+          "model": "users",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        }
+      },
+      "type": "commission_accounts",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "manager": {
+          "included": false
+        },
+        "payeeAddress": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "Deni",
+    "location": "us",
+    "preferredPayoutMethod": "paypal",
+    "paypalEmail": "test1@mailinator.com.com",
+    "payoutType": "by_request",
+    "taxId": "12-3456789",
+    "accountType": "personal",
+    "accountNumber": "124124",
+    "routingNumber": "236343423",
+    "swiftCode": "2352323",
+    "countryOfBank": "outside_us",
+    "commissionBalance": "$6.90",
+    "commissionBalanceCents": 690,
+    "taxClassification": "llc",
+    "llcClassification": "partnership",
+    "taxExemptionCode": 2,
+    "taxExemption": "The United States or any of its agencies or instrumentalities",
+    "masterCommissions": true,
+    "publishingCommissions": true,
+    "createdAt": "2022-03-22T05:58:18.134-05:00",
+    "updatedAt": "2022-05-10T00:53:58.701-05:00",
+    "__META__": {
+      "fields": [
+        "name",
+        "location",
+        "preferredPayoutMethod",
+        "paypalEmail",
+        "payoutType",
+        "taxId",
+        "accountType",
+        "accountNumber",
+        "routingNumber",
+        "swiftCode",
+        "countryOfBank",
+        "commissionBalance",
+        "commissionBalanceCents",
+        "taxClassification",
+        "llcClassification",
+        "taxExemptionCode",
+        "taxExemption",
+        "masterCommissions",
+        "publishingCommissions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "2023",
+      "refs": {
+        "manager": {
+          "model": "users",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        }
+      },
+      "type": "commission_accounts",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "manager": {
+          "included": false
+        },
+        "payeeAddress": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "Test Name  #4271",
+    "location": "us",
+    "preferredPayoutMethod": "paypal",
+    "paypalEmail": "test#4271@test.com",
+    "payoutType": "quarterly",
+    "taxId": "12-3456789",
+    "accountType": null,
+    "accountNumber": "",
+    "routingNumber": "",
+    "swiftCode": "",
+    "countryOfBank": null,
+    "commissionBalance": "$0.00",
+    "commissionBalanceCents": 0,
+    "taxClassification": null,
+    "llcClassification": null,
+    "taxExemptionCode": null,
+    "taxExemption": null,
+    "masterCommissions": false,
+    "publishingCommissions": false,
+    "createdAt": "2022-04-11T02:09:44.247-05:00",
+    "updatedAt": "2022-05-10T00:53:58.669-05:00",
+    "__META__": {
+      "fields": [
+        "name",
+        "location",
+        "preferredPayoutMethod",
+        "paypalEmail",
+        "payoutType",
+        "taxId",
+        "accountType",
+        "accountNumber",
+        "routingNumber",
+        "swiftCode",
+        "countryOfBank",
+        "commissionBalance",
+        "commissionBalanceCents",
+        "taxClassification",
+        "llcClassification",
+        "taxExemptionCode",
+        "taxExemption",
+        "masterCommissions",
+        "publishingCommissions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "2042",
+      "refs": {
+        "manager": {
+          "model": "users",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        }
+      },
+      "type": "commission_accounts",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "manager": {
+          "included": false
+        },
+        "payeeAddress": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "Test new tax info 4",
+    "location": "outside_us",
+    "preferredPayoutMethod": "paypal",
+    "paypalEmail": "test12@test.com",
+    "payoutType": "by_request",
+    "taxId": "",
+    "accountType": null,
+    "accountNumber": "",
+    "routingNumber": "",
+    "swiftCode": "",
+    "countryOfBank": null,
+    "commissionBalance": "$0.00",
+    "commissionBalanceCents": 0,
+    "taxClassification": "llc",
+    "llcClassification": "c_corporation",
+    "taxExemptionCode": 3,
+    "taxExemption": "A state, the District of Columbia, a U.S. commonwealth or possession, or any of their political subdivisions, agencies, or instrumentalities",
+    "masterCommissions": false,
+    "publishingCommissions": false,
+    "createdAt": "2022-04-04T01:22:02.664-05:00",
+    "updatedAt": "2022-05-10T00:53:58.579-05:00",
+    "__META__": {
+      "fields": [
+        "name",
+        "location",
+        "preferredPayoutMethod",
+        "paypalEmail",
+        "payoutType",
+        "taxId",
+        "accountType",
+        "accountNumber",
+        "routingNumber",
+        "swiftCode",
+        "countryOfBank",
+        "commissionBalance",
+        "commissionBalanceCents",
+        "taxClassification",
+        "llcClassification",
+        "taxExemptionCode",
+        "taxExemption",
+        "masterCommissions",
+        "publishingCommissions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "2029",
+      "refs": {
+        "manager": {
+          "model": "users",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        }
+      },
+      "type": "commission_accounts",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "manager": {
+          "included": false
+        },
+        "payeeAddress": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "Test Deni",
+    "location": "us",
+    "preferredPayoutMethod": "check",
+    "paypalEmail": "deni.stojmenov@infinum.com",
+    "payoutType": "quarterly",
+    "taxId": "123-23-2345",
+    "accountType": null,
+    "accountNumber": "",
+    "routingNumber": "",
+    "swiftCode": "",
+    "countryOfBank": null,
+    "commissionBalance": "$3.40",
+    "commissionBalanceCents": 340,
+    "taxClassification": null,
+    "llcClassification": null,
+    "taxExemptionCode": null,
+    "taxExemption": null,
+    "masterCommissions": true,
+    "publishingCommissions": false,
+    "createdAt": "2022-03-18T04:07:45.573-05:00",
+    "updatedAt": "2022-05-10T00:53:58.572-05:00",
+    "__META__": {
+      "fields": [
+        "name",
+        "location",
+        "preferredPayoutMethod",
+        "paypalEmail",
+        "payoutType",
+        "taxId",
+        "accountType",
+        "accountNumber",
+        "routingNumber",
+        "swiftCode",
+        "countryOfBank",
+        "commissionBalance",
+        "commissionBalanceCents",
+        "taxClassification",
+        "llcClassification",
+        "taxExemptionCode",
+        "taxExemption",
+        "masterCommissions",
+        "publishingCommissions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "2022",
+      "refs": {
+        "manager": {
+          "model": "users",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        }
+      },
+      "type": "commission_accounts",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "manager": {
+          "included": false
+        },
+        "payeeAddress": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "Tax Exemptions 4",
+    "location": "us",
+    "preferredPayoutMethod": "check",
+    "paypalEmail": "test@test.com",
+    "payoutType": "quarterly",
+    "taxId": "",
+    "accountType": "personal",
+    "accountNumber": "123",
+    "routingNumber": "523123223",
+    "swiftCode": "354732",
+    "countryOfBank": "us",
+    "commissionBalance": "$0.00",
+    "commissionBalanceCents": 0,
+    "taxClassification": "s_corporation",
+    "llcClassification": "c_corporation",
+    "taxExemptionCode": 2,
+    "taxExemption": "The United States or any of its agencies or instrumentalities",
+    "masterCommissions": false,
+    "publishingCommissions": false,
+    "createdAt": "2022-04-04T01:49:34.952-05:00",
+    "updatedAt": "2022-05-10T00:53:58.374-05:00",
+    "__META__": {
+      "fields": [
+        "name",
+        "location",
+        "preferredPayoutMethod",
+        "paypalEmail",
+        "payoutType",
+        "taxId",
+        "accountType",
+        "accountNumber",
+        "routingNumber",
+        "swiftCode",
+        "countryOfBank",
+        "commissionBalance",
+        "commissionBalanceCents",
+        "taxClassification",
+        "llcClassification",
+        "taxExemptionCode",
+        "taxExemption",
+        "masterCommissions",
+        "publishingCommissions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "id": "2040",
+      "refs": {
+        "manager": {
+          "model": "users",
+          "type": 0
+        },
+        "country": {
+          "model": "countries",
+          "type": 0
+        },
+        "payeeAddress": {
+          "model": "addresses",
+          "type": 0
+        }
+      },
+      "type": "commission_accounts",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "manager": {
+          "included": false
+        },
+        "payeeAddress": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "name": "North Macedonia",
+    "__META__": {
+      "fields": [
+        "name"
+      ],
+      "id": "MK",
+      "refs": {},
+      "type": "countries",
+      "jsonapiPersisted": true
+    }
+  },
+  {
+    "name": "United States of America",
+    "__META__": {
+      "fields": [
+        "name"
+      ],
+      "id": "US",
+      "refs": {},
+      "type": "countries",
+      "jsonapiPersisted": true
+    }
+  },
+  {
+    "name": "Delaware",
+    "__META__": {
+      "fields": [
+        "name"
+      ],
+      "id": "DE",
+      "refs": {
+        "country": {
+          "model": "countries",
+          "type": 0
+        }
+      },
+      "type": "states",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {
+        "country": {
+          "included": false
+        }
+      }
+    }
+  },
+  {
+    "username": "Deni0",
+    "hasOngoingUpload": false,
+    "user": "552909",
+    "cart": "10105567",
+    "__META__": {
+      "fields": [
+        "username",
+        "hasOngoingUpload"
+      ],
+      "id": "1",
+      "refs": {
+        "user": {
+          "model": "users",
+          "type": 0
+        },
+        "cart": {
+          "model": "carts",
+          "type": 0
+        }
+      },
+      "type": "sessions",
+      "jsonapiPersisted": true,
+      "jsonapiRefLinks": {},
+      "jsonapiRefMeta": {}
+    }
+  }
+]

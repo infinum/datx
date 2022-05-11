@@ -6,6 +6,8 @@
   ],
   "compilerOptions": {
     "moduleResolution": "node",
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist"
   }
 }
