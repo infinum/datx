@@ -1,0 +1,15 @@
+[
+  {
+    "lineItems": [],
+    "__META__": {
+      "id": "1",
+      "refs": {
+        "lineItems": {
+          "model": "line_items",
+          "type": 1
+        }
+      },
+      "type": "carts"
+    }
+  }
+]
