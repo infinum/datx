@@ -1,5 +1,5 @@
 {
-  "name": "datx",
+  "name": "datx-monorepo",
   "devDependencies": {
     "husky": "^4.2.4",
     "lerna": "^3.10.7",
@@ -8,7 +8,6 @@
   "scripts": {
     "precommit": "lerna run lint & lerna run test"
   },
-  "dependencies": {},
   "private": true,
   "workspaces": [
     "packages/*"

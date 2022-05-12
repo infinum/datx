@@ -47,3 +47,4 @@ website/build
 
 website/.DS_Store
 .DS_Store
+.yarn
