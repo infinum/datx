@@ -1,6 +1,6 @@
 [
   {
-    "lineItems": ["2", "3", "4", "5"],
+    "lineItems": ["2", "3"],
     "__META__": {
       "id": "1",
       "refs": {
@@ -21,18 +21,6 @@
   {
     "__META__": {
       "id": "3",
-      "type": "line_items"
-    }
-  },
-  {
-    "__META__": {
-      "id": "4",
-      "type": "line_items"
-    }
-  },
-  {
-    "__META__": {
-      "id": "5",
       "type": "line_items"
     }
   }

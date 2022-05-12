@@ -113,10 +113,9 @@ describe('issues', () => {
     expect(foo.baz).toBe('321');
   });
 
-  it('should add references form the snapshot', () => {
+  it('should add references form the snapshot (insert)', () => {
     class LineItem extends PureModel {
       public static type = 'line_items';
-
     }
 
     class Cart extends PureModel {
@@ -131,15 +130,42 @@ describe('issues', () => {
     }
 
     const store = new Store(snapshot1);
+    expect(store.findAll(LineItem).length).toBe(0);
 
     store.insert(snapshot2);
 
-    // snapshot2.forEach((rawModel) => {
-    //   store.add(rawModel, rawModel.__META__.type);
-    // })
+    expect(store.findAll(Cart).length).toBe(1);
+    expect(store.findAll(LineItem).length).toBe(2);
+    expect(store.findAll(Cart)[0].lineItems.length).toBe(2);
+    expect(store.findAll(Cart)[0].lineItems[0]).not.toBe(null);
+  });
 
-    expect(store.findAll(LineItem).length).toBe(4);
-    expect(store.findAll(Cart)[0].lineItems.length).toBe(4);
+  it('should add references form the snapshot (add)', () => {
+    class LineItem extends PureModel {
+      public static type = 'line_items';
+    }
+
+    class Cart extends PureModel {
+      public static type = 'carts';
+
+      @prop.toMany(LineItem)
+      public lineItems!: Array<LineItem>;
+    }
+
+    class Store extends Collection {
+      public static types = [LineItem, Cart];
+    }
+
+    const store = new Store(snapshot1);
+    expect(store.findAll(LineItem).length).toBe(0);
+
+    snapshot2.forEach((rawModel) => {
+      store.add(rawModel, rawModel.__META__.type);
+    });
+
+    expect(store.findAll(Cart).length).toBe(1);
+    expect(store.findAll(LineItem).length).toBe(2);
+    expect(store.findAll(Cart)[0].lineItems.length).toBe(2);
     expect(store.findAll(Cart)[0].lineItems[0]).not.toBe(null);
   });
 });

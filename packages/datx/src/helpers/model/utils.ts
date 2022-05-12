@@ -119,18 +119,19 @@ export function updateModel<T extends PureModel>(model: T, data: IDictionary): T
   const modelId = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'id') || 'id';
   const modelType = storage.getModelClassMetaKey(model.constructor as typeof PureModel, 'type');
 
-  const keys = Object.keys(data instanceof PureModel ? modelToJSON(data) : data);
+  const rawData = data instanceof PureModel ? modelToJSON(data) : data;
+  const keys = Object.keys(rawData);
   mergeMeta(model, storage.getModelMeta(model), data[META_FIELD]);
   startAction(model);
 
   keys.forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
-      assignModel(model, key, data[key]);
+      assignModel(model, key, rawData[key]);
     } else if (key === META_FIELD) {
-      const metaKeys = Object.keys(data[key] || {});
+      const metaKeys = Object.keys(rawData[key] || {});
       metaKeys.forEach((metaKey) => {
         if (!READ_ONLY_META.includes(metaKey)) {
-          setModelMetaKey(model, metaKey, data[key][metaKey]);
+          setModelMetaKey(model, metaKey, rawData[key][metaKey]);
         }
       });
     }
