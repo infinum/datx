@@ -11792,10 +11792,12 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-swr@2.0.0-beta.0:
-  version "2.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/swr/-/swr-2.0.0-beta.0.tgz#2030e329e05ee509ea3fb4d61d287ca35c55af63"
-  integrity sha512-MNwnk368D+Z+XSKNhOwC/SDzhVytv3OmWXidTdZG/MKrWdiXcVRtTcDpa7OZbCY9yterwfpxJeEGSyhBENVNIQ==
+swr@2.0.0-beta.3:
+  version "2.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-2.0.0-beta.3.tgz#79d7fa43ed73a436663a69836ec4ce37f29f9d8a"
+  integrity sha512-rXE6mDVUDgbsMDHCliXfbtPoiXFH9x4RXQnJ2bIEM9tLvYErToZ+G4ESbSxC+gbKNwZd/itU60UcTN5femcKzQ==
+  dependencies:
+    use-sync-external-store "^1.1.0"
 
 symbol-observable@4.0.0:
   version "4.0.0"
@@ -12258,6 +12260,11 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+use-sync-external-store@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.1.0.tgz#3343c3fe7f7e404db70f8c687adf5c1652d34e82"
+  integrity sha512-SEnieB2FPKEVne66NpXPd1Np4R1lTNKfjuy3XdIoPQKYBAFdzbzSZlSn1KJZUiihQLQC5Znot4SBz1EOTBwQAQ==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
