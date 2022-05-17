@@ -8,5 +8,6 @@ export * from './interfaces/UseDatx';
 export * from './hydrate';
 export * from './context';
 export * from './createFetcher';
+export * from './createGSSP';
 export * from './middleware';
 export * from './mixin';

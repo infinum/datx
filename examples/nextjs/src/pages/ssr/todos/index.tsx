@@ -5,7 +5,7 @@ import { postsQuery } from '../../../components/features/posts/Posts.queries';
 import { Todos } from '../../../components/features/todos/Todos';
 import { todosQuery } from '../../../components/features/todos/Todos.queries';
 import { Layout } from '../../../components/shared/layouts/Layout/Layout';
-import { createClient } from '../../../datx/createClient';
+import { gSSP } from '../../../datx/createClient';
 
 type SSRProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
@@ -19,20 +19,12 @@ const SSR: NextPage<SSRProps> = ({ fallback }) => {
   );
 };
 
-export const getServerSideProps = async () => {
-  const client = createClient();
-
-  await Promise.allSettled([client.fetchQuery(todosQuery), client.fetchQuery(postsQuery)]);
+export const getServerSideProps = gSSP(async ({ fetchQuery }) => {
+  await Promise.allSettled([fetchQuery(todosQuery), fetchQuery(postsQuery)]);
 
   // TODO - handle 404
 
-  const { fallback } = client;
-
-  return {
-    props: {
-      fallback,
-    },
-  };
-};
+  return {};
+});
 
 export default SSR;
