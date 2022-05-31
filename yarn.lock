@@ -205,16 +205,16 @@
     tslib "^2.3.0"
 
 "@angular/platform-browser@~13.3.0":
-  version "13.3.6"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-13.3.6.tgz#59b89346034f24d0f07c1c3dd1474fb6c1c199b5"
-  integrity sha512-ilzlMQe7Vg5fMnzUoe01SwBCjruJy2xna/jdXND4xHyntk2bUtOHOBnkwCiN3uAWDg228iS2tWKDbYGKoiRYmQ==
+  version "13.3.10"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-13.3.10.tgz#7e089c1d2ab043c016b40bc82dcf47a5fe2f8588"
+  integrity sha512-zi0FrA8zZRiHLBfKlfIxikG06wMF2KcSp6oqrIblrc1VrHgPRVRABz8vryH84lasDssjYdIS9AvbQnCCdgCzJA==
   dependencies:
     tslib "^2.3.0"
 
 "@angular/router@~13.3.0":
-  version "13.3.6"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-13.3.6.tgz#1ee2113f6e77513777824fedcae0beb1ed4b6974"
-  integrity sha512-XN3kaDdrqq/2JJbVaOs5pznsfOPwaqO99TADmWtwHlrrqBk7DUW730YijaCE6HZCZSjFpykUGVz3J1aXSULU2Q==
+  version "13.3.10"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-13.3.10.tgz#04c5c37f749949519326943f17bc75f94b21c153"
+  integrity sha512-neGaeiHravXlCbNbyGJecwQyu/91Pj/E9/ohVFzBBE4V9BrNx9v7Ntc4ugqgpnrV2wtonPP7TQDqXxrPk4QVfg==
   dependencies:
     tslib "^2.3.0"
 
@@ -2793,9 +2793,9 @@
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
 
 "@types/node@*", "@types/node@^17.0.14", "@types/node@^17.0.4":
-  version "17.0.31"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.31.tgz#a5bb84ecfa27eec5e1c802c6bbf8139bdb163a5d"
-  integrity sha512-AR0x5HbXGqkEx9CadRH3EBYx/VkiUgZIhP4wvPn/+5KIsgpNoyFaRlVe0Zlx9gRtg8fA06a9tskE2MSN7TcG4Q==
+  version "17.0.36"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.36.tgz#c0d5f2fe76b47b63e0e0efc3d2049a9970d68794"
+  integrity sha512-V3orv+ggDsWVHP99K3JlwtH20R7J4IhI1Kksgc+64q5VxgfRkQG8Ws3MFm/FZOKDYGy9feGFlZ70/HpCNe9QaA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
