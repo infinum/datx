@@ -49,7 +49,7 @@
     "@angular/common": "~13.3.0",
     "@angular/compiler": "~13.3.0",
     "@angular/compiler-cli": "~13.3.0",
-    "@angular/core": "~13.3.0",
+    "@angular/core": "~14.0.1",
     "@angular/forms": "~14.0.0",
     "@angular/platform-browser": "~13.3.0",
     "@angular/platform-browser-dynamic": "~13.3.0",
