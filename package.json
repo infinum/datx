@@ -20,5 +20,9 @@
     "hooks": {
       "pre-commit": "npm run precommit"
     }
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1"
   }
 }

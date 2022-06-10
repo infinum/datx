@@ -5,6 +5,7 @@
     "moduleResolution": "node",
     "noUnusedLocals": true,
     "resolveJsonModule": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "esModuleInterop": true
   }
 }
