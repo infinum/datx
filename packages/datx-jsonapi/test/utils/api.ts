@@ -5,7 +5,7 @@ import * as nodeUrl from 'url';
 
 import { config } from '../../src/NetworkUtils';
 
-const v1 = Math.random;
+const v1 = () => Math.random().toString();
 
 function getMockStream(name: string): string {
   const testPath = path.join(__dirname, `../mock/${name}.json`);
