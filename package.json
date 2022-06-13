@@ -24,5 +24,6 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1"
-  }
+  },
+  "packageManager": "yarn@3.2.1"
 }
