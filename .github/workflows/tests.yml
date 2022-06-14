@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
         mobx-version: [-2, -1, 0, 4, 5, 6]
         # -2 - mobx off, real mobx in tests
         # -1 - mobx off, mock mobx in tests
@@ -28,6 +28,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install -g lerna
+      - run: corepack enable
+      - run: yarn init -2
       - run: yarn
       - run: lerna bootstrap
       - name: Cleanup MobX
