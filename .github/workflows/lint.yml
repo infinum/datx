@@ -16,5 +16,7 @@ jobs:
 
       - name: Install & run
         run: |
+          corepack enable
+          yarn init -2
           yarn
           yarn lint --quiet
