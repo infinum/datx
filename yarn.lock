@@ -167,8 +167,8 @@
     tslib "^2.3.0"
 
 "@angular/compiler-cli@~14.0.1":
-  version "14.0.1"
-  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-14.0.1.tgz#6b88318e66e4f1d3bb8a5340e6b3a3722bcff52d"
+  version "14.0.2"
+  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-14.0.2.tgz#2dbf6fb8875a0919156d7923ee6bb4c9cb2f22c3"
   dependencies:
     "@babel/core" "^7.17.2"
     chokidar "^3.0.0"
