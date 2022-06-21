@@ -1,6 +1,6 @@
 {
   "name": "@datx/swr",
-  "version": "2.5.0-beta.2",
+  "version": "2.5.0-beta.3",
   "description": "DatX bindings for SWR",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
