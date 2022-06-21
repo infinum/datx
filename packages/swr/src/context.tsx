@@ -1,10 +1,10 @@
 import React, { createContext, PropsWithChildren } from 'react';
-import { ClientInstance } from './interfaces/Client';
+import { IClientInstance } from './interfaces/Client';
 
-export const DatxContext = createContext<ClientInstance | null>(null);
+export const DatxContext = createContext<IClientInstance | null>(null);
 
 export interface IDatxProviderProps {
-  client: ClientInstance;
+  client: IClientInstance;
 }
 
 export function DatxProvider({ client, children }: PropsWithChildren<IDatxProviderProps>) {

@@ -18,13 +18,14 @@ export interface IGenericResource extends JsonapiModelType {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IClient {}
 
-export type Client = IClient extends { types: Array<unknown> }
+export type ClientInternal = IClient extends { types: Array<unknown> }
   ? IClient
   : {
       types: Array<IGenericResource>;
       new (...args: any): JsonapiClient;
     } & IJsonapiCollection;
 
-export type ClientInstance = InstanceType<Client>;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface IClientInstance extends InstanceType<ClientInternal> {}
 
-export type ModelTypes = Client['types'][number];
+export type ModelTypes = ClientInternal['types'][number];
