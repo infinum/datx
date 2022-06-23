@@ -17,7 +17,7 @@ export function initDatxFactory(staticConfig: Partial<IConfigType> = {}) {
     return () => {
       Object.assign(config, mergedConfig);
 
-      if (!config.baseFetch) {
+      if (!staticConfig.baseFetch && !dynamicConfig.baseFetch) {
         config.baseFetch = customFetch.fetch.bind(customFetch);
       }
 
