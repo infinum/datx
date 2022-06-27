@@ -6,7 +6,7 @@
     "husky": "^8.0.1",
     "lerna": "^5.1.1",
     "prettier": "2.7.0",
-    "typescript": "4.7.3"
+    "typescript": "4.7.4"
   },
   "scripts": {
     "precommit": "npm run lint & lerna run test",
