@@ -200,8 +200,8 @@
     tslib "^2.3.0"
 
 "@angular/platform-browser-dynamic@~14.0.1":
-  version "14.0.1"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-14.0.1.tgz#e93438e6b27bf2bb8f8dc64702ec8b366ce3b6b6"
+  version "14.0.4"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-14.0.4.tgz#f9593e8bf210dbc026601cb32ec317f5879758f1"
   dependencies:
     tslib "^2.3.0"
 
