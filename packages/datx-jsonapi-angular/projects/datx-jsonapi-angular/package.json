@@ -1,3 +1,31 @@
 {
-  "name": "@datx/jsonapi-angular"
+  "name": "@datx/jsonapi-angular",
+  "version": "2.4.3-beta.1",
+  "description": "DatX mixin for Angular JSON API support",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infinum/datx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/infinum/datx/issues"
+  },
+  "homepage": "https://github.com/infinum/datx#readme",
+  "author": "Infinum JavaScript Team <hello@infinum.com>",
+  "license": "MIT",
+  "keywords": [
+    "datx",
+    "mobx",
+    "jsonapi",
+    "angular"
+  ],
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@angular/common": ">=12",
+    "@angular/core": ">=12",
+    "@datx/jsonapi": "2.4.0",
+    "rxjs": "6 || 7"
+  }
 }
