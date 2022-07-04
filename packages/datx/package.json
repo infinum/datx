@@ -57,8 +57,5 @@
     "setupFilesAfterEnv": [
       "./test/setup.ts"
     ]
-  },
-  "dependencies": {
-    "@datx/utils": "2.4.0"
   }
 }
