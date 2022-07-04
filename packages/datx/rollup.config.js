@@ -56,32 +56,4 @@ export default [
       }
     },
   },
-  {
-    input: './src/disable-mobx.ts',
-    output: [{ file: './disable-mobx.js', format: 'cjs' }],
-    plugins: [
-      resolve(),
-      commonjs(),
-      excludeDependenciesFromBundle(),
-      typescript({
-        typescript: require('typescript'),
-        tslib: require('tslib'),
-        tsconfig: './tsconfig.disable-mobx.json'
-      }),
-      terser({
-        toplevel: true,
-        compress: {
-          passes: 3,
-        },
-        output: {
-          comments: false,
-        },
-      }),
-    ],
-    onwarn(warning, rollupWarn) {
-      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
-        rollupWarn(warning);
-      }
-    },
-  },
 ];

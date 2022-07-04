@@ -1,6 +1,6 @@
 import { Schema } from '../Schema';
 import { ICustomScalar } from './ICustomScalar';
-import { TResourceTypeOpts } from './TResourceTypeOpts';
+import { IResourceTypeOpts } from './IResourceTypeOpts';
 
 // Handle all possible types
 export type TResourceTypes =
@@ -11,6 +11,6 @@ export type TResourceTypes =
   | typeof Number
   | Schema
   | TResourceArray
-  | TResourceTypeOpts<any>;
+  | IResourceTypeOpts<any>;
 // Handle the arrays
-type TResourceArray = Array<TResourceTypes>;
+type TResourceArray = [TResourceTypes];

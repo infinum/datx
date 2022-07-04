@@ -5,4 +5,5 @@ export interface ICustomScalar<TInstance = any, TPlain extends TJson = any> {
   description?: string;
   serialize(value: TInstance): TPlain;
   parseValue(value: TPlain): TInstance;
+  optional?: boolean;
 }

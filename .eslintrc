@@ -15,12 +15,6 @@
     "no-underscore-dangle": 1
   },
   "parserOptions": {
-    "project": [
-      "./packages/datx/tsconfig.json",
-      "./packages/datx-jsonapi/tsconfig.json",
-      "./packages/datx-jsonapi-angular/tsconfig.json",
-      "./packages/datx-network/tsconfig.json",
-      "./packages/datx-utils/tsconfig.json"
-    ]
+    "project": ["./packages/datx/tsconfig.json"]
   }
 }

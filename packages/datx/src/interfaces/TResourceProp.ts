@@ -1,7 +1,7 @@
 import { Schema } from '../Schema';
 import { ICustomScalar } from './ICustomScalar';
 import { IResource } from './IResource';
-import { TConstructor } from './TConstructor';
+import { IConstructor } from './IConstructor';
 import { TResourceTypes } from './TResourceTypes';
 
 // Map the schema types to instance types
@@ -35,8 +35,12 @@ export type TResourceProp<
     : never
   : TProp extends ICustomScalar<infer TInnerProp, infer TPlainProp>
   ? TPlain extends true
-    ? TPlainProp
+    ? TProp['optional'] extends true
+      ? TPlainProp | undefined
+      : TPlainProp
+    : TProp['optional'] extends true
+    ? TInnerProp | undefined
     : TInnerProp // Custom scalar
-  : TProp extends TConstructor
+  : TProp extends IConstructor
   ? InstanceType<TProp> // Primitive values
   : never;
