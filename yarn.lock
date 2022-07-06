@@ -6632,8 +6632,8 @@ neo-async@^2.6.0, neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
 
 ng-packagr@^14.0.1:
-  version "14.0.2"
-  resolved "https://registry.yarnpkg.com/ng-packagr/-/ng-packagr-14.0.2.tgz#5c824b753a4c5e2851c0e130fd98f4df77f6c04b"
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/ng-packagr/-/ng-packagr-14.0.3.tgz#452db7dfcf6e3f7f486e3a7939ebfb471e5d6f03"
   dependencies:
     "@rollup/plugin-json" "^4.1.0"
     "@rollup/plugin-node-resolve" "^13.1.3"
