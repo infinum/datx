@@ -206,8 +206,8 @@
     tslib "^2.3.0"
 
 "@angular/platform-browser@~14.0.1":
-  version "14.0.1"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-14.0.1.tgz#fed9b5192c23152b4b2e6c5455410eb6f21fe0c6"
+  version "14.0.4"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-14.0.4.tgz#7f7f98a39ed5047813d4db285fc01857de08b701"
   dependencies:
     tslib "^2.3.0"
 
