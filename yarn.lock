@@ -212,8 +212,8 @@
     tslib "^2.3.0"
 
 "@angular/router@~14.0.1":
-  version "14.0.1"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-14.0.1.tgz#ad0f1f31a1f8617222f24be99a87e76b7ca55e2b"
+  version "14.0.4"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-14.0.4.tgz#46cb7ed54b232217da31bd5b1f2274027589b28c"
   dependencies:
     tslib "^2.3.0"
 
