@@ -57,6 +57,36 @@ console.log(data.test?.foo, 'custom type props');
 console.log(Comment.serialize(data).test, 'should be a number');
 console.log(comment.test?.foo, 'should be a custom type');
 
+Comment.validate(
+  {
+    // @ts-expect-error Check if the type validation works
+    date: true,
+    upvotes: [
+      {
+        username: 'Darko',
+      },
+      user,
+      {
+        username: 'Zero cool',
+        age: 1337,
+        // @ts-expect-error Check if the extra param is detected
+        foobar: true,
+      },
+    ],
+    // Check if the missing author prop is detected
+    // Check if the extra param is detected
+    foo: 1,
+    post: {
+      title: 'foobar',
+      date: new Date(),
+      text: 'Lorem ipsum',
+    },
+    // @ts-expect-error Check if the type validation works for custom types
+    test: 'bar',
+  },
+  { strict: true, throw: true },
+);
+
 // ---------------
 
 // const client = new Client();

@@ -5,7 +5,7 @@ DatX is an opinionated JS/TS data store. It features support for simple property
 # TODOs
 
 - [x] Schema support
-- [x] Schema validation
+- [ ] Schema validation
 - [x] Schema typings
 - [x] Schema parsing/serialization
 - [x] Custom types
@@ -14,6 +14,7 @@ DatX is an opinionated JS/TS data store. It features support for simple property
 - [x] Optional custom types
 - [ ] Polymorphic types
 - [ ] Circular types
+- [ ] Property mapping
 
 ## License
 
