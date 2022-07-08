@@ -1,8 +1,7 @@
-import { parseSchema, serializeSchema, validateSchema } from './utils/schema';
+import { parseSchema } from './utils/schema/parse';
+import { serializeSchema } from './utils/schema/serialize';
 import { ISchemaData } from './interfaces/ISchemaData';
 import { IPlainResource, IResource } from './interfaces/IResource';
-import { IValidationOptions } from './interfaces/IValidationOptions';
-import { IValidationError } from './interfaces/IValidationError';
 
 export class Schema<T extends ISchemaData = ISchemaData> {
   constructor(public readonly type: string | number, public readonly definition: T) {}
@@ -13,12 +12,5 @@ export class Schema<T extends ISchemaData = ISchemaData> {
 
   public serialize(data: IResource<this>): IPlainResource<this> {
     return serializeSchema(this, data);
-  }
-
-  public validate(
-    data: IResource<this>,
-    options?: IValidationOptions,
-  ): [boolean, Array<IValidationError>] {
-    return validateSchema(this, data, options);
   }
 }

@@ -7,7 +7,7 @@ export interface IValidationOptions {
   strict?: boolean;
 
   /**
-   * If true, will throw an error if the data is invalid
+   * If true, will throw an error if the data is invalid (with only the first found issue)
    *
    * @default true
    */
@@ -19,11 +19,4 @@ export interface IValidationOptions {
    * @default false
    */
   plain?: boolean;
-
-  /**
-   * Eager validation - fail on first error
-   *
-   * @default false
-   */
-  eager?: false;
 }

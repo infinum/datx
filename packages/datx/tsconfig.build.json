@@ -20,6 +20,6 @@
     "target": "es5",
     "esModuleInterop": true
   },
-  "exclude": ["node_modules", "examples"],
+  "exclude": ["node_modules", "examples", "**/*.test.ts"],
   "include": ["src/**/*"]
 }

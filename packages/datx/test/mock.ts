@@ -1,7 +1,7 @@
 import { DateType, Schema } from '../src';
 
 export class CustomType {
-  public foo: number = 1;
+  public foo = 1;
 }
 
 export const User = new Schema('user', {
@@ -27,6 +27,9 @@ export const Comment = new Schema('comment', {
       return value.foo;
     },
     parseValue(value: number) {
+      if (typeof value !== 'number') {
+        throw new Error('Invalid custom type');
+      }
       const c = new CustomType();
       c.foo = value;
       return c;

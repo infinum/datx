@@ -1,4 +1,4 @@
-import { IResource } from '../src';
+import { IResource, validateSchema } from '../src';
 import { User, Comment, CustomType } from './schemas';
 
 const user: IResource<typeof User> = {
@@ -57,7 +57,8 @@ console.log(data.test?.foo, 'custom type props');
 console.log(Comment.serialize(data).test, 'should be a number');
 console.log(comment.test?.foo, 'should be a custom type');
 
-Comment.validate(
+validateSchema(
+  Comment,
   {
     // @ts-expect-error Check if the type validation works
     date: true,

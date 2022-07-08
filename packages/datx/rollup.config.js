@@ -9,7 +9,7 @@ import pkg from './package.json';
 export default [
   {
     input: './src/index.ts',
-    output: [{ file: pkg.main, format: 'cjs' }],
+    output: [{ file: pkg.main, format: 'cjs', sourcemap: true }],
     plugins: [
       resolve(),
       commonjs(),
@@ -38,7 +38,56 @@ export default [
   },
   {
     input: './src/index.ts',
-    output: [{ file: pkg.module, format: 'es' }],
+    output: [{ file: pkg.module, format: 'es', sourcemap: true }],
+    plugins: [
+      resolve(),
+      commonjs(),
+      excludeDependenciesFromBundle(),
+      typescript({
+        typescript: require('typescript'),
+        tslib: require('tslib'),
+        tsconfig: './tsconfig.build.json',
+        sourceMap: true,
+      }),
+    ],
+    onwarn(warning, rollupWarn) {
+      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+        rollupWarn(warning);
+      }
+    },
+  },
+  {
+    input: './src/min.ts',
+    output: [{ file: 'min/cjs.js', format: 'cjs', sourcemap: true }],
+    plugins: [
+      resolve(),
+      commonjs(),
+      excludeDependenciesFromBundle(),
+      typescript({
+        typescript: require('typescript'),
+        tslib: require('tslib'),
+        tsconfig: './tsconfig.build.json',
+        sourceMap: true,
+      }),
+      terser({
+        toplevel: true,
+        compress: {
+          passes: 3,
+        },
+        output: {
+          comments: false,
+        },
+      }),
+    ],
+    onwarn(warning, rollupWarn) {
+      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+        rollupWarn(warning);
+      }
+    },
+  },
+  {
+    input: './src/min.ts',
+    output: [{ file: 'min/esm.js', format: 'es', sourcemap: true }],
     plugins: [
       resolve(),
       commonjs(),
