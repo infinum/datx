@@ -15,10 +15,6 @@
     "rxjs": "6 || 7"
   },
   "devDependencies": {
-    "@datx/core": "2.4.0",
-    "@datx/jsonapi": "2.4.0",
-    "@datx/network": "2.4.0",
-    "@datx/utils": "2.4.0",
     "@angular-devkit/build-angular": "~14.0.1",
     "@angular/animations": "~14.0.1",
     "@angular/cli": "~14.0.1",
@@ -30,6 +26,10 @@
     "@angular/platform-browser": "~14.0.1",
     "@angular/platform-browser-dynamic": "~14.0.1",
     "@angular/router": "~14.0.1",
+    "@datx/core": "2.4.0",
+    "@datx/jsonapi": "2.4.0",
+    "@datx/network": "2.4.0",
+    "@datx/utils": "2.4.0",
     "@types/jest": "^28.1.1",
     "@types/node": "^17.0.41",
     "jest": "^28.1.1",
