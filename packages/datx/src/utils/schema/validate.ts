@@ -4,6 +4,21 @@ import { IValidationOptions } from '../../interfaces/IValidationOptions';
 import { Schema } from '../../Schema';
 import { mapObjectValues } from '../helpers';
 
+export function validatePlainSchema<TSchema extends Schema>(
+  schema: TSchema,
+  data: IResource<TSchema, true>,
+  options?: IValidationOptions,
+  path = '',
+): [boolean, Array<IValidationError>] {
+  return validateSchema(
+    schema,
+    // Some cheating to avoid a mess of types
+    data as unknown as IResource<TSchema>,
+    { ...options, plain: true },
+    path,
+  );
+}
+
 export function validateSchema<TSchema extends Schema>(
   schema: TSchema,
   data: IResource<TSchema>,
@@ -51,13 +66,23 @@ export function validateSchema<TSchema extends Schema>(
           return;
         }
         try {
-          const clone = def?.['parseValue'](def?.['serialize'](data[key as string]));
-          const constructor = clone.constructor;
-          if (!(data[key as string] instanceof constructor)) {
-            errors.push({
-              message: `Wrong custom instance type for ${key as string}`,
-              pointer: `${path}${key as string}`,
-            });
+          if (options?.plain) {
+            const clone = def?.['serialize'](def?.['parseValue'](data[key as string]));
+            if (data[key as string] !== clone) {
+              errors.push({
+                message: `Wrong custom type for ${key as string}`,
+                pointer: `${path}${key as string}`,
+              });
+            }
+          } else {
+            const clone = def?.['parseValue'](def?.['serialize'](data[key as string]));
+            const constructor = clone.constructor;
+            if (!(data[key as string] instanceof constructor)) {
+              errors.push({
+                message: `Wrong custom instance type for ${key as string}`,
+                pointer: `${path}${key as string}`,
+              });
+            }
           }
         } catch (e) {
           errors.push({

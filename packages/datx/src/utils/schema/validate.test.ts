@@ -1,4 +1,4 @@
-import { validateSchema } from './validate';
+import { validateSchema, validatePlainSchema } from './validate';
 import { Comment, User } from '../../../test/mock';
 
 describe('instance', () => {
@@ -182,6 +182,42 @@ describe('instance', () => {
         {
           message: 'Wrong property type for text',
           pointer: 'post.text',
+        },
+      ]);
+    });
+
+    it('should check custom types and schemas in plain objects', () => {
+      const [isError, errors] = validatePlainSchema(Comment, {
+        // @ts-expect-error Wrong on purpose
+        date: new Date(),
+        upvotes: [],
+        author: {
+          username: 'FooBar',
+        },
+        post: {
+          title: 'foobar',
+          // @ts-expect-error Wrong on purpose
+          date: 123,
+          text: 'Lorem ipsum',
+        },
+        text: 'This is a test',
+        // @ts-expect-error Wrong on purpose
+        test: true,
+      });
+
+      expect(isError).toBe(true);
+      expect(errors).toEqual([
+        {
+          message: 'Wrong custom type for date',
+          pointer: 'post.date',
+        },
+        {
+          message: 'Wrong custom type for date',
+          pointer: 'date',
+        },
+        {
+          message: 'Wrong custom property type for test',
+          pointer: 'test',
         },
       ]);
     });
