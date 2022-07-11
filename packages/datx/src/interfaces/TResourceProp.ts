@@ -1,7 +1,7 @@
 import { Schema } from '../Schema';
+import { IConstructor } from './IConstructor';
 import { ICustomScalar } from './ICustomScalar';
 import { IResource } from './IResource';
-import { IConstructor } from './IConstructor';
 import { TResourceTypes } from './TResourceTypes';
 
 // Map the schema types to instance types
@@ -9,7 +9,7 @@ export type TResourceProp<
   TProp extends TResourceTypes,
   TPlain extends boolean,
 > = TProp extends Schema
-  ? IResource<TProp, TPlain> // Schema
+  ? IResource<TProp, TPlain> | undefined // Schema
   : TProp extends Array<infer TInnerProp>
   ? // Array of types
     TInnerProp extends TResourceTypes

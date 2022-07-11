@@ -23,12 +23,14 @@ describe('serialization', () => {
       test: 2,
     });
 
-    comment.post.date = new Date('2022-08-01T00:00:00.000Z');
+    // This is ok in the test because it will fail if the type is wrong
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    comment.post!.date = new Date('2022-08-01T00:00:00.000Z');
 
     const rawComment = serializeSchema(Comment, comment);
 
     expect(rawComment.date).toBe('2022-07-01T00:00:00.000Z');
-    expect(rawComment.post.date).toBe('2022-08-01T00:00:00.000Z');
+    expect(rawComment.post?.date).toBe('2022-08-01T00:00:00.000Z');
     expect(rawComment.text).toBe('This is a test');
     expect(rawComment.test).toBe(2);
   });

@@ -4,7 +4,11 @@ import { ISchemaData } from './interfaces/ISchemaData';
 import { IPlainResource, IResource } from './interfaces/IResource';
 
 export class Schema<T extends ISchemaData = ISchemaData> {
-  constructor(public readonly type: string | number, public readonly definition: T) {}
+  constructor(
+    public readonly type: string | number,
+    public readonly definition: T,
+    public readonly id: (data: IResource<Schema>) => string | number,
+  ) {}
 
   public parse(data: IPlainResource<this>): IResource<this> {
     return parseSchema(this, data);

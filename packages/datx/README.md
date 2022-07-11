@@ -9,12 +9,13 @@ DatX is an opinionated JS/TS data store. It features support for simple property
 - [x] Schema typings
 - [x] Schema parsing/serialization
 - [x] Custom types
+- [ ] Circular types
 - [ ] Collection / cyclical serialization
 - [ ] Custom transformers
 - [x] Optional custom types
 - [ ] Polymorphic types
-- [ ] Circular types
 - [ ] Property mapping
+- [ ] Efficient snapshots
 
 ## License
 
