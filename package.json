@@ -3,7 +3,7 @@
   "devDependencies": {
     "@infinumjs/eslint-config-core-ts": "^3.3.1",
     "eslint": "^8.17.0",
-    "husky": "^8.0.1",
+    "husky": "^8.0.0",
     "lerna": "^5.1.1",
     "prettier": "2.7.0",
     "typescript": "4.7.4"
@@ -18,7 +18,9 @@
     "watch": "lerna run watch --no-private",
     "watch:swr": "lerna run watch --scope @datx/swr",
     "clean": "lerna clean && yarn clean:dist",
-    "clean:dist": "lerna exec -- rm -rf ./dist"
+    "clean:dist": "lerna exec -- rm -rf ./dist",
+    "example:nextjs:dev": "lerna run dev --scope nextjs --stream",
+    "prepare": "husky install"
   },
   "private": true,
   "workspaces": {
@@ -26,11 +28,6 @@
       "packages/*",
       "examples/*"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit"
-    }
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.1",
