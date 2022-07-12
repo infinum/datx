@@ -20,7 +20,9 @@
     "clean": "lerna clean && yarn clean:dist",
     "clean:dist": "lerna exec -- rm -rf ./dist",
     "example:nextjs:dev": "lerna run dev --scope nextjs --stream",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "pkg:check": "manypkg check",
+    "pkg:fix": "manypkg fix"
   },
   "private": true,
   "workspaces": {
@@ -30,6 +32,7 @@
     ]
   },
   "dependencies": {
+    "@manypkg/cli": "^0.19.1",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1"
   },

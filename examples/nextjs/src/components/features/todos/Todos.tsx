@@ -5,6 +5,7 @@ import NextLink from 'next/link';
 
 import { createTodo } from './Todos.mutations';
 import { todosQuery } from './Todos.queries';
+import { render } from 'react-dom';
 
 export interface ITodosProps {}
 
@@ -13,6 +14,7 @@ export const Todos: FC = () => {
   const { data, error, mutate } = useDatx(todosQuery, {
     onSuccess: (data) => console.log(data.data[0].id),
   });
+
   const [create, { status }] = useMutation(createTodo, {
     onSuccess: async () => {
       const input = inputRef.current;
@@ -20,6 +22,8 @@ export const Todos: FC = () => {
       mutate();
     },
   });
+
+  console.log('render');
 
   if (error) {
     return <ErrorFallback error={error} />;
