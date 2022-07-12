@@ -6,7 +6,7 @@ import { CustomFetchService } from '../services/custom-fetch/custom-fetch.servic
 export function initDatxFactory(staticConfig: Partial<IConfigType> = {}) {
   return (
     customFetch: CustomFetchService,
-    dynamicConfig: Partial<IConfigType>,
+    dynamicConfig?: Partial<IConfigType>,
   ): (() => Promise<void>) => {
     const mergedConfig: Partial<IConfigType> = {
       ...DEFAULT_DATX_ANGULAR_JSON_API_CONFIG,
@@ -17,7 +17,7 @@ export function initDatxFactory(staticConfig: Partial<IConfigType> = {}) {
     return () => {
       Object.assign(config, mergedConfig);
 
-      if (!config.baseFetch) {
+      if (!staticConfig.baseFetch && !dynamicConfig?.baseFetch) {
         config.baseFetch = customFetch.fetch.bind(customFetch);
       }
 

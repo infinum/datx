@@ -134,9 +134,15 @@ export function initModelRef<T extends PureModel>(
       key,
       () => getRef(model, key),
       (newValue: TRefValue) => {
+        const modelCollection = getModelCollection(model);
+
+        if (!modelCollection && newValue) {
+          throw error('The model needs to be in a collection to be referenceable');
+        }
+
         updateSingleAction(model, key, newValue);
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        updateRef(model, key, getRefValue(newValue, collection!, fieldDef, model, key));
+        updateRef(model, key, getRefValue(newValue, modelCollection!, fieldDef, model, key));
       },
     );
   }
