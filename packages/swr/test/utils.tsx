@@ -1,6 +1,5 @@
 import { Response } from '@datx/jsonapi';
-import { act, render } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, render, renderHook } from '@testing-library/react';
 import React, { FC } from 'react';
 import { SWRConfig } from 'swr';
 import { createFetcher, DatxProvider, useInitialize } from '../src';
@@ -35,7 +34,7 @@ export const renderHookWithConfig = <TProps, TResult>(
   callback: (props: TProps) => TResult,
   config?: Parameters<typeof SWRConfig>[0]['value'],
 ) =>
-  renderHook<TProps, TResult>(callback, {
+  renderHook<TResult, TProps>(callback, {
     wrapper: ({ children }: any) => <TestSWRConfig config={config}>{children}</TestSWRConfig>,
   });
 
