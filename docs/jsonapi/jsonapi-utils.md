@@ -117,3 +117,16 @@ clearCacheByType(type: IType);
 ```
 
 Clear the network cache for the given model type.
+
+## Response utils
+
+### getResponseRawData
+
+```typescript
+getResponseRawData<
+  TModel extends IJsonapiModel = IJsonapiModel,
+  TData extends IResponseData = IResponseData<TModel>,
+>(response: Response<TModel, TData>): IResponse | undefined
+```
+
+Get raw JSON:API response.

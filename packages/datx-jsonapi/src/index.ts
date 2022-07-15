@@ -17,10 +17,9 @@ export {
   saveModel,
 } from './helpers/model';
 
-export {
-  prepareQuery,
-  buildUrl
-} from './helpers/url';
+export { prepareQuery, buildUrl } from './helpers/url';
+
+export { getResponseRawData } from './helpers/response';
 
 export { BaseJsonapiRequest } from './BaseRequest';
 
