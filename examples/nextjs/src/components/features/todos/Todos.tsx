@@ -5,7 +5,6 @@ import NextLink from 'next/link';
 
 import { createTodo } from './Todos.mutations';
 import { todosQuery } from './Todos.queries';
-import { useSWRConfig } from 'swr';
 
 export interface ITodosProps {}
 
