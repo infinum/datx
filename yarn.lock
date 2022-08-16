@@ -112,9 +112,9 @@
     ora "5.4.1"
     rxjs "6.6.7"
 
-"@angular/animations@~14.0.1":
-  version "14.0.5"
-  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-14.0.5.tgz#f9890056a5deef6b4acabfbaf5b182cdede5004c"
+"@angular/animations@~14.1.2":
+  version "14.1.2"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-14.1.2.tgz#b23df533791fdc90e856afe032787655f501f19d"
   dependencies:
     tslib "^2.3.0"
 
@@ -170,9 +170,9 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/core@~14.0.1":
-  version "14.0.5"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-14.0.5.tgz#135db22c6cc2ea51fc8f504f1400a5453f73eec3"
+"@angular/core@~14.1.2":
+  version "14.1.2"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-14.1.2.tgz#1defacaad7494a8dca9e9ba1d4c1fe46009d9e4a"
   dependencies:
     tslib "^2.3.0"
 
@@ -182,9 +182,9 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/platform-browser-dynamic@~14.0.1":
-  version "14.0.5"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-14.0.5.tgz#6b31c1fdeebd57e36e7f7e5ca7445fc2abb607c7"
+"@angular/platform-browser-dynamic@~14.1.2":
+  version "14.1.2"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-14.1.2.tgz#b3fa484fd8c562408e5725d76062d5f7f2d8c049"
   dependencies:
     tslib "^2.3.0"
 
@@ -2619,9 +2619,9 @@
   version "18.0.3"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.3.tgz#463fc47f13ec0688a33aec75d078a0541a447199"
 
-"@types/node@^17.0.41":
-  version "17.0.45"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.45.tgz#2c0fafd78705e7a18b7906b5201a522719dc5190"
+"@types/node@^18.7.6":
+  version "18.7.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.6.tgz#31743bc5772b6ac223845e18c3fc26f042713c83"
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
