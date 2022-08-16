@@ -19,7 +19,7 @@
     "@angular/animations": "~14.0.1",
     "@angular/cli": "~14.0.1",
     "@angular/common": "~14.0.1",
-    "@angular/compiler": "~14.0.1",
+    "@angular/compiler": "~14.1.2",
     "@angular/compiler-cli": "~14.0.1",
     "@angular/core": "~14.0.1",
     "@angular/forms": "~14.0.1",
