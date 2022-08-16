@@ -24,7 +24,7 @@
     "@angular/core": "~14.1.2",
     "@angular/forms": "~14.0.1",
     "@angular/platform-browser": "~14.1.2",
-    "@angular/platform-browser-dynamic": "~14.0.1",
+    "@angular/platform-browser-dynamic": "~14.1.2",
     "@angular/router": "~14.1.2",
     "@datx/core": "2.4.4",
     "@datx/jsonapi": "2.4.4",
