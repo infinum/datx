@@ -2398,8 +2398,8 @@
     resolve "^1.19.0"
 
 "@rollup/plugin-typescript@^8.3.2":
-  version "8.3.3"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-typescript/-/plugin-typescript-8.3.3.tgz#eee7edab9cfc064f1cfd16570492693cf1432215"
+  version "8.3.4"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-typescript/-/plugin-typescript-8.3.4.tgz#45cdc0787b658b37d0362c705d8de86bc8bc040e"
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     resolve "^1.17.0"
