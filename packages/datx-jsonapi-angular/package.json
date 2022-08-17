@@ -22,7 +22,7 @@
     "@angular/compiler": "~14.0.1",
     "@angular/compiler-cli": "~14.0.1",
     "@angular/core": "~14.1.2",
-    "@angular/forms": "~14.0.1",
+    "@angular/forms": "~14.1.2",
     "@angular/platform-browser": "~14.1.2",
     "@angular/platform-browser-dynamic": "~14.1.2",
     "@angular/router": "~14.1.2",
