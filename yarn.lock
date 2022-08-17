@@ -8002,8 +8002,8 @@ rxjs@6.6.7:
     tslib "^1.9.0"
 
 rxjs@^7.5.5, rxjs@~7.5.5:
-  version "7.5.5"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.5.tgz#2ebad89af0f560f460ad5cc4213219e1f7dd4e9f"
+  version "7.5.6"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.6.tgz#0446577557862afd6903517ce7cae79ecb9662bc"
   dependencies:
     tslib "^2.1.0"
 
