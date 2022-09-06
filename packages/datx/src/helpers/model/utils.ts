@@ -336,7 +336,7 @@ export function updateModel<T extends PureModel>(model: T, data: Record<string, 
 
   Object.keys(rawData).forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
-      assignModel(model, key, rawData[key]);
+      assignModel(model, key, data[key]);
     } else if (key === META_FIELD) {
       const metaKeys = Object.keys(rawData[key] || {});
 
@@ -380,7 +380,7 @@ export function revertModel(model: PureModel): void {
   }
 }
 
-function isSame(valA: any, valB: any): boolean {
+function isSame<T>(valA: T, valB: T): boolean {
   return JSON.stringify(valA) === JSON.stringify(valB); // TODO: better comparison?
 }
 
@@ -395,7 +395,9 @@ export function isAttributeDirty<T extends PureModel>(model: T, key: keyof T): b
       return false;
     }
 
-    const value = field.referenceDef ? mapItems(model[key], getModelRef) : model[key];
+    const value = field.referenceDef
+      ? mapItems(model[key] as PureModel | IModelRef, getModelRef)
+      : model[key];
     return !isSame(value, prevCommit[key as string]);
   }
 
