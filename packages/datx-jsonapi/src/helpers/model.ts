@@ -28,7 +28,7 @@ import { IJsonapiCollection } from '../interfaces/IJsonapiCollection';
 import { IJsonapiModel } from '../interfaces/IJsonapiModel';
 import { IRequestOptions } from '../interfaces/IRequestOptions';
 import { IDefinition, ILink, IRecord, IRelationship } from '../interfaces/JsonApi';
-import { create, fetchLink, handleResponse, remove, update } from '../NetworkUtils';
+import { config, create, fetchLink, handleResponse, put, remove, update } from '../NetworkUtils';
 import { Response } from '../Response';
 import { prepareQuery } from './url';
 import { error, getModelClassRefs } from './utils';
@@ -120,7 +120,7 @@ export function fetchModelLink<T extends IJsonapiModel = IJsonapiModel>(
     throw error(`Link ${key} doesn't exist on the model`);
   }
   const link = links[key];
-  const responseObj = fetchLink<T>(link, (collection as unknown) as IJsonapiCollection, options);
+  const responseObj = fetchLink<T>(link, collection as unknown as IJsonapiCollection, options);
 
   if (getMeta(model, MODEL_QUEUE_FIELD)) {
     return responseObj.then((response) => {
@@ -180,7 +180,7 @@ export function fetchModelRefLink<T extends IJsonapiModel = IJsonapiModel>(
   const collection = getModelCollection(model);
   const link = getLink(model, ref, key);
 
-  return fetchLink<T>(link, (collection as unknown) as IJsonapiCollection, options);
+  return fetchLink<T>(link, collection as unknown as IJsonapiCollection, options);
 }
 
 export function getModelRefMeta(model: PureModel): Record<string, any> {
@@ -250,11 +250,13 @@ export function getModelEndpointUrl(model: IJsonapiModel, options?: IRequestOpti
 }
 
 export function saveModel(model: IJsonapiModel, options?: IRequestOptions): Promise<IJsonapiModel> {
-  const collection = (getModelCollection(model) as unknown) as IJsonapiCollection;
+  const collection = getModelCollection(model) as unknown as IJsonapiCollection;
 
+  const usePatchWhenPossible = config?.usePatchWhenPossible ?? false;
   const isPersisted = isModelPersisted(model);
-  const data: IRecord = modelToJsonApi(model, isPersisted);
-  const requestMethod = isPersisted ? update : create;
+  const data: IRecord = modelToJsonApi(model, usePatchWhenPossible && isPersisted);
+  const updateMethod = usePatchWhenPossible ? update : put;
+  const requestMethod = isPersisted ? updateMethod : create;
   const url = getModelEndpointUrl(model, options);
 
   return requestMethod(
@@ -275,7 +277,7 @@ export function removeModel<T extends IJsonapiModel>(
   model: T,
   options?: IRequestOptions,
 ): Promise<void> {
-  const collection = (getModelCollection(model) as unknown) as IJsonapiCollection;
+  const collection = getModelCollection(model) as unknown as IJsonapiCollection;
 
   const isPersisted = isModelPersisted(model);
   const url = getModelEndpointUrl(model);
@@ -312,7 +314,7 @@ export function saveRelationship<T extends IJsonapiModel>(
   ref: string,
   options?: IRequestOptions,
 ): Promise<T> {
-  const collection = (getModelCollection(model) as unknown) as IJsonapiCollection;
+  const collection = getModelCollection(model) as unknown as IJsonapiCollection;
   const link = getLink(model, ref, 'self');
   const href: string = typeof link === 'object' ? link.href : link;
 
