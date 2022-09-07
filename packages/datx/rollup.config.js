@@ -18,7 +18,6 @@ export default [
         typescript: require('typescript'),
         tslib: require('tslib'),
         tsconfig: './tsconfig.build.json',
-        sourceMap: true,
       }),
       terser({
         toplevel: true,
@@ -47,7 +46,6 @@ export default [
         typescript: require('typescript'),
         tslib: require('tslib'),
         tsconfig: './tsconfig.build.json',
-        sourceMap: true,
       }),
     ],
     onwarn(warning, rollupWarn) {
@@ -66,7 +64,8 @@ export default [
       typescript({
         typescript: require('typescript'),
         tslib: require('tslib'),
-        tsconfig: './tsconfig.disable-mobx.json'
+        tsconfig: './tsconfig.disable-mobx.json',
+        sourceMap: false,
       }),
       terser({
         toplevel: true,
