@@ -143,9 +143,9 @@
     uuid "8.3.2"
     yargs "17.5.1"
 
-"@angular/common@~14.0.1":
-  version "14.0.7"
-  resolved "https://registry.yarnpkg.com/@angular/common/-/common-14.0.7.tgz#f1a67c5784b9f1719d4bf0a07f4bb56f02ce0d6f"
+"@angular/common@~14.2.1":
+  version "14.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-14.2.1.tgz#064751634fe1724b065d8ef0c4e19a2b59606b7e"
   dependencies:
     tslib "^2.3.0"
 
@@ -170,9 +170,9 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/core@~14.1.2":
-  version "14.1.3"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-14.1.3.tgz#1cfb803305e8c5dbbe6d48df4a7d0a8223f67ed1"
+"@angular/core@~14.2.0":
+  version "14.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-14.2.1.tgz#509a160d94799b55450d4801ff37eda87b9f8393"
   dependencies:
     tslib "^2.3.0"
 
@@ -188,9 +188,9 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/platform-browser@~14.1.2":
-  version "14.1.3"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-14.1.3.tgz#0b1d57ed2413b87deb488a21fbc18982fa7b618b"
+"@angular/platform-browser@~14.2.0":
+  version "14.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-14.2.1.tgz#36000cf8810d7d31b93e5c78b272f56ad5e54580"
   dependencies:
     tslib "^2.3.0"
 
