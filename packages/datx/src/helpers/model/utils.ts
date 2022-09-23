@@ -299,6 +299,9 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
       if (shouldBeReference && !fields[key].referenceDef) {
         throw error('You should save this value as a reference.');
       }
+      if (key === getMeta(model.constructor, MetaClassField.IdField, undefined, true)) {
+        return;
+      }
       // model[key] = shouldBeReference ? value : getRawData(value);
       model[key] = value;
     } else {
