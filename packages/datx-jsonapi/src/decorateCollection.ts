@@ -10,7 +10,7 @@ import {
   PureCollection,
   PureModel,
   ReferenceType,
-  updateModel,
+  upsertModel,
   commitModel,
 } from '@datx/core';
 import { getMeta, IRawModel, mapItems, deprecated, isArrayLike } from '@datx/utils';
@@ -258,7 +258,7 @@ export function decorateCollection(
       const flattened: IRawModel = flattenModel(classRefs, obj);
 
       if (record) {
-        updateModel(record, flattened);
+        upsertModel(flattened, type, this);
         commitModel(record);
       } else if (staticCollection.types.filter((item) => item.type === type).length) {
         record = this.add<T>(flattened, type);
