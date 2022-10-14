@@ -32,6 +32,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular-devkit/architect@npm:0.1402.6":
+  version: 0.1402.6
+  resolution: "@angular-devkit/architect@npm:0.1402.6"
+  dependencies:
+    "@angular-devkit/core": 14.2.6
+    rxjs: 6.6.7
+  checksum: 0df416b41c7b1a65fe2c8e98e16a3faef6373d639acac9fcdc67eca728c78c8b036f6315ce83c1cee1c88d9dd9e644066515b0e809bafed322df8d86895beb0e
+  languageName: node
+  linkType: hard
+
 "@angular-devkit/build-angular@npm:~14.1.3":
   version: 14.1.3
   resolution: "@angular-devkit/build-angular@npm:14.1.3"
@@ -159,16 +169,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:14.1.3":
-  version: 14.1.3
-  resolution: "@angular-devkit/schematics@npm:14.1.3"
+"@angular-devkit/core@npm:14.2.6":
+  version: 14.2.6
+  resolution: "@angular-devkit/core@npm:14.2.6"
   dependencies:
-    "@angular-devkit/core": 14.1.3
+    ajv: 8.11.0
+    ajv-formats: 2.1.1
+    jsonc-parser: 3.1.0
+    rxjs: 6.6.7
+    source-map: 0.7.4
+  peerDependencies:
+    chokidar: ^3.5.2
+  peerDependenciesMeta:
+    chokidar:
+      optional: true
+  checksum: 4a1e43e501bd2e5059899d86fa6e1165f96eff6ada71e63da484902f43073fdf80d3a6bda182320354a30a9f7a14e8077d8c2f2afd76a9cc1873deae6a77822e
+  languageName: node
+  linkType: hard
+
+"@angular-devkit/schematics@npm:14.2.6":
+  version: 14.2.6
+  resolution: "@angular-devkit/schematics@npm:14.2.6"
+  dependencies:
+    "@angular-devkit/core": 14.2.6
     jsonc-parser: 3.1.0
     magic-string: 0.26.2
     ora: 5.4.1
     rxjs: 6.6.7
-  checksum: 671ac627859a28d366c3d444ffc90c546f0488895895bca3087852dbd9be5456d0d6862a8aabe6ec06238fd590460dd6161881355803ca03a1f09985f466a298
+  checksum: 56af237dc47cdfe5c99e2403bc603e3bbb4dd6f7409d649a080098e11e7c2b2adeee49f4869a9359eae547b98dd7ba5776532bead1eca5dbc313838aadbb0167
   languageName: node
   linkType: hard
 
@@ -183,14 +211,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cli@npm:~14.1.2":
-  version: 14.1.3
-  resolution: "@angular/cli@npm:14.1.3"
+"@angular/cli@npm:~14.2.6":
+  version: 14.2.6
+  resolution: "@angular/cli@npm:14.2.6"
   dependencies:
-    "@angular-devkit/architect": 0.1401.3
-    "@angular-devkit/core": 14.1.3
-    "@angular-devkit/schematics": 14.1.3
-    "@schematics/angular": 14.1.3
+    "@angular-devkit/architect": 0.1402.6
+    "@angular-devkit/core": 14.2.6
+    "@angular-devkit/schematics": 14.2.6
+    "@schematics/angular": 14.2.6
     "@yarnpkg/lockfile": 1.1.0
     ansi-colors: 4.1.3
     debug: 4.3.4
@@ -201,7 +229,7 @@ __metadata:
     npm-pick-manifest: 7.0.1
     open: 8.4.0
     ora: 5.4.1
-    pacote: 13.6.1
+    pacote: 13.6.2
     resolve: 1.22.1
     semver: 7.3.7
     symbol-observable: 4.0.0
@@ -209,7 +237,7 @@ __metadata:
     yargs: 17.5.1
   bin:
     ng: bin/ng.js
-  checksum: ff2b279199ee2152259a69889d0ec8b2e0c0457353777544e62227ebbd0e6d271adecac7a14af583daf167d11f076d9fe7f17ed2003aec44b5a56daf23232006
+  checksum: b8ef5c9b284c47ea2a0bf92e4d5c75a000eddbe2f6ad84aab7fce7e80783f0f7e9c773f380706f0accf3a75b64353dc982e8f4c079256e02cf5d02f12703f17a
   languageName: node
   linkType: hard
 
@@ -1896,7 +1924,7 @@ __metadata:
   dependencies:
     "@angular-devkit/build-angular": ~14.1.3
     "@angular/animations": ~14.1.2
-    "@angular/cli": ~14.1.2
+    "@angular/cli": ~14.2.6
     "@angular/common": ~14.2.0
     "@angular/compiler": ~14.0.1
     "@angular/compiler-cli": ~14.0.1
@@ -3709,14 +3737,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@schematics/angular@npm:14.1.3":
-  version: 14.1.3
-  resolution: "@schematics/angular@npm:14.1.3"
+"@schematics/angular@npm:14.2.6":
+  version: 14.2.6
+  resolution: "@schematics/angular@npm:14.2.6"
   dependencies:
-    "@angular-devkit/core": 14.1.3
-    "@angular-devkit/schematics": 14.1.3
+    "@angular-devkit/core": 14.2.6
+    "@angular-devkit/schematics": 14.2.6
     jsonc-parser: 3.1.0
-  checksum: adfa3c8412a547a1d5f443875a6fff84501f729619b6b949ae699ae0fe31a7631b23afdfd84e957a6870dce3b86d5e8c352d74ece929f4b0e66c6d081433bb0f
+  checksum: 5d07689c7bb291a3fee7aa07e1a2dabb82dd149dcdf5eee28e670fdd07217c3994e910609ddcfc96f73fa61aa782cb38b8d540b722b26fc921fd11fb63611520
   languageName: node
   linkType: hard
 
@@ -11021,38 +11049,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pacote@npm:13.6.1":
-  version: 13.6.1
-  resolution: "pacote@npm:13.6.1"
-  dependencies:
-    "@npmcli/git": ^3.0.0
-    "@npmcli/installed-package-contents": ^1.0.7
-    "@npmcli/promise-spawn": ^3.0.0
-    "@npmcli/run-script": ^4.1.0
-    cacache: ^16.0.0
-    chownr: ^2.0.0
-    fs-minipass: ^2.1.0
-    infer-owner: ^1.0.4
-    minipass: ^3.1.6
-    mkdirp: ^1.0.4
-    npm-package-arg: ^9.0.0
-    npm-packlist: ^5.1.0
-    npm-pick-manifest: ^7.0.0
-    npm-registry-fetch: ^13.0.1
-    proc-log: ^2.0.0
-    promise-retry: ^2.0.1
-    read-package-json: ^5.0.0
-    read-package-json-fast: ^2.0.3
-    rimraf: ^3.0.2
-    ssri: ^9.0.0
-    tar: ^6.1.11
-  bin:
-    pacote: lib/bin.js
-  checksum: 26cebb59aea93d03ad051d82c4f2300beb333ded0f16ba92cfe976b5600157bd1ee034afe1c86406bbe5eacd51d413797939b08aa58adcf73f7680aead9e667f
-  languageName: node
-  linkType: hard
-
-"pacote@npm:^13.0.3, pacote@npm:^13.6.1":
+"pacote@npm:13.6.2, pacote@npm:^13.0.3, pacote@npm:^13.6.1":
   version: 13.6.2
   resolution: "pacote@npm:13.6.2"
   dependencies:
@@ -13791,7 +13788,7 @@ __metadata:
 
 "typescript@patch:typescript@4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@~4.7.3#~builtin<compat/typescript>":
   version: 4.7.4
-  resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=a1c5e5"
+  resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -13801,7 +13798,7 @@ __metadata:
 
 "typescript@patch:typescript@^3 || ^4#~builtin<compat/typescript>":
   version: 4.8.4
-  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=a1c5e5"
+  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
