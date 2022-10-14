@@ -172,14 +172,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:~14.1.2":
-  version: 14.1.3
-  resolution: "@angular/animations@npm:14.1.3"
+"@angular/animations@npm:~14.2.6":
+  version: 14.2.6
+  resolution: "@angular/animations@npm:14.2.6"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 14.1.3
-  checksum: ba4a07bb8b07282a66888030b4ab1f6a5b9dbfd1d3849caee204be9e71181bde4b809520fd9755d4aa529c5b86db423839ba92036807b3eb76059087e69b9095
+    "@angular/core": 14.2.6
+  checksum: ea3a00ba9816d1fa10ad140204ce8758d2fb0a211d18ae57db2b53ca696959a7efbc0835401df624ac890e45bcf7dc43facf331d6fc306d72e43c7ce1fb9379d
   languageName: node
   linkType: hard
 
@@ -1895,7 +1895,7 @@ __metadata:
   resolution: "@datx/jsonapi-angular@workspace:packages/datx-jsonapi-angular"
   dependencies:
     "@angular-devkit/build-angular": ~14.1.3
-    "@angular/animations": ~14.1.2
+    "@angular/animations": ~14.2.6
     "@angular/cli": ~14.1.2
     "@angular/common": ~14.2.0
     "@angular/compiler": ~14.0.1
@@ -13791,7 +13791,7 @@ __metadata:
 
 "typescript@patch:typescript@4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@~4.7.3#~builtin<compat/typescript>":
   version: 4.7.4
-  resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=a1c5e5"
+  resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -13801,7 +13801,7 @@ __metadata:
 
 "typescript@patch:typescript@^3 || ^4#~builtin<compat/typescript>":
   version: 4.8.4
-  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=a1c5e5"
+  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
