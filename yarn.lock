@@ -276,17 +276,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/forms@npm:~14.1.2":
-  version: 14.1.3
-  resolution: "@angular/forms@npm:14.1.3"
+"@angular/forms@npm:~14.2.6":
+  version: 14.2.6
+  resolution: "@angular/forms@npm:14.2.6"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 14.1.3
-    "@angular/core": 14.1.3
-    "@angular/platform-browser": 14.1.3
+    "@angular/common": 14.2.6
+    "@angular/core": 14.2.6
+    "@angular/platform-browser": 14.2.6
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 7daaaf060cf6826e3bee5ac2a2a38a06f943f769e5ac76452cbbcad953a847c80c0afe660004d1f0a784834a3bc1411b3114be92857f92b61c6af851f6330631
+  checksum: c6b514325c4d5cefd9d3d220f6bd8bf53160a98fa965405e2f134e4b41271bdbf77f98cd7c8d625d1ed5b7972f948dae8a01e464ec1b644ac468d86f0d9e1463
   languageName: node
   linkType: hard
 
@@ -1901,7 +1901,7 @@ __metadata:
     "@angular/compiler": ~14.0.1
     "@angular/compiler-cli": ~14.0.1
     "@angular/core": ~14.2.0
-    "@angular/forms": ~14.1.2
+    "@angular/forms": ~14.2.6
     "@angular/platform-browser": ~14.2.0
     "@angular/platform-browser-dynamic": ~14.1.2
     "@angular/router": ~14.2.0
@@ -13791,7 +13791,7 @@ __metadata:
 
 "typescript@patch:typescript@4.7.4#~builtin<compat/typescript>, typescript@patch:typescript@~4.7.3#~builtin<compat/typescript>":
   version: 4.7.4
-  resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=a1c5e5"
+  resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -13801,7 +13801,7 @@ __metadata:
 
 "typescript@patch:typescript@^3 || ^4#~builtin<compat/typescript>":
   version: 4.8.4
-  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=a1c5e5"
+  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
