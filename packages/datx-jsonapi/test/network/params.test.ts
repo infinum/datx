@@ -2,7 +2,7 @@ import * as fetch from 'isomorphic-fetch';
 
 import { setupNetwork, setRequest, confirmNetwork } from '../utils/api';
 import { TestStore, Event } from '../utils/setup';
-import { ParamArrayType } from '../../src';
+import { buildUrl, IRequestOptions, ParamArrayType } from '../../src';
 import { clearAllCache } from '../../src/cache';
 import { config } from '../../src/NetworkUtils';
 
@@ -289,6 +289,58 @@ describe('params', () => {
       const store = new TestStore();
 
       await store.request('event', 'GET', undefined, { queryParams: { filter: { name: 'ć=' } } });
+    });
+  });
+
+  describe('URL search params stable sort', () => {
+    const options1: IRequestOptions = {
+      queryParams: {
+        filter: {
+          first: '1',
+          second: '2',
+        },
+        sort: 'name',
+        include: ['first', 'second'],
+        fields: {
+          first: '1',
+          second: '2',
+        },
+        custom: ['a=1', 'b=2', { key: 'c', value: '3' }],
+      },
+    };
+
+    const options2: IRequestOptions = {
+      queryParams: {
+        filter: {
+          second: '2',
+          first: '1',
+        },
+        sort: 'name',
+        include: ['second', 'first'],
+        fields: {
+          second: '2',
+          first: '1',
+        },
+        custom: [{ key: 'c', value: '3' }, 'b=2', 'a=1'],
+      },
+    };
+
+    it('should not sort URL search params if `sortParams` config is set to false or undefined', () => {
+      config.sortParams = false;
+
+      const urlObj1 = buildUrl('event', undefined, options1);
+      const urlObj2 = buildUrl('event', undefined, options2);
+
+      expect(urlObj1.url).not.toEqual(urlObj2.url);
+    });
+
+    it('should sort URL search params if `sortParams` config is set to true', async () => {
+      config.sortParams = true;
+
+      const urlObj1 = buildUrl('event', undefined, options1);
+      const urlObj2 = buildUrl('event', undefined, options2);
+
+      expect(urlObj1.url).toEqual(urlObj2.url);
     });
   });
 });

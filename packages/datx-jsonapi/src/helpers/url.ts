@@ -49,7 +49,9 @@ function prepareSort(sort?: string | Array<string>): Array<string> {
 }
 
 function prepareIncludes(include?: string | Array<string>): Array<string> {
-  return include ? [`include=${include}`] : [];
+  return include
+    ? [`include=${config.sortParams && Array.isArray(include) ? include.sort() : include}`]
+    : [];
 }
 
 function prepareFields(fields: Record<string, string | Array<string>>): Array<string> {
@@ -121,7 +123,19 @@ export function buildUrl(
     params = params.map(encodeParam);
   }
 
-  const baseUrl: string = appendParams(prefixUrl(url, containsBase), params);
+  let baseUrl: string = appendParams(prefixUrl(url, containsBase), params);
+
+  if (config.sortParams) {
+    const [url, searchParams] = baseUrl.split('?');
+
+    if (searchParams) {
+      const urlSearchParams = new URLSearchParams(searchParams);
+
+      urlSearchParams.sort();
+
+      baseUrl = `${url}?${urlSearchParams.toString()}`;
+    }
+  }
 
   return { data, headers, url: baseUrl };
 }

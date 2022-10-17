@@ -52,6 +52,13 @@ export interface IConfigType {
   transformRequest(options: ICollectionFetchOpts): ICollectionFetchOpts;
   transformResponse(response: IRawResponse): IRawResponse;
   usePatchWhenPossible: boolean;
+
+  /**
+   * Enable stable sort of url search params using `URLSearchParams.sort()` method.
+   * It will also sort include params using `Array.sort()` method.
+   * @default false
+   */
+  sortParams?: boolean;
 }
 
 export const config: IConfigType = {
@@ -70,6 +77,7 @@ export const config: IConfigType = {
   },
 
   encodeQueryString: false,
+  sortParams: false,
 
   // Reference of the fetch method that should be used
   fetchReference:
