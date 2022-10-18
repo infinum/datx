@@ -18,7 +18,6 @@ export default [
         typescript: require('typescript'),
         tslib: require('tslib'),
         tsconfig: './tsconfig.build.json',
-        sourceMap: true,
       }),
       terser({
         toplevel: true,
@@ -47,35 +46,6 @@ export default [
         typescript: require('typescript'),
         tslib: require('tslib'),
         tsconfig: './tsconfig.build.json',
-        sourceMap: true,
-      }),
-    ],
-    onwarn(warning, rollupWarn) {
-      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
-        rollupWarn(warning);
-      }
-    },
-  },
-  {
-    input: './src/disable-mobx.ts',
-    output: [{ file: './disable-mobx.js', format: 'cjs' }],
-    plugins: [
-      resolve(),
-      commonjs(),
-      excludeDependenciesFromBundle(),
-      typescript({
-        typescript: require('typescript'),
-        tslib: require('tslib'),
-        tsconfig: './tsconfig.disable-mobx.json'
-      }),
-      terser({
-        toplevel: true,
-        compress: {
-          passes: 3,
-        },
-        output: {
-          comments: false,
-        },
       }),
     ],
     onwarn(warning, rollupWarn) {

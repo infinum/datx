@@ -11,7 +11,6 @@ title: Basic setup
 ```typescript
 // /models/index.ts
 import { Model, Attribute } from '@datx/core';
-import { computed } from 'mobx';
 
 export class Dog extends Model {
   public static type = 'dog';
@@ -22,7 +21,6 @@ export class Dog extends Model {
   @Attribute()
   public name!: string;
 
-  @computed
   public get greet() {
     return `Hey, I am ${this.name} the ${this.breed}.`;
   }
@@ -59,7 +57,6 @@ export class Person extends Model {
 ```js
 // /models/index.js
 import { Model, Attribute } from '@datx/core';
-import { computed } from 'mobx';
 
 class Dog extends Model {
   static type = 'dog';
@@ -70,7 +67,6 @@ class Dog extends Model {
   @Attribute()
   name;
 
-  @computed
   get greet() {
     return `Hey, I am ${this.breed} ${this.name}.`;
   }
@@ -88,7 +84,6 @@ export class Person extends Model {
   @Attribute()
   age;
 
-  @computed
   get greet() {
     if (!this.favoriteDog) {
       return `Hey, I am ${this.name}.`;
@@ -104,7 +99,6 @@ export class Person extends Model {
 ```js
 // /models/index.js
 import { Model, Attribute } from '@datx/core';
-import { computed, decorate } from 'mobx';
 
 export class Dog extends Model {
   static type = 'dog';
@@ -116,9 +110,6 @@ export class Dog extends Model {
 
 Attribute()(Dog, 'breed');
 Attribute()(Dog, 'name');
-decorate(Dog, {
-  greet: computed,
-});
 
 export class Person extends Model {
   static type = 'person';
@@ -136,9 +127,6 @@ Attribute()(Person, 'id');
 Attribute()(Person, 'age');
 Attribute()(Person, 'name');
 Attribute({ toOne: Dog })(Person, 'favoriteDog');
-decorate(Person, {
-  greet: computed,
-});
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -150,24 +138,20 @@ decorate(Person, {
 
 ```typescript
 import { Collection } from '@datx/core';
-import { computed } from 'mobx';
 
 import { Person, Dog } from './models';
 
 export default class Family extends Collection {
   public static types = [Person, Dog];
 
-  @computed
   public get dogs() {
     return this.findAll(Dog);
   }
 
-  @computed
   public get germanShepherds() {
     return this.dogs.filter((dog) => dog.breed === 'German Shepherd');
   }
 
-  @computed
   public get minors() {
     return this.findAll(Person).filter((person) => person.age < 18);
   }
@@ -178,35 +162,6 @@ export default class Family extends Collection {
 
 ```js
 import { Collection } from '@datx/core';
-import { computed } from 'mobx';
-
-import { Person, Dog } from './models';
-
-export default class Family extends Collection {
-  static types = [Person, Dog];
-
-  @computed
-  get dogs() {
-    return this.findAll(Dog);
-  }
-
-  @computed
-  get germanShepherds() {
-    return this.dogs.filter((dog) => dog.breed === 'German Shepherd');
-  }
-
-  @computed
-  get minors() {
-    return this.findAll(Person).filter((person) => person.age < 18);
-  }
-}
-```
-
-<!--JavaScript (No decorators)-->
-
-```js
-import { Collection } from '@datx/core';
-import { computed, decorate } from 'mobx';
 
 import { Person, Dog } from './models';
 
@@ -225,12 +180,6 @@ export default class Family extends Collection {
     return this.findAll(Person).filter((person) => person.age < 18);
   }
 }
-
-decorate(Family, {
-  dogs: computed,
-  minors: computed,
-  germanShephers: computed,
-});
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->

@@ -1,10 +1,8 @@
 import { DATX_META } from './consts';
-import { IObservableArray } from './interfaces/IMobX';
-import { mobx } from './mobx';
 import { IResponseHeaders } from './interfaces/IResponseHeaders';
 
-export function isArrayLike(value: any): value is Array<any> | IObservableArray<any> {
-  return Array.isArray(value) || mobx.isObservableArray(value);
+export function isArrayLike(value: any): value is Array<any> {
+  return Array.isArray(value);
 }
 
 export function reducePrototypeChain<T, U>(
@@ -56,7 +54,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
     Object.defineProperty(obj, DATX_META, {
       configurable: false,
       enumerable: false,
-      value: mobx.observable.object({}, {}, { deep: false }),
+      value: {},
     });
   }
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/1863
@@ -66,7 +64,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
 export function setMeta<T = any>(obj: Record<string, any>, key: string, value: T): void {
   const meta = getMetaObj(obj);
 
-  mobx.set(meta, key, value);
+  meta[key] = value;
 }
 
 export function getMeta<T = any>(
@@ -123,10 +121,10 @@ type Getter<T> = () => T;
 type Setter<T> = (value: T) => void;
 
 /**
- * Add a computed property to an observable object
+ * Add a computed property to an object
  *
  * @export
- * @param {Record<string, any>} obj Observable object
+ * @param {Record<string, any>} obj object
  * @param {string} key Property to add
  * @param {() => any} getter Getter function
  * @param {(value: any) => void} [setter] Setter function
@@ -137,23 +135,10 @@ export function assignComputed<T = any>(
   getter: Getter<T> = undefinedGetter,
   setter: Setter<T> = defaultSetter,
 ): void {
-  // if (isObservable(obj)) {
-  //   throw new Error(`[datx exception] This object shouldn't be an observable`);
-  // }
-
-  const computedObj = mobx.extendObservable(
-    {},
-    {
-      get getter() {
-        return getter.call(obj);
-      },
-    },
-  );
-
   if (!('prop' in obj)) {
     Object.defineProperty(obj, key, {
       get() {
-        return computedObj.getter;
+        return getter.call(obj);
       },
       set(val: T) {
         setter.call(obj, val);
@@ -197,22 +182,14 @@ export function info(...args: Array<any>): void {
 }
 
 export function replaceInArray<T = any>(arr: Array<T>, data: Array<T>): Array<T> {
-  if (mobx.isObservableArray(arr)) {
-    return (arr as IObservableArray).replace(data);
-  } else {
-    arr.length = 0;
-    arr.push(...data);
-    return arr;
-  }
+  arr.length = 0;
+  arr.push(...data);
+  return arr;
 }
 
 export function removeFromArray<T = any>(arr: Array<T>, item: T): Array<T> {
-  if (mobx.isObservableArray(arr)) {
-    return (arr as IObservableArray).remove(item);
-  } else {
-    const pos = arr.indexOf(item);
-    return arr.splice(pos, 1);
-  }
+  const pos = arr.indexOf(item);
+  return arr.splice(pos, 1);
 }
 
 export class Headers implements IResponseHeaders {

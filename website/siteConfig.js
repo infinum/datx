@@ -10,7 +10,7 @@
 
 const siteConfig = {
   title: 'datx', // Title for your website.
-  tagline: 'A mobx data store',
+  tagline: 'An opinionated data store',
   url: 'https://datx.dev', // Your website URL
   baseUrl: '/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:

@@ -1,7 +1,6 @@
 # @datx/jsonapi-angular
 
-
-DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
+DatX is an opinionated data store. It features support for references to other models and first-class TypeScript support.
 
 `@datx/jsonapi-angular` is a datx mixin that adds [JSON API](https://jsonapi.org/) support for Angular applications.
 
@@ -31,21 +30,20 @@ import { AppCollection, APP_COLLECTION } from './collections/app.collection';
 @NgModule({
   imports: [
     DatxModule.forRoot({
-      baseUrl: 'https://my-api.com/'
-    })
+      baseUrl: 'https://my-api.com/',
+    }),
   ],
   providers: [
     {
       provide: APP_COLLECTION,
       useValue: new AppCollection(),
     },
-  ]
+  ],
 })
 export class AppModule {}
 ```
 
 You can also provide the config via DI if you need to set the config value based on data from some service:
-
 
 ```ts
 import { NgModule } from '@angular/core';
@@ -57,7 +55,7 @@ import { EnvironmentVariablesService } from './services/...';
   imports: [
     DatxModule.forRoot({
       cache: CachingStrategy.NetworkOnly,
-    })
+    }),
   ],
   provides: [
     {
@@ -71,9 +69,9 @@ import { EnvironmentVariablesService } from './services/...';
           baseUrl: environmentVariablesService.get('MY_API'),
         };
       },
-      deps: [EnvironmentVariablesService]
+      deps: [EnvironmentVariablesService],
     },
-  ]
+  ],
 })
 export class AppModule {}
 ```

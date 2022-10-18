@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
         mobx-version: [-2, -1, 0, 4, 5, 6]
         # -2 - mobx off, real mobx in tests
         # -1 - mobx off, mock mobx in tests
@@ -30,11 +30,5 @@ jobs:
       - run: npm install -g lerna
       - run: yarn
       - run: lerna bootstrap
-      - name: Cleanup MobX
-        if: ${{ matrix.mobx-version == '0' }}
-        run: cd packages/datx-utils; yarn remove mobx
-      - name: Install correct MobX version
-        if: ${{ matrix.mobx-version > 0 }}
-        run: cd packages/datx-utils; yarn add mobx@${{ matrix.mobx-version }} --dev
       - run: lerna run build
-      - run: MOBX_VERSION=${{ matrix.mobx-version }} lerna run test
+      - run: lerna run test

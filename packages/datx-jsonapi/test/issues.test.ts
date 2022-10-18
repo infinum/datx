@@ -1,5 +1,4 @@
 import { Collection, Model, prop, Attribute } from '@datx/core';
-import { mobx } from '@datx/utils';
 import * as fetch from 'isomorphic-fetch';
 import { getModelMeta, getModelRefMeta, jsonapi, modelToJsonApi, config } from '../src';
 
@@ -52,7 +51,6 @@ describe('Issues', () => {
       class ApiStore extends jsonapi(Collection) {
         public static types = [ImageRecord, EventRecord];
 
-        @mobx.computed
         get image(): Array<ImageRecord> {
           return this.findAll(ImageRecord);
         }
@@ -121,7 +119,6 @@ describe('Issues', () => {
       class ApiStore extends jsonapi(Collection) {
         public static types = [ImageRecord, EventRecord];
 
-        @mobx.computed
         get image(): Array<ImageRecord> {
           return this.findAll(ImageRecord);
         }
@@ -269,5 +266,50 @@ describe('Issues', () => {
     const jsonapiData = modelToJsonApi(foo1);
     expect(jsonapiData.relationships?.bar).toEqual({ data: { id: bar1.meta.id, type: 'bar' } });
     expect(jsonapiData.relationships?.bars).toBeUndefined();
+  });
+
+  it('should work with property parsers/serializers when updating existing model', () => {
+    class Foo extends jsonapi(Model) {
+      public static type = 'foo';
+
+      @Attribute({
+        parse: (value: string) => parseInt(value, 10),
+        serialize: (value: number) => `TEST:${value}`,
+      })
+      public value!: number;
+
+      @Attribute({ isIdentifier: true })
+      public id!: number;
+    }
+
+    class Store extends jsonapi(Collection) {
+      public static types = [Foo];
+    }
+
+    const store = new Store();
+    let foo = store.sync({
+      data: {
+        id: '1',
+        type: 'foo',
+        attributes: { value: '123' },
+      },
+    }) as Foo;
+
+    expect(foo.value).toBe(123);
+
+    let snapshot = foo.toJSON();
+    expect(snapshot.value).toBe('TEST:123');
+
+    foo = store.sync({
+      data: {
+        id: '1',
+        type: 'foo',
+        attributes: { value: '321' },
+      },
+    }) as Foo;
+    expect(foo.value).toBe(321);
+
+    snapshot = foo.toJSON();
+    expect(snapshot.value).toBe('TEST:321');
   });
 });

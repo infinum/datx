@@ -6,7 +6,7 @@ title: Network Mixin
 If you're using an API for your application, you can install `datx-network` to take the full advantage of the `datx` library:
 
 ```bash
-npm install --save datx datx-network mobx
+npm install --save datx datx-network
 ```
 
 **Note** If you're using the [JSON API specification](https://jsonapi.org/), check out [datx-jsonapi](./jsonapi-mixin) instead.

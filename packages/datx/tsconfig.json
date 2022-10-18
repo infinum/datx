@@ -4,6 +4,7 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "noUnusedLocals": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "esModuleInterop": true
   }
 }

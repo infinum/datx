@@ -1,6 +1,7 @@
 ---
-id: base-fetch
+id: version-3.0.0-base-fetch
 title: Angular JSON:API baseFetch
+original_id: base-fetch
 ---
 
 By default, the library will use the FetchAPI to do all the networking. This is not ideal when using Angular as it would remove some useful features like interceptors and request cancellation.

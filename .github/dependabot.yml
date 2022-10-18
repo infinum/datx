@@ -1,21 +1,23 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "daily"
+      interval: 'daily'
     labels:
-      - "maintenance"
+      - 'maintenance'
     assignees:
-      - "DarkoKukovec"
-    open-pull-requests-limit: 10
-  - package-ecosystem: "npm"
-    directory: "/website"
+      - 'DarkoKukovec'
+    # Disable version updates for npm dependencies
+    open-pull-requests-limit: 0
+  - package-ecosystem: 'npm'
+    directory: '/website'
     schedule:
-      interval: "daily"
+      interval: 'daily'
     labels:
-      - "maintenance"
-      - "documentation"
+      - 'maintenance'
+      - 'documentation'
     assignees:
-      - "DarkoKukovec"
-    open-pull-requests-limit: 10
+      - 'DarkoKukovec'
+    # Disable version updates for npm dependencies
+    open-pull-requests-limit: 0

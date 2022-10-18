@@ -1,6 +1,6 @@
 # @datx/network
 
-DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
+DatX is an opinionated data store. It features support for references to other models and first-class TypeScript support.
 
 `@datx/network` is a datx mixin that adds a networking layer support. It can be used with any REST-like API and probably also other types of an API.
 
@@ -16,7 +16,7 @@ class Person extends Model {
   public static type = 'person'; // Unique name of the model class
 
   @Attribute()
-  public name: string; // A normal observable property without a default value
+  public name: string; // A normal attribute without a default value
 
   @Attribute()
   public surname: string;
@@ -24,9 +24,7 @@ class Person extends Model {
   @Attribute({ toOne: Person })
   public spouse?: Person; // A reference to a Person model
 
-  @computed
   public get fullName() {
-    // Standard MobX computed props
     return `${this.name} ${this.surname}`;
   }
 }
@@ -63,10 +61,8 @@ const PersonInfo = ({ userId }) => {
 
 ## Getting started
 
-Note: `@datx/network` has a peer dependency to `mobx@^4.2.0` or `mobx@^5.5.0`, so don't forget to install the latest MobX version:
-
 ```bash
-npm install --save @datx/network mobx
+npm install --save @datx/network
 ```
 
 ### Polyfilling

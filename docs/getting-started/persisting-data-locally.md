@@ -7,7 +7,6 @@ Sometimes, you'll need to persist some data locally.
 Bellow is a basic example using `localStorage`, but the same concept can be applied to any type of persistence:
 
 ```javascript
-import { autorun } from 'mobx';
 import { Collection } from '@datx/core';
 
 class AppStore extends Collection {
@@ -25,13 +24,10 @@ class AppStore extends Collection {
     }
   }
 
-  initPersistData() {
-    autorun(() => {
-      const data = JSON.stringify(this.snapshot); // Use any logic you want (e.g. filter by type)
-      localStorage.setItem('data', data);
-    });
+  // Call this to save the data
+  persistData() {
+    const data = JSON.stringify(this.snapshot); // Use any logic you want (e.g. filter by type)
+    localStorage.setItem('data', data);
   }
 }
 ```
-
-The code will use MobX `autorun` to monitor the collection and persist the data only when something relevant changes (e.g. it will ignore changes to models you're not persisting).

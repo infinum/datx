@@ -1,7 +1,12 @@
 import { query, setUrl, paramArrayType, ParamArrayType, encodeQueryString } from '../src';
 import { MockBaseRequest } from './mock/MockBaseRequest';
+import { clearAllCache } from '../src/interceptors/cache';
 
 describe('query params', () => {
+  beforeEach(() => {
+    clearAllCache();
+  });
+
   it('should work for a basic params case', async () => {
     const request = new MockBaseRequest('foobar').pipe(setUrl('/test'), query('test', '123'));
 

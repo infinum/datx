@@ -3,7 +3,7 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "A mobx data store",
+    "tagline": "An opinionated data store",
     "docs": {
       "api-reference/attribute": {
         "title": "Attribute"
@@ -64,9 +64,6 @@
       },
       "getting-started/using-the-collection": {
         "title": "Using the collection"
-      },
-      "jsonapi-angular/base-fetch": {
-        "title": "Angular JSON:API baseFetch"
       },
       "jsonapi-angular/mixin": {
         "title": "Angular JSON:API mixin"
@@ -331,9 +328,6 @@
       },
       "version-2.0.0/getting-started/version-2.0.0-using-the-collection": {
         "title": "Using the collection"
-      },
-      "version-2.0.0/jsonapi-angular/version-2.0.0-base-fetch": {
-        "title": "baseFetch"
       },
       "version-2.0.0/jsonapi-angular/version-2.0.0-example-repo": {
         "title": "Example repo"

@@ -1,6 +1,6 @@
 import { INetworkModel } from '../interfaces/INetworkModel';
 import { IRequestOptions } from '../interfaces/IRequestOptions';
-import { getMeta, setMeta, mobx } from '@datx/utils';
+import { getMeta, setMeta } from '@datx/utils';
 import { NETWORK_PERSISTED } from '../consts';
 import { INetworkModelConstructor } from '../interfaces/INetworkModelConstructor';
 import { BaseRequest } from '../BaseRequest';
@@ -12,27 +12,25 @@ import { PureModel, commitModel, getModelCollection, getModelId } from '@datx/co
 function handleResponse<T extends INetworkModel = INetworkModel>(
   record: T,
 ): (response: Response<T>) => T {
-  return mobx.action(
-    (response: Response<T>): T => {
-      if (response.error) {
-        throw response.error;
-      }
+  return (response: Response<T>): T => {
+    if (response.error) {
+      throw response.error;
+    }
 
-      if (response.status === 204) {
-        setMeta(record, NETWORK_PERSISTED, true);
-
-        return record;
-      }
-
+    if (response.status === 204) {
       setMeta(record, NETWORK_PERSISTED, true);
 
-      const data = (response.replaceData(record).data as T) || record;
+      return record;
+    }
 
-      commitModel(data);
+    setMeta(record, NETWORK_PERSISTED, true);
 
-      return data;
-    },
-  );
+    const data = (response.replaceData(record).data as T) || record;
+
+    commitModel(data);
+
+    return data;
+  };
 }
 
 export function saveModel<TModel extends INetworkModel>(
@@ -52,7 +50,7 @@ export function saveModel<TModel extends INetworkModel>(
           method(HttpMethod.Put),
           setUrl(
             `${ModelConstructor.network['_options'].url}/{id}`,
-            (ModelConstructor as unknown) as typeof PureModel,
+            ModelConstructor as unknown as typeof PureModel,
           ),
         )
       : ModelConstructor.network.pipe(method(HttpMethod.Post));
@@ -92,7 +90,7 @@ export function removeModel<TModel extends INetworkModel>(
           method(HttpMethod.Delete),
           setUrl(
             `${ModelConstructor.network['_options'].url}/{id}`,
-            (ModelConstructor as unknown) as typeof PureModel,
+            ModelConstructor as unknown as typeof PureModel,
           ),
         )
       : false;

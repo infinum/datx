@@ -352,7 +352,7 @@ describe('Network basics', () => {
 
         expect(foobar.data).toBeInstanceOf(Array);
         expect(foobar.data).toHaveLength(0);
-      } catch (e) {
+      } catch (e: any) {
         hasThrown = true;
         expect(e.message).toBe("[datx exception] Link foobar doesn't exist on the model");
       }

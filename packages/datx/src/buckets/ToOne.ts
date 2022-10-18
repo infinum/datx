@@ -1,5 +1,3 @@
-import { isArrayLike, mobx } from '@datx/utils';
-
 import { error } from '../helpers/format';
 import { getModelRef, isModelReference } from '../helpers/model/utils';
 import { updateSingleAction } from '../helpers/patch';
@@ -8,7 +6,6 @@ import { PureCollection } from '../PureCollection';
 import { PureModel } from '../PureModel';
 
 export class ToOne<T extends PureModel> {
-  @mobx.observable
   private __rawValue: T | IModelRef | null = null;
 
   constructor(
@@ -19,10 +16,9 @@ export class ToOne<T extends PureModel> {
     protected __key?: string,
     protected __skipMissing = true,
   ) {
-    mobx.makeObservable(this);
     if (data && !this.__collection) {
       throw error('The model needs to be in a collection to be referenceable');
-    } else if (isArrayLike(data)) {
+    } else if (Array.isArray(data)) {
       throw error("The reference can't be an array of values.");
     } else if (!isModelReference(data) && !(data instanceof PureModel) && data !== null) {
       throw error('The value needs to be a reference');
@@ -35,7 +31,6 @@ export class ToOne<T extends PureModel> {
     this.__collection = value;
   }
 
-  @mobx.computed
   public get value(): T | null {
     return this.__rawValue ? this.__getModel(this.__rawValue) : null;
   }
@@ -45,7 +40,7 @@ export class ToOne<T extends PureModel> {
       throw error('The model needs to be in a collection to be referenceable');
     } else if (this.__readonly) {
       throw error('This is a read-only bucket');
-    } else if (isArrayLike(data)) {
+    } else if (Array.isArray(data)) {
       throw error("The reference can't be an array of values.");
     } else if (!isModelReference(data) && !(data instanceof PureModel) && data !== null) {
       throw error('The value needs to be a reference');
@@ -56,7 +51,6 @@ export class ToOne<T extends PureModel> {
     }
   }
 
-  @mobx.computed
   public get refValue(): IModelRef | null {
     return this.__rawValue ? getModelRef(this.__rawValue) : null;
   }
@@ -65,7 +59,6 @@ export class ToOne<T extends PureModel> {
     return this.refValue;
   }
 
-  @mobx.computed
   public get snapshot(): IModelRef | null {
     return this.toJSON();
   }

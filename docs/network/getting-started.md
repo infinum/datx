@@ -5,10 +5,8 @@ title: Getting started with DatX Network
 
 # Getting started
 
-Note: `datx-network` has a peer dependency to `mobx@^4.2.0` or `mobx@^5.5.0`, so don't forget to install the latest MobX version:
-
 ```bash
-npm install --save datx-network mobx
+npm install --save datx-network
 ```
 
 ## Polyfilling

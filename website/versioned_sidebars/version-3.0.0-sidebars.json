@@ -1,0 +1,80 @@
+{
+  "version-3.0.0-docs": {
+    "Getting started": [
+      "version-3.0.0-getting-started/installation",
+      "version-3.0.0-getting-started/defining-models",
+      "version-3.0.0-getting-started/references",
+      "version-3.0.0-getting-started/configuring-the-collection",
+      "version-3.0.0-getting-started/using-the-collection",
+      "version-3.0.0-getting-started/persisting-data-locally"
+    ],
+    "Mixins": [
+      "version-3.0.0-mixins/what-are-mixis",
+      "version-3.0.0-mixins/with-actions",
+      "version-3.0.0-mixins/with-meta",
+      "version-3.0.0-mixins/with-patches",
+      "version-3.0.0-mixins/network-mixin",
+      "version-3.0.0-mixins/jsonapi-mixin",
+      "version-3.0.0-mixins/building-your-own-mixin"
+    ],
+    "API Reference": [
+      "version-3.0.0-api-reference/collection",
+      "version-3.0.0-api-reference/model",
+      "version-3.0.0-api-reference/view",
+      "version-3.0.0-api-reference/attribute",
+      "version-3.0.0-api-reference/bucket",
+      "version-3.0.0-api-reference/pure-model",
+      "version-3.0.0-api-reference/model-utils",
+      "version-3.0.0-api-reference/lib-utils",
+      "version-3.0.0-api-reference/typescript-interfaces"
+    ],
+    "Network": [
+      "version-3.0.0-network/getting-started",
+      "version-3.0.0-network/base-request",
+      "version-3.0.0-network/caching",
+      "version-3.0.0-network/fetching",
+      "version-3.0.0-network/interceptors",
+      "version-3.0.0-network/operators",
+      "version-3.0.0-network/response",
+      "version-3.0.0-network/typescript-interfaces"
+    ],
+    "JSON API": [
+      "version-3.0.0-jsonapi/jsonapi-getting-started",
+      "version-3.0.0-jsonapi/jsonapi-basic-configuration",
+      "version-3.0.0-jsonapi/jsonapi-network-configuration",
+      "version-3.0.0-jsonapi/jsonapi-network-usage",
+      "version-3.0.0-jsonapi/jsonapi-spec-compliance",
+      "version-3.0.0-jsonapi/jsonapi-model",
+      "version-3.0.0-jsonapi/jsonapi-collection",
+      "version-3.0.0-jsonapi/jsonapi-view",
+      "version-3.0.0-jsonapi/jsonapi-response",
+      "version-3.0.0-jsonapi/jsonapi-config",
+      "version-3.0.0-jsonapi/jsonapi-utils",
+      "version-3.0.0-jsonapi/jsonapi-typescript-interfaces"
+    ],
+    "JSON API Angular": [
+      "version-3.0.0-jsonapi-angular/mixin",
+      "version-3.0.0-jsonapi-angular/base-fetch"
+    ],
+    "Migration guide": [
+      "version-3.0.0-migration-guide/breaking-changes",
+      "version-3.0.0-migration-guide/deprecations",
+      "version-3.0.0-migration-guide/whats-new",
+      "version-3.0.0-migration-guide/from-v1"
+    ],
+    "Troubleshooting": [
+      "version-3.0.0-troubleshooting/known-issues"
+    ]
+  },
+  "version-3.0.0-examples": {
+    "Setup": [
+      "version-3.0.0-examples/basic-setup",
+      "version-3.0.0-examples/react-setup",
+      "version-3.0.0-examples/nextjs-setup",
+      "version-3.0.0-examples/angular-setup"
+    ],
+    "Collection": [
+      "version-3.0.0-examples/adding-models"
+    ]
+  }
+}

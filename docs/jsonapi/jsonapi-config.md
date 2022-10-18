@@ -123,3 +123,11 @@ maxCacheAge: number; // seconds
 ```
 
 Options for caching of requests. This can be overridden on a collection or request level. The default caching strategy is `NetworkOnly` (no caching).
+
+## usePatchWhenPossible
+
+```typescript
+usePatchWhenPossible: boolean;
+```
+
+Defaults to `true`. If set to `false`, the library will always use `PUT` for updates. This is useful if your API doesn't support `PATCH` requests. (available since 2.4.5)
