@@ -326,7 +326,7 @@ export function updateModel<T extends PureModel>(model: T, data: Record<string, 
 
   Object.keys(rawData).forEach((key) => {
     if (key !== META_FIELD && key !== modelId && key !== modelType) {
-      assignModel(model, key, rawData[key]);
+      assignModel(model, key, data[key]);
     } else if (key === META_FIELD) {
       const metaKeys = Object.keys(rawData[key] || {});
 
