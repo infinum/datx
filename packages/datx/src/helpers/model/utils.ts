@@ -316,6 +316,32 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
   }
 }
 
+export function updateModel<T extends PureModel>(model: T, data: Record<string, any>): T {
+  startAction(model);
+  const rawData = getRawData(data);
+  const modelId = getMeta(model.constructor, MetaClassField.IdField, DEFAULT_ID_FIELD);
+  const modelType = getMeta(model.constructor, MetaClassField.TypeField, DEFAULT_TYPE_FIELD);
+
+  mergeMeta(model, omitKeys(rawData[META_FIELD] || {}, READ_ONLY_META));
+
+  Object.keys(rawData).forEach((key) => {
+    if (key !== META_FIELD && key !== modelId && key !== modelType) {
+      assignModel(model, key, rawData[key]);
+    } else if (key === META_FIELD) {
+      const metaKeys = Object.keys(rawData[key] || {});
+
+      metaKeys.forEach((metaKey) => {
+        if (!READ_ONLY_META.includes(metaKey)) {
+          setMeta(model, metaKey, rawData[key][metaKey]);
+        }
+      });
+    }
+  });
+  endAction(model);
+
+  return model;
+}
+
 export function updateModelCollection(model: PureModel, collection?: PureCollection): void {
   setMeta(model, MetaModelField.Collection, collection);
 
