@@ -27,5 +27,8 @@
       }
     }
   },
-  "defaultProject": "datx-jsonapi-angular"
+  "defaultProject": "datx-jsonapi-angular",
+  "cli": {
+    "analytics": false
+  }
 }

@@ -18,9 +18,9 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 ## Project setup
 
-1. Install lerna globally `yarn global add lerna`
-2. Run `lerna bootstrap`
-3. If you're getting errors for other datx package imports, also run `lerna run build` and `lerna link`
+1. Install lerna globally `npm install --location=global lerna`
+2. Run `yarn` in the root folder to install all dependencies
+3. Run `lerna run build` and `lerna link`
 
 ## Updating local dependencies
 

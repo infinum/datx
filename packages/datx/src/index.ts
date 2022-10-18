@@ -39,6 +39,8 @@ export {
   modelToDirtyJSON,
 } from './helpers/model/utils';
 
+export { upsertModel } from './helpers/collection';
+
 export { isCollection, isModel, isView } from './helpers/mixin';
 
 export { IModelRef } from './interfaces/IModelRef';

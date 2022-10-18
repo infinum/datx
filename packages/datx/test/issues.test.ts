@@ -1,4 +1,4 @@
-import { Collection, PureModel, Attribute, modelToJSON } from '../src';
+import { Collection, PureModel, Attribute, modelToJSON, updateModel, assignModel } from '../src';
 
 describe('issues', () => {
   it('should remove references on collection remove', () => {
@@ -98,5 +98,156 @@ describe('issues', () => {
     const snapshot = modelToJSON(foo);
 
     expect(snapshot.value).toBe('3');
+  });
+
+  it('should keep the same model reference after adding it to the collection', () => {
+    class Foo extends PureModel {
+      public static type = 'bar';
+    }
+
+    class Store extends Collection {
+      public static types = [Foo];
+    }
+
+    const store = new Store();
+
+    const foo = new Foo();
+    const foo2 = store.add(foo);
+    expect(foo).toBe(foo2);
+  });
+
+  it('should work when adding initialized models to collection', () => {
+    class Person extends PureModel {
+      public static type = 'person';
+
+      @Attribute({ toOne: 'dog' })
+      public dog!: Dog;
+    }
+
+    class Dog extends PureModel {
+      public static type = 'dog';
+
+      @Attribute()
+      public name!: string;
+    }
+
+    class Store extends Collection {
+      public static types = [Person, Dog];
+    }
+
+    const store = new Store();
+
+    const person = new Person({});
+    const dog = new Dog({ name: 'Floki' });
+
+    store.add(person);
+    store.add(dog);
+
+    person.dog = dog;
+
+    expect(person.dog?.name).toBe('Floki');
+  });
+
+  it('should work when adding un-initialized models to collection', () => {
+    class Person extends PureModel {
+      public static type = 'person';
+
+      @Attribute({ toOne: 'dog' })
+      public dog!: Dog;
+    }
+
+    class Dog extends PureModel {
+      public static type = 'dog';
+
+      @Attribute()
+      public name!: string;
+
+      @Attribute({ toOne: 'person' })
+      public person!: Dog;
+    }
+
+    class Store extends Collection {
+      public static types = [Person, Dog];
+    }
+
+    const store = new Store();
+
+    const person = store.add({}, Person);
+    const dog = store.add({ name: 'Floki' }, Dog);
+
+    person.dog = dog;
+
+    expect(person.dog?.name).toBe('Floki');
+  });
+
+  it('should work when setting initialized models to collection', () => {
+    class Person extends PureModel {
+      public static type = 'person';
+
+      @Attribute({ toOne: 'dog' })
+      public dog!: Dog;
+    }
+
+    class Dog extends PureModel {
+      public static type = 'dog';
+
+      @Attribute()
+      public name!: string;
+    }
+
+    class Store extends Collection {
+      public static types = [Person, Dog];
+    }
+
+    const store = new Store();
+
+    const person1 = new Person({});
+    const person2 = new Person({});
+    const dog = new Dog({ name: 'Floki' });
+
+    store.add(person1);
+    store.add(person2);
+    store.add(dog);
+
+    updateModel(person1, { dog });
+    assignModel(person2, 'dog', dog);
+
+    expect(person1.dog?.name).toBe('Floki');
+    expect(person1.dog).toBe(dog);
+
+    expect(person2.dog?.name).toBe('Floki');
+    expect(person2.dog).toBe(dog);
+  });
+
+  it('should work when setting un-initialized models to collection', () => {
+    class Person extends PureModel {
+      public static type = 'person';
+
+      @Attribute({ toOne: 'dog' })
+      public dog!: Dog;
+    }
+
+    class Dog extends PureModel {
+      public static type = 'dog';
+
+      @Attribute()
+      public name!: string;
+
+      @Attribute({ toOne: 'person' })
+      public person!: Dog;
+    }
+
+    class Store extends Collection {
+      public static types = [Person, Dog];
+    }
+
+    const store = new Store();
+
+    const person = store.add({}, Person);
+
+    updateModel(person, { dog: { name: 'Floki' } });
+
+    expect(person.dog?.name).toBe('Floki');
+    expect(person.dog).toBeInstanceOf(Dog);
   });
 });

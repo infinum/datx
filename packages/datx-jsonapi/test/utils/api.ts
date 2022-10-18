@@ -2,9 +2,10 @@ import * as fs from 'fs';
 import { isFunction } from 'lodash';
 import * as path from 'path';
 import * as nodeUrl from 'url';
-import { v1 } from 'uuid';
 
 import { config } from '../../src/NetworkUtils';
+
+const v1 = () => Math.random().toString();
 
 function getMockStream(name: string): string {
   const testPath = path.join(__dirname, `../mock/${name}.json`);

@@ -28,7 +28,7 @@ describe('error handling', () => {
 
     try {
       await store.fetchAll('event');
-    } catch (response) {
+    } catch (response: any) {
       hasFailed = true;
       const err = response.error;
 
@@ -51,7 +51,7 @@ describe('error handling', () => {
 
     try {
       await store.fetchAll('event');
-    } catch (response) {
+    } catch (response: any) {
       hasFailed = true;
       expect(Object.keys(response.error)).toEqual(['name', 'message', 'type']);
     }
@@ -70,7 +70,7 @@ describe('error handling', () => {
 
     try {
       await store.fetchAll('event');
-    } catch (response) {
+    } catch (response: any) {
       hasFailed = true;
       expect(response.error[0]).toBeInstanceOf(Object);
       expect(response.data).toBeNull();
@@ -97,7 +97,7 @@ describe('error handling', () => {
 
     try {
       await record.save();
-    } catch (response) {
+    } catch (response: any) {
       hasFailed = true;
       expect(response.error[0]).toBeInstanceOf(Object);
     }
@@ -128,7 +128,7 @@ describe('error handling', () => {
 
       try {
         await event.destroy();
-      } catch (responseWithError) {
+      } catch (responseWithError: any) {
         hasFailed = true;
         expect(responseWithError.error[0]).toBeInstanceOf(Object);
       }

@@ -267,4 +267,49 @@ describe('Issues', () => {
     expect(jsonapiData.relationships?.bar).toEqual({ data: { id: bar1.meta.id, type: 'bar' } });
     expect(jsonapiData.relationships?.bars).toBeUndefined();
   });
+
+  it('should work with property parsers/serializers when updating existing model', () => {
+    class Foo extends jsonapi(Model) {
+      public static type = 'foo';
+
+      @Attribute({
+        parse: (value: string) => parseInt(value, 10),
+        serialize: (value: number) => `TEST:${value}`,
+      })
+      public value!: number;
+
+      @Attribute({ isIdentifier: true })
+      public id!: number;
+    }
+
+    class Store extends jsonapi(Collection) {
+      public static types = [Foo];
+    }
+
+    const store = new Store();
+    let foo = store.sync({
+      data: {
+        id: '1',
+        type: 'foo',
+        attributes: { value: '123' },
+      },
+    }) as Foo;
+
+    expect(foo.value).toBe(123);
+
+    let snapshot = foo.toJSON();
+    expect(snapshot.value).toBe('TEST:123');
+
+    foo = store.sync({
+      data: {
+        id: '1',
+        type: 'foo',
+        attributes: { value: '321' },
+      },
+    }) as Foo;
+    expect(foo.value).toBe(321);
+
+    snapshot = foo.toJSON();
+    expect(snapshot.value).toBe('TEST:321');
+  });
 });

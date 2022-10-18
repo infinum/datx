@@ -51,6 +51,7 @@ export interface IConfigType {
   onError(IResponseObject): IResponseObject;
   transformRequest(options: ICollectionFetchOpts): ICollectionFetchOpts;
   transformResponse(response: IRawResponse): IRawResponse;
+  usePatchWhenPossible: boolean;
 }
 
 export const config: IConfigType = {
@@ -161,6 +162,8 @@ export const config: IConfigType = {
   transformResponse(response: IRawResponse): IRawResponse {
     return response;
   },
+
+  usePatchWhenPossible: true,
 };
 
 function getLocalNetworkError<T extends IJsonapiModel>(
@@ -420,6 +423,34 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
     collection,
     data,
     method: 'PATCH',
+    options,
+    url,
+    views,
+  });
+}
+
+/**
+ * API call used to update data on the server with put
+ *
+ * @export
+ * @param {IJsonapiCollection} collection Related collection
+ * @param {string} url API call URL
+ * @param {object} [data] Request body
+ * @param {IRequestOptions} [options] Server options
+ * @param {Array<View>} [views] Request view
+ * @returns {Promise<Response>} Resolves with a Response object
+ */
+export function put<T extends IJsonapiModel = IJsonapiModel>(
+  url: string,
+  data?: object,
+  collection?: IJsonapiCollection,
+  options?: IRequestOptions,
+  views?: Array<View>,
+): Promise<LibResponse<T>> {
+  return collectionFetch<T>({
+    collection,
+    data,
+    method: 'PUT',
     options,
     url,
     views,

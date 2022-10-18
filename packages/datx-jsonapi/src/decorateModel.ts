@@ -66,7 +66,7 @@ export function decorateModel(BaseClass: typeof PureModel): typeof PureModel {
     }
 
     public save(options?: IRequestOptions): Promise<IJsonapiModel> {
-      return saveModel((this as unknown) as IJsonapiModel, options);
+      return saveModel(this as unknown as IJsonapiModel, options);
     }
 
     public destroy(options?: IRequestOptions): Promise<void> {

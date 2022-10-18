@@ -55,7 +55,6 @@
     ],
     "JSON API Angular": [
       "version-2.0.0-jsonapi-angular/mixin",
-      "version-2.0.0-jsonapi-angular/base-fetch",
       "version-2.0.0-jsonapi-angular/example-repo"
     ],
     "Migration guide": [
@@ -64,7 +63,9 @@
       "version-2.0.0-migration-guide/whats-new",
       "version-2.0.0-migration-guide/from-v1"
     ],
-    "Troubleshooting": ["version-2.0.0-troubleshooting/known-issues"]
+    "Troubleshooting": [
+      "version-2.0.0-troubleshooting/known-issues"
+    ]
   },
   "version-2.0.0-examples": {
     "Setup": [
@@ -73,6 +74,8 @@
       "version-2.0.0-examples/nextjs-setup",
       "version-2.0.0-examples/angular-setup"
     ],
-    "Collection": ["version-2.0.0-examples/adding-models"]
+    "Collection": [
+      "version-2.0.0-examples/adding-models"
+    ]
   }
 }
