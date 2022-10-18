@@ -113,4 +113,11 @@ The [MIT License](LICENSE)
 @datx/network is maintained and sponsored by
 [Infinum](https://www.infinum.com).
 
-<img src="https://infinum.com/infinum.png" width="264">
+<p align="center">
+  <a href='https://infinum.com'>
+    <picture>
+        <source srcset="https://assets.infinum.com/brand/logo/static/white.svg" media="(prefers-color-scheme: dark)">
+        <img src="https://assets.infinum.com/brand/logo/static/default.svg">
+    </picture>
+  </a>
+</p>
