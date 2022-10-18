@@ -342,5 +342,21 @@ describe('params', () => {
 
       expect(urlObj1.url).toEqual(urlObj2.url);
     });
+
+    it('should hit the same cache key with different URL search params order', async () => {
+      config.sortParams = true;
+
+      setRequest({
+        name: 'events-1',
+        query:
+          'a=1&b=2&c=3&fields[first]=1&fields[second]=2&filter[first]=1&filter[second]=2&include=first,second&sort=name',
+        url: 'event',
+      });
+
+      const store = new TestStore();
+
+      await store.request('event', 'GET', undefined, options1);
+      await store.request('event', 'GET', undefined, options2);
+    });
   });
 });
