@@ -150,7 +150,7 @@ export function assignComputed<T = any>(
     },
   );
 
-  if (!('__proto__' in obj)) {
+  if (key !== '__proto__') {
     Object.defineProperty(obj, key, {
       get() {
         return computedObj.getter;
