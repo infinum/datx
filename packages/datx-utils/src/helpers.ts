@@ -52,7 +52,7 @@ function defaultSetter(): void {
 }
 
 export function getMetaObj(obj: Record<string, any>): Record<string, any> {
-  if (!Object.prototype.hasOwnProperty.call(obj, DATX_META) && !('__proto__' in obj)) {
+  if (!Object.prototype.hasOwnProperty.call(obj, DATX_META)) {
     Object.defineProperty(obj, DATX_META, {
       configurable: false,
       enumerable: false,
