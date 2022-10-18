@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Configuring the collection · datx</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="In order to work properly, the collection needs to know which models it supports. This is done by defining a static `types` array with a list of model classes:"/><meta name="docsearch:version" content="2.0.0"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Configuring the collection · datx"/><meta property="og:type" content="website"/><meta property="og:url" content="https://datx.dev/"/><meta property="og:description" content="In order to work properly, the collection needs to know which models it supports. This is done by defining a static `types` array with a list of model classes:"/><meta property="og:image" content="https://datx.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://datx.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><link rel="stylesheet" href="/css/code-block-buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/code-block-buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100}
+          )
+        });
+        </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/datx-logo.svg" alt="datx"/><h2 class="headerTitleWithLogo">datx</h2></a><a href="/versions"><h3>2.0.0</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/2.0.0/getting-started/installation" target="_self">Docs</a></li><li class=""><a href="/docs/2.0.0/examples/basic-setup" target="_self">Examples</a></li><li class=""><a href="https://github.com/infinum/datx" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Getting started</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Getting started<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/installation">Installation</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/defining-models">Defining models</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/references">References</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/2.0.0/getting-started/configuring-the-collection">Configuring the collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/using-the-collection">Using the collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/persisting-data-locally">Persisting data locally</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Mixins<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-actions">withActions</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-meta">withMeta</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-patches">withPatches</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/network-mixin">Network Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/jsonapi-mixin">JSONAPI Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/jsonapi-angular-mixin">JSONAPI Angular Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/building-your-own-mixin">Build your own mixin</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">API Reference<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/collection">Collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/model">Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/view">View</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/attribute">Attribute</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/bucket">Bucket</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/pure-model">Pure Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/model-utils">Model utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/lib-utils">Lib utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/typescript-interfaces">Typescript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Network<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/getting-started">Getting started with DatX Network</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/base-request">BaseRequest</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/caching">Caching</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/fetching">Fetching</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/interceptors">Interceptors</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/operators">Operators</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/response">Response</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/typescript-interfaces">TypeScript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-getting-started">Getting started with JSON API</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-basic-configuration">Basic configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-network-configuration">Network configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-network-usage">Network usage</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-spec-compliance">Spec compliance</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-model">Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-collection">Collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-view">View</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-response">Response</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-config">Config</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-utils">Utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-typescript-interfaces">Typescript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API Angular<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-angular/mixin">Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-angular/example-repo">Example repo</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Migration guide<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/breaking-changes">Breaking changes since v1</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/deprecations">Deprecations in v2</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/whats-new">What&#x27;s new</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/from-v1">Migration from v1</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Troubleshooting<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/troubleshooting/known-issues">Known issues</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Configuring the collection</h1></header><article><div><span><p>In order to work properly, the collection needs to know which models it supports. This is done by defining a static <code>types</code> array with a list of model classes:</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { Collection } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
+<span class="hljs-keyword">import</span> { Person, Pet } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyCollection <span class="hljs-keyword">extends</span> Collection {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> types = [Person, Pet];
+}
+</code></pre>
+<p>Alternativelly, with JavaScript without class properties:</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { Collection } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
+<span class="hljs-keyword">import</span> { Person, Pet } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models'</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyCollection</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Collection</span> </span>{}
+MyCollection.types = [Person, Pet];
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> MyCollection;
+</code></pre>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 10/18/2022 by Darko Kukovec</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/2.0.0/getting-started/references"><span class="arrow-prev">← </span><span>References</span></a><a class="docs-next button" href="/docs/2.0.0/getting-started/using-the-collection"><span>Using the collection</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2022 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'f03607e57957ae747b2342443460477a',
+                indexName: 'datx',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
