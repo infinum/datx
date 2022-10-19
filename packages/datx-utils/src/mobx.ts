@@ -20,7 +20,7 @@ const noopMobX = {
       if (key !== '__proto__') {
         obj[key] = value;
       }
-    } else if (!('__proto__' in obj)) {
+    } else if (!('__proto__' in key)) {
       Object.assign(obj, key);
     }
   },
