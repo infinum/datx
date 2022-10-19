@@ -133,7 +133,7 @@ export function buildUrl(
 
       urlSearchParams.sort();
 
-      baseUrl = `${url}?${urlSearchParams.toString()}`;
+      baseUrl = `${url}?${decodeURIComponent(urlSearchParams.toString())}`;
     }
   }
 
