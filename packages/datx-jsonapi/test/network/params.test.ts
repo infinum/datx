@@ -290,6 +290,21 @@ describe('params', () => {
 
       await store.request('event', 'GET', undefined, { queryParams: { filter: { name: 'ć=' } } });
     });
+
+    it('should encode params when encodeQueryString and sortParams are enabled', async () => {
+      config.encodeQueryString = true;
+      config.sortParams = true;
+
+      setRequest({
+        name: 'events-1',
+        query: false,
+        url: 'event?filter%5Bname%5D=%C4%87%3D',
+      });
+
+      const store = new TestStore();
+
+      await store.request('event', 'GET', undefined, { queryParams: { filter: { name: 'ć=' } } });
+    });
   });
 
   describe('URL search params stable sort', () => {
