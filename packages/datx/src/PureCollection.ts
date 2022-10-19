@@ -304,6 +304,10 @@ export class PureCollection {
     const stringType = type.toString();
     const stringId = id.toString();
 
+    if (stringType === '__proto__') {
+      return null;
+    }
+
     mobx.runInAction(() => {
       if (!(type in this.__dataMap)) {
         mobx.set(
