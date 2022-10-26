@@ -3,6 +3,7 @@
   "compilerOptions": {
     "inlineSources": false,
     "sourceMap": false,
-    "outDir": "./dist"
+    "declaration": false,
+    "outDir": "."
   }
 }

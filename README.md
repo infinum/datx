@@ -17,17 +17,18 @@ import { computed } from 'mobx';
 class Person extends Model {
   public static type = 'person'; // Unique name of the model class
 
-  @Attribute() 
+  @Attribute()
   public name!: string; // A normal property without a default value
-  
+
   @Attribute()
   public surname!: string;
-  
+
   @Attribute({ toOne: Person })
   public spouse?: Person; // A reference to a Person model
 
   @computed
-  public get fullName() { // Standard MobX computed props
+  public get fullName() {
+    // Standard MobX computed props
     return `${this.name} ${this.surname}`;
   }
 }
@@ -115,4 +116,11 @@ The [MIT License](LICENSE)
 datx is maintained and sponsored by
 [Infinum](https://www.infinum.com).
 
-<img src="https://infinum.com/infinum.png" width="264">
+<p align="center">
+  <a href='https://infinum.com'>
+    <picture>
+        <source srcset="https://assets.infinum.com/brand/logo/static/white.svg" media="(prefers-color-scheme: dark)">
+        <img src="https://assets.infinum.com/brand/logo/static/default.svg">
+    </picture>
+  </a>
+</p>

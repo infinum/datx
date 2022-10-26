@@ -52,6 +52,7 @@ export interface IConfigType {
   onError(IResponseObject): IResponseObject;
   transformRequest(options: ICollectionFetchOpts): ICollectionFetchOpts;
   transformResponse(response: IRawResponse): IRawResponse;
+  usePatchWhenPossible: boolean;
 }
 
 export const config: IConfigType = {
@@ -162,6 +163,8 @@ export const config: IConfigType = {
   transformResponse(response: IRawResponse): IRawResponse {
     return response;
   },
+
+  usePatchWhenPossible: true,
 };
 
 function getLocalNetworkError<T extends IJsonapiModel>(
@@ -169,7 +172,8 @@ function getLocalNetworkError<T extends IJsonapiModel>(
   reqOptions: ICollectionFetchOpts,
   collection?: IJsonapiCollection,
 ): LibResponse<T> {
-  const ResponseConstructor: typeof LibResponse = reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
+  const ResponseConstructor: typeof LibResponse =
+    reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
   return new ResponseConstructor<T>(
     {
       error: new Error(message),
@@ -190,7 +194,13 @@ function makeNetworkCall<T extends IJsonapiModel, IData extends IResponseData = 
   const ResponseConstructor: typeof LibResponse = fetchOptions?.['Response'] || LibResponse;
 
   return config
-    .baseFetch(params.method, params.url, params.data, params?.options?.networkConfig?.headers, fetchOptions)
+    .baseFetch(
+      params.method,
+      params.url,
+      params.data,
+      params?.options?.networkConfig?.headers,
+      fetchOptions,
+    )
     .then((response: IRawResponse) => {
       const collectionResponse = Object.assign({}, response, { collection: params.collection });
       const payload = config.transformResponse(collectionResponse);
@@ -230,7 +240,7 @@ function collectionFetch<TModel extends IJsonapiModel, IData extends IResponseDa
   const params = config.transformRequest(reqOptions);
   // const { url, options, data, method = 'GET', collection, views } = params;
 
-  const staticCollection = (params?.collection?.constructor as unknown) as {
+  const staticCollection = params?.collection?.constructor as unknown as {
     maxCacheAge?: number;
     cache: CachingStrategy;
   };
@@ -414,6 +424,34 @@ export function update<T extends IJsonapiModel = IJsonapiModel>(
 }
 
 /**
+ * API call used to update data on the server with put
+ *
+ * @export
+ * @param {IJsonapiCollection} collection Related collection
+ * @param {string} url API call URL
+ * @param {object} [data] Request body
+ * @param {IRequestOptions} [options] Server options
+ * @param {Array<View>} [views] Request view
+ * @returns {Promise<Response>} Resolves with a Response object
+ */
+export function put<T extends IJsonapiModel = IJsonapiModel>(
+  url: string,
+  data?: object,
+  collection?: IJsonapiCollection,
+  options?: IRequestOptions,
+  views?: Array<View>,
+): Promise<LibResponse<T>> {
+  return collectionFetch<T>({
+    collection,
+    data,
+    method: 'PUT',
+    options,
+    url,
+    views,
+  });
+}
+
+/**
  * API call used to remove data from the server
  *
  * @export
@@ -471,34 +509,32 @@ export function handleResponse<T extends IJsonapiModel = IJsonapiModel>(
   record: T,
   prop?: string,
 ): (response: LibResponse<T>) => T {
-  return mobx.action(
-    (response: LibResponse<T>): T => {
-      if (response.error) {
-        throw response.error;
-      }
+  return mobx.action((response: LibResponse<T>): T => {
+    if (response.error) {
+      throw response.error;
+    }
 
-      if (response.status === 204) {
-        setMeta(record, MODEL_PERSISTED_FIELD, true);
-
-        return record;
-      }
-
-      if (response.status === 202) {
-        const responseRecord = response.data as T;
-
-        setMeta(responseRecord, MODEL_PROP_FIELD, prop);
-        setMeta(responseRecord, MODEL_QUEUE_FIELD, true);
-        setMeta(responseRecord, MODEL_RELATED_FIELD, record);
-
-        return responseRecord;
-      }
+    if (response.status === 204) {
       setMeta(record, MODEL_PERSISTED_FIELD, true);
 
-      const data = response.replaceData(record).data as T;
+      return record;
+    }
 
-      commitModel(data);
+    if (response.status === 202) {
+      const responseRecord = response.data as T;
 
-      return data;
-    },
-  );
+      setMeta(responseRecord, MODEL_PROP_FIELD, prop);
+      setMeta(responseRecord, MODEL_QUEUE_FIELD, true);
+      setMeta(responseRecord, MODEL_RELATED_FIELD, record);
+
+      return responseRecord;
+    }
+    setMeta(record, MODEL_PERSISTED_FIELD, true);
+
+    const data = response.replaceData(record).data as T;
+
+    commitModel(data);
+
+    return data;
+  });
 }
