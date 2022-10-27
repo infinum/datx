@@ -132,19 +132,6 @@ export function buildUrl(
   let baseUrl: string = appendParams(prefixUrl(url, containsBase), params);
 
   if (config.sortParams) {
-    // const [url, searchParams] = baseUrl.split('?');
-
-    // if (searchParams) {
-    //   const urlSearchParams = new URLSearchParams(searchParams);
-
-    //   urlSearchParams.sort();
-
-    //   const urlSearchParamsString = config.encodeQueryString
-    //     ? urlSearchParams.toString()
-    //     : decodeURIComponent(urlSearchParams.toString());
-
-    //   baseUrl = sortUrlParams`${url}?${urlSearchParamsString}`;
-    // }
     baseUrl = sortUrlParams(baseUrl);
   }
 
