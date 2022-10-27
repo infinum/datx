@@ -9,7 +9,6 @@
     "typescript": "4.7.4"
   },
   "scripts": {
-    "precommit": "npm run lint & lerna run test",
     "lint": "eslint packages/**/*.ts",
     "postinstall": "npm run prepare",
     "prepare": "husky install"
