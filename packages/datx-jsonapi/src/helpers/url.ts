@@ -118,11 +118,11 @@ export function buildUrl(
   const headers: Record<string, string> =
     (options && options.networkConfig && options.networkConfig.headers) || {};
   let params: Array<string> = ([] as Array<string>).concat(
-    prepareFilters((options && options.queryParams && options.queryParams.filter) || {}),
-    prepareSort(options && options.queryParams && options.queryParams.sort),
-    prepareIncludes(options && options.queryParams && options.queryParams.include),
-    prepareFields((options && options.queryParams && options.queryParams.fields) || {}),
-    prepareRawParams((options && options.queryParams && options.queryParams.custom) || []),
+    prepareFilters(options?.queryParams?.filter || {}),
+    prepareSort(options?.queryParams?.sort),
+    prepareIncludes(options?.queryParams?.include),
+    prepareFields(options?.queryParams?.fields || {}),
+    prepareRawParams(options?.queryParams?.custom || []),
   );
 
   if (config.encodeQueryString) {
