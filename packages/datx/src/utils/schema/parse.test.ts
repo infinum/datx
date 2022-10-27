@@ -4,7 +4,7 @@ import { parseSchema } from './parse';
 
 describe('parse', () => {
   it('should do basic parsing', () => {
-    const user = parseSchema(User, {
+    const user = User.parse({
       username: 'FooBar',
       age: 27,
     });

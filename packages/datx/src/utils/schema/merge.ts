@@ -3,7 +3,10 @@ import { TResourceProp } from '../../interfaces/TResourceProp';
 import { Schema } from '../../Schema';
 import { mapObjectValues } from '../helpers';
 
-function mergeProp<TSchema extends Schema>(target: IResource<TSchema>, source: IResource<TSchema>) {
+function mergeProp<TSchema extends Schema>(
+  target: Partial<IResource<TSchema>>,
+  source: Partial<IResource<TSchema>>,
+) {
   return (
     key: keyof TSchema['definition'],
     def: TSchema['definition'][typeof key],
@@ -23,11 +26,8 @@ function mergeProp<TSchema extends Schema>(target: IResource<TSchema>, source: I
 
 export function mergeSchema<TSchema extends Schema>(
   schema: TSchema,
-  target: IResource<TSchema>,
-  source: IResource<TSchema>,
+  target: Partial<IResource<TSchema>>,
+  source: Partial<IResource<TSchema>>,
 ): IResource<TSchema> {
-  return Object.assign(
-    target,
-    mapObjectValues<TSchema['definition']>(schema.definition, mergeProp(target, source)),
-  );
+  return mapObjectValues<TSchema['definition']>(schema.definition, mergeProp(target, source));
 }

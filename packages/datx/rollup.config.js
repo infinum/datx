@@ -1,108 +1,87 @@
-import typescript from '@rollup/plugin-typescript';
-import { terser } from 'rollup-plugin-terser';
-import commonjs from '@rollup/plugin-commonjs';
-import resolve from '@rollup/plugin-node-resolve';
-import excludeDependenciesFromBundle from 'rollup-plugin-exclude-dependencies-from-bundle';
+const typescript = require('@rollup/plugin-typescript');
+const { terser } = require('rollup-plugin-terser');
+// const commonjs = require('@rollup/plugin-commonjs');
+const resolve = require('@rollup/plugin-node-resolve');
+// const excludeDependenciesFromBundle = require('rollup-plugin-exclude-dependencies-from-bundle');
 
-import pkg from './package.json';
+const pkg = require('./package.json');
+
+const resolvePlugin = resolve();
+
+const typescriptPlugin = typescript({
+  typescript: require('typescript'),
+  tslib: require('tslib'),
+  tsconfig: './tsconfig.build.json',
+  sourceMap: true,
+});
+
+const terserPlugin = terser({
+  toplevel: true,
+  compress: { passes: 3 },
+  output: { comments: false },
+});
 
 export default [
   {
     input: './src/index.ts',
     output: [{ file: pkg.main, format: 'cjs', sourcemap: true }],
     plugins: [
-      resolve(),
-      commonjs(),
-      excludeDependenciesFromBundle(),
-      typescript({
-        typescript: require('typescript'),
-        tslib: require('tslib'),
-        tsconfig: './tsconfig.build.json',
-        sourceMap: true,
-      }),
-      terser({
-        toplevel: true,
-        compress: {
-          passes: 3,
-        },
-        output: {
-          comments: false,
-        },
-      }),
+      resolvePlugin,
+      // commonjs(),
+      // excludeDependenciesFromBundle(),
+      typescriptPlugin,
+      terserPlugin,
     ],
-    onwarn(warning, rollupWarn) {
-      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
-        rollupWarn(warning);
-      }
-    },
+    // onwarn(warning, rollupWarn) {
+    //   if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+    //     rollupWarn(warning);
+    //   }
+    // },
   },
   {
     input: './src/index.ts',
     output: [{ file: pkg.module, format: 'es', sourcemap: true }],
     plugins: [
-      resolve(),
-      commonjs(),
-      excludeDependenciesFromBundle(),
-      typescript({
-        typescript: require('typescript'),
-        tslib: require('tslib'),
-        tsconfig: './tsconfig.build.json',
-        sourceMap: true,
-      }),
+      resolvePlugin,
+      // commonjs(),
+      // excludeDependenciesFromBundle(),
+      typescriptPlugin,
     ],
-    onwarn(warning, rollupWarn) {
-      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
-        rollupWarn(warning);
-      }
-    },
+    // onwarn(warning, rollupWarn) {
+    //   if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+    //     rollupWarn(warning);
+    //   }
+    // },
   },
   {
     input: './src/min.ts',
     output: [{ file: 'min/cjs.js', format: 'cjs', sourcemap: true }],
     plugins: [
-      resolve(),
-      commonjs(),
-      excludeDependenciesFromBundle(),
-      typescript({
-        typescript: require('typescript'),
-        tslib: require('tslib'),
-        tsconfig: './tsconfig.build.json',
-        sourceMap: true,
-      }),
-      terser({
-        toplevel: true,
-        compress: {
-          passes: 3,
-        },
-        output: {
-          comments: false,
-        },
-      }),
+      resolvePlugin,
+      // commonjs(),
+      // excludeDependenciesFromBundle(),
+      typescriptPlugin,
+      terserPlugin,
     ],
-    onwarn(warning, rollupWarn) {
-      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
-        rollupWarn(warning);
-      }
-    },
+    // onwarn(warning, rollupWarn) {
+    //   if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+    //     rollupWarn(warning);
+    //   }
+    // },
   },
   {
     input: './src/min.ts',
     output: [{ file: 'min/esm.js', format: 'es', sourcemap: true }],
     plugins: [
-      resolve(),
-      commonjs(),
-      excludeDependenciesFromBundle(),
-      typescript({
-        typescript: require('typescript'),
-        tslib: require('tslib'),
-        tsconfig: './tsconfig.build.json',
-        sourceMap: true,
-      }),
+      resolvePlugin,
+      // commonjs(),
+      // excludeDependenciesFromBundle(),
+      typescriptPlugin,
     ],
-    onwarn(warning, rollupWarn) {
-      if (warning.code !== 'CIRCULAR_DEPENDENCY') {
-        rollupWarn(warning);
-      }
-    },
+    // onwarn(warning, rollupWarn) {
+    //   if (warning.code !== 'CIRCULAR_DEPENDENCY') {
+    //     rollupWarn(warning);
+    //   }
+    // },
   },
 ];

@@ -57,7 +57,8 @@ export function parseSchema<TSchema extends Schema>(
   const collectionItem = collection?.byId[id];
 
   if (collectionItem) {
-    return mergeSchema(schema, collectionItem as IResource<TSchema>, item);
+    const merged = mergeSchema(schema, collectionItem as IResource<TSchema>, item);
+    return Object.assign(collectionItem, merged);
   }
 
   SchemaMeta.set(item, { id, type: schema.type, schema });

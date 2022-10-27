@@ -18,16 +18,23 @@ export class Collection {
     data: IResource<TSchema> | IResource<TSchema, true>,
     type?: TSchema,
   ): IResource<TSchema> {
-    if (type && !this.types.includes(type)) {
-      this.types.push(type);
-    }
     const item = type
       ? parseSchema(type, data as IResource<TSchema, true>)
       : (data as IResource<TSchema>);
 
-    this.data.push(item);
+    if (this.data.includes(item)) {
+      return item;
+    }
 
     const meta = SchemaMeta.get(item);
+    if (type && !this.types.includes(type)) {
+      this.types.push(type);
+    } else if (meta?.schema && !this.types.includes(meta?.schema)) {
+      this.types.push(meta?.schema);
+    }
+
+    this.data.push(item);
+
     if (meta) {
       meta.collection = this;
       this.byId[meta.id] = item;

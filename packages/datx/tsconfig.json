@@ -5,6 +5,6 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "noUnusedLocals": true,
-    "outDir": "./dist"
+    "allowJs": true
   }
 }
