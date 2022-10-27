@@ -49,9 +49,15 @@ function prepareSort(sort?: string | Array<string>): Array<string> {
 }
 
 function prepareIncludes(include?: string | Array<string>): Array<string> {
-  return include
-    ? [`include=${config.sortParams && Array.isArray(include) ? include.sort() : include}`]
-    : [];
+  if (!include) {
+    return [];
+  }
+
+  if (config.sortParams && Array.isArray(include)) {
+    return [`include=${[...include].sort()}`];
+  }
+
+  return [`include=${include}`];
 }
 
 function prepareFields(fields: Record<string, string | Array<string>>): Array<string> {
