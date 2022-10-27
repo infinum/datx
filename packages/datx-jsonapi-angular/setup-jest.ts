@@ -9,6 +9,8 @@ if (parseInt(process.env.MOBX_VERSION || '0', 10) < 0) {
 }
 
 if ('configure' in mobxInstance) {
+  // safe to do since we'll never enter this block if configure is not available in mobxInstance
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignores
   mobxInstance.configure({
     enforceActions: 'observed',

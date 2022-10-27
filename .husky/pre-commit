@@ -2,5 +2,5 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npm run lint
-lerna run ts:check
+lerna run ts:check --concurrency=5
 lerna run test
