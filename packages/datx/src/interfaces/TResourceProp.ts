@@ -1,5 +1,5 @@
+import { Constructor } from 'type-fest';
 import { Schema } from '../Schema';
-import { IConstructor } from './IConstructor';
 import { ICustomScalar } from './ICustomScalar';
 import { IResource } from './IResource';
 import { TResourceTypes } from './TResourceTypes';
@@ -41,6 +41,6 @@ export type TResourceProp<
     : TProp['optional'] extends true
     ? TInnerProp | undefined
     : TInnerProp // Custom scalar
-  : TProp extends IConstructor
+  : TProp extends Constructor<any>
   ? InstanceType<TProp> // Primitive values
   : never;

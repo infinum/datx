@@ -14,7 +14,7 @@ export class Schema<T extends ISchemaData = ISchemaData> {
     return parseSchema(this, data);
   }
 
-  public serialize(data: IResource<this>): IPlainResource<this> {
-    return serializeSchema(this, data);
+  public serialize(data: IResource<this>, depth?: number): IPlainResource<this> {
+    return serializeSchema(this, data, depth);
   }
 }

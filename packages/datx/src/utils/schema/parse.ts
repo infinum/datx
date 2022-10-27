@@ -4,6 +4,7 @@ import { TResourceProp } from '../../interfaces/TResourceProp';
 import { Schema } from '../../Schema';
 import { SchemaMeta } from '../../SchemaMeta';
 import { mapObjectValues } from '../helpers';
+import { mergeSchema } from './merge';
 
 function parseProp<TSchema extends Schema>(data: IPlainResource<TSchema>, collection?: Collection) {
   return (
@@ -11,7 +12,10 @@ function parseProp<TSchema extends Schema>(data: IPlainResource<TSchema>, collec
     def: TSchema['definition'][typeof key],
   ): TResourceProp<typeof def, true> => {
     if ('parseValue' in def) {
-      return def.parseValue(data[key as keyof typeof data]) as TResourceProp<typeof def, true>;
+      return def.parseValue(data[key as keyof typeof data], collection) as TResourceProp<
+        typeof def,
+        true
+      >;
     } else if (def instanceof Schema) {
       // @ts-ignore Figure out why this doesn't work here, but otherwise it's OK
       return parseSchema(
@@ -41,6 +45,9 @@ export function parseSchema<TSchema extends Schema>(
   data: IPlainResource<TSchema>,
   collection?: Collection,
 ): IResource<TSchema> {
+  if (!data) {
+    return data;
+  }
   const item = mapObjectValues<TSchema['definition']>(
     schema.definition,
     parseProp(data, collection),
@@ -50,13 +57,13 @@ export function parseSchema<TSchema extends Schema>(
   const collectionItem = collection?.byId[id];
 
   if (collectionItem) {
-    return collectionItem as IResource<TSchema>;
+    return mergeSchema(schema, collectionItem as IResource<TSchema>, item);
   }
 
   SchemaMeta.set(item, { id, type: schema.type, schema });
 
   if (collection) {
-    return collection.add(item as IResource<TSchema>);
+    return collection.add(item) as IResource<TSchema>;
   }
 
   return item;

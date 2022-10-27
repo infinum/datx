@@ -22,6 +22,9 @@ export function serializeSchema<TSchema extends Schema>(
   depth = Infinity,
   flatten = false,
 ): IPlainResource<TSchema> | IFlattenedResource<TSchema> {
+  if (!data) {
+    return data;
+  }
   const linked: Array<IPlainResource<Schema>> = [];
   const item = mapObjectValues<
     TSchema['definition'],
@@ -33,7 +36,13 @@ export function serializeSchema<TSchema extends Schema>(
       def: TSchema['definition'][typeof key],
     ): TResourceProp<typeof def, false> | undefined => {
       if ('serialize' in def) {
-        return def.serialize(data[key as keyof typeof data]) as TResourceProp<typeof def, false>;
+        if (depth === 0) {
+          return undefined;
+        }
+        return def.serialize(data[key as keyof typeof data], depth - 1) as TResourceProp<
+          typeof def,
+          false
+        >;
       } else if (def instanceof Schema) {
         if (depth === 0) {
           return undefined;
@@ -47,7 +56,8 @@ export function serializeSchema<TSchema extends Schema>(
         ) as IFlattenedResource<typeof def>;
 
         if (flatten) {
-          linked.push(innerItem.data, ...innerItem.linked);
+          linked.push(innerItem.data);
+          linked.push.apply(linked, innerItem.linked);
         }
       }
       return data[key as keyof typeof data] as TResourceProp<typeof def, false>;

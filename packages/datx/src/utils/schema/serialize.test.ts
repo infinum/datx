@@ -8,8 +8,8 @@ import { serializeSchema } from './serialize';
 
 function wrapSchema(schemaFn: () => Schema): ICustomScalar {
   return {
-    serialize: (data) => serializeSchema(schemaFn(), data),
-    parseValue: (data) => parseSchema(schemaFn(), data),
+    serialize: (data, depth) => serializeSchema(schemaFn(), data, depth),
+    parseValue: (data, collection) => parseSchema(schemaFn(), data, collection),
   };
 }
 
@@ -91,6 +91,6 @@ describe('serialization', () => {
 
     const rawFoo = serializeSchema(Foo, foo, 2);
 
-    expect(rawFoo?.bar?.foo).toEqual({ name: 'foo' });
+    expect(rawFoo?.bar?.foo).toHaveProperty('name', 'foo');
   });
 });

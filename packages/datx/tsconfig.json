@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.build.json",
-  "include": ["src/**/*", "test/**/*", "example/**/*"],
+  "include": ["src/**/*", "test/**/*", "example/**/*", "rollup.config.js"],
+  "exclude": ["node_modules", "examples"],
   "compilerOptions": {
     "moduleResolution": "node",
     "noUnusedLocals": true,
