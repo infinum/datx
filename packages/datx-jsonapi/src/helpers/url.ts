@@ -132,22 +132,41 @@ export function buildUrl(
   let baseUrl: string = appendParams(prefixUrl(url, containsBase), params);
 
   if (config.sortParams) {
-    const [url, searchParams] = baseUrl.split('?');
+    // const [url, searchParams] = baseUrl.split('?');
 
-    if (searchParams) {
-      const urlSearchParams = new URLSearchParams(searchParams);
+    // if (searchParams) {
+    //   const urlSearchParams = new URLSearchParams(searchParams);
 
-      urlSearchParams.sort();
+    //   urlSearchParams.sort();
 
-      const urlSearchParamsString = config.encodeQueryString
-        ? urlSearchParams.toString()
-        : decodeURIComponent(urlSearchParams.toString());
+    //   const urlSearchParamsString = config.encodeQueryString
+    //     ? urlSearchParams.toString()
+    //     : decodeURIComponent(urlSearchParams.toString());
 
-      baseUrl = `${url}?${urlSearchParamsString}`;
-    }
+    //   baseUrl = sortUrlParams`${url}?${urlSearchParamsString}`;
+    // }
+    baseUrl = sortUrlParams(baseUrl);
   }
 
   return { data, headers, url: baseUrl };
+}
+
+function sortUrlParams(url: string) {
+  const [baseUrl, searchParams] = url.split('?');
+
+  if (!searchParams) {
+    return url;
+  }
+
+  const urlSearchParams = new URLSearchParams(searchParams);
+
+  urlSearchParams.sort();
+
+  const urlSearchParamsString = config.encodeQueryString
+    ? urlSearchParams.toString()
+    : decodeURIComponent(urlSearchParams.toString());
+
+  return `${baseUrl}?${urlSearchParamsString}`;
 }
 
 export function prepareQuery(
