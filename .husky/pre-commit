@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run lint & lerna run test
+npm run lint
+lerna run ts:check
+lerna run test
