@@ -10,12 +10,15 @@ function parseProp<TSchema extends Schema>(data: IPlainResource<TSchema>, collec
   return (
     key: keyof TSchema['definition'],
     def: TSchema['definition'][typeof key],
+    item: Partial<IResource<TSchema>>,
   ): TResourceProp<typeof def, true> => {
     if ('parseValue' in def) {
-      return def.parseValue(data[key as keyof typeof data], collection) as TResourceProp<
-        typeof def,
-        true
-      >;
+      return def.parseValue(
+        data[key as keyof typeof data],
+        key as string | number,
+        item,
+        collection,
+      ) as TResourceProp<typeof def, true>;
     } else if (def instanceof Schema) {
       // @ts-ignore Figure out why this doesn't work here, but otherwise it's OK
       return parseSchema(
@@ -43,11 +46,12 @@ function parseProp<TSchema extends Schema>(data: IPlainResource<TSchema>, collec
 export function parseSchema<TSchema extends Schema>(
   schema: TSchema,
   data: IPlainResource<TSchema>,
-  collection?: Collection,
+  extCollection?: Collection,
 ): IResource<TSchema> {
   if (!data) {
     return data;
   }
+  const collection = extCollection || new Collection();
   const item = mapObjectValues<TSchema['definition']>(
     schema.definition,
     parseProp(data, collection),

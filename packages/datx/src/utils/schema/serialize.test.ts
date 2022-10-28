@@ -1,17 +1,10 @@
 import { IResource } from '../..';
 import { Comment } from '../../../test/mock';
 import { Collection } from '../../Collection';
-import { ICustomScalar } from '../../interfaces/ICustomScalar';
 import { Schema } from '../../Schema';
+import { schemaOrReference, wrapSchema } from '../helpers';
 import { parseSchema } from './parse';
 import { serializeSchema } from './serialize';
-
-function wrapSchema(schemaFn: () => Schema): ICustomScalar {
-  return {
-    serialize: (data, depth) => serializeSchema(schemaFn(), data, depth),
-    parseValue: (data, collection) => parseSchema(schemaFn(), data, collection),
-  };
-}
 
 describe('serialization', () => {
   it('should do nested serialization with custom types', () => {
@@ -92,5 +85,72 @@ describe('serialization', () => {
     const rawFoo = serializeSchema(Foo, foo, 2);
 
     expect(rawFoo?.bar?.foo).toHaveProperty('name', 'foo');
+  });
+
+  it('should work for references', () => {
+    const Foo = new Schema(
+      'foo',
+      {
+        name: String,
+        bar: schemaOrReference(() => Bar),
+      },
+      (data: IResource<Schema>) => `foo/${data.name}`,
+    );
+    const Bar = new Schema(
+      'bar',
+      {
+        name: String,
+        foo: schemaOrReference(() => Foo),
+      },
+      (data: IResource<Schema>) => `bar/${data.name}`,
+    );
+
+    const foo: IResource<typeof Foo> = {
+      name: 'foo',
+      bar: undefined,
+    };
+    const bar: IResource<typeof Bar> = {
+      name: 'bar',
+      foo,
+    };
+    foo.bar = bar;
+
+    const rawFoo = serializeSchema(Foo, foo);
+    const cloneFoo = parseSchema(Foo, rawFoo);
+    expect(cloneFoo.bar.foo).toBe(cloneFoo);
+  });
+
+  it('should work for references when flattening', () => {
+    const Foo = new Schema(
+      'foo',
+      {
+        name: String,
+        bar: schemaOrReference(() => Bar),
+      },
+      (data: IResource<Schema>) => `foo/${data.name}`,
+    );
+    const Bar = new Schema(
+      'bar',
+      {
+        name: String,
+        foo: schemaOrReference(() => Foo),
+      },
+      (data: IResource<Schema>) => `bar/${data.name}`,
+    );
+
+    const foo: IResource<typeof Foo> = {
+      name: 'foo',
+      bar: undefined,
+    };
+    const bar: IResource<typeof Bar> = {
+      name: 'bar',
+      foo,
+    };
+    foo.bar = bar;
+
+    const rawFoo = serializeSchema(Foo, foo, 4, true);
+    console.log(rawFoo);
+    expect(rawFoo.data).toEqual({ name: 'foo', bar: 'bar/bar' });
+    expect(rawFoo.linked).toEqual([{ name: 'bar', foo: 'foo/foo' }]);
   });
 });

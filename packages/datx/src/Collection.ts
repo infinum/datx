@@ -9,6 +9,11 @@ export class Collection {
   public readonly byType: Record<string, Array<IResource<Schema>>> = {};
   public readonly byId: Record<string, IResource<Schema>> = {};
 
+  private readonly listeners: Record<
+    string,
+    Array<{ model: IResource<Schema>; key: string | number }>
+  > = {};
+
   public add<TSchema extends Schema>(data: IResource<TSchema>): IResource<TSchema>;
   public add<TSchema extends Schema>(
     data: IResource<TSchema, true>,
@@ -39,6 +44,13 @@ export class Collection {
       meta.collection = this;
       this.byId[meta.id] = item;
 
+      if (this.listeners[meta.id]?.length) {
+        this.listeners[meta.id].forEach(({ model, key }) => {
+          model[key] = item;
+        });
+        this.listeners[meta.id].length = 0;
+      }
+
       this.byType[meta.type] = this.byType[meta.type] || [];
       this.byType[meta.type].push(item);
 
@@ -46,5 +58,10 @@ export class Collection {
     }
 
     throw new Error('SchemaMeta not found');
+  }
+
+  public addReferenceListener(model: IResource<Schema>, key: string | number, id: string | number) {
+    this.listeners[id] = this.listeners[id] || [];
+    this.listeners[id].push({ model, key });
   }
 }
