@@ -16,6 +16,7 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --no-private",
     "watch": "lerna run watch --no-private",
+    "build:swr": "lerna run build --scope @datx/swr",
     "watch:swr": "lerna run watch --scope @datx/swr",
     "clean": "lerna clean && yarn clean:dist",
     "clean:dist": "lerna exec -- rm -rf ./dist"

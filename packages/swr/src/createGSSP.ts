@@ -14,7 +14,7 @@ export const createGSSP =
   async (ctx) => {
     const client = createClient();
 
-    const results = await gsp({ ...ctx, fetchQuery: client.fetchQuery });
+    const results = await gsp({ ...ctx, client });
 
     if ('notFound' in result || 'redirect' in result) {
       return results;
