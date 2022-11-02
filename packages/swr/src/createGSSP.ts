@@ -4,7 +4,7 @@ import { JsonapiClient } from './interfaces/Client';
 import { IJsonapiSwrClient } from './interfaces/IJsonapiSwrClient';
 
 /**
- * Decorator for getServerSideProps
+ * Factory function for creating a decorator for getServerSideProps
  *
  * @param createClient Factory function for creating a json:api swr client
  */
