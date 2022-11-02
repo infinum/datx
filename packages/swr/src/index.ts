@@ -9,5 +9,6 @@ export * from './hydrate';
 export * from './context';
 export * from './createFetcher';
 export * from './createGSSP';
+export * from './createGSP';
 export * from './middleware';
 export * from './mixin';
