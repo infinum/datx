@@ -224,8 +224,8 @@ export const Todos: FC = () => {
       </button>
 
       {data.data?.map((todo) => (
-        <NextLink href={`./todos/${todo.id}`} key={todo.id}>
-          <a style={{ display: 'block' }}>{todo.message}</a>
+        <NextLink href={`./todos/${todo.id}`} key={todo.id} style={{ display: 'block' }}>
+          {todo.message}
         </NextLink>
       ))}
     </div>

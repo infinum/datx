@@ -5,17 +5,13 @@ const Home: NextPage = () => {
   return (
     <ul>
       <li>
-        <NextLink href="/csr/todos">
-          <a>Todo App - Client side rendering</a>
-        </NextLink>
+        <NextLink href="/csr/todos">Todo App - Client side rendering</NextLink>
       </li>
       <li>
-        <NextLink href="/ssr/todos">
-          <a>Todo App - Server side rendering</a>
-        </NextLink>
+        <NextLink href="/ssr/todos">Todo App - Server side rendering</NextLink>
       </li>
     </ul>
-  )
-}
+  );
+};
 
 export default Home;
