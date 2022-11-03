@@ -304,6 +304,10 @@ export class PureCollection {
     const stringType = type.toString();
     const stringId = id.toString();
 
+    if (stringType === '__proto__') {
+      return null;
+    }
+
     mobx.runInAction(() => {
       if (!(type in this.__dataMap)) {
         mobx.set(
@@ -494,7 +498,7 @@ export class PureCollection {
 
   // @ts-ignore - Used outside of the class, but marked as private to avoid undocumented use
   private __changeModelId(oldId: IIdentifier, newId: IIdentifier, type: IType): void {
-    if (type !== 'proto' && newId !== 'proto' && oldId !== 'proto') {
+    if (type !== '__proto__' && newId !== '__proto__' && oldId !== '__proto__') {
       this.__dataMap[type][newId] = this.__dataMap[type][oldId];
       delete this.__dataMap[type][oldId];
     }

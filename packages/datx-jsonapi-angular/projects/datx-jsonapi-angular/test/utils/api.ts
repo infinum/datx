@@ -5,7 +5,8 @@ import * as path from 'path';
 import { Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import * as nodeUrl from 'url';
-import { v1 } from 'uuid';
+
+const v1 = () => Math.random().toString();
 
 function getMockStream(name: string): string {
   const testPath = path.join(__dirname, `../mock/${name}.json`);

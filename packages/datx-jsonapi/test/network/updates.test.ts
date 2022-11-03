@@ -20,6 +20,7 @@ describe('updates', () => {
   beforeEach(() => {
     config.fetchReference = fetch;
     config.baseUrl = 'https://example.com/';
+    config.usePatchWhenPossible = true;
     clearAllCache();
     setupNetwork();
   });
@@ -462,6 +463,52 @@ describe('updates', () => {
             },
           }),
           method: 'PATCH',
+          name: 'event-1b',
+          url: 'event/12345',
+        });
+
+        record.title = 'Updated title';
+        expect(record.meta.dirty.title).toBe(true);
+
+        const updated = await record.save();
+
+        expect(record.meta.dirty.title).toBe(false);
+        expect(updated['title']).toBe('Test 1');
+        expect(updated).toBe(record);
+      }
+    });
+    it('should update a record with put', async () => {
+      config.usePatchWhenPossible = false;
+
+      setRequest({
+        name: 'event-1',
+        url: 'event/12345',
+      });
+
+      const store = new TestStore();
+      const events = await store.fetch('event', '12345');
+
+      const record = events.data;
+
+      expect(record).toBeInstanceOf(Event);
+      if (record instanceof Event) {
+        setRequest({
+          data: JSON.stringify({
+            data: {
+              attributes: {
+                title: 'Updated title',
+                date: '2017-03-19',
+              },
+              id: '12345',
+              type: 'event',
+              relationships: {
+                organizers: { data: [] },
+                images: { data: [] },
+                image: { data: null },
+              },
+            },
+          }),
+          method: 'PUT',
           name: 'event-1b',
           url: 'event/12345',
         });

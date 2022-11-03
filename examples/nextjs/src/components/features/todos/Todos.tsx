@@ -10,9 +10,8 @@ export interface ITodosProps {}
 
 export const Todos: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { data, error, mutate } = useDatx(todosQuery, {
-    onSuccess: (data) => console.log(data.data[0].id),
-  });
+  const { data, error, mutate } = useDatx(todosQuery);
+
   const [create, { status }] = useMutation(createTodo, {
     onSuccess: async () => {
       const input = inputRef.current;

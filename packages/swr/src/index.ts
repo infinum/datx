@@ -5,6 +5,7 @@ export * from './hooks/useDatx';
 export * from './interfaces/Client';
 export * from './interfaces/QueryExpression';
 export * from './interfaces/UseDatx';
+export * from './interfaces/DatxConfiguration';
 export * from './hydrate';
 export * from './context';
 export * from './createFetcher';

@@ -1,15 +1,14 @@
 {
   "name": "datx",
   "devDependencies": {
-    "@infinumjs/eslint-config-core-ts": "^3.0.0",
-    "eslint": "^8.3.0",
-    "husky": "^4.3.8",
-    "lerna": "^4.0.0",
-    "prettier": "2.6.2",
-    "typescript": "4.6.3"
+    "@infinumjs/eslint-config-core-ts": "^3.3.1",
+    "eslint": "^8.17.0",
+    "husky": "^8.0.0",
+    "lerna": "^5.1.1",
+    "prettier": "2.7.1",
+    "typescript": "4.7.4"
   },
   "scripts": {
-    "precommit": "npm run lint & lerna run test",
     "lint": "eslint packages/**/*.ts",
     "test": "lerna run test",
     "bootstrap": "lerna bootstrap",
@@ -19,9 +18,13 @@
     "watch:swr": "lerna run watch --scope @datx/swr",
     "test:swr": "lerna run test --scope @datx/swr",
     "clean": "lerna clean && yarn clean:dist",
-    "clean:dist": "lerna exec -- rm -rf ./dist"
+    "clean:dist": "lerna exec -- rm -rf ./dist",
+    "example:nextjs:dev": "lerna run dev --scope nextjs --stream",
+    "pkg:check": "manypkg check",
+    "pkg:fix": "manypkg fix",
+    "postinstall": "npm run prepare",
+    "prepare": "husky install"
   },
-  "dependencies": {},
   "private": true,
   "workspaces": {
     "packages": [
@@ -29,9 +32,10 @@
       "examples/*"
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit"
-    }
-  }
+  "dependencies": {
+    "@manypkg/cli": "^0.19.1",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1"
+  },
+  "packageManager": "yarn@3.2.1"
 }

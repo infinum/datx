@@ -7,10 +7,9 @@ title: Angular JSON:API setup
 
 Steps:
 
-- (Optional) Disable MobX by importing `datx/disable-mobx` before any other datx imports
+- (Optional) Disable MobX by importing `@datx/core/disable-mobx` before any other datx imports
 - Install `datx-jsonapi` and `datx-jsonapi-angular`
 - [Setup your collection and models](./basic-setup), use [`jsonapiAngular` mixin](../jsonapi-angular/mixin.md) when setting them up
-- Set up the [`baseFetch`](../jsonapi-angular/base-fetch.md)
 
 ## Use your store
 
@@ -23,165 +22,146 @@ First disable the MobX integration right away in the entrypoint:
 ```ts
 // src/main.ts
 
-import 'datx/disable-mobx';
+import '@datx/core/disable-mobx';
 // .. Rest of the file
 ```
 
-Next, we need a special implementation of `baseFetch`. This is needed to integrate with Angular network features like interceptors and request canceling:
+## Configuration
+
+Create a collection, provide it under `APP_COLLECTION` token, import `DatxModule` in your `AppModule` and configure it:
 
 ```ts
-// src/app/services/custom-fetch.ts
+import { InjectionToken } from '@angular/core';
+import { Collection } from '@datx/core';
+import { jsonapiAngular } from '@datx/jsonapi-angular';
 
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { config, IResponseObject } from '@datx/jsonapi';
-import { IResponseHeaders } from 'datx-jsonapi/dist/interfaces/IResponseHeaders';
-import { Observable } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+export const APP_COLLECTION = new InjectionToken<AppCollection>('App collection');
 
-@Injectable({ providedIn: 'root' })
-export class CustomFetchService {
-  constructor(private httpClient: HttpClient) {}
+export class AppCollection extends jsonapiAngular(Collection) {
+  public static readonly types = [...];
+}
+```
 
-  public async fetch(
-    method: string,
-    url: string,
-    body?: unknown,
-    headers: Record<string, string> = {},
-    fetchOptions?: { takeUntil$?: Observable<void> },
-  ): Promise<IResponseObject> {
-    const takeUntil$: Observable<void> | undefined = fetchOptions?.takeUntil$;
+```ts
+import { NgModule } from '@angular/core';
+import { DatxModule } from '@datx/jsonapi-angular';
+import { AppCollection, APP_COLLECTION } from './collections/app.collection';
 
-    const requestHeaders = {
-      ...config.defaultFetchOptions.headers,
-      ...headers,
-    };
+@NgModule({
+  imports: [
+    DatxModule.forRoot({
+      baseUrl: 'https://my-api.com/',
+    }),
+  ],
+  providers: [
+    {
+      provide: APP_COLLECTION,
+      useValue: new AppCollection(),
+    },
+  ],
+})
+export class AppModule {}
+```
 
-    let request$ = this.httpClient.request(method, url, {
-      observe: 'response',
-      responseType: 'json',
-      headers: requestHeaders,
-      body,
-    }).pipe(
-      map((response) => {
+You can also provide the config via DI if you need to set the config value based on data from some service:
+
+```ts
+import { NgModule } from '@angular/core';
+import { DatxModule, DATX_CONFIG } from '@datx/jsonapi-angular';
+import { AppCollection, APP_COLLECTION } from './collections/app.collection';
+import { EnvironmentVariablesService } from './services/...';
+
+@NgModule({
+  imports: [
+    DatxModule.forRoot({
+      cache: CachingStrategy.NetworkOnly,
+    }),
+  ],
+  provides: [
+    {
+      provide: APP_COLLECTION,
+      useValue: new AppCollection(),
+    },
+    {
+      provide: DATX_CONFIG,
+      useFactory: (environmentVariablesService: EnvironmentVariablesService) => {
         return {
-          data: response.body,
-          headers: response.headers as unknown as IResponseHeaders, // The interface actually matches
-          requestHeaders,
-          status: response.status,
+          baseUrl: environmentVariablesService.get('MY_API'),
         };
-      }),
-    );
-
-    if (takeUntil$) {
-      request$ = request$.pipe(takeUntil(takeUntil$));
-    }
-
-    try {
-      const d = await request$.toPromise();
-      if (d === undefined) {
-        return { status: -1 }; // Signal to DatX that it shouldn't fail, but shouldn't cache either
-      }
-
-      return d;
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  }
-}
-```
-
-The last step is to initialize all the settings:
-
-```ts
-// src/app/app/module.ts
-
-import { APP_INITIALIZER } from '@angular/core';
-import { CustomFetchService } from './services/custom-fetch.service';
-import { CachingStrategy, config } from '@datx/jsonapi';
-
-function initDatx(customFetch: CustomFetchService): () => Promise<void> {
-  return async () => {
-    config.baseFetch = customFetch.fetch.bind(customFetch);
-
-    config.defaultFetchOptions = {
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/vnd.api+json',
       },
-    };
-
-    // Use cache if not older than 10 seconds
-    config.maxCacheAge = 10;
-    config.cache = CachingStrategy.CacheFirst;
-  };
-}
-
-// ... in the module providers
-  {
-    provide: APP_INITIALIZER,
-    useFactory: initDatx,
-    multi: true,
-    deps: [CustomFetchService],
-  }
-
+      deps: [EnvironmentVariablesService],
+    },
+  ],
+})
+export class AppModule {}
 ```
+
+Config values passed via `forRoot` and via `DATX_CONFIG` and the default values will be merged together into a final configuration object. Values provided `DATX_CONFIG` DI token take precedence over values from `forRoot`, and default values have the lowest precedence.
+
+In the example above, the final config will use some default values, NetworkOnly caching option (as defined in `forRoot`) and whatever value `environmentVariablesService.get('MY_API')` returns for `baseUrl` (as defined in `DATX_CONFIG` provider).
 
 ### Usage
 
-To use DatX in the app, inject your collection in your component or service and you can start using it. All the networking features will expose rxjs observables.
+Create the base model:
 
 ```ts
-// src/app/app.component.ts
+import { IType, Model } from '@datx/core';
+import { jsonapiAngular } from '@datx/jsonapi-angular';
 
-export class AppComponent implements OnInit {
-  public results$: Observable<Response<Project>>;
-  public search$: BehaviorSubject<string> = new BehaviorSubject('');
-
-  constructor(
-    private collection: AppCollection,
-  ) {}
-
-  public ngOnInit(): void {
-    this.results$ = this.setupSearch().pipe(map((result: Response<Project>) => result.data));
-  }
-
-  private setupSearch(): Observable<any> {
-    return this.search$.pipe(
-      switchMap((query: string) => {
-        return this.collection.getMany({ queryParams: { filter: { query } } });
-      })
-    );
-  }
-
-  public onInputChanged(event: any): void {
-    this.search$.next(event.target.value);
+export class BaseModel extends jsonapiAngular(Model) {
+  public get id(): IType {
+    return this.meta.id;
   }
 }
 ```
 
-```html
-<!-- src/app/app.component.html -->
-<div *ngFor="let result of results$ | async">
-  {{ result.name }}
-  {{ result.meta.id }}
-</div>
+Create specific domain models and add them to `types` in `AppCollection`
+
+```ts
+import { Attribute } from '@datx/core';
+import { BaseModel } from './base-model';
+
+export class Artist extends BaseModel {
+  public static endpoint = 'artists';
+  public static type = 'project';
+
+  @Attribute()
+  public name!: string;
+}
 ```
 
----
+```ts
+export class AppCollection extends jsonapiAngular(Collection) {
+  public static readonly types = [Artist];
+}
+```
 
-## Related
+Create services for managing the models (one service per model):
 
-<div class="docs-card">
-  <a href="/docs/examples/basic-setup">
-    <h4>Basic setup</h4>
-    <small>Setup your datx store and models</small>
-  </a>
-</div>
-<div class="docs-card">
-  <a href="/docs/examples/adding-models">
-    <h4>Adding models</h4>
-    <small>Learn the different ways of adding models to your store</small>
-  </a>
-</div>
+```ts
+import { Inject, Injectable } from '@angular/core';
+import { CollectionService } from '@datx/jsonapi-angular';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ArtistsService extends CollectionService<Artist, AppCollection> {
+  protected ctor = Artist;
+
+  constructor(@Inject(APP_COLLECTION) protected readonly collection: AppCollection) {
+    super(collection);
+  }
+}
+```
+
+Inject the service in your component or other services and use methods like `getManyModels` and `getOneModel`:
+
+```ts
+export class ArtistsComponent {
+  public artists$ = this.artistsService.getAllModels();
+
+  constructor(private readonly artistsService: ArtistsService) {}
+}
+```
+
+That's it!
