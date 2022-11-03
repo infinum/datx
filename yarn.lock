@@ -2640,13 +2640,13 @@ __metadata:
     rollup: ^2.75.6
     rollup-plugin-exclude-dependencies-from-bundle: ^1.1.22
     rollup-plugin-terser: ^7.0.2
-    swr: 2.0.0-beta.6
+    swr: 2.0.0-rc.0
     tslib: ~2.4.0
     typescript: ~4.7.3
     uuid: ^9.0.0
   peerDependencies:
     react: ^16.11.0 || ^17.0.0 || ^18.0.0
-    swr: ^1.3.0 || ^2.0.0-beta.3 || ^2.0.0-rc.0 || ^2.0.0
+    swr: ^1.3.0 || ^2.0.0-rc.0 || ^2.0.0
   languageName: unknown
   linkType: soft
 
@@ -13901,7 +13901,7 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     source-map-explorer: 2.5.3
-    swr: 2.0.0-beta.6
+    swr: 2.0.0-rc.0
     typescript: ~4.7.3
     uuid: ^9.0.0
   languageName: unknown
@@ -17754,14 +17754,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:2.0.0-beta.6":
-  version: 2.0.0-beta.6
-  resolution: "swr@npm:2.0.0-beta.6"
+"swr@npm:2.0.0-rc.0":
+  version: 2.0.0-rc.0
+  resolution: "swr@npm:2.0.0-rc.0"
   dependencies:
-    use-sync-external-store: ^1.1.0
+    use-sync-external-store: ^1.2.0
   peerDependencies:
     react: ^16.11.0 || ^17.0.0 || ^18.0.0
-  checksum: a2fa5b4600e84351970636e50dfa5209e65caf279a076a64fab8cbd4fb39407d4bee4c93577579ae95ea61161fb3ae176197a23d56770d1b85d6718d31877e05
+  checksum: 61b3c01ddd70d588ec08fe49b4ab96b990e9abe40ece993e948cc86c025b63073cd208d8e3c1513398cbf2573fb8333cbd691a805feafe25b9f677d5371e2c77
   languageName: node
   linkType: hard
 
@@ -18478,21 +18478,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:1.2.0":
+"use-sync-external-store@npm:1.2.0, use-sync-external-store@npm:^1.2.0":
   version: 1.2.0
   resolution: "use-sync-external-store@npm:1.2.0"
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 5c639e0f8da3521d605f59ce5be9e094ca772bd44a4ce7322b055a6f58eeed8dda3c94cabd90c7a41fb6fa852210092008afe48f7038792fd47501f33299116a
-  languageName: node
-  linkType: hard
-
-"use-sync-external-store@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "use-sync-external-store@npm:1.1.0"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 8993a0b642f91d7fcdbb02b7b3ac984bd3af4769686f38291fe7fcfe73dfb73d6c64d20dfb7e5e7fbf5a6da8f5392d6f8e5b00c243a04975595946e82c02b883
   languageName: node
   linkType: hard
 
