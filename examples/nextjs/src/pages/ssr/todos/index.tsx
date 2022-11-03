@@ -1,7 +1,6 @@
 import { Hydrate } from '@datx/swr';
-import type { NextPage, InferGetServerSidePropsType } from 'next';
+import type { NextPage, InferGetServerSidePropsType, GetServerSideProps } from 'next';
 
-import { postsQuery } from '../../../components/features/posts/Posts.queries';
 import { Todos } from '../../../components/features/todos/Todos';
 import { todosQuery } from '../../../components/features/todos/Todos.queries';
 import { Layout } from '../../../components/shared/layouts/Layout/Layout';
@@ -20,7 +19,7 @@ const SSR: NextPage<SSRProps> = ({ fallback }) => {
 };
 
 export const getServerSideProps = gSSP(async ({ client }) => {
-  await Promise.allSettled([client.fetchQuery(todosQuery), client.fetchQuery(postsQuery)]);
+  await client.fetchQuery(todosQuery);
 
   // TODO - handle 404
 

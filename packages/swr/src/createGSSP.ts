@@ -2,6 +2,12 @@ import { result } from 'lodash';
 import { CreateClientFn } from './interfaces/CreateClientFn';
 import { JsonapiClient } from './interfaces/Client';
 import { IJsonapiSwrClient } from './interfaces/IJsonapiSwrClient';
+import type {
+  GetServerSidePropsContext,
+  GetServerSideProps,
+  PreviewData,
+  GetServerSidePropsResult,
+} from 'next';
 
 /**
  * Factory function for creating a decorator for getServerSideProps
@@ -10,11 +16,11 @@ import { IJsonapiSwrClient } from './interfaces/IJsonapiSwrClient';
  */
 export const createGSSP =
   (createClient: CreateClientFn<JsonapiClient & IJsonapiSwrClient>) =>
-  (gsp: (...args: Array<any>) => Promise<any>) =>
+  <T>(extendedGSSP: T) =>
   async (ctx) => {
     const client = createClient();
 
-    const results = await gsp({ ...ctx, client });
+    const results: GetServerSidePropsResult<any> = await extendedGSSP({ ...ctx, client });
 
     if ('notFound' in result || 'redirect' in result) {
       return results;
@@ -25,7 +31,7 @@ export const createGSSP =
     return {
       props: {
         fallback,
-        ...result['props'],
+        ...result.props,
       },
     };
   };
