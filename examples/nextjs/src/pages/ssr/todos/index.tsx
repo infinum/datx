@@ -19,8 +19,8 @@ const SSR: NextPage<SSRProps> = ({ fallback }) => {
   );
 };
 
-export const getServerSideProps = gSSP(async ({ fetchQuery }) => {
-  await Promise.allSettled([fetchQuery(todosQuery), fetchQuery(postsQuery)]);
+export const getServerSideProps = gSSP(async ({ client }) => {
+  await Promise.allSettled([client.fetchQuery(todosQuery), client.fetchQuery(postsQuery)]);
 
   // TODO - handle 404
 
