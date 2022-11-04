@@ -9,6 +9,6 @@ export * from './interfaces/DatxConfiguration';
 export * from './hydrate';
 export * from './context';
 export * from './createFetcher';
-export * from './createGSSP';
+export * from './createWithDatx';
 export * from './middleware';
 export * from './mixin';

@@ -14,13 +14,13 @@ import type {
  *
  * @param createClient Factory function for creating a json:api swr client
  */
-export const createGSSP =
+export const createWithDatx =
   (createClient: CreateClientFn<JsonapiClient & IJsonapiSwrClient>) =>
-  <T>(extendedGSSP: T) =>
+  <T>(loader: T) =>
   async (ctx) => {
     const client = createClient();
 
-    const results: GetServerSidePropsResult<any> = await extendedGSSP({ ...ctx, client });
+    const results = await loader({ ...ctx, client });
 
     if ('notFound' in result || 'redirect' in result) {
       return results;

@@ -1,6 +1,6 @@
 import { Collection } from '@datx/core';
 import { CachingStrategy, config } from '@datx/jsonapi';
-import { createGSSP, jsonapiSwrClient } from '@datx/swr';
+import { createWithDatx, jsonapiSwrClient } from '@datx/swr';
 
 import { Post } from '../models/Post';
 import { Todo } from '../models/Todo';
@@ -18,8 +18,6 @@ export function createClient() {
   return client;
 }
 
-export const gSSP = createGSSP(createClient);
-
-export const gSP = gSSP;
+export const withDatx = createWithDatx(createClient);
 
 export type Client = typeof JsonapiSwrClient;
