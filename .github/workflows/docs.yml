@@ -21,5 +21,6 @@ jobs:
       - name: Run & deploy
         run: |
           cd website
+          yarn set version 3.2.1
           yarn install
           GIT_USER="${{ secrets.DOCS_USER_NAME }}" yarn run publish-gh-pages
