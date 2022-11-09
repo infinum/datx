@@ -9,14 +9,12 @@
     "typescript": "4.7.4"
   },
   "scripts": {
+    "preinstall": "npx only-allow pnpm", 
     "lint": "eslint packages/**/*.ts",
     "postinstall": "npm run prepare",
     "prepare": "husky install"
   },
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1"
