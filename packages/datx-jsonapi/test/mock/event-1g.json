@@ -1,0 +1,12 @@
+{
+  "data": {
+    "id": "1",
+    "type": "event",
+    "attributes": {
+      "date": "2017-03-19"
+    },
+    "links": {
+      "self": "https://example.com/event/1234"
+    }
+  }
+}
