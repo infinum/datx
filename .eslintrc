@@ -5,7 +5,7 @@
     "node": true,
     "jest": true
   },
-  "extends": "@infinumjs/eslint-config-core-ts",
+  "extends": "@infinumjs/eslint-config-core-js",
   "rules": {
     "@typescript-eslint/ban-ts-comment": 1,
     "@typescript-eslint/ban-types": 1,
@@ -14,13 +14,19 @@
     "@typescript-eslint/explicit-member-accessibility": 1,
     "no-underscore-dangle": 1
   },
-  "parserOptions": {
-    "project": [
-      "./packages/datx/tsconfig.json",
-      "./packages/datx-jsonapi/tsconfig.json",
-      "./packages/datx-jsonapi-angular/tsconfig.json",
-      "./packages/datx-network/tsconfig.json",
-      "./packages/datx-utils/tsconfig.json"
-    ]
-  }
+  "overrides": [
+    {
+      "files": ["*.tsx?"],
+      "extends": "@infinumjs/eslint-config-core-ts",
+      "parserOptions": {
+        "project": [
+          "./packages/datx/tsconfig.json",
+          "./packages/datx-jsonapi/tsconfig.json",
+          "./packages/datx-jsonapi-angular/tsconfig.json",
+          "./packages/datx-network/tsconfig.json",
+          "./packages/datx-utils/tsconfig.json"
+        ]
+      }
+    }
+  ]
 }
