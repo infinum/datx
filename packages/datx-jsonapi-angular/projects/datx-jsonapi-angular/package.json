@@ -25,7 +25,10 @@
   "peerDependencies": {
     "@angular/common": ">=12",
     "@angular/core": ">=12",
-    "@datx/jsonapi": "2.4.0",
+    "@datx/core": "2.4.6",
+    "@datx/jsonapi": "2.4.6",
+    "@datx/network": "2.4.6",
+    "@datx/utils": "2.4.5",
     "rxjs": "6 || 7"
   }
 }
