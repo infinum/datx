@@ -12,7 +12,8 @@
     "precommit": "npm run lint & lerna run test",
     "lint": "eslint packages/**/*.ts",
     "postinstall": "npm run prepare",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "publish": "lerna publish --contents dist"
   },
   "private": true,
   "workspaces": [
