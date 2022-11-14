@@ -40,7 +40,8 @@
     "test": "jest --coverage",
     "watch": "jest --watch --coverage",
     "prepublish": "npm run build",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "ts:check": "tsc --noEmit"
   },
   "jest": {
     "coveragePathIgnorePatterns": [

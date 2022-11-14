@@ -9,5 +9,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "exact": true
+  "exact": true,
+  "useNx": true
 }

@@ -26,7 +26,6 @@ typings/
 
 # Optional npm cache directory
 .npm
-.yarn
 .yarn/*
 !.yarn/patches
 !.yarn/releases
