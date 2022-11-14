@@ -36,4 +36,4 @@ When writing docs, make sure your updates are writtern in `versioned_docs/{versi
 
 ## Publishing
 
-1. `lerna publish`
+1. `npm run publish`
