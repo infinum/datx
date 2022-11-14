@@ -1871,11 +1871,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@datx/core@2.4.6, @datx/core@workspace:packages/datx":
+"@datx/core@2.4.8, @datx/core@workspace:packages/datx":
   version: 0.0.0-use.local
   resolution: "@datx/core@workspace:packages/datx"
   dependencies:
-    "@datx/utils": 2.4.5
+    "@datx/utils": 2.4.8
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-node-resolve": ^13.3.0
     "@rollup/plugin-typescript": ^8.3.2
@@ -1907,10 +1907,10 @@ __metadata:
     "@angular/platform-browser": ~14.2.0
     "@angular/platform-browser-dynamic": ~14.1.2
     "@angular/router": ~14.2.0
-    "@datx/core": 2.4.6
-    "@datx/jsonapi": 2.4.6
-    "@datx/network": 2.4.6
-    "@datx/utils": 2.4.5
+    "@datx/core": 2.4.8
+    "@datx/jsonapi": 2.4.8
+    "@datx/network": 2.4.8
+    "@datx/utils": 2.4.8
     "@types/jest": ^28.1.1
     "@types/node": ^18.7.6
     jest: ^28.1.1
@@ -1927,13 +1927,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datx/jsonapi@2.4.6, @datx/jsonapi@workspace:packages/datx-jsonapi":
+"@datx/jsonapi@2.4.8, @datx/jsonapi@workspace:packages/datx-jsonapi":
   version: 0.0.0-use.local
   resolution: "@datx/jsonapi@workspace:packages/datx-jsonapi"
   dependencies:
-    "@datx/core": 2.4.6
-    "@datx/network": 2.4.6
-    "@datx/utils": 2.4.5
+    "@datx/core": 2.4.8
+    "@datx/network": 2.4.8
+    "@datx/utils": 2.4.8
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-node-resolve": ^13.3.0
     "@rollup/plugin-typescript": ^8.3.2
@@ -1955,12 +1955,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datx/network@2.4.6, @datx/network@workspace:packages/datx-network":
+"@datx/network@2.4.8, @datx/network@workspace:packages/datx-network":
   version: 0.0.0-use.local
   resolution: "@datx/network@workspace:packages/datx-network"
   dependencies:
-    "@datx/core": 2.4.6
-    "@datx/utils": 2.4.5
+    "@datx/core": 2.4.8
+    "@datx/utils": 2.4.8
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-node-resolve": ^13.3.0
     "@rollup/plugin-typescript": ^8.3.2
@@ -1979,7 +1979,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datx/utils@2.4.5, @datx/utils@workspace:packages/datx-utils":
+"@datx/utils@2.4.8, @datx/utils@workspace:packages/datx-utils":
   version: 0.0.0-use.local
   resolution: "@datx/utils@workspace:packages/datx-utils"
   dependencies:
