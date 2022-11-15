@@ -44,11 +44,11 @@ function prepareFilters(filters: IFilters): Array<string> {
   return parametrize(filters).map((item) => `filter[${item.key}]=${item.value}`);
 }
 
-function prepareSort(sort?: string | Array<string>): Array<string> {
+function prepareSort(sort?: string | ReadonlyArray<string>): Array<string> {
   return sort ? [`sort=${sort}`] : [];
 }
 
-function prepareIncludes(include?: string | Array<string>): Array<string> {
+function prepareIncludes(include?: string | ReadonlyArray<string>): Array<string> {
   if (!include) {
     return [];
   }
@@ -60,7 +60,7 @@ function prepareIncludes(include?: string | Array<string>): Array<string> {
   return [`include=${include}`];
 }
 
-function prepareFields(fields: Record<string, string | Array<string>>): Array<string> {
+function prepareFields(fields: Record<string, string | ReadonlyArray<string>>): Array<string> {
   const list: Array<string> = [];
 
   Object.keys(fields).forEach((key) => {
@@ -70,7 +70,9 @@ function prepareFields(fields: Record<string, string | Array<string>>): Array<st
   return list;
 }
 
-function prepareRawParams(params: Array<{ key: string; value: string } | string>): Array<string> {
+function prepareRawParams(
+  params: ReadonlyArray<{ key: string; value: string } | string>,
+): Array<string> {
   return params.map((param) => {
     if (typeof param === 'string') {
       return param;

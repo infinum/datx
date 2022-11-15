@@ -1,26 +1,26 @@
 # Contributing
 
 When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change. 
+email, or any other method with the owners of this repository before making a change.
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
 ## Pull Request Process
 
-1. Ensure any install or build dependencies are removed before the end of the layer when doing a 
+1. Ensure any install or build dependencies are removed before the end of the layer when doing a
    build.
-2. Update the README.md with details of changes to the interface, this includes new environment 
+2. Update the README.md with details of changes to the interface, this includes new environment
    variables, exposed ports, useful file locations and container parameters.
 3. Increase the version numbers in any examples files and the README.md to the new version that this
    Pull Request would represent. The versioning scheme we use is [SemVer](https://semver.org/).
-4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you 
+4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you
    do not have permission to do that, you may request the second reviewer to merge it for you.
-   
+
 ## Project setup
 
-1. Install lerna globally `yarn global add lerna`
-2. Run `lerna bootstrap`
-3. If you're getting errors for other datx package imports, also run `lerna run build` and `lerna link`
+1. Install lerna globally `npm install --location=global lerna`
+2. Run `yarn` in the root folder to install all dependencies
+3. Run `lerna run build` and `lerna link`
 
 ## Updating local dependencies
 
@@ -32,9 +32,8 @@ To test a specific package, run `yarn test` in its folder. If you want to run al
 
 ## Writing docs
 
-When writing docs, make sure your updates are writtern in  `versioned_docs/{version}` and `versioned_sidebars/{version}` to be visible once docs are generated and published. Otherwise, only `next` version on the docs website will be updated and published.
+When writing docs, make sure your updates are writtern in `versioned_docs/{version}` and `versioned_sidebars/{version}` to be visible once docs are generated and published. Otherwise, only `next` version on the docs website will be updated and published.
 
 ## Publishing
 
-1. `lerna publish`
-
+1. `npm run publish`

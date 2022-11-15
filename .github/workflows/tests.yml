@@ -29,7 +29,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install -g lerna
       - run: yarn
-      - run: lerna bootstrap
       - name: Cleanup MobX
         if: ${{ matrix.mobx-version == '0' }}
         run: cd packages/datx-utils; yarn remove mobx
