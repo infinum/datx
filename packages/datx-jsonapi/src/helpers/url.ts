@@ -49,7 +49,15 @@ function prepareSort(sort?: string | ReadonlyArray<string>): Array<string> {
 }
 
 function prepareIncludes(include?: string | ReadonlyArray<string>): Array<string> {
-  return include ? [`include=${include}`] : [];
+  if (!include) {
+    return [];
+  }
+
+  if (config.sortParams && Array.isArray(include)) {
+    return [`include=${[...include].sort()}`];
+  }
+
+  return [`include=${include}`];
 }
 
 function prepareFields(fields: Record<string, string | ReadonlyArray<string>>): Array<string> {
@@ -112,20 +120,42 @@ export function buildUrl(
   const headers: Record<string, string> =
     (options && options.networkConfig && options.networkConfig.headers) || {};
   let params: Array<string> = ([] as Array<string>).concat(
-    prepareFilters((options && options.queryParams && options.queryParams.filter) || {}),
-    prepareSort(options && options.queryParams && options.queryParams.sort),
-    prepareIncludes(options && options.queryParams && options.queryParams.include),
-    prepareFields((options && options.queryParams && options.queryParams.fields) || {}),
-    prepareRawParams((options && options.queryParams && options.queryParams.custom) || []),
+    prepareFilters(options?.queryParams?.filter || {}),
+    prepareSort(options?.queryParams?.sort),
+    prepareIncludes(options?.queryParams?.include),
+    prepareFields(options?.queryParams?.fields || {}),
+    prepareRawParams(options?.queryParams?.custom || []),
   );
 
   if (config.encodeQueryString) {
     params = params.map(encodeParam);
   }
 
-  const baseUrl: string = appendParams(prefixUrl(url, containsBase), params);
+  let baseUrl: string = appendParams(prefixUrl(url, containsBase), params);
+
+  if (config.sortParams) {
+    baseUrl = sortUrlParams(baseUrl);
+  }
 
   return { data, headers, url: baseUrl };
+}
+
+function sortUrlParams(url: string) {
+  const [baseUrl, searchParams] = url.split('?');
+
+  if (!searchParams) {
+    return url;
+  }
+
+  const urlSearchParams = new URLSearchParams(searchParams);
+
+  urlSearchParams.sort();
+
+  const urlSearchParamsString = config.encodeQueryString
+    ? urlSearchParams.toString()
+    : decodeURIComponent(urlSearchParams.toString());
+
+  return `${baseUrl}?${urlSearchParamsString}`;
 }
 
 export function prepareQuery(
