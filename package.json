@@ -12,7 +12,8 @@
     "lint": "eslint packages/**/*.ts",
     "postinstall": "npm run prepare",
     "prepare": "husky install",
-    "publish": "lerna publish --contents dist"
+    "publish": "lerna publish --contents dist",
+    "publish:dry": "lerna publish --contents dist --no-push --no-git-tag-version"
   },
   "private": true,
   "workspaces": [
