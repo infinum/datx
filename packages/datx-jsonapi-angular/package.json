@@ -1,6 +1,6 @@
 {
   "name": "@datx/jsonapi-angular",
-  "version": "2.4.9",
+  "version": "2.4.10",
   "scripts": {
     "ng": "ng",
     "build": "ng build datx-jsonapi-angular && npm run copy-license && npm run copy-readme",
@@ -28,7 +28,7 @@
     "@angular/platform-browser-dynamic": "~14.1.2",
     "@angular/router": "~14.2.0",
     "@datx/core": "2.4.8",
-    "@datx/jsonapi": "2.4.8",
+    "@datx/jsonapi": "2.4.10",
     "@datx/network": "2.4.8",
     "@datx/utils": "2.4.8",
     "@types/jest": "^28.1.1",
