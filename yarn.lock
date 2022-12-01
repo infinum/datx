@@ -1908,7 +1908,7 @@ __metadata:
     "@angular/platform-browser-dynamic": ~14.1.2
     "@angular/router": ~14.2.0
     "@datx/core": 2.4.8
-    "@datx/jsonapi": 2.4.8
+    "@datx/jsonapi": 2.4.10
     "@datx/network": 2.4.8
     "@datx/utils": 2.4.8
     "@types/jest": ^28.1.1
@@ -1927,7 +1927,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datx/jsonapi@2.4.8, @datx/jsonapi@workspace:packages/datx-jsonapi":
+"@datx/jsonapi@2.4.10, @datx/jsonapi@workspace:packages/datx-jsonapi":
   version: 0.0.0-use.local
   resolution: "@datx/jsonapi@workspace:packages/datx-jsonapi"
   dependencies:
