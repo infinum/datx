@@ -352,7 +352,51 @@ export interface IGetAllExpression<TModel extends JsonapiModelType = JsonapiMode
 A hook for remote mutations
 This is a helper hook until [this](https://github.com/vercel/swr/pull/1450) is merged to SWR core!
 
-// TODO example
+```tsx
+// ./src/queries/todo.ts
+
+import { IGetManyExpression } from '@datx/swr';
+
+import { Todo } from '../models/Todo';
+
+export const querytodos: IGetManyExpression<typeof Todo> = {
+  op: 'getMany',
+  type: 'todos',
+};
+```
+
+```tsx
+// ./src/mutations/todo.ts
+
+import { getModelEndpointUrl, modelToJsonApi } from '@datx/jsonapi';
+import { IClientInstance } from '@datx/swr';
+
+import { Todo } from '../models/Todo';
+
+export const createTodo = (client: IClientInstance, message: string | undefined) => {
+  const model = new Todo({ message });
+  const url = getModelEndpointUrl(model);
+  const data = modelToJsonApi(model);
+
+  return client.request<Todo, Array<Todo>>(url, 'POST', { data });
+};
+```
+
+```tsx
+import { useMutation, useDatx } from '@datx/swr';
+
+export const Todos: FC = () => {
+  const { data, error, mutate } = useDatx(todosQuery);
+
+  const [create, { status }] = useMutation(createTodo, {
+    onSuccess: async () => {
+      mutate();
+    },
+  });
+  
+  // ...
+};
+```
 
 ### SSR
 
