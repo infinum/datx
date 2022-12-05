@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { IModelConstructor, IRawModel, IType } from '@datx/core';
-import { IRequestOptions } from '@datx/jsonapi';
-import { IRecord } from '@datx/jsonapi/dist/interfaces/JsonApi';
+import { IRecord, IRequestOptions } from '@datx/jsonapi';
 import { EMPTY, Observable } from 'rxjs';
 import { expand, map, mapTo, reduce } from 'rxjs/operators';
 import { APP_COLLECTION } from '../../injection-tokens';
@@ -12,7 +11,7 @@ import { Response } from '../../Response';
 @Injectable()
 export abstract class CollectionService<
   TModel extends IJsonapiModel,
-  TCollection extends IJsonapiCollection
+  TCollection extends IJsonapiCollection,
 > {
   protected abstract readonly ctor: IModelConstructor<TModel>;
   private readonly maxPageSize = 1000;

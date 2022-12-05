@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { IConfigType } from '@datx/jsonapi/dist/NetworkUtils';
+import { IConfigType } from '@datx/jsonapi';
 
 export const DATX_CONFIG = new InjectionToken<Partial<IConfigType>>('DATX_CONFIG');
 

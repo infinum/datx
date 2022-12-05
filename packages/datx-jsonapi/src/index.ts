@@ -29,11 +29,11 @@ export { IJsonapiModel } from './interfaces/IJsonapiModel';
 export { IJsonapiView } from './interfaces/IJsonapiView';
 export { IRawResponse } from './interfaces/IRawResponse';
 export { IRequestOptions } from './interfaces/IRequestOptions';
-export { IResponse } from './interfaces/JsonApi';
 export { IResponseData } from './interfaces/IResponseData';
 export { IResponseSnapshot } from './interfaces/IResponseSnapshot';
+export { IResponse, IRecord, IDefinition } from './interfaces/JsonApi';
 
-export { config, fetchLink } from './NetworkUtils';
+export { config, fetchLink, IConfigType } from './NetworkUtils';
 
 export {
   BaseRequest,

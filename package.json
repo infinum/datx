@@ -22,7 +22,9 @@
     "pkg:check": "manypkg check",
     "pkg:fix": "manypkg fix",
     "postinstall": "npm run prepare",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "publish": "lerna publish --contents dist",
+    "publish:dry": "lerna publish --contents dist --no-push --no-git-tag-version"
   },
   "private": true,
   "workspaces": {
@@ -36,5 +38,5 @@
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1"
   },
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.2.4"
 }
