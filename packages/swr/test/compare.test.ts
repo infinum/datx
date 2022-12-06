@@ -1,8 +1,9 @@
-import { renderHookWithConfig } from './utils';
+import { IResponse } from '@datx/jsonapi';
 import { useSWRConfig } from 'swr';
-import { getResponseCompare } from '../src/compare';
-import { IResponse, Response } from '@datx/jsonapi';
 import { useClient } from '../src';
+import { getResponseCompare } from '../src/compare';
+import { CollectionResponse } from '../src/Response';
+import { renderHookWithConfig } from './utils';
 
 describe('compare', () => {
   it('should return true if response data is identical', async () => {
@@ -17,10 +18,10 @@ describe('compare', () => {
         ],
       };
 
-      const responseA = new Response({ data, status: 200 }, client, {
+      const responseA = new CollectionResponse({ data, status: 200 }, client, {
         cacheOptions: { skipCache: true },
       });
-      const responseB = new Response({ data, status: 200 }, client, {
+      const responseB = new CollectionResponse({ data, status: 200 }, client, {
         cacheOptions: { skipCache: true },
       });
 
