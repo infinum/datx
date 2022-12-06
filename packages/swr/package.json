@@ -29,6 +29,7 @@
     "test": "jest --coverage",
     "test:dev": "jest",
     "test:watch": "jest --watch --coverage",
+    "ts:check": "tsc --noEmit",
     "prepublish": "npm run build",
     "build": "rollup --config",
     "watch": "rollup --config --watch"

@@ -92,6 +92,7 @@ export default ExampleApp;
 For more details how to disable Mobx see [Disable Mobx](#disable-mobx) section.
 
 ### Define models
+
 ```ts
 // src/models/Post.ts
 
@@ -128,6 +129,7 @@ export class Todo extends jsonapiModel(PureModel) {
   message!: string;
 }
 ```
+
 > It's important to use `readonly` in `public static readonly type = 'posts';`. It helps TS to infer the typings in `useDatx` without the need to manually pass generics.
 
 ### Define queries
@@ -207,11 +209,11 @@ const { data: todo } = useDatx(getTodoByUserQuery(user));
 // src/components/features/todos/Todos.mutations.ts
 
 import { getModelEndpointUrl, modelToJsonApi } from '@datx/jsonapi';
-import { ClientInstance } from '@datx/swr';
+import { IClientInstance } from '@datx/swr';
 
 import { Todo } from '../../../models/Todo';
 
-export const createTodo = (client: ClientInstance, message: string | undefined) => {
+export const createTodo = (client: IClientInstance, message: string | undefined) => {
   const model = new Todo({ message });
   const url = getModelEndpointUrl(model);
   const data = modelToJsonApi(model);
@@ -393,7 +395,7 @@ export const Todos: FC = () => {
       mutate();
     },
   });
-  
+
   // ...
 };
 ```

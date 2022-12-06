@@ -4,7 +4,7 @@ import {
   IGetAllExpression,
   FetcherExpressionArgument,
 } from './interfaces/QueryExpression';
-import { ClientInstance } from './interfaces/Client';
+import { IClientInstance } from './interfaces/Client';
 import { IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
 
 function isGetOne(expression: FetcherExpressionArgument): expression is IGetOneExpression {
@@ -20,7 +20,7 @@ function isGetAll(expression: FetcherExpressionArgument): expression is IGetAllE
 }
 
 export const createFetcher =
-  (client: ClientInstance) =>
+  (client: IClientInstance) =>
   <TModel extends IJsonapiModel = IJsonapiModel>(
     expression: FetcherExpressionArgument,
     config?: Pick<IRequestOptions, 'networkConfig'>,

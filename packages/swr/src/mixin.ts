@@ -15,6 +15,7 @@ import { Expression } from './interfaces/QueryExpression';
 
 export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
   class JsonapiSwrClient extends jsonapiCollection(BaseClass) implements IJsonapiSwrClient {
+    public static types = [];
     private __fallback: Record<string, unknown> = {};
 
     public async fetchQuery<TModel extends IJsonapiModel = IJsonapiModel>(
@@ -22,8 +23,13 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
       config?: IFetchQueryConfiguration,
     ) {
       try {
+        const executableExpression = typeof expression === 'function' ? expression() : expression;
+        if (!executableExpression) {
+          return;
+        }
+
         const fetcher = createFetcher(this);
-        const response = await fetcher<TModel>(expression);
+        const response = await fetcher<TModel>(executableExpression);
         const key = unstable_serialize(expression);
 
         // clone response to avoid mutation

@@ -1,4 +1,4 @@
-import { Response } from '@datx/jsonapi';
+import { IJsonapiModel, Response } from '@datx/jsonapi';
 import { act, render, renderHook } from '@testing-library/react';
 import React, { FC } from 'react';
 import { SWRConfig } from 'swr';
@@ -47,7 +47,7 @@ export const renderWithConfig = (
   });
 };
 
-export const getErrorMessage = (response: Response) => {
+export const getErrorMessage = (response: Response<IJsonapiModel>) => {
   const { error, status } = response;
 
   if (error instanceof Error) {

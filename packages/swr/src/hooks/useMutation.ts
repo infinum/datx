@@ -2,7 +2,7 @@ import { IJsonapiModel, Response } from '@datx/jsonapi';
 import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
 import { IMutationOptions } from '../interfaces/IMutationOptions';
 import { IResponseData } from '../interfaces/IResponseData';
-import { MutationFn } from '../interfaces/MutaionFn';
+import { MutationFn } from '../interfaces/MutationFn';
 import { MutationAction } from '../interfaces/MutationAction';
 import { MutationResult } from '../interfaces/MutationResult';
 import { IMutationState } from '../interfaces/MutationState';

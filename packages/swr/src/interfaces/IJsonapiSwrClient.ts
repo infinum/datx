@@ -9,5 +9,5 @@ export interface IJsonapiSwrClient {
   fetchQuery: <TModel extends IJsonapiModel = IJsonapiModel>(
     expression: Expression,
     config?: IFetchQueryConfiguration,
-  ) => Promise<IFetchQueryReturn<TModel>>;
+  ) => Promise<IFetchQueryReturn<TModel> | undefined>;
 }
