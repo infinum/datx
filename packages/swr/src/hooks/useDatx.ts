@@ -1,10 +1,11 @@
-import { IJsonapiModel, IResponseData, Response } from '@datx/jsonapi';
+import { IJsonapiModel, Response } from '@datx/jsonapi';
 import useSWR from 'swr';
 
 import { Expression } from '../interfaces/QueryExpression';
 import { DatxConfiguration } from '../interfaces/DatxConfiguration';
 import { middleware } from '../middleware';
 import { Data, Model } from '../interfaces/UseDatx';
+import { IResponseData } from '../interfaces/IResponseData';
 
 export function useDatx<
   TExpression extends Expression,
