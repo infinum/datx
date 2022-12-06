@@ -1,11 +1,5 @@
 import { ICollectionConstructor, PureCollection } from '@datx/core';
-import {
-  IJsonapiCollection,
-  IJsonapiModel,
-  IRawResponse,
-  jsonapiCollection,
-  Response,
-} from '@datx/jsonapi';
+import { IJsonapiCollection, IJsonapiModel, IRawResponse, jsonapiCollection } from '@datx/jsonapi';
 import { unstable_serialize } from 'swr';
 import { createFetcher } from './createFetcher';
 import { IFetchQueryConfiguration } from './interfaces/IFetchQueryConfiguration';
@@ -14,6 +8,8 @@ import { IJsonapiSwrClient } from './interfaces/IJsonapiSwrClient';
 import { IResponseData } from './interfaces/IResponseData';
 import { Expression, ExpressionArgument } from './interfaces/QueryExpression';
 import { Data, Model } from './interfaces/UseDatx';
+import { isCollectionResponse, isSingleResponse } from './Response';
+import { isFunction } from './utils';
 
 export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
   class JsonapiSwrClient extends jsonapiCollection(BaseClass) implements IJsonapiSwrClient {
@@ -26,8 +22,9 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
       TData extends IResponseData = Data<TExpression, TModel>,
     >(expression: TExpression, config?: IFetchQueryConfiguration) {
       try {
-        const executableExpression =
-          typeof expression === 'function' ? expression() : (expression as ExpressionArgument);
+        const executableExpression = isFunction(expression)
+          ? expression()
+          : (expression as ExpressionArgument);
         if (!executableExpression) {
           throw new Error(`Expression can't be empty, got: ${executableExpression}`);
         }
@@ -46,14 +43,15 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
           data: response,
         } as IFetchQueryReturn<TData>;
       } catch (error) {
-        if (config?.prefetch) {
+        const prefetch = config?.prefetch;
+        if (isFunction(prefetch) ? prefetch(error) : prefetch) {
           return {
             data: undefined,
             error,
           };
         }
 
-        if (error instanceof Response) {
+        if (isSingleResponse<TModel>(error) || isCollectionResponse<TModel>(error)) {
           throw error.error;
         }
 

@@ -32,3 +32,15 @@ export class SingleResponse<TModel extends IJsonapiModel> extends BaseResponse<
     return this.__data.value as TModel;
   }
 }
+
+export function isSingleResponse<TModel extends IJsonapiModel>(
+  obj: unknown,
+): obj is SingleResponse<TModel> {
+  return obj instanceof SingleResponse;
+}
+
+export function isCollectionResponse<TModel extends IJsonapiModel>(
+  obj: unknown,
+): obj is CollectionResponse<TModel> {
+  return obj instanceof CollectionResponse;
+}
