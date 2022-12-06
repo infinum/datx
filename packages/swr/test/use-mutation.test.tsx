@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React, { FC } from 'react';
 
 import { useMutation } from '../src';
-import { renderWithConfig } from './utils';
 import { createClient } from './datx';
+import { renderWithConfig } from './utils';
 
 interface ITesterProps {
   mutationFn: () => Promise<any>;
@@ -26,8 +26,10 @@ const Tester: FC<ITesterProps> = ({ mutationFn, onMutate, onSuccess, onFailure, 
 };
 
 // TODO fix tests
-describe.skip('useMutation', () => {
-  test('should call all the correct function for a successful mutation', async () => {
+describe('useMutation', () => {
+  test('should call all the correct functions for a successful mutation', async () => {
+    const user = userEvent.setup({ delay: null });
+
     const mutationFn = jest.fn(() => Promise.resolve('result-1'));
     const onMutate = jest.fn();
     const onSuccess = jest.fn();
@@ -35,7 +37,6 @@ describe.skip('useMutation', () => {
     const onSettled = jest.fn();
 
     const client = createClient();
-
     renderWithConfig(
       <Tester
         mutationFn={mutationFn}
@@ -46,9 +47,9 @@ describe.skip('useMutation', () => {
       />,
     );
 
-    userEvent.click(screen.getByRole('button'));
+    user.click(screen.getByRole('button'));
 
-    await screen.findByText('running');
+    await screen.findByText('success');
 
     expect(mutationFn).toHaveBeenCalledWith(client, 'test-1');
     expect(onMutate).toHaveBeenCalledWith({ input: 'test-1' });
@@ -86,7 +87,7 @@ describe.skip('useMutation', () => {
 
     userEvent.click(screen.getByRole('button'));
 
-    await screen.findByText('running');
+    await screen.findByText('failure');
 
     expect(mutationFn).toHaveBeenCalledWith(client, 'test-1');
     expect(onMutate).toHaveBeenCalledWith({ input: 'test-1' });
