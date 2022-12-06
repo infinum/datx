@@ -1,5 +1,6 @@
-import { IJsonapiModel, IRequestOptions, IResponseData, Response } from '@datx/jsonapi';
+import { IJsonapiModel, IRequestOptions, Response } from '@datx/jsonapi';
 import { Fetcher, SWRConfiguration } from 'swr';
+import { IResponseData } from './IResponseData';
 
 export type DatxConfiguration<
   TModel extends IJsonapiModel,

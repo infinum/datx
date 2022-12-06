@@ -1,5 +1,5 @@
 import { View, IViewConstructor, PureModel } from '@datx/core';
-import * as fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch';
 
 import { IJsonapiView, jsonapi, config } from '../src';
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';

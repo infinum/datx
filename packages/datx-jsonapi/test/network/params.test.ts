@@ -1,4 +1,4 @@
-import * as fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch';
 
 import { setupNetwork, setRequest, confirmNetwork } from '../utils/api';
 import { TestStore, Event } from '../utils/setup';

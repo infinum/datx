@@ -29,7 +29,6 @@ export { IJsonapiModel } from './interfaces/IJsonapiModel';
 export { IJsonapiView } from './interfaces/IJsonapiView';
 export { IRawResponse } from './interfaces/IRawResponse';
 export { IRequestOptions } from './interfaces/IRequestOptions';
-export { IResponseData } from './interfaces/IResponseData';
 export { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 export { IResponse, IRecord, IDefinition } from './interfaces/JsonApi';
 

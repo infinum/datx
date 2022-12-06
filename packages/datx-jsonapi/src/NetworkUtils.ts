@@ -18,7 +18,6 @@ import { ILink, IResponse } from './interfaces/JsonApi';
 import { Response as LibResponse } from './Response';
 import { CachingStrategy, ParamArrayType } from '@datx/network';
 import { saveCache, getCache } from './cache';
-import { IResponseData } from '.';
 
 export type FetchType = (
   method: string,
@@ -193,14 +192,13 @@ function getLocalNetworkError<T extends IJsonapiModel>(
   );
 }
 
-function makeNetworkCall<T extends IJsonapiModel, IData extends IResponseData = IResponseData<T>>(
+function makeNetworkCall<T extends IJsonapiModel>(
   params: ICollectionFetchOpts,
   fetchOptions?: object,
   doCacheResponse = false,
-  existingResponse?: LibResponse<T, IData>,
-): Promise<LibResponse<T, IData>> {
+  existingResponse?: LibResponse<T>,
+): Promise<LibResponse<T>> {
   const ResponseConstructor: typeof LibResponse = fetchOptions?.['Response'] || LibResponse;
-
   return config
     .baseFetch(
       params.method,
@@ -218,7 +216,7 @@ function makeNetworkCall<T extends IJsonapiModel, IData extends IResponseData = 
         return existingResponse;
       }
 
-      return new ResponseConstructor<T, IData>(
+      return new ResponseConstructor<T>(
         payload,
         params.collection,
         params.options,
@@ -226,7 +224,7 @@ function makeNetworkCall<T extends IJsonapiModel, IData extends IResponseData = 
         params.views,
       );
     })
-    .then((response: LibResponse<T, IData>) => {
+    .then((response: LibResponse<T>) => {
       if (doCacheResponse) {
         saveCache(params.url, response);
       }
@@ -240,10 +238,11 @@ function makeNetworkCall<T extends IJsonapiModel, IData extends IResponseData = 
  * @param {ICollectionFetchOpts} reqOptions API request options
  * @returns {Promise<Response>} Resolves with a response object
  */
-function collectionFetch<TModel extends IJsonapiModel, IData extends IResponseData = IResponseData<TModel>>(
+function collectionFetch<T extends IJsonapiModel>(
   reqOptions: ICollectionFetchOpts,
-): Promise<LibResponse<TModel, IData>> {
-  const ResponseConstructor: typeof LibResponse = reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
+): Promise<LibResponse<T>> {
+  const ResponseConstructor: typeof LibResponse =
+    reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
 
   const params = config.transformRequest(reqOptions);
   // const { url, options, data, method = 'GET', collection, views } = params;
@@ -271,28 +270,30 @@ function collectionFetch<TModel extends IJsonapiModel, IData extends IResponseDa
 
   // NetworkOnly - Ignore cache
   if (cacheStrategy === CachingStrategy.NetworkOnly) {
-    return makeNetworkCall<TModel, IData>(params, reqOptions.options?.fetchOptions);
+    return makeNetworkCall<T>(params, reqOptions.options?.fetchOptions);
   }
 
-  const cacheContent: { response: LibResponse<TModel, IData> } | undefined = (getCache(
+  const cacheContent: { response: LibResponse<T> } | undefined = getCache(
     params.url,
     maxCacheAge,
     ResponseConstructor,
-  ) as unknown) as { response: LibResponse<TModel, IData> } | undefined;
+  ) as unknown as { response: LibResponse<T> } | undefined;
 
   // NetworkFirst - Fallback to cache only on network error
   if (cacheStrategy === CachingStrategy.NetworkFirst) {
-    return makeNetworkCall<TModel, IData>(params, reqOptions.options?.fetchOptions, true).catch((errorResponse) => {
-      if (cacheContent) {
-        return cacheContent.response;
-      }
-      throw errorResponse;
-    });
+    return makeNetworkCall<T>(params, reqOptions.options?.fetchOptions, true).catch(
+      (errorResponse) => {
+        if (cacheContent) {
+          return cacheContent.response;
+        }
+        throw errorResponse;
+      },
+    );
   }
 
   // StaleWhileRevalidate - Use cache and update it in background
   if (cacheStrategy === CachingStrategy.StaleWhileRevalidate) {
-    const network = makeNetworkCall<TModel, IData>(params, reqOptions.options?.fetchOptions, true);
+    const network = makeNetworkCall<T>(params, reqOptions.options?.fetchOptions, true);
 
     if (cacheContent) {
       network.catch(() => {
@@ -319,14 +320,19 @@ function collectionFetch<TModel extends IJsonapiModel, IData extends IResponseDa
   if (cacheStrategy === CachingStrategy.CacheFirst) {
     return cacheContent
       ? Promise.resolve(cacheContent.response)
-      : makeNetworkCall<TModel, IData>(params, reqOptions.options?.fetchOptions, true);
+      : makeNetworkCall<T>(params, reqOptions.options?.fetchOptions, true);
   }
 
   // StaleAndUpdate - Use cache and update response once network is complete
   if (cacheStrategy === CachingStrategy.StaleAndUpdate) {
-    const existingResponse = cacheContent?.response?.clone() as LibResponse<TModel, IData>;
+    const existingResponse = cacheContent?.response?.clone() as LibResponse<T>;
 
-    const network = makeNetworkCall<TModel, IData>(params, reqOptions.options?.fetchOptions, true, existingResponse);
+    const network = makeNetworkCall<T>(
+      params,
+      reqOptions.options?.fetchOptions,
+      true,
+      existingResponse,
+    );
 
     if (existingResponse) {
       network.catch(() => {
@@ -343,10 +349,10 @@ function collectionFetch<TModel extends IJsonapiModel, IData extends IResponseDa
   );
 }
 
-export function libFetch<TModel extends IJsonapiModel = IJsonapiModel, IData extends IResponseData = IResponseData<TModel>>(
+export function libFetch<T extends IJsonapiModel = IJsonapiModel>(
   options: ICollectionFetchOpts,
-): Promise<LibResponse<TModel, IData>> {
-  return collectionFetch<TModel, IData>(options);
+): Promise<LibResponse<T>> {
+  return collectionFetch<T>(options);
 }
 
 /**
