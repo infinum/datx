@@ -6,6 +6,7 @@ import {
 } from './interfaces/QueryExpression';
 import { IClientInstance } from './interfaces/Client';
 import { IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
+import { CollectionResponse, SingleResponse } from './Response';
 
 function isGetOne(expression: FetcherExpressionArgument): expression is IGetOneExpression {
   return expression.op === 'getOne';
@@ -30,19 +31,41 @@ export const createFetcher =
     if (isGetOne(expression)) {
       const { type, id, queryParams } = expression;
 
-      return client.getOne<TModel>(type, id, { queryParams, networkConfig });
+      return client.getOne<TModel>(type, id, {
+        queryParams,
+        networkConfig,
+        fetchOptions: {
+          Response: SingleResponse,
+        },
+      });
     }
 
     if (isGetMany(expression)) {
       const { type, queryParams } = expression;
 
-      return client.getMany<TModel>(type, { queryParams, networkConfig });
+      return client.getMany<TModel>(type, {
+        queryParams,
+        networkConfig,
+        fetchOptions: {
+          Response: CollectionResponse,
+        },
+      });
     }
 
     if (isGetAll(expression)) {
       const { type, queryParams, maxRequests } = expression;
 
-      return client.getAll<TModel>(type, { queryParams, networkConfig }, maxRequests);
+      return client.getAll<TModel>(
+        type,
+        {
+          queryParams,
+          networkConfig,
+          fetchOptions: {
+            Response: CollectionResponse,
+          },
+        },
+        maxRequests,
+      );
     }
 
     throw new Error('Invalid expression operation!');

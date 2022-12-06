@@ -1,16 +1,19 @@
-import { IJsonapiModel, Response } from '@datx/jsonapi';
+import { IJsonapiModel } from '@datx/jsonapi';
 import useSWR from 'swr';
 
-import { DatxConfiguration } from '../interfaces/DatxConfiguration';
 import { Expression } from '../interfaces/QueryExpression';
-import { Model } from '../interfaces/UseDatx';
+import { DatxConfiguration } from '../interfaces/DatxConfiguration';
 import { middleware } from '../middleware';
+import { Data, Model } from '../interfaces/UseDatx';
+import { IResponseData } from '../interfaces/IResponseData';
+import { Response } from '../Response';
 
 export function useDatx<
   TExpression extends Expression,
   TModel extends IJsonapiModel = Model<TExpression>,
->(expression: TExpression, config?: DatxConfiguration<TModel>) {
-  return useSWR<Response<TModel>, Response<TModel>>(expression, {
+  TData extends IResponseData = Data<TExpression, TModel>,
+>(expression: TExpression, config?: DatxConfiguration<TData>) {
+  return useSWR<Response<TData>, Response<TData>>(expression, {
     ...config,
     use: [middleware, ...(config?.use || [])],
   });

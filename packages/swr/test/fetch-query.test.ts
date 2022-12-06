@@ -24,6 +24,10 @@ describe('fetchQuery', () => {
     expect((data?.data as Array<Todo>).length).toBe(1);
   });
 
+  test('should throw on deferrable query', async () => {
+    await expect(client.fetchQuery(() => null)).rejects.toBeInstanceOf(Error);
+  });
+
   test('client stores fallback under the appropriate key', async () => {
     const key = unstable_serialize(queryTodos);
 

@@ -1,10 +1,12 @@
-import { IJsonapiModel, IRequestOptions, Response } from '@datx/jsonapi';
+import { IRequestOptions } from '@datx/jsonapi';
 import { Fetcher, SWRConfiguration } from 'swr';
+import { Response } from '../Response';
+import { IResponseData } from './IResponseData';
 
-export type DatxConfiguration<TModel extends IJsonapiModel> = SWRConfiguration<
-  Response<TModel>,
-  Response<TModel>,
-  Fetcher<Response<TModel>>
+export type DatxConfiguration<TData extends IResponseData> = SWRConfiguration<
+  Response<TData>,
+  Response<TData>,
+  Fetcher<Response<TData>>
 > & {
   networkConfig?: IRequestOptions['networkConfig'];
 };

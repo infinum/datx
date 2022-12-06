@@ -1,5 +1,7 @@
-import { IJsonapiModel, Response } from '@datx/jsonapi';
+import { Response } from '../Response';
+import { IResponseData } from './IResponseData';
 
-export interface IFetchQueryReturn<TModel extends IJsonapiModel = IJsonapiModel> {
-  data: Response<TModel>;
+export interface IFetchQueryReturn<TData extends IResponseData> {
+  data?: Response<TData>;
+  error?: unknown;
 }
