@@ -47,7 +47,7 @@ export function upsertModel(
     keys.forEach((key: string) => {
       const isBackRefKey = Boolean(fields?.[key]?.referenceDef?.property);
       const result = modelMapParse(TypeModel, data, key);
-      if (!(isBackRefKey && result === undefined && !(key in data))) {
+      if (result !== undefined && !isBackRefKey) {
         parsedData[key] = result;
       }
     });

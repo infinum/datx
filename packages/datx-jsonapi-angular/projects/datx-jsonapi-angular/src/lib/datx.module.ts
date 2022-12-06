@@ -1,5 +1,5 @@
 import { APP_INITIALIZER, ModuleWithProviders, NgModule, Optional } from '@angular/core';
-import { IConfigType } from '@datx/jsonapi/dist/NetworkUtils';
+import { IConfigType } from '@datx/jsonapi';
 import { CachingStrategy } from '@datx/network';
 import { initDatxFactory } from './helpers/init-datx-factory';
 import { DATX_CONFIG } from './injection-tokens';

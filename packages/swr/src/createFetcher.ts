@@ -6,8 +6,9 @@ import {
   IGetRelatedResourcesExpression,
   IGetRelatedResourceExpression,
 } from './interfaces/QueryExpression';
-import { ClientInstance } from './interfaces/Client';
+import { IClientInstance } from './interfaces/Client';
 import { IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
+import { CollectionResponse, SingleResponse } from './Response';
 
 function isGetOne(expression: FetcherExpressionArgument): expression is IGetOneExpression {
   return expression.op === 'getOne';
@@ -34,7 +35,7 @@ function isGetRelatedResources(
 }
 
 export const createFetcher =
-  (client: ClientInstance) =>
+  (client: IClientInstance) =>
   <TModel extends IJsonapiModel = IJsonapiModel>(
     expression: FetcherExpressionArgument,
     config?: Pick<IRequestOptions, 'networkConfig'>,
@@ -44,19 +45,41 @@ export const createFetcher =
     if (isGetOne(expression)) {
       const { type, id, queryParams } = expression;
 
-      return client.getOne<TModel>(type, id, { queryParams, networkConfig });
+      return client.getOne<TModel>(type, id, {
+        queryParams,
+        networkConfig,
+        fetchOptions: {
+          Response: SingleResponse,
+        },
+      });
     }
 
     if (isGetMany(expression)) {
       const { type, queryParams } = expression;
 
-      return client.getMany<TModel>(type, { queryParams, networkConfig });
+      return client.getMany<TModel>(type, {
+        queryParams,
+        networkConfig,
+        fetchOptions: {
+          Response: CollectionResponse,
+        },
+      });
     }
 
     if (isGetAll(expression)) {
       const { type, queryParams, maxRequests } = expression;
 
-      return client.getAll<TModel>(type, { queryParams, networkConfig }, maxRequests);
+      return client.getAll<TModel>(
+        type,
+        {
+          queryParams,
+          networkConfig,
+          fetchOptions: {
+            Response: CollectionResponse,
+          },
+        },
+        maxRequests,
+      );
     }
 
     if (isGetRelatedResource(expression)) {
@@ -65,15 +88,21 @@ export const createFetcher =
       return client.request<TModel>(`${type}/${relation}`, undefined, undefined, {
         queryParams,
         networkConfig,
+        fetchOptions: {
+          Response: SingleResponse,
+        },
       });
     }
 
     if (isGetRelatedResources(expression)) {
       const { type, relation, queryParams } = expression;
 
-      return client.request<TModel, Array<TModel>>(`${type}/${relation}`, undefined, undefined, {
+      return client.request<TModel>(`${type}/${relation}`, undefined, undefined, {
         queryParams,
         networkConfig,
+        fetchOptions: {
+          Response: CollectionResponse,
+        },
       });
     }
 

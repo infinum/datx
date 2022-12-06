@@ -1,5 +1,4 @@
 import { IModelConstructor, IType, PureCollection, PureModel } from '@datx/core';
-import { IResponseData } from '..';
 
 import { Response } from '../Response';
 import { IGetAllResponse } from './IGetAllResponse';
@@ -53,12 +52,12 @@ export interface IJsonapiCollection extends PureCollection {
     maxRequests?: number,
   ): Promise<IGetAllResponse<T>>;
 
-  request<TModel extends IJsonapiModel = IJsonapiModel, IData extends IResponseData = IResponseData<TModel>>(
+  request<T extends IJsonapiModel = IJsonapiModel>(
     url: string,
     method?: string,
     data?: object,
     options?: IRequestOptions,
-  ): Promise<Response<TModel, IData>>;
+  ): Promise<Response<T>>;
 
   removeOne(
     type: IType | typeof PureModel,

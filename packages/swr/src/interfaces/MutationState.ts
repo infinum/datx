@@ -1,8 +1,9 @@
-import { IJsonapiModel, IResponseData, Response } from "@datx/jsonapi";
-import { MutationStatus } from "./MutationStatus";
+import { IJsonapiModel, Response } from '@datx/jsonapi';
+import { IResponseData } from './IResponseData';
+import { MutationStatus } from './MutationStatus';
 
-export type MutationState<TModel extends IJsonapiModel, TData extends IResponseData> = {
+export interface IMutationState<TModel extends IJsonapiModel, TData extends IResponseData> {
   status: MutationStatus;
   data?: Response<TModel, TData>;
   error?: Response<TModel, TData>;
-};
+}

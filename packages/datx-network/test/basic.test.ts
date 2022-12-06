@@ -36,10 +36,7 @@ describe('Request', () => {
 
   it('throw on server error', async () => {
     const store = new Collection();
-    const request = new MockBaseRequest('foobar').pipe(
-      setUrl('foobar'),
-      collection(store),
-    );
+    const request = new MockBaseRequest('foobar').pipe(setUrl('foobar'), collection(store));
     request['resetMock']({
       status: 404,
       json: async () => ({}),
@@ -49,7 +46,11 @@ describe('Request', () => {
       expect(true).toBe(false);
     } catch (e) {
       expect(store.length).toBe(0);
-      expect(e.error).toEqual({ message: 'Invalid HTTP status: 404', status: 404 });
+      expect(e).toHaveProperty('error');
+      expect((e as { error: unknown }).error).toEqual({
+        message: 'Invalid HTTP status: 404',
+        status: 404,
+      });
     }
   });
 
@@ -88,7 +89,10 @@ describe('Request', () => {
   });
 
   it('should pass params data to interceptors', async () => {
-    async function mockInterceptor (request: IFetchOptions, next: INetworkHandler): Promise<Response<PureModel>> {
+    async function mockInterceptor(
+      request: IFetchOptions,
+      next: INetworkHandler,
+    ): Promise<Response<PureModel>> {
       expect(request.params).toEqual({ foo: 1 });
 
       return next(request);
@@ -96,10 +100,7 @@ describe('Request', () => {
 
     const request1 = new MockBaseRequest('foobar');
 
-    const request2 = request1.pipe(
-      setUrl('/foobar'),
-      addInterceptor(mockInterceptor),
-    );
+    const request2 = request1.pipe(setUrl('/foobar'), addInterceptor(mockInterceptor));
 
     await request2.fetch({ foo: 1 });
 
@@ -110,7 +111,10 @@ describe('Request', () => {
     let counter = 0;
 
     function mockInterceptor(expected: number) {
-      return async (request: IFetchOptions, next: INetworkHandler): Promise<Response<PureModel>> => {
+      return async (
+        request: IFetchOptions,
+        next: INetworkHandler,
+      ): Promise<Response<PureModel>> => {
         expect(counter).toBe(expected);
         counter++;
         return next(request);

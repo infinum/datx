@@ -15,10 +15,7 @@ export const jsonApiRawResponse = {
 };
 
 export const handlers = [
-  rest.get(`${BASE_URL}todos`, (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json(jsonApiRawResponse),
-    );
+  rest.get(`${BASE_URL}todos`, (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(jsonApiRawResponse));
   }),
 ];

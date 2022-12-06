@@ -1,5 +1,4 @@
-import { config } from '@datx/jsonapi';
-import { IConfigType } from '@datx/jsonapi/dist/NetworkUtils';
+import { config, IConfigType } from '@datx/jsonapi';
 import { DEFAULT_DATX_ANGULAR_JSON_API_CONFIG } from '../datx.module';
 import { CustomFetchService } from '../services/custom-fetch/custom-fetch.service';
 

@@ -16,18 +16,22 @@ import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IJsonapiView } from './interfaces/IJsonapiView';
 
+/** @deprecated Use `jsonapiModel`, `jsonapiCollection` or `jsonapiView` instead */
 export function jsonapi<T extends PureModel>(
   Base: IModelConstructor<T>,
 ): IModelConstructor<T & IJsonapiModel>;
 
+/** @deprecated Use `jsonapiModel`, `jsonapiCollection` or `jsonapiView` instead */
 export function jsonapi<T extends PureCollection>(
   Base: ICollectionConstructor<T>,
 ): ICollectionConstructor<T & IJsonapiCollection>;
 
+/** @deprecated Use `jsonapiModel`, `jsonapiCollection` or `jsonapiView` instead */
 export function jsonapi<T extends PureModel>(
   Base: IViewConstructor<T>,
 ): IViewConstructor<IJsonapiModel, T & IJsonapiView>;
 
+/** @deprecated Use `jsonapiModel`, `jsonapiCollection` or `jsonapiView` instead */
 export function jsonapi<T>(
   Base: IModelConstructor<T> | ICollectionConstructor<T> | IViewConstructor<T>,
 ):
@@ -52,20 +56,14 @@ export function jsonapi<T>(
   throw new Error('The instance needs to be a model, collection or a view');
 }
 
-export function jsonapiModel<T>(
-  Base: IModelConstructor<T>,
-) {
+export function jsonapiModel<T extends PureModel>(Base: IModelConstructor<T>) {
   return decorateModel(Base as any) as IModelConstructor<T & IJsonapiModel>;
 }
 
-export function jsonapiCollection<T>(
-  Base: ICollectionConstructor<T>,
-) {
+export function jsonapiCollection<T extends PureCollection>(Base: ICollectionConstructor<T>) {
   return decorateCollection(Base as any) as ICollectionConstructor<T & IJsonapiCollection>;
 }
 
-export function jsonapiView<T>(
-  Base: IViewConstructor<T>,
-) {
+export function jsonapiView<T extends PureModel>(Base: IViewConstructor<T>) {
   return decorateView(Base as any) as IViewConstructor<IJsonapiModel, T & IJsonapiView>;
 }

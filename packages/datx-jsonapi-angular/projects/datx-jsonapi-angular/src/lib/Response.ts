@@ -1,5 +1,4 @@
-import { fetchLink, Response as PromiseResponse } from '@datx/jsonapi';
-import { IResponseSnapshot } from '@datx/jsonapi/dist/interfaces/IResponseSnapshot';
+import { fetchLink, IResponseSnapshot, Response as PromiseResponse } from '@datx/jsonapi';
 import { Observable } from 'rxjs';
 import { observableWrapper } from './helpers/wrapper';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
@@ -7,7 +6,10 @@ import { IJsonapiModel } from './interfaces/IJsonapiModel';
 type ILink = string | { href: string; meta: Record<string, any> };
 type IAsync<T extends IJsonapiModel> = Observable<Response<T>>;
 
-export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseResponse<any, any, IAsync<T>> {
+export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseResponse<
+  any,
+  IAsync<T>
+> {
   /**
    * Function called when a link is being fetched. The returned value is cached
    *

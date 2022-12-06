@@ -1,10 +1,11 @@
-import { IJsonapiModel, IResponseData, Response } from '@datx/jsonapi';
+import { IJsonapiModel, Response } from '@datx/jsonapi';
 import { Reducer, useCallback, useEffect, useReducer, useRef } from 'react';
 import { IMutationOptions } from '../interfaces/IMutationOptions';
-import { MutationFn } from '../interfaces/MutaionFn';
+import { IResponseData } from '../interfaces/IResponseData';
+import { MutationFn } from '../interfaces/MutationFn';
 import { MutationAction } from '../interfaces/MutationAction';
 import { MutationResult } from '../interfaces/MutationResult';
-import { MutationState } from '../interfaces/MutationState';
+import { IMutationState } from '../interfaces/MutationState';
 import { useClient } from './useClient';
 
 function useGetLatest<Value>(value: Value): () => Value {
@@ -17,12 +18,12 @@ function useGetLatest<Value>(value: Value): () => Value {
   return useCallback(() => ref.current, []);
 }
 
-const initialState: MutationState<never, never> = { status: 'idle' };
+const initialState: IMutationState<never, never> = { status: 'idle' };
 
 const reducer = <TModel extends IJsonapiModel, TData extends IResponseData>(
   _,
   action,
-): MutationState<TModel, TData> => {
+): IMutationState<TModel, TData> => {
   if (action.type === 'RESET') {
     return { status: 'idle' };
   }
@@ -60,7 +61,7 @@ export function useMutation<
   const client = useClient();
 
   const [{ status, data, error }, dispatch] = useReducer<
-    Reducer<MutationState<TModel, TData>, MutationAction<TModel, TData>>
+    Reducer<IMutationState<TModel, TData>, MutationAction<TModel, TData>>
   >(reducer, initialState);
 
   const getMutationFn = useGetLatest(mutationFn);

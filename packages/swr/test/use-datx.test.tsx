@@ -23,7 +23,7 @@ const Todos: FC = () => {
     return <div>{loadingMessage}</div>;
   }
 
-  return <div>{data?.data[0].message}</div>;
+  return <div>{data?.data?.[0].message}</div>;
 };
 
 describe('useDatx', () => {

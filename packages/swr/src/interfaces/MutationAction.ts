@@ -1,4 +1,5 @@
-import { IJsonapiModel, IResponseData, Response } from "@datx/jsonapi";
+import { IJsonapiModel, Response } from '@datx/jsonapi';
+import { IResponseData } from './IResponseData';
 
 export type MutationAction<TModel extends IJsonapiModel, TData extends IResponseData> =
   | { type: 'RESET' }

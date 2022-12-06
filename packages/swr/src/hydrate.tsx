@@ -2,10 +2,10 @@ import React, { PropsWithChildren } from 'react';
 import { Response } from '@datx/jsonapi';
 import { SWRConfig } from 'swr';
 import { useClient } from './hooks/useClient';
-import { ClientInstance } from './interfaces/Client';
+import { IClientInstance } from './interfaces/Client';
 import { Fallback } from './interfaces/Fallback';
 
-const hydrate = (client: ClientInstance, fallback: Fallback | undefined) => {
+const hydrate = (client: IClientInstance, fallback: Fallback | undefined) => {
   return (
     fallback &&
     Object.keys(fallback).reduce((previousValue, currentValue) => {

@@ -1,7 +1,12 @@
-import { IJsonapiModel, IResponseData, Response } from "@datx/jsonapi";
-import { MutationRollbackFn } from "./MutationRollbackFn";
+import { IJsonapiModel, Response } from '@datx/jsonapi';
+import { IResponseData } from './IResponseData';
+import { MutationRollbackFn } from './MutationRollbackFn';
 
-export interface IMutationOptions<TInput, TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>> {
+export interface IMutationOptions<
+  TInput,
+  TModel extends IJsonapiModel = IJsonapiModel,
+  TData extends IResponseData = IResponseData<TModel>,
+> {
   /**
    * A function to be executed before the mutation runs.
    *
@@ -10,7 +15,9 @@ export interface IMutationOptions<TInput, TModel extends IJsonapiModel = IJsonap
    * It can be an async or sync function, in both cases if it returns a function
    * it will keep it as a way to rollback the changed applied inside onMutate.
    */
-  onMutate?(params: { input: TInput }): Promise<MutationRollbackFn | void> | MutationRollbackFn | void;
+  onMutate?(params: {
+    input: TInput;
+  }): Promise<MutationRollbackFn | void> | MutationRollbackFn | void;
   /**
    * A function to be executed after the mutation resolves successfully.
    *

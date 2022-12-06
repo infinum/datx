@@ -1,6 +1,6 @@
 import { Collection, Model, prop, Attribute } from '@datx/core';
 import { mobx } from '@datx/utils';
-import * as fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch';
 import { getModelMeta, getModelRefMeta, jsonapi, modelToJsonApi, config } from '../src';
 
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
@@ -314,5 +314,28 @@ describe('Issues', () => {
 
     snapshot = foo.toJSON();
     expect(snapshot.value).toBe('TEST:321');
+  });
+
+  it('should work with partial responses', async () => {
+    setRequest({
+      name: 'event-1b',
+      url: 'event/1',
+    });
+
+    setRequest({
+      method: 'PATCH',
+      name: 'event-1g',
+      url: 'event/1',
+    });
+
+    const store = new TestStore();
+    const eventResponse = await store.fetch(Event, '1');
+    const event = eventResponse.data as Event;
+
+    expect(event.title).toBe('Test 1');
+
+    await event.save();
+
+    expect(event.title).toBe('Test 1');
   });
 });

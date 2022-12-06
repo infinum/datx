@@ -17,10 +17,15 @@ describe('fetchQuery', () => {
   });
 
   test('should fetch query', async () => {
-    const { data } = await client.fetchQuery(queryTodos);
+    const res = await client.fetchQuery(queryTodos);
+    const data = res?.data;
 
     expect(data).toBeTruthy();
-    expect((data.data as Array<Todo>).length).toBe(1);
+    expect((data?.data as Array<Todo>).length).toBe(1);
+  });
+
+  test('should throw on deferrable query', async () => {
+    await expect(client.fetchQuery(() => null)).rejects.toBeInstanceOf(Error);
   });
 
   test('client stores fallback under the appropriate key', async () => {

@@ -1,8 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { IModelConstructor, IRawModel, IType } from '@datx/core';
-import { IRequestOptions } from '@datx/jsonapi';
-import { IRecord } from '@datx/jsonapi/dist/interfaces/JsonApi';
+import { IRecord, IRequestOptions } from '@datx/jsonapi';
 import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { APP_COLLECTION } from '../../injection-tokens';
@@ -20,8 +19,9 @@ function asyncData<TData>(data: TData): Observable<TData> {
 @Injectable()
 export abstract class CollectionTestingService<
   TModel extends IJsonapiModel,
-  TCollection extends IJsonapiCollection
-> implements ExtractPublic<CollectionService<TModel, TCollection>> {
+  TCollection extends IJsonapiCollection,
+> implements ExtractPublic<CollectionService<TModel, TCollection>>
+{
   protected abstract ctor: IModelConstructor<TModel>;
 
   constructor(@Inject(APP_COLLECTION) protected readonly collection: TCollection) {}

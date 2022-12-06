@@ -22,7 +22,6 @@ import { flattenModel } from './helpers/model';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { fetchLink } from './NetworkUtils';
 import { IResponseSnapshot } from './interfaces/IResponseSnapshot';
-import { IResponseData } from '.';
 
 function serializeHeaders(
   headers: Array<[string, string]> | IResponseHeaders,
@@ -48,15 +47,15 @@ function initHeaders(headers: Array<[string, string]> | IResponseHeaders): IResp
   return headers;
 }
 
-function initData<TModel extends IJsonapiModel>(
+function initData<T extends IJsonapiModel>(
   response: IRawResponse,
   collection?: IJsonapiCollection,
-  overrideData?: IResponseData<TModel>,
+  overrideData?: T | Array<T>,
 ): any {
   if (collection && response.data) {
-    const data = overrideData || collection.sync<TModel>(response.data);
+    const data = overrideData || collection.sync<T>(response.data);
 
-    return new Bucket.ToOneOrMany<TModel>(data, collection as any, true);
+    return new Bucket.ToOneOrMany<T>(data, collection as any, true);
   }
 
   if (response.data) {
@@ -69,17 +68,17 @@ function initData<TModel extends IJsonapiModel>(
       }
 
       return {
-        value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as TModel),
+        value: overrideData || (new GenericModel(flattenModel(undefined, resp.data)) as T),
       };
     }
   }
 
-  return new Bucket.ToOneOrMany<TModel>(null, collection as any, true);
+  return new Bucket.ToOneOrMany<T>(null, collection as any, true);
 }
 
-type IAsync<TModel extends IJsonapiModel, TData extends IResponseData = IResponseData<TModel>> = Promise<Response<TModel, TData>>;
+type IAsync<T extends IJsonapiModel> = Promise<Response<T>>;
 
-export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extends IResponseData = IResponseData<TModel>, TAsync = IAsync<TModel, TData>> {
+export class Response<T extends IJsonapiModel, P = IAsync<T>> {
   private __data;
 
   protected __internal: IResponseInternal = {
@@ -153,7 +152,7 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
    * @type {P<Response>}
    * @memberOf Response
    */
-  public first?: () => TAsync; // Handled by the __fetchLink
+  public first?: () => P; // Handled by the __fetchLink
 
   /**
    * Previous data page
@@ -161,7 +160,7 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
    * @type {P<Response>}
    * @memberOf Response
    */
-  public prev?: () => TAsync; // Handled by the __fetchLink
+  public prev?: () => P; // Handled by the __fetchLink
 
   /**
    * Next data page
@@ -169,7 +168,7 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
    * @type {P<Response>}
    * @memberOf Response
    */
-  public next?: () => TAsync; // Handled by the __fetchLink
+  public next?: () => P; // Handled by the __fetchLink
 
   /**
    * Last data page
@@ -177,7 +176,7 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
    * @type {P<Response>}
    * @memberOf Response
    */
-  public last?: () => TAsync; // Handled by the __fetchLink
+  public last?: () => P; // Handled by the __fetchLink
 
   /**
    * Received HTTP status
@@ -208,13 +207,13 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
    * @type {Record<string, P<Response>>}
    * @memberOf Response
    */
-  protected readonly __cache: Record<string, () => TAsync> = {};
+  protected readonly __cache: Record<string, () => P> = {};
 
   constructor(
     response: IRawResponse,
     collection?: IJsonapiCollection,
     options?: IRequestOptions,
-    overrideData?: IResponseData<TModel>,
+    overrideData?: T | Array<T>,
     views?: Array<View>,
   ) {
     this.collection = collection;
@@ -238,7 +237,7 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
     return !this.error;
   }
 
-  public get data(): TData {
+  public get data(): T | Array<T> | null {
     return this.__data.value;
   }
 
@@ -283,7 +282,7 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
    *
    * @memberOf Response
    */
-  public replaceData(data: TModel): Response<TModel, TData, TAsync> {
+  public replaceData(data: T): Response<T, P> {
     const record: PureModel = this.data as PureModel;
 
     if (record === data) {
@@ -322,7 +321,7 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
     );
   }
 
-  public clone(): Response<TModel> {
+  public clone(): Response<T> {
     const ResponseConstructor: typeof Response = this.constructor as typeof Response;
     return new ResponseConstructor(
       this.__internal.response,
@@ -343,7 +342,7 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
     };
   }
 
-  public update(response: IRawResponse, views?: Array<View>): Response<TModel, TData, TAsync> {
+  public update(response: IRawResponse, views?: Array<View>): Response<T, P> {
     this.__updateInternal(response, undefined, views);
     const newData = initData(response, this.collection);
 
@@ -361,7 +360,7 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
    *
    * @memberOf Response
    */
-  protected __fetchLink(name: string): () => TAsync {
+  protected __fetchLink(name: string): () => P {
     const ResponseConstructor: typeof Response = this.constructor as typeof Response;
     if (!this.__cache[name]) {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
@@ -371,8 +370,14 @@ export class Response<TModel extends IJsonapiModel = IJsonapiModel, TData extend
 
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
-        this.__cache[name] = (): TAsync =>
-          fetchLink<TModel>(link, this.collection, options, this.views, ResponseConstructor) as unknown as TAsync;
+        this.__cache[name] = (): P =>
+          fetchLink<T>(
+            link,
+            this.collection,
+            options,
+            this.views,
+            ResponseConstructor,
+          ) as unknown as P;
       }
     }
 

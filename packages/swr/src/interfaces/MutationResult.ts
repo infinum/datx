@@ -1,4 +1,5 @@
-import { IJsonapiModel, IResponseData, Response } from '@datx/jsonapi';
+import { IJsonapiModel, Response } from '@datx/jsonapi';
+import { IResponseData } from './IResponseData';
 import { MutationResetFn } from './MutationResetFn';
 import { MutationStatus } from './MutationStatus';
 
