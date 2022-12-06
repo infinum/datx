@@ -50,13 +50,39 @@ describe('fetchQuery', () => {
     ]);
   });
 
-  // describe('Conditional Data Fetching', () => {
-  //   test('should throw if variables are used inside query but they are not provided', async () => {
-  //     await expect(client.fetchQuery(queryTodos)).rejects.toThrow();
-  //   });
+  test('should not throw on API error if prefetch is true', async () => {
+    server.use(todosError);
 
-  //   test('should throw if variables are used inside query but properties are undefined', async () => {
-  //     await expect(client.fetchQuery(queryTodos)).rejects.toThrow();
-  //   });
-  // });
+    await expect(client.fetchQuery(queryTodos, { prefetch: true })).resolves.toStrictEqual({
+      data: undefined,
+      error: expect.anything(),
+    });
+  });
+
+  test('should not throw on API error if prefetch returns true', async () => {
+    server.use(todosError);
+
+    await expect(client.fetchQuery(queryTodos, { prefetch: () => true })).resolves.toStrictEqual({
+      data: undefined,
+      error: expect.anything(),
+    });
+  });
+
+  describe('Conditional Data Fetching', () => {
+    test('should throw if null is used as query', async () => {
+      await expect(client.fetchQuery(null)).rejects.toThrow();
+    });
+
+    test('should throw if null is returned as query fn', async () => {
+      await expect(client.fetchQuery(() => null)).rejects.toThrow();
+    });
+
+    // test('should throw if variables are used inside query but they are not provided', async () => {
+    //   await expect(client.fetchQuery(queryTodos)).rejects.toThrow();
+    // });
+
+    // test('should throw if variables are used inside query but properties are undefined', async () => {
+    //   await expect(client.fetchQuery(queryTodos)).rejects.toThrow();
+    // });
+  });
 });
