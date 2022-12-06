@@ -11,7 +11,6 @@
   "scripts": {
     "lint": "eslint packages/**/*.ts",
     "test": "lerna run test",
-    "bootstrap": "lerna bootstrap",
     "build": "lerna run build --no-private",
     "watch": "lerna run watch --no-private",
     "watch:swr": "lerna run watch --scope @datx/swr",
