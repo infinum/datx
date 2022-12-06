@@ -18,6 +18,5 @@ module.exports = {
   automock: false,
   resetMocks: false,
   coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/test/'],
-
   coverageReporters: ['text'],
 };
