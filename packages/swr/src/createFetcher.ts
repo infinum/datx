@@ -3,6 +3,8 @@ import {
   IGetManyExpression,
   IGetAllExpression,
   FetcherExpressionArgument,
+  IGetRelatedResourcesExpression,
+  IGetRelatedResourceExpression,
 } from './interfaces/QueryExpression';
 import { IClientInstance } from './interfaces/Client';
 import { IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
@@ -18,6 +20,18 @@ function isGetMany(expression: FetcherExpressionArgument): expression is IGetMan
 
 function isGetAll(expression: FetcherExpressionArgument): expression is IGetAllExpression {
   return expression.op === 'getAll';
+}
+
+function isGetRelatedResource(
+  expression: FetcherExpressionArgument,
+): expression is IGetRelatedResourceExpression {
+  return expression.op === 'getRelatedResource';
+}
+
+function isGetRelatedResources(
+  expression: FetcherExpressionArgument,
+): expression is IGetRelatedResourcesExpression {
+  return expression.op === 'getRelatedResources';
 }
 
 export const createFetcher =
@@ -66,6 +80,30 @@ export const createFetcher =
         },
         maxRequests,
       );
+    }
+
+    if (isGetRelatedResource(expression)) {
+      const { type, relation, queryParams } = expression;
+
+      return client.request<TModel>(`${type}/${relation}`, undefined, undefined, {
+        queryParams,
+        networkConfig,
+        fetchOptions: {
+          Response: SingleResponse,
+        },
+      });
+    }
+
+    if (isGetRelatedResources(expression)) {
+      const { type, relation, queryParams } = expression;
+
+      return client.request<TModel>(`${type}/${relation}`, undefined, undefined, {
+        queryParams,
+        networkConfig,
+        fetchOptions: {
+          Response: CollectionResponse,
+        },
+      });
     }
 
     throw new Error('Invalid expression operation!');

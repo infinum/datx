@@ -21,12 +21,30 @@ export interface IGetAllExpression<TModel extends JsonapiModelType = JsonapiMode
   maxRequests?: number | undefined;
 }
 
+export interface IGetRelatedResourceExpression<TModel extends JsonapiModelType = JsonapiModelType> {
+  readonly op: 'getRelatedResource';
+  readonly type: TModel['type'];
+  readonly relation: string;
+  queryParams?: IRequestOptions['queryParams'];
+}
+
+export interface IGetRelatedResourcesExpression<
+  TModel extends JsonapiModelType = JsonapiModelType,
+> {
+  readonly op: 'getRelatedResources';
+  readonly type: TModel['type'];
+  readonly relation: string;
+  queryParams?: IRequestOptions['queryParams'];
+}
+
 export type DeferredLike = null | undefined | false;
 
 export type ExpressionArgument =
   | IGetOneExpression
   | IGetManyExpression
   | IGetAllExpression
+  | IGetRelatedResourceExpression
+  | IGetRelatedResourcesExpression
   | DeferredLike;
 
 export type Expression = ExpressionArgument | (() => ExpressionArgument);
