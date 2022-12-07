@@ -54,7 +54,7 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
 
           this.__fallback[key] = rawResponses;
 
-          // @ts-ignore
+          // @ts-ignore
           return {
             data: response,
             error: undefined,
@@ -67,7 +67,7 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
 
         this.__fallback[key] = rawResponse;
 
-        // @ts-ignore
+        // @ts-ignore
         return {
           data: response,
           error: undefined,
@@ -75,7 +75,7 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
       } catch (error) {
         const prefetch = config?.prefetch;
         if (isFunction(prefetch) ? prefetch(error) : prefetch) {
-          // @ts-ignore
+          // @ts-ignore
           return {
             data: undefined,
             error,

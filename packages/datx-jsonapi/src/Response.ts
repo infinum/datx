@@ -79,7 +79,7 @@ function initData<T extends IJsonapiModel>(
 type IAsync<T extends IJsonapiModel> = Promise<Response<T>>;
 
 export class Response<T extends IJsonapiModel, P = IAsync<T>> {
-  private __data;
+  private readonly __data;
 
   protected __internal: IResponseInternal = {
     response: {},
