@@ -24,6 +24,16 @@ describe('fetchQuery', () => {
     expect((data?.data as Array<Todo>).length).toBe(1);
   });
 
+  test.only('should fetch getAll query', async () => {
+    const res = await client.fetchQuery({ op: 'getAll', type: 'todos' } as const);
+    const data = res?.data;
+
+    expect(data).toBeTruthy();
+    expect(data?.data?.length).toBe(1);
+    expect(data?.responses.length).toBe(1);
+    expect(data?.lastResponse).toBeTruthy();
+  });
+
   test('should throw on deferrable query', async () => {
     await expect(client.fetchQuery(() => null)).rejects.toBeInstanceOf(Error);
   });
