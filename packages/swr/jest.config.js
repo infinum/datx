@@ -15,8 +15,10 @@ module.exports = {
       },
     ],
   },
+  moduleNameMapper: {
+    '^@datx/swr': '<rootDir>/src',
+  },
   automock: false,
   resetMocks: false,
-  coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/test/'],
-  coverageReporters: ['text'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/test/'],
 };
