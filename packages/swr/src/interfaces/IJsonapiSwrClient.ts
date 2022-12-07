@@ -1,9 +1,9 @@
 import { IJsonapiModel } from '@datx/jsonapi';
 import { Fallback } from './Fallback';
 import { IFetchQueryConfiguration } from './IFetchQueryConfiguration';
-import { IFetchQueryReturn } from './IFetchQueryReturn';
+import { IFetchAllQueryReturn, IFetchQueryReturn } from './IFetchQueryReturn';
 import { IResponseData } from './IResponseData';
-import { Expression } from './QueryExpression';
+import { Expression, IGetAllExpression } from './QueryExpression';
 import { Data, Model } from './UseDatx';
 
 export interface IJsonapiSwrClient {
@@ -15,5 +15,11 @@ export interface IJsonapiSwrClient {
   >(
     expression: TExpression,
     config?: IFetchQueryConfiguration,
-  ) => Promise<IFetchQueryReturn<TData>>;
+  ) => Promise<
+    TExpression extends IGetAllExpression
+      ? IFetchAllQueryReturn<TModel>
+      : TExpression extends () => IGetAllExpression
+      ? IFetchAllQueryReturn<TModel>
+      : IFetchQueryReturn<TData>
+  >;
 }

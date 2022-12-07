@@ -18,7 +18,7 @@ function isGetMany(expression: FetcherExpressionArgument): expression is IGetMan
   return expression.op === 'getMany';
 }
 
-function isGetAll(expression: FetcherExpressionArgument): expression is IGetAllExpression {
+export function isGetAll(expression: FetcherExpressionArgument): expression is IGetAllExpression {
   return expression.op === 'getAll';
 }
 
