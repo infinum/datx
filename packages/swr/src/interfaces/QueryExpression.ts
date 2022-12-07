@@ -25,6 +25,7 @@ export interface IGetRelatedResourceExpression<TModel extends JsonapiModelType =
   readonly op: 'getRelatedResource';
   readonly type: TModel['type'];
   readonly relation: string;
+  id: string;
   queryParams?: IRequestOptions['queryParams'];
 }
 
@@ -34,6 +35,7 @@ export interface IGetRelatedResourcesExpression<
   readonly op: 'getRelatedResources';
   readonly type: TModel['type'];
   readonly relation: string;
+  id: string;
   queryParams?: IRequestOptions['queryParams'];
 }
 
