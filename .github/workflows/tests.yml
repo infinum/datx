@@ -28,6 +28,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install -g lerna@6
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-datx-${{  hashFiles('**/yarn.lock') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-datx-${{ hashFiles('**/yarn.lock') }}
       - run: yarn
       - name: Cleanup MobX
         if: ${{ matrix.mobx-version == '0' }}
