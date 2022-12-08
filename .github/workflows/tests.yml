@@ -40,9 +40,9 @@ jobs:
       - run: yarn
       - name: Cleanup MobX
         if: ${{ matrix.mobx-version == '0' }}
-        run: yarn workspace @datx/utils remove mobx
+        run: cd packages/datx-utils; yarn remove mobx
       - name: Install correct MobX version
         if: ${{ matrix.mobx-version > 0 }}
-        run: yarn workspace @datx/utils add mobx@${{ matrix.mobx-version }} -D
+        run: cd packages/datx-utils; yarn add mobx@${{ matrix.mobx-version }} --dev
       - run: yarn build
       - run: MOBX_VERSION=${{ matrix.mobx-version }} yarn test
