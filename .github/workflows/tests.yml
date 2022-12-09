@@ -33,7 +33,7 @@ jobs:
         with:
           path: node_modules
           # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-datx-${{  hashFiles('**/yarn.lock') }}-${{ matrix.node-version }}-${{ matrix.mobx-version }}
+          key: ${{ runner.os }}-datx-${{ hashFiles('**/yarn.lock') }}-${{ matrix.node-version }}-${{ matrix.mobx-version }}
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-datx-${{ hashFiles('**/yarn.lock') }}-${{ matrix.node-version }}-${{ matrix.mobx-version }}
@@ -45,4 +45,4 @@ jobs:
         if: ${{ matrix.mobx-version > 0 }}
         run: cd packages/datx-utils; yarn add mobx@${{ matrix.mobx-version }} --dev
       - run: yarn build
-      - run: MOBX_VERSION=${{ matrix.mobx-version }} yarn test
+      - run: MOBX_VERSION=${{ matrix.mobx-version }} yarn test --skip-nx-cache
