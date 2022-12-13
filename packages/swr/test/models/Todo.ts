@@ -1,5 +1,6 @@
 import { Attribute, PureModel } from '@datx/core';
 import { jsonapiModel } from '@datx/jsonapi';
+import { Person } from './Person';
 
 export class Todo extends jsonapiModel(PureModel) {
   public static readonly type = 'todos';
@@ -9,4 +10,10 @@ export class Todo extends jsonapiModel(PureModel) {
 
   @Attribute()
   public message!: string;
+
+  @Attribute({ toOne: () => Person })
+  public author!: Person;
+
+  @Attribute({ toOne: () => Person })
+  public author2!: Todo;
 }

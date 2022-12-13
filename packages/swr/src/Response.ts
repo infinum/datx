@@ -11,25 +11,23 @@ export type Response<TData extends IResponseData> = TData extends Array<infer TM
   ? CollectionResponse<TModel extends IJsonapiModel ? TModel : never>
   : SingleResponse<TData extends IJsonapiModel ? TData : never>;
 
-type IAsync<T extends IJsonapiModel> = Promise<CollectionResponse<T>>;
-
-export class CollectionResponse<TModel extends IJsonapiModel> extends BaseResponse<
+export class CollectionResponse<TModel extends IJsonapiModel = IJsonapiModel> extends BaseResponse<
   TModel,
-  IAsync<TModel>
+  Promise<CollectionResponse<TModel>>
 > {
   public get data(): Array<TModel> {
     // @ts-ignore
-    return this.__data.value as Array<TModel>;
+    return this.__data.value;
   }
 }
 
-export class SingleResponse<TModel extends IJsonapiModel> extends BaseResponse<
+export class SingleResponse<TModel extends IJsonapiModel = IJsonapiModel> extends BaseResponse<
   TModel,
-  IAsync<TModel>
+  never
 > {
   public get data(): TModel {
     // @ts-ignore
-    return this.__data.value as TModel;
+    return this.__data.value;
   }
 }
 

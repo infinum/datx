@@ -21,19 +21,21 @@ export interface IGetAllExpression<TModel extends JsonapiModelType = JsonapiMode
   maxRequests?: number | undefined;
 }
 
-export interface IGetRelatedResourceExpression<TModel extends JsonapiModelType = JsonapiModelType> {
+export interface IGetRelatedResourceExpression<
+  TModelType extends JsonapiModelType = JsonapiModelType,
+> {
   readonly op: 'getRelatedResource';
-  readonly type: TModel['type'];
+  readonly type: TModelType['type'];
   readonly relation: string;
   id: string;
   queryParams?: IRequestOptions['queryParams'];
 }
 
 export interface IGetRelatedResourcesExpression<
-  TModel extends JsonapiModelType = JsonapiModelType,
+  TModelType extends JsonapiModelType = JsonapiModelType,
 > {
   readonly op: 'getRelatedResources';
-  readonly type: TModel['type'];
+  readonly type: TModelType['type'];
   readonly relation: string;
   id: string;
   queryParams?: IRequestOptions['queryParams'];

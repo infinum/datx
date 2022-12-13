@@ -3,7 +3,13 @@ import { Fallback } from './Fallback';
 import { IFetchQueryConfiguration } from './IFetchQueryConfiguration';
 import { IFetchAllQueryReturn, IFetchQueryReturn } from './IFetchQueryReturn';
 import { IResponseData } from './IResponseData';
-import { Expression, IGetAllExpression } from './QueryExpression';
+import {
+  ExactExpressionArgument,
+  Expression,
+  IGetAllExpression,
+  IGetRelatedResourceExpression,
+  IGetRelatedResourcesExpression,
+} from './QueryExpression';
 import { Data, Model } from './UseDatx';
 
 export interface IJsonapiSwrClient {
@@ -16,10 +22,18 @@ export interface IJsonapiSwrClient {
     expression: TExpression,
     config?: IFetchQueryConfiguration,
   ) => Promise<
-    TExpression extends IGetAllExpression
+    ExactExpressionArgument<TExpression> extends IGetAllExpression
       ? IFetchAllQueryReturn<TModel>
-      : TExpression extends () => IGetAllExpression
-      ? IFetchAllQueryReturn<TModel>
+      : ExactExpressionArgument<TExpression> extends
+          | IGetRelatedResourceExpression
+          | IGetRelatedResourcesExpression
+      ? ExactExpressionArgument<TExpression> extends { readonly relation: infer TRelation }
+        ? TRelation extends keyof TModel
+          ? TModel[TRelation] extends IJsonapiModel | Array<IJsonapiModel>
+            ? IFetchQueryReturn<TModel[TRelation]>
+            : never
+          : never
+        : never
       : IFetchQueryReturn<TData>
   >;
 }

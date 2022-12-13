@@ -2,20 +2,39 @@ import { rest } from 'msw';
 import { BASE_URL } from '../constants';
 
 export const message = 'JSON:API paints my bikeshed!';
-export const jsonApiRawResponse = {
-  data: [
-    {
-      type: 'todos',
-      id: '1',
-      attributes: {
-        message,
-      },
-    },
-  ],
+export const todoResource = {
+  type: 'todos',
+  id: '1',
+  attributes: {
+    message,
+  },
 };
 
+export const name = 'John Doe';
+export const personResource = {
+  type: 'persons',
+  id: '1',
+  attributes: {
+    name,
+  },
+};
+
+export const jsonApiRawWrapper = (data) => ({ data });
+
 export const handlers = [
+  rest.get(`${BASE_URL}todo-lists/:id/todos`, (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(jsonApiRawWrapper([todoResource])));
+  }),
   rest.get(`${BASE_URL}todos`, (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(jsonApiRawResponse));
+    return res(ctx.status(200), ctx.json(jsonApiRawWrapper([todoResource])));
+  }),
+  rest.get(`${BASE_URL}todos/1`, (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(jsonApiRawWrapper(todoResource)));
+  }),
+  rest.get(`${BASE_URL}todos/:id/author`, (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(jsonApiRawWrapper(personResource)));
+  }),
+  rest.get(`${BASE_URL}todo-lists/:id/author`, (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(jsonApiRawWrapper(personResource)));
   }),
 ];

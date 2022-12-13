@@ -1,7 +1,9 @@
 import { unstable_serialize } from 'swr';
 import { createClient, JsonapiSwrClient } from './datx';
+import { message, name } from './mocks/handlers';
 import { server } from './mocks/server';
 import { todosError } from './mocks/todos';
+import { Person } from './models/Person';
 import { Todo } from './models/Todo';
 
 const queryTodos = {
@@ -16,7 +18,7 @@ describe('fetchQuery', () => {
     client = createClient();
   });
 
-  test('should fetch query', async () => {
+  test('should fetch getMany query', async () => {
     const res = await client.fetchQuery(queryTodos);
     const data = res?.data;
 
@@ -24,14 +26,56 @@ describe('fetchQuery', () => {
     expect((data?.data as Array<Todo>).length).toBe(1);
   });
 
-  test.only('should fetch getAll query', async () => {
-    const res = await client.fetchQuery({ op: 'getAll', type: 'todos' } as const);
+  test('should fetch getAll query', async () => {
+    const res = await client.fetchQuery(() => ({ op: 'getAll', type: 'todos' } as const));
     const data = res?.data;
 
     expect(data).toBeTruthy();
     expect(data?.data?.length).toBe(1);
     expect(data?.responses.length).toBe(1);
     expect(data?.lastResponse).toBeTruthy();
+  });
+
+  test('should fetch getOne query', async () => {
+    const res = await client.fetchQuery({
+      op: 'getOne',
+      type: 'todos',
+      id: '1',
+    } as const);
+    const data = res?.data;
+
+    expect(data).toBeTruthy();
+    expect(data?.data).toBeInstanceOf(Todo);
+  });
+
+  test('should fetch getRelatedResource query', async () => {
+    const res = await client.fetchQuery({
+      op: 'getRelatedResource',
+      type: 'todos',
+      id: '1',
+      relation: 'author',
+    } as const);
+    const data = res?.data;
+
+    expect(data).toBeTruthy();
+    expect(data?.data).toBeInstanceOf(Person);
+    expect(data?.data.name).toBe(name);
+  });
+
+  test('should fetch getRelatedResources query', async () => {
+    const res = await client.fetchQuery({
+      op: 'getRelatedResources',
+      type: 'todo-lists',
+      id: '1',
+      relation: 'todos',
+    } as const);
+    const data = res?.data;
+
+    expect(data).toBeTruthy();
+    expect(data?.data).toBeInstanceOf(Array);
+    expect(data?.data.length).toBe(1);
+    expect(data?.data[0]).toBeInstanceOf(Todo);
+    expect(data?.data[0].message).toBe(message);
   });
 
   test('should throw on deferrable query', async () => {

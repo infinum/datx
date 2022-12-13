@@ -1,13 +1,14 @@
-import {
-  IGetOneExpression,
-  IGetManyExpression,
-  IGetAllExpression,
-  FetcherExpressionArgument,
-  IGetRelatedResourcesExpression,
-  IGetRelatedResourceExpression,
-} from './interfaces/QueryExpression';
-import { IClientInstance } from './interfaces/Client';
 import { IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
+import { IClientInstance, JsonapiModel } from './interfaces/Client';
+import { IGetAllSWRResponse } from './interfaces/IFetchQueryReturn';
+import {
+  FetcherExpressionArgument,
+  IGetAllExpression,
+  IGetManyExpression,
+  IGetOneExpression,
+  IGetRelatedResourceExpression,
+  IGetRelatedResourcesExpression,
+} from './interfaces/QueryExpression';
 import { CollectionResponse, SingleResponse } from './Response';
 
 function isGetOne(expression: FetcherExpressionArgument): expression is IGetOneExpression {
@@ -36,7 +37,7 @@ function isGetRelatedResources(
 
 export const createFetcher =
   (client: IClientInstance) =>
-  <TModel extends IJsonapiModel = IJsonapiModel>(
+  <TModel extends JsonapiModel = JsonapiModel>(
     expression: FetcherExpressionArgument,
     config?: Pick<IRequestOptions, 'networkConfig'>,
   ) => {
@@ -51,7 +52,7 @@ export const createFetcher =
         fetchOptions: {
           Response: SingleResponse,
         },
-      });
+      }) as Promise<SingleResponse<TModel>>;
     }
 
     if (isGetMany(expression)) {
@@ -63,7 +64,7 @@ export const createFetcher =
         fetchOptions: {
           Response: CollectionResponse,
         },
-      });
+      }) as Promise<CollectionResponse<TModel>>;
     }
 
     if (isGetAll(expression)) {
@@ -79,31 +80,31 @@ export const createFetcher =
           },
         },
         maxRequests,
-      );
+      ) as Promise<IGetAllSWRResponse<TModel>>;
     }
 
     if (isGetRelatedResource(expression)) {
-      const { type, relation, queryParams } = expression;
+      const { type, id, relation, queryParams } = expression;
 
-      return client.request<TModel>(`${type}/${relation}`, undefined, undefined, {
+      return client.request(`${type}/${id}/${relation}`, undefined, undefined, {
         queryParams,
         networkConfig,
         fetchOptions: {
           Response: SingleResponse,
         },
-      });
+      }) as Promise<SingleResponse<IJsonapiModel>>;
     }
 
     if (isGetRelatedResources(expression)) {
-      const { type, relation, queryParams } = expression;
+      const { type, id, relation, queryParams } = expression;
 
-      return client.request<TModel>(`${type}/${relation}`, undefined, undefined, {
+      return client.request(`${type}/${id}/${relation}`, undefined, undefined, {
         queryParams,
         networkConfig,
         fetchOptions: {
           Response: CollectionResponse,
         },
-      });
+      }) as Promise<CollectionResponse<IJsonapiModel>>;
     }
 
     throw new Error('Invalid expression operation!');

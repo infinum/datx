@@ -8,7 +8,14 @@ import { IFetchQueryConfiguration } from './interfaces/IFetchQueryConfiguration'
 import { IFetchAllQueryReturn, IFetchQueryReturn } from './interfaces/IFetchQueryReturn';
 import { IJsonapiSwrClient } from './interfaces/IJsonapiSwrClient';
 import { IResponseData } from './interfaces/IResponseData';
-import { Expression, ExpressionArgument, IGetAllExpression } from './interfaces/QueryExpression';
+import {
+  ExactExpressionArgument,
+  Expression,
+  ExpressionArgument,
+  IGetAllExpression,
+  IGetRelatedResourceExpression,
+  IGetRelatedResourcesExpression,
+} from './interfaces/QueryExpression';
 import { Data, Model } from './interfaces/UseDatx';
 import { isCollectionResponse, isSingleResponse } from './Response';
 import { isFunction } from './utils';
@@ -26,10 +33,18 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
       expression: TExpression,
       config?: IFetchQueryConfiguration,
     ): Promise<
-      TExpression extends IGetAllExpression
+      ExactExpressionArgument<TExpression> extends IGetAllExpression
         ? IFetchAllQueryReturn<TModel>
-        : TExpression extends () => IGetAllExpression
-        ? IFetchAllQueryReturn<TModel>
+        : ExactExpressionArgument<TExpression> extends
+            | IGetRelatedResourceExpression
+            | IGetRelatedResourcesExpression
+        ? ExactExpressionArgument<TExpression> extends { readonly relation: infer TRelation }
+          ? TRelation extends keyof TModel
+            ? TModel[TRelation] extends JsonapiModel | Array<JsonapiModel>
+              ? IFetchQueryReturn<TModel[TRelation]>
+              : never
+            : never
+          : never
         : IFetchQueryReturn<TData>
     > {
       try {
@@ -82,7 +97,7 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
           };
         }
 
-        if (isSingleResponse<TModel>(error) || isCollectionResponse<TModel>(error)) {
+        if (isSingleResponse(error) || isCollectionResponse(error)) {
           throw error.error;
         }
 

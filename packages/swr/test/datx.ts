@@ -3,10 +3,12 @@ import { config } from '@datx/jsonapi';
 
 import { jsonapiSwrClient } from '@datx/swr';
 import { BASE_URL } from './constants';
+import { Person } from './models/Person';
 import { Todo } from './models/Todo';
+import { TodoList } from './models/TodoList';
 
 export class JsonapiSwrClient extends jsonapiSwrClient(Collection) {
-  public static types = [Todo];
+  public static types = [Person, Todo, TodoList];
 }
 
 export function createClient() {
