@@ -35,5 +35,5 @@ jobs:
       - name: Install correct MobX version
         if: ${{ matrix.mobx-version > 0 }}
         run: cd packages/datx-utils; yarn add mobx@${{ matrix.mobx-version }} --dev
-      - run: lerna run build
-      - run: MOBX_VERSION=${{ matrix.mobx-version }} lerna run test
+      - run: lerna run build --no-private
+      - run: MOBX_VERSION=${{ matrix.mobx-version }} lerna run test --no-private
