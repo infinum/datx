@@ -17,6 +17,8 @@ module.exports = {
   },
   moduleNameMapper: {
     '^@datx/swr': '<rootDir>/src',
+    '^@datx/utils': '<rootDir>/../datx-utils/src/',
+    '^@datx/jsonapi': '<rootDir>/../datx-jsonapi/src/',
   },
   automock: false,
   resetMocks: false,
