@@ -11,3 +11,5 @@ export * from './context';
 export * from './createFetcher';
 export * from './middleware';
 export * from './mixin';
+export * from './Response';
+export * from './interfaces/Fallback';
