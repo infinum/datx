@@ -1,7 +1,7 @@
 module.exports = {
   testEnvironment: 'jsdom',
   testRegex: '/test/.*\\.test\\.tsx?$',
-  modulePathIgnorePatterns: ['<rootDir>/examples/'],
+  modulePathIgnorePatterns: ['<rootDir>/examples/', 'packages/.*/dist'],
   setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
   transform: {
     '^.+\\.(t|j)sx?$': [
