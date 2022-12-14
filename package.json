@@ -23,6 +23,7 @@
     "postinstall": "npm run prepare",
     "prepare": "husky install",
     "publish": "lerna publish --contents dist --no-private",
+    "publish:beta": "npm run publish -- --npm-tag=beta --preid=beta",
     "publish:dry": "lerna publish --contents dist --no-push --no-git-tag-version"
   },
   "private": true,
