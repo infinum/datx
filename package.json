@@ -22,7 +22,7 @@
     "pkg:fix": "manypkg fix",
     "postinstall": "npm run prepare",
     "prepare": "husky install",
-    "publish": "lerna publish --contents dist",
+    "publish": "lerna publish --contents dist --no-private",
     "publish:dry": "lerna publish --contents dist --no-push --no-git-tag-version"
   },
   "private": true,
