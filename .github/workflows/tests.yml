@@ -20,11 +20,11 @@ jobs:
         # 4+ - mobx@version, real mobx in tests
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 1
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install -g lerna@6
