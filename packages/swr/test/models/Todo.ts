@@ -13,7 +13,4 @@ export class Todo extends jsonapiModel(PureModel) {
 
   @Attribute({ toOne: () => Person })
   public author!: Person;
-
-  @Attribute({ toOne: () => Person })
-  public author2!: Todo;
 }
