@@ -6,9 +6,10 @@ import { BASE_URL } from './constants';
 import { Person } from './models/Person';
 import { Todo } from './models/Todo';
 import { TodoList } from './models/TodoList';
+import { WithEndpoint } from './models/WithEndpoint';
 
 export class JsonapiSwrClient extends jsonapiSwrClient(Collection) {
-  public static types = [Person, Todo, TodoList];
+  public static types = [Person, Todo, TodoList, WithEndpoint];
 }
 
 export function createClient() {

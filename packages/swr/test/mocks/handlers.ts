@@ -37,4 +37,7 @@ export const handlers = [
   rest.get(`${BASE_URL}todo-lists/:id/author`, (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(jsonApiRawWrapper(personResource)));
   }),
+  rest.get(`${BASE_URL}with-endpoint/:id/:relation`, (_, res, ctx) => {
+    return res(ctx.status(200), ctx.json(jsonApiRawWrapper(personResource)));
+  }),
 ];

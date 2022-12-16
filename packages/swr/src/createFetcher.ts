@@ -1,4 +1,4 @@
-import { IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
+import { IJsonapiModel, IRequestOptions, prepareQuery } from '@datx/jsonapi';
 import { IClientInstance, JsonapiModel } from './interfaces/Client';
 import { IGetAllSWRResponse } from './interfaces/IFetchQueryReturn';
 import {
@@ -86,7 +86,15 @@ export const createFetcher =
     if (isGetRelatedResource(expression)) {
       const { type, id, relation, queryParams } = expression;
 
-      return client.request(`${type}/${id}/${relation}`, undefined, undefined, {
+      const { url } = prepareQuery(
+        type,
+        `${id}/${relation}`,
+        undefined,
+        { queryParams, networkConfig },
+        client,
+      );
+
+      return client.request(url, undefined, undefined, {
         queryParams,
         networkConfig,
         fetchOptions: {
@@ -98,7 +106,15 @@ export const createFetcher =
     if (isGetRelatedResources(expression)) {
       const { type, id, relation, queryParams } = expression;
 
-      return client.request(`${type}/${id}/${relation}`, undefined, undefined, {
+      const { url } = prepareQuery(
+        type,
+        `${id}/${relation}`,
+        undefined,
+        { queryParams, networkConfig },
+        client,
+      );
+
+      return client.request(url, undefined, undefined, {
         queryParams,
         networkConfig,
         fetchOptions: {
