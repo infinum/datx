@@ -149,7 +149,6 @@ describe('serialization', () => {
     foo.bar = bar;
 
     const rawFoo = serializeSchema(Foo, foo, 4, true);
-    console.log(rawFoo);
     expect(rawFoo.data).toEqual({ name: 'foo', bar: 'bar/bar' });
     expect(rawFoo.linked).toEqual([{ name: 'bar', foo: 'foo/foo' }]);
   });

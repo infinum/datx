@@ -46,31 +46,32 @@ export function serializeSchema<TSchema extends Schema>(
       key: keyof TSchema['definition'],
       def: TSchema['definition'][typeof key],
     ): TResourceProp<typeof def, false> | undefined => {
+      const innerData = data[key as keyof typeof data];
       if ('serialize' in def) {
+        const id = 'id' in def ? (def.id?.(innerData) as any) : undefined; // TODO: Add string|number as a valid type for plain relations
         if (depth === 0) {
-          return 'id' in def ? (def.id(data) as any) : undefined; // TODO: Add string|number as a valid type for plain relations
+          return id;
         }
 
-        const innerItem = def.serialize(
-          data[key as keyof typeof data],
-          depth - 1,
-          flatten,
-          contained,
-        ) as TResourceProp<typeof def, false>;
+        const innerItem = def.serialize(innerData, depth - 1, flatten, contained) as TResourceProp<
+          typeof def,
+          false
+        >;
 
         if (flatten) {
           linked.push(innerItem.data);
           linked.push.apply(linked, innerItem.linked);
+          return id;
         } else {
           return innerItem;
         }
       }
-      return data[key as keyof typeof data] as TResourceProp<typeof def, false>;
+      return innerData as TResourceProp<typeof def, false>;
     },
   );
 
   if (flatten) {
-    return { data: item, linked } as IFlattenedResource<TSchema>;
+    return { data: item, linked: linked.filter(Boolean) } as IFlattenedResource<TSchema>;
   }
   return item;
 }

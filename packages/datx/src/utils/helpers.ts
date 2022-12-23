@@ -24,14 +24,18 @@ export function wrapSchema(schemaFn: () => Schema): ICustomScalar {
   };
 }
 
-export function schemaOrReference(schemaFn: () => Schema): ICustomScalar {
+export function schemaOrReference(schemaFn: () => Schema): ICustomScalar & {
+  id?: (value: any) => string | number;
+} {
   return {
+    id: (data) => schemaFn().id(data),
     serialize: (data, depth, flatten, contained) => {
       const ModelSchema = schemaFn();
       const id = ModelSchema.id(data);
-      if ((contained && contained.includes(id)) || depth === 0) {
+      if (contained?.includes(id) || depth === 0) {
         return id;
       }
+      contained?.push(id);
       return serializeSchema(ModelSchema, data, depth, flatten, contained);
     },
     parseValue: (data, key, model, collection) => {
