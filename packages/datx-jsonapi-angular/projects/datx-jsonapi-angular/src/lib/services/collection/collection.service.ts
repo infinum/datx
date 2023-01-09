@@ -100,7 +100,7 @@ export abstract class CollectionService<
     return model.save().pipe(mapTo(model));
   }
 
-  protected request(
+  public request(
     url: string,
     method?: string,
     data?: object,
