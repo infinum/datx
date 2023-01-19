@@ -29,7 +29,7 @@ function serializeHeaders(
   if (headers instanceof Array) {
     return headers;
   }
-  
+
   const list: Array<[string, string]> = [];
 
   if (!headers.forEach) {
@@ -374,13 +374,13 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
         this.__cache[name] = (): P =>
-          (fetchLink<T>(
+          fetchLink<T>(
             link,
             this.collection,
             options,
             this.views,
             ResponseConstructor,
-          ) as unknown) as P;
+          ) as unknown as P;
       }
     }
 
