@@ -32,6 +32,9 @@ function serializeHeaders(
 
   const list: Array<[string, string]> = [];
 
+  if (!headers.forEach) {
+    return list;
+  }
   headers.forEach((value: string, key: string) => {
     list.push([key, value]);
   });
