@@ -1871,7 +1871,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@datx/core@2.4.8, @datx/core@workspace:packages/datx":
+"@datx/core@2.4.11, @datx/core@workspace:packages/datx":
   version: 0.0.0-use.local
   resolution: "@datx/core@workspace:packages/datx"
   dependencies:
@@ -1907,9 +1907,9 @@ __metadata:
     "@angular/platform-browser": ~14.2.0
     "@angular/platform-browser-dynamic": ~14.1.2
     "@angular/router": ~14.2.0
-    "@datx/core": 2.4.8
-    "@datx/jsonapi": 2.4.10
-    "@datx/network": 2.4.8
+    "@datx/core": 2.4.11
+    "@datx/jsonapi": 2.4.11
+    "@datx/network": 2.4.11
     "@datx/utils": 2.4.8
     "@types/jest": ^28.1.1
     "@types/node": ^18.7.6
@@ -1927,12 +1927,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datx/jsonapi@2.4.10, @datx/jsonapi@workspace:packages/datx-jsonapi":
+"@datx/jsonapi@2.4.11, @datx/jsonapi@workspace:packages/datx-jsonapi":
   version: 0.0.0-use.local
   resolution: "@datx/jsonapi@workspace:packages/datx-jsonapi"
   dependencies:
-    "@datx/core": 2.4.8
-    "@datx/network": 2.4.8
+    "@datx/core": 2.4.11
+    "@datx/network": 2.4.11
     "@datx/utils": 2.4.8
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-node-resolve": ^13.3.0
@@ -1955,11 +1955,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datx/network@2.4.8, @datx/network@workspace:packages/datx-network":
+"@datx/network@2.4.11, @datx/network@workspace:packages/datx-network":
   version: 0.0.0-use.local
   resolution: "@datx/network@workspace:packages/datx-network"
   dependencies:
-    "@datx/core": 2.4.8
+    "@datx/core": 2.4.11
     "@datx/utils": 2.4.8
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-node-resolve": ^13.3.0
