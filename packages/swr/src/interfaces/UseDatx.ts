@@ -1,7 +1,16 @@
 import { IJsonapiModel } from '@datx/jsonapi';
-import { ExactExpressionArgument, Expression, FindModel } from './QueryExpression';
+import {
+  ExactExpressionArgument,
+  Expression,
+  FindModel,
+  InfiniteExpression,
+} from './QueryExpression';
 
 export type Model<TExpression extends Expression> = FindModel<
+  ExactExpressionArgument<TExpression>['type']
+>;
+
+export type InfiniteModel<TExpression extends InfiniteExpression> = FindModel<
   ExactExpressionArgument<TExpression>['type']
 >;
 
