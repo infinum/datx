@@ -1,3 +1,4 @@
+export * from './hooks/useDatxInfinite';
 export * from './hooks/useInitialize';
 export * from './hooks/useClient';
 export * from './hooks/useMutation';
