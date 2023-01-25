@@ -38,7 +38,7 @@ export function modelMapParse(modelClass: typeof PureModel, data: object, key: s
     true,
   );
 
-  return parseFn(mapField ? data[mapField] : data[key], data);
+  return parseFn(mapField ? data[mapField] ?? data[key] : data[key], data);
 }
 
 export function modelMapSerialize(modelClass: typeof PureModel, data: object, key: string): any {

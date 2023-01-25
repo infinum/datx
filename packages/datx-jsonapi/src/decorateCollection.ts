@@ -255,7 +255,7 @@ export function decorateCollection(
       const Type =
         staticCollection.types.find((item) => getModelType(item) === type) || GenericModel;
       const classRefs = getModelClassRefs(Type);
-      const flattened: IRawModel = flattenModel(classRefs, obj);
+      const flattened: IRawModel = flattenModel(classRefs, obj, Type);
 
       if (record) {
         upsertModel(flattened, type, this);

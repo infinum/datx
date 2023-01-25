@@ -1,11 +1,12 @@
 import { Collection, Model, prop, Attribute } from '@datx/core';
-import { mobx } from '@datx/utils';
+import { META_FIELD, mobx } from '@datx/utils';
 import * as fetch from 'isomorphic-fetch';
 import { getModelMeta, getModelRefMeta, jsonapi, modelToJsonApi, config } from '../src';
 
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
 import { Event, LineItem, TestStore } from './utils/setup';
 import { clearAllCache } from '../src/cache';
+import { flattenModel } from '../src/helpers/model';
 
 describe('Issues', () => {
   beforeEach(() => {
@@ -337,5 +338,140 @@ describe('Issues', () => {
     await event.save();
 
     expect(event.title).toBe('Test 1');
+  });
+
+  it('should work for map option with relationships', async () => {
+    class ModelA extends jsonapi(Model) {
+      public static type = 'model_a';
+
+      @Attribute()
+      public name!: string;
+    }
+
+    class ModelB extends jsonapi(Model) {
+      public static type = 'model_b';
+
+      @Attribute({ toOne: ModelA, map: 'model_a' })
+      public modelA!: ModelA;
+    }
+
+    class Store extends jsonapi(Collection) {
+      public static types = [ModelA, ModelB];
+    }
+
+    setRequest({
+      name: 'issue-1143',
+      url: 'model_b/1',
+    });
+
+    const store = new Store();
+
+    const modelBResponse = await store.getOne(ModelB, '1');
+    const modelB = modelBResponse.data as ModelB;
+
+    expect(modelB.modelA).toBeInstanceOf(ModelA);
+    expect(modelB.modelA.name).toBe('A');
+
+    setRequest({
+      method: 'POST',
+      name: 'issue-1143',
+      url: 'model_b',
+      data: {
+        data: {
+          attributes: {},
+          type: 'model_b',
+          relationships: {
+            model_a: {
+              data: {
+                id: '1',
+                type: 'model_a',
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const newB = new ModelB({ modelA: modelB.modelA }, store);
+    expect(newB.modelA.name).toBe('A');
+    await newB.save();
+  });
+
+  it('should map relationships when parsing', async () => {
+    class OrderLine extends jsonapi(Model) {
+      public static type = 'order-lines';
+    }
+    class Order extends jsonapi(Model) {
+      public static type = 'orders';
+
+      @Attribute() public amount!: number;
+
+      @Attribute({
+        map: 'created_at',
+        parse: (value: string) => new Date(value),
+        serialize: (value: Date) => value?.toISOString(),
+      })
+      public createdAt?: Date;
+
+      @Attribute() public reference!: string;
+
+      @Attribute({
+        map: 'retrieve_at',
+        parse: (value: string) => new Date(value),
+        serialize: (value: Date) => value?.toISOString(),
+      })
+      public retrieveAt?: Date;
+
+      @Attribute() public status!: number;
+
+      @Attribute({ toOneOrMany: OrderLine, map: 'order-lines' })
+      public orderLines!: Array<OrderLine>;
+    }
+
+    class Store extends jsonapi(Collection) {
+      public static types = [Order, OrderLine];
+    }
+
+    const store = new Store();
+
+    setRequest({
+      name: 'issue-1144',
+      url: 'orders/1',
+    });
+
+    const orderResponse = await store.getOne(Order, '1');
+    const order = orderResponse.data as Order;
+
+    const newOrder1 = new Order({ created_at: new Date(), retrieveAt: new Date() });
+    const newOrder2 = store.add({ created_at: new Date(), retrieveAt: new Date() }, Order);
+    console.log(
+      flattenModel(
+        {
+          [Order.type]: Order,
+        },
+        {
+          id: '123',
+          type: 'orders',
+          attributes: { created_at: new Date(), retrieve_at: new Date() },
+        },
+      ),
+    );
+    const newOrder3 = store.sync({
+      data: {
+        id: '123',
+        type: 'orders',
+        attributes: { created_at: new Date(), retrieve_at: new Date() },
+      },
+    }) as Order;
+    expect(newOrder1.meta.snapshot[META_FIELD]?.fields?.created_at).toBeUndefined();
+    expect(newOrder2.meta.snapshot[META_FIELD]?.fields?.created_at).toBeUndefined();
+    expect(newOrder3.meta.snapshot[META_FIELD]?.fields?.created_at).toBeUndefined();
+
+    expect(order.createdAt).toBeInstanceOf(Date);
+    expect(order.meta.snapshot[META_FIELD]?.fields?.created_at).toBeUndefined();
+    expect(order.meta.snapshot[META_FIELD]?.fields?.createdAt).toEqual({
+      defaultValue: undefined,
+      referenceDef: false,
+    });
   });
 });

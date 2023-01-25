@@ -10,6 +10,7 @@ import {
   upsertModel,
   Model,
 } from '../src';
+import { META_FIELD } from '@datx/utils';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });
@@ -297,5 +298,43 @@ describe('issues', () => {
     expect(person2.age).toBe(2);
     expect(person2.name).toBe('Foo');
     expect(person2).toBe(person);
+  });
+
+  it('should work for mapped relationships', () => {
+    //
+  });
+
+  it('should not add original properties if mapped', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+
+      @Attribute({
+        map: 'some_value',
+      })
+      public value!: number;
+    }
+
+    class Store extends Collection {
+      public static types = [Foo];
+    }
+
+    const store = new Store();
+
+    const foo1 = store.add({ some_value: 1 }, Foo);
+
+    const foo2 = new Foo({ value: 1 });
+
+    expect(foo1.value).toBe(1);
+    expect(foo2.value).toBe(1);
+
+    expect(foo1.meta.snapshot?.some_value).not.toBeUndefined();
+    expect(foo1.meta.snapshot?.value).toBeUndefined();
+    expect(foo1.meta.snapshot[META_FIELD]?.fields?.some_value).toBeUndefined();
+    expect(foo1.meta.snapshot[META_FIELD]?.fields?.value).not.toBeUndefined();
+
+    expect(foo2.meta.snapshot?.some_value).not.toBeUndefined();
+    expect(foo2.meta.snapshot?.value).toBeUndefined();
+    expect(foo2.meta.snapshot[META_FIELD]?.fields?.some_value).toBeUndefined();
+    expect(foo2.meta.snapshot[META_FIELD]?.fields?.value).not.toBeUndefined();
   });
 });
