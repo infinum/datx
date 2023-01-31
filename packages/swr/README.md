@@ -349,6 +349,45 @@ export interface IGetAllExpression<TModel extends JsonapiModelType = JsonapiMode
 }
 ```
 
+#### useDatxInfinite
+
+```ts
+const getPageExpression = (index: number, size = 10) => ({
+  op: 'getMany',
+  type: 'todos',
+  queryParams: {
+    custom: [
+      { key: 'page[index]', value: String(index) },
+      { key: 'page[size]', value: String(size) },
+    ] as const,
+  },
+} as const satisfies IGetManyExpression<typeof Todo>);
+// omit `satisfies IGetManyExpression<typeof Todo>` if you are using typescript < 4.9
+
+const config: DatxInfiniteConfiguration<Todo> = {
+  // datx config
+  networkConfig: {
+    headers: {
+      'Accept-Language': 'en',
+    }
+  },
+  // SWR config
+  onSuccess: (data) => console.log(data[0].data[0].id),
+}
+
+const getKey = (pageIndex: number, previousPageData: CollectionResponse) => {
+  if (previousPageData && previousPageData.data.length === 0) return null;
+
+  return getPageExpression(pageIndex);
+};
+
+const = useDatx(getKey, config);
+```
+
+Second parameter of `useDatxInfinite` is for passing config options. It extends default SWRInfinite config prop with additional `networkConfig` property useful for passing custom headers.
+
+> Core expression should always be a `getMany` operation.
+
 #### useMutation (deprecated)
 
 A hook for remote mutations
