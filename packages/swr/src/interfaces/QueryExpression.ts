@@ -51,7 +51,14 @@ export type ExpressionArgument =
   | IGetRelatedResourcesExpression
   | DeferredLike;
 
+export type InfiniteExpressionArgument =
+  | IGetManyExpression
+  | IGetRelatedResourcesExpression
+  | DeferredLike;
+
 export type Expression = ExpressionArgument | (() => ExpressionArgument);
+
+export type InfiniteExpression = InfiniteExpressionArgument | (() => InfiniteExpressionArgument);
 
 export type RemoveDeferredLike<TType> = TType extends DeferredLike ? never : TType;
 

@@ -25,7 +25,12 @@ export const handlers = [
   rest.get(`${BASE_URL}todo-lists/:id/todos`, (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(jsonApiRawWrapper([todoResource])));
   }),
-  rest.get(`${BASE_URL}todos`, (_, res, ctx) => {
+  rest.get(`${BASE_URL}todos`, (req, res, ctx) => {
+    const pageIndex = parseInt(req.url.searchParams.get('page[index]') ?? '0');
+    if (pageIndex >= 1) {
+      return res(ctx.status(200), ctx.json(jsonApiRawWrapper([])));
+    }
+
     return res(ctx.status(200), ctx.json(jsonApiRawWrapper([todoResource])));
   }),
   rest.get(`${BASE_URL}todos/1`, (_, res, ctx) => {
