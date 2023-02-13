@@ -82,4 +82,13 @@ export abstract class CollectionTestingService<
   public update(model: TModel): Observable<TModel> {
     return asyncData(model);
   }
+
+  public request(
+    url: string,
+    method?: string | undefined,
+    data?: object | undefined,
+    options?: IRequestOptions | undefined,
+  ): Observable<Response<TModel>> {
+    return this.collection.request(url, method, data, options);
+  }
 }
