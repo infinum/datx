@@ -1,0 +1,10 @@
+docs
+src
+test
+tsconfig.json
+tsconfig.build.json 
+tslint.json
+coverage
+.rpt2_cache
+node_modules
+rollup.config.js
