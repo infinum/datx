@@ -1,10 +1,10 @@
-import { PerBuildGenerator } from './generators/per-build';
-import { SequenceGenerator } from './generators/sequence';
+import { IPerBuildGenerator } from './generators/per-build';
+import { ISequenceGenerator } from './generators/sequence';
 import { IModelConstructor, PureModel } from '@datx/core';
 
 export type ModelType = IModelConstructor<PureModel>;
 
-export type FieldGenerator<T> = SequenceGenerator<T> | PerBuildGenerator<T>;
+export type FieldGenerator<T> = ISequenceGenerator<T> | IPerBuildGenerator<T>;
 
 export type Field<T = any> = T | FieldGenerator<T>;
 
