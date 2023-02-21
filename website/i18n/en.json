@@ -168,6 +168,9 @@
       "network/typescript-interfaces": {
         "title": "TypeScript interfaces"
       },
+      "testing/test-data-factory": {
+        "title": "Test data factory"
+      },
       "troubleshooting/known-issues": {
         "title": "Known issues"
       },
@@ -440,6 +443,9 @@
       "version-2.0.0/network/version-2.0.0-typescript-interfaces": {
         "title": "TypeScript interfaces"
       },
+      "version-2.0.0/testing/version-2.0.0-test-data-factory": {
+        "title": "Test data factory"
+      },
       "version-2.0.0/troubleshooting/version-2.0.0-known-issues": {
         "title": "Known issues"
       }
@@ -458,6 +464,7 @@
       "JSON API Angular": "JSON API Angular",
       "JSON API SWR": "JSON API SWR",
       "Migration guide": "Migration guide",
+      "Testing": "Testing",
       "Troubleshooting": "Troubleshooting",
       "Setup": "Setup",
       "Collection": "Collection"

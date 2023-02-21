@@ -57,16 +57,15 @@
       "version-2.0.0-jsonapi-angular/mixin",
       "version-2.0.0-jsonapi-angular/example-repo"
     ],
-    "JSON API SWR": [
-      "version-2.0.0-jsonapi-swr/overview",
-      "version-2.0.0-jsonapi-swr/api"
-    ],
+    "JSON API SWR": ["version-2.0.0-jsonapi-swr/overview", "version-2.0.0-jsonapi-swr/api"],
     "Migration guide": [
       "version-2.0.0-migration-guide/breaking-changes",
       "version-2.0.0-migration-guide/deprecations",
       "version-2.0.0-migration-guide/whats-new",
       "version-2.0.0-migration-guide/from-v1"
     ],
+
+    "Testing": ["version-2.0.0-testing/test-data-factory"],
     "Troubleshooting": ["version-2.0.0-troubleshooting/known-issues"]
   },
   "version-2.0.0-examples": {
