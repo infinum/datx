@@ -31,6 +31,7 @@ export const createFactory = <TCollection extends PureCollection>(client: TColle
             return fieldValue.call(sequenceCounterMap.get(key));
           }
 
+          case 'oneOf':
           case perBuildType: {
             return fieldValue.call();
           }
