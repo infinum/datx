@@ -21,13 +21,13 @@ const factory = createFactory(client);
 
 const userFactory = factory(User, {
   fields: {
-    name: 'jack',
+    name: 'John',
   },
 });
 
 const user = userFactory();
 
-console.log(user); // => { name: 'jack'}
+console.log(user); // => { name: 'John'}
 ```
 
 Once you've created a factory, you can call it to generate an instance of that object - in this case, a `user`.
@@ -69,13 +69,13 @@ const factory = createFactory(client);
 
 const userFactory = factory(User, {
   fields: {
-    email: sequence(x => `jack${x}@gmail.com`),
+    email: sequence(x => `example${x}@gmail.com`),
   },
 });
 const userOne = userFactory();
 const userTwo = userFactory();
-// userOne.email === jack1@gmail.com
-// userTwo.email === jack2@gmail.com
+// userOne.email === example1@gmail.com
+// userTwo.email === example2@gmail.com
 ```
 
 You can use the `reset` method to reset the counter used internally when generating a sequence:
@@ -159,8 +159,8 @@ const factory = createFactory(client);
 
 const userFactory = factory(User, {
   fields: {
-    name: 'jack',
-    details: {},
+    name: 'John',
+    email: `user-${Math.random()}@example.com`,
   },
 });
 ```
@@ -170,7 +170,7 @@ A user generated from this factory will always be the same data. However, if you
 ```js
 const userOne = userFactory();
 const userTwo = userFactory();
-userOne.details === userTwo.details; // true
+userOne.email === userTwo.email; // true
 ```
 
 If you want to generate a unique object every time, you can use `perBuild` which takes a function and executes it when a factory is built:
@@ -185,10 +185,8 @@ const factory = createFactory(client);
 
 const userFactory = factory(User, {
   fields: {
-    name: 'jack',
-    details: perBuild(() => {
-      return {};
-    }),
+    name: 'John',
+    email: perBuild(() => `user-${Math.random()}@example.com`),
   },
 });
 const userOne = userFactory();
@@ -228,7 +226,7 @@ const factory = createFactory(client);
 
 const userFactory = factory(User, {
   fields: {
-    name: perBuild(() => 'jack'),
+    name: perBuild(() => 'John'),
   },
   postBuild: (user) => {
     user.name = user.name.toUpperCase();
@@ -261,11 +259,11 @@ const userFactory = factory(User, {
 const user = userFactory({
   overrides: {
     id: 1,
-    name: 'jack',
+    name: 'John',
   },
 });
 // user.id === 1
-// user.name === 'jack'
+// user.name === 'John'
 ```
 
 If you need to edit the object directly, you can pass in a `map` function when you call the factory. This will be called after test-data-bot has generated the fake object, and lets you directly change its properties.
@@ -281,7 +279,7 @@ const factory = createFactory(client);
 const userFactory = factory(User, {
   fields: {
     id: sequence(),
-    name: 'jack',
+    name: 'John',
   },
 });
 const user = userFactory({
@@ -309,7 +307,7 @@ const factory = createFactory(client);
 
 const userFactory = factory(User, {
   fields: {
-    name: 'jack',
+    name: 'John',
     admin: false,
   },
   traits: {
@@ -331,7 +329,7 @@ But imagine that the field changes, or the way you represent admins changes. Or 
 ```ts
 const userFactory = factory(User, {
   fields: {
-    name: 'jack',
+    name: 'John',
     admin: false,
   },
   traits: {
