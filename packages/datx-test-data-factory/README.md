@@ -32,7 +32,7 @@ console.log(user); // => { name: 'John'}
 
 Once you've created a factory, you can call it to generate an instance of that object - in this case, a `user`.
 
-It would be boring though if each user had the same `name` - so test-data-bot lets you generate data via some API methods:
+It would be boring though if each user had the same `name` - so test-data-factory lets you generate data via some API methods:
 
 ### Incrementing IDs with `sequence`
 
@@ -147,7 +147,7 @@ const userFactory = factory(User, {
 
 ### `perBuild`
 
-test-data-bot lets you declare a field to always be a particular value:
+test-data-factory lets you declare a field to always be a particular value:
 
 ```js
 import { createFactory, sequence } from '@datx/test-data-factory';
@@ -165,7 +165,7 @@ const userFactory = factory(User, {
 });
 ```
 
-A user generated from this factory will always be the same data. However, if you generate two users using the factory above, they will have _exactly the same object_ for the `details` key:
+A user generated from this factory will always be the same data. However, if you generate two users using the factory above, they will have _exactly the same value_ for the `email` field:
 
 ```js
 const userOne = userFactory();
@@ -214,7 +214,7 @@ const userFactory = factory(User, {
 
 ### Mapping over all the created objects with `postBuild`
 
-If you need to transform an object in a way that test-data-bot doesn't support out the box, you can pass a `postBuild` function when creating a factory. This factory will run every time you create an object from it.
+If you need to transform an object in a way that test-data-factory doesn't support out the box, you can pass a `postBuild` function when creating a factory. This factory will run every time you create an object from it.
 
 ```js
 import { createFactory, sequence, perBuild } from '@datx/test-data-factory';
@@ -237,6 +237,8 @@ const userFactory = factory(User, {
 const user = userFactory();
 // user.name will be uppercase
 ```
+
+> `postBuild` is will run after `overrides` transformations!
 
 ## Overrides per-build
 
@@ -266,7 +268,7 @@ const user = userFactory({
 // user.name === 'John'
 ```
 
-If you need to edit the object directly, you can pass in a `map` function when you call the factory. This will be called after test-data-bot has generated the fake object, and lets you directly change its properties.
+<!-- If you need to edit the object directly, you can pass in a `map` function when you call the factory. This will be called after test-data-factory has generated the fake object, and lets you directly change its properties.
 
 ```js
 import { createFactory, sequence, perBuild } from '@datx/test-data-factory';
@@ -282,6 +284,7 @@ const userFactory = factory(User, {
     name: 'John',
   },
 });
+
 const user = userFactory({
   map: (user) => {
     user.name = user.name.toUpperCase();
@@ -291,9 +294,9 @@ const user = userFactory({
 });
 ```
 
-Using `overrides` and `map` lets you easily customize a specific object that a factory has created.
+Using `overrides` and `map` lets you easily customize a specific object that a factory has created. -->
 
-## Traits
+<!-- ## Traits
 
 Traits let you define a set of overrides for a factory that can easily be re-applied. Let's imagine you've got a users factory where users can be admins:
 
@@ -312,7 +315,9 @@ const userFactory = factory(User, {
   },
   traits: {
     admin: {
-      overrides: { admin: true },
+      overrides: { 
+        admin: true 
+      },
     },
   },
 });
@@ -334,7 +339,9 @@ const userFactory = factory(User, {
   },
   traits: {
     admin: {
-      overrides: { admin: true },
+      overrides: { 
+        admin: true 
+      },
     },
   },
 });
@@ -351,7 +358,7 @@ You can define and use multiple traits when building an object. Be aware that if
 ```js
 // any properties defined in other-trait will override any that admin sets
 const admin = userFactory({ traits: ['admin', 'other-trait'] });
-```
+``` -->
 
 ## Using faker library?
 
