@@ -67,6 +67,10 @@
     "testMatch": null,
     "setupFilesAfterEnv": [
       "./test/setup.ts"
+    ],
+    "coverageReporters": [
+      "json",
+      "html"
     ]
   }
 }
