@@ -24,19 +24,17 @@ describe('general', () => {
     expect(post.body).toBe('Hello world');
   });
 
-  it('should generates the same object each time', () => {
+  it('should generates the same email each time', () => {
     const userFactory = factory(User, {
       fields: {
-        avatar: {
-          url: 'https://example.com/avatar.png',
-        },
+        email: `user-${Math.random()}@example.com`,
       },
     });
 
     const user1 = userFactory();
     const user2 = userFactory();
 
-    expect(user1.avatar).toStrictEqual(user2.avatar);
+    expect(user1.email).toBe(user2.email);
   });
 
   it('should create Data and override it correctly', () => {

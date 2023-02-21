@@ -6,25 +6,20 @@ const client = createTestClient();
 const factory = createFactory(client);
 
 describe('pre build', () => {
-	beforeEach(() => {
-		client.reset();
-	});
+  beforeEach(() => {
+    client.reset();
+  });
 
-	it('should generates a new object each time', () => {
-		const userFactory = factory(User, {
-			fields: {
-				avatar: perBuild(() => ({
-					url: 'https://example.com/avatar.png',
-				})),
-			},
-		});
+  it('should generates a new avatar url each time', () => {
+    const userFactory = factory(User, {
+      fields: {
+        email: perBuild(() => `user-${Math.random()}@example.com`),
+      },
+    });
 
-		const user1 = userFactory();
-		const user2 = userFactory();
+    const user1 = userFactory();
+    const user2 = userFactory();
 
-		expect(user1.avatar).toEqual({ url: 'https://example.com/avatar.png' });
-		expect(user2.avatar).toEqual({ url: 'https://example.com/avatar.png' });
-
-		expect(user1.avatar).not.toBe(user2.avatar);
-	});
+    expect(user1.email).not.toBe(user2.email);
+  });
 });
