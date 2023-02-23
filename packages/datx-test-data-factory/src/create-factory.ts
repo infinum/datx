@@ -1,81 +1,43 @@
-import { perBuildType } from './generators/per-build';
-import { sequenceType } from './generators/sequence';
-import {
-  Attributes,
-  IBuildConfiguration,
-  IConfiguration,
-  Field,
-  FieldsConfiguration,
-  ModelType,
-} from './types';
-import { isGenerator, mapValues } from './utils';
+import { IBuildConfiguration, IConfiguration, IFactoryContext, ModelType } from './types';
+import { createContext } from './context';
 import { PureCollection } from '@datx/core';
+import { compute } from './compute';
+
+export const createBuilder = <TCollection extends PureCollection, TModelType extends ModelType>(
+  client: TCollection,
+  model: TModelType,
+  fields: IConfiguration<TModelType>['fields'] | undefined,
+  config: IConfiguration<TModelType> | undefined,
+  context: IFactoryContext,
+) => {
+  const build = (buildTimeConfig?: IBuildConfiguration<TModelType>): InstanceType<TModelType> => {
+    const computedFields = fields ? compute(fields, buildTimeConfig, context) : {};
+
+    const data = client.add(computedFields, model) as InstanceType<TModelType>;
+
+    if (config?.postBuild) {
+      return config.postBuild(data);
+    }
+
+    return data;
+  };
+
+  build.reset = () => {
+    context.reset();
+  };
+
+  return build;
+};
 
 export const createFactory = <TCollection extends PureCollection>(client: TCollection) => {
   const factory = <TModelType extends ModelType>(
     model: TModelType,
     config?: IConfiguration<TModelType>,
   ) => {
-    let sequenceCounterMap = new Map();
+    const { fields } = config || {};
+    const context = createContext();
 
-    const computeField = (fieldValue: Field<Attributes<TModelType>>, key: string) => {
-      if (isGenerator(fieldValue)) {
-        switch (fieldValue.type) {
-          case sequenceType: {
-            if (!sequenceCounterMap.has(key)) {
-              sequenceCounterMap.set(key, 0);
-            }
-
-            sequenceCounterMap.set(key, sequenceCounterMap.get(key) + 1);
-
-            return fieldValue.call(sequenceCounterMap.get(key));
-          }
-
-          case 'oneOf':
-          case perBuildType: {
-            return fieldValue.call();
-          }
-        }
-      }
-
-      return fieldValue;
-    };
-
-    const compute = (
-      fields: FieldsConfiguration<TModelType>,
-      buildTimeConfig: IBuildConfiguration<TModelType> = {},
-    ) => {
-      const overrides = buildTimeConfig.overrides || {};
-
-      return mapValues(fields, (value, key) => {
-        const override = overrides[key];
-
-        if (override) {
-          return computeField(override, key);
-        }
-
-        // @ts-ignore
-        return computeField(value, key);
-      });
-    };
-
-    const build = (buildTimeConfig?: IBuildConfiguration<TModelType>): InstanceType<TModelType> => {
-      const fields = config?.fields ? compute(config?.fields, buildTimeConfig) : {};
-
-      const data = client.add(fields, model) as InstanceType<TModelType>;
-
-      if (config?.postBuild) {
-        return config.postBuild(data);
-      }
-
-      return data;
-    };
-
-    build.reset = () => {
-      sequenceCounterMap = new Map();
-    };
-
-    return build;
+    return createBuilder(client, model, fields, config, context);
   };
 
   factory.reset = () => {

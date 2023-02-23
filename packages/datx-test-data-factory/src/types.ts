@@ -54,3 +54,12 @@ export interface IBuildConfiguration<TModelType extends ModelType> {
 export interface IFactory<TModelType extends ModelType> {
   (buildTimeConfig?: IBuildConfiguration<TModelType>): InstanceType<TModelType>;
 }
+
+export interface IFactoryContextValue {
+  sequenceCounterMap: Map<string, number>;
+}
+
+export interface IFactoryContext {
+  value: IFactoryContextValue;
+  reset: () => void;
+}
