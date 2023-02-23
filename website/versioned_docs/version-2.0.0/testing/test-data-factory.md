@@ -73,7 +73,7 @@ const factory = createFactory(client);
 
 const userFactory = factory(User, {
   fields: {
-    email: sequence(x => `example${x}@gmail.com`),
+    email: sequence((x) => `example${x}@gmail.com`),
   },
 });
 const userOne = userFactory();
@@ -244,6 +244,54 @@ const user = userFactory();
 
 > `postBuild` is will run after `overrides` transformations!
 
+## Working with deeply nested relationships
+
+test-data-factory lets you create deeply nested relationships between objects.
+
+For example, if you have a `Post` model that has many `Comment` models, and each `Comment` has
+an `author` relationship to a `User` model, you can create a `Post` with a bunch of `Comment`s,
+each with an `author`.
+
+```ts
+import { createFactory, sequence, perBuild, buildMany } from '@datx/test-data-factory';
+import { createClient } from './create-client';
+import { User } from './models/User';
+
+const client = createClient();
+const factory = createFactory(client);
+
+const userFactory = factory(User, {
+  fields: {
+    id: sequence(),
+    name: sequence((n) => `John Doe ${n}`),
+    email: sequence((n) => `john${n}@example.com`),
+    createdAt: new Date('2020-01-01'),
+  },
+});
+
+const commentFactory = factory(Comment, {
+  fields: {
+    id: sequence(),
+    body: 'Hello world',
+    author: perBuild(() => userFactory()),
+  },
+});
+
+const postFactory = factory(Post, {
+  fields: {
+    id: sequence(),
+    title: 'My first post',
+    body: 'Hello world',
+    comments: buildMany(commentFactory, 5),
+  },
+});
+
+const post = postFactory();
+
+// post.comments.length === 5;
+// post.comments[0].author.name will be 'John Doe 1';
+```
+
 ## Overrides per-build
 
 You'll often need to generate a random object but control one of the values directly for the purpose of testing. When you call a factory you can pass in overrides which will override the factory defaults:
@@ -306,7 +354,7 @@ Using `overrides` and `map` lets you easily customize a specific object that a f
 
 Traits let you define a set of overrides for a factory that can easily be re-applied. Let's imagine you've got a users factory where users can be admins:
 
-```ts
+```js
 import { createFactory } from '@datx/test-data-factory';
 import { createClient } from './create-client';
 import { User } from './models/User';
@@ -321,8 +369,8 @@ const userFactory = factory(User, {
   },
   traits: {
     admin: {
-      overrides: { 
-        admin: true 
+      overrides: {
+        admin: true,
       },
     },
   },
@@ -345,8 +393,8 @@ const userFactory = factory(User, {
   },
   traits: {
     admin: {
-      overrides: { 
-        admin: true 
+      overrides: {
+        admin: true,
       },
     },
   },
@@ -369,15 +417,50 @@ const admin = userFactory({ traits: ['admin', 'other-trait'] });
 ## Using faker library?
 
 ```js
-import {build, perBuild} from '@datx/test-data-factory';
+import { build, perBuild } from '@datx/test-data-factory';
 // This can be any fake data library you like.
 import fake from 'faker';
 
 const userFactory = factory({
   // Within perBuild, call your faker library directly.
-  name: perBuild(() => fake().name())
-})
+  name: perBuild(() => fake().name()),
+});
 ```
+
+## Using with Jest testing library
+
+Here is an example of how to use this library with Jest testing library.
+
+```ts
+import { createFactory, sequence, perBuild } from '@datx/test-data-factory';
+import { createClient } from './create-client';
+import { User } from './models/User';
+
+const client = createClient();
+const factory = createFactory(client);
+
+const userFactory = factory(User, {
+  fields: {
+    id: sequence(),
+    name: 'John',
+  },
+});
+
+describe('User', () => {
+  beforeEach(() => {
+    factory.reset();
+  });
+
+  it('should create a user', () => {
+    const user = userFactory();
+
+    expect(user.id).toBe(1);
+    expect(user.name).toBe('John');
+  });
+});
+```
+
+> It is important to reset the factory before each test, otherwise the client will not be reset.
 
 ## Inspired by
 
