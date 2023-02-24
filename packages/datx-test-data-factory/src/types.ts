@@ -41,13 +41,26 @@ export type Overrides<TModelType extends ModelType> = {
   [Key in keyof Attributes<TModelType>]?: Field<Attributes<TModelType>[Key]>;
 };
 
+export type PostBuildFn<TModelType extends ModelType> = (
+  model: InstanceType<TModelType>,
+) => InstanceType<TModelType>;
+
+export interface ITraitsConfiguration<TModelType extends ModelType> {
+  readonly [traitName: string]: {
+    overrides?: Overrides<TModelType>;
+    postBuild?: PostBuildFn<TModelType>;
+  };
+}
+
 export interface IConfiguration<TModelType extends ModelType> {
   readonly fields: FieldsConfiguration<TModelType>;
-  readonly postBuild?: (model: InstanceType<TModelType>) => InstanceType<TModelType>;
+  readonly postBuild?: PostBuildFn<TModelType>;
+  readonly traits?: ITraitsConfiguration<TModelType>;
 }
 
 export interface IBuildConfiguration<TModelType extends ModelType> {
   overrides?: Overrides<TModelType>;
+  traits?: string | Array<string>;
   // map?: (builtThing: Attributes<TModelType>) => Attributes<TModelType>;
 }
 

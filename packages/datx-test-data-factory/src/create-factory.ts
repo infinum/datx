@@ -2,6 +2,7 @@ import { IBuildConfiguration, IConfiguration, IFactoryContext, ModelType } from 
 import { createContext } from './context';
 import { PureCollection } from '@datx/core';
 import { compute } from './compute';
+import { getTraits } from './traits';
 
 export const createBuilder = <TCollection extends PureCollection, TModelType extends ModelType>(
   client: TCollection,
@@ -10,8 +11,9 @@ export const createBuilder = <TCollection extends PureCollection, TModelType ext
   config: IConfiguration<TModelType> | undefined,
   context: IFactoryContext,
 ) => {
-  const build = (buildTimeConfig?: IBuildConfiguration<TModelType>): InstanceType<TModelType> => {
+  const builder = (buildTimeConfig?: IBuildConfiguration<TModelType>): InstanceType<TModelType> => {
     const computedFields = fields ? compute(fields, buildTimeConfig, context) : {};
+    const traits = getTraits(buildTimeConfig);
 
     const data = client.add(computedFields, model) as InstanceType<TModelType>;
 
@@ -22,11 +24,11 @@ export const createBuilder = <TCollection extends PureCollection, TModelType ext
     return data;
   };
 
-  build.reset = () => {
+  builder.reset = () => {
     context.reset();
   };
 
-  return build;
+  return builder;
 };
 
 export const createFactory = <TCollection extends PureCollection>(client: TCollection) => {
