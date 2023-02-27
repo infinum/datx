@@ -1,3 +1,4 @@
+import { IResourceTypeOpts } from '../../interfaces/IResourceTypeOpts';
 import { IResource } from '../../interfaces/IResource';
 import { IValidationError } from '../../interfaces/IValidationError';
 import { IValidationOptions } from '../../interfaces/IValidationOptions';
@@ -32,10 +33,16 @@ export function validateSchema<TSchema extends Schema>(
     (key: keyof TSchema['definition'], def: TSchema['definition'][typeof key]) => {
       dataKeys = dataKeys.filter((k) => k !== key);
 
-      const type = def instanceof Schema ? def : def?.['type'] ?? def;
-      const optional = def?.['optional'] ?? false;
+      const typeObj =
+        'type' in def && !(def instanceof Schema)
+          ? (def as IResourceTypeOpts<any>)
+          : ({ type: def, optional: def?.['optional'] ?? false } as IResourceTypeOpts<typeof def>);
 
-      if (typeof data[key as string] === 'undefined' && !optional) {
+      const type = typeObj.type;
+      const optional = typeObj?.['optional'] ?? false;
+      const value = data[key as keyof IResource<TSchema>];
+
+      if (typeof value === 'undefined' && !optional) {
         errors.push({
           message: `Missing required property ${key as string}`,
           pointer: `${path}${key as string}`,
@@ -43,7 +50,7 @@ export function validateSchema<TSchema extends Schema>(
       } else if (type instanceof Schema) {
         const [hasErrors, subErrors] = validateSchema(
           type,
-          data[key as string] as IResource<typeof type>,
+          value as IResource<typeof type>,
           options,
           `${path}${key as string}.`,
         );
@@ -52,8 +59,8 @@ export function validateSchema<TSchema extends Schema>(
           errors.push(...subErrors);
         }
       } else if (typeof type === 'function') {
-        if (data[key as string] !== type(data[key as string])) {
-          if (typeof data[key as string] === 'undefined' && optional) {
+        if (value !== type(value)) {
+          if (typeof value === 'undefined' && optional) {
             return;
           }
           errors.push({
@@ -61,23 +68,25 @@ export function validateSchema<TSchema extends Schema>(
             pointer: `${path}${key as string}`,
           });
         }
-      } else if (def?.['parseValue']) {
-        if (typeof data[key as string] === 'undefined' && optional) {
+      } else if ('parseValue' in def) {
+        if (typeof value === 'undefined' && optional) {
           return;
         }
         try {
           if (options?.plain) {
-            const clone = def?.['serialize'](def?.['parseValue'](data[key as string]));
-            if (data[key as string] !== clone) {
+            const clone = def.serialize(def.parseValue(value, key as string | number, data));
+
+            if (value !== clone) {
               errors.push({
                 message: `Wrong custom type for ${key as string}`,
                 pointer: `${path}${key as string}`,
               });
             }
           } else {
-            const clone = def?.['parseValue'](def?.['serialize'](data[key as string]));
+            const clone = def.parseValue(def.serialize(value), key as string | number, data);
             const constructor = clone.constructor;
-            if (!(data[key as string] instanceof constructor)) {
+
+            if (!((value as any) instanceof constructor)) {
               errors.push({
                 message: `Wrong custom instance type for ${key as string}`,
                 pointer: `${path}${key as string}`,

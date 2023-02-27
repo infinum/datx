@@ -42,5 +42,6 @@ export type TResourceProp<
     ? TInnerProp | undefined
     : TInnerProp // Custom scalar
   : TProp extends Constructor<any>
-  ? InstanceType<TProp> // Primitive values
+  ? // @ts-ignore
+    ReturnType<TProp> // Primitive values
   : never;

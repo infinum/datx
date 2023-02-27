@@ -7,7 +7,7 @@ type TOptionalKey<
   TSchema extends Record<string, unknown>,
   TKey extends keyof TSchema,
   TValue = TSchema[TKey],
-> = Exclude<TValue, NonNullable<TValue>> extends never ? never : TKey extends string ? TKey : never;
+> = Exclude<TValue, NonNullable<TValue>> extends never ? never : TKey;
 
 type TOptionalKeys<
   TSchema extends Record<string, unknown>,

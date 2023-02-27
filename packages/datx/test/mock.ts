@@ -1,4 +1,4 @@
-import { DateType, IResource, Schema } from '../src';
+import { Date, IResource, Schema, Boolean } from '../src';
 
 export class CustomType {
   public foo = 1;
@@ -17,7 +17,7 @@ export const Post = new Schema(
   'post',
   {
     title: String,
-    date: DateType,
+    date: Date,
     text: String,
   },
   (data: IResource<Schema>) => `post/${data.title}`,
@@ -28,7 +28,7 @@ export const Comment = new Schema(
   {
     author: User,
     post: Post,
-    date: DateType,
+    date: Date,
     text: String,
     upvotes: [User],
     featured: { type: Boolean, optional: true },

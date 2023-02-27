@@ -1,8 +1,9 @@
 export { Schema } from './Schema';
-export { ISchemaData } from './interfaces/ISchemaData';
-export { IPlainResource, IResource } from './interfaces/IResource';
-export { TResourceProp } from './interfaces/TResourceProp';
+export type { ICustomScalar } from './interfaces/ICustomScalar';
+export type { ISchemaData } from './interfaces/ISchemaData';
+export type { IPlainResource, IResource } from './interfaces/IResource';
+export type { TResourceProp } from './interfaces/TResourceProp';
 export { parseSchema } from './utils/schema/parse';
 export { serializeSchema } from './utils/schema/serialize';
 
-export { DateType } from './commonTypes';
+export { Date, Pojo, Json, String, Number, Boolean } from './commonTypes';

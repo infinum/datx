@@ -39,6 +39,7 @@ function parseProp<TSchema extends Schema>(data: IPlainResource<TSchema>, collec
         true
       >;
     }
+
     return data[key as keyof typeof data] as TResourceProp<typeof def, true>;
   };
 }
@@ -47,9 +48,21 @@ export function parseSchema<TSchema extends Schema>(
   schema: TSchema,
   data: IPlainResource<TSchema>,
   extCollection?: Collection,
-): IResource<TSchema> {
+): IResource<TSchema>;
+export function parseSchema<TSchema extends Schema>(
+  schema: TSchema,
+  data: Array<IPlainResource<TSchema>>,
+  extCollection?: Collection,
+): Array<IResource<TSchema>>;
+export function parseSchema<TSchema extends Schema>(
+  schema: TSchema,
+  data: IPlainResource<TSchema> | Array<IPlainResource<TSchema>>,
+  extCollection?: Collection,
+): IResource<TSchema> | Array<IResource<TSchema>> {
   if (!data) {
     return data;
+  } else if (Array.isArray(data)) {
+    return data.map((item) => parseSchema(schema, item, extCollection));
   }
   const collection = extCollection || new Collection();
   const item = mapObjectValues<TSchema['definition']>(
@@ -62,6 +75,7 @@ export function parseSchema<TSchema extends Schema>(
 
   if (collectionItem) {
     const merged = mergeSchema(schema, collectionItem as IResource<TSchema>, item);
+
     return Object.assign(collectionItem, merged);
   }
 

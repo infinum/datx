@@ -32,6 +32,7 @@ export class Collection {
     }
 
     const meta = SchemaMeta.get(item);
+
     if (type && !this.types.includes(type)) {
       this.types.push(type);
     } else if (meta?.schema && !this.types.includes(meta?.schema)) {

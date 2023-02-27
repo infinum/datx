@@ -19,6 +19,7 @@ function mergeProp<TSchema extends Schema>(
         source?.[key as keyof typeof source] as IResource<typeof def>,
       );
     }
+
     return (source[key as keyof typeof source] ??
       target[key as keyof typeof target]) as TResourceProp<typeof def, true>;
   };

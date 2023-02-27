@@ -11,8 +11,12 @@ export class Schema<T extends ISchemaData = ISchemaData> {
     public readonly id: (data: IResource<Schema>) => string | number,
   ) {}
 
-  public parse(data: IPlainResource<this>): IResource<this> {
-    return parseSchema(this, data);
+  public parse(data: IPlainResource<this>): IResource<this>;
+  public parse(data: Array<IPlainResource<this>>): Array<IResource<this>>;
+  public parse(
+    data: IPlainResource<this> | Array<IPlainResource<this>>,
+  ): IResource<this> | Array<IResource<this>> {
+    return parseSchema(this, data as IPlainResource<this>);
   }
 
   public serialize(
@@ -22,23 +26,43 @@ export class Schema<T extends ISchemaData = ISchemaData> {
     contained?: Array<string | number>,
   ): IPlainResource<this>;
   public serialize(
+    data: Array<IResource<this>>,
+    depth?: number,
+    flatten?: false,
+    contained?: Array<string | number>,
+  ): Array<IPlainResource<this>>;
+  public serialize(
     data: IResource<this>,
     depth: number,
     flatten: true,
     contained?: Array<string | number>,
   ): IFlattenedResource<this>;
   public serialize(
-    data: IResource<this>,
-    depth?: number,
-    flatten?: boolean,
+    data: Array<IResource<this>>,
+    depth: number,
+    flatten: true,
     contained?: Array<string | number>,
-  ): IPlainResource<this> | IFlattenedResource<this>;
+  ): IFlattenedResource<this, true>;
   public serialize(
-    data: IResource<this>,
+    data: IResource<this> | Array<IResource<this>>,
     depth?: number,
     flatten?: boolean,
     contained?: Array<string | number>,
-  ): IPlainResource<this> | IFlattenedResource<this> {
-    return serializeSchema(this, data, depth, flatten, contained);
+  ):
+    | IPlainResource<this>
+    | IFlattenedResource<this>
+    | Array<IPlainResource<this>>
+    | IFlattenedResource<this, true>;
+  public serialize(
+    data: IResource<this> | Array<IResource<this>>,
+    depth?: number,
+    flatten?: boolean,
+    contained?: Array<string | number>,
+  ):
+    | IPlainResource<this>
+    | IFlattenedResource<this>
+    | Array<IPlainResource<this>>
+    | IFlattenedResource<this, true> {
+    return serializeSchema(this, data as IResource<this>, depth, flatten, contained);
   }
 }
