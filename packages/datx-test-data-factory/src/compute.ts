@@ -1,5 +1,6 @@
 import { perBuildType } from './generators/per-build';
 import { sequenceType } from './generators/sequence';
+
 import {
   Attributes,
   Field,
@@ -7,10 +8,11 @@ import {
   IBuildConfiguration,
   IFactoryContext,
   ModelType,
+  Overrides,
 } from './types';
 import { isGenerator, mapValues } from './utils';
 
-const computeField = <TModelType extends ModelType>(
+export const computeField = <TModelType extends ModelType>(
   fieldValue: Field<Attributes<TModelType>>,
   key: string,
   context: IFactoryContext,
@@ -46,6 +48,7 @@ const computeField = <TModelType extends ModelType>(
 export const compute = <TModelType extends ModelType>(
   fields: FieldsConfiguration<TModelType>,
   buildTimeConfig: IBuildConfiguration<TModelType> = {},
+  traitOverrides: Overrides<TModelType> = {},
   context: IFactoryContext,
 ) => {
   const overrides = buildTimeConfig.overrides || {};
@@ -53,8 +56,14 @@ export const compute = <TModelType extends ModelType>(
   return mapValues(fields, (value, key) => {
     const override = overrides[key];
 
+    const trait = traitOverrides[key];
+
     if (override) {
       return computeField(override, key, context);
+    }
+
+    if (trait) {
+      return computeField(trait, key, context);
     }
 
     // @ts-ignore

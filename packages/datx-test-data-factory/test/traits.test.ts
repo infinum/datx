@@ -101,7 +101,7 @@ describe('traits', () => {
     });
 
     const userWithTrait = userFactory({
-      traits: ['admin', 'Bob'],
+      traits: ['admin', 'bob'],
     });
 
     expect(userWithTrait.isAdmin).toBe(true);
@@ -137,11 +137,11 @@ describe('traits', () => {
       },
     });
 
-    expect(
+    expect(() =>
       userFactory({
         traits: 'non-existing-trait',
       }),
-    ).toThrowError('Trait non-existing-trait was not defined');
+    ).toThrowError(`Trait 'non-existing-trait' was not defined.`);
   });
 
   it('should override undefined values', () => {
