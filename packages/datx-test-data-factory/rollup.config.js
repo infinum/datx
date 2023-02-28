@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import excludeDependenciesFromBundle from 'rollup-plugin-exclude-dependencies-from-bundle';
 import generatePackageJson from 'rollup-plugin-generate-package-json';
+import copy from 'rollup-plugin-copy';
 
 import pkg from './package.json';
 
@@ -44,6 +45,9 @@ export default [
           devDependencies: {},
           husky: undefined,
         }),
+      }),
+      copy({
+        targets: [{ src: 'README.md', dest: 'dist' }],
       }),
     ],
     onwarn(warning, rollupWarn) {
