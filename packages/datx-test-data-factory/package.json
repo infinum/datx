@@ -1,6 +1,6 @@
 {
   "name": "@datx/test-data-factory",
-  "version": "1.0.0-2",
+  "version": "1.0.0-3",
   "description": "DatX companion lib for generating test data with ease!",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
