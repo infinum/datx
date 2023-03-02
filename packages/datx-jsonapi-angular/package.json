@@ -1,6 +1,6 @@
 {
   "name": "@datx/jsonapi-angular",
-  "version": "2.4.12",
+  "version": "2.4.13",
   "scripts": {
     "ng": "ng",
     "build": "ng build datx-jsonapi-angular && npm run copy-license && npm run copy-readme",
