@@ -1,7 +1,8 @@
 import { Comment } from './Comment';
 import { Attribute, Model } from '@datx/core';
+import { jsonapi } from '@datx/jsonapi';
 
-export class Post extends Model {
+export class Post extends jsonapi(Model) {
   public static type = 'posts';
 
   @Attribute({ isIdentifier: true })

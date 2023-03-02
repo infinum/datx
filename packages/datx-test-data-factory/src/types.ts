@@ -33,12 +33,8 @@ export type Attributes<TModelType extends ModelType> = {
   >]?: InstanceType<TModelType>[Key];
 };
 
-export type FieldsConfiguration<TModelType extends ModelType> = {
+export type Fields<TModelType extends ModelType> = {
   readonly [Key in keyof Attributes<TModelType>]: Field<Attributes<TModelType>[Key]>;
-};
-
-export type Overrides<TModelType extends ModelType> = {
-  [Key in keyof Attributes<TModelType>]?: Field<Attributes<TModelType>[Key]>;
 };
 
 export type PostBuildFn<TModelType extends ModelType> = (
@@ -47,19 +43,19 @@ export type PostBuildFn<TModelType extends ModelType> = (
 
 export interface ITraitsConfiguration<TModelType extends ModelType> {
   readonly [traitName: string]: {
-    overrides?: Overrides<TModelType>;
+    overrides?: Fields<TModelType>;
     postBuild?: PostBuildFn<TModelType>;
   };
 }
 
 export interface IConfiguration<TModelType extends ModelType> {
-  readonly fields: FieldsConfiguration<TModelType>;
+  readonly fields: Fields<TModelType>;
   readonly postBuild?: PostBuildFn<TModelType>;
   readonly traits?: ITraitsConfiguration<TModelType>;
 }
 
 export interface IBuildConfiguration<TModelType extends ModelType> {
-  overrides?: Overrides<TModelType>;
+  overrides?: Fields<TModelType>;
   traits?: string | Array<string>;
   // map?: (builtThing: Attributes<TModelType>) => Attributes<TModelType>;
 }
@@ -88,13 +84,24 @@ export interface IBuilderConfig<TCollection extends PureCollection, TModelType e
  * JSON:API
  */
 
-export type JsonapiFieldsConfiguration<TModelType extends ModelType> =
-  FieldsConfiguration<TModelType> & {
-    readonly meta: Record<string, unknown>;
+export type JsonapiFields<TModelType extends ModelType> = Fields<TModelType> & {
+  readonly meta?: Record<string, unknown>;
+};
+
+export interface IJsonapiTraitsConfiguration<TModelType extends ModelType> {
+  readonly [traitName: string]: {
+    overrides?: JsonapiFields<TModelType>;
+    postBuild?: PostBuildFn<TModelType>;
   };
+}
 
 export interface IJsonapiConfiguration<TModelType extends ModelType> {
-  readonly fields: JsonapiFieldsConfiguration<TModelType>;
+  readonly fields: JsonapiFields<TModelType>;
   readonly postBuild?: PostBuildFn<TModelType>;
-  readonly traits?: ITraitsConfiguration<TModelType>;
+  readonly traits?: IJsonapiTraitsConfiguration<TModelType>;
 }
+
+export type JsonapiBuildConfiguration<TModelType extends ModelType> =
+  IBuildConfiguration<TModelType> & {
+    overrides?: JsonapiFields<TModelType>;
+  };

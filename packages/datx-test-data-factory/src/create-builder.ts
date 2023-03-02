@@ -1,4 +1,4 @@
-import { FieldsConfiguration, IBuildConfiguration, IBuilderConfig, ModelType } from './types';
+import { Fields, IBuildConfiguration, IBuilderConfig, ModelType } from './types';
 import { getModelType, PureCollection } from '@datx/core';
 import { compute, computeField } from './compute';
 import { getTraitOverrides, getTraits } from './traits';
@@ -28,7 +28,7 @@ export const createBuilder = <TCollection extends PureCollection, TModelType ext
       }
 
       for (const stringKey of Object.keys(traitConfig.overrides)) {
-        const key = stringKey as keyof FieldsConfiguration<TModelType>;
+        const key = stringKey as keyof Fields<TModelType>;
 
         // If the key already exists in the base fields, we'll have defined it,
         // so we don't need to worry about it.

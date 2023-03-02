@@ -1,4 +1,4 @@
-import { FieldsConfiguration, IBuildConfiguration, IBuilderConfig, ModelType } from '../types';
+import { Fields, IBuilderConfig, JsonapiBuildConfiguration, ModelType } from '../types';
 import { getModelType, PureCollection } from '@datx/core';
 import { compute, computeField } from '../compute';
 import { getTraitOverrides, getTraits } from '../traits';
@@ -16,7 +16,9 @@ export const createJsonapiBuilder = <
 }: IBuilderConfig<TCollection, TModelType>) => {
   const { fields } = config || {};
 
-  const builder = (buildTimeConfig?: IBuildConfiguration<TModelType>): InstanceType<TModelType> => {
+  const builder = (
+    buildTimeConfig?: JsonapiBuildConfiguration<TModelType>,
+  ): InstanceType<TModelType> => {
     const traits = getTraits(buildTimeConfig);
     const traitOverrides = getTraitOverrides(traits, config);
 
@@ -33,7 +35,7 @@ export const createJsonapiBuilder = <
       }
 
       for (const stringKey of Object.keys(traitConfig.overrides)) {
-        const key = stringKey as keyof FieldsConfiguration<TModelType>;
+        const key = stringKey as keyof Fields<TModelType>;
 
         // If the key already exists in the base fields, we'll have defined it,
         // so we don't need to worry about it.
