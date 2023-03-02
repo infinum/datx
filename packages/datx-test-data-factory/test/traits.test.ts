@@ -1,8 +1,8 @@
-import { createTestClient } from './create-test-client';
+import { createClient } from './create-client';
 import { createFactory, perBuild, sequence } from '../src';
 import { User } from './models/User';
 
-const client = createTestClient();
+const client = createClient();
 const factory = createFactory(client);
 
 describe('traits', () => {

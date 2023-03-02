@@ -1,13 +1,13 @@
-import { createTestClient } from './create-test-client';
+import { createClient } from './create-client';
 import { createFactory, sequence, perBuild } from '../src';
 import { User } from './models/User';
 
-const client = createTestClient();
+const client = createClient();
 const factory = createFactory(client);
 
 describe('overrides', () => {
   beforeEach(() => {
-    client.reset();
+    factory.reset();
   });
 
   it('should override normal field when building an instance', () => {

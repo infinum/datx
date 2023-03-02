@@ -1,14 +1,14 @@
-import { createTestClient } from './create-test-client';
+import { createClient } from './create-client';
 import { createFactory } from '../src';
 import { Post } from './models/Post';
 import { User } from './models/User';
 
-const client = createTestClient();
+const client = createClient();
 const factory = createFactory(client);
 
 describe('general', () => {
   beforeEach(() => {
-    client.reset();
+    factory.reset();
   });
 
   it('should build a basic object from a factory', () => {

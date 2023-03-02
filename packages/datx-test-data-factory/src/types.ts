@@ -1,6 +1,6 @@
 import { IPerBuildGenerator } from './generators/per-build';
 import { ISequenceGenerator } from './generators/sequence';
-import { IModelConstructor, PureModel } from '@datx/core';
+import { IModelConstructor, PureCollection, PureModel } from '@datx/core';
 import { IOneOfGenerator } from './generators/one-of';
 
 export type ModelType = IModelConstructor<PureModel>;
@@ -75,4 +75,26 @@ export interface IFactoryContextValue {
 export interface IFactoryContext {
   value: IFactoryContextValue;
   reset: () => void;
+}
+
+export interface IBuilderConfig<TCollection extends PureCollection, TModelType extends ModelType> {
+  client: TCollection;
+  model: TModelType;
+  config: IConfiguration<TModelType> | undefined;
+  context: IFactoryContext;
+}
+
+/**
+ * JSON:API
+ */
+
+export type JsonapiFieldsConfiguration<TModelType extends ModelType> =
+  FieldsConfiguration<TModelType> & {
+    readonly meta: Record<string, unknown>;
+  };
+
+export interface IJsonapiConfiguration<TModelType extends ModelType> {
+  readonly fields: JsonapiFieldsConfiguration<TModelType>;
+  readonly postBuild?: PostBuildFn<TModelType>;
+  readonly traits?: ITraitsConfiguration<TModelType>;
 }

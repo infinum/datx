@@ -1,39 +1,39 @@
-import { createTestClient } from './create-test-client';
+import { createClient } from './create-client';
 import { createFactory, sequence } from '../src';
 import { User } from './models/User';
 
 describe('factory', () => {
-	it('should create a factory', () => {
-		const client = createTestClient();
-		const factory = createFactory(client);
-		const userFactory = factory(User, {
-			fields: {
-				id: sequence(),
-			},
-		});
-		const user = userFactory();
+  it('should create a factory', () => {
+    const client = createClient();
+    const factory = createFactory(client);
+    const userFactory = factory(User, {
+      fields: {
+        id: sequence(),
+      },
+    });
+    const user = userFactory();
 
-		expect(user.id).toBe(1);
-	});
+    expect(user.id).toBe(1);
+  });
 
-	it('should reset client on factory reset', () => {
-		const client = createTestClient();
-		const factory = createFactory(client);
-		const userFactory = factory(User, {
-			fields: {
-				id: sequence(),
-			},
-		});
+  it('should reset client on factory reset', () => {
+    const client = createClient();
+    const factory = createFactory(client);
+    const userFactory = factory(User, {
+      fields: {
+        id: sequence(),
+      },
+    });
 
-		userFactory();
-		userFactory();
+    userFactory();
+    userFactory();
 
-		expect(client.findAll(User).length).toBe(2);
+    expect(client.findAll(User).length).toBe(2);
 
-		factory.reset();
+    factory.reset();
 
-		userFactory();
+    userFactory();
 
-		expect(client.findAll(User).length).toBe(1);
-	});
+    expect(client.findAll(User).length).toBe(1);
+  });
 });

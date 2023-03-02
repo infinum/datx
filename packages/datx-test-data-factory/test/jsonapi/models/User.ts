@@ -1,7 +1,8 @@
 import { Attribute, Model } from '@datx/core';
-import { IImage } from '../interfaces';
+import { jsonapi } from '@datx/jsonapi';
+import { IImage } from '../../interfaces';
 
-export class User extends Model {
+export class User extends jsonapi(Model) {
   public static type = 'users';
 
   @Attribute({ isIdentifier: true })

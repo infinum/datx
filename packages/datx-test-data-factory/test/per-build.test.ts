@@ -1,13 +1,13 @@
-import { createTestClient } from './create-test-client';
+import { createClient } from './create-client';
 import { createFactory, perBuild } from '../src';
 import { User } from './models/User';
 
-const client = createTestClient();
+const client = createClient();
 const factory = createFactory(client);
 
 describe('pre build', () => {
   beforeEach(() => {
-    client.reset();
+    factory.reset();
   });
 
   it('should generates a new avatar url each time', () => {

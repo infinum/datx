@@ -5,11 +5,11 @@ import { Post } from './models/Post';
 import { User } from './models/User';
 
 export class TestClient extends Collection {
-	public static types = [User, Post, Comment];
+  public static types = [User, Post, Comment];
 }
 
-export const createTestClient = () => {
-	const client = new TestClient();
+export const createClient = () => {
+  const client = new TestClient();
 
-	return client;
+  return client;
 };
