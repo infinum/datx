@@ -3,10 +3,9 @@
   "version": "2.4.13",
   "scripts": {
     "ng": "ng",
-    "build": "ng build datx-jsonapi-angular && npm run copy-license && npm run copy-readme",
+    "build": "ng build datx-jsonapi-angular && npm run copy-license && npm run copy-readme && node ./prepublish.js",
     "copy-license": "cp ./LICENSE ./dist/LICENSE",
     "copy-readme": "cp ./README.md ./dist/README.md",
-    "prepublish": "npm run build && node ./prepublish.js",
     "test": "jest",
     "ts:check": "tsc --noEmit"
   },
