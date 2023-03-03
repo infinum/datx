@@ -57,11 +57,11 @@ export const compute = <TModelType extends ModelType>(
 
     const trait = traitOverrides[key];
 
-    if (override) {
+    if (override !== undefined) {
       return computeField(override, key, context);
     }
 
-    if (trait) {
+    if (trait !== undefined) {
       return computeField(trait, key, context);
     }
 

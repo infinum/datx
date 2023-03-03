@@ -73,4 +73,23 @@ describe('overrides', () => {
 
     expect(user.name).toBe('John 1');
   });
+
+  it('should override multiple fields', () => {
+    const userFactory = factory(User, {
+      fields: {
+        name: 'John',
+        isAdmin: true,
+      },
+    });
+
+    const user = userFactory({
+      overrides: {
+        name: 'Jane',
+        isAdmin: false,
+      },
+    });
+
+    expect(user.name).toBe('Jane');
+    expect(user.isAdmin).toBe(false);
+  });
 });
