@@ -350,7 +350,7 @@ const user = userFactory({
 
 Using `overrides` and `map` lets you easily customize a specific object that a factory has created.
 
-## Traits (🚨 Not Implemented!)
+## Traits
 
 Traits let you define a set of overrides for a factory that can easily be re-applied. Let's imagine you've got a users factory where users can be admins:
 
