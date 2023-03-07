@@ -1,7 +1,7 @@
-import { Collection, getModelId, getModelType, Model } from '@datx/core';
+import { Collection, getModelId, getModelType, Model, PureModel, View } from '@datx/core';
 import { mobx } from '@datx/utils';
 
-import { getModelRefLinks, jsonapi, modelToJsonApi } from '../src';
+import { getModelRefLinks, isJsonApiClass, jsonapi, modelToJsonApi } from '../src';
 import { Event, Image, Photo, TestStore, User } from './utils/setup';
 
 describe('General', () => {
@@ -714,5 +714,21 @@ describe('General', () => {
       expect(data.relationships.images.data).toHaveLength(0);
       expect(data.relationships.image.data).toBeNull();
     }
+  });
+
+  it('should detect jsonapi classes', () => {
+    class PlainModel extends Model {}
+    class JsonapiModel extends jsonapi(Model) {}
+    class PlainCollection extends Collection {}
+    class JsonapiCollection extends jsonapi(Collection) {}
+    class PlainView extends View {}
+    class JsonapiView extends jsonapi(View<PureModel>) {}
+
+    expect(isJsonApiClass(PlainModel)).toBe(false);
+    expect(isJsonApiClass(JsonapiModel)).toBe(true);
+    expect(isJsonApiClass(PlainCollection)).toBe(false);
+    expect(isJsonApiClass(JsonapiCollection)).toBe(true);
+    expect(isJsonApiClass(PlainView as typeof View)).toBe(false);
+    expect(isJsonApiClass(JsonapiView as typeof View)).toBe(true);
   });
 });

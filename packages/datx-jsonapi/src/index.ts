@@ -17,10 +17,8 @@ export {
   saveModel,
 } from './helpers/model';
 
-export {
-  prepareQuery,
-  buildUrl
-} from './helpers/url';
+export { prepareQuery, buildUrl } from './helpers/url';
+export { isJsonApiClass } from './helpers/utils';
 
 export { BaseJsonapiRequest } from './BaseRequest';
 
@@ -63,3 +61,11 @@ export {
   clearAllCache,
   clearCacheByType,
 } from '@datx/network';
+
+export {
+  MODEL_LINKS_FIELD,
+  MODEL_META_FIELD,
+  MODEL_PERSISTED_FIELD,
+  MODEL_REF_LINKS_FIELD,
+  MODEL_REF_META_FIELD,
+} from './consts';
