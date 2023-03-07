@@ -5,6 +5,8 @@ import { compute, computeField } from './compute';
 import { getTraitOverrides, getTraits } from './traits';
 import { getRawData } from './utils';
 
+const identity = <T>(value: T) => value;
+
 export const createBuilder = <TCollection extends PureCollection, TModelType extends ModelType>({
   client,
   model,
@@ -51,20 +53,19 @@ export const createBuilder = <TCollection extends PureCollection, TModelType ext
 
     const traitPostBuilds = traits.map((trait) => {
       const traitConfig = config?.traits?.[trait] || {};
-      const postBuild = traitConfig.postBuild || ((fields) => fields);
+      const postBuild = traitConfig.postBuild || identity;
 
       return postBuild;
     });
 
-    const afterTraitPostBuildFields = traitPostBuilds.reduce((fields, traitPostBuild) => {
+    traitPostBuilds.reduce((fields, traitPostBuild) => {
       return traitPostBuild(fields);
     }, data);
 
-    if (config?.postBuild) {
-      return config.postBuild(afterTraitPostBuildFields);
-    }
+    const postBuild = config?.postBuild || identity;
+    const map = buildTimeConfig?.map || identity;
 
-    return data;
+    return map(postBuild(data));
   };
 
   builder.reset = () => {

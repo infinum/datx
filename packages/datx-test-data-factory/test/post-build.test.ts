@@ -60,4 +60,71 @@ describe('post build', () => {
 
     expect(user.name).toBe('JOHN DOE');
   });
+
+  it('should apply traits postBuild transformers', () => {
+    const userFactory = factory(User, {
+      fields: {
+        name: 'John Doe',
+      },
+      traits: {
+        trait1: {
+          postBuild: (user) => {
+            user.name = 'trait 1';
+
+            return user;
+          },
+        },
+        trait2: {
+          postBuild: (user) => {
+            user.name = 'trait 2';
+
+            return user;
+          },
+        },
+      },
+    });
+
+    const user = userFactory({
+      traits: ['trait1', 'trait2'],
+    });
+
+    expect(user.name).toBe('trait 2');
+  });
+
+  it('should apply traits postBuild transformers before main postBuild', () => {
+    const userFactory = factory(User, {
+      fields: {
+        name: 'John Doe',
+      },
+      traits: {
+        trait1: {
+          postBuild: (user) => {
+            user.name = 'trait 1';
+
+            return user;
+          },
+        },
+        trait2: {
+          postBuild: (user) => {
+            user.name = 'trait 2';
+
+            return user;
+          },
+        },
+      },
+      postBuild: (user) => {
+        expect(user.name).toBe('trait 2');
+
+        user.name = 'main post build';
+
+        return user;
+      },
+    });
+
+    const user = userFactory({
+      traits: ['trait1', 'trait2'],
+    });
+
+    expect(user.name).toBe('main post build');
+  });
 });

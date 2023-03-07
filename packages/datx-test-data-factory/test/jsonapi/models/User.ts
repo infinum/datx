@@ -1,6 +1,6 @@
 import { Attribute, Model } from '@datx/core';
 import { jsonapi } from '@datx/jsonapi';
-import { IImage } from '../../interfaces';
+import { IImage, IUserSports } from '../../interfaces';
 
 export class User extends jsonapi(Model) {
   public static type = 'users';
@@ -28,4 +28,7 @@ export class User extends jsonapi(Model) {
     serialize: (value: Date) => value && value.toISOString(),
   })
   public createdAt?: Date;
+
+  @Attribute()
+  public sports!: IUserSports;
 }

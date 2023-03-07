@@ -1,5 +1,5 @@
 import { Attribute, Model } from '@datx/core';
-import { IImage } from '../interfaces';
+import { IImage, IUserSports } from '../interfaces';
 
 export class User extends Model {
   public static type = 'users';
@@ -27,4 +27,7 @@ export class User extends Model {
     serialize: (value: Date) => value && value.toISOString(),
   })
   public createdAt?: Date;
+
+  @Attribute()
+  public sports!: IUserSports;
 }

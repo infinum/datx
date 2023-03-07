@@ -13,7 +13,7 @@ yarn add --dev @datx/test-data-factory
 
 ## Creating your first factory
 
-We use the `build` function to create a factory. You give a factory an object of fields you want to define:
+We use the `createFactory` function to create a factory. You give a factory an object of fields you want to define:
 
 ```js
 import { createFactory } from '@datx/test-data-factory';
@@ -36,7 +36,7 @@ console.log(user); // => { name: 'John'}
 
 Once you've created a factory, you can call it to generate an instance of that object - in this case, a `user`.
 
-It would be boring though if each user had the same `name` - so test-data-factory lets you generate data via some API methods:
+It would be boring though if each user had the same `name` - so `@datx/test-data-factory` lets you generate data via some API methods:
 
 ### Incrementing IDs with `sequence`
 
@@ -151,7 +151,7 @@ const userFactory = factory(User, {
 
 ### `perBuild`
 
-test-data-factory lets you declare a field to always be a particular value:
+`@datx/test-data-factory` lets you declare a field to always be a particular value:
 
 ```js
 import { createFactory, sequence } from '@datx/test-data-factory';
@@ -218,7 +218,7 @@ const userFactory = factory(User, {
 
 ### Mapping over all the created objects with `postBuild`
 
-If you need to transform an object in a way that test-data-factory doesn't support out the box, you can pass a `postBuild` function when creating a factory. This factory will run every time you create an object from it.
+If you need to transform an object in a way that `@datx/test-data-factory` doesn't support out the box, you can pass a `postBuild` function when creating a factory. This factory will run every time you create an object from it.
 
 ```js
 import { createFactory, sequence, perBuild } from '@datx/test-data-factory';
@@ -242,11 +242,11 @@ const user = userFactory();
 // user.name will be uppercase
 ```
 
-> `postBuild` is will run after `overrides` transformations!
+> `postBuild` will be executed after `overrides` transformations!
 
 ## Working with deeply nested relationships
 
-test-data-factory lets you create deeply nested relationships between objects.
+`@datx/test-data-factory` lets you create deeply nested relationships between objects.
 
 For example, if you have a `Post` model that has many `Comment` models, and each `Comment` has
 an `author` relationship to a `User` model, you can create a `Post` with a bunch of `Comment`s,
@@ -320,9 +320,9 @@ const user = userFactory({
 // user.name === 'John'
 ```
 
-## Editing object directly with `map` (🚨 Not Implemented!)
+## Editing object directly with `map`
 
-If you need to edit the object directly, you can pass in a `map` function when you call the factory. This will be called after test-data-factory has generated the fake object, and lets you directly change its properties.
+If you need to edit the object directly, you can pass in a `map` function when you call the factory. This will be called after `@datx/test-data-factory` has generated the fake object, and lets you directly change its properties.
 
 ```js
 import { createFactory, sequence, perBuild } from '@datx/test-data-factory';
@@ -425,6 +425,54 @@ const userFactory = factory({
   // Within perBuild, call your faker library directly.
   name: perBuild(() => fake().name()),
 });
+```
+
+## Using with JSON:API resources
+
+When using this library with JSON:API resources, factory will automatically support `meta` and `links` fields.
+
+```ts
+import { Collection, Attribute, Model } from '@datx/core';
+import { jsonapi, getModelMeta, getModelLinks } from '@datx/jsonapi';
+import { createFactory, sequence, perBuild } from '@datx/test-data-factory';
+
+class User extends jsonapi(Model) {
+  public static type = 'users';
+
+  @Attribute({ isIdentifier: true })
+  public id!: number;
+
+  @Attribute()
+  public name!: string;
+}
+
+class JsonapiClient extends jsonapi(Collection) {
+  public static types = [User];
+}
+
+const client = new JsonapiClient();
+const factory = createFactory(client);
+
+const userFactory = factory(User, {
+  fields: {
+    id: sequence(),
+    name: 'John',
+    meta: {
+      foo: 'bar',
+    },
+    links: {
+      self: 'https://example.com',
+    },
+  },
+});
+
+const user = userFactory();
+
+const meta = getModelMeta(user);
+const links = getModelLinks(user);
+
+// meta.foo === 'bar';
+// links.self === 'https://example.com';
 ```
 
 ## Using with Jest testing library

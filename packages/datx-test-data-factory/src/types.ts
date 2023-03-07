@@ -62,9 +62,18 @@ export interface IConfiguration<TModelType extends ModelType> {
 }
 
 export interface IBuildConfiguration<TModelType extends ModelType> {
+  /**
+   * A list of fields to override
+   */
   overrides?: FactoryFields<TModelType>;
+  /**
+   * Single trait or a list of traits to apply to the model
+   */
   traits?: string | Array<string>;
-  // map?: (builtThing: Attributes<TModelType>) => Attributes<TModelType>;
+  /**
+   * A function that can be used to modify the model after it has been built
+   */
+  map?: (instance: InstanceType<TModelType>) => InstanceType<TModelType>;
 }
 
 export interface IFactory<TModelType extends ModelType> {
