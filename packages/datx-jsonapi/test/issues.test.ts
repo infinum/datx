@@ -6,7 +6,6 @@ import { getModelMeta, getModelRefMeta, jsonapi, modelToJsonApi, config } from '
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
 import { Event, LineItem, TestStore } from './utils/setup';
 import { clearAllCache } from '../src/cache';
-import { flattenModel } from '../src/helpers/model';
 
 describe('Issues', () => {
   beforeEach(() => {
@@ -444,18 +443,6 @@ describe('Issues', () => {
 
     const newOrder1 = new Order({ created_at: new Date(), retrieveAt: new Date() });
     const newOrder2 = store.add({ created_at: new Date(), retrieveAt: new Date() }, Order);
-    console.log(
-      flattenModel(
-        {
-          [Order.type]: Order,
-        },
-        {
-          id: '123',
-          type: 'orders',
-          attributes: { created_at: new Date(), retrieve_at: new Date() },
-        },
-      ),
-    );
     const newOrder3 = store.sync({
       data: {
         id: '123',

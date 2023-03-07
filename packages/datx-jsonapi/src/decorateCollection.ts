@@ -35,6 +35,7 @@ import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
 import { CachingStrategy } from '@datx/network';
 import { IGetAllResponse } from './interfaces/IGetAllResponse';
+import { DATX_JSONAPI_CLASS } from './consts';
 
 type TSerialisedStore = IRawCollection & { cache?: Array<Omit<ICacheInternal, 'collection'>> };
 
@@ -66,6 +67,8 @@ export function decorateCollection(
   BaseClass: typeof PureCollection,
 ): ICollectionConstructor<PureCollection & IJsonapiCollection> {
   class JsonapiCollection extends BaseClass {
+    public static [DATX_JSONAPI_CLASS] = true;
+
     public static types =
       BaseClass.types && BaseClass.types.length
         ? BaseClass.types.concat(GenericModel)

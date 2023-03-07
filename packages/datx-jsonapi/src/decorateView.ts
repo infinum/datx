@@ -6,6 +6,7 @@ import {
   PureModel,
   View,
 } from '@datx/core';
+import { DATX_JSONAPI_CLASS } from './consts';
 import { getAllResponses } from './helpers/utils';
 import { IGetAllResponse } from './interfaces/IGetAllResponse';
 
@@ -20,6 +21,8 @@ export function decorateView<U>(
   BaseClass: typeof View,
 ): IViewConstructor<IJsonapiModel, U & IJsonapiView> {
   class JsonapiView<M extends IJsonapiModel = IJsonapiModel> extends BaseClass {
+    public static [DATX_JSONAPI_CLASS] = true;
+
     protected __collection: IJsonapiCollection & PureCollection;
 
     constructor(

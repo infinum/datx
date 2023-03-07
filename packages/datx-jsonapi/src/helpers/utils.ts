@@ -1,5 +1,6 @@
-import { IFieldDefinition, IReferenceDefinition, PureModel } from '@datx/core';
+import { Collection, IFieldDefinition, IReferenceDefinition, PureModel, View } from '@datx/core';
 import { getMeta } from '@datx/utils';
+import { DATX_JSONAPI_CLASS } from '../consts';
 import { IGetAllResponse } from '../interfaces/IGetAllResponse';
 import { IJsonapiModel } from '../interfaces/IJsonapiModel';
 import { Response } from '../Response';
@@ -75,4 +76,8 @@ export async function getAllResponses<M extends IJsonapiModel = IJsonapiModel>(
     responses,
     lastResponse,
   };
+}
+
+export function isJsonApiClass(type: typeof PureModel | typeof Collection | typeof View): boolean {
+  return DATX_JSONAPI_CLASS in type;
 }
