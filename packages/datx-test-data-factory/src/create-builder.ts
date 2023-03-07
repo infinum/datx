@@ -4,6 +4,7 @@ import { compute, computeField } from './compute';
 
 import { getTraitOverrides, getTraits } from './traits';
 import { getRawData } from './utils';
+import { isJsonApiClass } from '@datx/jsonapi';
 
 const identity = <T>(value: T) => value;
 
@@ -46,9 +47,7 @@ export const createBuilder = <TCollection extends PureCollection, TModelType ext
     });
 
     const type = getModelType(model);
-
-    const rawData = getRawData(computedFields);
-
+    const rawData = isJsonApiClass(model) ? getRawData(computedFields) : computedFields;
     const data = client.add(rawData, type) as InstanceType<TModelType>;
 
     const traitPostBuilds = traits.map((trait) => {
