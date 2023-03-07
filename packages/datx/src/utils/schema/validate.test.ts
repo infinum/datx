@@ -103,7 +103,7 @@ describe('instance', () => {
       expect(isError).toBe(true);
       expect(errors).toEqual([
         {
-          message: 'Wrong custom property type for test',
+          message: 'Wrong property type for test',
           pointer: 'test',
         },
       ]);
@@ -134,7 +134,7 @@ describe('instance', () => {
       expect(isError).toBe(true);
       expect(errors).toEqual([
         {
-          message: 'Wrong custom instance type for test',
+          message: 'Wrong property type for test',
           pointer: 'test',
         },
       ]);
@@ -176,7 +176,7 @@ describe('instance', () => {
           pointer: 'post.title',
         },
         {
-          message: 'Wrong custom property type for date',
+          message: 'Wrong property type for date',
           pointer: 'post.date',
         },
         {
@@ -208,15 +208,15 @@ describe('instance', () => {
       expect(isError).toBe(true);
       expect(errors).toEqual([
         {
-          message: 'Wrong custom type for date',
+          message: 'Wrong property type for date',
           pointer: 'post.date',
         },
         {
-          message: 'Wrong custom type for date',
+          message: 'Wrong property type for date',
           pointer: 'date',
         },
         {
-          message: 'Wrong custom property type for test',
+          message: 'Wrong property type for test',
           pointer: 'test',
         },
       ]);

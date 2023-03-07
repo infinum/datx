@@ -9,6 +9,7 @@ export const Date: ICustomScalar<Date, string> = {
   parseValue(value: string): Date {
     return new globalThis.Date(value);
   },
+  test: (item: unknown): item is Date => item instanceof globalThis.Date,
 };
 
 export const Json: ICustomScalar<object, string> = {
@@ -19,6 +20,7 @@ export const Json: ICustomScalar<object, string> = {
   parseValue(value: string): object {
     return JSON.parse(value);
   },
+  test: (item: unknown): item is object => typeof item === 'object' && item !== null,
 };
 
 export const Pojo: ICustomScalar<JsonValue, JsonValue> = {
@@ -28,6 +30,7 @@ export const Pojo: ICustomScalar<JsonValue, JsonValue> = {
   parseValue(value: JsonValue): JsonValue {
     return value;
   },
+  test: (item: unknown): item is JsonValue => typeof item !== 'function',
 };
 
 export const String: ICustomScalar<string, string> = {
@@ -37,6 +40,7 @@ export const String: ICustomScalar<string, string> = {
   parseValue(value: string): string {
     return value;
   },
+  test: (item: unknown): item is string => typeof item === 'string',
 };
 
 export const Number: ICustomScalar<number, number> = {
@@ -46,6 +50,7 @@ export const Number: ICustomScalar<number, number> = {
   parseValue(value: number): number {
     return value;
   },
+  test: (item: unknown): item is number => typeof item === 'number',
 };
 
 export const Boolean: ICustomScalar<boolean, boolean> = {
@@ -55,4 +60,5 @@ export const Boolean: ICustomScalar<boolean, boolean> = {
   parseValue(value: boolean): boolean {
     return value;
   },
+  test: (item: unknown): item is boolean => typeof item === 'boolean',
 };

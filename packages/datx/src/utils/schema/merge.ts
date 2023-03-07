@@ -9,8 +9,9 @@ function mergeProp<TSchema extends Schema>(
 ) {
   return (
     key: keyof TSchema['definition'],
-    def: TSchema['definition'][typeof key],
-  ): TResourceProp<typeof def, true> => {
+    outerDef: TSchema['definition'][typeof key],
+  ): TResourceProp<(typeof outerDef)['type']['type'], true> => {
+    const def = outerDef.type.type;
     if (def instanceof Schema) {
       // @ts-ignore Figure out why this doesn't work here, but otherwise it's OK
       return mergeSchema(

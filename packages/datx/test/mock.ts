@@ -1,4 +1,4 @@
-import { Date, IResource, Schema, Boolean } from '../src';
+import { IResource, Schema, type } from '../src';
 
 export class CustomType {
   public foo = 1;
@@ -7,8 +7,8 @@ export class CustomType {
 export const User = new Schema(
   'user',
   {
-    username: String,
-    age: { type: Number, optional: true, defaultValue: 0 },
+    username: type.String,
+    age: { type: type.Number, optional: true, defaultValue: 0 },
   },
   (data: IResource<Schema>) => `user/${data.username}`,
 );
@@ -16,9 +16,9 @@ export const User = new Schema(
 export const Post = new Schema(
   'post',
   {
-    title: String,
-    date: Date,
-    text: String,
+    title: type.String,
+    date: type.Date,
+    text: type.String,
   },
   (data: IResource<Schema>) => `post/${data.title}`,
 );
@@ -28,10 +28,10 @@ export const Comment = new Schema(
   {
     author: User,
     post: Post,
-    date: Date,
-    text: String,
+    date: type.Date,
+    text: type.String,
     upvotes: [User],
-    featured: { type: Boolean, optional: true },
+    featured: { type: type.Boolean, optional: true },
     test: {
       serialize(value: CustomType) {
         return value.foo;

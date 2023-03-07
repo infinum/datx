@@ -15,7 +15,7 @@ type TOptionalKeys<
 > = U extends any ? TOptionalKey<TSchema, U> : never;
 
 type IRecord<TSchema extends Schema, TPlain extends boolean = false> = {
-  [P in keyof TSchema['definition']]: TResourceProp<TSchema['definition'][P], TPlain>;
+  [P in keyof TSchema['definition']]: TResourceProp<TSchema['definition'][P]['type'], TPlain>;
 };
 
 export type IResource<

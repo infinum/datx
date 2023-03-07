@@ -1,4 +1,4 @@
-import { IResourceTypeOpts } from '../../interfaces/IResourceTypeOpts';
+import { IInnerType } from '../../interfaces/IInnerType';
 import { IResource } from '../../interfaces/IResource';
 import { IValidationError } from '../../interfaces/IValidationError';
 import { IValidationOptions } from '../../interfaces/IValidationOptions';
@@ -35,8 +35,8 @@ export function validateSchema<TSchema extends Schema>(
 
       const typeObj =
         'type' in def && !(def instanceof Schema)
-          ? (def as IResourceTypeOpts<any>)
-          : ({ type: def, optional: def?.['optional'] ?? false } as IResourceTypeOpts<typeof def>);
+          ? (def as IInnerType<any>)
+          : ({ type: def, optional: def?.['optional'] ?? false } as IInnerType<typeof def>);
 
       const type = typeObj.type;
       const optional = typeObj?.['optional'] ?? false;
@@ -78,24 +78,31 @@ export function validateSchema<TSchema extends Schema>(
 
             if (value !== clone) {
               errors.push({
-                message: `Wrong custom type for ${key as string}`,
+                message: `Wrong property type for ${key as string}`,
                 pointer: `${path}${key as string}`,
               });
             }
           } else {
-            const clone = def.parseValue(def.serialize(value), key as string | number, data);
-            const constructor = clone.constructor;
+            let correctType = false;
+            if (def.test) {
+              correctType = def.test(value);
+            } else if (def instanceof Schema) {
+              correctType = (value as unknown) instanceof def.constructor;
+            } else {
+              correctType = (value as unknown) instanceof (def as any);
+            }
 
-            if (!((value as any) instanceof constructor)) {
+            if (!correctType) {
+              console.log(value, typeof value, key);
               errors.push({
-                message: `Wrong custom instance type for ${key as string}`,
+                message: `Wrong property type for ${key as string}`,
                 pointer: `${path}${key as string}`,
               });
             }
           }
         } catch (e) {
           errors.push({
-            message: `Wrong custom property type for ${key as string}`,
+            message: `Wrong property type for ${key as string}`,
             pointer: `${path}${key as string}`,
           });
         }

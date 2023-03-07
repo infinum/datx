@@ -1,6 +1,7 @@
 import { IResource } from '../../interfaces/IResource';
 import { Schema } from '../../Schema';
 import { mergeSchema } from './merge';
+import { String, Number } from '../../commonTypes';
 
 describe('merge', () => {
   it('should do basic merging', () => {

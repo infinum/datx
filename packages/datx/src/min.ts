@@ -6,4 +6,6 @@ export type { TResourceProp } from './interfaces/TResourceProp';
 export { parseSchema } from './utils/schema/parse';
 export { serializeSchema } from './utils/schema/serialize';
 
+export { type } from './type';
+
 export { Date, Pojo, Json, String, Number, Boolean } from './commonTypes';

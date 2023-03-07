@@ -5,6 +5,7 @@ import { Schema } from '../../Schema';
 import { schemaOrReference, wrapSchema } from '../helpers';
 import { parseSchema } from './parse';
 import { serializeSchema } from './serialize';
+import { String } from '../../commonTypes';
 
 describe('serialization', () => {
   it('should do nested serialization with custom types', () => {

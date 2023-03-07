@@ -45,7 +45,7 @@ export function serializeSchema<TSchema extends Schema>(
   | IFlattenedResource<TSchema, true>;
 export function serializeSchema<TSchema extends Schema>(
   schema: TSchema,
-  data: IResource<TSchema>,
+  data: IResource<TSchema> | Array<IResource<TSchema>>,
   depth = Infinity,
   flatten = false,
   contained: Array<string | number> = [],
@@ -75,8 +75,10 @@ export function serializeSchema<TSchema extends Schema>(
     schema.definition,
     (
       key: keyof TSchema['definition'],
-      def: TSchema['definition'][typeof key],
-    ): TResourceProp<typeof def, false> | undefined => {
+      outerDef: TSchema['definition'][typeof key],
+    ): TResourceProp<(typeof outerDef)['type']['type'], false> | undefined => {
+      const innerDef = outerDef.type;
+      const def = innerDef.type;
       const innerData = data[key as keyof typeof data];
 
       if ('serialize' in def) {

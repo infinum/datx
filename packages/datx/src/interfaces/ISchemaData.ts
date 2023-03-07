@@ -1,5 +1,6 @@
-import { TResourceTypes } from './TResourceTypes';
+import { IOuterType } from './IOuterType';
+import { TResourceType } from './TResourceType';
 
-export interface ISchemaData {
-  [key: string]: TResourceTypes;
+export interface ISchemaData<TResourceTypeProp extends TResourceType = TResourceType> {
+  [key: string]: IOuterType<TResourceTypeProp>;
 }

@@ -9,9 +9,11 @@ import { mergeSchema } from './merge';
 function parseProp<TSchema extends Schema>(data: IPlainResource<TSchema>, collection?: Collection) {
   return (
     key: keyof TSchema['definition'],
-    def: TSchema['definition'][typeof key],
+    outerDef: TSchema['definition'][typeof key],
     item: Partial<IResource<TSchema>>,
   ): TResourceProp<typeof def, true> => {
+    const innerDef = outerDef.type;
+    const def = innerDef.type;
     if ('parseValue' in def) {
       return def.parseValue(
         data[key as keyof typeof data],
@@ -20,14 +22,13 @@ function parseProp<TSchema extends Schema>(data: IPlainResource<TSchema>, collec
         collection,
       ) as TResourceProp<typeof def, true>;
     } else if (def instanceof Schema) {
-      // @ts-ignore Figure out why this doesn't work here, but otherwise it's OK
       return parseSchema(
         def,
         data[key as keyof typeof data] as IPlainResource<typeof def>,
         collection,
       );
-    } else if ('defaultValue' in def) {
-      return (data[key as keyof typeof data] ?? def.defaultValue) as TResourceProp<
+    } else if ('defaultValue' in innerDef) {
+      return (data[key as keyof typeof data] ?? innerDef.defaultValue) as TResourceProp<
         typeof def,
         true
       >;

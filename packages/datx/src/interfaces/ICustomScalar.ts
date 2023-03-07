@@ -1,11 +1,7 @@
 import { JsonValue } from 'type-fest';
 import { Collection } from '../Collection';
-import { Schema } from '../Schema';
-import { IResource } from './IResource';
 
-export interface ICustomScalar<TInstance = any, TPlain extends JsonValue = any> {
-  name?: string;
-  description?: string;
+export interface ICustomScalar<TInstance = unknown, TPlain extends JsonValue = any> {
   serialize(
     value: TInstance,
     depth?: number,
@@ -15,8 +11,8 @@ export interface ICustomScalar<TInstance = any, TPlain extends JsonValue = any> 
   parseValue(
     value: TPlain,
     key: string | number,
-    item: Partial<IResource<Schema>>,
+    item: Partial<TInstance>,
     collection?: Collection,
   ): TInstance;
-  optional?: boolean;
+  test?: (item: unknown) => item is TInstance;
 }

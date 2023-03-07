@@ -70,5 +70,6 @@ describe('parse', () => {
     expect(comment.author?.username).toBe('FooBar');
     expect(comment.author).toEqual({ username: 'FooBar', age: 0 });
     expect(comment.author).toBe(comment.upvotes[0]);
+    expect(comment.featured).toBe(undefined);
   });
 });
