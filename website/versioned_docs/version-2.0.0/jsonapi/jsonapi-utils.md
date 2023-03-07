@@ -118,3 +118,11 @@ clearCacheByType(type: IType);
 ```
 
 Clear the network cache for the given model type.
+
+### isJsonApiClass
+
+```typescript
+function isJsonApiClass(type: typeof PureModel | typeof Collection | typeof View): boolean;
+```
+
+Check if the given type is a JSON API class (was decorated with `jsonapi()`).
