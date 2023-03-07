@@ -1,12 +1,15 @@
 import { PureCollection } from '@datx/core';
 import { createContext } from '../context';
-import { IJsonapiConfiguration, ModelType } from '../types';
+import { IConfiguration, ModelType } from '../types';
 import { createJsonapiBuilder } from './create-jsonapi-builder';
 
+/**
+ * @deprecated `createFactory` now supports jsonapi type of collections
+ */
 export const createJsonapiFactory = <TCollection extends PureCollection>(client: TCollection) => {
   const factory = <TModelType extends ModelType>(
     model: TModelType,
-    config?: IJsonapiConfiguration<TModelType>,
+    config?: IConfiguration<TModelType>,
   ) => {
     const context = createContext();
 

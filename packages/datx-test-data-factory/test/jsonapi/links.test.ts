@@ -1,38 +1,38 @@
 import { createJsonapiClient } from './create-client';
 
 import { User } from './models/User';
-import { getModelMeta } from '@datx/jsonapi';
+import { getModelLinks } from '@datx/jsonapi';
 import { createFactory } from '../../src';
 
 const client = createJsonapiClient();
 const factory = createFactory(client);
 
-describe('jsonapi meta', () => {
+describe('jsonapi links', () => {
   beforeEach(() => {
     factory.reset();
   });
 
-  it('should build meta fields', () => {
+  it('should build links fields', () => {
     const userFactory = factory(User, {
       fields: {
         name: 'John',
-        meta: {
-          foo: 'bar',
+        links: {
+          self: '/users/1',
         },
       },
     });
 
     const user = userFactory();
 
-    const userMeta = getModelMeta(user);
+    const userLinks = getModelLinks(user);
 
     expect(user.name).toBe('John');
-    expect(userMeta).toEqual({
-      foo: 'bar',
+    expect(userLinks).toEqual({
+      self: '/users/1',
     });
   });
 
-  it('should build resource without meta', () => {
+  it('should build resource without links', () => {
     const userFactory = factory(User, {
       fields: {
         name: 'John',
@@ -41,35 +41,35 @@ describe('jsonapi meta', () => {
 
     const user = userFactory();
 
-    const userMeta = getModelMeta(user);
+    const userLinks = getModelLinks(user);
 
     expect(user.name).toBe('John');
-    expect(userMeta).toEqual({});
+    expect(userLinks).toEqual({});
   });
 
-  it('should override meta', () => {
+  it('should override links', () => {
     const userFactory = factory(User, {
       fields: {
         name: 'John',
-        meta: {
-          foo: 'bar',
+        links: {
+          self: '/users/1',
         },
       },
     });
 
     const user = userFactory({
       overrides: {
-        meta: {
-          foo: 'baz',
+        links: {
+          self: '/users/2',
         },
       },
     });
 
-    const userMeta = getModelMeta(user);
+    const userLinks = getModelLinks(user);
 
     expect(user.name).toBe('John');
-    expect(userMeta).toEqual({
-      foo: 'baz',
+    expect(userLinks).toEqual({
+      self: '/users/2',
     });
   });
 
@@ -77,15 +77,15 @@ describe('jsonapi meta', () => {
     const userFactory = factory(User, {
       fields: {
         name: 'John',
-        meta: {
-          foo: 'bar',
+        links: {
+          self: '/users/1',
         },
       },
       traits: {
-        withMeta: {
+        withLinks: {
           overrides: {
-            meta: {
-              foo: 'baz',
+            links: {
+              self: '/users/2',
             },
           },
         },
@@ -93,14 +93,14 @@ describe('jsonapi meta', () => {
     });
 
     const user = userFactory({
-      traits: ['withMeta'],
+      traits: ['withLinks'],
     });
 
-    const userMeta = getModelMeta(user);
+    const userLinks = getModelLinks(user);
 
     expect(user.name).toBe('John');
-    expect(userMeta).toEqual({
-      foo: 'baz',
+    expect(userLinks).toEqual({
+      self: '/users/2',
     });
   });
 });

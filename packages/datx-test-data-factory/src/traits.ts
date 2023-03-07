@@ -1,4 +1,4 @@
-import { Fields, IBuildConfiguration, IConfiguration, ModelType } from './types';
+import { FactoryFields, IBuildConfiguration, IConfiguration, ModelType } from './types';
 
 export const getTraits = <TModelType extends ModelType>(
   buildTimeConfig: IBuildConfiguration<TModelType> | undefined,
@@ -12,7 +12,7 @@ export const getTraitOverrides = <TModelType extends ModelType>(
   traits: Array<string>,
   config: IConfiguration<TModelType> | undefined,
 ) => {
-  return traits.reduce<Fields<TModelType>>((overrides, currentTraitKey) => {
+  return traits.reduce<FactoryFields<TModelType>>((overrides, currentTraitKey) => {
     const hasTrait = config?.traits?.[currentTraitKey];
 
     if (!hasTrait) {

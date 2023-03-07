@@ -1,13 +1,13 @@
 import { createJsonapiClient } from './create-client';
-import { createJsonapiFactory, perBuild, sequence } from '../../src';
+import { buildMany, createFactory, perBuild, sequence } from '../../src';
 import { User } from './models/User';
 import { Post } from './models/Post';
 import { Comment } from './models/Comment';
 
 const client = createJsonapiClient();
-const factory = createJsonapiFactory(client);
+const factory = createFactory(client);
 
-describe('relationships', () => {
+describe('jsonapi relationships', () => {
   beforeEach(() => {
     factory.reset();
   });
@@ -35,13 +35,7 @@ describe('relationships', () => {
         id: sequence(),
         title: 'My first post',
         body: 'Hello world',
-        comments: [
-          commentFactory(),
-          commentFactory(),
-          commentFactory(),
-          commentFactory(),
-          commentFactory(),
-        ],
+        comments: buildMany(commentFactory, 5),
       },
     });
 

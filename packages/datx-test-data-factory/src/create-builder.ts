@@ -1,7 +1,9 @@
-import { Fields, IBuildConfiguration, IBuilderConfig, ModelType } from './types';
+import { FactoryFields, IBuildConfiguration, IBuilderConfig, ModelType } from './types';
 import { getModelType, PureCollection } from '@datx/core';
 import { compute, computeField } from './compute';
+
 import { getTraitOverrides, getTraits } from './traits';
+import { getRawData } from './utils';
 
 export const createBuilder = <TCollection extends PureCollection, TModelType extends ModelType>({
   client,
@@ -28,7 +30,7 @@ export const createBuilder = <TCollection extends PureCollection, TModelType ext
       }
 
       for (const stringKey of Object.keys(traitConfig.overrides)) {
-        const key = stringKey as keyof Fields<TModelType>;
+        const key = stringKey as keyof FactoryFields<TModelType>;
 
         // If the key already exists in the base fields, we'll have defined it,
         // so we don't need to worry about it.
@@ -43,7 +45,9 @@ export const createBuilder = <TCollection extends PureCollection, TModelType ext
 
     const type = getModelType(model);
 
-    const data = client.add(computedFields, type) as InstanceType<TModelType>;
+    const rawData = getRawData(computedFields);
+
+    const data = client.add(rawData, type) as InstanceType<TModelType>;
 
     const traitPostBuilds = traits.map((trait) => {
       const traitConfig = config?.traits?.[trait] || {};
