@@ -3,7 +3,7 @@ import { getModelType, PureCollection } from '@datx/core';
 import { compute, computeField } from '../compute';
 import { getTraitOverrides, getTraits } from '../traits';
 import { META_FIELD } from '@datx/utils';
-import { MODEL_META_FIELD } from '../const';
+import { MODEL_META_FIELD } from '@datx/jsonapi';
 
 export const createJsonapiBuilder = <
   TCollection extends PureCollection,

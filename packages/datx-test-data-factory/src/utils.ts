@@ -1,5 +1,5 @@
 import { IRawModel, META_FIELD } from '@datx/utils';
-import { MODEL_LINKS_FIELD, MODEL_META_FIELD } from './const';
+import { MODEL_LINKS_FIELD, MODEL_META_FIELD } from '@datx/jsonapi';
 import { Field, FieldGenerator, Fields, ModelType } from './types';
 
 export const isGenerator = (field: Field): field is FieldGenerator<any> => {
