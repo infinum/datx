@@ -14,7 +14,7 @@ import { Model, Attribute } from '@datx/core';
 import { computed } from 'mobx';
 
 export class Dog extends Model {
-  public static type = 'dog';
+  public static readonly type = 'dog';
 
   @Attribute()
   public breed!: string;
@@ -29,7 +29,7 @@ export class Dog extends Model {
 }
 
 export class Person extends Model {
-  public static type = 'person';
+  public static readonly type = 'person';
 
   @Attribute()
   public id!: number;

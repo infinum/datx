@@ -1,6 +1,6 @@
 import { Collection, Model, prop, Attribute } from '@datx/core';
 import { META_FIELD, mobx } from '@datx/utils';
-import * as fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch';
 import { getModelMeta, getModelRefMeta, jsonapi, modelToJsonApi, config } from '../src';
 
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';

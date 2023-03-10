@@ -1,6 +1,6 @@
 {
   "name": "@datx/jsonapi",
-  "version": "2.4.14",
+  "version": "2.5.0-beta.6",
   "description": "DatX mixin for JSON API support",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -31,6 +31,7 @@
     "@types/uuid": "^8.3.4",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^28.1.1",
+    "jest-environment-jsdom": "28.1.2",
     "lodash": "^4.17.21",
     "rollup": "^2.75.6",
     "rollup-plugin-copy": "^3.4.0",
@@ -43,9 +44,10 @@
   },
   "scripts": {
     "test": "jest --coverage",
-    "watch": "jest --watch --coverage",
+    "test:watch": "jest --watch --coverage",
     "prepublish": "npm run build",
     "build": "rollup -c",
+    "watch": "rollup -c --watch",
     "ts:check": "tsc --noEmit"
   },
   "jest": {
@@ -73,8 +75,8 @@
     ]
   },
   "dependencies": {
-    "@datx/core": "2.4.12",
-    "@datx/network": "2.4.12",
-    "@datx/utils": "2.4.8"
+    "@datx/core": "2.5.0-beta.6",
+    "@datx/network": "2.5.0-beta.6",
+    "@datx/utils": "2.5.0-beta.6"
   }
 }

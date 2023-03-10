@@ -1,4 +1,4 @@
-export { jsonapi } from './mixin';
+export { jsonapi, jsonapiModel, jsonapiCollection, jsonapiView } from './mixin';
 export { Response } from './Response';
 export { NetworkResponse } from './NetworkResponse';
 export { GenericModel } from './GenericModel';
@@ -19,6 +19,8 @@ export {
 
 export { prepareQuery, buildUrl } from './helpers/url';
 export { isJsonApiClass } from './helpers/utils';
+
+export { getResponseRawData } from './helpers/response';
 
 export { BaseJsonapiRequest } from './BaseRequest';
 

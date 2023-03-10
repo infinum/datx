@@ -10,16 +10,31 @@
   },
   "scripts": {
     "lint": "eslint packages/**/*.ts",
+    "test": "lerna run test",
+    "build": "lerna run build --no-private",
+    "watch": "lerna run watch --no-private",
+    "watch:swr": "lerna run watch --scope @datx/swr",
+    "test:swr": "lerna run test --scope @datx/swr",
+    "clean": "lerna clean && yarn clean:dist",
+    "clean:dist": "lerna exec -- rm -rf ./dist",
+    "example:nextjs:dev": "lerna run dev --scope nextjs --stream",
+    "pkg:check": "manypkg check",
+    "pkg:fix": "manypkg fix",
     "postinstall": "npm run prepare",
     "prepare": "husky install",
-    "publish": "lerna publish --contents dist",
+    "publish": "lerna publish --contents dist --no-private",
+    "publish:beta": "npm run publish -- --npm-tag=beta --preid=beta",
     "publish:dry": "lerna publish --contents dist --no-push --no-git-tag-version"
   },
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "examples/*"
+    ]
+  },
   "dependencies": {
+    "@manypkg/cli": "^0.19.1",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1"
   },

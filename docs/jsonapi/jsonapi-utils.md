@@ -125,3 +125,16 @@ function isJsonApiClass(type: typeof PureModel | typeof Collection | typeof View
 ```
 
 Check if the given type is a JSON API class (was decorated with `jsonapi()`).
+
+## Response utils
+
+### getResponseRawData
+
+```typescript
+getResponseRawData<
+  TModel extends IJsonapiModel = IJsonapiModel,
+  TData extends IResponseData = IResponseData<TModel>,
+>(response: Response<TModel, TData>): IResponse | undefined
+```
+
+Get raw JSON:API response.

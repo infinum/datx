@@ -1,6 +1,6 @@
 {
   "name": "@datx/network",
-  "version": "2.4.12",
+  "version": "2.5.0-beta.6",
   "description": "DatX network layer",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -28,6 +28,7 @@
     "@types/node": "^18.7.6",
     "@types/react": "^18.0.12",
     "jest": "^28.1.1",
+    "jest-environment-jsdom": "28.1.2",
     "rollup": "^2.75.6",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.22",
@@ -39,9 +40,10 @@
   },
   "scripts": {
     "test": "jest --coverage",
-    "watch": "jest --watch --coverage",
+    "test:watch": "jest --watch --coverage",
     "prepublish": "npm run build",
     "build": "rollup -c",
+    "watch": "rollup --config --watch",
     "ts:check": "tsc --noEmit"
   },
   "jest": {
@@ -69,7 +71,7 @@
     ]
   },
   "dependencies": {
-    "@datx/core": "2.4.12",
-    "@datx/utils": "2.4.8"
+    "@datx/core": "2.5.0-beta.6",
+    "@datx/utils": "2.5.0-beta.6"
   }
 }
