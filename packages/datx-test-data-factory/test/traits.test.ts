@@ -71,17 +71,21 @@ describe('traits', () => {
         admin: {
           overrides: { isAdmin: perBuild(() => true) },
         },
+        bob: {
+          overrides: { name: 'Bob' },
+        },
       },
     });
 
     const userWithTrait = userFactory({
-      traits: 'admin',
+      traits: ['admin', 'bob'],
       overrides: {
         isAdmin: perBuild(() => false),
       },
     });
 
     expect(userWithTrait.isAdmin).toBe(false);
+    expect(userWithTrait.name).toBe('Bob');
   });
 
   it('should support multiple traits', () => {

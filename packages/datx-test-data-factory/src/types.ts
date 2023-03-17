@@ -56,9 +56,16 @@ export interface ITraitsConfiguration<TModelType extends ModelType> {
 }
 
 export interface IConfiguration<TModelType extends ModelType> {
-  readonly fields: FactoryFields<TModelType>;
-  readonly postBuild?: PostBuildFn<TModelType>;
+  readonly fields?: FactoryFields<TModelType>;
+  /**
+   * A trait configurations that can be applied to the model
+   */
   readonly traits?: ITraitsConfiguration<TModelType>;
+  /**
+   * A function that can be used to modify the model after it has been built.
+   * Applied after traits and overrides.
+   */
+  readonly postBuild?: PostBuildFn<TModelType>;
 }
 
 export interface IBuildConfiguration<TModelType extends ModelType> {

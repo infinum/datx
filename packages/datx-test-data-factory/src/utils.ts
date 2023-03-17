@@ -40,22 +40,4 @@ export const getRawData = <IModelType extends ModelType>(
   return rawData;
 };
 
-// export const mapValues = <T extends Record<string, unknown>, U>(
-//   obj: T,
-//   fn: (value: typeof obj[typeof key], key: keyof T) => U,
-// ) => {
-
-//   return (Object.entries(obj) as Array<[keyof T, typeof obj[keyof T]]>).reduce(
-//     (acc, [key, value]) => {
-//       acc[key] = fn(value, key);
-
-//       return acc;
-//     },
-//     {} as Record<keyof T, U>,
-//   );
-// };
-
-export const compose =
-  (...fns) =>
-  (x) =>
-    fns.reduce((acc, fn) => fn(acc), x);
+export const identity = <T>(value: T) => value;

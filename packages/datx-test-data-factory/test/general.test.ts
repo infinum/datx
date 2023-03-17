@@ -50,4 +50,20 @@ describe('general', () => {
     expect(user1.createdAt).toEqual(new Date('2020-01-01'));
     expect(user2.createdAt).toEqual(new Date('2020-02-01'));
   });
+
+  it('should allow factory without fields and apply build-time overrides over traits', () => {
+    const userFactory = factory(User, {
+      traits: {
+        admin: {
+          overrides: {
+            name: 'admin',
+          },
+        },
+      },
+    });
+
+    const user1 = userFactory({ traits: 'admin', overrides: { name: 'John' } });
+
+    expect(user1.name).toBe('John');
+  });
 });

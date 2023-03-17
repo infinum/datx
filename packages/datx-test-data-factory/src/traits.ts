@@ -1,5 +1,12 @@
 import { FactoryFields, IBuildConfiguration, IConfiguration, ModelType } from './types';
+import { identity } from './utils';
 
+/**
+ * REturns an array of trait names from the build time configuration
+ *
+ * @param buildTimeConfig
+ * @returns {Array<string>} The array of trait names
+ */
 export const getTraits = <TModelType extends ModelType>(
   buildTimeConfig: IBuildConfiguration<TModelType> | undefined,
 ) => {
@@ -27,3 +34,14 @@ export const getTraitOverrides = <TModelType extends ModelType>(
     };
   }, {} as any);
 };
+
+export const getTraitPostBuildFunctions = <TModelType extends ModelType>(
+  traitNames: Array<string>,
+  config: IConfiguration<TModelType> | undefined,
+) =>
+  traitNames.map((trait) => {
+    const traitConfig = config?.traits?.[trait] || {};
+    const postBuild = traitConfig.postBuild || identity;
+
+    return postBuild;
+  });
