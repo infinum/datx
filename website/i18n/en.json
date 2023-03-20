@@ -68,6 +68,13 @@
       "jsonapi-angular/mixin": {
         "title": "Angular JSON:API mixin"
       },
+      "jsonapi-swr/api": {
+        "title": "useDatx API",
+        "sidebar_label": "API"
+      },
+      "jsonapi-swr/overview": {
+        "title": "useDatx"
+      },
       "jsonapi/jsonapi-basic-configuration": {
         "title": "Basic configuration"
       },
@@ -335,6 +342,14 @@
       "version-2.0.0/jsonapi-angular/version-2.0.0-mixin": {
         "title": "Mixin"
       },
+      "version-2.0.0/jsonapi-swr/version-2.0.0-api": {
+        "title": "useDatx API",
+        "sidebar_label": "API"
+      },
+      "version-2.0.0/jsonapi-swr/version-2.0.0-overview": {
+        "title": "useDatx",
+        "sidebar_label": "Overview"
+      },
       "version-2.0.0/jsonapi/version-2.0.0-jsonapi-basic-configuration": {
         "title": "Basic configuration"
       },
@@ -441,6 +456,7 @@
       "Network": "Network",
       "JSON API": "JSON API",
       "JSON API Angular": "JSON API Angular",
+      "JSON API SWR": "JSON API SWR",
       "Migration guide": "Migration guide",
       "Troubleshooting": "Troubleshooting",
       "Setup": "Setup",
