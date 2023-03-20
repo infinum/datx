@@ -244,6 +244,32 @@ const user = userFactory();
 
 > `postBuild` will be executed after `overrides` transformations!
 
+## Build many helper `buildMany`
+
+`@datx/test-data-factory` provides a helper function `buildMany` that lets you create many objects at once:
+
+```ts
+import { createFactory, sequence, perBuild, buildMany } from '@datx/test-data-factory';
+import { createClient } from './create-client';
+import { User } from './models/User';
+
+const client = createClient();
+const factory = createFactory(client);
+
+const userFactory = factory(User, {
+  fields: {
+    id: sequence(),
+    name: sequence((n) => `John Doe ${n}`),
+    email: sequence((n) => `john${n}@example.com`),
+    createdAt: new Date('2020-01-01'),
+  },
+});
+
+const users = buildMany(userFactory, 5);
+
+// users will be an array of 5 users
+```
+
 ## Working with deeply nested relationships
 
 `@datx/test-data-factory` lets you create deeply nested relationships between objects.
@@ -346,6 +372,8 @@ const user = userFactory({
     return user;
   },
 });
+
+// user.name === 'JOHN'
 ```
 
 Using `overrides` and `map` lets you easily customize a specific object that a factory has created.
