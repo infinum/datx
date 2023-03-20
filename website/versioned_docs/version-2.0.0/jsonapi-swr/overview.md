@@ -238,6 +238,38 @@ export const createTodo = (client: IClientInstance, message: string | undefined)
 };
 ```
 
+### SSR
+
+You will use the `fetchQuery` method inside `getServerSideProps` to fetch the data and pass the fallback to the page for hydration.
+
+```tsx
+type HomeProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const Home: NextPage<SSRProps> = ({ fallback }) => {
+  return (
+    <Hydrate fallback={fallback}>
+      <Layout>
+        <Todos />
+      </Layout>
+    </Hydrate>
+  );
+};
+
+export const getServerSideProps = async () => {
+  const client = createClient();
+
+  const todo = await client.fetchQuery(todosQuery);
+
+  return {
+    props: {
+      fallback: client.fallback,
+    },
+  };
+};
+
+export default Home;
+```
+
 ### Use data fetching and mutations together
 
 ```tsx

@@ -165,36 +165,29 @@ export const Todos: FC = () => {
 };
 ```
 
-## SSR utils
+## Utils
 
-You will use the `fetchQuery` method inside `getServerSideProps` to fetch the data and pass the fallback to the page for hydration.
+### SWR Client
+
+#### fetchQuery
+
+Takes in an expression as an argument and returns a promise with the response. Useful on server side for fetching data before rendering.
 
 ```tsx
-type HomeProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+const client = createClient();
 
-const Home: NextPage<SSRProps> = ({ fallback }) => {
-  return (
-    <Hydrate fallback={fallback}>
-      <Layout>
-        <Todos />
-      </Layout>
-    </Hydrate>
-  );
-};
+const todo = await client.fetchQuery(todosQuery);
+```
 
-export const getServerSideProps = async () => {
-  const client = createClient();
+#### requestSingle and requestCollection
 
-  const todo = await client.fetchQuery(todosQuery);
+Same as `request` but with a bit more type safety.
 
-  return {
-    props: {
-      fallback: client.fallback,
-    },
-  };
-};
+```tsx
+const client = createClient();
 
-export default Home;
+const todo = await client.requestSingle('todos/1', 'GET', undefined); // returns SingleResponse
+const todos = await client.requestCollection('todos', 'GET', undefined); // returns CollectionResponse
 ```
 
 ### hydrate
@@ -206,5 +199,5 @@ const fallback = {
   '/api/v1/todos': rawResponse
 }
 
-<Hydrate fallback={fallback}>
+<Hydrate fallback={fallback} />
 ```

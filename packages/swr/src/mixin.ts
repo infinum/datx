@@ -1,5 +1,11 @@
 import { ICollectionConstructor, PureCollection } from '@datx/core';
-import { IJsonapiCollection, IRawResponse, jsonapiCollection } from '@datx/jsonapi';
+import {
+  IJsonapiCollection,
+  IJsonapiModel,
+  IRawResponse,
+  IRequestOptions,
+  jsonapiCollection,
+} from '@datx/jsonapi';
 import { IGetAllResponse } from '@datx/jsonapi/dist/interfaces/IGetAllResponse';
 import { unstable_serialize } from 'swr';
 import { createFetcher, isGetAll } from './createFetcher';
@@ -17,7 +23,12 @@ import {
   IGetRelatedResourcesExpression,
 } from './interfaces/QueryExpression';
 import { Data, Model } from './interfaces/UseDatx';
-import { isCollectionResponse, isSingleResponse } from './Response';
+import {
+  CollectionResponse,
+  isCollectionResponse,
+  isSingleResponse,
+  SingleResponse,
+} from './Response';
 import { isFunction } from './utils';
 
 export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
@@ -107,6 +118,24 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
 
     public get fallback() {
       return JSON.parse(JSON.stringify(this.__fallback));
+    }
+
+    public requestSingle<T extends IJsonapiModel = IJsonapiModel>(
+      url: string,
+      method?: string | undefined,
+      data?: object | undefined,
+      options?: IRequestOptions | undefined,
+    ): Promise<SingleResponse<T>> {
+      return this.request<T>(url, method, data, options) as Promise<SingleResponse<T>>;
+    }
+
+    public requestCollection<T extends IJsonapiModel = IJsonapiModel>(
+      url: string,
+      method?: string | undefined,
+      data?: object | undefined,
+      options?: IRequestOptions | undefined,
+    ): Promise<CollectionResponse<T>> {
+      return this.request<T>(url, method, data, options) as Promise<CollectionResponse<T>>;
     }
   }
 

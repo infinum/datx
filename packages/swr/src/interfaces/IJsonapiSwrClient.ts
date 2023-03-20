@@ -1,4 +1,5 @@
-import { IJsonapiModel } from '@datx/jsonapi';
+import { IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
+import { CollectionResponse, SingleResponse } from '../Response';
 import { Fallback } from './Fallback';
 import { IFetchQueryConfiguration } from './IFetchQueryConfiguration';
 import { IFetchAllQueryReturn, IFetchQueryReturn } from './IFetchQueryReturn';
@@ -36,4 +37,18 @@ export interface IJsonapiSwrClient {
         : never
       : IFetchQueryReturn<TData>
   >;
+
+  requestSingle<T extends IJsonapiModel = IJsonapiModel>(
+    url: string,
+    method?: string,
+    data?: object,
+    options?: IRequestOptions,
+  ): Promise<SingleResponse<T>>;
+
+  requestCollection<T extends IJsonapiModel = IJsonapiModel>(
+    url: string,
+    method?: string,
+    data?: object,
+    options?: IRequestOptions,
+  ): Promise<CollectionResponse<T>>;
 }
