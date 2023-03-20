@@ -16,12 +16,12 @@
     "@datx/swr": "^2.5.0-beta.3",
     "@next/bundle-analyzer": "^12.2.2",
     "mobx": "^6.6.0",
-    "next": "^12.2.2",
+    "next": "^13.2.4",
     "next-api-router": "^1.0.4",
     "next-compose-plugins": "2.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "swr": "2.0.0-beta.6",
+    "swr": "^2.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

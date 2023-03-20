@@ -8,5 +8,5 @@ export const createTodo = (client: IClientInstance, message: string | undefined)
   const url = getModelEndpointUrl(model);
   const data = modelToJsonApi(model);
 
-  return client.request<Todo, Array<Todo>>(url, 'POST', { data });
+  return client.requestSingle<Todo>(url, 'POST', { data });
 };
