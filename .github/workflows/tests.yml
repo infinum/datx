@@ -28,13 +28,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - run: npm install -g lerna@6
+      - run: npm install -g lerna@6.5.1
       - run: yarn --immutable
       - name: Cleanup MobX
         if: ${{ matrix.mobx-version == '0' }}
         run: cd packages/datx-utils; yarn remove mobx
       - name: Install correct MobX version
         if: ${{ matrix.mobx-version > 0 }}
-        run: cd packages/datx-utils; yarn add mobx@${{ matrix.mobx-version }} --dev
+        run: |
+          yarn workspace @datx/core add mobx@${{ matrix.mobx-version }} --dev
+          yarn workspace @datx/utils add mobx@${{ matrix.mobx-version }} --dev
       - run: lerna run build --no-private --skip-nx-cache
       - run: MOBX_VERSION=${{ matrix.mobx-version }} lerna run test --no-private --skip-nx-cache
