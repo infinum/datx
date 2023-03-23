@@ -1,7 +1,7 @@
 import { createJsonapiClient } from './create-client';
 import { createFactory } from '../../src';
 import { User } from './models/User';
-import { modelToJsonApi } from '@datx/jsonapi';
+import { isModelPersisted, modelToJsonApi } from '@datx/jsonapi';
 import { Comment } from './models/Comment';
 
 const client = createJsonapiClient();
@@ -45,5 +45,17 @@ describe('jsonapi issues', () => {
     const jsonapiUser = modelToJsonApi(comment.author);
 
     expect(jsonapiUser.id).toBe('1');
+  });
+
+  it('should set model to persisted', () => {
+    const userFactory = factory(User, {
+      fields: {
+        id: 1,
+      },
+    });
+
+    const user = userFactory();
+
+    expect(isModelPersisted(user)).toBe(true);
   });
 });
