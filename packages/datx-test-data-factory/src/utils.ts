@@ -1,6 +1,7 @@
 import { IRawModel, META_FIELD } from '@datx/utils';
-import { MODEL_LINKS_FIELD, MODEL_META_FIELD } from '@datx/jsonapi';
+import { MODEL_LINKS_FIELD, MODEL_META_FIELD, MODEL_PERSISTED_FIELD } from '@datx/jsonapi';
 import { Field, FieldGenerator, Fields, ModelType } from './types';
+import { IType } from '@datx/core';
 
 export const isGenerator = (field: Field): field is FieldGenerator<any> => {
   if (!field) return false;
@@ -16,9 +17,10 @@ export const mapValues = <T, U>(
 };
 
 export const getRawData = <IModelType extends ModelType>(
+  type: IType,
   fields: Record<string, Fields<IModelType>>,
 ) => {
-  const { meta, links, ...rest } = fields;
+  const { meta, links, id, ...rest } = fields;
 
   const rawData: IRawModel = {
     ...rest,
@@ -29,11 +31,11 @@ export const getRawData = <IModelType extends ModelType>(
 
       //   return obj;
       // }, {}),
-      // id: computedFields.id,
+      id,
       [MODEL_LINKS_FIELD]: links,
       [MODEL_META_FIELD]: meta,
-      // [MODEL_PERSISTED_FIELD]: Boolean(computedFields.id),
-      // type: type,
+      [MODEL_PERSISTED_FIELD]: Boolean(id),
+      type: type,
     },
   };
 

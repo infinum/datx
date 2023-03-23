@@ -29,7 +29,7 @@ export const createBuilder = <TCollection extends PureCollection, TModelType ext
     const computedFields = compute(finalFields, context);
 
     const type = getModelType(model);
-    const rawData = isJsonApiClass(model) ? getRawData(computedFields) : computedFields;
+    const rawData = isJsonApiClass(model) ? getRawData(type, computedFields) : computedFields;
     const data = client.add(rawData, type) as InstanceType<TModelType>;
 
     // This part mutates the original data
