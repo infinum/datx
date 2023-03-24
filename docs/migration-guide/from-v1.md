@@ -31,7 +31,7 @@ If you're using remove, you should change to `collection.removeOne`. Keep in min
 
 ### `setupModel`
 
-You should migrate to using the `Attribute` decorator/function. The [defining models](../defining-models) page describes how to do this in both cases - if you have decorators or if you don't.
+You should migrate to using the `Attribute` decorator/function. The [defining models](../getting-started/defining-models) page describes how to do this in both cases - if you have decorators or if you don't.
 
 ### `id` and `type` fields
 

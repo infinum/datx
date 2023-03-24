@@ -6,7 +6,7 @@ original_id: lib-utils
 
 ## setupModel
 
-Helper used to set up models [without using decorators](defining-models#javascript-without-decorators).
+Helper used to set up models [without using decorators](../getting-started/defining-models#javascript-without-decorators).
 
 ```typescript
 setupModel<IModel extends PureModel, IFields extends IDictionary<any>>(
