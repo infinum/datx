@@ -61,6 +61,14 @@ export interface IConfigType {
   sortParams?: boolean;
 }
 
+/**
+ * Tries to get the built-in fetch reference. If it's a browser, use window to avoid any potential need for polyfills, but use globalThis in Node.js
+ */
+const fetchReference =
+  (isBrowser
+    ? typeof window.fetch === 'function' && window.fetch.bind(window)
+    : typeof globalThis.fetch === 'function' && globalThis.fetch.bind(globalThis)) || undefined;
+
 export const config: IConfigType = {
   // Base URL for all API calls
   baseUrl: '/',
@@ -80,12 +88,7 @@ export const config: IConfigType = {
   sortParams: false,
 
   // Reference of the fetch method that should be used
-  fetchReference:
-    (isBrowser &&
-      'fetch' in window &&
-      typeof window.fetch === 'function' &&
-      window.fetch.bind(window)) ||
-    undefined,
+  fetchReference,
 
   // Determines how will the request param arrays be stringified
   paramArrayType: ParamArrayType.CommaSeparated, // As recommended by the spec
