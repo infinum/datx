@@ -1997,9 +1997,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datx/swr@^2.5.0-beta.3, @datx/swr@workspace:packages/swr":
+"@datx/swr@^2.5.0-beta.3, @datx/swr@workspace:packages/datx-swr":
   version: 0.0.0-use.local
-  resolution: "@datx/swr@workspace:packages/swr"
+  resolution: "@datx/swr@workspace:packages/datx-swr"
   dependencies:
     "@datx/core": 2.5.0-beta.11
     "@datx/jsonapi": 2.5.0-beta.11
