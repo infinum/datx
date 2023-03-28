@@ -9,7 +9,7 @@
       "version-2.0.0-getting-started/persisting-data-locally"
     ],
     "Mixins": [
-      "version-2.0.0-mixins/what-are-mixis",
+      "version-2.0.0-mixins/what-are-mixins",
       "version-2.0.0-mixins/with-actions",
       "version-2.0.0-mixins/with-meta",
       "version-2.0.0-mixins/with-patches",
@@ -67,9 +67,7 @@
       "version-2.0.0-migration-guide/whats-new",
       "version-2.0.0-migration-guide/from-v1"
     ],
-    "Troubleshooting": [
-      "version-2.0.0-troubleshooting/known-issues"
-    ]
+    "Troubleshooting": ["version-2.0.0-troubleshooting/known-issues"]
   },
   "version-2.0.0-examples": {
     "Setup": [
@@ -78,8 +76,6 @@
       "version-2.0.0-examples/nextjs-setup",
       "version-2.0.0-examples/angular-setup"
     ],
-    "Collection": [
-      "version-2.0.0-examples/adding-models"
-    ]
+    "Collection": ["version-2.0.0-examples/adding-models"]
   }
 }

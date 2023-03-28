@@ -9,7 +9,7 @@
       "getting-started/persisting-data-locally"
     ],
     "Mixins": [
-      "mixins/what-are-mixis",
+      "mixins/what-are-mixins",
       "mixins/with-actions",
       "mixins/with-meta",
       "mixins/with-patches",
@@ -52,22 +52,15 @@
       "jsonapi/jsonapi-utils",
       "jsonapi/jsonapi-typescript-interfaces"
     ],
-    "JSON API Angular": [
-      "jsonapi-angular/mixin"
-    ],
-    "JSON API SWR": [
-      "jsonapi-swr/overview",
-      "jsonapi-swr/api"
-    ],
+    "JSON API Angular": ["jsonapi-angular/mixin"],
+    "JSON API SWR": ["jsonapi-swr/overview", "jsonapi-swr/api"],
     "Migration guide": [
       "migration-guide/breaking-changes",
       "migration-guide/deprecations",
       "migration-guide/whats-new",
       "migration-guide/from-v1"
     ],
-    "Troubleshooting": [
-      "troubleshooting/known-issues"
-    ]
+    "Troubleshooting": ["troubleshooting/known-issues"]
   },
   "examples": {
     "Setup": [
@@ -76,8 +69,6 @@
       "examples/nextjs-setup",
       "examples/angular-setup"
     ],
-    "Collection": [
-      "examples/adding-models"
-    ]
+    "Collection": ["examples/adding-models"]
   }
 }
