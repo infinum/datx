@@ -20,8 +20,8 @@
       "./packages/datx-jsonapi/tsconfig.json",
       "./packages/datx-jsonapi-angular/tsconfig.json",
       "./packages/datx-network/tsconfig.json",
-      "./packages/datx-utils/tsconfig.json",
-      "./packages/datx-swr/tsconfig.json"
+      "./packages/datx-swr/tsconfig.json",
+      "./packages/datx-utils/tsconfig.json"
     ]
   }
 }
