@@ -1,7 +1,14 @@
 import { Collection, getModelId, getModelType, Model, PureModel, View } from '@datx/core';
 import { mobx } from '@datx/utils';
 
-import { getModelRefLinks, isJsonApiClass, jsonapi, modelToJsonApi } from '../src';
+import {
+  getModelRefLinks,
+  isJsonApiClass,
+  jsonapiCollection,
+  jsonapiModel,
+  jsonapiView,
+  modelToJsonApi,
+} from '../src';
 import { Event, Image, Photo, TestStore, User } from './utils/setup';
 
 describe('General', () => {
@@ -663,7 +670,7 @@ describe('General', () => {
   });
 
   it('should support generic records', () => {
-    const JsonapiCollection = jsonapi(Collection);
+    const JsonapiCollection = jsonapiCollection(Collection);
     const store = new JsonapiCollection();
     const user = store.sync({
       data: {
@@ -718,11 +725,11 @@ describe('General', () => {
 
   it('should detect jsonapi classes', () => {
     class PlainModel extends Model {}
-    class JsonapiModel extends jsonapi(Model) {}
+    class JsonapiModel extends jsonapiModel(Model) {}
     class PlainCollection extends Collection {}
-    class JsonapiCollection extends jsonapi(Collection) {}
+    class JsonapiCollection extends jsonapiCollection(Collection) {}
     class PlainView extends View {}
-    class JsonapiView extends jsonapi(View<PureModel>) {}
+    class JsonapiView extends jsonapiView(View<PureModel>) {}
 
     expect(isJsonApiClass(PlainModel)).toBe(false);
     expect(isJsonApiClass(JsonapiModel)).toBe(true);
