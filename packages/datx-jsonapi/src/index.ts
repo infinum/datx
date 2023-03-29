@@ -20,6 +20,8 @@ export {
 export { prepareQuery, buildUrl } from './helpers/url';
 export { isJsonApiClass } from './helpers/utils';
 
+export { getResponseRawData } from './helpers/response';
+
 export { BaseJsonapiRequest } from './BaseRequest';
 
 export { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
