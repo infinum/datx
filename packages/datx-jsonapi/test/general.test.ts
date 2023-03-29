@@ -4,6 +4,7 @@ import { mobx } from '@datx/utils';
 import {
   getModelRefLinks,
   isJsonApiClass,
+  jsonapi,
   jsonapiCollection,
   jsonapiModel,
   jsonapiView,
@@ -725,17 +726,23 @@ describe('General', () => {
 
   it('should detect jsonapi classes', () => {
     class PlainModel extends Model {}
-    class JsonapiModel extends jsonapiModel(Model) {}
+    class JsonapiModel extends jsonapi(Model) {}
+    class JsonapiModel2 extends jsonapiModel(Model) {}
     class PlainCollection extends Collection {}
-    class JsonapiCollection extends jsonapiCollection(Collection) {}
+    class JsonapiCollection extends jsonapi(Collection) {}
+    class JsonapiCollection2 extends jsonapiCollection(Collection) {}
     class PlainView extends View {}
-    class JsonapiView extends jsonapiView(View<PureModel>) {}
+    class JsonapiView extends jsonapi(View<PureModel>) {}
+    class JsonapiView2 extends jsonapiView(View<PureModel>) {}
 
     expect(isJsonApiClass(PlainModel)).toBe(false);
     expect(isJsonApiClass(JsonapiModel)).toBe(true);
+    expect(isJsonApiClass(JsonapiModel2)).toBe(true);
     expect(isJsonApiClass(PlainCollection)).toBe(false);
     expect(isJsonApiClass(JsonapiCollection)).toBe(true);
+    expect(isJsonApiClass(JsonapiCollection2)).toBe(true);
     expect(isJsonApiClass(PlainView as typeof View)).toBe(false);
     expect(isJsonApiClass(JsonapiView as typeof View)).toBe(true);
+    expect(isJsonApiClass(JsonapiView2 as typeof View)).toBe(true);
   });
 });
