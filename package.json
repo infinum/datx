@@ -27,12 +27,9 @@
     "publish:dry": "lerna publish --contents dist --no-push --no-git-tag-version"
   },
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "examples/*"
-    ]
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "dependencies": {
     "@manypkg/cli": "^0.19.1",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
