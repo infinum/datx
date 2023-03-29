@@ -22,7 +22,6 @@
     "@types/jest": "^28.1.1",
     "@types/node": "^18.7.6",
     "jest": "^28.1.1",
-    "jest-environment-jsdom": "28.1.2",
     "rollup": "^2.75.6",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.22",
