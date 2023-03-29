@@ -1,4 +1,0 @@
-{
-  "root": true,
-  "extends": ["@infinumjs/eslint-config-react-ts", "plugin:@next/next/recommended"]
-}
