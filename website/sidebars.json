@@ -53,7 +53,6 @@
       "jsonapi/jsonapi-typescript-interfaces"
     ],
     "JSON API Angular": ["jsonapi-angular/mixin"],
-    "JSON API SWR": ["jsonapi-swr/overview", "jsonapi-swr/api"],
     "Migration guide": [
       "migration-guide/breaking-changes",
       "migration-guide/deprecations",
