@@ -25,3 +25,6 @@ jobs:
 
       - name: Run lint
         run: yarn lint --quiet
+
+      - name: Run @manypkg/cli
+        run: yarn pkg:check
