@@ -10,9 +10,17 @@
   },
   "scripts": {
     "lint": "eslint packages/**/*.ts",
+    "test": "lerna run test",
+    "build": "lerna run build --no-private",
+    "watch": "lerna run watch --no-private",
+    "clean": "lerna clean && yarn clean:dist",
+    "clean:dist": "lerna exec -- rm -rf ./dist",
+    "pkg:check": "manypkg check",
+    "pkg:fix": "manypkg fix",
     "postinstall": "npm run prepare",
     "prepare": "husky install",
-    "publish": "lerna publish --contents dist",
+    "publish": "lerna publish --contents dist --no-private",
+    "publish:beta": "npm run publish -- --npm-tag=beta --preid=beta",
     "publish:dry": "lerna publish --contents dist --no-push --no-git-tag-version"
   },
   "private": true,
