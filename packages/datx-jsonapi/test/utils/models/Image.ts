@@ -1,10 +1,10 @@
 import { IType, Model, prop } from '@datx/core';
 import { mobx } from '@datx/utils';
 
-import { jsonapi } from '../../../src';
+import { jsonapiModel } from '../../../src';
 import { Event } from './Event';
 
-export class Image extends jsonapi(Model) {
+export class Image extends jsonapiModel(Model) {
   public static type: IType = 'image';
 
   @prop

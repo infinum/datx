@@ -1,9 +1,9 @@
 import { IType, Model, prop } from '@datx/core';
 import { mobx } from '@datx/utils';
 
-import { jsonapi } from '../../../src';
+import { jsonapiModel } from '../../../src';
 
-export class User extends jsonapi(Model) {
+export class User extends jsonapiModel(Model) {
   public static type: IType = 'user';
 
   @prop

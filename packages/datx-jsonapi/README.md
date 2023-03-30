@@ -10,10 +10,10 @@ DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) 
 
 ```typescript
 import { Collection, Model, Attribute } from '@datx/core';
-import { jsonapi } from '@datx/jsonapi';
+import { jsonapiCollection, jsonapiModel } from '@datx/jsonapi';
 import { computed } from 'mobx';
 
-class Person extends jsonapi(Model) {
+class Person extends jsonapiModel(Model) {
   public static type = 'person'; // Unique name of the model class
 
   @Attribute()
@@ -32,7 +32,7 @@ class Person extends jsonapi(Model) {
   }
 }
 
-class AppData extends jsonapi(Collection) {
+class AppData extends jsonapiCollection(Collection) {
   public static types = [Person]; // A list of models available in the collection
 }
 
