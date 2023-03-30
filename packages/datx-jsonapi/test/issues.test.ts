@@ -1,7 +1,14 @@
 import { Collection, Model, prop, Attribute } from '@datx/core';
 import { META_FIELD, mobx } from '@datx/utils';
 import * as fetch from 'isomorphic-fetch';
-import { getModelMeta, getModelRefMeta, jsonapi, modelToJsonApi, config } from '../src';
+import {
+  getModelMeta,
+  getModelRefMeta,
+  jsonapiCollection,
+  jsonapiModel,
+  modelToJsonApi,
+  config,
+} from '../src';
 
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
 import { Event, LineItem, TestStore } from './utils/setup';
@@ -32,7 +39,7 @@ describe('Issues', () => {
 
   describe('should handle server response with null reference (#47)', () => {
     it('should remove the reference if null', async () => {
-      class ImageRecord extends jsonapi(Model) {
+      class ImageRecord extends jsonapiModel(Model) {
         public static type = 'image';
 
         @prop
@@ -42,14 +49,14 @@ describe('Issues', () => {
         public event!: Array<EventRecord>;
       }
 
-      class EventRecord extends jsonapi(Model) {
+      class EventRecord extends jsonapiModel(Model) {
         public static type = 'event';
 
         @prop.toOneOrMany(ImageRecord)
         public image!: ImageRecord | Array<ImageRecord>;
       }
 
-      class ApiStore extends jsonapi(Collection) {
+      class ApiStore extends jsonapiCollection(Collection) {
         public static types = [ImageRecord, EventRecord];
 
         @mobx.computed
@@ -101,7 +108,7 @@ describe('Issues', () => {
     });
 
     it('should update the reference if not null', async () => {
-      class ImageRecord extends jsonapi(Model) {
+      class ImageRecord extends jsonapiModel(Model) {
         public static type = 'image';
 
         @prop
@@ -111,14 +118,14 @@ describe('Issues', () => {
         public event!: Array<EventRecord>;
       }
 
-      class EventRecord extends jsonapi(Model) {
+      class EventRecord extends jsonapiModel(Model) {
         public static type = 'event';
 
         @prop.toOneOrMany(ImageRecord)
         public image!: ImageRecord | Array<ImageRecord>;
       }
 
-      class ApiStore extends jsonapi(Collection) {
+      class ApiStore extends jsonapiCollection(Collection) {
         public static types = [ImageRecord, EventRecord];
 
         @mobx.computed
@@ -236,7 +243,7 @@ describe('Issues', () => {
   });
 
   it('should serialize the right relationships', () => {
-    class Foo extends jsonapi(Model) {
+    class Foo extends jsonapiModel(Model) {
       public static type = 'foo';
 
       @Attribute({ toOne: 'bar' })
@@ -246,14 +253,14 @@ describe('Issues', () => {
       public bars!: Array<Bar>;
     }
 
-    class Bar extends jsonapi(Model) {
+    class Bar extends jsonapiModel(Model) {
       public static type = 'bar';
 
       @Attribute({ toOne: 'foo' })
       public foo!: Foo;
     }
 
-    class Store extends jsonapi(Collection) {
+    class Store extends jsonapiCollection(Collection) {
       public static types = [Foo, Bar];
     }
 
@@ -272,7 +279,7 @@ describe('Issues', () => {
   });
 
   it('should work with property parsers/serializers when updating existing model', () => {
-    class Foo extends jsonapi(Model) {
+    class Foo extends jsonapiModel(Model) {
       public static type = 'foo';
 
       @Attribute({
@@ -285,7 +292,7 @@ describe('Issues', () => {
       public id!: number;
     }
 
-    class Store extends jsonapi(Collection) {
+    class Store extends jsonapiCollection(Collection) {
       public static types = [Foo];
     }
 
@@ -340,21 +347,21 @@ describe('Issues', () => {
   });
 
   it('should work for map option with relationships', async () => {
-    class ModelA extends jsonapi(Model) {
+    class ModelA extends jsonapiModel(Model) {
       public static type = 'model_a';
 
       @Attribute()
       public name!: string;
     }
 
-    class ModelB extends jsonapi(Model) {
+    class ModelB extends jsonapiModel(Model) {
       public static type = 'model_b';
 
       @Attribute({ toOne: ModelA, map: 'model_a' })
       public modelA!: ModelA;
     }
 
-    class Store extends jsonapi(Collection) {
+    class Store extends jsonapiCollection(Collection) {
       public static types = [ModelA, ModelB];
     }
 
@@ -397,10 +404,10 @@ describe('Issues', () => {
   });
 
   it('should map relationships when parsing', async () => {
-    class OrderLine extends jsonapi(Model) {
+    class OrderLine extends jsonapiModel(Model) {
       public static type = 'order-lines';
     }
-    class Order extends jsonapi(Model) {
+    class Order extends jsonapiModel(Model) {
       public static type = 'orders';
 
       @Attribute() public amount!: number;
@@ -427,7 +434,7 @@ describe('Issues', () => {
       public orderLines!: Array<OrderLine>;
     }
 
-    class Store extends jsonapi(Collection) {
+    class Store extends jsonapiCollection(Collection) {
       public static types = [Order, OrderLine];
     }
 
