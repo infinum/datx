@@ -3314,7 +3314,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@manypkg/cli@npm:^0.19.1":
+"@manypkg/cli@npm:^0.19.2":
   version: 0.19.2
   resolution: "@manypkg/cli@npm:0.19.2"
   dependencies:
@@ -6876,7 +6876,7 @@ __metadata:
   resolution: "datx@workspace:."
   dependencies:
     "@infinumjs/eslint-config-core-ts": ^3.3.1
-    "@manypkg/cli": ^0.19.1
+    "@manypkg/cli": ^0.19.2
     "@typescript-eslint/eslint-plugin": ^5.27.1
     "@typescript-eslint/parser": ^5.27.1
     eslint: ^8.17.0
