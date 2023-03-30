@@ -10,7 +10,14 @@ import {
 } from '@datx/core';
 import fetch from 'isomorphic-fetch';
 
-import { fetchModelLink, jsonapi, modelToJsonApi, saveRelationship, config } from '../../src';
+import {
+  fetchModelLink,
+  jsonapiModel,
+  jsonapiCollection,
+  modelToJsonApi,
+  saveRelationship,
+  config,
+} from '../../src';
 import { clearAllCache } from '../../src/cache';
 
 import { setupNetwork, setRequest, confirmNetwork } from '../utils/api';
@@ -90,14 +97,14 @@ describe('updates', () => {
     });
 
     it('should add a referenced record', async () => {
-      class Foo extends jsonapi(Event) {
+      class Foo extends jsonapiModel(Event) {
         public static type = 'event';
 
         @prop.identifier
         public id!: string;
       }
 
-      class Bar extends jsonapi(Model) {
+      class Bar extends jsonapiModel(Model) {
         public static type = 'bar';
 
         @prop.toOne(Foo)
@@ -108,7 +115,7 @@ describe('updates', () => {
         public static types = [Foo, Bar];
       }
 
-      const store = new (jsonapi(Test))();
+      const store = new (jsonapiCollection(Test))();
       const foo = new Foo({
         title: 'Example title',
       });

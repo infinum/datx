@@ -1998,31 +1998,31 @@ __metadata:
   dependencies:
     "@datx/core": 2.5.0-beta.11
     "@datx/jsonapi": 2.5.0-beta.11
-    "@rollup/plugin-commonjs": ^21.0.0
-    "@rollup/plugin-node-resolve": ^13.0.0
-    "@rollup/plugin-typescript": ^8.2.1
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-node-resolve": ^13.3.0
+    "@rollup/plugin-typescript": ^8.3.2
     "@swc-node/jest": 1.4.3
     "@swc/core": ^1.3.21
     "@testing-library/jest-dom": 5.16.4
     "@testing-library/react": 13.3.0
     "@testing-library/user-event": 14.2.1
     "@types/isomorphic-fetch": 0.0.36
-    "@types/jest": ^28.1.5
-    "@types/lodash": ^4.14.168
-    "@types/node": ^16.0.0
-    "@types/uuid": ^8.3.0
-    isomorphic-fetch: 3.0.0
-    jest: 28.1.3
+    "@types/jest": ^28.1.1
+    "@types/lodash": ^4.14.182
+    "@types/node": ^18.7.6
+    "@types/uuid": ^8.3.4
+    isomorphic-fetch: ^3.0.0
+    jest: ^28.1.1
     jest-environment-jsdom: 28.1.3
     msw: ~0.49.0
     react: ^18.2.0
     react-dom: ^18.2.0
-    rollup: ^2.38.0
-    rollup-plugin-exclude-dependencies-from-bundle: ^1.1.17
+    rollup: ^2.75.6
+    rollup-plugin-exclude-dependencies-from-bundle: ^1.1.22
     rollup-plugin-terser: ^7.0.2
     swr: 2.0.0-beta.6
-    tslib: ^2.3.0
-    typescript: ^4.6.3
+    tslib: ~2.4.0
+    typescript: ~4.7.3
     uuid: ^8.3.2
   peerDependencies:
     react: ^16.11.0 || ^17.0.0 || ^18.0.0
@@ -3931,23 +3931,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-commonjs@npm:^21.0.0":
-  version: 21.1.0
-  resolution: "@rollup/plugin-commonjs@npm:21.1.0"
-  dependencies:
-    "@rollup/pluginutils": ^3.1.0
-    commondir: ^1.0.1
-    estree-walker: ^2.0.1
-    glob: ^7.1.6
-    is-reference: ^1.2.1
-    magic-string: ^0.25.7
-    resolve: ^1.17.0
-  peerDependencies:
-    rollup: ^2.38.3
-  checksum: e8280f4b6192729f2bdf878c48c451dc441075f2a12f22c688393f48a6b95e8ff83caaacc3df4eb1d81516e08a0e3a669213632879910d85dd630b37bb284df7
-  languageName: node
-  linkType: hard
-
 "@rollup/plugin-commonjs@npm:^22.0.0":
   version: 22.0.2
   resolution: "@rollup/plugin-commonjs@npm:22.0.2"
@@ -3976,7 +3959,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-node-resolve@npm:^13.0.0, @rollup/plugin-node-resolve@npm:^13.1.3, @rollup/plugin-node-resolve@npm:^13.3.0":
+"@rollup/plugin-node-resolve@npm:^13.1.3, @rollup/plugin-node-resolve@npm:^13.3.0":
   version: 13.3.0
   resolution: "@rollup/plugin-node-resolve@npm:13.3.0"
   dependencies:
@@ -3992,7 +3975,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-typescript@npm:^8.2.1, @rollup/plugin-typescript@npm:^8.3.2":
+"@rollup/plugin-typescript@npm:^8.3.2":
   version: 8.5.0
   resolution: "@rollup/plugin-typescript@npm:8.5.0"
   dependencies:
@@ -4512,7 +4495,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^28.1.1, @types/jest@npm:^28.1.5":
+"@types/jest@npm:^28.1.1":
   version: 28.1.8
   resolution: "@types/jest@npm:28.1.8"
   dependencies:
@@ -4560,13 +4543,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: e009a2bfb50e90ca9b7c6e8f648f8464067271fd99116f881073fa6fa76dc8d0133181dd65e6614d5fb1220d671d67b0124aef7d97dc02d7e342ab143a47779d
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:^4.14.168":
-  version: 4.14.191
-  resolution: "@types/lodash@npm:4.14.191"
-  checksum: ba0d5434e10690869f32d5ea49095250157cae502f10d57de0a723fd72229ce6c6a4979576f0f13e0aa9fbe3ce2457bfb9fa7d4ec3d6daba56730a51906d1491
   languageName: node
   linkType: hard
 
@@ -4623,13 +4599,6 @@ __metadata:
   version: 12.20.55
   resolution: "@types/node@npm:12.20.55"
   checksum: e4f86785f4092706e0d3b0edff8dca5a13b45627e4b36700acd8dfe6ad53db71928c8dee914d4276c7fd3b6ccd829aa919811c9eb708a2c8e4c6eb3701178c37
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^16.0.0":
-  version: 16.18.4
-  resolution: "@types/node@npm:16.18.4"
-  checksum: c2da162df295d81eed199d2b12f1edf9618d9f4099ba84a8553859b40e1dac2d44131c75b57803bd35cf9da881434d0abebe46994a2936b6b9c16d8e52db9146
   languageName: node
   linkType: hard
 
@@ -4808,7 +4777,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uuid@npm:^8.3.0, @types/uuid@npm:^8.3.4":
+"@types/uuid@npm:^8.3.4":
   version: 8.3.4
   resolution: "@types/uuid@npm:8.3.4"
   checksum: 6f11f3ff70f30210edaa8071422d405e9c1d4e53abbe50fdce365150d3c698fe7bbff65c1e71ae080cbfb8fded860dbb5e174da96fdbbdfcaa3fb3daa474d20f
@@ -9912,7 +9881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isomorphic-fetch@npm:3.0.0, isomorphic-fetch@npm:^3.0.0":
+"isomorphic-fetch@npm:^3.0.0":
   version: 3.0.0
   resolution: "isomorphic-fetch@npm:3.0.0"
   dependencies:
@@ -10532,7 +10501,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:28.1.3, jest@npm:^28.1.1":
+"jest@npm:^28.1.1":
   version: 28.1.3
   resolution: "jest@npm:28.1.3"
   dependencies:
@@ -14076,7 +14045,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-exclude-dependencies-from-bundle@npm:^1.1.17, rollup-plugin-exclude-dependencies-from-bundle@npm:^1.1.22":
+"rollup-plugin-exclude-dependencies-from-bundle@npm:^1.1.22":
   version: 1.1.23
   resolution: "rollup-plugin-exclude-dependencies-from-bundle@npm:1.1.23"
   peerDependencies:
@@ -14127,7 +14096,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:^2.38.0, rollup@npm:^2.70.0, rollup@npm:^2.75.6":
+"rollup@npm:^2.70.0, rollup@npm:^2.75.6":
   version: 2.79.1
   resolution: "rollup@npm:2.79.1"
   dependencies:
@@ -15498,7 +15467,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^3 || ^4, typescript@npm:^4.6.3":
+"typescript@npm:^3 || ^4":
   version: 4.9.3
   resolution: "typescript@npm:4.9.3"
   bin:
@@ -15518,7 +15487,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^3 || ^4#~builtin<compat/typescript>, typescript@patch:typescript@^4.6.3#~builtin<compat/typescript>":
+"typescript@patch:typescript@^3 || ^4#~builtin<compat/typescript>":
   version: 4.9.3
   resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=701156"
   bin:

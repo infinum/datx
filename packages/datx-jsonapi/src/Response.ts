@@ -82,7 +82,7 @@ function initData<T extends IJsonapiModel>(
 type IAsync<T extends IJsonapiModel> = Promise<Response<T>>;
 
 export class Response<T extends IJsonapiModel, P = IAsync<T>> {
-  private __data;
+  private readonly __data;
 
   protected __internal: IResponseInternal = {
     response: {},
@@ -374,13 +374,13 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
         this.__cache[name] = (): P =>
-          (fetchLink<T>(
+          fetchLink<T>(
             link,
             this.collection,
             options,
             this.views,
             ResponseConstructor,
-          ) as unknown) as P;
+          ) as unknown as P;
       }
     }
 

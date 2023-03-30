@@ -1,6 +1,6 @@
 import { Collection } from '@datx/core';
 
-import { jsonapi } from '../../src';
+import { jsonapiCollection } from '../../src';
 import { Event } from './models/Event';
 import { Image } from './models/Image';
 import { LineItem } from './models/LineItem';
@@ -11,6 +11,6 @@ import { User } from './models/User';
 
 export { Event, Image, Organizer, Photo, User, ProductVariant, LineItem };
 
-export class TestStore extends jsonapi(Collection) {
+export class TestStore extends jsonapiCollection(Collection) {
   public static types = [User, Event, Image, Organizer, Photo, ProductVariant, LineItem];
 }

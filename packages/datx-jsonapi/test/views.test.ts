@@ -1,7 +1,7 @@
 import { View, IViewConstructor, PureModel } from '@datx/core';
 import fetch from 'isomorphic-fetch';
 
-import { IJsonapiView, jsonapi, config } from '../src';
+import { IJsonapiView, jsonapi, jsonapiView, config } from '../src';
 import { setupNetwork, setRequest, confirmNetwork } from './utils/api';
 import { Event, TestStore } from './utils/setup';
 import { clearAllCache } from '../src/cache';
@@ -13,7 +13,7 @@ const baseTransformResponse = config.transformResponse;
 describe('Views', () => {
   it('should sync an event', () => {
     const store = new TestStore();
-    const JsonapiView = jsonapi(View as IViewConstructor<PureModel>);
+    const JsonapiView = jsonapiView(View as IViewConstructor<PureModel>);
     const view = new JsonapiView(Event, store);
 
     const event = view.sync({
@@ -49,7 +49,7 @@ describe('Views', () => {
       });
 
       const store = new TestStore();
-      const JsonapiView = jsonapi(View as IViewConstructor<PureModel>);
+      const JsonapiView = jsonapiView(View as IViewConstructor<PureModel>);
       const view = new JsonapiView(Event, store);
       const events = await view.getMany();
 
@@ -65,7 +65,7 @@ describe('Views', () => {
       });
 
       const store = new TestStore();
-      const JsonapiView = jsonapi(View as IViewConstructor<PureModel>);
+      const JsonapiView = jsonapiView(View as IViewConstructor<PureModel>);
       const view = new JsonapiView(Event, store);
       const events = await view.getMany();
 
