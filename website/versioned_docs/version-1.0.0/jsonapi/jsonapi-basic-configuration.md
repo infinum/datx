@@ -4,7 +4,7 @@ title: Basic configuration
 original_id: jsonapi-basic-configuration
 ---
 
-To apply the mixin to your models and collections, use the `jsonapi` method. Everything from the [`datx` defining models guide](defining-models) also applies.
+To apply the mixin to your models and collections, use the `jsonapi` method. Everything from the [`datx` defining models guide](../getting-started/defining-models) also applies.
 
 ```typescript
 import { Collection, Model } from 'datx';

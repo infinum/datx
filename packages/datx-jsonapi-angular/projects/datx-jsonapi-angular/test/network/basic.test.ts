@@ -4,9 +4,9 @@ import {
   getModelLinks,
   getModelMeta,
   getModelRefMeta,
+  IDefinition,
   modelToJsonApi,
 } from '@datx/jsonapi';
-import { IDefinition } from '@datx/jsonapi/dist/interfaces/JsonApi';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { IJsonapiModel, Response } from '../../src/public-api';

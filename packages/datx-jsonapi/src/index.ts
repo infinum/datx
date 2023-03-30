@@ -1,4 +1,4 @@
-export { jsonapi } from './mixin';
+export { jsonapi, jsonapiModel, jsonapiCollection, jsonapiView } from './mixin';
 export { Response } from './Response';
 export { NetworkResponse } from './NetworkResponse';
 export { GenericModel } from './GenericModel';
@@ -17,10 +17,10 @@ export {
   saveModel,
 } from './helpers/model';
 
-export {
-  prepareQuery,
-  buildUrl
-} from './helpers/url';
+export { prepareQuery, buildUrl } from './helpers/url';
+export { isJsonApiClass } from './helpers/utils';
+
+export { getResponseRawData } from './helpers/response';
 
 export { BaseJsonapiRequest } from './BaseRequest';
 
@@ -30,9 +30,10 @@ export { IJsonapiModel } from './interfaces/IJsonapiModel';
 export { IJsonapiView } from './interfaces/IJsonapiView';
 export { IRawResponse } from './interfaces/IRawResponse';
 export { IRequestOptions } from './interfaces/IRequestOptions';
-export { IResponse } from './interfaces/JsonApi';
+export { IResponseSnapshot } from './interfaces/IResponseSnapshot';
+export { IResponse, IRecord, IDefinition } from './interfaces/JsonApi';
 
-export { config, fetchLink } from './NetworkUtils';
+export { config, fetchLink, IConfigType } from './NetworkUtils';
 
 export {
   BaseRequest,
@@ -62,3 +63,11 @@ export {
   clearAllCache,
   clearCacheByType,
 } from '@datx/network';
+
+export {
+  MODEL_LINKS_FIELD,
+  MODEL_META_FIELD,
+  MODEL_PERSISTED_FIELD,
+  MODEL_REF_LINKS_FIELD,
+  MODEL_REF_META_FIELD,
+} from './consts';

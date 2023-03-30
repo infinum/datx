@@ -1,0 +1,15 @@
+{
+  "data": {
+    "attributes": { "name": "B" },
+    "type": "model_b",
+    "id": "1",
+    "relationships": { "model_a": { "data": { "type": "model_a", "id": "1" } } }
+  },
+  "included": [
+    {
+      "attributes": { "name": "A" },
+      "type": "model_a",
+      "id": "1"
+    }
+  ]
+}

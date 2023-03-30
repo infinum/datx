@@ -10,8 +10,9 @@ import {
   PureModel,
   ReferenceType,
   modelToDirtyJSON,
+  IModelConstructor,
 } from '@datx/core';
-import { getMeta, IRawModel, mapItems, META_FIELD, setMeta } from '@datx/utils';
+import { getMeta, getMetaObj, IRawModel, mapItems, META_FIELD, setMeta } from '@datx/utils';
 
 import { clearCacheByType } from '../cache';
 import {
@@ -35,19 +36,28 @@ import { error, getModelClassRefs } from './utils';
 import { GenericModel } from '../GenericModel';
 
 export function flattenModel(classRefs): null;
-export function flattenModel(classRefs, data?: IRecord): IRawModel;
+export function flattenModel(classRefs, data?: IRecord, modelClass?: IModelConstructor): IRawModel;
 export function flattenModel(
   classRefs: Record<string, IReferenceOptions<PureModel>>,
   data?: IRecord,
+  modelClass: IModelConstructor = GenericModel,
 ): IRawModel | null {
   if (!data) {
     return null;
   }
 
+  const modelMeta = getMetaObj(modelClass);
+  const mapKeys = Object.fromEntries(
+    Object.keys(modelMeta)
+      .filter((key) => key.startsWith('map_'))
+      .map((key) => [modelMeta[key], key.slice(4)]),
+  );
+
   const rawData = {
     [META_FIELD]: {
       fields: Object.keys(data.attributes || {}).reduce((obj, key) => {
-        obj[key] = { referenceDef: false };
+        const mappedName = mapKeys[key] ?? key;
+        obj[mappedName] = { referenceDef: false };
 
         return obj;
       }, {}),
@@ -209,6 +219,7 @@ export function modelToJsonApi(model: IJsonapiModel, onlyDirty?: boolean): IReco
   };
 
   const refs = getModelClassRefs(model);
+  const meta: object | null = getMetaObj(model.constructor);
 
   Object.keys(refs).forEach((key) => {
     if (refs[key].property) {
@@ -217,7 +228,9 @@ export function modelToJsonApi(model: IJsonapiModel, onlyDirty?: boolean): IReco
     data.relationships = data.relationships || {};
     const refsList: IModelRef | Array<IModelRef> | null = getRefId(model, key);
 
-    data.relationships[key] = {
+    const mappedKey = meta?.[`map_${key}`] ?? key;
+
+    data.relationships[mappedKey] = {
       data: mapItems(refsList, (refItem: IModelRef) => ({
         id: refItem.id.toString(),
         type: refItem.type,

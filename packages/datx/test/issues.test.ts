@@ -1,6 +1,16 @@
 import testMobx from './mobx';
 
-import { Collection, PureModel, Attribute, modelToJSON, updateModel, assignModel } from '../src';
+import {
+  Collection,
+  PureModel,
+  Attribute,
+  modelToJSON,
+  updateModel,
+  assignModel,
+  upsertModel,
+  Model,
+} from '../src';
+import { META_FIELD } from '@datx/utils';
 
 // @ts-ignore
 testMobx.configure({ enforceActions: 'observed' });
@@ -254,5 +264,77 @@ describe('issues', () => {
 
     expect(person.dog?.name).toBe('Floki');
     expect(person.dog).toBeInstanceOf(Dog);
+  });
+
+  it('should work with upserting partial models', () => {
+    class Person extends Model {
+      public static type = 'person';
+
+      @Attribute()
+      public name!: string;
+
+      @Attribute()
+      public age!: number;
+    }
+
+    class Store extends Collection {
+      public static types = [Person];
+    }
+
+    const store = new Store();
+
+    const person = store.add({ name: 'Foo', age: 1 }, Person);
+    // eslint-disable-next-line no-underscore-dangle
+    const personMeta = person.meta.snapshot.__META__;
+
+    expect(person.name).toBe('Foo');
+
+    const person2 = upsertModel(
+      { age: 2, __META__: { id: personMeta?.id, type: personMeta?.type } },
+      'person',
+      store,
+    ) as Person;
+
+    expect(person2.age).toBe(2);
+    expect(person2.name).toBe('Foo');
+    expect(person2).toBe(person);
+  });
+
+  it('should work for mapped relationships', () => {
+    //
+  });
+
+  it('should not add original properties if mapped', () => {
+    class Foo extends Model {
+      public static type = 'foo';
+
+      @Attribute({
+        map: 'some_value',
+      })
+      public value!: number;
+    }
+
+    class Store extends Collection {
+      public static types = [Foo];
+    }
+
+    const store = new Store();
+
+    const foo1 = store.add({ some_value: 1 }, Foo);
+
+    const foo2 = new Foo({ value: 1 });
+
+    expect(foo1.value).toBe(1);
+    expect(foo2.value).toBe(1);
+
+    expect(foo1.meta.snapshot?.some_value).not.toBeUndefined();
+    expect(foo1.meta.snapshot?.value).toBeUndefined();
+    expect(foo1.meta.snapshot[META_FIELD]?.fields?.some_value).toBeUndefined();
+    expect(foo1.meta.snapshot[META_FIELD]?.fields?.value).not.toBeUndefined();
+
+    expect(foo2.meta.snapshot?.some_value).not.toBeUndefined();
+    expect(foo2.meta.snapshot?.value).toBeUndefined();
+    expect(foo2.meta.snapshot[META_FIELD]?.fields?.some_value).toBeUndefined();
+    expect(foo2.meta.snapshot[META_FIELD]?.fields?.value).not.toBeUndefined();
   });
 });

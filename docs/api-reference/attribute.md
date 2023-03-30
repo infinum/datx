@@ -5,7 +5,7 @@ title: Attribute
 
 The `Attribute` decorator is used to define the properties of the model.
 
-For usage examples check out the [defining models guide](Defining-models).
+For usage examples check out the [defining models guide](../getting-started/defining-models).
 
 It supports the following methods:
 
@@ -148,4 +148,4 @@ public id: string;
 
 ## Using `Attribute` without decorators
 
-[In some cases](https://github.com/infinum/datx/issues/92), you might not be able to use the `@Attribute()` decorator, but you can still use it as a function. The function has two arguments: the class you're decorating and name of the property you're decorating. You can find the example in the [defining models](https://github.com/infinum/datx/wiki/Defining-models) section.
+[In some cases](https://github.com/infinum/datx/issues/92), you might not be able to use the `@Attribute()` decorator, but you can still use it as a function. The function has two arguments: the class you're decorating and name of the property you're decorating. You can find the example in the [defining models](../getting-started/defining-models) section.

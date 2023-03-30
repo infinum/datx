@@ -9,3 +9,5 @@ export const MODEL_RELATED_FIELD = 'jsonapiRelated';
 
 // eslint-disable-next-line no-useless-escape
 export const URL_REGEX = /^((https?\:)?\/\/)/;
+
+export const DATX_JSONAPI_CLASS = Symbol('@datx/jsonapi class');

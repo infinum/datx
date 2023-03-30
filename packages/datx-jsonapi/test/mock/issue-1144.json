@@ -1,0 +1,124 @@
+{
+  "jsonapi": { "version": "1.0" },
+  "links": { "self": "http://localhost/api/v1/orders/1" },
+  "data": {
+    "type": "orders",
+    "id": "1",
+    "attributes": {
+      "reference": "asdasdasd",
+      "status": 1,
+      "retrieve_at": "2023-01-20T11:19:52.000000Z",
+      "created_at": "2023-01-20T11:19:54.000000Z",
+      "updated_at": "2023-01-20T11:19:55.000000Z"
+    },
+    "relationships": {
+      "order-lines": {
+        "links": {
+          "related": "http://localhost/api/v1/orders/1/order-lines",
+          "self": "http://localhost/api/v1/orders/1/relationships/order-lines"
+        },
+        "data": [
+          { "type": "order-lines", "id": "1" },
+          { "type": "order-lines", "id": "2" },
+          { "type": "order-lines", "id": "3" }
+        ]
+      }
+    },
+    "links": { "self": "http://localhost/api/v1/orders/1" }
+  },
+  "included": [
+    {
+      "type": "order-lines",
+      "id": "1",
+      "attributes": {
+        "amount": 3,
+        "bigbag_type": 1,
+        "has_pallet": 1,
+        "created_at": "2023-01-20T12:50:26.000000Z"
+      },
+      "relationships": {
+        "product": {
+          "links": {
+            "related": "http://localhost/api/v1/order-lines/1/product",
+            "self": "http://localhost/api/v1/order-lines/1/relationships/product"
+          },
+          "data": { "type": "products", "id": "1" }
+        }
+      },
+      "links": { "self": "http://localhost/api/v1/order-lines/1" }
+    },
+    {
+      "type": "products",
+      "id": "1",
+      "attributes": {
+        "reference": "101005",
+        "description": "Aquado General 0/8 mm",
+        "createdAt": "2023-01-20T11:49:58.000000Z",
+        "updatedAt": "2023-01-20T11:49:58.000000Z"
+      },
+      "links": { "self": "http://localhost/api/v1/products/1" }
+    },
+    {
+      "type": "order-lines",
+      "id": "2",
+      "attributes": {
+        "amount": 4,
+        "bigbag_type": 2,
+        "has_pallet": 0,
+        "created_at": "2023-01-20T12:50:26.000000Z"
+      },
+      "relationships": {
+        "product": {
+          "links": {
+            "related": "http://localhost/api/v1/order-lines/2/product",
+            "self": "http://localhost/api/v1/order-lines/2/relationships/product"
+          },
+          "data": { "type": "products", "id": "14" }
+        }
+      },
+      "links": { "self": "http://localhost/api/v1/order-lines/2" }
+    },
+    {
+      "type": "products",
+      "id": "14",
+      "attributes": {
+        "reference": "100590",
+        "description": "Basaltsplit 0/2 mm",
+        "createdAt": "2023-01-20T11:49:58.000000Z",
+        "updatedAt": "2023-01-20T11:49:58.000000Z"
+      },
+      "links": { "self": "http://localhost/api/v1/products/14" }
+    },
+    {
+      "type": "order-lines",
+      "id": "3",
+      "attributes": {
+        "amount": 2,
+        "bigbag_type": 2,
+        "has_pallet": 0,
+        "created_at": "2023-01-20T12:50:26.000000Z"
+      },
+      "relationships": {
+        "product": {
+          "links": {
+            "related": "http://localhost/api/v1/order-lines/3/product",
+            "self": "http://localhost/api/v1/order-lines/3/relationships/product"
+          },
+          "data": { "type": "products", "id": "3" }
+        }
+      },
+      "links": { "self": "http://localhost/api/v1/order-lines/3" }
+    },
+    {
+      "type": "products",
+      "id": "3",
+      "attributes": {
+        "reference": "100975",
+        "description": "Aquado Natural 0/8 mm",
+        "createdAt": "2023-01-20T11:49:58.000000Z",
+        "updatedAt": "2023-01-20T11:49:58.000000Z"
+      },
+      "links": { "self": "http://localhost/api/v1/products/3" }
+    }
+  ]
+}

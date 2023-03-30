@@ -4,21 +4,21 @@ title: Basic configuration
 original_id: jsonapi-basic-configuration
 ---
 
-To apply the mixin to your models and collections, use the `jsonapi` method. Everything from the [`datx` defining models guide](defining-models) also applies.
+To apply the mixin to your models and collections, use the `jsonapi` method. Everything from the [`datx` defining models guide](../getting-started/defining-models) also applies.
 
 ```typescript
 import { Collection, Model } from '@datx/core';
-import { config, jsonapi } from '@datx/jsonapi';
+import { config, jsonapiCollection, jsonapiModel } from '@datx/jsonapi';
 
-class Person extends jsonapi(Model) {
+class Person extends jsonapiModel(Model) {
   static type = 'person';
 }
 
-class Pet extends jsonapi(Model) {
+class Pet extends jsonapiModel(Model) {
   static type = 'pet';
 }
 
-class MyCollection extends jsonapi(Collection) {
+class MyCollection extends jsonapiCollection(Collection) {
   static types = [Person, Pet];
 }
 ```

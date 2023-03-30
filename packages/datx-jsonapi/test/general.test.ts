@@ -1,7 +1,15 @@
-import { Collection, getModelId, getModelType, Model } from '@datx/core';
+import { Collection, getModelId, getModelType, Model, PureModel, View } from '@datx/core';
 import { mobx } from '@datx/utils';
 
-import { getModelRefLinks, jsonapi, modelToJsonApi } from '../src';
+import {
+  getModelRefLinks,
+  isJsonApiClass,
+  jsonapi,
+  jsonapiCollection,
+  jsonapiModel,
+  jsonapiView,
+  modelToJsonApi,
+} from '../src';
 import { Event, Image, Photo, TestStore, User } from './utils/setup';
 
 describe('General', () => {
@@ -663,7 +671,7 @@ describe('General', () => {
   });
 
   it('should support generic records', () => {
-    const JsonapiCollection = jsonapi(Collection);
+    const JsonapiCollection = jsonapiCollection(Collection);
     const store = new JsonapiCollection();
     const user = store.sync({
       data: {
@@ -714,5 +722,27 @@ describe('General', () => {
       expect(data.relationships.images.data).toHaveLength(0);
       expect(data.relationships.image.data).toBeNull();
     }
+  });
+
+  it('should detect jsonapi classes', () => {
+    class PlainModel extends Model {}
+    class JsonapiModel extends jsonapi(Model) {}
+    class JsonapiModel2 extends jsonapiModel(Model) {}
+    class PlainCollection extends Collection {}
+    class JsonapiCollection extends jsonapi(Collection) {}
+    class JsonapiCollection2 extends jsonapiCollection(Collection) {}
+    class PlainView extends View {}
+    class JsonapiView extends jsonapi(View<PureModel>) {}
+    class JsonapiView2 extends jsonapiView(View<PureModel>) {}
+
+    expect(isJsonApiClass(PlainModel)).toBe(false);
+    expect(isJsonApiClass(JsonapiModel)).toBe(true);
+    expect(isJsonApiClass(JsonapiModel2)).toBe(true);
+    expect(isJsonApiClass(PlainCollection)).toBe(false);
+    expect(isJsonApiClass(JsonapiCollection)).toBe(true);
+    expect(isJsonApiClass(JsonapiCollection2)).toBe(true);
+    expect(isJsonApiClass(PlainView as typeof View)).toBe(false);
+    expect(isJsonApiClass(JsonapiView as typeof View)).toBe(true);
+    expect(isJsonApiClass(JsonapiView2 as typeof View)).toBe(true);
   });
 });
