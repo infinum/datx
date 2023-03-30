@@ -5,6 +5,8 @@
     "test": "lerna run test",
     "build": "lerna run build --no-private",
     "watch": "lerna run watch --no-private",
+    "watch:swr": "lerna run watch --scope @datx/swr",
+    "test:swr": "lerna run test --scope @datx/swr",
     "clean": "lerna clean && yarn clean:dist",
     "clean:dist": "lerna exec -- rm -rf ./dist",
     "pkg:check": "manypkg check",

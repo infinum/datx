@@ -1,6 +1,6 @@
 {
   "name": "@datx/core",
-  "version": "2.4.12",
+  "version": "2.5.0-beta.11",
   "description": "A MobX data store",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -32,9 +32,10 @@
   },
   "scripts": {
     "test": "jest --coverage",
-    "watch": "jest --watch --coverage",
+    "test:watch": "jest --watch --coverage",
     "prepublish": "npm run build",
     "build": "rollup -c",
+    "watch": "rollup --config --watch",
     "ts:check": "tsc --noEmit"
   },
   "jest": {
@@ -62,6 +63,6 @@
     ]
   },
   "dependencies": {
-    "@datx/utils": "2.4.8"
+    "@datx/utils": "2.5.0-beta.11"
   }
 }

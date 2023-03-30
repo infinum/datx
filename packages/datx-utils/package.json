@@ -1,6 +1,6 @@
 {
   "name": "@datx/utils",
-  "version": "2.4.8",
+  "version": "2.5.0-beta.11",
   "description": "DatX lib utils for mixins",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -38,9 +38,10 @@
   },
   "scripts": {
     "test": "jest --coverage",
-    "watch": "jest --watch --coverage",
+    "test:watch": "jest --watch --coverage",
     "prepublish": "npm run build",
     "build": "rollup -c",
+    "watch": "rollup --config --watch",
     "ts:check": "tsc --noEmit"
   },
   "jest": {
