@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
         mobx-version: [-2, -1, 0, 4, 5, 6]
         # -2 - mobx off, real mobx in tests
         # -1 - mobx off, mock mobx in tests
