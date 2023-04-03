@@ -172,45 +172,6 @@ export const todosQuery = {
 } as const satisfies IGetManyExpression<typeof Todo>;
 ```
 
-### Conditional data fetching
-
-```ts
-// conditionally fetch
-export const getTodoQuery = (id?: string) =>
-  id
-    ? ({
-        id,
-        op: 'getOne',
-        type: 'todos',
-      } as IGetOneExpression<typeof Todo>)
-    : null;
-
-const { data, error } = useDatx(getTodoQuery(id));
-
-// ...or return a falsy value, a.k.a currying
-export const getTodoQuery = (id?: string) => () =>
-  id
-    ? ({
-        id,
-        op: 'getOne',
-        type: 'todos',
-      } as IGetOneExpression<typeof Todo>)
-    : null;
-
-const { data, error } = useDatx(getTodoQuery(id));
-
-// ...or throw an error when property is not defined
-export const getTodoByUserQuery = (user?: User) => () =>
-  ({
-    id: user.todo.id, // if user is not defined this will throw an error
-    op: 'getOne',
-    type: 'todos',
-  } as IGetOneExpression<typeof Todo>);
-
-const { data: user } = useDatx(getUserQuery(id));
-const { data: todo } = useDatx(getTodoByUserQuery(user));
-```
-
 ### Query naming convention
 
 Query can be a static object or a function. Both cases should be suffixed with `query` to make it clear that it's a query.
@@ -256,7 +217,28 @@ Datx SWR supports concept of lazy initializer function. It's a function that ret
 
 Lazy initializer function is SWR concept used for conditional fetching. You can find more details in [SWR Conditional Fetching](https://swr.vercel.app/docs/conditional-fetching) documentation.
 
+#### Simple conditionally fetch
+
 ```ts
+const { data: post } = useDatx(id ? {
+  id,
+  op: 'getOne',
+  type: 'posts',
+} : null);
+```
+
+#### Lazy initializer function which returns falsy value
+
+```ts
+const getPost = (id?: string) =>
+  id
+    ? ({
+        id,
+        op: 'getOne',
+        type: 'posts',
+      } as const satisfies IGetOneExpression<typeof Post>)
+    : null;
+
 const getPostCommentsRelationshipQuery = (postId?: string) =>
   postId
     ? ({
@@ -272,9 +254,18 @@ const { data: comments } = useDatx(() => getPostCommentsRelationshipQuery(postId
 
 ```
 
-I can also throw an error if some property is not defined.
+#### Lazy initializer function which throws an error if some property is not defined
 
 ```ts
+const getPost = (id?: string) =>
+  id
+    ? ({
+        id,
+        op: 'getOne',
+        type: 'posts',
+      } as const satisfies IGetOneExpression<typeof Post>)
+    : null;
+
 const getTodoByUserQuery = (user: User) =>
   ({
     id: user.todo.id, // if user is not defined this will throw an error
