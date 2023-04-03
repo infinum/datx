@@ -136,8 +136,6 @@ export class Todo extends jsonapiModel(PureModel) {
 Using expression types (Preferred):
 
 ```ts
-// src/components/features/todos/Todos.queries.ts
-
 import { IGetManyExpression } from '@datx/swr';
 
 import { Todo } from '../../../models/Todo';
@@ -151,8 +149,6 @@ export const todosQuery: IGetManyExpression<typeof Todo> = {
 Using `as const`:
 
 ```ts
-// src/components/features/todos/Todos.queries.ts
-
 import { Todo } from '../../../models/Todo';
 
 export const todosQuery = {
@@ -161,13 +157,11 @@ export const todosQuery = {
 } as const;
 ```
 
-If your project uses TypeScript 4.9 or newer you can use `satisfies` to limit the type:
+> It's important to use `as const` assertion. It tells the compiler to infer the narrowest or most specific type it can for an expression. If you leave it off, the compiler will use its default type inference behavior, which will possibly result in a wider or more general type.
+
+With TS v5 using `satisfies` keyword:
 
 ```ts
-// src/components/features/todos/Todos.queries.ts
-
-import { IGetManyExpression } from '@datx/swr';
-
 import { Todo } from '../../../models/Todo';
 
 export const todosQuery = {
@@ -176,11 +170,20 @@ export const todosQuery = {
 } as const satisfies IGetManyExpression<typeof Todo>;
 ```
 
-> It's important to use `as const` assertion. It tells the compiler to infer the narrowest or most specific type it can for an expression. If you leave it off, the compiler will use its default type inference behavior, which will possibly result in a wider or more general type.
+With TS v5 using `satisfies` keyword:
+
+```ts
+import { Todo } from '../../../models/Todo';
+
+export const todosQuery = {
+  op: 'getMany',
+  type: 'todos',
+} as const satisfies IGetManyExpression<typeof Todo>;
+```
 
 ### Conditional data fetching
 
-```tsx
+```ts
 // conditionally fetch
 export const getTodoQuery = (id?: string) =>
   id
@@ -215,6 +218,63 @@ export const getTodoByUserQuery = (user?: User) => () =>
 
 const { data: user } = useDatx(getUserQuery(id));
 const { data: todo } = useDatx(getTodoByUserQuery(user));
+```
+
+### Query naming convention
+
+Query can be a variable or a function. Both cases should be suffixed with `query` to make it clear that it's a query.
+If you use a function, it's recommended to add `get` prefix to indicate that it's a getter.
+
+> Rule of thumb is to use `get` prefix if query depends on some other data. 
+
+```ts
+// collection query
+const todosQuery = {
+  op: 'getMany',
+  type: 'todos',
+} as const;
+
+// single item query
+const getTodoQuery = (id?: string) =>
+  id
+    ? ({
+        id,
+        op: 'getOne',
+        type: 'todos',
+      } as const satisfies IGetOneExpression<typeof Todo>)
+    : null;
+
+// single item lazy query, a.k.a currying
+const getTodoQuery = (id?: string) => () =>
+  id
+    ? ({
+        id,
+        op: 'getOne',
+        type: 'todos',
+      } as const satisfies IGetOneExpression<typeof Todo>)
+    : null;
+
+// related query through primary resource
+const getPostCommentsRelationshipQuery = (postId?: string) =>
+  postId
+    ? ({
+        id: postId,
+        op: 'getRelationship',
+        relationship: 'comments',
+        type: 'posts',
+      } as const satisfies IGetRelationshipExpression<typeof Post>)
+    : null;
+
+// related query through primary resource lazy query
+const getPostCommentsRelationshipQuery = (postId?: string) => () =>
+  postId
+    ? ({
+        id: postId,
+        op: 'getRelationship',
+        relationship: 'comments',
+        type: 'posts',
+      } as const satisfies IGetRelationshipExpression<typeof Post>)
+    : null;
 ```
 
 ### Define mutations
@@ -319,3 +379,29 @@ export const Todos: FC = () => {
   );
 };
 ```
+
+## Disable Mobx in Next.js projects
+
+Since we don't want to use Mobx, we need to add a little boilerplate to work around that. First, we need to instruct DatX not to use Mobx, by adding `@datx/core/disable-mobx` before App bootstrap:
+
+```tsx
+// src/pages/_app.tsx
+
+import '@datx/core/disable-mobx';
+```
+
+Next, we need to overwrite Mobx path so that it can be resolved by Datx:
+
+```json
+// /tsconfig.json
+
+{
+  "compilerOptions": {
+    "paths": {
+      "mobx": ["./mobx.js"]
+    }
+  }
+}
+```
+
+> `./mobx.js` is an empty file!

@@ -48,8 +48,7 @@ Second parameter of `useDatx` is for passing config options. It extends default 
 
 ### Expression signature
 
-Currently we support 3 expressions for fetching resources `getOne`, `getMany` and `getAll`.
-Future plan is to support generic `request` operation and `getRelated`.
+Currently, we support 3 expressions for fetching resources `getOne`, `getMany`, `getAll`, `get.
 
 ```ts
 // fetch single resource by id
@@ -74,9 +73,22 @@ export interface IGetAllExpression<TModel extends JsonapiModelType = JsonapiMode
   queryParams?: IRequestOptions['queryParams'];
   maxRequests?: number | undefined;
 }
+
+// fetch related resource through the primary resource
+export interface IGetRelatedResourceExpression<
+  TModelType extends JsonapiModelType = JsonapiModelType,
+> {
+  readonly op: 'getRelatedResource';
+  readonly type: TModelType['type'];
+  readonly relation: string;
+  id: string;
+  queryParams?: IRequestOptions['queryParams'];
+}
 ```
 
 ## useDatxInfinite
+
+For fetching paginated data. It uses `useSWRInfinite` internally so all the options from the [documentation](https://swr.vercel.app/docs/pagination#useswrinfinite) can be applied to `useDatxInfinite`.
 
 ```ts
 const getPageExpression = (index: number, size = 10) => ({
@@ -108,16 +120,16 @@ const getKey = (pageIndex: number, previousPageData: CollectionResponse) => {
   return getPageExpression(pageIndex);
 };
 
-const = useDatx(getKey, config);
+const = useDatxInfinite(getKey, config);
 ```
 
 Second parameter of `useDatxInfinite` is for passing config options. It extends default SWRInfinite config prop with additional `networkConfig` property useful for passing custom headers.
 
 > Core expression should always be a `getMany` operation.
 
-## useMutation (deprecated)
+## useMutation
 
-A hook for remote mutations
+A hook for remote mutations.
 This is a helper hook until [this](https://github.com/vercel/swr/pull/1450) is merged to SWR core!
 
 ```tsx
