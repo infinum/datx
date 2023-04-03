@@ -119,7 +119,7 @@ const getKey = (pageIndex: number, previousPageData: CollectionResponse) => {
   return getPageExpression(pageIndex);
 };
 
-const datx = useDatxInfinite(getKey, config);
+const { data: responses, error, size, setSize } = useDatxInfinite(getKey, config);
 ```
 
 Second parameter of `useDatxInfinite` is for passing config options. It extends default SWRInfinite config prop with additional `networkConfig` property useful for passing custom headers.

@@ -48,7 +48,7 @@ Second parameter of `useDatx` is for passing config options. It extends default 
 
 ### Expression signature
 
-Currently, we support 3 expressions for fetching resources `getOne`, `getMany`, `getAll` and `getRelatedResource`.
+Currently, we support 4 expressions for fetching resources `getOne`, `getMany`, `getAll` and `getRelatedResource`.
 
 ```ts
 // fetch single resource by id
@@ -120,7 +120,7 @@ const getKey = (pageIndex: number, previousPageData: CollectionResponse) => {
   return getPageExpression(pageIndex);
 };
 
-const = useDatxInfinite(getKey, config);
+const { data: responses, error, size, setSize } = useDatxInfinite(getKey, config);
 ```
 
 Second parameter of `useDatxInfinite` is for passing config options. It extends default SWRInfinite config prop with additional `networkConfig` property useful for passing custom headers.
