@@ -48,7 +48,7 @@ Second parameter of `useDatx` is for passing config options. It extends default 
 
 ### Expression signature
 
-Currently, we support 3 expressions for fetching resources `getOne`, `getMany`, `getAll`, `get.
+Currently, we support 3 expressions for fetching resources `getOne`, `getMany`, `getAll` and `getRelatedResource`.
 
 ```ts
 // fetch single resource by id
