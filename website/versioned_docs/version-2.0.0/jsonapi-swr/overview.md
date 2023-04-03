@@ -172,7 +172,7 @@ export const todosQuery = {
 } as const satisfies IGetManyExpression<typeof Todo>;
 ```
 
-With TS v5 using `satisfies` keyword:
+If your project uses TypeScript 4.9 or newer you can use `satisfies` to limit the type:
 
 ```ts
 import { Todo } from '../../../models/Todo';
