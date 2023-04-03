@@ -215,7 +215,6 @@ const { data: todo } = useDatx(getTodoByUserQuery(user));
 
 Query can be a static object or a function. Both cases should be suffixed with `query` to make it clear that it's a query.
 If you use a function, it's recommended to add `get` prefix to indicate that it's a getter.
-Query could also be lazy initializer function that returns a query. In this case it's recommended to use `get` prefix as well.
 
 > Rule of thumb is to use `get` prefix if query depends on some other data. 
 
@@ -238,16 +237,6 @@ const getTodoQuery = (id?: string) =>
       } as const satisfies IGetOneExpression<typeof Todo>)
     : null;
 
-// single item lazy query, a.k.a currying
-const getTodoQuery = (id?: string) => () =>
-  id
-    ? ({
-        id,
-        op: 'getOne',
-        type: 'todos',
-      } as const satisfies IGetOneExpression<typeof Todo>)
-    : null;
-
 // related query through primary resource
 const getPostCommentsRelationshipQuery = (postId?: string) =>
   postId
@@ -259,8 +248,16 @@ const getPostCommentsRelationshipQuery = (postId?: string) =>
       } as const satisfies IGetRelationshipExpression<typeof Post>)
     : null;
 
-// related query through primary resource lazy query
-const getPostCommentsRelationshipQuery = (postId?: string) => () =>
+```
+
+### Conditional data fetching
+
+Datx SWR supports concept of lazy initializer function. It's a function that returns a query or `null` if query should not be executed.
+
+Lazy initializer function is SWR concept used for conditional fetching. You can find more details in [SWR Conditional Fetching](https://swr.vercel.app/docs/conditional-fetching) documentation.
+
+```ts
+const getPostCommentsRelationshipQuery = (postId?: string) =>
   postId
     ? ({
         id: postId,
@@ -269,6 +266,24 @@ const getPostCommentsRelationshipQuery = (postId?: string) => () =>
         type: 'posts',
       } as const satisfies IGetRelationshipExpression<typeof Post>)
     : null;
+
+const { data: post } = useDatx(getPost(postId));
+const { data: comments } = useDatx(() => getPostCommentsRelationshipQuery(postId));
+
+```
+
+I can also throw an error if some property is not defined.
+
+```ts
+const getTodoByUserQuery = (user: User) =>
+  ({
+    id: user.todo.id, // if user is not defined this will throw an error
+    op: 'getOne',
+    type: 'todos',
+  } as const satisfies IGetOneExpression<typeof Todo>);
+
+const { data: user } = useDatx(getUserQuery(id));
+const { data: todo } = useDatx(() => getTodoByUserQuery(user)); // it will not fetch the data if user is not defined
 ```
 
 ### Define mutations
