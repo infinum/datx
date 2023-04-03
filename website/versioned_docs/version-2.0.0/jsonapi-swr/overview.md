@@ -161,17 +161,6 @@ export const todosQuery = {
 
 > It's important to use `as const` assertion. It tells the compiler to infer the narrowest or most specific type it can for an expression. If you leave it off, the compiler will use its default type inference behavior, which will possibly result in a wider or more general type.
 
-With TS v5 using `satisfies` keyword:
-
-```ts
-import { Todo } from '../../../models/Todo';
-
-export const todosQuery = {
-  op: 'getMany',
-  type: 'todos',
-} as const satisfies IGetManyExpression<typeof Todo>;
-```
-
 If your project uses TypeScript 4.9 or newer you can use `satisfies` to limit the type:
 
 ```ts
