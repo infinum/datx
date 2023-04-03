@@ -213,10 +213,13 @@ const { data: todo } = useDatx(getTodoByUserQuery(user));
 
 ### Query naming convention
 
-Query can be a variable or a function. Both cases should be suffixed with `query` to make it clear that it's a query.
+Query can be a static object or a function. Both cases should be suffixed with `query` to make it clear that it's a query.
 If you use a function, it's recommended to add `get` prefix to indicate that it's a getter.
+Query could also be lazy initializer function that returns a query. In this case it's recommended to use `get` prefix as well.
 
 > Rule of thumb is to use `get` prefix if query depends on some other data. 
+
+> Lazy initializer function is SWR concept used for conditional fetching. You can find more details in [SWR Conditional Fetching](https://swr.vercel.app/docs/conditional-fetching) documentation.
 
 ```ts
 // collection query
