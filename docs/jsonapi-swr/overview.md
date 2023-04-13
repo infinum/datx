@@ -201,10 +201,10 @@ const getPostCommentsRelationshipQuery = (postId?: string) =>
   postId
     ? ({
         id: postId,
-        op: 'getRelationship',
+        op: 'getRelatedResources',
         relationship: 'comments',
         type: 'posts',
-      } as const satisfies IGetRelationshipExpression<typeof Post>)
+      } as const satisfies IGetRelatedResourcesExpression<typeof Post>)
     : null;
 
 ```
@@ -241,10 +241,10 @@ const getPostCommentsRelationshipQuery = (postId?: string) =>
   postId
     ? ({
         id: postId,
-        op: 'getRelationship',
+        op: 'getRelatedResources',
         relationship: 'comments',
         type: 'posts',
-      } as const satisfies IGetRelationshipExpression<typeof Post>)
+      } as const satisfies IGetRelatedResourcesExpression<typeof Post>)
     : null;
 
 const { data: post } = useDatx(getPost(postId));
