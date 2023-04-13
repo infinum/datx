@@ -48,7 +48,7 @@ Second parameter of `useDatx` is for passing config options. It extends default 
 
 ### Expression signature
 
-Currently, we support 4 expressions for fetching resources `getOne`, `getMany`, `getAll` and `getRelatedResource`.
+Currently, we support 5 expressions for fetching resources `getOne`, `getMany`, `getAll`, `getRelatedResource` and `getRelatedResources`.
 
 ```ts
 // fetch single resource by id
@@ -74,7 +74,7 @@ export interface IGetAllExpression<TModel extends JsonapiModelType = JsonapiMode
   maxRequests?: number | undefined;
 }
 
-// fetch related resource through the primary resource
+// fetch single related resource through the primary resource
 export interface IGetRelatedResourceExpression<
   TModelType extends JsonapiModelType = JsonapiModelType,
 > {
@@ -83,6 +83,17 @@ export interface IGetRelatedResourceExpression<
   readonly relation: string;
   id: string;
   queryParams?: IRequestOptions['queryParams'];
+}
+
+// fetch a collection of related resources through the primary resource
+export interface IGetRelatedResourcesExpression<
+    TModelType extends JsonapiModelType = JsonapiModelType
+> {
+    readonly op: 'getRelatedResources';
+    readonly type: TModelType['type'];
+    readonly relation: string;
+    id: string;
+    queryParams?: IRequestOptions['queryParams'];
 }
 ```
 
