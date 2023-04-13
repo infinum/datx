@@ -90,8 +90,7 @@ Otherwise, your response to a request might include sensitive cached query resul
 </code></pre>
 <p>Second parameter of <code>useDatx</code> is for passing config options. It extends default SWR config prop with additional <code>networkConfig</code> property useful for passing custom headers.</p>
 <h3><a class="anchor" aria-hidden="true" id="expression-signature"></a><a href="#expression-signature" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Expression signature</h3>
-<p>Currently we support 3 expressions for fetching resources <code>getOne</code>, <code>getMany</code> and <code>getAll</code>.
-Future plan is to support generic <code>request</code> operation and <code>getRelated</code>.</p>
+<p>Currently, we support 5 expressions for fetching resources <code>getOne</code>, <code>getMany</code>, <code>getAll</code>, <code>getRelatedResource</code> and <code>getRelatedResources</code>.</p>
 <pre><code class="hljs css language-ts"><span class="hljs-comment">// fetch single resource by id</span>
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IGetOneExpression&lt;TModel <span class="hljs-keyword">extends</span> JsonapiModelType = JsonapiModelType&gt; {
   readonly op: <span class="hljs-string">'getOne'</span>;
@@ -114,8 +113,31 @@ Future plan is to support generic <code>request</code> operation and <code>getRe
   queryParams?: IRequestOptions[<span class="hljs-string">'queryParams'</span>];
   maxRequests?: <span class="hljs-built_in">number</span> | <span class="hljs-literal">undefined</span>;
 }
+
+<span class="hljs-comment">// fetch single related resource through the primary resource</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IGetRelatedResourceExpression&lt;
+  TModelType <span class="hljs-keyword">extends</span> JsonapiModelType = JsonapiModelType,
+&gt; {
+  readonly op: <span class="hljs-string">'getRelatedResource'</span>;
+  readonly <span class="hljs-keyword">type</span>: TModelType[<span class="hljs-string">'type'</span>];
+  readonly relation: <span class="hljs-built_in">string</span>;
+  id: <span class="hljs-built_in">string</span>;
+  queryParams?: IRequestOptions[<span class="hljs-string">'queryParams'</span>];
+}
+
+<span class="hljs-comment">// fetch a collection of related resources through the primary resource</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IGetRelatedResourcesExpression&lt;
+    TModelType <span class="hljs-keyword">extends</span> JsonapiModelType = JsonapiModelType
+&gt; {
+    readonly op: <span class="hljs-string">'getRelatedResources'</span>;
+    readonly <span class="hljs-keyword">type</span>: TModelType[<span class="hljs-string">'type'</span>];
+    readonly relation: <span class="hljs-built_in">string</span>;
+    id: <span class="hljs-built_in">string</span>;
+    queryParams?: IRequestOptions[<span class="hljs-string">'queryParams'</span>];
+}
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="usedatxinfinite"></a><a href="#usedatxinfinite" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>useDatxInfinite</h2>
+<p>For fetching paginated data. It uses <code>useSWRInfinite</code> internally so all the options from the <a href="https://swr.vercel.app/docs/pagination#useswrinfinite">documentation</a> can be applied to <code>useDatxInfinite</code>.</p>
 <pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> getPageExpression = <span class="hljs-function">(<span class="hljs-params">index: <span class="hljs-built_in">number</span>, size = 10</span>) =&gt;</span> ({
   op: <span class="hljs-string">'getMany'</span>,
   <span class="hljs-keyword">type</span>: <span class="hljs-string">'todos'</span>,
@@ -145,14 +167,14 @@ Future plan is to support generic <code>request</code> operation and <code>getRe
   <span class="hljs-keyword">return</span> getPageExpression(pageIndex);
 };
 
-<span class="hljs-keyword">const</span> = useDatx(getKey, config);
+<span class="hljs-keyword">const</span> { data: responses, error, size, setSize } = useDatxInfinite(getKey, config);
 </code></pre>
 <p>Second parameter of <code>useDatxInfinite</code> is for passing config options. It extends default SWRInfinite config prop with additional <code>networkConfig</code> property useful for passing custom headers.</p>
 <blockquote>
 <p>Core expression should always be a <code>getMany</code> operation.</p>
 </blockquote>
-<h2><a class="anchor" aria-hidden="true" id="usemutation-deprecated"></a><a href="#usemutation-deprecated" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>useMutation (deprecated)</h2>
-<p>A hook for remote mutations
+<h2><a class="anchor" aria-hidden="true" id="usemutation"></a><a href="#usemutation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>useMutation</h2>
+<p>A hook for remote mutations.
 This is a helper hook until <a href="https://github.com/vercel/swr/pull/1450">this</a> is merged to SWR core!</p>
 <pre><code class="hljs css language-tsx"><span class="hljs-comment">// ./src/queries/todo.ts</span>
 
@@ -218,7 +240,7 @@ const todo = await client.fetchQuery(todosQuery);
 
 &lt;Hydrate fallback=<span class="hljs-comment">{fallback}</span> /&gt;
 </code></pre>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 3/30/2023 by Kristian Djaković</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/jsonapi-swr/overview"><span class="arrow-prev">← </span><span class="function-name-prevnext">useDatx</span></a><a class="docs-next button" href="/docs/next/migration-guide/breaking-changes"><span>Breaking changes since v1</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#useinitialize">useInitialize</a></li><li><a href="#useclient">useClient</a></li><li><a href="#usedatx">useDatx</a><ul class="toc-headings"><li><a href="#expression-signature">Expression signature</a></li></ul></li><li><a href="#usedatxinfinite">useDatxInfinite</a></li><li><a href="#usemutation-deprecated">useMutation (deprecated)</a></li><li><a href="#utils">Utils</a><ul class="toc-headings"><li><a href="#swr-client">SWR Client</a></li><li><a href="#hydrate">hydrate</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 4/13/2023 by Ivica Batinić</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/jsonapi-swr/overview"><span class="arrow-prev">← </span><span class="function-name-prevnext">useDatx</span></a><a class="docs-next button" href="/docs/next/migration-guide/breaking-changes"><span>Breaking changes since v1</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#useinitialize">useInitialize</a></li><li><a href="#useclient">useClient</a></li><li><a href="#usedatx">useDatx</a><ul class="toc-headings"><li><a href="#expression-signature">Expression signature</a></li></ul></li><li><a href="#usedatxinfinite">useDatxInfinite</a></li><li><a href="#usemutation">useMutation</a></li><li><a href="#utils">Utils</a><ul class="toc-headings"><li><a href="#swr-client">SWR Client</a></li><li><a href="#hydrate">hydrate</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
                 document.addEventListener('keyup', function(e) {
                   if (e.target !== document.body) {
                     return;
