@@ -138,8 +138,6 @@ export class Todo extends jsonapiModel(PureModel) {
 Using expression types (Preferred):
 
 ```ts
-// src/components/features/todos/Todos.queries.ts
-
 import { IGetManyExpression } from '@datx/swr';
 
 import { Todo } from '../../../models/Todo';
@@ -153,8 +151,6 @@ export const todosQuery: IGetManyExpression<typeof Todo> = {
 Using `as const`:
 
 ```ts
-// src/components/features/todos/Todos.queries.ts
-
 import { Todo } from '../../../models/Todo';
 
 export const todosQuery = {
@@ -163,13 +159,11 @@ export const todosQuery = {
 } as const;
 ```
 
+> It's important to use `as const` assertion. It tells the compiler to infer the narrowest or most specific type it can for an expression. If you leave it off, the compiler will use its default type inference behavior, which will possibly result in a wider or more general type.
+
 If your project uses TypeScript 4.9 or newer you can use `satisfies` to limit the type:
 
 ```ts
-// src/components/features/todos/Todos.queries.ts
-
-import { IGetManyExpression } from '@datx/swr';
-
 import { Todo } from '../../../models/Todo';
 
 export const todosQuery = {
@@ -178,45 +172,109 @@ export const todosQuery = {
 } as const satisfies IGetManyExpression<typeof Todo>;
 ```
 
-> It's important to use `as const` assertion. It tells the compiler to infer the narrowest or most specific type it can for an expression. If you leave it off, the compiler will use its default type inference behavior, which will possibly result in a wider or more general type.
+### Query naming convention
+
+Query can be a static object or a function. Both cases should be suffixed with `query` to make it clear that it's a query.
+If you use a function, it's recommended to add `get` prefix to indicate that it's a getter.
+
+> Rule of thumb is to use `get` prefix if query depends on some other data. 
+
+> Lazy initializer function is SWR concept used for conditional fetching. You can find more details in [SWR Conditional Fetching](https://swr.vercel.app/docs/conditional-fetching) documentation.
+
+```ts
+// collection query
+const todosQuery = {
+  op: 'getMany',
+  type: 'todos',
+} as const;
+
+// single item query
+const getTodoQuery = (id?: string) =>
+  id
+    ? ({
+        id,
+        op: 'getOne',
+        type: 'todos',
+      } as const satisfies IGetOneExpression<typeof Todo>)
+    : null;
+
+// related query through primary resource
+const getPostCommentsRelationshipQuery = (postId?: string) =>
+  postId
+    ? ({
+        id: postId,
+        op: 'getRelatedResources',
+        relationship: 'comments',
+        type: 'posts',
+      } as const satisfies IGetRelatedResourcesExpression<typeof Post>)
+    : null;
+
+```
 
 ### Conditional data fetching
 
-```tsx
-// conditionally fetch
-export const getTodoQuery = (id?: string) =>
+Datx SWR supports concept of lazy initializer function. It's a function that returns a query or `null` if query should not be executed.
+
+Lazy initializer function is SWR concept used for conditional fetching. You can find more details in [SWR Conditional Fetching](https://swr.vercel.app/docs/conditional-fetching) documentation.
+
+#### Simple conditionally fetch
+
+```ts
+const { data: post } = useDatx(id ? {
+  id,
+  op: 'getOne',
+  type: 'posts',
+} : null);
+```
+
+#### Lazy initializer function which returns falsy value
+
+```ts
+const getPost = (id?: string) =>
   id
     ? ({
         id,
         op: 'getOne',
-        type: 'todos',
-      } as IGetOneExpression<typeof Todo>)
+        type: 'posts',
+      } as const satisfies IGetOneExpression<typeof Post>)
     : null;
 
-const { data, error } = useDatx(getTodoQuery(id));
+const getPostCommentsRelationshipQuery = (postId?: string) =>
+  postId
+    ? ({
+        id: postId,
+        op: 'getRelatedResources',
+        relationship: 'comments',
+        type: 'posts',
+      } as const satisfies IGetRelatedResourcesExpression<typeof Post>)
+    : null;
 
-// ...or return a falsy value, a.k.a currying
-export const getTodoQuery = (id?: string) => () =>
+const { data: post } = useDatx(getPost(postId));
+const { data: comments } = useDatx(() => getPostCommentsRelationshipQuery(postId));
+
+```
+
+#### Lazy initializer function which throws an error if some property is not defined
+
+```ts
+const getPost = (id?: string) =>
   id
     ? ({
         id,
         op: 'getOne',
-        type: 'todos',
-      } as IGetOneExpression<typeof Todo>)
+        type: 'posts',
+      } as const satisfies IGetOneExpression<typeof Post>)
     : null;
 
-const { data, error } = useDatx(getTodoQuery(id));
-
-// ...or throw an error when property is not defined
-export const getTodoByUserQuery = (user?: User) => () =>
+const getTodoByUserQuery = (user: User) =>
   ({
     id: user.todo.id, // if user is not defined this will throw an error
     op: 'getOne',
     type: 'todos',
-  } as IGetOneExpression<typeof Todo>);
+  } as const satisfies IGetOneExpression<typeof Todo>);
 
 const { data: user } = useDatx(getUserQuery(id));
-const { data: todo } = useDatx(getTodoByUserQuery(user));
+const { data: todo } = useDatx(() => getTodoByUserQuery(user)); // it will not fetch the data if user is not defined
 ```
 
 ### Define mutations
@@ -321,3 +379,29 @@ export const Todos: FC = () => {
   );
 };
 ```
+
+## Disable Mobx in Next.js projects
+
+Since we don't want to use Mobx, we need to add a little boilerplate to work around that. First, we need to instruct DatX not to use Mobx, by adding `@datx/core/disable-mobx` before App bootstrap:
+
+```tsx
+// src/pages/_app.tsx
+
+import '@datx/core/disable-mobx';
+```
+
+Next, we need to overwrite Mobx path so that it can be resolved by Datx:
+
+```json
+// /tsconfig.json
+
+{
+  "compilerOptions": {
+    "paths": {
+      "mobx": ["./mobx.js"]
+    }
+  }
+}
+```
+
+> `./mobx.js` is an empty file!
