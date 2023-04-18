@@ -10,6 +10,7 @@ import {
   IGetRelatedResourcesExpression,
 } from './interfaces/QueryExpression';
 import { CollectionResponse, SingleResponse } from './Response';
+import { ILinkObject } from '@datx/jsonapi/dist/interfaces/JsonApi';
 
 function isGetOne(expression: FetcherExpressionArgument): expression is IGetOneExpression {
   return expression.op === 'getOne';
@@ -33,6 +34,14 @@ function isGetRelatedResources(
   expression: FetcherExpressionArgument,
 ): expression is IGetRelatedResourcesExpression {
   return expression.op === 'getRelatedResources';
+}
+
+function isLink(expression: FetcherExpressionArgument): expression is string {
+  return typeof expression === 'string';
+}
+
+function isLinkObject(expression: FetcherExpressionArgument): expression is ILinkObject {
+  return typeof expression.href !== 'undefined';
 }
 
 export const createFetcher =
@@ -121,6 +130,18 @@ export const createFetcher =
           Response: CollectionResponse,
         },
       }) as Promise<CollectionResponse<IJsonapiModel>>;
+    }
+
+    if (isLink(expression)) {
+      return client.request(expression, undefined, undefined, {
+        networkConfig,
+      });
+    }
+
+    if (isLinkObject(expression)) {
+      return client.request(expression.href, undefined, undefined, {
+        networkConfig,
+      });
     }
 
     throw new Error('Invalid expression operation!');

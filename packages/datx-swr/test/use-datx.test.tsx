@@ -96,4 +96,28 @@ describe('useDatx', () => {
 
     await screen.findByText(todosErrorDetails);
   });
+
+  describe('query URL', () => {
+    it('should allow using relative url strings instead of expressions', async () => {
+      const Test = () => {
+        const { data: response, error } = useDatx('todos/1');
+
+        if (error) {
+          return <div>{getErrorMessage(error)}</div>;
+        }
+
+        if (!response) {
+          return <div>{loadingMessage}</div>;
+        }
+
+        return <div>{response.data.name}</div>;
+      };
+
+      renderWithConfig(<Test />);
+
+      screen.getByText(loadingMessage);
+
+      await screen.findByText(name);
+    });
+  });
 });

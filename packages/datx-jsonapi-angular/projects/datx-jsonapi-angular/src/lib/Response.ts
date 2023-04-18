@@ -1,9 +1,8 @@
-import { fetchLink, IResponseSnapshot, Response as PromiseResponse } from '@datx/jsonapi';
+import { fetchLink, ILink, IResponseSnapshot, Response as PromiseResponse } from '@datx/jsonapi';
 import { Observable } from 'rxjs';
 import { observableWrapper } from './helpers/wrapper';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 
-type ILink = string | { href: string; meta: Record<string, any> };
 type IAsync<T extends IJsonapiModel> = Observable<Response<T>>;
 
 export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseResponse<
