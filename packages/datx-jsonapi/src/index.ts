@@ -33,6 +33,17 @@ export { IRequestOptions } from './interfaces/IRequestOptions';
 export { IResponseSnapshot } from './interfaces/IResponseSnapshot';
 export { IResponse } from './interfaces/IResponse';
 
+export {
+  /**
+   * @deprecated import directly form `@datx/jsonapi-types`. Will be removed in v3
+   */
+  IRecord,
+  /**
+   * @deprecated import directly form `@datx/jsonapi-types`. Will be removed in v3
+   */
+  IDefinition,
+} from '@datx/jsonapi-types';
+
 export { config, fetchLink, IConfigType } from './NetworkUtils';
 
 export {
