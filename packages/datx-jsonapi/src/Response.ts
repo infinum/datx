@@ -9,12 +9,12 @@ import {
   View,
 } from '@datx/core';
 import { assignComputed, Headers, IResponseHeaders } from '@datx/utils';
+import type { IError, IJsonApiObject, ILink } from '@datx/jsonapi-types';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IError, IJsonApiObject, ILink } from './interfaces/JsonApi';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 
 import { GenericModel } from './GenericModel';

@@ -31,7 +31,7 @@ export { IJsonapiView } from './interfaces/IJsonapiView';
 export { IRawResponse } from './interfaces/IRawResponse';
 export { IRequestOptions } from './interfaces/IRequestOptions';
 export { IResponseSnapshot } from './interfaces/IResponseSnapshot';
-export { IResponse, IRecord, IDefinition } from './interfaces/JsonApi';
+export { IResponse } from './interfaces/IResponse';
 
 export { config, fetchLink, IConfigType } from './NetworkUtils';
 

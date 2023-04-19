@@ -1,5 +1,6 @@
 import { View, commitModel } from '@datx/core';
 import { setMeta, mobx, IResponseHeaders } from '@datx/utils';
+import { ILink } from '@datx/jsonapi-types';
 
 import {
   MODEL_PERSISTED_FIELD,
@@ -14,7 +15,7 @@ import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { ILink, IResponse } from './interfaces/JsonApi';
+import { IResponse } from './interfaces/IResponse';
 import { Response as LibResponse } from './Response';
 import { CachingStrategy, ParamArrayType } from '@datx/network';
 import { saveCache, getCache } from './cache';

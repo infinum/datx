@@ -226,7 +226,7 @@ describe('Network basics', () => {
       expect(events.links).toBeInstanceOf(Object);
       if (events.links instanceof Object && typeof events.links.next === 'object') {
         expect(events.links.next.href).toBe('https://example.com/event?page=2');
-        expect(events.links.next.meta.foo).toBe('bar');
+        expect(events.links.next.meta?.foo).toBe('bar');
       }
     }
 

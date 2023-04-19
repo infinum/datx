@@ -14,7 +14,7 @@ import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IJsonapiView } from './interfaces/IJsonapiView';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IResponse } from './interfaces/JsonApi';
+import { IResponse } from './interfaces/IResponse';
 import { Response } from './Response';
 
 export function decorateView<U>(
