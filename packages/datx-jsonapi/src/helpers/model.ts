@@ -13,6 +13,7 @@ import {
   IModelConstructor,
 } from '@datx/core';
 import { getMeta, getMetaObj, IRawModel, mapItems, META_FIELD, setMeta } from '@datx/utils';
+import { IDefinition, ILink, IRecord, IRelationship } from '@datx/jsonapi-types';
 
 import { clearCacheByType } from '../cache';
 import {
@@ -28,7 +29,6 @@ import {
 import { IJsonapiCollection } from '../interfaces/IJsonapiCollection';
 import { IJsonapiModel } from '../interfaces/IJsonapiModel';
 import { IRequestOptions } from '../interfaces/IRequestOptions';
-import { IDefinition, ILink, IRecord, IRelationship } from '../interfaces/JsonApi';
 import { config, create, fetchLink, handleResponse, put, remove, update } from '../NetworkUtils';
 import { Response } from '../Response';
 import { prepareQuery } from './url';
@@ -329,7 +329,7 @@ export function saveRelationship<T extends IJsonapiModel>(
 ): Promise<T> {
   const collection = getModelCollection(model) as unknown as IJsonapiCollection;
   const link = getLink(model, ref, 'self');
-  const href: string = typeof link === 'object' ? link.href : link;
+  const href = (typeof link === 'object' ? link?.href : link) || '';
 
   const modelRefs = getRefId(model, ref);
   const fields: IFieldDefinition = getMeta<IFieldDefinition>(model, 'fields')?.[ref];

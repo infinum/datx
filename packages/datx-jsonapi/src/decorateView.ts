@@ -6,6 +6,7 @@ import {
   PureModel,
   View,
 } from '@datx/core';
+import type { IResponse } from '@datx/jsonapi-types';
 import { DATX_JSONAPI_CLASS } from './consts';
 import { getAllResponses } from './helpers/utils';
 import { IGetAllResponse } from './interfaces/IGetAllResponse';
@@ -14,7 +15,6 @@ import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IJsonapiView } from './interfaces/IJsonapiView';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IResponse } from './interfaces/JsonApi';
 import { Response } from './Response';
 
 export function decorateView<U>(

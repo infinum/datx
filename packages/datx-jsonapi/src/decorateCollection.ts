@@ -14,6 +14,7 @@ import {
   commitModel,
 } from '@datx/core';
 import { getMeta, IRawModel, mapItems, deprecated, isArrayLike } from '@datx/utils';
+import type { IDefinition, IRecord, IRelationship, IResponse } from '@datx/jsonapi-types';
 
 import {
   clearAllCache,
@@ -30,7 +31,7 @@ import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IDefinition, IRecord, IRelationship, IRequest, IResponse } from './interfaces/JsonApi';
+import { IRequest } from './interfaces/IRequest';
 import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
 import { CachingStrategy } from '@datx/network';

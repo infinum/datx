@@ -24,6 +24,7 @@
   "dependencies": {
     "@infinumjs/eslint-config-core-ts": "^3.3.1",
     "@manypkg/cli": "^0.19.2",
+    "@nrwl/cli": "^15.9.2",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "eslint": "^8.17.0",

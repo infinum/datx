@@ -1,9 +1,9 @@
 import { View, PureCollection } from '@datx/core';
 import { Response as BaseResponse, IResponseObject } from '@datx/network';
 import { assignComputed } from '@datx/utils';
+import { IJsonApiObject, ILink } from '@datx/jsonapi-types';
 
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
-import { IJsonApiObject, ILink } from './interfaces/JsonApi';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 
 import { fetchLink } from './NetworkUtils';
