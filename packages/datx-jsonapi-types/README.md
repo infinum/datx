@@ -14,7 +14,6 @@ Check out the [documentation](https://datx.dev/docs/jsonapi-types/overview) for 
 
 ## Troubleshooting
 
-
 Having issues with the library? Check out the [troubleshooting](https://datx.dev/docs/troubleshooting/known-issues) page or [open](https://github.com/infinum/datx/issues/new/choose) an issue.
 
 ## License
