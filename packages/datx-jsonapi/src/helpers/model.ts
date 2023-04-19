@@ -329,7 +329,7 @@ export function saveRelationship<T extends IJsonapiModel>(
 ): Promise<T> {
   const collection = getModelCollection(model) as unknown as IJsonapiCollection;
   const link = getLink(model, ref, 'self');
-  const href: string = typeof link === 'object' ? link.href : link;
+  const href = (typeof link === 'object' ? link?.href : link) || '';
 
   const modelRefs = getRefId(model, ref);
   const fields: IFieldDefinition = getMeta<IFieldDefinition>(model, 'fields')?.[ref];
