@@ -31,15 +31,18 @@ export { IJsonapiView } from './interfaces/IJsonapiView';
 export { IRawResponse } from './interfaces/IRawResponse';
 export { IRequestOptions } from './interfaces/IRequestOptions';
 export { IResponseSnapshot } from './interfaces/IResponseSnapshot';
-export { IResponse } from './interfaces/IResponse';
 
 export {
   /**
-   * @deprecated import directly form `@datx/jsonapi-types`. Will be removed in v3
+   * @deprecated import directly form `@datx/jsonapi-types`. Will be removed in v3 and renamed to `IResourceObject`
    */
   IRecord,
   /**
-   * @deprecated import directly form `@datx/jsonapi-types`. Will be removed in v3
+   * @deprecated import directly form `@datx/jsonapi-types`. Will be removed in v3 and renamed to `IDocument`
+   */
+  IResponse,
+  /**
+   * @deprecated import directly form `@datx/jsonapi-types`. Will be removed in v3 and renamed to `IResourceIdentifierObject`
    */
   IDefinition,
 } from '@datx/jsonapi-types';

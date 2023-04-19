@@ -1,10 +1,10 @@
 import { IModelConstructor, IType, PureCollection, PureModel } from '@datx/core';
+import { IResponse } from '@datx/jsonapi-types';
 
 import { Response } from '../Response';
 import { IGetAllResponse } from './IGetAllResponse';
 import { IJsonapiModel } from './IJsonapiModel';
 import { IRequestOptions } from './IRequestOptions';
-import { IResponse } from './IResponse';
 
 export interface IJsonapiCollection extends PureCollection {
   sync<T extends IJsonapiModel = IJsonapiModel>(body?: IResponse): T | Array<T> | null;

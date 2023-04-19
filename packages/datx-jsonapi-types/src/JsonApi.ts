@@ -265,3 +265,24 @@ export interface IResourceObject extends IResourceIdentifierObject {
    */
   meta?: IMeta;
 }
+
+/**
+ * @deprecated renamed to IDocument
+ */
+export type IResponse = IDocument;
+
+/**
+ * A top level object in a JSON API document.
+ *
+ * @docs https://jsonapi.org/format/#document-top-level
+ */
+export interface IDocument {
+  data?: IResourceObject | Array<IResourceObject>;
+  errors?: Array<IError>;
+
+  included?: Array<IRecord>;
+
+  meta?: IMeta;
+  links?: Record<string, ILink>;
+  jsonapi?: IJsonApiObject;
+}
