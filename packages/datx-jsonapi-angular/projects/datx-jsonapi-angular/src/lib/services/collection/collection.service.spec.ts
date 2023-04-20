@@ -1,10 +1,11 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { Attribute, Collection, Model } from '@datx/core';
 import { IRequestOptions } from '@datx/jsonapi';
 import { of } from 'rxjs';
-import { APP_COLLECTION } from '../../injection-tokens';
-import { jsonapiAngular } from '../../mixin';
 import { Response } from '../../Response';
+import { APP_COLLECTION, DATX_CONFIG } from '../../injection-tokens';
+import { jsonapiAngular } from '../../mixin';
 import { CollectionService } from './collection.service';
 
 export class User extends jsonapiAngular(Model) {
@@ -22,10 +23,6 @@ class AppCollection extends jsonapiAngular(Collection) {
 @Injectable()
 class TestModelService extends CollectionService<User, AppCollection> {
   protected ctor = User;
-
-  constructor(@Inject(APP_COLLECTION) protected readonly collection: AppCollection) {
-    super(collection);
-  }
 }
 
 describe('CollectionService', () => {
@@ -33,8 +30,21 @@ describe('CollectionService', () => {
   let appCollection: AppCollection;
 
   beforeEach(() => {
-    appCollection = new AppCollection();
-    service = new TestModelService(appCollection);
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: DATX_CONFIG,
+          useValue: {},
+        },
+        {
+          provide: APP_COLLECTION,
+          useValue: new AppCollection(),
+        },
+        TestModelService,
+      ],
+    });
+    appCollection = TestBed.inject(APP_COLLECTION);
+    service = TestBed.inject(TestModelService);
 
     jest
       .spyOn(appCollection, 'getMany')

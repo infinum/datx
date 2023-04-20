@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 
-const packageJson = require('./package.json');
+const packageJson = require('./projects/datx-jsonapi-angular/package.json');
 const distPackageJson = require('./dist/package.json');
 
 // Update package version

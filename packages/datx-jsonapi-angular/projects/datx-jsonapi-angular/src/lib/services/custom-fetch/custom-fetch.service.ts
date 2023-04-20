@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { config, IRawResponse } from '@datx/jsonapi';
 import { IResponseHeaders } from '@datx/utils';
 import { Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-@Injectable()
 export class CustomFetchService {
   constructor(private readonly httpClient: HttpClient) {}
 

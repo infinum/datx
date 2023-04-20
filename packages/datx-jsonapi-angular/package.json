@@ -10,11 +10,6 @@
     "ts:check": "tsc --noEmit",
     "test:watch": "jest --watch --coverage"
   },
-  "peerDependencies": {
-    "@angular/common": ">=12",
-    "@angular/core": ">=12",
-    "rxjs": "6 || 7"
-  },
   "devDependencies": {
     "@angular-devkit/build-angular": "~14.1.3",
     "@angular/animations": "~14.1.2",
