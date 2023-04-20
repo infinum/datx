@@ -65,5 +65,8 @@
     "setupFilesAfterEnv": [
       "./test/setup.ts"
     ]
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
