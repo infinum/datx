@@ -1,5 +1,6 @@
 import { PureCollection, PureModel } from '@datx/core';
 import { IRawModel, META_FIELD, setMeta } from '@datx/utils';
+import { IRecord } from '@datx/jsonapi-types';
 
 import {
   DATX_JSONAPI_CLASS,
@@ -12,7 +13,6 @@ import {
 import { flattenModel, removeModel, saveModel } from './helpers/model';
 import { getModelClassRefs } from './helpers/utils';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IRecord } from './interfaces/JsonApi';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 
 const HYDRATIZATION_KEYS = [

@@ -5,7 +5,7 @@ import { IFilters } from '../interfaces/IFilters';
 import { IHeaders } from '../interfaces/IHeaders';
 import { IJsonapiModel } from '../interfaces/IJsonapiModel';
 import { IRequestOptions } from '../interfaces/IRequestOptions';
-import { IRequest } from '../interfaces/JsonApi';
+import { IRequest } from '../interfaces/IRequest';
 import { config } from '../NetworkUtils';
 import { ParamArrayType } from '@datx/network';
 

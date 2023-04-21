@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { IModelConstructor, IRawModel, IType } from '@datx/core';
-import { IRecord, IRequestOptions } from '@datx/jsonapi';
+import { IRequestOptions } from '@datx/jsonapi';
+import type { IRecord } from '@datx/jsonapi-types';
 import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { APP_COLLECTION } from '../../injection-tokens';
