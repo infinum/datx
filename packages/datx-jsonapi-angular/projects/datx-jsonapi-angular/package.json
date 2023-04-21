@@ -1,6 +1,6 @@
 {
   "name": "@datx/jsonapi-angular",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "DatX mixin for Angular JSON API support",
   "sideEffects": false,
   "repository": {

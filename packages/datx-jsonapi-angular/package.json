@@ -1,6 +1,6 @@
 {
   "name": "@datx/jsonapi-angular",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "scripts": {
     "ng": "ng",
     "build": "ng build datx-jsonapi-angular && npm run copy-license && npm run copy-readme && node ./prepublish.js",
@@ -9,6 +9,13 @@
     "test": "jest",
     "ts:check": "tsc --noEmit",
     "test:watch": "jest --watch --coverage"
+  },
+  "peerDependencies": {
+    "@datx/core": "2.5.1",
+    "@datx/jsonapi": "2.5.1",
+    "@datx/jsonapi-types": "2.5.1",
+    "@datx/network": "2.5.1",
+    "@datx/utils": "2.5.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~14.1.3",
