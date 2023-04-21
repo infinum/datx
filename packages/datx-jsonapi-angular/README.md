@@ -46,11 +46,8 @@ This step will become unnecessary in future versions of DatX.
 Create a collection and provide it under `APP_COLLECTION` token:
 
 ```ts title=src/app/collections/app.collection
-import { InjectionToken } from '@angular/core';
 import { Collection } from '@datx/core';
 import { jsonapiAngular } from '@datx/jsonapi-angular';
-
-export const APP_COLLECTION = new InjectionToken<AppCollection>('App collection');
 
 export class AppCollection extends jsonapiAngular(Collection) {
   public static readonly types = [...];
@@ -58,7 +55,8 @@ export class AppCollection extends jsonapiAngular(Collection) {
 ```
 
 ```ts title=src/app/app.module.ts
-import { AppCollection, APP_COLLECTION } from './collections/app.collection';
+import { APP_COLLECTION } from '@datx/jsonapi-angular';
+import { AppCollection } from './collections/app.collection';
 
 @NgModule({
   providers: [
@@ -76,8 +74,8 @@ export class AppModule {}
 Provide `DATX_CONFIG` with your own values for the config:
 
 ```ts title=src/app/app.module.ts
-import { DATX_CONFIG, setupDatx } from '@datx/jsonapi-angular';
-import { AppCollection, APP_COLLECTION } from '.collections/app.collection';
+import { APP_COLLECTION, DATX_CONFIG, setupDatx } from '@datx/jsonapi-angular';
+import { AppCollection } from '.collections/app.collection';
 
 @NgModule({
   provides: [
