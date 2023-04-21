@@ -8,7 +8,7 @@ original_id: angular-setup
 
 Steps:
 
-- (Optional) Disable MobX by importing `datx/disable-mobx` before any other datx imports
+- (Optional) Disable MobX by importing `@datx/core/disable-mobx` before any other datx imports
 - Install `datx-jsonapi` and `datx-jsonapi-angular`
 - [Setup your collection and models](./basic-setup), use [`jsonapiAngular` mixin](../jsonapi-angular/mixin.md) when setting them up
 

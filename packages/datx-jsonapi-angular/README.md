@@ -6,9 +6,44 @@ DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) 
 
 ---
 
-## Configuration
+## Installation
 
-First, create a collection and provide it under `APP_COLLECTION` token:
+```bash
+npm install @datx/jsonapi-angular
+```
+
+## Setup
+
+### Disable MobX
+
+Update `main.ts` and `test.ts` by adding this import:
+
+```ts title=src/main.ts | src/test.ts
+import '@datx/core/disable-mobx';
+```
+
+Update `tsconfig.json` mobx path:
+
+```json title=tsconfig.json
+{
+	"compilerOptions": {
+    ...
+		"paths": {
+			"mobx": ["./noop.js"],
+      ...
+		},
+    ...
+	}
+}
+```
+
+`noop.js` can be just an empty file.
+
+This step will become unnecessary in future versions of DatX.
+
+### Collection
+
+Create a collection and provide it under `APP_COLLECTION` token:
 
 ```ts title=src/app/collections/app.collection
 import { InjectionToken } from '@angular/core';
@@ -36,7 +71,9 @@ import { AppCollection, APP_COLLECTION } from './collections/app.collection';
 export class AppModule {}
 ```
 
-Next, provide `DATX_CONFIG` with your own values for the config:
+### Configure DatX
+
+Provide `DATX_CONFIG` with your own values for the config:
 
 ```ts title=src/app/app.module.ts
 import { DATX_CONFIG, setupDatx } from '@datx/jsonapi-angular';
