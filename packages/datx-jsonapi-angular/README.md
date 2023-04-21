@@ -1,64 +1,83 @@
 # @datx/jsonapi-angular
 
-
 DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
 
 `@datx/jsonapi-angular` is a datx mixin that adds [JSON API](https://jsonapi.org/) support for Angular applications.
 
 ---
 
-## Configuration
+## Installation
 
-Create a collection, provide it under `APP_COLLECTION` token, import `DatxModule` in your `AppModule` and configure it:
+```bash
+npm install @datx/jsonapi-angular
+```
 
-```ts
-import { InjectionToken } from '@angular/core';
+## Setup
+
+### Disable MobX
+
+Update `main.ts` and `test.ts` by adding this import:
+
+```ts title=src/main.ts | src/test.ts
+import '@datx/core/disable-mobx';
+```
+
+Update `tsconfig.json` mobx path:
+
+```json title=tsconfig.json
+{
+	"compilerOptions": {
+    ...
+		"paths": {
+			"mobx": ["./noop.js"],
+      ...
+		},
+    ...
+	}
+}
+```
+
+`noop.js` can be just an empty file.
+
+This step will become unnecessary in future versions of DatX.
+
+### Collection
+
+Create a collection and provide it under `APP_COLLECTION` token:
+
+```ts title=src/app/collections/app.collection
 import { Collection } from '@datx/core';
 import { jsonapiAngular } from '@datx/jsonapi-angular';
-
-export const APP_COLLECTION = new InjectionToken<AppCollection>('App collection');
 
 export class AppCollection extends jsonapiAngular(Collection) {
   public static readonly types = [...];
 }
 ```
 
-```ts
-import { NgModule } from '@angular/core';
-import { DatxModule } from '@datx/jsonapi-angular';
-import { AppCollection, APP_COLLECTION } from './collections/app.collection';
+```ts title=src/app/app.module.ts
+import { APP_COLLECTION } from '@datx/jsonapi-angular';
+import { AppCollection } from './collections/app.collection';
 
 @NgModule({
-  imports: [
-    DatxModule.forRoot({
-      baseUrl: 'https://my-api.com/'
-    })
-  ],
   providers: [
     {
       provide: APP_COLLECTION,
       useValue: new AppCollection(),
     },
-  ]
+  ],
 })
 export class AppModule {}
 ```
 
-You can also provide the config via DI if you need to set the config value based on data from some service:
+### Configure DatX
 
+Provide `DATX_CONFIG` with your own values for the config:
 
-```ts
-import { NgModule } from '@angular/core';
-import { DatxModule, DATX_CONFIG } from '@datx/jsonapi-angular';
-import { AppCollection, APP_COLLECTION } from './collections/app.collection';
-import { EnvironmentVariablesService } from './services/...';
+```ts title=src/app/app.module.ts
+import { APP_COLLECTION, DATX_CONFIG, setupDatx } from '@datx/jsonapi-angular';
+import { AppCollection } from '.collections/app.collection';
 
 @NgModule({
-  imports: [
-    DatxModule.forRoot({
-      cache: CachingStrategy.NetworkOnly,
-    })
-  ],
   provides: [
     {
       provide: APP_COLLECTION,
@@ -66,21 +85,17 @@ import { EnvironmentVariablesService } from './services/...';
     },
     {
       provide: DATX_CONFIG,
-      useFactory: (environmentVariablesService: EnvironmentVariablesService) => {
-        return {
-          baseUrl: environmentVariablesService.get('MY_API'),
-        };
+      useFactory: (httpClient: HttpClient) => {
+        return setupDatx(httpClient, {
+          baseUrl: '/api/v1/',
+        });
       },
-      deps: [EnvironmentVariablesService]
+      deps: [HttpClient],
     },
-  ]
+  ],
 })
 export class AppModule {}
 ```
-
-Config values passed via `forRoot` and via `DATX_CONFIG` and the default values will be merged together into a final configuration object. Values provided `DATX_CONFIG` DI token take precedence over values from `forRoot`, and default values have the lowest precedence.
-
-In the example above, the final config will use some default values, NetworkOnly caching option (as defined in `forRoot`) and whatever value `environmentVariablesService.get('MY_API')` returns for `baseUrl` (as defined in `DATX_CONFIG` provider).
 
 ## Basic usage example
 
@@ -101,7 +116,7 @@ Create specific domain models and add them to `types` in `AppCollection`
 
 ```ts
 import { Attribute } from '@datx/core';
-import { BaseModel } from './base-model';
+import { BaseModel } from 'src/app/base-model';
 
 export class Artist extends BaseModel {
   public static endpoint = 'artists';
@@ -129,10 +144,6 @@ import { CollectionService } from '@datx/jsonapi-angular';
 })
 export class ArtistsService extends CollectionService<Artist, AppCollection> {
   protected ctor = Artist;
-
-  constructor(@Inject(APP_COLLECTION) protected readonly collection: AppCollection) {
-    super(collection);
-  }
 }
 ```
 
