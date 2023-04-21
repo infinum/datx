@@ -60,6 +60,7 @@
       "migration-guide/whats-new",
       "migration-guide/from-v1"
     ],
+    "Testing": ["testing/test-data-factory"],
     "Troubleshooting": ["troubleshooting/known-issues"]
   },
   "examples": {
