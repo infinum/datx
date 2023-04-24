@@ -1,4 +1,4 @@
-import { IType, Model, prop } from '@datx/core';
+import { Field, IType, Model } from '@datx/core';
 import { mobx } from '@datx/utils';
 
 import { jsonapiModel } from '../../../src';
@@ -6,14 +6,14 @@ import { jsonapiModel } from '../../../src';
 export class User extends jsonapiModel(Model) {
   public static type: IType = 'user';
 
-  @prop
+  @Field()
   public firstName!: string;
 
-  @prop
+  @Field()
   public lastName!: string;
 
   @mobx.computed
-  get fullName(): string {
+  public get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
 }

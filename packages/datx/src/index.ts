@@ -5,7 +5,9 @@ export { IRawModel } from '@datx/utils';
 export const Bucket = { ToMany, ToOne, ToOneOrMany };
 
 export {
+  Field,
   Attribute,
+  ViewField,
   ViewAttribute,
   prop,
   view,

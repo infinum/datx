@@ -37,7 +37,7 @@ export type FunctionRefModel = (
 export type ParsedRefModel = IType | FunctionRefModel;
 export type DynamicRefModel = BasicRefModel | FunctionRefModel;
 
-interface IAttributeFieldOptions {
+interface IFieldAttributeOptions {
   defaultValue?: any;
   isIdentifier?: true;
   isType?: true;
@@ -46,36 +46,36 @@ interface IAttributeFieldOptions {
   serialize?: (value: any, data: object) => any;
 }
 
-interface IAttributeNoReference {
+interface IFieldNoReference {
   toOne?: undefined;
   toOneOrMany?: undefined;
   toMany?: undefined;
   referenceProperty?: undefined;
 }
 
-interface IAttributeToOne {
+interface IFieldToOne {
   toOne: DynamicRefModel;
   toOneOrMany?: undefined;
   toMany?: undefined;
   referenceProperty?: undefined;
 }
 
-interface IAttributeToOneOrMany {
+interface IFieldToOneOrMany {
   toOne?: undefined;
   toOneOrMany: DynamicRefModel;
   toMany?: undefined;
   referenceProperty?: undefined;
 }
 
-interface IAttributeToMany {
+interface IFieldToMany {
   toOne?: undefined;
   toOneOrMany?: undefined;
   toMany: DynamicRefModel;
   referenceProperty?: string;
 }
 
-type IAttributeOptions = IAttributeFieldOptions &
-  (IAttributeNoReference | IAttributeToOne | IAttributeToOneOrMany | IAttributeToMany);
+type IFieldOptions = IFieldAttributeOptions &
+  (IFieldNoReference | IFieldToOne | IFieldToOneOrMany | IFieldToMany);
 
 export interface IReferenceDefinition {
   type: ReferenceType;
@@ -132,9 +132,9 @@ function getReferenceDef(
 }
 
 /**
- * Set a model attribute as tracked
+ * Set a model field as tracked
  */
-export function Attribute<T extends PureModel>({
+export function Field<T extends PureModel>({
   defaultValue,
   isIdentifier,
   isType,
@@ -145,7 +145,7 @@ export function Attribute<T extends PureModel>({
   map,
   parse,
   serialize,
-}: IAttributeOptions = {}) {
+}: IFieldOptions = {}) {
   return (obj: T, key: string, opts?: object): void => {
     prepareDecorator(obj, key, opts);
     const modelClass = getClass(obj);
@@ -175,7 +175,13 @@ export function Attribute<T extends PureModel>({
   };
 }
 
-export function ViewAttribute<TCollection extends PureCollection, TModel extends PureModel>(
+/**
+ * @deprecated use `@Field` instead. Will be removed in v3
+ * @see https://jsonapi.org/format/#document-resource-object-fields
+ */
+export const Attribute = Field;
+
+export function ViewField<TCollection extends PureCollection, TModel extends PureModel>(
   modelType: IModelConstructor<TModel> | IType,
   options: {
     sortMethod?: string | ((item: TModel) => any);
@@ -198,38 +204,46 @@ export function ViewAttribute<TCollection extends PureCollection, TModel extends
   };
 }
 
+/**
+ * @deprecated use `ViewField` instead. Will be removed in v3
+ */
+export const ViewAttribute = ViewField;
+
 const propDeprecation = '@prop was deprecated, use @Attribute instead';
 
 // Compatibility implementation
 function propFn<T extends PureModel>(obj: T, key: string, opts?: object): void {
   deprecated(propDeprecation);
-  Attribute()(obj, key, opts);
+  Field()(obj, key, opts);
 }
 
+/**
+ * @deprecated use `Field` instead. Will be removed in v3
+ */
 export const prop = Object.assign(propFn, {
   defaultValue(value: any) {
     deprecated(propDeprecation);
-    return Attribute({ defaultValue: value });
+    return Field({ defaultValue: value });
   },
 
   toOne(refModel: typeof PureModel | IType) {
     deprecated(propDeprecation);
-    return Attribute({ toOne: refModel });
+    return Field({ toOne: refModel });
   },
 
   toMany(refModel: typeof PureModel | IType, property?: string) {
     deprecated(propDeprecation);
-    return Attribute({ toMany: refModel, referenceProperty: property });
+    return Field({ toMany: refModel, referenceProperty: property });
   },
 
   toOneOrMany(refModel: typeof PureModel | IType) {
     deprecated(propDeprecation);
-    return Attribute({ toOneOrMany: refModel });
+    return Field({ toOneOrMany: refModel });
   },
 
-  identifier: Attribute({ isIdentifier: true }),
+  identifier: Field({ isIdentifier: true }),
 
-  type: Attribute({ isType: true }),
+  type: Field({ isType: true }),
 });
 
-export const view = ViewAttribute;
+export const view = ViewField;

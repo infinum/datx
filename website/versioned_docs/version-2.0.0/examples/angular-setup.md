@@ -120,7 +120,7 @@ export class Artist extends BaseModel {
   public static endpoint = 'artists';
   public static type = 'project';
 
-  @Attribute()
+  @Field()
   public name!: string;
 }
 ```

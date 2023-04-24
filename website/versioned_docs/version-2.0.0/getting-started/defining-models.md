@@ -26,13 +26,13 @@ import { Model, Attribute } from '@datx/core';
 class Pet extends Model {
   static type = 'pet';
 
-  @Attribute()
+  @Field()
   public name: string;
 
-  @Attribute({ defaultValue: 0 })
+  @Field({ defaultValue: 0 })
   public age: number;
 
-  @Attribute({ toOne: Person })
+  @Field({ toOne: Person })
   public owner: Person;
 }
 ```

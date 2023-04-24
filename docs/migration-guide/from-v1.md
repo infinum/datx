@@ -101,14 +101,14 @@ The `prop` decorator was replaced with `Attribute` that supports some new featur
 
 The changes are:
 
-- `@prop` to `@Attribute()`
-- `@prop.identifier` to `@Attribute({ isIdentifier: true })`
-- `@prop.type` to `@Attribute({ isType: true })`
-- `@prop.defaultValue(val)` to `@Attribute({ defaultValue: val })`
-- `@prop.toOne(RefModel)` to `@Attribute({ toOne: RefModel })`
-- `@prop.toOneOrMany(RefModel)` to `@Attribute({ toOneOrMany: RefModel })`
-- `@prop.toMany(RefModel)` to `@Attribute({ toMany: RefModel })`
-- `@prop.toMany(RefModel, 'backProp')` to `@Attribute({ toMany: RefModel, referenceProperty: 'backProp' })`
+- `@prop` to `@Field()`
+- `@prop.identifier` to `@Field({ isIdentifier: true })`
+- `@prop.type` to `@Field({ isType: true })`
+- `@prop.defaultValue(val)` to `@Field({ defaultValue: val })`
+- `@prop.toOne(RefModel)` to `@Field({ toOne: RefModel })`
+- `@prop.toOneOrMany(RefModel)` to `@Field({ toOneOrMany: RefModel })`
+- `@prop.toMany(RefModel)` to `@Field({ toMany: RefModel })`
+- `@prop.toMany(RefModel, 'backProp')` to `@Field({ toMany: RefModel, referenceProperty: 'backProp' })`
 
 ### Caching enhancements
 

@@ -101,13 +101,13 @@ import { jsonapiModel } from '@datx/jsonapi';
 export class Post extends jsonapiModel(PureModel) {
   public static readonly type = 'posts';
 
-  @Attribute({ isIdentifier: true })
+  @Field({ isIdentifier: true })
   id!: number;
 
-  @Attribute()
+  @Field()
   title!: string;
 
-  @Attribute()
+  @Field()
   body!: string;
 }
 ```
@@ -121,10 +121,10 @@ import { jsonapiModel } from '@datx/jsonapi';
 export class Todo extends jsonapiModel(PureModel) {
   public static readonly type = 'todos';
 
-  @Attribute({ isIdentifier: true })
+  @Field({ isIdentifier: true })
   id!: number;
 
-  @Attribute()
+  @Field()
   message!: string;
 }
 ```

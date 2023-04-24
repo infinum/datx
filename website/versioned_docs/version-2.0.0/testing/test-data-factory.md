@@ -467,10 +467,10 @@ import { createFactory, sequence, perBuild } from '@datx/test-data-factory';
 class User extends jsonapi(Model) {
   public static type = 'users';
 
-  @Attribute({ isIdentifier: true })
+  @Field({ isIdentifier: true })
   public id!: number;
 
-  @Attribute()
+  @Field()
   public name!: string;
 }
 
