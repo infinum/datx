@@ -11,7 +11,7 @@ original_id: basic-setup
 
 ```typescript
 // /models/index.ts
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 import { computed } from 'mobx';
 
 export class Dog extends Model {
@@ -59,7 +59,7 @@ export class Person extends Model {
 
 ```js
 // /models/index.js
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 import { computed } from 'mobx';
 
 class Dog extends Model {
@@ -104,7 +104,7 @@ export class Person extends Model {
 
 ```js
 // /models/index.js
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 import { computed, decorate } from 'mobx';
 
 export class Dog extends Model {

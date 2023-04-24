@@ -113,7 +113,7 @@ export class BaseModel extends jsonapiAngular(Model) {
 Create specific domain models and add them to `types` in `AppCollection`
 
 ```ts
-import { Attribute } from '@datx/core';
+import { Field } from '@datx/core';
 import { BaseModel } from 'src/app/base-model';
 
 export class Artist extends BaseModel {

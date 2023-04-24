@@ -29,7 +29,7 @@ import { PatchType } from './enums/PatchType';
 import { triggerAction } from './helpers/patch';
 import { upsertModel, initModels } from './helpers/collection';
 import { MetaClassField } from './enums/MetaClassField';
-import { IFieldDefinition } from './Attribute';
+import { IFieldDefinition } from './Field';
 import { IBucket } from './interfaces/IBucket';
 import { MetaModelField } from './enums/MetaModelField';
 import { IRawView } from './interfaces/IRawView';

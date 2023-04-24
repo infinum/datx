@@ -13,7 +13,7 @@ export {
   view,
   IFieldDefinition,
   IReferenceDefinition,
-} from './Attribute';
+} from './Field';
 export { Collection } from './Collection';
 export { Model } from './Model';
 export { PureCollection } from './PureCollection';

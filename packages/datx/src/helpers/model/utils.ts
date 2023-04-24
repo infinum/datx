@@ -20,7 +20,7 @@ import { IIdentifier } from '../../interfaces/IIdentifier';
 import { startAction, endAction } from '../patch';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { initModelField } from './init';
-import { IFieldDefinition } from '../../Attribute';
+import { IFieldDefinition } from '../../Field';
 import { IBucket } from '../../interfaces/IBucket';
 import { error } from '../format';
 import { ReferenceType } from '../../enums/ReferenceType';

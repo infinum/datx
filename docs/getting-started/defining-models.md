@@ -20,7 +20,7 @@ class Person extends Model {
 Other things that should be defined are attributes and their default values or [References](references):
 
 ```typescript
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 
 class Pet extends Model {
   static type = 'pet';
@@ -45,7 +45,7 @@ Most of the code can remain the same, but the attributes need to be defined sepa
 #### TypeScript
 
 ```typescript
-import { Model, prop, Attribute } from '@datx/core';
+import { Model, prop, Field } from '@datx/core';
 
 class Pet extends Model {
   static type = 'pet';
@@ -63,7 +63,7 @@ Attribute({ toOne: Person })(Pet, 'owner');
 #### JavaScript
 
 ```javascript
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 
 class Pet extends Model {
   static type = 'pet';

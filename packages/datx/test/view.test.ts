@@ -2,7 +2,7 @@ import testMobx from './mobx';
 
 import { Collection, Model, View, Attribute } from '../src';
 import { updateModelId } from '../src/helpers/model/fields';
-import { ViewAttribute } from '../src/Attribute';
+import { ViewAttribute } from '../src/Field';
 import { mobx } from '@datx/utils';
 
 // @ts-ignore
@@ -277,19 +277,19 @@ describe('View', () => {
     if (mobx.useRealMobX) {
       viewInstance.list.push(foo1);
       expect(viewInstance).toHaveLength(4);
-  
+
       viewInstance.list.unshift(foo2);
       expect(viewInstance).toHaveLength(5);
-  
+
       viewInstance.list.splice(2, 2);
       expect(viewInstance).toHaveLength(3);
     } else {
       viewInstance.list = [...viewInstance.list, foo1];
       expect(viewInstance).toHaveLength(4);
-  
+
       viewInstance.list = [foo2, ...viewInstance.list];
       expect(viewInstance).toHaveLength(5);
-  
+
       viewInstance.list = [...viewInstance.list.slice(0, 2), ...viewInstance.list.slice(4)];
       expect(viewInstance).toHaveLength(3);
     }
@@ -320,9 +320,7 @@ describe('View', () => {
       } else {
         viewInstance.list = [...viewInstance.list, foo1];
       }
-    }).toThrowError(
-      "New models can't be added directly to a sorted view list",
-    );
+    }).toThrowError("New models can't be added directly to a sorted view list");
 
     expect(() => {
       if (mobx.useRealMobX) {
@@ -330,30 +328,20 @@ describe('View', () => {
       } else {
         viewInstance.list = [foo2, ...viewInstance.list];
       }
-    }).toThrowError(
-      "New models can't be added directly to a sorted view list",
-    );
+    }).toThrowError("New models can't be added directly to a sorted view list");
 
     expect(() => {
       if (mobx.useRealMobX) {
         viewInstance.list[1] = foo1;
       } else {
-        viewInstance.list = [
-          ...viewInstance.list.slice(0, 1),
-          foo1,
-          ...viewInstance.list.slice(2),
-        ];
+        viewInstance.list = [...viewInstance.list.slice(0, 1), foo1, ...viewInstance.list.slice(2)];
       }
     }).toThrowError("New models can't be added directly to a sorted view list");
     expect(() => {
       if (mobx.useRealMobX) {
         viewInstance.list[3] = foo1;
       } else {
-        viewInstance.list = [
-          ...viewInstance.list.slice(0, 3),
-          foo1,
-          ...viewInstance.list.slice(4),
-        ];
+        viewInstance.list = [...viewInstance.list.slice(0, 3), foo1, ...viewInstance.list.slice(4)];
       }
     }).toThrowError("New models can't be added directly to a sorted view list");
 
@@ -400,9 +388,7 @@ describe('View', () => {
       } else {
         viewInstance.list = [...viewInstance.list, foo1];
       }
-    }).toThrowError(
-      'The models in this view need to be unique',
-    );
+    }).toThrowError('The models in this view need to be unique');
 
     expect(() => {
       if (mobx.useRealMobX) {
@@ -410,9 +396,7 @@ describe('View', () => {
       } else {
         viewInstance.list = [foo1, ...viewInstance.list];
       }
-    }).toThrowError(
-      'The models in this view need to be unique',
-    );
+    }).toThrowError('The models in this view need to be unique');
   });
 
   it('should be able to deserialize the view', () => {

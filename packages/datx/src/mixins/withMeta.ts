@@ -14,7 +14,7 @@ import { IMetaMixin } from '../interfaces/IMetaMixin';
 import { IModelConstructor } from '../interfaces/IModelConstructor';
 import { PureModel } from '../PureModel';
 import { MetaModelField } from '../enums/MetaModelField';
-import { IFieldDefinition } from '../Attribute';
+import { IFieldDefinition } from '../Field';
 import { IIdentifier } from '../interfaces/IIdentifier';
 import { IType } from '../interfaces/IType';
 import { PureCollection } from '../PureCollection';
@@ -125,5 +125,5 @@ export function withMeta<T extends PureModel = PureModel>(
     }
   }
 
-  return (WithMeta as unknown) as IModelConstructor<IMetaMixin<T> & T>;
+  return WithMeta as unknown as IModelConstructor<IMetaMixin<T> & T>;
 }
