@@ -43,6 +43,16 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+    },
+    {
+      "type": "node",
+      "name": "DatX Codemod",
+      "request": "launch",
+      "args": ["--runInBand"],
+      "cwd": "${workspaceFolder}/packages/datx-codemod",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest"
     }
   ]
 }
