@@ -12,32 +12,32 @@
   "homepage": "https://github.com/infinum/datx#readme",
   "author": "Infinum JavaScript Team <hello@infinum.com>",
   "license": "MIT",
-  "dependencies": {
-    "chalk": "4.1.0",
-    "cheerio": "1.0.0-rc.9",
-    "execa": "4.0.3",
-    "globby": "11.0.1",
-    "inquirer": "7.3.3",
-    "is-git-clean": "1.1.0",
-    "jscodeshift": "0.13.1",
-    "meow": "7.0.1"
-  },
   "files": [
     "transforms/*.js",
     "bin/*.js",
     "lib/**/*.js",
     "lib/cra-to-next/gitignore"
   ],
+  "bin": "./bin/datx-codemod.js",
   "scripts": {
     "build": "tsc -d -p tsconfig.json",
     "prepublishOnly": "cd ../../ && turbo run build",
     "dev": "tsc -d -w -p tsconfig.json",
     "test": "jest"
   },
-  "bin": "./bin/datx-codemod.js",
+  "dependencies": {
+    "chalk": "5.2.0",
+    "cheerio": "1.0.0-rc.12",
+    "execa": "7.1.1",
+    "globby": "13.1.4",
+    "inquirer": "9.2.0",
+    "is-git-clean": "1.1.0",
+    "jscodeshift": "0.14.0",
+    "meow": "11.0.0"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.1",
-    "@types/jscodeshift": "0.11.0",
+    "@types/jscodeshift": "0.11.6",
     "jest": "^29.5.0",
     "typescript": "~4.7.3"
   },

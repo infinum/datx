@@ -25,21 +25,78 @@ This codemod transforms the `@prop` decorator to the `@Attribute` decorator.
 For example, the following code:
 
 ```ts
-import { prop } from 'datx';
+import { Model, prop } from 'datx';
 
-class User {
+class Pet extends Model {
   @prop
-  public name: string;
+  public name!: string;
+
+  @prop.identifier
+  public id!: string;
+
+  @prop.type
+  public type!: string;
+
+  @prop.defaultValue(0)
+  public age: number;
+
+  @prop.toOne(Person)
+  public owner: Person;
+
+  @prop.toOneOrMany(Person)
+  public owners: Person | Person[];
+
+  @prop.toMany(Person)
+  public friends: Person[];
+
+  @prop.toMany(Person, 'backProp')
+  public friends2: Person[];
 }
 ```
 
 will be transformed to:
 
 ```ts
-import { Attribute } from 'datx';
+import { Model, Attribute } from '@datx/core';
 
-class User {
-  @Attribute
-  public name: string;
+class Pet extends Model {
+  @Attribute()
+  public name!: string;
+
+  @Attribute({
+    isIdentifier: true,
+  })
+  public id!: string;
+
+  @Attribute({
+    isType: true,
+  })
+  public type!: string;
+
+  @Attribute({
+    defaultValue: 0,
+  })
+  public age: number;
+
+  @Attribute({
+    toOne: Person,
+  })
+  public owner: Person;
+
+  @Attribute({
+    toOneOrMany: Person,
+  })
+  public owners: Person | Person[];
+
+  @Attribute({
+    toMany: Person,
+  })
+  public friends: Person[];
+
+  @Attribute({
+    toMany: Person,
+    referenceProperty: 'backProp',
+  })
+  public friends2: Person[];
 }
 ```
