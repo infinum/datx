@@ -2051,9 +2051,7 @@ __metadata:
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-node-resolve": ^13.3.0
     "@rollup/plugin-typescript": ^8.3.2
-    "@swc-node/jest": 1.4.3
-    "@swc/core": ^1.3.21
-    "@testing-library/jest-dom": 5.16.4
+    "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 13.3.0
     "@testing-library/user-event": 14.2.1
     "@types/isomorphic-fetch": 0.0.36
@@ -2071,6 +2069,7 @@ __metadata:
     rollup-plugin-exclude-dependencies-from-bundle: ^1.1.22
     rollup-plugin-terser: ^7.0.2
     swr: 2.0.0-beta.6
+    ts-jest: 28.0.4
     tslib: ~2.4.0
     typescript: ~4.7.3
     uuid: ^8.3.2
@@ -2957,145 +2956,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@node-rs/xxhash-android-arm-eabi@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-android-arm-eabi@npm:1.3.0"
-  conditions: os=android & cpu=arm
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-android-arm64@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-android-arm64@npm:1.3.0"
-  conditions: os=android & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-darwin-arm64@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-darwin-arm64@npm:1.3.0"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-darwin-x64@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-darwin-x64@npm:1.3.0"
-  conditions: os=darwin & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-freebsd-x64@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-freebsd-x64@npm:1.3.0"
-  conditions: os=freebsd & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-linux-arm-gnueabihf@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-linux-arm-gnueabihf@npm:1.3.0"
-  conditions: os=linux & cpu=arm
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-linux-arm64-gnu@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-linux-arm64-gnu@npm:1.3.0"
-  conditions: os=linux & cpu=arm64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-linux-arm64-musl@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-linux-arm64-musl@npm:1.3.0"
-  conditions: os=linux & cpu=arm64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-linux-x64-gnu@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-linux-x64-gnu@npm:1.3.0"
-  conditions: os=linux & cpu=x64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-linux-x64-musl@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-linux-x64-musl@npm:1.3.0"
-  conditions: os=linux & cpu=x64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-win32-arm64-msvc@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-win32-arm64-msvc@npm:1.3.0"
-  conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-win32-ia32-msvc@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-win32-ia32-msvc@npm:1.3.0"
-  conditions: os=win32 & cpu=ia32
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash-win32-x64-msvc@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash-win32-x64-msvc@npm:1.3.0"
-  conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@node-rs/xxhash@npm:^1.0.1":
-  version: 1.3.0
-  resolution: "@node-rs/xxhash@npm:1.3.0"
-  dependencies:
-    "@node-rs/xxhash-android-arm-eabi": 1.3.0
-    "@node-rs/xxhash-android-arm64": 1.3.0
-    "@node-rs/xxhash-darwin-arm64": 1.3.0
-    "@node-rs/xxhash-darwin-x64": 1.3.0
-    "@node-rs/xxhash-freebsd-x64": 1.3.0
-    "@node-rs/xxhash-linux-arm-gnueabihf": 1.3.0
-    "@node-rs/xxhash-linux-arm64-gnu": 1.3.0
-    "@node-rs/xxhash-linux-arm64-musl": 1.3.0
-    "@node-rs/xxhash-linux-x64-gnu": 1.3.0
-    "@node-rs/xxhash-linux-x64-musl": 1.3.0
-    "@node-rs/xxhash-win32-arm64-msvc": 1.3.0
-    "@node-rs/xxhash-win32-ia32-msvc": 1.3.0
-    "@node-rs/xxhash-win32-x64-msvc": 1.3.0
-  dependenciesMeta:
-    "@node-rs/xxhash-android-arm-eabi":
-      optional: true
-    "@node-rs/xxhash-android-arm64":
-      optional: true
-    "@node-rs/xxhash-darwin-arm64":
-      optional: true
-    "@node-rs/xxhash-darwin-x64":
-      optional: true
-    "@node-rs/xxhash-freebsd-x64":
-      optional: true
-    "@node-rs/xxhash-linux-arm-gnueabihf":
-      optional: true
-    "@node-rs/xxhash-linux-arm64-gnu":
-      optional: true
-    "@node-rs/xxhash-linux-arm64-musl":
-      optional: true
-    "@node-rs/xxhash-linux-x64-gnu":
-      optional: true
-    "@node-rs/xxhash-linux-x64-musl":
-      optional: true
-    "@node-rs/xxhash-win32-arm64-msvc":
-      optional: true
-    "@node-rs/xxhash-win32-ia32-msvc":
-      optional: true
-    "@node-rs/xxhash-win32-x64-msvc":
-      optional: true
-  checksum: 1bc505ed48accb817fd5a67ec6efbc350d28ffb5709b0248dcd4b37ffa40f959b84d44eee4e42e722379478961d1aa11eee6e5965b1084c02b26534567118e68
-  languageName: node
-  linkType: hard
-
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -3789,139 +3649,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc-node/core@npm:^1.8.2":
-  version: 1.10.3
-  resolution: "@swc-node/core@npm:1.10.3"
-  peerDependencies:
-    "@swc/core": ">= 1.3"
-  checksum: 6e3e50a44d7a1c1aa62599d83c58f21568c1da03422124b46634488aba02747939063eeb1a2710aab0ab9f14f347386226a017ed72e6ba608d4a26532cd426af
-  languageName: node
-  linkType: hard
-
-"@swc-node/jest@npm:1.4.3":
-  version: 1.4.3
-  resolution: "@swc-node/jest@npm:1.4.3"
-  dependencies:
-    "@node-rs/xxhash": ^1.0.1
-    "@swc-node/core": ^1.8.2
-  checksum: bfc7b7c54eaa761f7bc31c3afda9fcfb99b177efee39b08cda2a2014f60eccf45a6dfefe4d8973d4cc34b4193516f434ca891b71d084185582122d86c27738cf
-  languageName: node
-  linkType: hard
-
-"@swc/core-darwin-arm64@npm:1.3.53":
-  version: 1.3.53
-  resolution: "@swc/core-darwin-arm64@npm:1.3.53"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-darwin-x64@npm:1.3.53":
-  version: 1.3.53
-  resolution: "@swc/core-darwin-x64@npm:1.3.53"
-  conditions: os=darwin & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm-gnueabihf@npm:1.3.53":
-  version: 1.3.53
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.3.53"
-  conditions: os=linux & cpu=arm
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm64-gnu@npm:1.3.53":
-  version: 1.3.53
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.3.53"
-  conditions: os=linux & cpu=arm64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm64-musl@npm:1.3.53":
-  version: 1.3.53
-  resolution: "@swc/core-linux-arm64-musl@npm:1.3.53"
-  conditions: os=linux & cpu=arm64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-x64-gnu@npm:1.3.53":
-  version: 1.3.53
-  resolution: "@swc/core-linux-x64-gnu@npm:1.3.53"
-  conditions: os=linux & cpu=x64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-x64-musl@npm:1.3.53":
-  version: 1.3.53
-  resolution: "@swc/core-linux-x64-musl@npm:1.3.53"
-  conditions: os=linux & cpu=x64 & libc=musl
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-arm64-msvc@npm:1.3.53":
-  version: 1.3.53
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.3.53"
-  conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-ia32-msvc@npm:1.3.53":
-  version: 1.3.53
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.3.53"
-  conditions: os=win32 & cpu=ia32
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-x64-msvc@npm:1.3.53":
-  version: 1.3.53
-  resolution: "@swc/core-win32-x64-msvc@npm:1.3.53"
-  conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core@npm:^1.3.21":
-  version: 1.3.53
-  resolution: "@swc/core@npm:1.3.53"
-  dependencies:
-    "@swc/core-darwin-arm64": 1.3.53
-    "@swc/core-darwin-x64": 1.3.53
-    "@swc/core-linux-arm-gnueabihf": 1.3.53
-    "@swc/core-linux-arm64-gnu": 1.3.53
-    "@swc/core-linux-arm64-musl": 1.3.53
-    "@swc/core-linux-x64-gnu": 1.3.53
-    "@swc/core-linux-x64-musl": 1.3.53
-    "@swc/core-win32-arm64-msvc": 1.3.53
-    "@swc/core-win32-ia32-msvc": 1.3.53
-    "@swc/core-win32-x64-msvc": 1.3.53
-  peerDependencies:
-    "@swc/helpers": ^0.5.0
-  dependenciesMeta:
-    "@swc/core-darwin-arm64":
-      optional: true
-    "@swc/core-darwin-x64":
-      optional: true
-    "@swc/core-linux-arm-gnueabihf":
-      optional: true
-    "@swc/core-linux-arm64-gnu":
-      optional: true
-    "@swc/core-linux-arm64-musl":
-      optional: true
-    "@swc/core-linux-x64-gnu":
-      optional: true
-    "@swc/core-linux-x64-musl":
-      optional: true
-    "@swc/core-win32-arm64-msvc":
-      optional: true
-    "@swc/core-win32-ia32-msvc":
-      optional: true
-    "@swc/core-win32-x64-msvc":
-      optional: true
-  peerDependenciesMeta:
-    "@swc/helpers":
-      optional: true
-  checksum: b446aaee4db7e1febf18a4f8490ac9fc8af39cea9e9eed436ec0ec9910e15bd8c4efa88b0a8a1abd95c1bc01ac5cffede1cb0b027371d6879071c2b038bc0e81
-  languageName: node
-  linkType: hard
-
 "@szmarczak/http-timer@npm:^1.1.2":
   version: 1.1.2
   resolution: "@szmarczak/http-timer@npm:1.1.2"
@@ -3947,20 +3674,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:5.16.4":
-  version: 5.16.4
-  resolution: "@testing-library/jest-dom@npm:5.16.4"
+"@testing-library/jest-dom@npm:5.16.5":
+  version: 5.16.5
+  resolution: "@testing-library/jest-dom@npm:5.16.5"
   dependencies:
+    "@adobe/css-tools": ^4.0.1
     "@babel/runtime": ^7.9.2
     "@types/testing-library__jest-dom": ^5.9.1
     aria-query: ^5.0.0
     chalk: ^3.0.0
-    css: ^3.0.0
     css.escape: ^1.5.1
     dom-accessibility-api: ^0.5.6
     lodash: ^4.17.15
     redent: ^3.0.0
-  checksum: 4240501223b72b97a44d4e3c669f39b208c49fb645d11d08d5f178d607265c5dfad07efbe027f41a0e2458178ff1fd5bf437fc05661b9109dcd013b95a37079e
+  checksum: 94911f901a8031f3e489d04ac057cb5373621230f5d92bed80e514e24b069fb58a3166d1dd86963e55f078a1bd999da595e2ab96ed95f452d477e272937d792a
   languageName: node
   linkType: hard
 
@@ -15873,6 +15600,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-jest@npm:28.0.4":
+  version: 28.0.4
+  resolution: "ts-jest@npm:28.0.4"
+  dependencies:
+    bs-logger: 0.x
+    fast-json-stable-stringify: 2.x
+    jest-util: ^28.0.0
+    json5: ^2.2.1
+    lodash.memoize: 4.x
+    make-error: 1.x
+    semver: 7.x
+    yargs-parser: ^20.x
+  peerDependencies:
+    "@babel/core": ">=7.0.0-beta.0 <8"
+    babel-jest: ^28.0.0
+    jest: ^28.0.0
+    typescript: ">=4.3"
+  peerDependenciesMeta:
+    "@babel/core":
+      optional: true
+    babel-jest:
+      optional: true
+    esbuild:
+      optional: true
+  bin:
+    ts-jest: cli.js
+  checksum: 21028e1917f60f086e0af6d057039f31385ca0f5b85736dc19bdd670ccbb5675c7ecde2eb30a5d01fcccdc7a59054498db0c4419306fc5fab0a596e3cf001023
+  languageName: node
+  linkType: hard
+
 "ts-jest@npm:^28.0.0, ts-jest@npm:^28.0.4":
   version: 28.0.8
   resolution: "ts-jest@npm:28.0.8"
@@ -16973,7 +16730,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs-parser@npm:^20.2.2, yargs-parser@npm:^20.2.3":
+"yargs-parser@npm:^20.2.2, yargs-parser@npm:^20.2.3, yargs-parser@npm:^20.x":
   version: 20.2.9
   resolution: "yargs-parser@npm:20.2.9"
   checksum: 8bb69015f2b0ff9e17b2c8e6bfe224ab463dd00ca211eece72a4cd8a906224d2703fb8a326d36fdd0e68701e201b2a60ed7cf81ce0fd9b3799f9fe7745977ae3
