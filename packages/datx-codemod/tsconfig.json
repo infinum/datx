@@ -12,5 +12,5 @@
     "rootDir": "./src"
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "**/__tests__/*", "**/prop-to-attribute/*"]
+  "exclude": ["node_modules"]
 }

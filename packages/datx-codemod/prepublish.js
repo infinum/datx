@@ -16,3 +16,6 @@ fs.writeFileSync('./dist/package.json', JSON.stringify(distPackageJson, null, 2)
 
 fs.copyFileSync('./README.md', './dist/README.md');
 fs.copyFileSync('./LICENSE', './dist/LICENSE');
+
+fs.rmdirSync('./dist/transforms/__testfixtures__', { recursive: true });
+fs.rmdirSync('./dist/transforms/__tests__', { recursive: true });
