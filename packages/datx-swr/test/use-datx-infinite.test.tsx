@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { CollectionResponse, useDatxInfinite } from '@datx/swr';
 import { message } from './mocks/handlers';

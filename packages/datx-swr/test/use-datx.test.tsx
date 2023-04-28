@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { screen } from '@testing-library/react';
 import { server } from './mocks/server';
 
