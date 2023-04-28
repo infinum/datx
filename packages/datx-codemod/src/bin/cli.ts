@@ -95,6 +95,14 @@ const TRANSFORMER_INQUIRER_CHOICES = [
     name: 'prop-to-attribute: Transforms `@prop` decorator into `@Attribute`',
     value: 'prop-to-attribute',
   },
+  {
+    name: 'scoped-package-name: The packages are now scoped under `@datx` and the `datx` prefix is deprecated',
+    value: 'scoped-package-name',
+  },
+  {
+    name: 'attribute-to-field: In DatX 3.0.0, the `@Attribute` decorator is renamed to `@Field`',
+    value: 'attribute-to-field',
+  },
 ];
 
 function expandFilePathsIfNeeded(filesBeforeExpansion) {
