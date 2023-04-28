@@ -1,6 +1,6 @@
 import { API, FileInfo } from 'jscodeshift';
 
-export const parser = 'ts';
+export const parser = 'tsx';
 
 export default function transformer(file: FileInfo, api: API) {
   const j = api.jscodeshift;
@@ -12,14 +12,16 @@ export default function transformer(file: FileInfo, api: API) {
     if (path.node.source.value === 'datx') {
       path.node.source.value = '@datx/core';
 
-      path.node.specifiers = path.node.specifiers.map((specifier) => {
-        if (specifier.type === 'ImportSpecifier') {
-          if (specifier.imported.name === 'prop') {
-            specifier.imported.name = 'Attribute';
+      if (path.node.specifiers) {
+        path.node.specifiers = path.node.specifiers.map((specifier) => {
+          if (specifier.type === 'ImportSpecifier') {
+            if (specifier.imported.name === 'prop') {
+              specifier.imported.name = 'Attribute';
+            }
           }
-        }
-        return specifier;
-      });
+          return specifier;
+        });
+      }
     }
   });
 
@@ -28,7 +30,7 @@ export default function transformer(file: FileInfo, api: API) {
     path.node.body = path.node.body.map((node) => {
       if (node.type === 'ClassProperty') {
         // @ts-ignore
-        node.decorators = node.decorators.map((decorator) => {
+        node.decorators = node.decorators?.map((decorator) => {
           // Before: @prop.identifier
           // After: @Attribute({ isType: true })
           if (decorator.expression?.property?.name === 'identifier') {

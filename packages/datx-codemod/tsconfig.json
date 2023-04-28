@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "sourceMap": true,
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "declaration": false,
     "esModuleInterop": true,
     "target": "es2015",
     "downlevelIteration": true,
@@ -10,5 +12,5 @@
     "rootDir": "./src"
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/__tests__/*", "**/prop-to-attribute/*"]
 }

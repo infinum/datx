@@ -17,7 +17,112 @@ Codemods are transformations that run on your codebase programmatically. This al
 - `--dry` - dry run (no changes are made to files)
 - `--print` - print output, useful for development
 
-## Available Transforms
+## Datx 3.0.0
+
+### `attribute-to-field`
+
+In DatX 3.0.0, the `@Attribute` decorator is renamed to `@Field`. This codemod transforms the `@Attribute` decorator to the `@Field` decorator.
+
+For example, the following code:
+
+```ts
+import { Model, Attribute } from '@datx/core';
+
+class Pet extends Model {
+  public static type = 'pet';
+
+  @Attribute()
+  public name!: string;
+
+  @Attribute({
+    isIdentifier: true,
+  })
+  public id!: string;
+
+  @Attribute({
+    isType: true,
+  })
+  public type!: string;
+
+  @Attribute({
+    defaultValue: 0,
+  })
+  public age: number;
+
+  @Attribute({
+    toOne: Person,
+  })
+  public owner: Person;
+
+  @Attribute({
+    toOneOrMany: Person,
+  })
+  public owners: Person | Person[];
+
+  @Attribute({
+    toMany: Person,
+  })
+  public friends: Person[];
+
+  @Attribute({
+    toMany: Person,
+    referenceProperty: 'backProp',
+  })
+  public friends2: Person[];
+}
+```
+
+will be transformed to:
+
+```ts
+import { Model, Field } from '@datx/core';
+
+class Pet extends Model {
+  public static type = 'pet';
+
+  @Field()
+  public name!: string;
+
+  @Field({
+    isIdentifier: true,
+  })
+  public id!: string;
+
+  @Field({
+    isType: true,
+  })
+  public type!: string;
+
+  @Field({
+    defaultValue: 0,
+  })
+  public age: number;
+
+  @Field({
+    toOne: Person,
+  })
+  public owner: Person;
+
+  @Field({
+    toOneOrMany: Person,
+  })
+  public owners: Person | Person[];
+
+  @Field({
+    toMany: Person,
+  })
+  public friends: Person[];
+
+  @Field({
+    toMany: Person,
+    referenceProperty: 'backProp',
+  })
+  public friends2: Person[];
+}
+```
+
+
+## Datx 2.0.0
 
 ### `prop-to-attribute`
 
@@ -100,4 +205,24 @@ class Pet extends Model {
   })
   public friends2: Person[];
 }
+```
+
+### `scoped-package-name`
+
+The packages are now scoped under `@datx` and the `datx` prefix is deprecated. This codemod transforms the package names to the new scoped names.
+
+For example, the following code:
+
+```ts
+import * as utils from 'datx-utils';
+import * as datx from 'datx';
+import * as jsonapi from 'datx-jsonapi';
+```
+
+will be transformed to:
+
+```ts
+import * as utils from '@datx/utils';
+import * as datx from '@datx/core';
+import * as jsonapi from '@datx/jsonapi';
 ```

@@ -11,6 +11,7 @@
 import globby from 'globby';
 import inquirer from 'inquirer';
 import meow from 'meow';
+import type { Options, AnyFlags } from 'meow';
 import path from 'path';
 import execa from 'execa';
 import chalk from 'chalk';
@@ -48,7 +49,7 @@ export function checkGitStatus(force) {
 export function runTransform({ files, flags, transformer }) {
   const transformerPath = path.join(transformerDirectory, `${transformer}.js`);
 
-  let args = [];
+  let args: Array<string> = [];
 
   const { dry, print, runInBand } = flags;
 
@@ -121,8 +122,8 @@ export function run() {
       alias: {
         h: 'help',
       },
-    },
-  } as meow.Options<meow.AnyFlags>);
+    } as AnyFlags,
+  } as Options<AnyFlags>);
 
   if (!cli.flags.dry) {
     checkGitStatus(cli.flags.force);

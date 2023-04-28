@@ -3,6 +3,8 @@
 import { Model, prop } from 'datx';
 
 class Pet extends Model {
+  public static type = 'pet';
+
   @prop
   public name!: string;
 

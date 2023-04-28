@@ -1,44 +1,44 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 
 class Pet extends Model {
   public static type = 'pet';
 
-  @Attribute()
+  @Field()
   public name!: string;
 
-  @Attribute({
+  @Field({
     isIdentifier: true,
   })
   public id!: string;
 
-  @Attribute({
+  @Field({
     isType: true,
   })
   public type!: string;
 
-  @Attribute({
+  @Field({
     defaultValue: 0,
   })
   public age: number;
 
-  @Attribute({
+  @Field({
     toOne: Person,
   })
   public owner: Person;
 
-  @Attribute({
+  @Field({
     toOneOrMany: Person,
   })
   public owners: Person | Person[];
 
-  @Attribute({
+  @Field({
     toMany: Person,
   })
   public friends: Person[];
 
-  @Attribute({
+  @Field({
     toMany: Person,
     referenceProperty: 'backProp',
   })
