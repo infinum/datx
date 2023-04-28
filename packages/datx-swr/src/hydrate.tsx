@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { IJsonapiModel, Response } from '@datx/jsonapi';
 import { SWRConfig } from 'swr';
 import { useClient } from './hooks/useClient';

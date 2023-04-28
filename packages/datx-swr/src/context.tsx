@@ -1,4 +1,4 @@
-import React, { createContext, PropsWithChildren } from 'react';
+import { createContext, PropsWithChildren } from 'react';
 import { IClientInstance } from './interfaces/Client';
 
 export const DatxContext = createContext<IClientInstance | null>(null);
