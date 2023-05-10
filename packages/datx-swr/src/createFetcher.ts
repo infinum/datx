@@ -86,13 +86,7 @@ export const createFetcher =
     if (isGetRelatedResource(expression)) {
       const { type, id, relation, queryParams } = expression;
 
-      const { url } = prepareQuery(
-        type,
-        `${id}/${relation}`,
-        undefined,
-        { queryParams, networkConfig },
-        client,
-      );
+      const { url } = prepareQuery(type, `${id}/${relation}`, undefined, undefined, client);
 
       return client.request(url, undefined, undefined, {
         queryParams,
@@ -106,13 +100,7 @@ export const createFetcher =
     if (isGetRelatedResources(expression)) {
       const { type, id, relation, queryParams } = expression;
 
-      const { url } = prepareQuery(
-        type,
-        `${id}/${relation}`,
-        undefined,
-        { queryParams, networkConfig },
-        client,
-      );
+      const { url } = prepareQuery(type, `${id}/${relation}`, undefined, undefined, client);
 
       return client.request(url, undefined, undefined, {
         queryParams,
