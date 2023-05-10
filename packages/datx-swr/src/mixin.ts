@@ -58,6 +58,8 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
           : never
         : IFetchQueryReturn<TData>
     > {
+      const { prefetch, hydrate = true } = config || {};
+
       try {
         const executableExpression = isFunction(expression)
           ? expression()
@@ -78,7 +80,9 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
             return raw;
           });
 
-          this.__fallback[key] = rawResponses;
+          if (hydrate) {
+            this.__fallback[key] = rawResponses;
+          }
 
           // @ts-ignore
           return {
@@ -91,7 +95,9 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
         const rawResponse = { ...(response['__internal'].response as IRawResponse) };
         delete rawResponse.collection;
 
-        this.__fallback[key] = rawResponse;
+        if (hydrate) {
+          this.__fallback[key] = rawResponse;
+        }
 
         // @ts-ignore
         return {
@@ -99,7 +105,6 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
           error: undefined,
         };
       } catch (error) {
-        const prefetch = config?.prefetch;
         if (isFunction(prefetch) ? prefetch(error) : prefetch) {
           // @ts-ignore
           return {

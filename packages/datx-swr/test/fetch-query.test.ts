@@ -122,6 +122,18 @@ describe('fetchQuery', () => {
     });
   });
 
+  test('should not add response to fallback if hydration if false', async () => {
+    await client.fetchQuery(queryTodos, { hydrate: false });
+
+    expect(client.fallback).toEqual({});
+  });
+
+  test('should add response to fallback by default (hydration: true)', async () => {
+    await client.fetchQuery(queryTodos);
+
+    expect(Object.keys(client.fallback).length).toBe(1);
+  });
+
   describe('Conditional Data Fetching', () => {
     test('should throw if null is used as query', async () => {
       await expect(client.fetchQuery(null)).rejects.toThrow();
