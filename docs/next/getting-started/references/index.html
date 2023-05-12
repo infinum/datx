@@ -89,26 +89,26 @@
 <pre><code class="hljs css language-typescript"><span class="hljs-keyword">class</span> Person <span class="hljs-keyword">extends</span> Model {
   <span class="hljs-keyword">static</span> <span class="hljs-keyword">type</span> = <span class="hljs-string">'person'</span>;
 
-  <span class="hljs-meta">@Attribute</span>({ isIdentifier: <span class="hljs-literal">true</span> })
+  <span class="hljs-meta">@Field</span>({ isIdentifier: <span class="hljs-literal">true</span> })
   <span class="hljs-keyword">public</span> id!: <span class="hljs-built_in">number</span>;
 
-  <span class="hljs-meta">@Attribute</span>()
+  <span class="hljs-meta">@Field</span>()
   <span class="hljs-keyword">public</span> firstName!: <span class="hljs-built_in">string</span>;
 
-  <span class="hljs-meta">@Attribute</span>()
+  <span class="hljs-meta">@Field</span>()
   <span class="hljs-keyword">public</span> lastName!: <span class="hljs-built_in">string</span>;
 
-  <span class="hljs-meta">@Attribute</span>({ toOne: Person })
+  <span class="hljs-meta">@Field</span>({ toOne: Person })
   <span class="hljs-keyword">public</span> spouse!: Person;
 }
 
 <span class="hljs-keyword">class</span> Pet <span class="hljs-keyword">extends</span> Model {
   <span class="hljs-keyword">static</span> <span class="hljs-keyword">type</span> = <span class="hljs-string">'pet'</span>;
 
-  <span class="hljs-meta">@Attribute</span>()
+  <span class="hljs-meta">@Field</span>()
   <span class="hljs-keyword">public</span> name!: <span class="hljs-built_in">string</span>;
 
-  <span class="hljs-meta">@Attribute</span>({ toOne: Person })
+  <span class="hljs-meta">@Field</span>({ toOne: Person })
   <span class="hljs-keyword">public</span> owner!: Person;
 }
 
@@ -132,19 +132,19 @@ In the previous example, we had a Pet model that had a direct reference to the P
 <pre><code class="hljs css language-javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
   <span class="hljs-keyword">static</span> type = <span class="hljs-string">'person'</span>;
 
-  @Attribute({ <span class="hljs-attr">isIdentifier</span>: <span class="hljs-literal">true</span> })
+  @Field({ <span class="hljs-attr">isIdentifier</span>: <span class="hljs-literal">true</span> })
   <span class="hljs-attr">id</span>: number;
 
-  @Attribute()
+  @Field()
   <span class="hljs-attr">firstName</span>: string;
 
-  @Attribute()
+  @Field()
   <span class="hljs-attr">lastName</span>: string;
 
-  @Attribute({ <span class="hljs-attr">toOne</span>: Person })
+  @Field({ <span class="hljs-attr">toOne</span>: Person })
   <span class="hljs-attr">spouse</span>: Person;
 
-  @Attribute({ <span class="hljs-attr">toMany</span>: Pet, <span class="hljs-attr">referenceProperty</span>: <span class="hljs-string">'owner'</span> })
+  @Field({ <span class="hljs-attr">toMany</span>: Pet, <span class="hljs-attr">referenceProperty</span>: <span class="hljs-string">'owner'</span> })
   <span class="hljs-attr">pets</span>: <span class="hljs-built_in">Array</span>&lt;Pet&gt;;
 }
 
@@ -181,7 +181,7 @@ initModelRef(bob, <span class="hljs-string">'siblings'</span>, { <span class="hl
 <li>A model (as opposed to the id reference) reference can't be set on a model if it's not in a collection (any collection).</li>
 <li>If a model has a reference and it's not in a collection or the referenced model is not in the same collection, only the reference model id can be retrieved.</li>
 </ol>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 5/12/2023 by Kristian Djaković</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/getting-started/defining-models"><span class="arrow-prev">← </span><span>Defining models</span></a><a class="docs-next button" href="/docs/next/getting-started/configuring-the-collection"><span>Configuring the collection</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#direct-references">Direct references</a></li><li><a href="#indirect-references">Indirect references</a></li><li><a href="#dynamic-references">Dynamic references</a></li><li><a href="#limitations">Limitations</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 5/12/2023 by Ivica Batinić</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/getting-started/defining-models"><span class="arrow-prev">← </span><span>Defining models</span></a><a class="docs-next button" href="/docs/next/getting-started/configuring-the-collection"><span>Configuring the collection</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#direct-references">Direct references</a></li><li><a href="#indirect-references">Indirect references</a></li><li><a href="#dynamic-references">Dynamic references</a></li><li><a href="#limitations">Limitations</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
                 document.addEventListener('keyup', function(e) {
                   if (e.target !== document.body) {
                     return;

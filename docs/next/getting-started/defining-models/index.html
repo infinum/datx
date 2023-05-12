@@ -70,18 +70,18 @@
 }
 </code></pre>
 <p>Other things that should be defined are attributes and their default values or <a href="references">References</a>:</p>
-<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { Model, Attribute } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { Model, Field } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
 
 <span class="hljs-keyword">class</span> Pet <span class="hljs-keyword">extends</span> Model {
   <span class="hljs-keyword">static</span> <span class="hljs-keyword">type</span> = <span class="hljs-string">'pet'</span>;
 
-  <span class="hljs-meta">@Attribute</span>()
+  <span class="hljs-meta">@Field</span>()
   <span class="hljs-keyword">public</span> name: <span class="hljs-built_in">string</span>;
 
-  <span class="hljs-meta">@Attribute</span>({ defaultValue: <span class="hljs-number">0</span> })
+  <span class="hljs-meta">@Field</span>({ defaultValue: <span class="hljs-number">0</span> })
   <span class="hljs-keyword">public</span> age: <span class="hljs-built_in">number</span>;
 
-  <span class="hljs-meta">@Attribute</span>({ toOne: Person })
+  <span class="hljs-meta">@Field</span>({ toOne: Person })
   <span class="hljs-keyword">public</span> owner: Person;
 }
 </code></pre>
@@ -89,7 +89,7 @@
 <h2><a class="anchor" aria-hidden="true" id="javascript-without-decorators"></a><a href="#javascript-without-decorators" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>JavaScript without decorators</h2>
 <p>Most of the code can remain the same, but the attributes need to be defined separately. In order to ensure some properties are always observables, they need to be marked as attributes (like the <code>name</code> property in the example bellow).</p>
 <h4><a class="anchor" aria-hidden="true" id="typescript-1"></a><a href="#typescript-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TypeScript</h4>
-<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { Model, prop, Attribute } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { Model, prop, Field } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
 
 <span class="hljs-keyword">class</span> Pet <span class="hljs-keyword">extends</span> Model {
   <span class="hljs-keyword">static</span> <span class="hljs-keyword">type</span> = <span class="hljs-string">'pet'</span>;
@@ -104,7 +104,7 @@ Attribute({ defaultValue: <span class="hljs-number">0</span> })(Pet, <span class
 Attribute({ toOne: Person })(Pet, <span class="hljs-string">'owner'</span>);
 </code></pre>
 <h4><a class="anchor" aria-hidden="true" id="javascript"></a><a href="#javascript" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>JavaScript</h4>
-<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { Model, Attribute } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { Model, Field } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Pet</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
   <span class="hljs-keyword">static</span> type = <span class="hljs-string">'pet'</span>;
@@ -114,7 +114,7 @@ Attribute()(Pet, <span class="hljs-string">'name'</span>);
 Attribute({ <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span> })(Pet, <span class="hljs-string">'age'</span>);
 Attribute({ <span class="hljs-attr">toOne</span>: Person })(Pet, <span class="hljs-string">'owner'</span>);
 </code></pre>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 5/12/2023 by Kristian Djaković</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/getting-started/installation"><span class="arrow-prev">← </span><span>Installation</span></a><a class="docs-next button" href="/docs/next/getting-started/references"><span>References</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#typescript">TypeScript</a></li><li><a href="#javascript-without-decorators">JavaScript without decorators</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 5/12/2023 by Ivica Batinić</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/getting-started/installation"><span class="arrow-prev">← </span><span>Installation</span></a><a class="docs-next button" href="/docs/next/getting-started/references"><span>References</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#typescript">TypeScript</a></li><li><a href="#javascript-without-decorators">JavaScript without decorators</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
                 document.addEventListener('keyup', function(e) {
                   if (e.target !== document.body) {
                     return;
