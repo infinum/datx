@@ -97,19 +97,19 @@ For more details how to disable Mobx see [Disable Mobx](#disable-mobx) section.
 ```ts
 // src/models/Post.ts
 
-import { Attribute, PureModel } from '@datx/core';
+import { Field, PureModel } from '@datx/core';
 import { jsonapiModel } from '@datx/jsonapi';
 
 export class Post extends jsonapiModel(PureModel) {
   public static readonly type = 'posts';
 
-  @Attribute({ isIdentifier: true })
+  @Field({ isIdentifier: true })
   id!: number;
 
-  @Attribute()
+  @Field()
   title!: string;
 
-  @Attribute()
+  @Field()
   body!: string;
 }
 ```
@@ -117,16 +117,16 @@ export class Post extends jsonapiModel(PureModel) {
 ```ts
 // src/models/Todo.ts
 
-import { Attribute, PureModel } from '@datx/core';
+import { Field, PureModel } from '@datx/core';
 import { jsonapiModel } from '@datx/jsonapi';
 
 export class Todo extends jsonapiModel(PureModel) {
   public static readonly type = 'todos';
 
-  @Attribute({ isIdentifier: true })
+  @Field({ isIdentifier: true })
   id!: number;
 
-  @Attribute()
+  @Field()
   message!: string;
 }
 ```

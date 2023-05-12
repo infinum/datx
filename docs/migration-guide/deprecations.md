@@ -5,8 +5,8 @@ title: Deprecations in v2
 
 ## `@prop` attribute
 
-- `@prop` -> `@Attribute()`
-- `@prop.toMany(Foo)` -> `@Attribute({ toMany: Foo })`
+- `@prop` -> `@Field()`
+- `@prop.toMany(Foo)` -> `@Field({ toMany: Foo })`
 - etc.
 
 ## `fetch` and `fetchAll`

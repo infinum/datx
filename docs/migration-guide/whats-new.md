@@ -26,11 +26,11 @@ The collection `toJSON` will now also serialise and hydrate the cache that was l
 
 ## Polymorphic relationships
 
-DatX v1 had a limitation where a relationship on the model could only hold references to one model type. This limitation was removed in v2. When you define the reference by [using the `@Attribute` decorator](../attribute#polymorphic-relationships), you can either define the default type (another one will be used if another model type instance is passed) or you can define a function.
+DatX v1 had a limitation where a relationship on the model could only hold references to one model type. This limitation was removed in v2. When you define the reference by [using the `@Field` decorator](../attribute#polymorphic-relationships), you can either define the default type (another one will be used if another model type instance is passed) or you can define a function.
 
 ## Parsers & serializers
 
-Sometimes, you'll need to map your data in a way that might not be compatible with your API (or maybe for some other reason specific to your use case). This could range from renaming properties to converting them to other types (e.g. from a date string to a date object). This is where [parsers and serializers](../attribute) can be used. The functions are passed as options to the `@Attribute` decorator.
+Sometimes, you'll need to map your data in a way that might not be compatible with your API (or maybe for some other reason specific to your use case). This could range from renaming properties to converting them to other types (e.g. from a date string to a date object). This is where [parsers and serializers](../attribute) can be used. The functions are passed as options to the `@Field` decorator.
 
 ## Buckets
 

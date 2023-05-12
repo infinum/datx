@@ -1,4 +1,13 @@
-import { getMeta, setMeta, warn, mapItems, isArrayLike, mobx, IArraySplice, IObservableArray } from '@datx/utils';
+import {
+  getMeta,
+  setMeta,
+  warn,
+  mapItems,
+  isArrayLike,
+  mobx,
+  IArraySplice,
+  IObservableArray,
+} from '@datx/utils';
 
 import { PureModel } from '../../PureModel';
 import { IBucket } from '../../interfaces/IBucket';
@@ -6,7 +15,7 @@ import { TRefValue } from '../../interfaces/TRefValue';
 import { IIdentifier } from '../../interfaces/IIdentifier';
 import { getModelRefType } from './init';
 import { getModelCollection, getModelId, getModelRef, getModelType, isIdentifier } from './utils';
-import { IFieldDefinition, IReferenceDefinition } from '../../Attribute';
+import { IFieldDefinition, IReferenceDefinition } from '../../Field';
 import { MetaModelField } from '../../enums/MetaModelField';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { IType } from '../../interfaces/IType';

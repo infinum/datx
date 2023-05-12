@@ -5,13 +5,15 @@ export { IRawModel } from '@datx/utils';
 export const Bucket = { ToMany, ToOne, ToOneOrMany };
 
 export {
+  Field,
   Attribute,
+  ViewField,
   ViewAttribute,
   prop,
   view,
   IFieldDefinition,
   IReferenceDefinition,
-} from './Attribute';
+} from './Field';
 export { Collection } from './Collection';
 export { Model } from './Model';
 export { PureCollection } from './PureCollection';

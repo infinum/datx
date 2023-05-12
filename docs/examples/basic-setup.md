@@ -10,16 +10,16 @@ title: Basic setup
 
 ```typescript
 // /models/index.ts
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 import { computed } from 'mobx';
 
 export class Dog extends Model {
   public static type = 'dog';
 
-  @Attribute()
+  @Field()
   public breed!: string;
 
-  @Attribute()
+  @Field()
   public name!: string;
 
   @computed
@@ -31,16 +31,16 @@ export class Dog extends Model {
 export class Person extends Model {
   public static type = 'person';
 
-  @Attribute()
+  @Field()
   public id!: number;
 
-  @Attribute()
+  @Field()
   public name!: string;
 
-  @Attribute()
+  @Field()
   public age!: number;
 
-  @Attribute({ toOne: Dog })
+  @Field({ toOne: Dog })
   public favoriteDog!: Dog | null;
 
   @computed
@@ -58,16 +58,16 @@ export class Person extends Model {
 
 ```js
 // /models/index.js
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 import { computed } from 'mobx';
 
 class Dog extends Model {
   static type = 'dog';
 
-  @Attribute()
+  @Field()
   breed;
 
-  @Attribute()
+  @Field()
   name;
 
   @computed
@@ -79,13 +79,13 @@ class Dog extends Model {
 export class Person extends Model {
   static type = 'person';
 
-  @Attribute()
+  @Field()
   id;
 
-  @Attribute()
+  @Field()
   name;
 
-  @Attribute()
+  @Field()
   age;
 
   @computed
@@ -103,7 +103,7 @@ export class Person extends Model {
 
 ```js
 // /models/index.js
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 import { computed, decorate } from 'mobx';
 
 export class Dog extends Model {

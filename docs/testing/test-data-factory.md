@@ -459,17 +459,17 @@ const userFactory = factory({
 When using this library with JSON:API resources, factory will automatically support `meta` and `links` fields.
 
 ```ts
-import { Collection, Attribute, Model } from '@datx/core';
+import { Collection, Field, Model } from '@datx/core';
 import { jsonapi, getModelMeta, getModelLinks } from '@datx/jsonapi';
 import { createFactory, sequence, perBuild } from '@datx/test-data-factory';
 
 class User extends jsonapi(Model) {
   public static type = 'users';
 
-  @Attribute({ isIdentifier: true })
+  @Field({ isIdentifier: true })
   public id!: number;
 
-  @Attribute()
+  @Field()
   public name!: string;
 }
 

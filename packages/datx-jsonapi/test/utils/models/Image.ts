@@ -1,4 +1,4 @@
-import { IType, Model, prop } from '@datx/core';
+import { Field, IType, Model } from '@datx/core';
 import { mobx } from '@datx/utils';
 
 import { jsonapiModel } from '../../../src';
@@ -7,14 +7,14 @@ import { Event } from './Event';
 export class Image extends jsonapiModel(Model) {
   public static type: IType = 'image';
 
-  @prop
+  @Field()
   public name!: string;
 
-  @prop.toOne('event')
+  @Field({ toOne: 'event' })
   public event!: Event;
 
   @mobx.computed
-  get id(): string {
+  public get id(): string {
     return this.meta.id.toString();
   }
 }

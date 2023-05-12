@@ -39,26 +39,26 @@ The references are defined with the `Attribute` decorator and can be one of thre
 class Person extends Model {
   static type = 'person';
 
-  @Attribute({ isIdentifier: true })
+  @Field({ isIdentifier: true })
   public id!: number;
 
-  @Attribute()
+  @Field()
   public firstName!: string;
 
-  @Attribute()
+  @Field()
   public lastName!: string;
 
-  @Attribute({ toOne: Person })
+  @Field({ toOne: Person })
   public spouse!: Person;
 }
 
 class Pet extends Model {
   static type = 'pet';
 
-  @Attribute()
+  @Field()
   public name!: string;
 
-  @Attribute({ toOne: Person })
+  @Field({ toOne: Person })
   public owner!: Person;
 }
 
@@ -87,19 +87,19 @@ Since there is a direct reference in one direction, we can create a indirect ref
 class Person extends Model {
   static type = 'person';
 
-  @Attribute({ isIdentifier: true })
+  @Field({ isIdentifier: true })
   id: number;
 
-  @Attribute()
+  @Field()
   firstName: string;
 
-  @Attribute()
+  @Field()
   lastName: string;
 
-  @Attribute({ toOne: Person })
+  @Field({ toOne: Person })
   spouse: Person;
 
-  @Attribute({ toMany: Pet, referenceProperty: 'owner' })
+  @Field({ toMany: Pet, referenceProperty: 'owner' })
   pets: Array<Pet>;
 }
 
