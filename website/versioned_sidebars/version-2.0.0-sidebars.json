@@ -23,6 +23,7 @@
       "version-2.0.0-api-reference/model",
       "version-2.0.0-api-reference/view",
       "version-2.0.0-api-reference/attribute",
+      "version-2.0.0-api-reference/field",
       "version-2.0.0-api-reference/bucket",
       "version-2.0.0-api-reference/pure-model",
       "version-2.0.0-api-reference/model-utils",

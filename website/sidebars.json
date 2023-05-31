@@ -22,6 +22,7 @@
       "api-reference/model",
       "api-reference/view",
       "api-reference/attribute",
+      "api-reference/field",
       "api-reference/bucket",
       "api-reference/pure-model",
       "api-reference/model-utils",

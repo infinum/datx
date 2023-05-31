@@ -114,8 +114,8 @@ export class Dog extends Model {
   }
 }
 
-Attribute()(Dog, 'breed');
-Attribute()(Dog, 'name');
+Field()(Dog, 'breed');
+Field()(Dog, 'name');
 decorate(Dog, {
   greet: computed,
 });
@@ -132,10 +132,10 @@ export class Person extends Model {
   }
 }
 
-Attribute()(Person, 'id');
-Attribute()(Person, 'age');
-Attribute()(Person, 'name');
-Attribute({ toOne: Dog })(Person, 'favoriteDog');
+Field()(Person, 'id');
+Field()(Person, 'age');
+Field()(Person, 'name');
+Field({ toOne: Dog })(Person, 'favoriteDog');
 decorate(Person, {
   greet: computed,
 });

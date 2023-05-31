@@ -56,9 +56,9 @@ class Pet extends Model {
   public owner: Person;
 }
 
-Attribute()(Pet, 'name');
-Attribute({ defaultValue: 0 })(Pet, 'age');
-Attribute({ toOne: Person })(Pet, 'owner');
+Field()(Pet, 'name');
+Field({ defaultValue: 0 })(Pet, 'age');
+Field({ toOne: Person })(Pet, 'owner');
 ```
 
 #### JavaScript
@@ -70,7 +70,7 @@ class Pet extends Model {
   static type = 'pet';
 }
 
-Attribute()(Pet, 'name');
-Attribute({ defaultValue: 0 })(Pet, 'age');
-Attribute({ toOne: Person })(Pet, 'owner');
+Field()(Pet, 'name');
+Field({ defaultValue: 0 })(Pet, 'age');
+Field({ toOne: Person })(Pet, 'owner');
 ```
