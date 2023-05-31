@@ -14,6 +14,9 @@
       "api-reference/collection": {
         "title": "Collection"
       },
+      "api-reference/field": {
+        "title": "Field"
+      },
       "api-reference/lib-utils": {
         "title": "Lib utils"
       },
@@ -113,6 +116,9 @@
       },
       "migration-guide/breaking-changes": {
         "title": "Breaking changes since v1"
+      },
+      "migration-guide/codemods": {
+        "title": "Codemods"
       },
       "migration-guide/deprecations": {
         "title": "Deprecations in v2"
@@ -300,6 +306,9 @@
       "version-2.0.0/api-reference/version-2.0.0-collection": {
         "title": "Collection"
       },
+      "version-2.0.0/api-reference/version-2.0.0-field": {
+        "title": "Field"
+      },
       "version-2.0.0/api-reference/version-2.0.0-lib-utils": {
         "title": "Lib utils"
       },
@@ -391,6 +400,9 @@
       },
       "version-2.0.0/migration-guide/version-2.0.0-breaking-changes": {
         "title": "Breaking changes since v1"
+      },
+      "version-2.0.0/migration-guide/version-2.0.0-codemods": {
+        "title": "Codemods"
       },
       "version-2.0.0/migration-guide/version-2.0.0-deprecations": {
         "title": "Deprecations in v2"
