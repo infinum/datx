@@ -1,6 +1,6 @@
 {
   "name": "@datx/codemod",
-  "version": "2.5.1-beta.5",
+  "version": "2.6.1",
   "description": "DatX codemods",
   "repository": {
     "type": "git",
