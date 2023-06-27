@@ -1,7 +1,7 @@
 import { IType, Model } from '@datx/core';
 
-import { jsonapi } from '../../../src';
+import { jsonapiModel } from '../../../src';
 
-export class ProductVariant extends jsonapi(Model) {
+export class ProductVariant extends jsonapiModel(Model) {
   public static type: IType = 'product_variants';
 }

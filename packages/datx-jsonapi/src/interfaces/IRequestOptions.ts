@@ -4,11 +4,11 @@ import { CachingStrategy } from '@datx/network';
 
 export interface IRequestOptions {
   queryParams?: {
-    include?: string | Array<string>;
+    include?: string | ReadonlyArray<string>;
     filter?: IFilters;
-    sort?: string | Array<string>;
-    fields?: Record<string, string | Array<string>>;
-    custom?: Array<{ key: string; value: string } | string>;
+    sort?: string | ReadonlyArray<string>;
+    fields?: Record<string, string | ReadonlyArray<string>>;
+    custom?: ReadonlyArray<{ key: string; value: string } | string>;
   };
   cacheOptions?: {
     cachingStrategy?: CachingStrategy;

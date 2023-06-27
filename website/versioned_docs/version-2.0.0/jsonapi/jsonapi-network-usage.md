@@ -8,10 +8,10 @@ original_id: jsonapi-network-usage
 
 ```typescript
 import { Collection, Model } from '@datx/core';
-import { config, jsonapi } from '@datx/jsonapi';
+import { config, jsonapiCollection } from '@datx/jsonapi';
 config.baseUrl = 'https://example.com/';
 
-class MyCollection extends jsonapi(Collection) {}
+class MyCollection extends jsonapiCollection(Collection) {}
 const collection = new MyCollection();
 
 collection
@@ -26,10 +26,10 @@ collection
 
 ```typescript
 import { Collection, Model } from '@datx/core';
-import { config, jsonapi } from '@datx/jsonapi';
+import { config, jsonapiCollection } from '@datx/jsonapi';
 config.baseUrl = 'https://example.com/';
 
-class MyCollection extends jsonapi(Collection) {}
+class MyCollection extends jsonapiCollection(Collection) {}
 const collection = new MyCollection();
 
 collection
@@ -47,10 +47,10 @@ The request method can be used if something (url, method, etc.) is not standard:
 
 ```typescript
 import { Collection, Model } from '@datx/core';
-import { config, jsonapi } from '@datx/jsonapi';
+import { config, jsonapiCollection } from '@datx/jsonapi';
 config.baseUrl = 'https://example.com/';
 
-class MyCollection extends jsonapi(Collection) {}
+class MyCollection extends jsonapiCollection(Collection) {}
 const collection = new MyCollection();
 
 collection
@@ -65,11 +65,11 @@ collection
 
 ```typescript
 import { Collection, Model } from '@datx/core';
-import { config, jsonapi } from '@datx/jsonapi';
+import { config, jsonapiCollection } from '@datx/jsonapi';
 
 config.baseUrl = 'https://example.com/';
 
-class MyCollection extends jsonapi(Collection) {}
+class MyCollection extends jsonapiCollection(Collection) {}
 const collection = new MyCollection();
 
 // Get a list of all users if the API requires pagination

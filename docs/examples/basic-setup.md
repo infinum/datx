@@ -10,15 +10,15 @@ title: Basic setup
 
 ```typescript
 // /models/index.ts
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 
 export class Dog extends Model {
   public static type = 'dog';
 
-  @Attribute()
+  @Field()
   public breed!: string;
 
-  @Attribute()
+  @Field()
   public name!: string;
 
   public get greet() {
@@ -29,19 +29,18 @@ export class Dog extends Model {
 export class Person extends Model {
   public static type = 'person';
 
-  @Attribute()
+  @Field()
   public id!: number;
 
-  @Attribute()
+  @Field()
   public name!: string;
 
-  @Attribute()
+  @Field()
   public age!: number;
 
-  @Attribute({ toOne: Dog })
+  @Field({ toOne: Dog })
   public favoriteDog!: Dog | null;
 
-  @computed
   public get greet() {
     if (!this.favoriteDog) {
       return `Hey, I am ${this.name}.`;
@@ -56,15 +55,15 @@ export class Person extends Model {
 
 ```js
 // /models/index.js
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 
 class Dog extends Model {
   static type = 'dog';
 
-  @Attribute()
+  @Field()
   breed;
 
-  @Attribute()
+  @Field()
   name;
 
   get greet() {
@@ -75,13 +74,13 @@ class Dog extends Model {
 export class Person extends Model {
   static type = 'person';
 
-  @Attribute()
+  @Field()
   id;
 
-  @Attribute()
+  @Field()
   name;
 
-  @Attribute()
+  @Field()
   age;
 
   get greet() {
@@ -98,7 +97,7 @@ export class Person extends Model {
 
 ```js
 // /models/index.js
-import { Model, Attribute } from '@datx/core';
+import { Model, Field } from '@datx/core';
 
 export class Dog extends Model {
   static type = 'dog';
@@ -108,8 +107,8 @@ export class Dog extends Model {
   }
 }
 
-Attribute()(Dog, 'breed');
-Attribute()(Dog, 'name');
+Field()(Dog, 'breed');
+Field()(Dog, 'name');
 
 export class Person extends Model {
   static type = 'person';
@@ -123,10 +122,10 @@ export class Person extends Model {
   }
 }
 
-Attribute()(Person, 'id');
-Attribute()(Person, 'age');
-Attribute()(Person, 'name');
-Attribute({ toOne: Dog })(Person, 'favoriteDog');
+Field()(Person, 'id');
+Field()(Person, 'age');
+Field()(Person, 'name');
+Field({ toOne: Dog })(Person, 'favoriteDog');
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->

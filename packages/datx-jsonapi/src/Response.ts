@@ -9,12 +9,12 @@ import {
   View,
 } from '@datx/core';
 import { assignComputed, Headers, IResponseHeaders } from '@datx/utils';
+import type { IError, IJsonApiObject, ILink } from '@datx/jsonapi-types';
 
 import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IRawResponse } from './interfaces/IRawResponse';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IError, IJsonApiObject, ILink } from './interfaces/JsonApi';
 import { IResponseInternal } from './interfaces/IResponseInternal';
 
 import { GenericModel } from './GenericModel';
@@ -32,6 +32,9 @@ function serializeHeaders(
 
   const list: Array<[string, string]> = [];
 
+  if (!headers.forEach) {
+    return list;
+  }
   headers.forEach((value: string, key: string) => {
     list.push([key, value]);
   });
@@ -79,7 +82,7 @@ function initData<T extends IJsonapiModel>(
 type IAsync<T extends IJsonapiModel> = Promise<Response<T>>;
 
 export class Response<T extends IJsonapiModel, P = IAsync<T>> {
-  private __data;
+  private readonly __data;
 
   protected __internal: IResponseInternal = {
     response: {},
@@ -371,13 +374,13 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
         options.networkConfig = options.networkConfig || {};
         options.networkConfig.headers = this.requestHeaders;
         this.__cache[name] = (): P =>
-          (fetchLink<T>(
+          fetchLink<T>(
             link,
             this.collection,
             options,
             this.views,
             ResponseConstructor,
-          ) as unknown) as P;
+          ) as unknown as P;
       }
     }
 

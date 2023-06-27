@@ -9,7 +9,7 @@
       "getting-started/persisting-data-locally"
     ],
     "Mixins": [
-      "mixins/what-are-mixis",
+      "mixins/what-are-mixins",
       "mixins/with-actions",
       "mixins/with-meta",
       "mixins/with-patches",
@@ -22,6 +22,7 @@
       "api-reference/model",
       "api-reference/view",
       "api-reference/attribute",
+      "api-reference/field",
       "api-reference/bucket",
       "api-reference/pure-model",
       "api-reference/model-utils",
@@ -52,18 +53,16 @@
       "jsonapi/jsonapi-utils",
       "jsonapi/jsonapi-typescript-interfaces"
     ],
-    "JSON API Angular": [
-      "jsonapi-angular/mixin"
-    ],
+    "JSON API Angular": ["jsonapi-angular/mixin"],
+    "JSON API SWR": ["jsonapi-swr/overview", "jsonapi-swr/api"],
     "Migration guide": [
       "migration-guide/breaking-changes",
       "migration-guide/deprecations",
       "migration-guide/whats-new",
       "migration-guide/from-v1"
     ],
-    "Troubleshooting": [
-      "troubleshooting/known-issues"
-    ]
+    "Testing": ["testing/test-data-factory"],
+    "Troubleshooting": ["troubleshooting/known-issues"]
   },
   "examples": {
     "Setup": [

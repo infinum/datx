@@ -6,7 +6,7 @@ original_id: prop
 
 The `prop` decorator util is used to define the properties of the model. If needed, multiple prop decorators can be used on the same property.
 
-For usage examples check out the [defining models guide](Defining-models).
+For usage examples check out the [defining models guide](../getting-started/defining-models).
 
 It supports the following methods:
 
@@ -77,4 +77,4 @@ Defines a relationship to a single or multiple models. The value can also be und
 
 ## Using `prop` without decorators
 
-[In some cases](https://github.com/infinum/datx/issues/92), you might not be able to use the `@prop` decorator, but you can still use it as a function. The function has two arguments: the class you're decorating and name of the property you're decorating. You can find the example in the [defining models](https://github.com/infinum/datx/wiki/Defining-models#option-1) section.
+[In some cases](https://github.com/infinum/datx/issues/92), you might not be able to use the `@prop` decorator, but you can still use it as a function. The function has two arguments: the class you're decorating and name of the property you're decorating. You can find the example in the [defining models](../getting-started/defining-models#option-1) section.

@@ -18,7 +18,7 @@ import { IIdentifier } from '../../interfaces/IIdentifier';
 import { startAction, endAction } from '../patch';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { initModelField } from './init';
-import { IFieldDefinition } from '../../Attribute';
+import { IFieldDefinition } from '../../Field';
 import { IBucket } from '../../interfaces/IBucket';
 import { error } from '../format';
 import { ReferenceType } from '../../enums/ReferenceType';
@@ -36,7 +36,7 @@ export function modelMapParse(modelClass: typeof PureModel, data: object, key: s
     true,
   );
 
-  return parseFn(mapField ? data[mapField] : data[key], data);
+  return parseFn(mapField ? data[mapField] ?? data[key] : data[key], data);
 }
 
 export function modelMapSerialize(modelClass: typeof PureModel, data: object, key: string): any {
@@ -294,6 +294,9 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
   if (key in fields) {
     if (shouldBeReference && !fields[key].referenceDef) {
       throw error('You should save this value as a reference.');
+    }
+    if (key === getMeta(model.constructor, MetaClassField.IdField, undefined, true)) {
+      return;
     }
     // model[key] = shouldBeReference ? value : getRawData(value);
     model[key] = value;

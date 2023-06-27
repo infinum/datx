@@ -1,30 +1,41 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { IModelConstructor, IRawModel, IType } from '@datx/core';
-import { IRequestOptions } from '@datx/jsonapi';
-import { IRecord } from '@datx/jsonapi/dist/interfaces/JsonApi';
+import { IConfigType, IRequestOptions } from '@datx/jsonapi';
+import { IResourceObject } from '@datx/jsonapi-types';
 import { EMPTY, Observable } from 'rxjs';
-import { expand, map, mapTo, reduce } from 'rxjs/operators';
-import { APP_COLLECTION } from '../../injection-tokens';
+import { expand, map, reduce } from 'rxjs/operators';
+import { Response } from '../../Response';
+import { APP_COLLECTION, DATX_CONFIG } from '../../injection-tokens';
 import { IJsonapiCollection } from '../../interfaces/IJsonapiCollection';
 import { IJsonapiModel } from '../../interfaces/IJsonapiModel';
-import { Response } from '../../Response';
 
 @Injectable()
 export abstract class CollectionService<
   TModel extends IJsonapiModel,
-  TCollection extends IJsonapiCollection
+  TCollection extends IJsonapiCollection,
 > {
   protected abstract readonly ctor: IModelConstructor<TModel>;
   private readonly maxPageSize = 1000;
+  protected readonly collection: TCollection = inject(APP_COLLECTION);
 
-  constructor(@Inject(APP_COLLECTION) protected readonly collection: TCollection) {}
+  /**
+   * @note DO NOT REMOVE THIS, OR DATX CONFIG WILL NOT BE INITIALIZED
+   *
+   * This ensures that DATX_CONFIG factory is run once, whenever some specific CollectionService is used for the first time in application runtime.
+   *
+   * This makes DatX configuration lazy - it will be configured only when it is needed for the first time (by using some specific CollectionService).
+   * For example, when there is an APP_INITIALIZER that fetches some data using some specific CollectionService, this ensures that DatX will be configured in time.
+   *
+   * Even if noone actually reads datxConfig property, it sill needs to be here in order to trigger the factory. However, if someone does want to check DatX config (for whatever reason), they could read it from here instead of importing the mutated config object from DatX package.
+   */
+  protected readonly datxConfig: IConfigType = inject(DATX_CONFIG);
 
-  public setData(data: Array<IRawModel | IRecord>): Array<TModel> {
+  public setData(data: Array<IRawModel | IResourceObject>): Array<TModel> {
     this.collection.removeAll(this.ctor);
     return this.collection.add(data, this.ctor);
   }
 
-  public create(rawModel: IRawModel | IRecord): TModel {
+  public create(rawModel: IRawModel | IResourceObject): TModel {
     if (rawModel.id === null || rawModel.id === undefined || rawModel.id === '') {
       delete rawModel.id;
     }
@@ -32,7 +43,7 @@ export abstract class CollectionService<
     return this.collection.add(rawModel, this.ctor);
   }
 
-  public createAndSave(rawModel: IRawModel | IRecord): Observable<TModel> {
+  public createAndSave(rawModel: IRawModel | IResourceObject): Observable<TModel> {
     const model = this.create(rawModel);
     return this.update(model);
   }
@@ -98,10 +109,10 @@ export abstract class CollectionService<
   }
 
   public update(model: TModel): Observable<TModel> {
-    return model.save().pipe(mapTo(model));
+    return model.save().pipe(map(() => model));
   }
 
-  protected request(
+  public request(
     url: string,
     method?: string,
     data?: object,

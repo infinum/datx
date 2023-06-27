@@ -8,32 +8,48 @@
       "type": "node",
       "name": "DatX Utils Jest",
       "request": "launch",
-      "args": [
-        "--runInBand"
-      ],
+      "args": ["--runInBand"],
       "cwd": "${workspaceFolder}/packages/datx-utils",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-    }, {
+    },
+    {
       "type": "node",
       "name": "DatX Jest",
       "request": "launch",
-      "args": [
-        "--runInBand"
-      ],
+      "args": ["--runInBand"],
       "cwd": "${workspaceFolder}/packages/datx",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-    }, {
+    },
+    {
       "type": "node",
       "name": "DatX JSON API Jest",
       "request": "launch",
-      "args": [
-        "--runInBand"
-      ],
+      "args": ["--runInBand"],
       "cwd": "${workspaceFolder}/packages/datx-jsonapi",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+    },
+    {
+      "type": "node",
+      "name": "DatX Test Data Factory",
+      "request": "launch",
+      "args": ["--runInBand"],
+      "cwd": "${workspaceFolder}/packages/datx-test-data-factory",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+    },
+    {
+      "type": "node",
+      "name": "DatX Codemod",
+      "request": "launch",
+      "args": ["--runInBand"],
+      "cwd": "${workspaceFolder}/packages/datx-codemod",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest"

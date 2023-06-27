@@ -4,7 +4,7 @@ import { IPatch } from '../interfaces/IPatch';
 import { PureModel } from '../PureModel';
 import { getModelCollection, getModelId, getModelRef, getModelType } from './model/utils';
 import { MetaModelField } from '../enums/MetaModelField';
-import { IFieldDefinition } from '../Attribute';
+import { IFieldDefinition } from '../Field';
 
 function isEmptyObject(data: object): boolean {
   return Object.keys(data).length === 0;

@@ -50,7 +50,11 @@ describe('Request', () => {
       expect(true).toBe(false);
     } catch (e) {
       expect(store.length).toBe(0);
-      expect(e.error).toEqual({ message: 'Invalid HTTP status: 404', status: 404 });
+      expect(e).toHaveProperty('error');
+      expect((e as { error: unknown }).error).toEqual({
+        message: 'Invalid HTTP status: 404',
+        status: 404,
+      });
     }
   });
 

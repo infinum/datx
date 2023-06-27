@@ -1,18 +1,18 @@
-import { IType, Model, prop } from '@datx/core';
+import { Field, IType, Model } from '@datx/core';
 
-import { jsonapi } from '../../../src';
+import { jsonapiModel } from '../../../src';
 import { Event } from './Event';
 
-export class Image extends jsonapi(Model) {
+export class Image extends jsonapiModel(Model) {
   public static type: IType = 'image';
 
-  @prop
+  @Field()
   public name!: string;
 
-  @prop.toOne('event')
+  @Field({ toOne: 'event' })
   public event!: Event;
 
-  get id(): string {
+  public get id(): string {
     return this.meta.id.toString();
   }
 }

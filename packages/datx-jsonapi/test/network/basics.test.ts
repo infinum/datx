@@ -1,5 +1,5 @@
 import { Collection, Model } from '@datx/core';
-import * as fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch';
 
 import {
   fetchModelLink,
@@ -7,7 +7,8 @@ import {
   getModelLinks,
   getModelMeta,
   getModelRefMeta,
-  jsonapi,
+  jsonapiModel,
+  jsonapiCollection,
   modelToJsonApi,
   config,
 } from '../../src';
@@ -224,8 +225,8 @@ describe('Network basics', () => {
       expect(events.data instanceof Array && events.data[0]['title']).toBe('Test 1');
       expect(events.links).toBeInstanceOf(Object);
       if (events.links instanceof Object && typeof events.links.next === 'object') {
-        expect(events.links.next.href).toBe('https://example.com/event?page=2');
-        expect(events.links.next.meta.foo).toBe('bar');
+        expect(events.links.next?.href).toBe('https://example.com/event?page=2');
+        expect(events.links.next?.meta?.foo).toBe('bar');
       }
     }
 
@@ -387,7 +388,7 @@ describe('Network basics', () => {
   });
 
   it('should support endpoint', async () => {
-    class TestEvent extends jsonapi(Model) {
+    class TestEvent extends jsonapiModel(Model) {
       public static type = 'event';
 
       public static endpoint = 'foo/event';
@@ -397,7 +398,7 @@ describe('Network basics', () => {
       public static types = [TestEvent];
     }
 
-    const store = new (jsonapi(TestCollection))();
+    const store = new (jsonapiCollection(TestCollection))();
 
     setRequest({
       name: 'event-1',
@@ -420,7 +421,7 @@ describe('Network basics', () => {
   });
 
   it('should support functional endpoint', async () => {
-    class TestEvent extends jsonapi(Model) {
+    class TestEvent extends jsonapiModel(Model) {
       public static type = 'event';
 
       public static endpoint = (baseUrl: string): string => {
@@ -432,7 +433,7 @@ describe('Network basics', () => {
       public static types = [TestEvent];
     }
 
-    const store = new (jsonapi(TestCollection))();
+    const store = new (jsonapiCollection(TestCollection))();
 
     setRequest({
       name: 'event-1',

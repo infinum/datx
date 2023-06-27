@@ -4,7 +4,7 @@ import { PureModel } from '../../PureModel';
 import { PureCollection } from '../../PureCollection';
 import { MetaClassField } from '../../enums/MetaClassField';
 import { MetaModelField } from '../../enums/MetaModelField';
-import { IFieldDefinition, IReferenceDefinition, ParsedRefModel } from '../../Attribute';
+import { IFieldDefinition, IReferenceDefinition, ParsedRefModel } from '../../Field';
 import { ReferenceType } from '../../enums/ReferenceType';
 import {
   getModelType,

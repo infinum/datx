@@ -14,6 +14,7 @@ import {
   commitModel,
 } from '@datx/core';
 import { getMeta, IRawModel, mapItems, deprecated, isArrayLike } from '@datx/utils';
+import type { IDefinition, IRecord, IRelationship, IResponse } from '@datx/jsonapi-types';
 
 import {
   clearAllCache,
@@ -30,11 +31,12 @@ import { IHeaders } from './interfaces/IHeaders';
 import { IJsonapiCollection } from './interfaces/IJsonapiCollection';
 import { IJsonapiModel } from './interfaces/IJsonapiModel';
 import { IRequestOptions } from './interfaces/IRequestOptions';
-import { IDefinition, IRecord, IRelationship, IRequest, IResponse } from './interfaces/JsonApi';
+import { IRequest } from './interfaces/IRequest';
 import { libFetch, read } from './NetworkUtils';
 import { Response } from './Response';
 import { CachingStrategy } from '@datx/network';
 import { IGetAllResponse } from './interfaces/IGetAllResponse';
+import { DATX_JSONAPI_CLASS } from './consts';
 
 type TSerialisedStore = IRawCollection & { cache?: Array<Omit<ICacheInternal, 'collection'>> };
 
@@ -66,6 +68,8 @@ export function decorateCollection(
   BaseClass: typeof PureCollection,
 ): ICollectionConstructor<PureCollection & IJsonapiCollection> {
   class JsonapiCollection extends BaseClass {
+    public static [DATX_JSONAPI_CLASS] = true;
+
     public static types =
       BaseClass.types && BaseClass.types.length
         ? BaseClass.types.concat(GenericModel)
@@ -255,7 +259,7 @@ export function decorateCollection(
       const Type =
         staticCollection.types.find((item) => getModelType(item) === type) || GenericModel;
       const classRefs = getModelClassRefs(Type);
-      const flattened: IRawModel = flattenModel(classRefs, obj);
+      const flattened: IRawModel = flattenModel(classRefs, obj, Type);
 
       if (record) {
         upsertModel(flattened, type, this);
@@ -312,7 +316,7 @@ export function decorateCollection(
           } else {
             const refsDef = getMeta(record, 'refs') as Record<string, IReferenceOptions>;
 
-            if (refsDef && ref in refsDef && ref !== 'proto') {
+            if (refsDef && ref in refsDef && ref !== '__proto__') {
               record[ref] = refsDef[ref].type === ReferenceType.TO_MANY ? [] : null;
             }
           }

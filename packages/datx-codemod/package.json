@@ -1,0 +1,71 @@
+{
+  "name": "@datx/codemod",
+  "version": "2.6.1",
+  "description": "DatX codemods",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infinum/datx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/infinum/datx/issues"
+  },
+  "homepage": "https://github.com/infinum/datx#readme",
+  "author": "Infinum JavaScript Team <hello@infinum.com>",
+  "license": "MIT",
+  "files": [
+    "transforms/*.js",
+    "bin/*.js"
+  ],
+  "scripts": {
+    "dev": "tsc -w -p tsconfig.json",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch --coverage",
+    "prepublish": "npm run build",
+    "build": "tsc -p tsconfig.json && node ./prepublish.js",
+    "ts:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "chalk": "4.1.0",
+    "cheerio": "1.0.0-rc.9",
+    "execa": "4.0.3",
+    "globby": "11.0.1",
+    "inquirer": "7.3.3",
+    "is-git-clean": "1.1.0",
+    "jscodeshift": "0.13.1",
+    "meow": "7.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.1",
+    "@types/jscodeshift": "0.11.6",
+    "jest": "^28.1.1",
+    "typescript": "~4.7.3"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "src//transforms/__tests__",
+      "src//transforms/__testfixtures__",
+      "/node_modules/"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "testRegex": "src/transforms/__tests__/(.*).test.ts$",
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "warnOnly": true
+        }
+      }
+    },
+    "preset": "ts-jest",
+    "testMatch": null,
+    "coverageReporters": [
+      "json",
+      "html"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

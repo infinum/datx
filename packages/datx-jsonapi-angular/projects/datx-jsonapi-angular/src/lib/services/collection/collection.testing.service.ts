@@ -1,16 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { IModelConstructor, IRawModel, IType } from '@datx/core';
-import { IRequestOptions } from '@datx/jsonapi';
-import { IRecord } from '@datx/jsonapi/dist/interfaces/JsonApi';
+import { IConfigType, IRequestOptions } from '@datx/jsonapi';
 import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { APP_COLLECTION } from '../../injection-tokens';
+import { Response } from '../../Response';
+import { APP_COLLECTION, DATX_CONFIG } from '../../injection-tokens';
 import { IJsonapiCollection } from '../../interfaces/IJsonapiCollection';
 import { IJsonapiModel } from '../../interfaces/IJsonapiModel';
-import { Response } from '../../Response';
 import { ExtractPublic } from '../../types/extract-public';
 import { CollectionService } from './collection.service';
+import { IResourceObject } from '@datx/jsonapi-types';
 
 // TODO: share this helper somehow (the build will break if it is imported from ../../../test/utils and if test dir is not in listed in tsconfig include array)
 function asyncData<TData>(data: TData): Observable<TData> {
@@ -20,22 +20,24 @@ function asyncData<TData>(data: TData): Observable<TData> {
 @Injectable()
 export abstract class CollectionTestingService<
   TModel extends IJsonapiModel,
-  TCollection extends IJsonapiCollection
-> implements ExtractPublic<CollectionService<TModel, TCollection>> {
+  TCollection extends IJsonapiCollection,
+> implements ExtractPublic<CollectionService<TModel, TCollection>>
+{
   protected abstract ctor: IModelConstructor<TModel>;
 
-  constructor(@Inject(APP_COLLECTION) protected readonly collection: TCollection) {}
+  protected readonly collection: TCollection = inject(APP_COLLECTION);
+  protected readonly datxConfig: IConfigType = inject(DATX_CONFIG);
 
-  public setData(data: Array<IRawModel | IRecord>): Array<TModel> {
+  public setData(data: Array<IRawModel | IResourceObject>): Array<TModel> {
     this.collection.removeAll(this.ctor);
     return this.collection.add(data, this.ctor);
   }
 
-  public create(rawModel: IRawModel | IRecord): TModel {
+  public create(rawModel: IRawModel | IResourceObject): TModel {
     return this.collection.add(rawModel, this.ctor);
   }
 
-  public createAndSave(rawModel: IRawModel | IRecord): Observable<TModel> {
+  public createAndSave(rawModel: IRawModel | IResourceObject): Observable<TModel> {
     const model = this.create(rawModel);
     return this.update(model);
   }
@@ -81,5 +83,14 @@ export abstract class CollectionTestingService<
 
   public update(model: TModel): Observable<TModel> {
     return asyncData(model);
+  }
+
+  public request(
+    url: string,
+    method?: string | undefined,
+    data?: object | undefined,
+    options?: IRequestOptions | undefined,
+  ): Observable<Response<TModel>> {
+    return this.collection.request(url, method, data, options);
   }
 }

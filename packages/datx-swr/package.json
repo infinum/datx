@@ -1,0 +1,109 @@
+{
+  "name": "@datx/swr",
+  "version": "2.6.1",
+  "description": "DatX bindings for SWR",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infinum/datx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/infinum/datx/issues"
+  },
+  "homepage": "https://github.com/infinum/datx#readme",
+  "author": "Infinum JavaScript Team <hello@infinum.com>",
+  "license": "MIT",
+  "keywords": [
+    "datx",
+    "swr",
+    "jsonapi"
+  ],
+  "scripts": {
+    "test": "jest --coverage",
+    "test:dev": "jest",
+    "test:watch": "jest --watch --coverage",
+    "ts:check": "tsc --noEmit",
+    "prepublish": "npm run build",
+    "build": "rollup --config",
+    "watch": "rollup --config --watch"
+  },
+  "dependencies": {
+    "@datx/core": "2.6.1",
+    "@datx/jsonapi": "2.6.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "@testing-library/jest-dom": "5.16.5",
+    "@testing-library/react": "13.3.0",
+    "@testing-library/user-event": "14.2.1",
+    "@types/isomorphic-fetch": "0.0.36",
+    "@types/jest": "^28.1.1",
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^18.7.6",
+    "@types/uuid": "^8.3.4",
+    "isomorphic-fetch": "^3.0.0",
+    "jest": "^28.1.1",
+    "jest-environment-jsdom": "28.1.3",
+    "msw": "~0.49.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rollup": "^2.75.6",
+    "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.22",
+    "rollup-plugin-terser": "^7.0.2",
+    "swr": "2.0.0-beta.6",
+    "ts-jest": "^28.0.4",
+    "tslib": "~2.4.0",
+    "typescript": "~4.7.3",
+    "uuid": "^8.3.2"
+  },
+  "peerDependencies": {
+    "react": "^16.11.0 || ^17.0.0 || ^18.0.0",
+    "swr": "^1.3.0 || ^2.0.0"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "/test/",
+      "/node_modules/"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "tsx",
+      "jsx"
+    ],
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "warnOnly": true
+        }
+      }
+    },
+    "preset": "ts-jest",
+    "testMatch": null,
+    "testEnvironment": "jsdom",
+    "testRegex": "/test/.*\\.test\\.tsx?$",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/examples/",
+      "packages/.*/dist"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/setup.ts"
+    ],
+    "moduleNameMapper": {
+      "^@datx/swr": "<rootDir>/src",
+      "^@datx/utils": "<rootDir>/../datx-utils/src/",
+      "^@datx/jsonapi": "<rootDir>/../datx-jsonapi/src/"
+    },
+    "automock": false,
+    "resetMocks": false
+  }
+}

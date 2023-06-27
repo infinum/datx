@@ -10,9 +10,9 @@ DatX is an opinionated data store. It features support for references to other m
 
 ```typescript
 import { Collection, Model, Attribute } from '@datx/core';
-import { jsonapi } from '@datx/jsonapi';
+import { jsonapiCollection, jsonapiModel } from '@datx/jsonapi';
 
-class Person extends jsonapi(Model) {
+class Person extends jsonapiModel(Model) {
   public static type = 'person'; // Unique name of the model class
 
   @Attribute()
@@ -29,7 +29,7 @@ class Person extends jsonapi(Model) {
   }
 }
 
-class AppData extends jsonapi(Collection) {
+class AppData extends jsonapiCollection(Collection) {
   public static types = [Person]; // A list of models available in the collection
 }
 
@@ -95,4 +95,11 @@ The [MIT License](LICENSE)
 datx-jsonapi is maintained and sponsored by
 [Infinum](https://www.infinum.com).
 
-<img src="https://infinum.com/infinum.png" width="264">
+<p align="center">
+  <a href='https://infinum.com'>
+    <picture>
+        <source srcset="https://assets.infinum.com/brand/logo/static/white.svg" media="(prefers-color-scheme: dark)">
+        <img src="https://assets.infinum.com/brand/logo/static/default.svg">
+    </picture>
+  </a>
+</p>

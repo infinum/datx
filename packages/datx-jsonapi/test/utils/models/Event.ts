@@ -1,30 +1,30 @@
-import { IType, Model, prop } from '@datx/core';
+import { IType, Model, Field } from '@datx/core';
 
-import { jsonapi } from '../../../src';
+import { jsonapiModel } from '../../../src';
 import { Image } from './Image';
 import { Organizer } from './Organizer';
 
-export class Event extends jsonapi(Model) {
+export class Event extends jsonapiModel(Model) {
   public static type: IType = 'event';
 
-  @prop.identifier
+  @Field({ isIdentifier: true })
   public id!: string;
 
-  @prop
+  @Field()
   public name!: string;
 
-  @prop
+  @Field()
   public title!: string;
 
-  @prop.toMany(Organizer)
+  @Field({ toMany: Organizer })
   public organizers!: Array<Organizer>;
 
-  @prop.toMany(Image)
+  @Field({ toMany: Image })
   public images!: Array<Image>;
 
-  @prop.toOne(Image)
+  @Field({ toOne: Image })
   public image!: Image;
 
-  @prop
+  @Field()
   public imagesLinks!: Record<string, string>;
 }

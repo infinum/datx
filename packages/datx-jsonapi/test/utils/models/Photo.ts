@@ -1,10 +1,10 @@
-import { IType, Model, prop } from '@datx/core';
+import { IType, Model, Field } from '@datx/core';
 
-import { jsonapi } from '../../../src';
+import { jsonapiModel } from '../../../src';
 
-export class Photo extends jsonapi(Model) {
+export class Photo extends jsonapiModel(Model) {
   public static type: IType = 'photo';
 
-  @prop.defaultValue(false)
+  @Field({ defaultValue: false })
   public selected!: boolean;
 }

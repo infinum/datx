@@ -44,7 +44,8 @@ describe('caching', () => {
           await request.fetch();
           throw Error('The request should fail');
         } catch (response) {
-          expect((response as Response<PureModel>)?.error).toEqual(
+          expect(response).toHaveProperty('error');
+          expect((response as { error: unknown })?.error).toEqual(
             new Error('Network not available'),
           );
         }
@@ -91,7 +92,8 @@ describe('caching', () => {
           await request.fetch();
           throw Error('The request should fail');
         } catch (response) {
-          expect((response as Response<PureModel>)?.error).toEqual(
+          expect(response).toHaveProperty('error');
+          expect((response as { error: unknown })?.error).toEqual(
             new Error('Network not available'),
           );
         }
@@ -184,7 +186,8 @@ describe('caching', () => {
           await request.fetch();
           throw Error('The request should fail');
         } catch (response) {
-          expect((response as Response<PureModel>)?.error?.toString()).toBe(
+          expect(response).toHaveProperty('error');
+          expect((response as { error: Error })?.error.toString()).toBe(
             'Error: No cache for this request',
           );
         }
@@ -260,7 +263,8 @@ describe('caching', () => {
           await request.fetch();
           throw Error('The request should fail');
         } catch (response) {
-          expect((response as Response<PureModel>)?.error?.toString()).toBe(
+          expect(response).toHaveProperty('error');
+          expect((response as { error: Error })?.error.toString()).toBe(
             'Error: Network not available',
           );
         }
@@ -298,10 +302,9 @@ describe('caching', () => {
         try {
           await request.fetch();
           throw Error('The request should fail');
-        } catch (response) {
-          expect((response as Response<PureModel>)?.error?.toString()).toBe(
-            'Error: Network not available',
-          );
+        } catch (e) {
+          expect(e).toHaveProperty('error');
+          expect((e as { error: Error })?.error.toString()).toBe('Error: Network not available');
         }
 
         saveCacheForCollection(rawCache);
@@ -358,7 +361,8 @@ describe('caching', () => {
           await request.fetch();
           throw Error('The request should fail');
         } catch (response) {
-          expect((response as Response<PureModel>)?.error?.toString()).toBe(
+          expect(response).toHaveProperty('error');
+          expect((response as { error: Error })?.error.toString()).toBe(
             'Error: Invalid caching strategy',
           );
         }

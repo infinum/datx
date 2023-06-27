@@ -9,7 +9,7 @@
       "version-2.0.0-getting-started/persisting-data-locally"
     ],
     "Mixins": [
-      "version-2.0.0-mixins/what-are-mixis",
+      "version-2.0.0-mixins/what-are-mixins",
       "version-2.0.0-mixins/with-actions",
       "version-2.0.0-mixins/with-meta",
       "version-2.0.0-mixins/with-patches",
@@ -23,6 +23,7 @@
       "version-2.0.0-api-reference/model",
       "version-2.0.0-api-reference/view",
       "version-2.0.0-api-reference/attribute",
+      "version-2.0.0-api-reference/field",
       "version-2.0.0-api-reference/bucket",
       "version-2.0.0-api-reference/pure-model",
       "version-2.0.0-api-reference/model-utils",
@@ -57,15 +58,16 @@
       "version-2.0.0-jsonapi-angular/mixin",
       "version-2.0.0-jsonapi-angular/example-repo"
     ],
+    "JSON API SWR": ["version-2.0.0-jsonapi-swr/overview", "version-2.0.0-jsonapi-swr/api"],
     "Migration guide": [
       "version-2.0.0-migration-guide/breaking-changes",
       "version-2.0.0-migration-guide/deprecations",
       "version-2.0.0-migration-guide/whats-new",
       "version-2.0.0-migration-guide/from-v1"
     ],
-    "Troubleshooting": [
-      "version-2.0.0-troubleshooting/known-issues"
-    ]
+
+    "Testing": ["version-2.0.0-testing/test-data-factory"],
+    "Troubleshooting": ["version-2.0.0-troubleshooting/known-issues"]
   },
   "version-2.0.0-examples": {
     "Setup": [

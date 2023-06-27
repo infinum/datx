@@ -3,13 +3,18 @@ import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import excludeDependenciesFromBundle from 'rollup-plugin-exclude-dependencies-from-bundle';
+import generatePackageJson from 'rollup-plugin-generate-package-json';
+import copy from 'rollup-plugin-copy';
 
 import pkg from './package.json';
 
 export default [
   {
     input: './src/index.ts',
-    output: [{ file: pkg.main, format: 'cjs' }],
+    output: [
+      { file: pkg.main, format: 'cjs', sourcemap: true },
+      { file: pkg.module, format: 'es', sourcemap: true },
+    ],
     plugins: [
       resolve(),
       commonjs(),
@@ -27,6 +32,22 @@ export default [
         output: {
           comments: false,
         },
+      }),
+      generatePackageJson({
+        outputFolder: 'dist',
+        baseContents: (pack) => ({
+          ...pack,
+          main: './index.cjs.js',
+          module: './index.esm.js',
+          typings: './index.d.ts',
+          jest: undefined,
+          scripts: undefined,
+          devDependencies: {},
+          husky: undefined,
+        }),
+      }),
+      copy({
+        targets: [{ src: 'README.md', dest: 'dist' }],
       }),
     ],
     onwarn(warning, rollupWarn) {

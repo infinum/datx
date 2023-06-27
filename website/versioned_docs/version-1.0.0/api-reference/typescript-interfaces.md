@@ -50,7 +50,7 @@ interface ICollectionFetchOpts {
 
 ## IRawResponse
 
-Options received by the [`transformResponse`](JSONAPI-Config#transformresponse) method:
+Options received by the [`transformResponse`](jsonapi-config#transformresponse) method:
 
 ```typescript
 interface IRawResponse {

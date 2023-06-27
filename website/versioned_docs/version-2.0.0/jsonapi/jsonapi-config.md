@@ -104,7 +104,7 @@ Note: It is recommended not to modify the existing object but instead create a c
 transformResponse(response: IRawResponse): IRawResponse
 ```
 
-Can be used to modify the response before it's parsed. It is receiving a [IRawResponse](typescript-nterfaces#irawresponse) object, and it should also return an object with the same interface.
+Can be used to modify the response before it's parsed. It is receiving a [IRawResponse](../api-reference/typescript-interfaces#irawresponse) object, and it should also return an object with the same interface.
 
 Note: It is recommended not to modify the existing object but instead create a copy.
 

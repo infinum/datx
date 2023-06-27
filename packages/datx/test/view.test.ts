@@ -1,6 +1,9 @@
 import { Collection, Model, View, Attribute } from '../src';
 import { updateModelId } from '../src/helpers/model/fields';
-import { ViewAttribute } from '../src/Attribute';
+import { ViewAttribute } from '../src/Field';
+
+// @ts-ignore
+testMobx.configure({ enforceActions: 'observed' });
 
 describe('View', () => {
   it('should init a view', () => {

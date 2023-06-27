@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.build.json",
+  "include": ["src/**/*", "test/**/*"],
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@datx/swr": ["./src"]
+    }
+  }
+}

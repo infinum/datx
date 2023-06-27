@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { config, IRawResponse } from '@datx/jsonapi';
-import { IResponseHeaders } from '@datx/utils/dist/interfaces/IResponseHeaders';
+import { IResponseHeaders } from '@datx/utils';
 import { Observable } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-@Injectable()
 export class CustomFetchService {
   constructor(private readonly httpClient: HttpClient) {}
 
@@ -34,7 +32,7 @@ export class CustomFetchService {
         map((response) => {
           return {
             data: response.body,
-            headers: (response.headers as unknown) as IResponseHeaders, // The interface actually matches
+            headers: response.headers as unknown as IResponseHeaders, // The interface actually matches
             requestHeaders,
             status: response.status,
           } as IRawResponse;
