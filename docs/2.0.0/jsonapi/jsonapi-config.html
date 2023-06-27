@@ -1,0 +1,165 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Config · datx</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="The library is exposing a config for some networking related options:"/><meta name="docsearch:version" content="2.0.0"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Config · datx"/><meta property="og:type" content="website"/><meta property="og:url" content="https://datx.dev/"/><meta property="og:description" content="The library is exposing a config for some networking related options:"/><meta property="og:image" content="https://datx.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://datx.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><link rel="stylesheet" href="/css/code-block-buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/code-block-buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100}
+          )
+        });
+        </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/datx-logo.svg" alt="datx"/><h2 class="headerTitleWithLogo">datx</h2></a><a href="/versions"><h3>2.0.0</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/2.0.0/getting-started/installation" target="_self">Docs</a></li><li class=""><a href="/docs/2.0.0/examples/basic-setup" target="_self">Examples</a></li><li class=""><a href="https://github.com/infinum/datx" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>JSON API</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Getting started<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/installation">Installation</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/defining-models">Defining models</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/references">References</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/configuring-the-collection">Configuring the collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/using-the-collection">Using the collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/persisting-data-locally">Persisting data locally</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Mixins<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/what-are-mixins">What are mixins</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-actions">withActions</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-meta">withMeta</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-patches">withPatches</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/network-mixin">Network Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/jsonapi-mixin">JSONAPI Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/jsonapi-angular-mixin">JSONAPI Angular Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/building-your-own-mixin">Build your own mixin</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">API Reference<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/collection">Collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/model">Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/view">View</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/attribute">Attribute</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/field">Field</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/bucket">Bucket</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/pure-model">Pure Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/model-utils">Model utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/lib-utils">Lib utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/typescript-interfaces">Typescript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Network<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/getting-started">Getting started with DatX Network</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/base-request">BaseRequest</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/caching">Caching</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/fetching">Fetching</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/interceptors">Interceptors</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/operators">Operators</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/response">Response</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/typescript-interfaces">TypeScript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-getting-started">Getting started with JSON API</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-basic-configuration">Basic configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-network-configuration">Network configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-network-usage">Network usage</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-spec-compliance">Spec compliance</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-model">Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-collection">Collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-view">View</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-response">Response</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-config">Config</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-utils">Utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-typescript-interfaces">Typescript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API Angular<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-angular/mixin">Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-angular/example-repo">Example repo</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API SWR<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-swr/overview">Overview</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-swr/api">API</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Migration guide<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/breaking-changes">Breaking changes since v1</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/deprecations">Deprecations in v2</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/whats-new">What&#x27;s new</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/from-v1">Migration from v1</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Testing<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/testing/test-data-factory">Test data factory</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Troubleshooting<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/troubleshooting/known-issues">Known issues</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Config</h1></header><article><div><span><p>The library is exposing a config for some networking related options:</p>
+<h2><a class="anchor" aria-hidden="true" id="baseurl"></a><a href="#baseurl" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>baseUrl</h2>
+<p>The base URL used for the networking. By default, this is <code>&quot;/&quot;</code>, but can be changed to something like <code>&quot;https://example.com/api/&quot;</code></p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi'</span>;
+
+config.baseUrl = <span class="hljs-string">'https://example.com/api/'</span>;
+
+<span class="hljs-comment">// Ready for some API calls</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="fetchreference"></a><a href="#fetchreference" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>fetchReference</h2>
+<p>If you want to use the <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch">fetch API</a>, but need to use a different implementation, like <a href="https://www.npmjs.com/package/isomorphic-fetch"><code>isomorphic-fetch</code></a>, you can set the new reference here.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi'</span>;
+<span class="hljs-keyword">import</span> fetch <span class="hljs-keyword">from</span> <span class="hljs-string">'isomorphic-fetch'</span>;
+
+config.fetchReference = fetch;
+
+<span class="hljs-comment">// Ready for some API calls</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="defaultfetchoptions"></a><a href="#defaultfetchoptions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>defaultFetchOptions</h2>
+<p>If needed, you can define default options that are passed to the fetch method. Keep in mind that the body and method properties will be overridden.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi'</span>;
+
+config.defaultFetchOptions = {
+  <span class="hljs-attr">credentials</span>: <span class="hljs-string">'same-origin'</span>,
+  <span class="hljs-attr">headers</span>: {
+    <span class="hljs-comment">// My custom headers</span>
+  },
+};
+
+<span class="hljs-comment">// Ready for some API calls</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="encodequerystring"></a><a href="#encodequerystring" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>encodeQueryString</h2>
+<p>URL query string isn't encoded by default, so you have to manually encode query params which may contain URL-unsafe characters (for example, user input), to ensure the URL is valid. This option enables encoding of all params handled by the lib.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> { config } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi'</span>;
+
+config.encodeQueryString = <span class="hljs-literal">true</span>;
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="paramarraytype"></a><a href="#paramarraytype" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>paramArrayType</h2>
+<p>Some JSON API param formats are not strictly specified (like <a href="http://jsonapi.org/recommendations/#filtering">filter</a>), while others might not always be implemented according to the spec. To work around this, the lib exposes the <code>paramArrayType</code> property in the config. It can be one of the four values exposed in the <code>ParamArrayType</code> enum:</p>
+<ul>
+<li><code>COMMA_SEPARATED</code> (default value) - filter[a]=1,2</li>
+<li><code>MULTIPLE_PARAMS</code> - filter[a]=1&amp;filter[a]=2</li>
+<li><code>PARAM_ARRAY</code> - filter[a][]=1&amp;filter[a][]=2</li>
+<li><code>OBJECT_PATH</code> - filter[a.0]=1&amp;filter[a.1]=2</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="basefetch"></a><a href="#basefetch" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>baseFetch</h2>
+<p>If you want to use something other than the fetch API (e.g. jQuery, superagent, axios or anything else), you'll need to override the <code>baseFetch</code> method.</p>
+<pre><code class="hljs css language-typescript">baseFetch(
+  method: <span class="hljs-built_in">string</span>,
+  url: <span class="hljs-built_in">string</span>,
+  body?: object,
+  requestHeaders?: IHeaders,
+): <span class="hljs-built_in">Promise</span>&lt;IRawResponse&gt;
+</code></pre>
+<p>The function will receive a request method, request url, a body object and request headers (key/value object), and it needs to return a promise that resolves to <a href="Interfaces#irawresponse">a raw response object</a> - a JSON API valid response with some additional properties:</p>
+<ul>
+<li><code>status</code> - HTTP status</li>
+<li><code>requestHeaders</code> - the same object that was received by the function</li>
+<li><code>headers</code> - A <a href="https://developer.mozilla.org/en-US/docs/Web/API/Headers">Headers</a> object received from the server</li>
+</ul>
+<p>Depending on your <code>baseFetch</code> implementation, you might not need the <code>baseUrl</code>, <code>fetchReference</code> and <code>defaultHeaders</code> properties since they're consumed by the default <code>baseFetch</code> implementation.</p>
+<h2><a class="anchor" aria-hidden="true" id="transformrequest"></a><a href="#transformrequest" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>transformRequest</h2>
+<pre><code class="hljs css language-typescript">transformRequest(options: ICollectionFetchOptions): ICollectionFetchOptions
+</code></pre>
+<p>Can be used to modify the request before it's made. It is receiving a <a href="typescript-interfaces#icollectionfetchopts">ICollectionFetchOptions</a> object, and it should also return an object with the same interface.</p>
+<p>Note: It is recommended not to modify the existing object but instead create a copy.</p>
+<h2><a class="anchor" aria-hidden="true" id="transformresponse"></a><a href="#transformresponse" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>transformResponse</h2>
+<pre><code class="hljs css language-typescript">transformResponse(response: IRawResponse): IRawResponse
+</code></pre>
+<p>Can be used to modify the response before it's parsed. It is receiving a <a href="../api-reference/typescript-interfaces#irawresponse">IRawResponse</a> object, and it should also return an object with the same interface.</p>
+<p>Note: It is recommended not to modify the existing object but instead create a copy.</p>
+<h2><a class="anchor" aria-hidden="true" id="onerror"></a><a href="#onerror" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>onError</h2>
+<pre><code class="hljs css language-typescript">onError(IResponseObject): IResponseObject;
+</code></pre>
+<p>Can be used to modify the response on error. By default it will just pass the regular response.</p>
+<h2><a class="anchor" aria-hidden="true" id="caching"></a><a href="#caching" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Caching</h2>
+<pre><code class="hljs css language-typescript">cache: CachingStrategy;
+maxCacheAge: <span class="hljs-built_in">number</span>; <span class="hljs-comment">// seconds</span>
+</code></pre>
+<p>Options for caching of requests. This can be overridden on a collection or request level. The default caching strategy is <code>NetworkOnly</code> (no caching).</p>
+<h2><a class="anchor" aria-hidden="true" id="usepatchwhenpossible"></a><a href="#usepatchwhenpossible" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>usePatchWhenPossible</h2>
+<pre><code class="hljs css language-typescript">usePatchWhenPossible: <span class="hljs-built_in">boolean</span>;
+</code></pre>
+<p>Defaults to <code>true</code>. If set to <code>false</code>, the library will always use <code>PUT</code> for updates. This is useful if your API doesn't support <code>PATCH</code> requests. (available since 2.4.5)</p>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 6/27/2023 by Darko Kukovec</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/2.0.0/jsonapi/jsonapi-response"><span class="arrow-prev">← </span><span>Response</span></a><a class="docs-next button" href="/docs/2.0.0/jsonapi/jsonapi-utils"><span>Utils</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#baseurl">baseUrl</a></li><li><a href="#fetchreference">fetchReference</a></li><li><a href="#defaultfetchoptions">defaultFetchOptions</a></li><li><a href="#encodequerystring">encodeQueryString</a></li><li><a href="#paramarraytype">paramArrayType</a></li><li><a href="#basefetch">baseFetch</a></li><li><a href="#transformrequest">transformRequest</a></li><li><a href="#transformresponse">transformResponse</a></li><li><a href="#onerror">onError</a></li><li><a href="#caching">Caching</a></li><li><a href="#usepatchwhenpossible">usePatchWhenPossible</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'f03607e57957ae747b2342443460477a',
+                indexName: 'datx',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

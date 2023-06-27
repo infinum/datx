@@ -1,0 +1,300 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>React setup · datx</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Preface"/><meta name="docsearch:version" content="2.0.0"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="React setup · datx"/><meta property="og:type" content="website"/><meta property="og:url" content="https://datx.dev/"/><meta property="og:description" content="## Preface"/><meta property="og:image" content="https://datx.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://datx.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><link rel="stylesheet" href="/css/code-block-buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/code-block-buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100}
+          )
+        });
+        </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/datx-logo.svg" alt="datx"/><h2 class="headerTitleWithLogo">datx</h2></a><a href="/versions"><h3>2.0.0</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/2.0.0/getting-started/installation" target="_self">Docs</a></li><li class="siteNavGroupActive"><a href="/docs/2.0.0/examples/basic-setup" target="_self">Examples</a></li><li class=""><a href="https://github.com/infinum/datx" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Setup</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Setup<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/examples/basic-setup">Basic setup</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/2.0.0/examples/react-setup">React setup</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/examples/nextjs-setup">Next.js Setup</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/examples/angular-setup">Angular JSON:API setup</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Collection<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/examples/adding-models">Adding models</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">React setup</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="preface"></a><a href="#preface" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Preface</h2>
+<p>This examples uses the <code>react-mobx ^6.x</code> since we will be only using functional components with <a href="https://reactjs.org/docs/hooks-intro.html">hooks</a>.</p>
+<p>If your codebase does not support hooks, you can check out <a href="https://mobx-react.js.org/libraries">mobx-react docs</a> for more info.</p>
+<h2><a class="anchor" aria-hidden="true" id="getting-started"></a><a href="#getting-started" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Getting started</h2>
+<p>Steps:</p>
+<ul>
+<li><a href="./basic-setup">Setup your collection and models</a></li>
+<li><a href="./react-setup#storeprovider">Create <code>&lt;StoreProvider&gt;</code> that will wrap initial <code>&lt;App /&gt;</code> component</a></li>
+<li><a href="./react-setup#usestores-hook">Create <code>useStores</code> hook</a></li>
+<li><a href="./react-setup#use-your-store">Use your store in component</a></li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="storeprovider"></a><a href="#storeprovider" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>StoreProvider</code></h2>
+<p>Store provider is nothing but a <a href="https://reactjs.org/docs/context.html#contextprovider">react context provider</a> that will hold our initialized store instances.</p>
+<p>Inside our store folder, along with models and collection(s), we will create a <code>StoreContext</code> file with store context setup.</p>
+<div class="tabs"><div class="nav-tabs"><div id="tab-group-29-tab-30" class="nav-link active" data-group="group_29" data-tab="tab-group-29-content-30">TypeScript</div><div id="tab-group-29-tab-31" class="nav-link" data-group="group_29" data-tab="tab-group-29-content-31">JavaScript</div></div><div class="tab-content"><div id="tab-group-29-content-30" class="tab-pane active" data-group="group_29" tabindex="-1"><div><span><pre><code class="hljs css language-tsx"><span class="hljs-comment">// store/StoreProvider.tsx</span><br /><br /><span class="hljs-keyword">import</span> { createContext, ReactNode } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;<br /><br /><span class="hljs-keyword">import</span> AppStore <span class="hljs-keyword">from</span> <span class="hljs-string">'./AppStore'</span>;<br /><br /><span class="hljs-keyword">export</span> interface IStores {<br />  <span class="hljs-attr">store</span>: AppStore;<br />}<br /><br />interface IProviderProps {<br />  <span class="hljs-attr">children</span>: ReactNode;<br />}<br /><br /><span class="hljs-keyword">const</span> storeContext = createContext&lt;IStores&gt;({ store });<br /><br /><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> StoreProvider = <span class="hljs-function">(<span class="hljs-params">{ children }: IProviderProps</span>) =&gt;</span> {<br />  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">storeContext.Provider</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{{</span> <span class="hljs-attr">store</span> }}&gt;</span>{children}<span class="hljs-tag">&lt;/<span class="hljs-name">storeContext.Provider</span>&gt;</span></span>;<br />};<br /></code></pre>
+</span></div></div><div id="tab-group-29-content-31" class="tab-pane" data-group="group_29" tabindex="-1"><div><span><pre><code class="hljs css language-jsx"><span class="hljs-comment">// store/StoreProvider.jsx</span><br /><br /><span class="hljs-keyword">import</span> { createContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;<br /><br /><span class="hljs-keyword">import</span> AppStore <span class="hljs-keyword">from</span> <span class="hljs-string">'./AppStore'</span>;<br /><br /><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> storeContext = createContext({ store });<br /><br /><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> StoreProvider = <span class="hljs-function">(<span class="hljs-params">{ children }</span>) =&gt;</span> {<br />  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">storeContext.Provider</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{{</span> <span class="hljs-attr">store</span> }}&gt;</span>{children}<span class="hljs-tag">&lt;/<span class="hljs-name">storeContext.Provider</span>&gt;</span></span>;<br />};<br /></code></pre>
+</span></div></div></div></div>
+<h2><a class="anchor" aria-hidden="true" id="usestores-hook"></a><a href="#usestores-hook" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>useStores</code> hook</h2>
+<p>Our <code>useStores</code> hook will get access to the <code>storeContext</code> via <a href="https://reactjs.org/docs/hooks-reference.html#usecontext">useContext</a> hook and give us an object of our stores we added as value to our <code>&lt;StoreProvider&gt;</code>.</p>
+<pre><code class="hljs css language-js"><span class="hljs-comment">// /hooks/useStores.ts</span>
+
+<span class="hljs-keyword">import</span> { useContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+
+<span class="hljs-keyword">import</span> { storeContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'../store/StoreProvider.tsx'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> useStores = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> useContext(storeContext);
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="use-your-store"></a><a href="#use-your-store" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Use your store</h2>
+<p>In this section, we will show you a couple different ways of observing your store changes in your components, and differences between them.</p>
+<ul>
+<li>Using <code>observer</code> HOC</li>
+<li>Using <code>&lt;Observer&gt;</code> component</li>
+<li>Using <code>useObserver</code> hook</li>
+</ul>
+<p>But first, we will setup our app with <code>StoreProvider</code> and use our store in our component with <code>useStores</code> hook.</p>
+<h3><a class="anchor" aria-hidden="true" id="setup-your-app"></a><a href="#setup-your-app" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Setup your app</h3>
+<pre><code class="hljs css language-jsx"><span class="hljs-comment">// /index.tsx (or jsx)</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { render } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
+
+<span class="hljs-keyword">import</span> { App } <span class="hljs-keyword">from</span> <span class="hljs-string">'./App'</span>;
+<span class="hljs-keyword">import</span> { StoreProvider } <span class="hljs-keyword">from</span> <span class="hljs-string">'./store/StoreContext'</span>;
+
+<span class="hljs-keyword">const</span> rootElement = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'root'</span>);
+render(
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">StoreProvider</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">StoreProvider</span>&gt;</span></span>,
+  rootElement,
+);
+</code></pre>
+<p>Now, our <code>&lt;App&gt;</code> component has access to the <code>storeContext</code> via <code>useStores</code> hook. (Since useStores hook returns a <code>useContext()</code> hook with <code>storeContext</code> as its parameter)</p>
+<h3><a class="anchor" aria-hidden="true" id="use-store-inside-wrapped-component"></a><a href="#use-store-inside-wrapped-component" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Use store inside wrapped component</h3>
+<pre><code class="hljs css language-jsx"><span class="hljs-comment">// components/App.tsx (or jsx)</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+
+<span class="hljs-keyword">import</span> { useStore } <span class="hljs-keyword">from</span> <span class="hljs-string">'./store/StoreContext'</span>;
+<span class="hljs-keyword">import</span> { Book } <span class="hljs-keyword">from</span> <span class="hljs-string">'./store/models/Book'</span>;
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./styles.css'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> { store } = useStore();
+  <span class="hljs-keyword">const</span> books = store.findAll(Book);
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"App"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Your books: {books.length}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span> // 2
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+};
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="using-observer-hoc"></a><a href="#using-observer-hoc" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Using <code>observer</code> HOC</h3>
+<p>When wrapping your component in <code>observer</code> HOC, the component will become reactive and will re-render every time when a observable changes (e.g. you remove a model from a store).</p>
+<blockquote>
+<p>Quick note: Since we don't use <a href="https://reactjs.org/docs/legacy-context.html">legacy context</a>, you don't have to worry about the warning described on <a href="https://mobx-react.js.org/observer-hoc">mobx-react docs</a></p>
+</blockquote>
+<pre><code class="hljs css language-jsx"><span class="hljs-comment">// components/App.tsx (or jsx)</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { observer } <span class="hljs-keyword">from</span> <span class="hljs-string">'mobx-react'</span>;
+
+<span class="hljs-keyword">import</span> { useStore } <span class="hljs-keyword">from</span> <span class="hljs-string">'./store/StoreContext'</span>;
+<span class="hljs-keyword">import</span> { Book } <span class="hljs-keyword">from</span> <span class="hljs-string">'./store/models/Book'</span>;
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./styles.css'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> App = observer(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> { store } = useStore();
+
+  <span class="hljs-keyword">const</span> handleRemoveBook = <span class="hljs-function">(<span class="hljs-params">bookId</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      store.removeOne(Book, bookId);
+    };
+  };
+
+  <span class="hljs-built_in">console</span>.log(store.getAllModels()); <span class="hljs-comment">// 4 -&gt; 3</span>
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"App"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Your books: {store.books.length}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {store.books.map((book) =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{book.id}</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>
+              {book.title} <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{handleRemoveBook(book.id)}</span>&gt;</span>X<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">small</span>&gt;</span>by {book.author.name}<span class="hljs-tag">&lt;/<span class="hljs-name">small</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+});
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="using-useobserver-hook"></a><a href="#using-useobserver-hook" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Using <code>useObserver</code> hook</h3>
+<p>Here, we use <code>useObserver</code> hook to return our jsx element when observable change. Despite using it in the middle of our component, our entire component will be re-rendered on observable change.</p>
+<p>Read more on <a href="https://mobx-react.js.org/observer-hook">mobx-react</a> docs.</p>
+<pre><code class="hljs css language-jsx"><span class="hljs-comment">// components/App.tsx (or jsx)</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { useObserver } <span class="hljs-keyword">from</span> <span class="hljs-string">'mobx-react'</span>;
+
+<span class="hljs-keyword">import</span> { useStore } <span class="hljs-keyword">from</span> <span class="hljs-string">'./store/StoreContext'</span>;
+<span class="hljs-keyword">import</span> { Book } <span class="hljs-keyword">from</span> <span class="hljs-string">'./store/models/Book'</span>;
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./styles.css'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> { store } = useStore();
+
+  <span class="hljs-keyword">const</span> handleRemoveBook = <span class="hljs-function">(<span class="hljs-params">bookId</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      store.removeOne(Book, bookId);
+    };
+  };
+
+  <span class="hljs-built_in">console</span>.log(store.getAllModels()); <span class="hljs-comment">// 4 -&gt; 3</span>
+
+  <span class="hljs-keyword">return</span> useObserver(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"App"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Your books: {store.books.length}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {store.books.map((book) =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{book.id}</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>
+              {book.title} <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{handleRemoveBook(book.id)}</span>&gt;</span>X<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">small</span>&gt;</span>by {book.author.name}<span class="hljs-tag">&lt;/<span class="hljs-name">small</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  ));
+};
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="using-observer-component"></a><a href="#using-observer-component" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Using <code>&lt;Observer&gt;</code> component</h3>
+<p>When using the Observer component, only a portion of code will be updated on observable change. It is a good approach if you have a large component and you want to update just a specific part(s) that needs to listen to changes.</p>
+<blockquote>
+<p>Since observer can see observables only within its own render function, nesting another component with render prop will prevent Observer to observe changes. Check out <a href="https://mobx-react.js.org/observer-component#nesting-caveat">mobx-react docs</a> for more information.</p>
+</blockquote>
+<pre><code class="hljs css language-jsx"><span class="hljs-comment">// components/App.tsx (or jsx)</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { useObserver } <span class="hljs-keyword">from</span> <span class="hljs-string">'mobx-react'</span>;
+
+<span class="hljs-keyword">import</span> { useStore } <span class="hljs-keyword">from</span> <span class="hljs-string">'./store/StoreContext'</span>;
+<span class="hljs-keyword">import</span> { Book } <span class="hljs-keyword">from</span> <span class="hljs-string">'./store/models/Book'</span>;
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">'./styles.css'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> { store } = useStore();
+
+  <span class="hljs-keyword">const</span> handleRemoveBook = <span class="hljs-function">(<span class="hljs-params">bookId</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      store.removeOne(Book, bookId);
+    };
+  };
+
+  <span class="hljs-built_in">console</span>.log(store.getAllModels()); <span class="hljs-comment">// Always 4</span>
+
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"App"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Your books: {store.books.length}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span> {/** Oops, this will stay 2 */}
+      <span class="hljs-tag">&lt;<span class="hljs-name">Observer</span>&gt;</span>
+        {() =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+            {store.books.map((book) =&gt; (
+              <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{book.id}</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>
+                  {book.title} <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{handleRemoveBook(book.id)}</span>&gt;</span>X<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">small</span>&gt;</span>by {book.author.name}<span class="hljs-tag">&lt;/<span class="hljs-name">small</span>&gt;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+            ))}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+        )}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">Observer</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  );
+};
+</code></pre>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="related"></a><a href="#related" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Related</h2>
+<div class="docs-card">
+  <a href="/docs/examples/basic-setup">
+    <h4>Basic setup</h4>
+    <small>Setup your datx store and models</small>
+  </a>
+</div>
+<div class="docs-card">
+  <a href="/docs/examples/adding-models">
+    <h4>Adding models</h4>
+    <small>Learn the different ways of adding models to your store</small>
+  </a>
+</div>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 6/27/2023 by Darko Kukovec</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/2.0.0/examples/basic-setup"><span class="arrow-prev">← </span><span>Basic setup</span></a><a class="docs-next button" href="/docs/2.0.0/examples/nextjs-setup"><span>Next.js setup</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#preface">Preface</a></li><li><a href="#getting-started">Getting started</a></li><li><a href="#storeprovider"><code>StoreProvider</code></a></li><li><a href="#usestores-hook"><code>useStores</code> hook</a></li><li><a href="#use-your-store">Use your store</a><ul class="toc-headings"><li><a href="#setup-your-app">Setup your app</a></li><li><a href="#use-store-inside-wrapped-component">Use store inside wrapped component</a></li><li><a href="#using-observer-hoc">Using <code>observer</code> HOC</a></li><li><a href="#using-useobserver-hook">Using <code>useObserver</code> hook</a></li><li><a href="#using-observer-component">Using <code>&lt;Observer&gt;</code> component</a></li></ul></li><li><a href="#related">Related</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'f03607e57957ae747b2342443460477a',
+                indexName: 'datx',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
