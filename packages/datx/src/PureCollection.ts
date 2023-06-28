@@ -220,6 +220,7 @@ export class PureCollection {
     } else if (id) {
       model = this.findOne(obj, id);
     }
+
     if (model) {
       this.__removeModel(model);
     }
@@ -283,6 +284,10 @@ export class PureCollection {
     const stringType = type.toString();
     const stringId = id.toString();
 
+    if (stringType === '__proto__' || stringId === '__proto__') {
+      return null;
+    }
+
     if (!(type in this.__dataMap)) {
       // @ts-ignore
       this.__dataMap[stringType] = { [stringId]: null };
@@ -339,6 +344,7 @@ export class PureCollection {
     const modelInstance = upsertModel(data, type, this);
 
     const collectionTypes = (this.constructor as typeof PureCollection).types.map(getModelType);
+
     if (
       !collectionTypes.includes(type) &&
       (typeof model === 'object' || typeof model === 'function')
@@ -368,6 +374,10 @@ export class PureCollection {
 
     const modelType = type || getModelType(model);
     const modelId = id || getModelId(model);
+
+    if (modelType === '__proto__' || modelId === '__proto__') {
+      return;
+    }
 
     triggerAction(
       {
@@ -434,10 +444,12 @@ export class PureCollection {
       if (existingModel !== model) {
         updateModel(existingModel, model);
       }
+
       return;
     }
 
     this.__data.push(model);
+
     if (modelType in this.__dataList) {
       this.__dataList[modelType].push(model);
     } else {

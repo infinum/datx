@@ -2054,15 +2054,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datx/core@npm:2.6.1":
-  version: 2.6.1
-  resolution: "@datx/core@npm:2.6.1"
-  dependencies:
-    "@datx/utils": 2.5.1
-  checksum: ee3a079413a99fcf0b61d29b086ec240ec00cf8ae6b6052126b03dbc02d37c426d16ba362861687a2d154c755ae260dbc5a9d7012ab3305bf52fa3a00cdc633a
-  languageName: node
-  linkType: hard
-
 "@datx/jsonapi-angular@workspace:packages/datx-jsonapi-angular":
   version: 0.0.0-use.local
   resolution: "@datx/jsonapi-angular@workspace:packages/datx-jsonapi-angular"
@@ -2078,11 +2069,11 @@ __metadata:
     "@angular/platform-browser": ~14.2.0
     "@angular/platform-browser-dynamic": ~14.1.2
     "@angular/router": ~14.2.0
-    "@datx/core": 2.6.1
-    "@datx/jsonapi": 2.6.1
-    "@datx/jsonapi-types": 2.5.1
-    "@datx/network": 2.6.1
-    "@datx/utils": 2.5.1
+    "@datx/core": 3.0.0-beta.0
+    "@datx/jsonapi": 3.0.0-beta.0
+    "@datx/jsonapi-types": 3.0.0-beta.0
+    "@datx/network": 3.0.0-beta.0
+    "@datx/utils": 3.0.0-beta.0
     "@types/jest": ^28.1.1
     "@types/node": ^18.7.6
     jest: ^28.1.1
@@ -2095,13 +2086,13 @@ __metadata:
   peerDependencies:
     "@datx/core": 3.0.0-beta.0
     "@datx/jsonapi": 3.0.0-beta.0
-    "@datx/jsonapi-types": 2.5.1
+    "@datx/jsonapi-types": 3.0.0-beta.0
     "@datx/network": 3.0.0-beta.0
     "@datx/utils": 3.0.0-beta.0
   languageName: unknown
   linkType: soft
 
-"@datx/jsonapi-types@2.5.1, @datx/jsonapi-types@workspace:packages/datx-jsonapi-types":
+"@datx/jsonapi-types@3.0.0-beta.0, @datx/jsonapi-types@workspace:packages/datx-jsonapi-types":
   version: 0.0.0-use.local
   resolution: "@datx/jsonapi-types@workspace:packages/datx-jsonapi-types"
   dependencies:
@@ -2122,18 +2113,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datx/jsonapi@npm:2.6.1":
-  version: 2.6.1
-  resolution: "@datx/jsonapi@npm:2.6.1"
-  dependencies:
-    "@datx/core": 2.6.1
-    "@datx/network": 2.6.1
-    "@datx/utils": 2.5.1
-  checksum: a25d4d600714646ac58884898deccec256d56ec3a7b46d09767592d5a3358edd2841f898f4cb16c85cb0adf4e4fc25c594dcfb2699b9b847d7f07fe912859135
-  languageName: node
-  linkType: hard
-
-"@datx/jsonapi@workspace:packages/datx-jsonapi":
+"@datx/jsonapi@3.0.0-beta.0, @datx/jsonapi@workspace:packages/datx-jsonapi":
   version: 0.0.0-use.local
   resolution: "@datx/jsonapi@workspace:packages/datx-jsonapi"
   dependencies:
@@ -2185,22 +2165,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datx/network@npm:2.6.1":
-  version: 2.6.1
-  resolution: "@datx/network@npm:2.6.1"
-  dependencies:
-    "@datx/core": 2.6.1
-    "@datx/utils": 2.5.1
-  checksum: 25d9dde09ca6aa063b4dcb7118d25f70722d1a555a9a7102c03a464c9fc05277a2c41de3e51c6fe7e1b1c36bb181b64d8d6d7113dfd74552c4d4bea2cbbc4cd9
-  languageName: node
-  linkType: hard
-
 "@datx/swr@workspace:packages/datx-swr":
   version: 0.0.0-use.local
   resolution: "@datx/swr@workspace:packages/datx-swr"
   dependencies:
-    "@datx/core": 2.6.1
-    "@datx/jsonapi": 2.6.1
+    "@datx/core": 3.0.0-beta.0
+    "@datx/jsonapi": 3.0.0-beta.0
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-node-resolve": ^13.3.0
     "@rollup/plugin-typescript": ^8.3.2
@@ -2236,6 +2206,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@datx/test-data-factory@workspace:packages/datx-test-data-factory"
   dependencies:
+    "@datx/core": 3.0.0-beta.0
+    "@datx/jsonapi": 3.0.0-beta.0
+    "@datx/utils": 3.0.0-beta.0
     "@rollup/plugin-commonjs": ^22.0.0
     "@rollup/plugin-node-resolve": ^13.3.0
     "@rollup/plugin-typescript": ^8.3.2
@@ -2250,6 +2223,10 @@ __metadata:
     ts-jest: ^28.0.4
     tslib: ~2.4.0
     typescript: ~4.7.3
+  peerDependencies:
+    "@datx/core": 3.0.0-beta.0
+    "@datx/jsonapi": 3.0.0-beta.0
+    "@datx/utils": 3.0.0-beta.0
   languageName: unknown
   linkType: soft
 
@@ -2272,13 +2249,6 @@ __metadata:
     typescript: ~4.7.3
   languageName: unknown
   linkType: soft
-
-"@datx/utils@npm:2.5.1":
-  version: 2.5.1
-  resolution: "@datx/utils@npm:2.5.1"
-  checksum: aa8ae396d2ed460e211055c0fe2719eb5c570b9c528c14bef8aead2016090e0a0ddb4462b374deb836b533dc8429d52e478e97c01b9fd1f190673fd31df3b7df
-  languageName: node
-  linkType: hard
 
 "@discoveryjs/json-ext@npm:0.5.7":
   version: 0.5.7
@@ -3409,7 +3379,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nrwl/cli@npm:15.9.4, @nrwl/cli@npm:^15.9.2":
+"@nrwl/cli@npm:15.9.4, @nrwl/cli@npm:^15.9.3":
   version: 15.9.4
   resolution: "@nrwl/cli@npm:15.9.4"
   dependencies:
@@ -6983,7 +6953,7 @@ __metadata:
   dependencies:
     "@infinumjs/eslint-config-core-ts": ^3.3.1
     "@manypkg/cli": ^0.19.2
-    "@nrwl/cli": ^15.9.2
+    "@nrwl/cli": ^15.9.3
     "@typescript-eslint/eslint-plugin": ^5.27.1
     "@typescript-eslint/parser": ^5.27.1
     eslint: ^8.17.0
