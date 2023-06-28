@@ -105,8 +105,6 @@
 <h3><a class="anchor" aria-hidden="true" id="client-initialization"></a><a href="#client-initialization" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Client initialization</h3>
 <pre><code class="hljs css language-tsx"><span class="hljs-comment">// src/pages/_app.tsx</span>
 
-<span class="hljs-keyword">import</span> <span class="hljs-string">'@datx/core/disable-mobx'</span>;
-
 <span class="hljs-keyword">import</span> type { AppProps } <span class="hljs-keyword">from</span> <span class="hljs-string">'next/app'</span>;
 <span class="hljs-keyword">import</span> { createFetcher, DatxProvider, useInitialize } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/swr'</span>;
 <span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'../datx/createClient'</span>;
@@ -130,7 +128,6 @@
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> ExampleApp;
 </code></pre>
-<p>For more details how to disable Mobx see <a href="#disable-mobx">Disable Mobx</a> section.</p>
 <h3><a class="anchor" aria-hidden="true" id="define-models"></a><a href="#define-models" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Define models</h3>
 <pre><code class="hljs css language-ts"><span class="hljs-comment">// src/models/Post.ts</span>
 
@@ -239,11 +236,15 @@ If you use a function, it's recommended to add <code>get</code> prefix to indica
 <p>Datx SWR supports concept of lazy initializer function. It's a function that returns a query or <code>null</code> if query should not be executed.</p>
 <p>Lazy initializer function is SWR concept used for conditional fetching. You can find more details in <a href="https://swr.vercel.app/docs/conditional-fetching">SWR Conditional Fetching</a> documentation.</p>
 <h4><a class="anchor" aria-hidden="true" id="simple-conditionally-fetch"></a><a href="#simple-conditionally-fetch" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Simple conditionally fetch</h4>
-<pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> { data: post } = useDatx(id ? {
-  id,
-  op: <span class="hljs-string">'getOne'</span>,
-  <span class="hljs-keyword">type</span>: <span class="hljs-string">'posts'</span>,
-} : <span class="hljs-literal">null</span>);
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> { data: post } = useDatx(
+  id
+    ? {
+        id,
+        op: <span class="hljs-string">'getOne'</span>,
+        <span class="hljs-keyword">type</span>: <span class="hljs-string">'posts'</span>,
+      }
+    : <span class="hljs-literal">null</span>,
+);
 </code></pre>
 <h4><a class="anchor" aria-hidden="true" id="lazy-initializer-function-which-returns-falsy-value"></a><a href="#lazy-initializer-function-which-returns-falsy-value" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Lazy initializer function which returns falsy value</h4>
 <pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> getPost = <span class="hljs-function">(<span class="hljs-params">id?: <span class="hljs-built_in">string</span></span>) =&gt;</span>
@@ -382,27 +383,7 @@ If you use a function, it's recommended to add <code>get</code> prefix to indica
   );
 };
 </code></pre>
-<h2><a class="anchor" aria-hidden="true" id="disable-mobx-in-nextjs-projects"></a><a href="#disable-mobx-in-nextjs-projects" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Disable Mobx in Next.js projects</h2>
-<p>Since we don't want to use Mobx, we need to add a little boilerplate to work around that. First, we need to instruct DatX not to use Mobx, by adding <code>@datx/core/disable-mobx</code> before App bootstrap:</p>
-<pre><code class="hljs css language-tsx"><span class="hljs-comment">// src/pages/_app.tsx</span>
-
-<span class="hljs-meta"><span class="hljs-meta-keyword">import</span> '@datx/core/disable-mobx';</span>
-</code></pre>
-<p>Next, we need to overwrite Mobx path so that it can be resolved by Datx:</p>
-<pre><code class="hljs css language-json"><span class="hljs-comment">// /tsconfig.json</span>
-
-{
-  <span class="hljs-attr">"compilerOptions"</span>: {
-    <span class="hljs-attr">"paths"</span>: {
-      <span class="hljs-attr">"mobx"</span>: [<span class="hljs-string">"./mobx.js"</span>]
-    }
-  }
-}
-</code></pre>
-<blockquote>
-<p><code>./mobx.js</code> is an empty file!</p>
-</blockquote>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 6/27/2023 by Darko Kukovec</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/jsonapi-angular/mixin"><span class="arrow-prev">← </span><span>Angular JSON:API mixin</span></a><a class="docs-next button" href="/docs/next/jsonapi-swr/api"><span>API</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#install">Install</a></li><li><a href="#basic-usage-with-nextjs">Basic usage with Next.js</a><ul class="toc-headings"><li><a href="#datx-client-initializer-function">Datx Client initializer function</a></li><li><a href="#client-types-override">Client types override</a></li><li><a href="#client-initialization">Client initialization</a></li><li><a href="#define-models">Define models</a></li><li><a href="#define-queries">Define queries</a></li><li><a href="#query-naming-convention">Query naming convention</a></li><li><a href="#conditional-data-fetching">Conditional data fetching</a></li><li><a href="#define-mutations">Define mutations</a></li><li><a href="#ssr">SSR</a></li><li><a href="#use-data-fetching-and-mutations-together">Use data fetching and mutations together</a></li></ul></li><li><a href="#disable-mobx-in-nextjs-projects">Disable Mobx in Next.js projects</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 6/28/2023 by Darko Kukovec</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/jsonapi-angular/mixin"><span class="arrow-prev">← </span><span>Angular JSON:API mixin</span></a><a class="docs-next button" href="/docs/next/jsonapi-swr/api"><span>API</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#install">Install</a></li><li><a href="#basic-usage-with-nextjs">Basic usage with Next.js</a><ul class="toc-headings"><li><a href="#datx-client-initializer-function">Datx Client initializer function</a></li><li><a href="#client-types-override">Client types override</a></li><li><a href="#client-initialization">Client initialization</a></li><li><a href="#define-models">Define models</a></li><li><a href="#define-queries">Define queries</a></li><li><a href="#query-naming-convention">Query naming convention</a></li><li><a href="#conditional-data-fetching">Conditional data fetching</a></li><li><a href="#define-mutations">Define mutations</a></li><li><a href="#ssr">SSR</a></li><li><a href="#use-data-fetching-and-mutations-together">Use data fetching and mutations together</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
                 document.addEventListener('keyup', function(e) {
                   if (e.target !== document.body) {
                     return;
