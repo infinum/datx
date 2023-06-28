@@ -15,7 +15,6 @@
   "license": "MIT",
   "keywords": [
     "datx",
-    "mobx",
     "jsonapi",
     "angular"
   ],
@@ -25,11 +24,11 @@
   "peerDependencies": {
     "@angular/common": ">=14",
     "@angular/core": ">=14",
-    "@datx/core": "2.5.1",
-    "@datx/jsonapi": "2.5.1",
-    "@datx/jsonapi-types": "2.5.1",
-    "@datx/network": "2.5.1",
-    "@datx/utils": "2.5.1",
+    "@datx/core": "3.0.0-beta.0",
+    "@datx/jsonapi": "3.0.0-beta.0",
+    "@datx/jsonapi-types": "3.0.0-beta.0",
+    "@datx/network": "3.0.0-beta.0",
+    "@datx/utils": "3.0.0-beta.0",
     "rxjs": "6 || 7"
   }
 }

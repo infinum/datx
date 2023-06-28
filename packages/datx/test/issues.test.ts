@@ -10,9 +10,6 @@ import {
 } from '../src';
 import { META_FIELD } from '@datx/utils';
 
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
-
 describe('issues', () => {
   it('should remove references on collection remove', () => {
     class Bar extends PureModel {

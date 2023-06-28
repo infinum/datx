@@ -30,7 +30,7 @@ The `length` property contains a total number of models in the collection instan
 
 ### snapshot
 
-A current plain JS value of the collection. The value is always immutable - a new instance is created on every change. The property is a computed property, so it can be observed using MobX.
+A current plain JS value of the collection. The value is always immutable - a new instance is created on every change.
 
 ### types
 

@@ -26,7 +26,6 @@
     "@types/jest": "^28.1.1",
     "@types/node": "^18.7.6",
     "jest": "^28.1.1",
-    "mobx": "^6.6.0",
     "rollup": "^2.75.6",
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.22",
     "rollup-plugin-generate-package-json": "^3.2.0",

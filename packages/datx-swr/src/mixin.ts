@@ -5,8 +5,8 @@ import {
   IRawResponse,
   IRequestOptions,
   jsonapiCollection,
+  IGetAllResponse,
 } from '@datx/jsonapi';
-import { IGetAllResponse } from '@datx/jsonapi/dist/interfaces/IGetAllResponse';
 import { unstable_serialize } from 'swr';
 import { createFetcher, isGetAll } from './createFetcher';
 import { JsonapiModel } from './interfaces/Client';

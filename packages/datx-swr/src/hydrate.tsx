@@ -1,10 +1,9 @@
 import { PropsWithChildren } from 'react';
-import { IJsonapiModel, Response } from '@datx/jsonapi';
+import { IJsonapiModel, Response, IGetAllResponse } from '@datx/jsonapi';
 import { SWRConfig } from 'swr';
 import { useClient } from './hooks/useClient';
 import { IClientInstance } from './interfaces/Client';
 import { Fallback } from './interfaces/Fallback';
-import { IGetAllResponse } from '@datx/jsonapi/dist/interfaces/IGetAllResponse';
 
 const hydrate = (client: IClientInstance, fallback: Fallback | undefined) => {
   if (!fallback) {

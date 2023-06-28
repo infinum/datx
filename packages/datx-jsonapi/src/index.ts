@@ -31,6 +31,7 @@ export { IJsonapiView } from './interfaces/IJsonapiView';
 export { IRawResponse } from './interfaces/IRawResponse';
 export { IRequestOptions } from './interfaces/IRequestOptions';
 export { IResponseSnapshot } from './interfaces/IResponseSnapshot';
+export { IGetAllResponse } from './interfaces/IGetAllResponse';
 
 export {
   /**

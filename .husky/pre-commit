@@ -2,5 +2,5 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npm run lint
-lerna run ts:check
-lerna run test
+npm run ts:check
+npm run test
