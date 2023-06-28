@@ -59,6 +59,7 @@ describe('overrides', () => {
         expect(user.name).toBe('JOHN');
 
         user.name = 'new name';
+
         return user;
       },
     });

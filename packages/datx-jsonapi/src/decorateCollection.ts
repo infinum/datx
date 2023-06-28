@@ -115,6 +115,7 @@ export function decorateCollection(
       options?: IRequestOptions,
     ): Promise<Response<T>> {
       deprecated('fetch is deprecated, use getOne instead');
+
       return this.getOne(
         type,
         id,
@@ -138,6 +139,7 @@ export function decorateCollection(
       options?: IRequestOptions,
     ): Promise<Response<T>> {
       deprecated('fetchAll is deprecated, use getMany instead');
+
       return this.getMany(
         type,
         Object.assign({}, options, {

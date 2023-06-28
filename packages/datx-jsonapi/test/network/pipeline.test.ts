@@ -71,6 +71,7 @@ describe('pipeline', () => {
     const mockEventWithRelationships = JSON.parse(
       fs.readFileSync('./test/mock/event-1f.json', 'utf-8'),
     );
+
     request['resetMock']({ status: 200, json: async () => mockEventWithRelationships });
 
     const response = await request.fetch();

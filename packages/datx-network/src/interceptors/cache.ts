@@ -95,12 +95,15 @@ function makeNetworkCall<T extends PureModel>(
   return next(params).then(
     (response: Response<T>) => {
       let finalResponse = response;
+
       if (existingResponse) {
         finalResponse = existingResponse.update(response, params.views);
       }
+
       if (doCacheResponse) {
         saveCache(params.url, finalResponse);
       }
+
       return finalResponse;
     },
     (response: Response<T>) => {
@@ -156,6 +159,7 @@ export function cacheInterceptor<T extends PureModel>(
         if (cacheContent) {
           return cacheContent.response;
         }
+
         throw errorResponse;
       });
     }
@@ -168,6 +172,7 @@ export function cacheInterceptor<T extends PureModel>(
         network.catch(() => {
           // Ignore the failure
         });
+
         return Promise.resolve(cacheContent.response);
       }
 
@@ -202,6 +207,7 @@ export function cacheInterceptor<T extends PureModel>(
         network.catch(() => {
           // Ignore the failure
         });
+
         return Promise.resolve(existingResponse);
       }
 

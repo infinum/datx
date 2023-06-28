@@ -46,6 +46,7 @@ export class ToOne<T extends PureModel> {
       throw error('The value needs to be a reference');
     }
     this.__rawValue = data;
+
     if (this.__model && this.__key) {
       updateSingleAction(this.__model, this.__key, data);
     }
@@ -81,6 +82,7 @@ export class ToOne<T extends PureModel> {
     if (!this.__skipMissing) {
       return model as any;
     }
+
     return null;
   }
 }

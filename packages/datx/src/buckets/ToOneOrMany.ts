@@ -20,6 +20,7 @@ export class ToOneOrMany<T extends PureModel> {
     protected __skipMissing = true,
   ) {
     this.__isList = Array.isArray(data);
+
     if (this.__isList) {
       this.__toManyBucket = new ToMany(
         data as Array<T | IModelRef>,
@@ -43,9 +44,11 @@ export class ToOneOrMany<T extends PureModel> {
 
   public setCollection(value: PureCollection | undefined): void {
     this.__collection = value;
+
     if (this.__toManyBucket) {
       this.__toManyBucket.setCollection(value);
     }
+
     if (this.__toOneBucket) {
       this.__toOneBucket.setCollection(value);
     }
@@ -57,6 +60,7 @@ export class ToOneOrMany<T extends PureModel> {
 
   public set value(data: T | Array<T> | null) {
     this.__isList = Array.isArray(data);
+
     if (this.__isList) {
       if (this.__toManyBucket) {
         this.__toManyBucket.value = data as Array<T>;
@@ -74,6 +78,7 @@ export class ToOneOrMany<T extends PureModel> {
   // @ts-ignore
   private set __readonlyValue(data: T | Array<T> | null) {
     this.__isList = Array.isArray(data);
+
     if (this.__isList) {
       if (this.__toManyBucket) {
         // @ts-ignore

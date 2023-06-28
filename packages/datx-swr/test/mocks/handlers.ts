@@ -2,6 +2,7 @@ import { rest } from 'msw';
 import { BASE_URL } from '../constants';
 
 export const message = 'JSON:API paints my bikeshed!';
+
 export const todoResource = {
   type: 'todos',
   id: '1',
@@ -11,6 +12,7 @@ export const todoResource = {
 };
 
 export const name = 'John Doe';
+
 export const personResource = {
   type: 'persons',
   id: '1',
@@ -27,6 +29,7 @@ export const handlers = [
   }),
   rest.get(`${BASE_URL}todos`, (req, res, ctx) => {
     const pageIndex = parseInt(req.url.searchParams.get('page[index]') ?? '0');
+
     if (pageIndex >= 1) {
       return res(ctx.status(200), ctx.json(jsonApiRawWrapper([])));
     }

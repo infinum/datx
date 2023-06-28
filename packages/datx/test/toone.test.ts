@@ -182,6 +182,7 @@ describe('ToOne', () => {
             expect(parentModel).toBeInstanceOf(Foo);
             expect(key).toBe('bar');
             expect(collection).toBeInstanceOf(PureCollection);
+
             return Bar;
           },
         })
@@ -213,6 +214,7 @@ describe('ToOne', () => {
         @Attribute({
           toOne: (data) => {
             expect(data).toEqual({ value: 1 });
+
             return 'bar';
           },
         })
@@ -244,6 +246,7 @@ describe('ToOne', () => {
         @Attribute({
           toOne: (data) => {
             expect(data).toEqual({ value: 1 });
+
             return 'baz';
           },
         })

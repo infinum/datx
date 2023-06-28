@@ -103,6 +103,7 @@ export function endAction(model: PureModel, patchType: PatchType = PatchType.UPD
   });
 
   patchData.count--;
+
   if (patchData.count === 0) {
     const newValue = patchData.newValue;
     const oldValue = patchData.oldValue;

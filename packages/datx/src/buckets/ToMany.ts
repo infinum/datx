@@ -58,6 +58,7 @@ export class ToMany<T extends PureModel> {
     }
 
     replaceInArray(this.__rawList, data);
+
     if (this.__model && this.__key) {
       updateSingleAction(this.__model, this.__key, data);
     }

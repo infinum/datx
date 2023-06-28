@@ -64,6 +64,7 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
         const executableExpression = isFunction(expression)
           ? expression()
           : (expression as ExpressionArgument);
+
         if (!executableExpression) {
           throw new Error(`Expression can't be empty, got: ${executableExpression}`);
         }
@@ -75,6 +76,7 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
         if (isGetAll(executableExpression)) {
           const rawResponses = (response as IGetAllResponse<TModel>).responses.map((r) => {
             const raw = { ...r['__internal'].response };
+
             delete raw.collection;
 
             return raw;
@@ -93,6 +95,7 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
 
         // clone response to avoid mutation
         const rawResponse = { ...(response['__internal'].response as IRawResponse) };
+
         delete rawResponse.collection;
 
         if (hydrate) {

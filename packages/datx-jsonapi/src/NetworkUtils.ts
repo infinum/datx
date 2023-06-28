@@ -132,6 +132,7 @@ export const config: IConfigType = {
         if (this.fetchReference) {
           return this.fetchReference(url, options);
         }
+
         throw new Error('Fetch reference needs to be defined before using the network');
       })
       .then((response: Response) => {
@@ -144,10 +145,12 @@ export const config: IConfigType = {
         if (status === 204) {
           return null;
         }
+
         throw error;
       })
       .then((responseData: IResponse) => {
         data = responseData;
+
         if (status >= 400) {
           throw {
             message: `Invalid HTTP status: ${status}`,
@@ -184,6 +187,7 @@ function getLocalNetworkError<T extends IJsonapiModel>(
 ): LibResponse<T> {
   const ResponseConstructor: typeof LibResponse =
     reqOptions.options?.fetchOptions?.['Response'] || LibResponse;
+
   return new ResponseConstructor<T>(
     {
       error: new Error(message),
@@ -202,6 +206,7 @@ function makeNetworkCall<T extends IJsonapiModel>(
   existingResponse?: LibResponse<T>,
 ): Promise<LibResponse<T>> {
   const ResponseConstructor: typeof LibResponse = fetchOptions?.['Response'] || LibResponse;
+
   return config
     .baseFetch(
       params.method,
@@ -216,6 +221,7 @@ function makeNetworkCall<T extends IJsonapiModel>(
 
       if (existingResponse) {
         existingResponse.update(payload, params.views);
+
         return existingResponse;
       }
 
@@ -231,6 +237,7 @@ function makeNetworkCall<T extends IJsonapiModel>(
       if (doCacheResponse) {
         saveCache(params.url, response);
       }
+
       return response;
     });
 }
@@ -267,6 +274,7 @@ function collectionFetch<T extends IJsonapiModel>(
   if (staticCollection && staticCollection.maxCacheAge !== undefined) {
     maxCacheAge = staticCollection.maxCacheAge;
   }
+
   if (reqOptions.options?.cacheOptions?.maxAge !== undefined) {
     maxCacheAge = reqOptions.options?.cacheOptions?.maxAge;
   }
@@ -289,6 +297,7 @@ function collectionFetch<T extends IJsonapiModel>(
         if (cacheContent) {
           return cacheContent.response;
         }
+
         throw errorResponse;
       },
     );
@@ -302,6 +311,7 @@ function collectionFetch<T extends IJsonapiModel>(
       network.catch(() => {
         // Ignore the failure
       });
+
       return Promise.resolve(cacheContent.response);
     }
 
@@ -341,6 +351,7 @@ function collectionFetch<T extends IJsonapiModel>(
       network.catch(() => {
         // Ignore the failure
       });
+
       return Promise.resolve(existingResponse);
     }
 

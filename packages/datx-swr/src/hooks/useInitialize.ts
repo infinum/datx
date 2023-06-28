@@ -15,6 +15,7 @@ const initialize = (createClient: CreateClientFn) => {
   if (typeof window === 'undefined') {
     return _client;
   }
+
   // Create the GraphQL Client once in the client
   if (!client) {
     client = _client;

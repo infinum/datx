@@ -51,7 +51,9 @@ export function modelMapSerialize(modelClass: typeof PureModel, data: object, ke
 }
 
 export function isModelReference(value: IModelRef | Array<IModelRef>): true;
+
 export function isModelReference(value: unknown): false;
+
 export function isModelReference(value: unknown): boolean {
   if (Array.isArray(value)) {
     return (value as Array<IModelRef>).every(isModelReference);
@@ -74,16 +76,19 @@ export function peekNonNullish(...args: Array<any>): any {
   if (args.length === 0) return null;
 
   let i = -1;
+
   while (++i < args.length) {
     let arg = args[i];
 
     if (typeof arg === 'function') {
       arg = arg();
     }
+
     if (arg !== null && arg !== undefined) {
       return arg;
     }
   }
+
   return null;
 }
 
@@ -117,6 +122,7 @@ export function getModelId(model: PureModel | IIdentifier): IIdentifier {
     if (id !== undefined) {
       return id;
     }
+
     throw error('Model without an ID');
   }
 
@@ -221,6 +227,7 @@ export function modelToJSON(model: PureModel): IRawModel {
       const modelClass = model.constructor as typeof PureModel;
       const mapField = getMeta(modelClass, `${MetaClassField.MapField}_${fieldName}`, null, true);
       const key = mapField ? mapField : fieldName;
+
       // Make sure to use an existing value if the attribute is used multiple times
       raw[key] = raw[key] || modelMapSerialize(modelClass, model, fieldName);
     }
@@ -261,6 +268,7 @@ export function getOriginalModel<T extends PureModel = PureModel>(model: T): T {
 
     return collection.findOne(model, originalId) as T;
   }
+
   throw error('The given model is not a clone.');
 }
 
@@ -295,6 +303,7 @@ export function assignModel<T extends PureModel>(model: T, key: string, value: a
     if (shouldBeReference && !fields[key].referenceDef) {
       throw error('You should save this value as a reference.');
     }
+
     if (key === getMeta(model.constructor, MetaClassField.IdField, undefined, true)) {
       return;
     }
@@ -391,6 +400,7 @@ export function isAttributeDirty<T extends PureModel>(model: T, key: keyof T): b
     const value = field.referenceDef
       ? mapItems(model[key] as PureModel | IModelRef, getModelRef)
       : model[key];
+
     return !isSame(value, prevCommit[key as string]);
   }
 

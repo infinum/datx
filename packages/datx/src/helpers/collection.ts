@@ -31,6 +31,7 @@ export function upsertModel(
         collection,
       );
     }
+
     throw error(`No model is defined for the type ${type}.`);
   }
 
@@ -47,10 +48,12 @@ export function upsertModel(
     keys.forEach((key: string) => {
       const isBackRefKey = Boolean(fields?.[key]?.referenceDef?.property);
       const result = modelMapParse(TypeModel, data, key);
+
       if (result !== undefined && !isBackRefKey) {
         parsedData[key] = result;
       }
     });
+
     return updateModel(existingModel, parsedData);
   }
 

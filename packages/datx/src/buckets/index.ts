@@ -6,11 +6,15 @@ import { ToOne } from './ToOne';
 import { ToOneOrMany } from './ToOneOrMany';
 
 export function getBucketConstructor(type: ReferenceType.TO_ONE): typeof ToOne;
+
 export function getBucketConstructor(type: ReferenceType.TO_ONE_OR_MANY): typeof ToOneOrMany;
+
 export function getBucketConstructor(type: ReferenceType.TO_MANY): typeof ToMany;
+
 export function getBucketConstructor(
   type: ReferenceType,
 ): typeof ToOne | typeof ToOneOrMany | typeof ToMany;
+
 export function getBucketConstructor(
   type: ReferenceType,
 ): typeof ToOne | typeof ToOneOrMany | typeof ToMany {

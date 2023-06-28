@@ -20,6 +20,7 @@ export function setupDatx(http: HttpClient, partialConfig: Partial<IConfigType>)
     ...DEFAULT_DATX_ANGULAR_JSON_API_CONFIG,
     ...partialConfig,
   };
+
   config.baseFetch = baseFetch.fetch.bind(baseFetch);
 
   Object.assign(config, mergedConfig);

@@ -320,6 +320,7 @@ describe('caching', () => {
 
         try {
           await store.getMany('image');
+
           throw Error('The request should fail');
         } catch (response: any) {
           expect(response?.error?.toString()).toBe('Error: Network not available');
@@ -389,6 +390,7 @@ describe('caching', () => {
 
         try {
           await store.getMany('image');
+
           throw Error('The request should fail');
         } catch (response: any) {
           expect(response?.error?.toString()).toBe('Error: Network not available');
@@ -508,6 +510,7 @@ describe('caching', () => {
 
         try {
           await store.getMany(Event);
+
           throw Error('The request should fail');
         } catch (response: any) {
           expect(response?.error?.toString()).toBe('Error: No cache for this request');
@@ -604,6 +607,7 @@ describe('caching', () => {
 
         try {
           await store.getMany('image');
+
           throw Error('The request should fail');
         } catch (response: any) {
           expect(response?.error?.toString()).toBe('Error: Network not available');
@@ -656,6 +660,7 @@ describe('caching', () => {
 
         try {
           await store.getOne(Event, '1');
+
           throw Error('The request should fail');
         } catch (e: any) {
           expect(e.error.message).toBe('Unexpected request: GET https://example.com/event/1');
@@ -807,6 +812,7 @@ describe('caching', () => {
 
       try {
         await store.getOne(Event, '1', { cacheOptions: { maxAge: 0 } });
+
         throw Error('The request should fail');
       } catch (errorResponse: any) {
         expect(errorResponse?.error?.toString()).toBe('Error: Network not available');
@@ -820,6 +826,7 @@ describe('caching', () => {
 
       try {
         await store.getMany(Event, { cacheOptions: { cachingStrategy: 123 } });
+
         throw Error('The request should fail');
       } catch (response: any) {
         expect(response?.error?.toString()).toBe('Error: Invalid caching strategy');

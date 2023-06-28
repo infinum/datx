@@ -44,12 +44,14 @@ describe('Network basics', () => {
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
+
     if (events.data instanceof Array) {
       const event = events.data[0];
 
       expect(event['title']).toBe('Test 1');
       expect(getModelMeta(event).createdAt).toBe('2017-03-19T16:00:00.000Z');
       expect(event.meta.refs.images).toBeInstanceOf(Array);
+
       if (event.meta.refs.images instanceof Array) {
         expect(event.meta.refs.images.map((image) => image.id)).toContain('1');
       }
@@ -125,12 +127,14 @@ describe('Network basics', () => {
     const events = await store.fetchAll(Event);
 
     expect(events.data).toBeInstanceOf(Array);
+
     if (events.data) {
       const event = events.data[0];
       const data = modelToJsonApi(event);
 
       expect(data.attributes && 'id' in data.attributes).toBe(false);
       expect(data.relationships).not.toBeUndefined();
+
       if (data.relationships) {
         expect(data.relationships.images.data).toHaveLength(1);
         expect(data.relationships.image.data).toBeNull();
@@ -145,12 +149,15 @@ describe('Network basics', () => {
     });
     let hasTransformRequestHookBeenCalled = false;
     const store = new TestStore();
+
     config.transformRequest = (opts): any => {
       expect(opts.collection).toBe(store);
       hasTransformRequestHookBeenCalled = true;
+
       return { ...opts, url: `${opts.url}/all` };
     };
     const events = await store.fetchAll('event');
+
     expect(events.data).toBeInstanceOf(Array);
     expect(hasTransformRequestHookBeenCalled).toBe(true);
   });
@@ -161,13 +168,16 @@ describe('Network basics', () => {
       url: 'event',
     });
     let hasTransformResponseHookBeenCalled = false;
+
     config.transformResponse = (opts): any => {
       expect(opts.status).toBe(200);
       hasTransformResponseHookBeenCalled = true;
+
       return { ...opts, status: 201 };
     };
     const store = new TestStore();
     const events = await store.fetchAll('event');
+
     expect(events.data).toBeInstanceOf(Array);
     expect(events.status).toBe(201);
     expect(hasTransformResponseHookBeenCalled).toBe(true);
@@ -185,6 +195,7 @@ describe('Network basics', () => {
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
     expect(events.jsonapi).toBeInstanceOf(Object);
+
     if (events.jsonapi) {
       expect(events.jsonapi.version).toBe('1.0');
       expect(events.jsonapi.meta && events.jsonapi.meta.foo).toBe('bar');
@@ -203,6 +214,7 @@ describe('Network basics', () => {
     const record = events.data;
 
     expect(record).toBeInstanceOf(Object);
+
     if (record) {
       expect(record['title']).toBe('Test 1');
       expect(getModelLinks(record)).toBeInstanceOf(Object);
@@ -221,9 +233,11 @@ describe('Network basics', () => {
 
     expect(events.data).toBeInstanceOf(Array);
     expect(events.data).toHaveLength(4);
+
     if (events.data instanceof Array) {
       expect(events.data instanceof Array && events.data[0]['title']).toBe('Test 1');
       expect(events.links).toBeInstanceOf(Object);
+
       if (events.links instanceof Object && typeof events.links.next === 'object') {
         expect(events.links.next?.href).toBe('https://example.com/event?page=2');
         expect(events.links.next?.meta?.foo).toBe('bar');
@@ -241,6 +255,7 @@ describe('Network basics', () => {
     const events2 = await events.next?.();
 
     expect(events2).toBeInstanceOf(Object);
+
     if (events2) {
       expect(events2.data).toBeInstanceOf(Array);
       expect(events2.data).toHaveLength(2);
@@ -249,6 +264,7 @@ describe('Network basics', () => {
       const events1 = await events2.prev?.();
 
       expect(events1).toBeInstanceOf(Object);
+
       if (events1) {
         expect(events1.data).toBeInstanceOf(Array);
         expect(events1.data).toHaveLength(4);
@@ -345,6 +361,7 @@ describe('Network basics', () => {
     const event = events.data;
 
     expect(event).toBeInstanceOf(Event);
+
     if (event instanceof Event) {
       let hasThrown = false;
 
@@ -377,6 +394,7 @@ describe('Network basics', () => {
     });
 
     expect(event).toBeInstanceOf(Event);
+
     if (event) {
       const image = await fetchModelRefLink(event, 'images', 'self');
       const imageData = image.data as Image;

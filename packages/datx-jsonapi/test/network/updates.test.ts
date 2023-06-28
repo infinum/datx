@@ -225,6 +225,7 @@ describe('updates', () => {
       const queueRecord = queue2.data;
 
       expect(queueRecord).not.toBeNull();
+
       if (queueRecord) {
         expect(getModelType(queueRecord)).toBe('queue');
       }
@@ -282,6 +283,7 @@ describe('updates', () => {
       const queueRecord = queue2.data;
 
       expect(queueRecord).not.toBeNull();
+
       if (queueRecord) {
         expect(getModelType(queueRecord)).toBe('queue');
       }
@@ -295,6 +297,7 @@ describe('updates', () => {
       const updated = updatedRes.data;
 
       expect(updated).not.toBeNull();
+
       if (updated) {
         expect(getModelType(updated)).toBe('event');
 
@@ -453,6 +456,7 @@ describe('updates', () => {
       const record = events.data;
 
       expect(record).toBeInstanceOf(Event);
+
       if (record instanceof Event) {
         setRequest({
           data: JSON.stringify({
@@ -498,6 +502,7 @@ describe('updates', () => {
       const record = events.data;
 
       expect(record).toBeInstanceOf(Event);
+
       if (record instanceof Event) {
         setRequest({
           data: JSON.stringify({
@@ -542,6 +547,7 @@ describe('updates', () => {
       const event = events.data && (events.data[0] as Event);
 
       expect(event).toBeInstanceOf(Event);
+
       if (event) {
         event.images = [
           // @ts-ignore
@@ -582,6 +588,7 @@ describe('updates', () => {
         const { images } = event2;
 
         expect(images).toHaveLength(2);
+
         if (images instanceof Array) {
           expect(images.map((image) => image.id)).toContain('1');
           expect(images.map((image) => image.id)).toContain('2');

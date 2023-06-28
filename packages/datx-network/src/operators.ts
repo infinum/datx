@@ -79,9 +79,11 @@ export function query(
   name: string,
   value: string | Array<string> | object | undefined,
 ): (pipeline: BaseRequest) => void;
+
 export function query(
   params: Record<string, string | Array<string> | object | undefined>,
 ): (pipeline: BaseRequest) => void;
+
 export function query(
   name: string | Record<string, string | Array<string> | object | undefined>,
   value?: string | Array<string> | object | undefined,
@@ -96,7 +98,9 @@ export function query(
 }
 
 export function header(name: string, value: string): (pipeline: BaseRequest) => void;
+
 export function header(params: Record<string, string>): (pipeline: BaseRequest) => void;
+
 export function header(name: string | Record<string, string>, value?: string) {
   return (pipeline: BaseRequest): void => {
     if (typeof name === 'string') {
@@ -108,7 +112,9 @@ export function header(name: string | Record<string, string>, value?: string) {
 }
 
 export function params(name: string, value: string): (pipeline: BaseRequest) => void;
+
 export function params(params: Record<string, string>): (pipeline: BaseRequest) => void;
+
 export function params(name: string | Record<string, string>, value?: string) {
   return (pipeline: BaseRequest): void => {
     if (typeof name === 'string') {
@@ -134,6 +140,7 @@ export function paramArrayType(paramArrayType: ParamArrayType) {
 export function fetchReference(fetchReference: typeof fetch) {
   return (pipeline: BaseRequest): void => {
     const config = pipeline['_config'];
+
     config.fetchReference = fetchReference;
     upsertInterceptor(
       config.fetchInterceptor(
@@ -150,6 +157,7 @@ export function fetchReference(fetchReference: typeof fetch) {
 export function serializer(serialize: (request: IFetchOptions) => IFetchOptions) {
   return (pipeline: BaseRequest): void => {
     const config = pipeline['_config'];
+
     config.serialize = serialize;
     upsertInterceptor(
       config.fetchInterceptor(
@@ -166,6 +174,7 @@ export function serializer(serialize: (request: IFetchOptions) => IFetchOptions)
 export function parser(parse: (data: object, response: IResponseObject) => object) {
   return (pipeline: BaseRequest): void => {
     const config = pipeline['_config'];
+
     config.parse = parse;
     upsertInterceptor(
       config.fetchInterceptor(

@@ -16,9 +16,11 @@ function sortWrapperFn<T extends PureModel = PureModel>(sortFn: (a: T) => number
     if (sortFn(a) === sortFn(b)) {
       return 0;
     }
+
     if (sortFn(a) > sortFn(b)) {
       return 1;
     }
+
     return -1;
   };
 }

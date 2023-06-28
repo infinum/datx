@@ -21,6 +21,7 @@ export class Response<T extends IJsonapiModel = IJsonapiModel> extends PromiseRe
    */
   protected __fetchLink(name: string): () => Observable<Response<T>> {
     const ResponseConstructor: typeof Response = this.constructor as typeof Response;
+
     if (!this.__cache[name]) {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 

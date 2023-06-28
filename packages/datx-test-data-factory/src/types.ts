@@ -5,6 +5,7 @@ import { IOneOfGenerator } from './generators/one-of';
 import { IJsonapiModel } from '@datx/jsonapi';
 
 export type ModelType = IModelConstructor<PureModel>;
+
 export type JsonapiModelType = IModelConstructor<PureModel & IJsonapiModel>;
 
 export type FieldGenerator<T> = ISequenceGenerator<T> | IPerBuildGenerator<T> | IOneOfGenerator<T>;

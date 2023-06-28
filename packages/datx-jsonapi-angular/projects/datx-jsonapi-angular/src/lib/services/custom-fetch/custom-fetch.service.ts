@@ -45,6 +45,7 @@ export class CustomFetchService {
 
     try {
       const d = await request$.toPromise();
+
       if (d === undefined) {
         // TODO: check if this is needed, maybe `d` can never be `undefined`
         return { status: -1 }; // Signal to DatX that it shouldn't fail, but shouldn't cache either
@@ -53,6 +54,7 @@ export class CustomFetchService {
       return d;
     } catch (e) {
       console.error(e);
+
       throw e;
     }
   }

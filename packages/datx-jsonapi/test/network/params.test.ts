@@ -111,6 +111,7 @@ describe('params', () => {
     });
     const store = new TestStore();
     const event = store.add({}, Event);
+
     await event.save({ queryParams: { include: 'bar' } });
   });
 

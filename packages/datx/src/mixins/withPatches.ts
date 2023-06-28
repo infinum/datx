@@ -91,6 +91,7 @@ export function withPatches<T extends PureCollection>(
 
     return (WithPatches as any) as ICollectionConstructor<IMetaPatchesCollection & T>;
   }
+
   if (isModel(Base)) {
     const BaseClass = Base as typeof PureModel;
 
@@ -133,5 +134,6 @@ export function withPatches<T extends PureCollection>(
 
     return (WithPatches as any) as IModelConstructor<IMetaPatchesModel & T>;
   }
+
   throw error('Only Models and Collections can be decorated with patches');
 }

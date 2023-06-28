@@ -92,6 +92,7 @@ describe('General', () => {
     }) as Event;
 
     expect(event.name).toBe('Demo');
+
     if (event.meta.refs.image instanceof Array) {
       expect(event.meta.refs.image).not.toBeInstanceOf(Array);
     } else {
@@ -116,6 +117,7 @@ describe('General', () => {
     const event = store.findOne(Event, '1');
 
     expect(event).not.toBeNull();
+
     if (event) {
       expect(event.meta.id).toBe('1');
       expect(event.meta.type).toBe('event');
@@ -139,6 +141,7 @@ describe('General', () => {
     const event = store.findOne(Event, '1');
 
     expect(event).toBeInstanceOf(Event);
+
     if (event) {
       let name = 'Demo';
       let autorunCount = 0;
@@ -194,6 +197,7 @@ describe('General', () => {
     const event = store.findOne(Event, '1');
 
     expect(event).not.toBeNull();
+
     if (event) {
       expect(event.name).toBe('Demo');
       expect(event.images.length).toBe(1);
@@ -232,6 +236,7 @@ describe('General', () => {
     const event = store.findOne(Event, '1');
 
     expect(event).not.toBeNull();
+
     if (event) {
       expect(event.name).toBe('Demo');
       expect(event.image).toBe(null);
@@ -281,6 +286,7 @@ describe('General', () => {
     const event = store.findOne(Event, '1');
 
     expect(event).not.toBeNull();
+
     if (event) {
       expect(event.name).toBe('Demo');
       expect(event.images[0].name).toBe('Header');
@@ -388,6 +394,7 @@ describe('General', () => {
     const event = store.findOne(Event, '1');
 
     expect(event).not.toBeNull();
+
     if (event) {
       expect(event.organizers.length).toBe(2);
       expect(event.images.length).toBe(3);
@@ -408,6 +415,7 @@ describe('General', () => {
     const event = store.findOne(Event, '1');
 
     expect(event).not.toBeNull();
+
     if (event) {
       expect(event.meta.id).toBe('1');
     }
@@ -638,6 +646,7 @@ describe('General', () => {
     const photo1 = store.findOne(Photo, '1');
 
     expect(photo1).not.toBeNull();
+
     if (photo1) {
       expect(photo1.selected).toBe(false);
       expect(photo1['foo']).not.toBe(false);
@@ -647,6 +656,7 @@ describe('General', () => {
     const photo2 = store.findOne(Photo, '2');
 
     expect(photo2).not.toBeNull();
+
     if (photo2) {
       expect(photo2.selected).toBe(true);
     }
@@ -654,6 +664,7 @@ describe('General', () => {
     const photo3 = store.findOne(Photo, '3');
 
     expect(photo3).not.toBeNull();
+
     if (photo3) {
       expect(photo3.selected).toBe(false);
     }
@@ -701,6 +712,7 @@ describe('General', () => {
 
     expect(data.attributes && 'id' in data.attributes).toBe(false);
     expect(data.relationships).not.toBeUndefined();
+
     if (data.relationships) {
       expect(data.relationships.images.data).toHaveLength(0);
       expect(data.relationships.image.data).toBeNull();
@@ -713,6 +725,7 @@ describe('General', () => {
     const data = modelToJsonApi(event);
 
     expect(data.attributes && 'id' in data.attributes).toBe(false);
+
     if (data.relationships) {
       expect(data.relationships.images.data).toHaveLength(0);
       expect(data.relationships.image.data).toBeNull();

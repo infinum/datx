@@ -123,6 +123,7 @@ describe('error handling', () => {
     const event = response.data && (response.data[0] as Event);
 
     expect(event).toBeInstanceOf(Event);
+
     if (event) {
       let hasFailed = false;
 

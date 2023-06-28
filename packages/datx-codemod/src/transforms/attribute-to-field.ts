@@ -16,6 +16,7 @@ export default function transformer(file: FileInfo, api: API) {
             specifier.imported.name = 'Field';
           }
         }
+
         return specifier;
       });
     }
@@ -36,6 +37,7 @@ export default function transformer(file: FileInfo, api: API) {
           return decorator;
         });
       }
+
       return node;
     });
   });

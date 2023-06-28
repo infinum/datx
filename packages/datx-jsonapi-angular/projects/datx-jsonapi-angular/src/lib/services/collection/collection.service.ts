@@ -32,6 +32,7 @@ export abstract class CollectionService<
 
   public setData(data: Array<IRawModel | IResourceObject>): Array<TModel> {
     this.collection.removeAll(this.ctor);
+
     return this.collection.add(data, this.ctor);
   }
 
@@ -45,6 +46,7 @@ export abstract class CollectionService<
 
   public createAndSave(rawModel: IRawModel | IResourceObject): Observable<TModel> {
     const model = this.create(rawModel);
+
     return this.update(model);
   }
 

@@ -84,6 +84,7 @@ describe('Views', () => {
       const events2 = await events.next?.();
 
       expect(events2).toBeInstanceOf(Object);
+
       if (events2) {
         expect(events2.data).toBeInstanceOf(Array);
         expect(events2.data).toHaveLength(2);
@@ -126,6 +127,7 @@ describe('Views', () => {
       const events2 = await events.next?.();
 
       expect(events2).toBeInstanceOf(Object);
+
       if (events2) {
         expect(events2.data).toBeInstanceOf(Array);
         expect(events2.data).toHaveLength(2);

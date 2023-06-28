@@ -38,12 +38,14 @@ export function saveModel<TModel extends INetworkModel>(
   options?: IRequestOptions,
 ): Promise<TModel> {
   const ModelConstructor = model.constructor as INetworkModelConstructor;
+
   if (!ModelConstructor.network) {
     throw new Error('The network property needs to be defined on the model');
   }
   const isPersisted = getMeta(model, NETWORK_PERSISTED, false);
 
   let baseRequest: BaseRequest | undefined;
+
   if (ModelConstructor.network instanceof BaseRequest) {
     baseRequest = isPersisted
       ? ModelConstructor.network.pipe(
@@ -78,12 +80,14 @@ export function removeModel<TModel extends INetworkModel>(
   options?: IRequestOptions,
 ): Promise<void> {
   const ModelConstructor = model.constructor as INetworkModelConstructor;
+
   if (!ModelConstructor.network) {
     throw new Error('The network property needs to be defined on the model');
   }
   const isPersisted = getMeta(model, NETWORK_PERSISTED, false);
 
   let baseRequest: BaseRequest | false | undefined;
+
   if (ModelConstructor.network instanceof BaseRequest) {
     baseRequest = isPersisted
       ? ModelConstructor.network.pipe(
@@ -113,6 +117,7 @@ export function removeModel<TModel extends INetworkModel>(
       .fetch({ id: getModelId(model) })
       .then(() => {
         const collection = getModelCollection(model);
+
         if (collection) {
           collection.removeOne(model);
         }

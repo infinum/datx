@@ -87,6 +87,7 @@ describe('CustomFetchService', () => {
     expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
 
     let error: unknown;
+
     try {
       await service.fetch(method, url);
     } catch (e) {

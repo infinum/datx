@@ -32,7 +32,9 @@ export function reducePrototypeChain<T, U>(
  * @returns {(U|Array<U>|null)} Return value of the callback function
  */
 export function mapItems<T, U>(data: Array<T>, fn: (item: T) => U): Array<U>;
+
 export function mapItems<T, U>(data: T, fn: (item: T) => U): U | null;
+
 export function mapItems<T, U>(data: T | Array<T>, fn: (item: T) => U): U | Array<U> | null {
   if (isArrayLike(data)) {
     return (data as Array<T>).map((item) => fn(item));
@@ -57,6 +59,7 @@ export function getMetaObj(obj: Record<string, any>): Record<string, any> {
       value: {},
     });
   }
+
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/1863
   return obj[DATX_META];
 }
@@ -74,6 +77,7 @@ export function getMeta<T = any>(
   includeChain?: boolean,
   mergeChain?: boolean,
 ): T;
+
 export function getMeta<T = any>(
   obj: Record<string, any>,
   key: string,
@@ -81,6 +85,7 @@ export function getMeta<T = any>(
   includeChain?: boolean,
   mergeChain?: boolean,
 ): T | undefined;
+
 export function getMeta<T = any>(
   obj: Record<string, any>,
   key: string,
@@ -184,11 +189,13 @@ export function info(...args: Array<any>): void {
 export function replaceInArray<T = any>(arr: Array<T>, data: Array<T>): Array<T> {
   arr.length = 0;
   arr.push(...data);
+
   return arr;
 }
 
 export function removeFromArray<T = any>(arr: Array<T>, item: T): Array<T> {
   const pos = arr.indexOf(item);
+
   return arr.splice(pos, 1);
 }
 
@@ -197,6 +204,7 @@ export class Headers implements IResponseHeaders {
 
   public get(name: string): string | null {
     const matches = this.headers.filter(([key, _value]) => key === name);
+
     return matches.map(([_key, value]) => value).join(',') || null;
   }
 

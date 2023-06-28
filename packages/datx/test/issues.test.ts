@@ -123,6 +123,7 @@ describe('issues', () => {
 
     const foo = new Foo();
     const foo2 = store.add(foo);
+
     expect(foo).toBe(foo2);
   });
 

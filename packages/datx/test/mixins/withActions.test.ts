@@ -83,6 +83,7 @@ describe('withActions', () => {
     const FooMeta = withActions(Foo);
 
     const foo = new FooMeta({ foo: 1 });
+
     expect(isAttributeDirty(foo, 'foo')).toBe(false);
     expect(isAttributeDirty(foo, 'bar')).toBe(false);
 

@@ -110,6 +110,7 @@ describe('withMeta', () => {
     }
 
     const foo = new Foo({ foo: 1 });
+
     expect(foo.meta.dirty.foo).toBe(false);
     expect(foo.meta.dirty.bar).toBe(false);
 

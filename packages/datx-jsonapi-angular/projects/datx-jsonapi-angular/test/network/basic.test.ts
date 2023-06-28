@@ -34,16 +34,19 @@ describe('Network basics', () => {
     });
 
     const store = new TestStore();
+
     store.getMany(Event).subscribe((events) => {
       try {
         expect(events.data).toBeInstanceOf(Array);
         expect(events.data).toHaveLength(4);
+
         if (events.data instanceof Array) {
           const event = events.data[0];
 
           expect(event['title']).toBe('Test 1');
           expect(getModelMeta(event)['createdAt']).toBe('2017-03-19T16:00:00.000Z');
           expect(event.meta.refs.images).toBeInstanceOf(Array);
+
           if (event.meta.refs.images instanceof Array) {
             expect(event.meta.refs.images.map((image: IDefinition) => image.id)).toContain('1');
           }
@@ -75,6 +78,7 @@ describe('Network basics', () => {
     });
 
     const store = new TestStore();
+
     store.getMany(Event).subscribe((events) => {
       try {
         expect(events.data).toBeNull();
@@ -92,11 +96,13 @@ describe('Network basics', () => {
     });
 
     const store = new TestStore();
+
     store.getOne(Event, '1').subscribe((events) => {
       try {
         const record = events.data;
 
         expect(record).toBeInstanceOf(Object);
+
         if (record) {
           expect(record['title']).toBe('Test 1');
           expect(getModelLinks(record)).toBeInstanceOf(Object);
@@ -120,6 +126,7 @@ describe('Network basics', () => {
     let events1: any;
 
     const store = new TestStore();
+
     store
       .getMany(Event)
       .pipe(
@@ -127,9 +134,11 @@ describe('Network basics', () => {
           events = ev;
           expect(events.data).toBeInstanceOf(Array);
           expect(events.data).toHaveLength(4);
+
           if (events.data instanceof Array) {
             expect(events.data instanceof Array && events.data[0]['title']).toBe('Test 1');
             expect(events.links).toBeInstanceOf(Object);
+
             if (events.links instanceof Object && typeof events.links.next === 'object') {
               expect(events.links.next.href).toBe('https://example.com/event?page=2');
               expect(events.links.next.meta.foo).toBe('bar');
@@ -150,6 +159,7 @@ describe('Network basics', () => {
         switchMap((ev2: Response<IJsonapiModel>) => {
           events2 = ev2;
           expect(events2).toBeInstanceOf(Object);
+
           if (events2) {
             expect(events2.data).toBeInstanceOf(Array);
             expect(events2.data).toHaveLength(2);
@@ -167,6 +177,7 @@ describe('Network basics', () => {
         switchMap((ev1: Response<IJsonapiModel>) => {
           events1 = ev1;
           expect(events1).toBeInstanceOf(Object);
+
           if (events1) {
             expect(events1.data).toBeInstanceOf(Array);
             expect(events1.data).toHaveLength(4);

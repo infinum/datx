@@ -22,6 +22,7 @@ describe('ToOneOrMany', () => {
       const bucketInstance = new Bucket.ToOneOrMany(foos, collection);
 
       expect(bucketInstance.value).toBeInstanceOf(Array);
+
       if (bucketInstance.value instanceof Array) {
         expect(bucketInstance.value).toHaveLength(2);
         expect(bucketInstance.value[0]).toBeInstanceOf(Foo);
@@ -47,6 +48,7 @@ describe('ToOneOrMany', () => {
       const bucketInstance = new Bucket.ToOneOrMany([...foos, ...bars], collection);
 
       expect(bucketInstance.value).toBeInstanceOf(Array);
+
       if (bucketInstance.value instanceof Array) {
         expect(bucketInstance.value).toHaveLength(3);
         expect(bucketInstance.value[0]).toBeInstanceOf(Foo);
@@ -79,6 +81,7 @@ describe('ToOneOrMany', () => {
 
       expect(collection.length).toBe(2);
       expect(bucketInstance.value).toBeInstanceOf(Array);
+
       if (bucketInstance.value instanceof Array) {
         expect(bucketInstance.value.length).toBe(2);
         expect(bucketInstance.snapshot).toBeInstanceOf(Array);
@@ -106,6 +109,7 @@ describe('ToOneOrMany', () => {
       const bucketInstance = new Bucket.ToOneOrMany<Foo | Bar>([...foos, ...bars], collection);
 
       expect(bucketInstance.value).toBeInstanceOf(Array);
+
       if (bucketInstance.value instanceof Array) {
         expect(bucketInstance.value).toHaveLength(3);
         expect(bucketInstance.value[0]).toBeInstanceOf(Foo);
@@ -142,6 +146,7 @@ describe('ToOneOrMany', () => {
               expect(parentModel).toBeInstanceOf(Foo);
               expect(key).toBe('bar');
               expect(collection).toBeInstanceOf(PureCollection);
+
               return Bar;
             },
           })
@@ -173,6 +178,7 @@ describe('ToOneOrMany', () => {
           @Attribute({
             toOneOrMany: (data) => {
               expect(data).toEqual({ value: 1 });
+
               return 'bar';
             },
           })
@@ -243,6 +249,7 @@ describe('ToOneOrMany', () => {
           @Attribute({
             toOneOrMany: (data) => {
               expect(data).toEqual({ value: 1 });
+
               return 'baz';
             },
           })
@@ -347,6 +354,7 @@ describe('ToOneOrMany', () => {
               expect(parentModel).toBeInstanceOf(Foo);
               expect(key).toBe('bar');
               expect(collection).toBeInstanceOf(PureCollection);
+
               return Bar;
             },
           })
@@ -378,6 +386,7 @@ describe('ToOneOrMany', () => {
           @Attribute({
             toOneOrMany: (data) => {
               expect(data).toEqual({ value: 1 });
+
               return 'bar';
             },
           })
@@ -409,6 +418,7 @@ describe('ToOneOrMany', () => {
           @Attribute({
             toOneOrMany: (data) => {
               expect(data).toEqual({ value: 1 });
+
               return 'baz';
             },
           })

@@ -46,6 +46,7 @@ function initData<T extends PureModel | Array<PureModel>>(
 ): any {
   let data: any = null;
   const hasData = Boolean(response.data && Object.keys(response.data).length);
+
   if (collection && response.data && hasData) {
     data =
       overrideData ||
@@ -59,6 +60,7 @@ function initData<T extends PureModel | Array<PureModel>>(
         : PureModel;
 
     data = overrideData || mapItems(response.data, (item) => new ModelConstructor(item));
+
     return { value: data };
   }
 
@@ -150,6 +152,7 @@ export class Response<T extends PureModel | Array<PureModel>> {
   ) {
     this.collection = collection;
     this.__updateInternal(response, views);
+
     try {
       this.__data = initData(response, collection, overrideData);
     } catch (e) {
@@ -238,6 +241,7 @@ export class Response<T extends PureModel | Array<PureModel>> {
 
   public update(response: IResponseObject | Response<T>, views?: Array<View>): Response<T> {
     const responseData = response instanceof Response ? response.__internal.response : response;
+
     this.__updateInternal(responseData, views);
     const newData = initData(responseData, this.collection);
 

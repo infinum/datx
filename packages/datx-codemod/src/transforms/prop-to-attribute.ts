@@ -19,6 +19,7 @@ export default function transformer(file: FileInfo, api: API) {
               specifier.imported.name = 'Attribute';
             }
           }
+
           return specifier;
         });
       }
@@ -115,6 +116,7 @@ export default function transformer(file: FileInfo, api: API) {
           return decorator;
         });
       }
+
       return node;
     });
   });

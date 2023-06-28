@@ -125,6 +125,7 @@ describe('ToMany', () => {
             expect(parentModel).toBeInstanceOf(Foo);
             expect(key).toBe('bar');
             expect(collection).toBeInstanceOf(PureCollection);
+
             return Bar;
           },
         })
@@ -156,6 +157,7 @@ describe('ToMany', () => {
         @Attribute({
           toMany: (data) => {
             expect(data).toEqual({ value: 1 });
+
             return 'bar';
           },
         })
@@ -226,6 +228,7 @@ describe('ToMany', () => {
         @Attribute({
           toMany: (data) => {
             expect(data).toEqual({ value: 1 });
+
             return 'baz';
           },
         })

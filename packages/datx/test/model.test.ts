@@ -65,6 +65,7 @@ describe('Model', () => {
 
       const foo1 = new Foo({ list: [1, 2, 3] });
       const foo2 = new Foo();
+
       foo2.list = [3, 2, 1];
 
       expect(foo1.list.map).toBeTruthy();
@@ -884,6 +885,7 @@ describe('Model', () => {
       const foo5 = collection.findOne(Foo, 5);
 
       expect(foo5).toBeTruthy();
+
       if (foo5) {
         expect(foo5.key).toBe(5);
       }
@@ -891,6 +893,7 @@ describe('Model', () => {
       const bar6 = collection.findOne(Bar, 6);
 
       expect(bar6).toBeTruthy();
+
       if (bar6) {
         expect(bar6.key).toBe(6);
       }
@@ -1123,6 +1126,7 @@ describe('Model', () => {
       }
 
       const foo = new Foo({ foo: 1 });
+
       expect(isAttributeDirty(foo, 'foo')).toBe(false);
       expect(isAttributeDirty(foo, 'bar')).toBe(false);
 
@@ -1130,6 +1134,7 @@ describe('Model', () => {
       expect(isAttributeDirty(foo, 'foo')).toBe(false);
       expect(isAttributeDirty(foo, 'bar')).toBe(true);
       const raw = modelToDirtyJSON(foo);
+
       expect(raw).not.toHaveProperty('foo');
       expect(raw).toHaveProperty('bar');
 
@@ -1156,6 +1161,7 @@ describe('Model', () => {
       }
 
       const foo = new Foo({ foo: 1 });
+
       expect(isAttributeDirty(foo, 'foo')).toBe(false);
       expect(isAttributeDirty(foo, 'bar')).toBe(false);
 
@@ -1179,6 +1185,7 @@ describe('Model', () => {
       }
 
       const foo = new Foo({ foo: 1 });
+
       expect(isAttributeDirty(foo, 'foo')).toBe(false);
       expect(isAttributeDirty(foo, 'bar')).toBe(false);
 

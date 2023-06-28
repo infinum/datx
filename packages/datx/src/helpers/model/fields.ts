@@ -41,6 +41,7 @@ export function updateRef(
       key,
       getModelCollection(model),
     );
+
     value = mapItems(value, (v: IIdentifier | IModelRef | PureModel) =>
       isIdentifier(v) ? { id: v, type } : getModelRef(v),
     );

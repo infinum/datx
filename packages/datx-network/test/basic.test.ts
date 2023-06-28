@@ -23,6 +23,7 @@ describe('Request', () => {
 
   it('should initialize', () => {
     const request = new MockBaseRequest('foobar');
+
     expect(request).toBeTruthy();
     expect(request['_config'].baseUrl).toBe('foobar');
     expect(request).toBeInstanceOf(MockBaseRequest);
@@ -30,6 +31,7 @@ describe('Request', () => {
 
   it('throw if no url is set', async () => {
     const request = new MockBaseRequest('foobar');
+
     try {
       await request.fetch();
       expect(true).toBe(false);
@@ -41,10 +43,12 @@ describe('Request', () => {
   it('throw on server error', async () => {
     const store = new Collection();
     const request = new MockBaseRequest('foobar').pipe(setUrl('foobar'), collection(store));
+
     request['resetMock']({
       status: 404,
       json: async () => ({}),
     });
+
     try {
       await request.fetch();
       expect(true).toBe(false);
@@ -121,6 +125,7 @@ describe('Request', () => {
       ): Promise<Response<PureModel>> => {
         expect(counter).toBe(expected);
         counter++;
+
         return next(request);
       };
     }
@@ -223,6 +228,7 @@ describe('Request', () => {
 
     it('FooModel, single model', async () => {
       const request1 = new MockBaseRequest('foobar');
+
       class Foo extends PureModel {
         @Attribute()
         public title!: string;
@@ -252,6 +258,7 @@ describe('Request', () => {
 
     it('FooModel, array', async () => {
       const request1 = new MockBaseRequest('foobar');
+
       class Foo extends PureModel {
         @Attribute()
         public title!: string;
@@ -283,6 +290,7 @@ describe('Request', () => {
 
     it('collection, single model', async () => {
       const request1 = new MockBaseRequest('foobar');
+
       class Foo extends PureModel {
         public static type = 'foo';
 
@@ -320,6 +328,7 @@ describe('Request', () => {
 
     it('collection, array', async () => {
       const request1 = new MockBaseRequest('foobar');
+
       class Foo extends PureModel {
         public static type = 'foo';
 
@@ -359,6 +368,7 @@ describe('Request', () => {
 
     it('collection default, single model', async () => {
       const request1 = new MockBaseRequest('foobar');
+
       class Foo extends PureModel {
         public static type = 'foo';
 
@@ -396,6 +406,7 @@ describe('Request', () => {
 
     it('collection default, array', async () => {
       const request1 = new MockBaseRequest('foobar');
+
       class Foo extends PureModel {
         public static type = 'foo';
 

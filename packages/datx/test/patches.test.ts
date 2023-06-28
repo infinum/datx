@@ -296,6 +296,7 @@ describe('patch', () => {
       const model = store.findAll<Model>('foo')[0];
 
       expect(model).not.toBe(null);
+
       if (model) {
         model['name'] = 'FooBar';
         model.assign('age', 42);
@@ -333,6 +334,7 @@ describe('patch', () => {
       const model = store.findAll<Model>('foo')[0];
 
       expect(model).not.toBe(null);
+
       if (model) {
         const modelMeta = { id: model.meta.id, type: model.meta.type };
 
