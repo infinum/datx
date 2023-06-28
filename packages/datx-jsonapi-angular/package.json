@@ -1,8 +1,6 @@
 {
   "name": "@datx/jsonapi-angular",
   "version": "3.0.0-beta.0",
-  "description": "DatX mixin for Angular JSON API support",
-  "main": "dist/bundles/datx-jsonapi-angular.umd.js",
   "module": "dist/fesm2015/datx-jsonapi-angular.js",
   "es2015": "dist/fesm2015/datx-jsonapi-angular.js",
   "esm2015": "dist/esm2015/datx-jsonapi-angular.js",
