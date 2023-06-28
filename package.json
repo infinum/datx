@@ -30,7 +30,7 @@
     }
   },
   "devDependencies": {
-    "@infinumjs/eslint-config-core-ts": "^3.3.1",
+    "@infinumjs/eslint-config-core-ts": "^3.5.0",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "eslint": "^8.17.0",

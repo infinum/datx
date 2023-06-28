@@ -2506,26 +2506,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@infinumjs/eslint-config-core-js@npm:^3.4.0":
-  version: 3.4.0
-  resolution: "@infinumjs/eslint-config-core-js@npm:3.4.0"
+"@infinumjs/eslint-config-core-js@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "@infinumjs/eslint-config-core-js@npm:3.5.0"
   peerDependencies:
     eslint: ">=8.14"
-  checksum: 13dd09499d4fc6efa66b32d86da751c3f84007e694e4f1385a0077163dbc83b63f4b32c42adb49577c4178c34330199afe398845b8669f5e23b0dc8123f9ed84
+  checksum: 1fbab8b2a16d3914ca76093e766d4bbb20ca80ae819020a2ccbd07a3461960aca8595f1609faf15a4306dfee9c63c4d80d765038b613d31e6f3184f4a9a2121f
   languageName: node
   linkType: hard
 
-"@infinumjs/eslint-config-core-ts@npm:^3.3.1":
-  version: 3.4.0
-  resolution: "@infinumjs/eslint-config-core-ts@npm:3.4.0"
+"@infinumjs/eslint-config-core-ts@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "@infinumjs/eslint-config-core-ts@npm:3.5.0"
   dependencies:
-    "@infinumjs/eslint-config-core-js": ^3.4.0
+    "@infinumjs/eslint-config-core-js": ^3.5.0
   peerDependencies:
     "@typescript-eslint/eslint-plugin": ">=5"
     "@typescript-eslint/parser": ">=5"
     eslint: ">=8.14"
     typescript: ">=3"
-  checksum: 29d82f0712137144993dfd89bf9bd37ab92d0f199641efc0c046780959312d99948236e867df611b11a0bca304645c9f630e8da694546b783e359df5528444a4
+  checksum: 6a2bc355f76f7b8f3097651af6189b42f820e21fdd6593b8f9daa4ef1d17967ebe2b3b315d35ceb285e698b4de0df714cba05de7d635cce2e5e9e647411ff491
   languageName: node
   linkType: hard
 
@@ -6951,7 +6951,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "datx@workspace:."
   dependencies:
-    "@infinumjs/eslint-config-core-ts": ^3.3.1
+    "@infinumjs/eslint-config-core-ts": ^3.5.0
     "@manypkg/cli": ^0.19.2
     "@nrwl/cli": ^15.9.3
     "@typescript-eslint/eslint-plugin": ^5.27.1

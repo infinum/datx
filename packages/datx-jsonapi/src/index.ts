@@ -1,4 +1,5 @@
 export { jsonapi, jsonapiModel, jsonapiCollection, jsonapiView } from './mixin';
+
 export { Response } from './Response';
 export { NetworkResponse } from './NetworkResponse';
 export { GenericModel } from './GenericModel';
