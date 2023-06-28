@@ -12,7 +12,8 @@ import { ExtractPublic } from '../../types/extract-public';
 import { CollectionService } from './collection.service';
 import { IResourceObject } from '@datx/jsonapi-types';
 
-// TODO: share this helper somehow (the build will break if it is imported from ../../../test/utils and if test dir is not in listed in tsconfig include array)
+// TODO: share this helper somehow (the build will break if it is imported
+// from ../../../test/utils and if test dir is not in listed in tsconfig include array)
 function asyncData<TData>(data: TData): Observable<TData> {
   return of(data).pipe(delay(0));
 }

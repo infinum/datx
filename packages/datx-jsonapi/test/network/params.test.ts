@@ -365,6 +365,7 @@ describe('params', () => {
       setRequest({
         name: 'events-1',
         query:
+          // eslint-disable-next-line max-len
           'a=1&b=2&c=3&fields[first]=1&fields[second]=2&filter[first]=1&filter[second]=2&include=first,second&sort=name',
         url: 'event',
       });

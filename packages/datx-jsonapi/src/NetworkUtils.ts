@@ -62,7 +62,8 @@ export interface IConfigType {
 }
 
 /**
- * Tries to get the built-in fetch reference. If it's a browser, use window to avoid any potential need for polyfills, but use globalThis in Node.js
+ * Tries to get the built-in fetch reference.
+ * If it's a browser, use window to avoid any potential need for polyfills, but use globalThis in Node.js
  */
 const fetchReference =
   (isBrowser

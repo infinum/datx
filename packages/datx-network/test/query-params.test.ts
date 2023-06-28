@@ -73,6 +73,7 @@ describe('query params', () => {
 
     await request.fetch();
     expect(request['lastUrl']).toBe(
+      // eslint-disable-next-line max-len
       'foobar/test?test[]=123&test[]=234&foo[bar]=1&foo[baz][]=2&foo[baz][]=3&foo[test][foo][bar][]=4&foo[test][foo][bar][]=5',
     );
   });

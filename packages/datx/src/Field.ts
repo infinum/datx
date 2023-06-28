@@ -23,6 +23,7 @@ function prepareDecorator<T extends PureModel>(_obj: T, _key: string, opts?: obj
     // If initializer is undefined, the descriptor will be null and therefore
     // the initializerDefineProperty will be skipped
 
+    // eslint-disable-next-line max-len
     // https://github.com/babel/babel/blob/3aaafae053fa75febb3aa45d45b6f00646e30ba4/packages/babel-helpers/src/helpers.js#L1019
   }
 }

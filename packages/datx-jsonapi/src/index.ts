@@ -54,7 +54,8 @@ export {
    */
   IResponse,
   /**
-   * @deprecated import directly form `@datx/jsonapi-types`. Will be removed in v3 and renamed to `IResourceIdentifierObject`
+   * @deprecated import directly form `@datx/jsonapi-types`.
+   * Will be removed in v3 and renamed to `IResourceIdentifierObject`
    */
   IDefinition,
 } from '@datx/jsonapi-types';

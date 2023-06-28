@@ -21,12 +21,17 @@ export abstract class CollectionService<
   /**
    * @note DO NOT REMOVE THIS, OR DATX CONFIG WILL NOT BE INITIALIZED
    *
-   * This ensures that DATX_CONFIG factory is run once, whenever some specific CollectionService is used for the first time in application runtime.
+   * This ensures that DATX_CONFIG factory is run once, whenever some specific CollectionService is used
+   * for the first time in application runtime.
    *
-   * This makes DatX configuration lazy - it will be configured only when it is needed for the first time (by using some specific CollectionService).
-   * For example, when there is an APP_INITIALIZER that fetches some data using some specific CollectionService, this ensures that DatX will be configured in time.
+   * This makes DatX configuration lazy - it will be configured only when it is needed for the first
+   * time (by using some specific CollectionService).
+   * For example, when there is an APP_INITIALIZER that fetches some data using some specific CollectionService,
+   * this ensures that DatX will be configured in time.
    *
-   * Even if noone actually reads datxConfig property, it sill needs to be here in order to trigger the factory. However, if someone does want to check DatX config (for whatever reason), they could read it from here instead of importing the mutated config object from DatX package.
+   * Even if noone actually reads datxConfig property, it sill needs to be here in order to trigger the factory.
+   * However, if someone does want to check DatX config (for whatever reason), they could read it from here instead
+   * of importing the mutated config object from DatX package.
    */
   protected readonly datxConfig: IConfigType = inject(DATX_CONFIG);
 
