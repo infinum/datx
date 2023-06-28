@@ -1,0 +1,261 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>useDatx API · datx</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## useInitialize"/><meta name="docsearch:version" content="2.0.0"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="useDatx API · datx"/><meta property="og:type" content="website"/><meta property="og:url" content="https://datx.dev/"/><meta property="og:description" content="## useInitialize"/><meta property="og:image" content="https://datx.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://datx.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><link rel="stylesheet" href="/css/code-block-buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/code-block-buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100}
+          )
+        });
+        </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/datx-logo.svg" alt="datx"/><h2 class="headerTitleWithLogo">datx</h2></a><a href="/versions"><h3>2.0.0</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/2.0.0/getting-started/installation" target="_self">Docs</a></li><li class=""><a href="/docs/2.0.0/examples/basic-setup" target="_self">Examples</a></li><li class=""><a href="https://github.com/infinum/datx" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>JSON API SWR</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Getting started<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/installation">Installation</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/defining-models">Defining models</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/references">References</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/configuring-the-collection">Configuring the collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/using-the-collection">Using the collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/persisting-data-locally">Persisting data locally</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Mixins<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/what-are-mixins">What are mixins</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-actions">withActions</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-meta">withMeta</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-patches">withPatches</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/network-mixin">Network Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/jsonapi-mixin">JSONAPI Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/jsonapi-angular-mixin">JSONAPI Angular Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/building-your-own-mixin">Build your own mixin</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">API Reference<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/collection">Collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/model">Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/view">View</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/attribute">Attribute</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/field">Field</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/bucket">Bucket</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/pure-model">Pure Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/model-utils">Model utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/lib-utils">Lib utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/typescript-interfaces">Typescript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Network<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/getting-started">Getting started with DatX Network</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/base-request">BaseRequest</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/caching">Caching</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/fetching">Fetching</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/interceptors">Interceptors</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/operators">Operators</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/response">Response</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/typescript-interfaces">TypeScript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-getting-started">Getting started with JSON API</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-basic-configuration">Basic configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-network-configuration">Network configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-network-usage">Network usage</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-spec-compliance">Spec compliance</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-model">Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-collection">Collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-view">View</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-response">Response</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-config">Config</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-utils">Utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-typescript-interfaces">Typescript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API Angular<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-angular/mixin">Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-angular/example-repo">Example repo</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API SWR<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-swr/overview">Overview</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/2.0.0/jsonapi-swr/api">API</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Migration guide<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/breaking-changes">Breaking changes since v1</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/deprecations">Deprecations in v2</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/whats-new">What&#x27;s new</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/from-v1">Migration from v1</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Testing<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/testing/test-data-factory">Test data factory</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Troubleshooting<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/troubleshooting/known-issues">Known issues</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">useDatx API</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="useinitialize"></a><a href="#useinitialize" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>useInitialize</h2>
+<p>On the server side it is important to create an entirely new instance of Datx Client for each request.
+Otherwise, your response to a request might include sensitive cached query results from a previous request.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> client = useInitialize(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">new</span> Client());
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="useclient"></a><a href="#useclient" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>useClient</h2>
+<p>For accessing <code>Client</code> instance from the context. It's made mainly for internal usage.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> client = useClient();
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="usedatx"></a><a href="#usedatx" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>useDatx</h2>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> expression: IGetManyExpression&lt;<span class="hljs-keyword">typeof</span> Todo&gt; = {
+  op: <span class="hljs-string">'getMany'</span>,
+  <span class="hljs-keyword">type</span>: <span class="hljs-string">'todos'</span>,
+};
+
+<span class="hljs-keyword">const</span> config: DatxConfiguration&lt;Todo, <span class="hljs-built_in">Array</span>&lt;Todo&gt;&gt; = {
+  <span class="hljs-comment">// datx config</span>
+  networkConfig: {
+    headers: {
+      <span class="hljs-string">'Accept-Language'</span>: <span class="hljs-string">'en'</span>,
+    }
+  },
+  <span class="hljs-comment">// SWR config</span>
+  onSuccess: <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(data.data[<span class="hljs-number">0</span>].id),
+}
+
+<span class="hljs-keyword">const</span> = useDatx(expression, config);
+</code></pre>
+<p>Second parameter of <code>useDatx</code> is for passing config options. It extends default SWR config prop with additional <code>networkConfig</code> property useful for passing custom headers.</p>
+<h3><a class="anchor" aria-hidden="true" id="expression-signature"></a><a href="#expression-signature" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Expression signature</h3>
+<p>Currently, we support 5 expressions for fetching resources <code>getOne</code>, <code>getMany</code>, <code>getAll</code>, <code>getRelatedResource</code> and <code>getRelatedResources</code>.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-comment">// fetch single resource by id</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IGetOneExpression&lt;TModel <span class="hljs-keyword">extends</span> JsonapiModelType = JsonapiModelType&gt; {
+  readonly op: <span class="hljs-string">'getOne'</span>;
+  readonly <span class="hljs-keyword">type</span>: TModel[<span class="hljs-string">'type'</span>];
+  id: <span class="hljs-built_in">string</span>;
+  queryParams?: IRequestOptions[<span class="hljs-string">'queryParams'</span>];
+}
+
+<span class="hljs-comment">// fetch resource collection</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IGetManyExpression&lt;TModel <span class="hljs-keyword">extends</span> JsonapiModelType = JsonapiModelType&gt; {
+  readonly op: <span class="hljs-string">'getMany'</span>;
+  readonly <span class="hljs-keyword">type</span>: TModel[<span class="hljs-string">'type'</span>];
+  queryParams?: IRequestOptions[<span class="hljs-string">'queryParams'</span>];
+}
+
+<span class="hljs-comment">// fetch all the pages of resource collection</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IGetAllExpression&lt;TModel <span class="hljs-keyword">extends</span> JsonapiModelType = JsonapiModelType&gt; {
+  readonly op: <span class="hljs-string">'getAll'</span>;
+  readonly <span class="hljs-keyword">type</span>: TModel[<span class="hljs-string">'type'</span>];
+  queryParams?: IRequestOptions[<span class="hljs-string">'queryParams'</span>];
+  maxRequests?: <span class="hljs-built_in">number</span> | <span class="hljs-literal">undefined</span>;
+}
+
+<span class="hljs-comment">// fetch single related resource through the primary resource</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IGetRelatedResourceExpression&lt;
+  TModelType <span class="hljs-keyword">extends</span> JsonapiModelType = JsonapiModelType,
+&gt; {
+  readonly op: <span class="hljs-string">'getRelatedResource'</span>;
+  readonly <span class="hljs-keyword">type</span>: TModelType[<span class="hljs-string">'type'</span>];
+  readonly relation: <span class="hljs-built_in">string</span>;
+  id: <span class="hljs-built_in">string</span>;
+  queryParams?: IRequestOptions[<span class="hljs-string">'queryParams'</span>];
+}
+
+<span class="hljs-comment">// fetch a collection of related resources through the primary resource</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> IGetRelatedResourcesExpression&lt;
+    TModelType <span class="hljs-keyword">extends</span> JsonapiModelType = JsonapiModelType
+&gt; {
+    readonly op: <span class="hljs-string">'getRelatedResources'</span>;
+    readonly <span class="hljs-keyword">type</span>: TModelType[<span class="hljs-string">'type'</span>];
+    readonly relation: <span class="hljs-built_in">string</span>;
+    id: <span class="hljs-built_in">string</span>;
+    queryParams?: IRequestOptions[<span class="hljs-string">'queryParams'</span>];
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="usedatxinfinite"></a><a href="#usedatxinfinite" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>useDatxInfinite</h2>
+<p>For fetching paginated data. It uses <code>useSWRInfinite</code> internally so all the options from the <a href="https://swr.vercel.app/docs/pagination#useswrinfinite">documentation</a> can be applied to <code>useDatxInfinite</code>.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> getPageExpression = <span class="hljs-function">(<span class="hljs-params">index: <span class="hljs-built_in">number</span>, size = 10</span>) =&gt;</span> ({
+  op: <span class="hljs-string">'getMany'</span>,
+  <span class="hljs-keyword">type</span>: <span class="hljs-string">'todos'</span>,
+  queryParams: {
+    custom: [
+      { key: <span class="hljs-string">'page[index]'</span>, value: <span class="hljs-built_in">String</span>(index) },
+      { key: <span class="hljs-string">'page[size]'</span>, value: <span class="hljs-built_in">String</span>(size) },
+    ] <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span>,
+  },
+} <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span> satisfies IGetManyExpression&lt;<span class="hljs-keyword">typeof</span> Todo&gt;);
+<span class="hljs-comment">// omit `satisfies IGetManyExpression&lt;typeof Todo&gt;` if you are using typescript &lt; 4.9</span>
+
+<span class="hljs-keyword">const</span> config: DatxInfiniteConfiguration&lt;Todo&gt; = {
+  <span class="hljs-comment">// datx config</span>
+  networkConfig: {
+    headers: {
+      <span class="hljs-string">'Accept-Language'</span>: <span class="hljs-string">'en'</span>,
+    }
+  },
+  <span class="hljs-comment">// SWR config</span>
+  onSuccess: <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(data[<span class="hljs-number">0</span>].data[<span class="hljs-number">0</span>].id),
+}
+
+<span class="hljs-keyword">const</span> getKey = <span class="hljs-function">(<span class="hljs-params">pageIndex: <span class="hljs-built_in">number</span>, previousPageData: CollectionResponse</span>) =&gt;</span> {
+  <span class="hljs-keyword">if</span> (previousPageData &amp;&amp; previousPageData.data.length === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+
+  <span class="hljs-keyword">return</span> getPageExpression(pageIndex);
+};
+
+<span class="hljs-keyword">const</span> { data: responses, error, size, setSize } = useDatxInfinite(getKey, config);
+</code></pre>
+<p>Second parameter of <code>useDatxInfinite</code> is for passing config options. It extends default SWRInfinite config prop with additional <code>networkConfig</code> property useful for passing custom headers.</p>
+<blockquote>
+<p>Core expression should always be a <code>getMany</code> operation.</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="usemutation"></a><a href="#usemutation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>useMutation</h2>
+<p>A hook for remote mutations.
+This is a helper hook until <a href="https://github.com/vercel/swr/pull/1450">this</a> is merged to SWR core!</p>
+<pre><code class="hljs css language-tsx"><span class="hljs-comment">// ./src/queries/todo.ts</span>
+
+<span class="hljs-keyword">import</span> { IGetManyExpression } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/swr'</span>;
+
+<span class="hljs-keyword">import</span> { Todo } <span class="hljs-keyword">from</span> <span class="hljs-string">'../models/Todo'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> querytodos: IGetManyExpression&lt;<span class="hljs-keyword">typeof</span> Todo&gt; = {
+  op: <span class="hljs-string">'getMany'</span>,
+  <span class="hljs-keyword">type</span>: <span class="hljs-string">'todos'</span>,
+};
+</code></pre>
+<pre><code class="hljs css language-tsx"><span class="hljs-comment">// ./src/mutations/todo.ts</span>
+
+<span class="hljs-keyword">import</span> { getModelEndpointUrl, modelToJsonApi } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi'</span>;
+<span class="hljs-keyword">import</span> { IClientInstance } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/swr'</span>;
+
+<span class="hljs-keyword">import</span> { Todo } <span class="hljs-keyword">from</span> <span class="hljs-string">'../models/Todo'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> createTodo = <span class="hljs-function">(<span class="hljs-params">client: IClientInstance, message: <span class="hljs-built_in">string</span> | <span class="hljs-literal">undefined</span></span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> model = <span class="hljs-keyword">new</span> Todo({ message });
+  <span class="hljs-keyword">const</span> url = getModelEndpointUrl(model);
+  <span class="hljs-keyword">const</span> data = modelToJsonApi(model);
+
+  <span class="hljs-keyword">return</span> client.request&lt;Todo, <span class="hljs-built_in">Array</span>&lt;Todo&gt;&gt;(url, <span class="hljs-string">'POST'</span>, { data });
+};
+</code></pre>
+<pre><code class="hljs css language-tsx"><span class="hljs-keyword">import</span> { useMutation, useDatx } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/swr'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Todos: FC = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> { data, error, mutate } = useDatx(todosQuery);
+
+  <span class="hljs-keyword">const</span> [create, { status }] = useMutation(createTodo, {
+    <span class="hljs-attr">onSuccess</span>: <span class="hljs-keyword">async</span> () =&gt; {
+      mutate();
+    },
+  });
+
+  <span class="hljs-comment">// ...</span>
+};
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="utils"></a><a href="#utils" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Utils</h2>
+<h3><a class="anchor" aria-hidden="true" id="swr-client"></a><a href="#swr-client" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>SWR Client</h3>
+<h4><a class="anchor" aria-hidden="true" id="fetchquery"></a><a href="#fetchquery" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>fetchQuery</h4>
+<p>Takes in an expression as an argument and returns a promise with the response. Useful on server side for fetching data before rendering.</p>
+<pre><code class="hljs css language-tsx">const<span class="hljs-built_in"> client </span>= createClient();
+
+const todo = await client.fetchQuery(todosQuery);
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="requestsingle-and-requestcollection"></a><a href="#requestsingle-and-requestcollection" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>requestSingle and requestCollection</h4>
+<p>Same as <code>request</code> but with a bit more type safety.</p>
+<pre><code class="hljs css language-tsx"><span class="hljs-keyword">const</span> client = createClient();
+
+<span class="hljs-keyword">const</span> todo = <span class="hljs-keyword">await</span> client.requestSingle(<span class="hljs-string">'todos/1'</span>, <span class="hljs-string">'GET'</span>, <span class="hljs-literal">undefined</span>); <span class="hljs-comment">// returns SingleResponse</span>
+<span class="hljs-keyword">const</span> todos = <span class="hljs-keyword">await</span> client.requestCollection(<span class="hljs-string">'todos'</span>, <span class="hljs-string">'GET'</span>, <span class="hljs-literal">undefined</span>); <span class="hljs-comment">// returns CollectionResponse</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="hydrate"></a><a href="#hydrate" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>hydrate</h3>
+<pre><code class="hljs css language-tsx"><span class="hljs-keyword">type</span> Fallback = <span class="hljs-keyword">Record</span>&lt;<span class="hljs-keyword">string</span>, IRawResponse&gt;
+
+<span class="hljs-keyword">const</span> fallback = <span class="hljs-comment">{
+  '/api/v1/todos': rawResponse
+}</span>
+
+&lt;Hydrate fallback=<span class="hljs-comment">{fallback}</span> /&gt;
+</code></pre>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 6/28/2023 by Darko Kukovec</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/2.0.0/jsonapi-swr/overview"><span class="arrow-prev">← </span><span class="function-name-prevnext">useDatx</span></a><a class="docs-next button" href="/docs/2.0.0/migration-guide/breaking-changes"><span>Breaking changes since v2</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#useinitialize">useInitialize</a></li><li><a href="#useclient">useClient</a></li><li><a href="#usedatx">useDatx</a><ul class="toc-headings"><li><a href="#expression-signature">Expression signature</a></li></ul></li><li><a href="#usedatxinfinite">useDatxInfinite</a></li><li><a href="#usemutation">useMutation</a></li><li><a href="#utils">Utils</a><ul class="toc-headings"><li><a href="#swr-client">SWR Client</a></li><li><a href="#hydrate">hydrate</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'f03607e57957ae747b2342443460477a',
+                indexName: 'datx',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
