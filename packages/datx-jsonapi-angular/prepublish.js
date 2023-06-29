@@ -8,11 +8,12 @@ const distPackageJson = require('./dist/package.json');
 // Update package version
 distPackageJson.version = packageJson.version;
 
+distPackageJson.peerDependencies = distPackageJson.peerDependencies || {};
+
 // Update dependency versions
-Object.keys(distPackageJson.peerDependencies).forEach((key) => {
+Object.keys(packageJson.dependencies).forEach((key) => {
   if (key.startsWith('@datx/')) {
-    distPackageJson.peerDependencies[key] =
-      packageJson.devDependencies[key] || packageJson.peerDependencies[key];
+    distPackageJson.peerDependencies[key] = packageJson.dependencies[key];
   }
 });
 

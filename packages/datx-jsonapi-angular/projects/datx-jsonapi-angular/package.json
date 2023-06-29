@@ -18,17 +18,17 @@
     "jsonapi",
     "angular"
   ],
-  "dependencies": {
+  "devDependencies": {
     "@datx/core": "3.0.0-beta.1",
     "@datx/jsonapi": "3.0.0-beta.1",
     "@datx/jsonapi-types": "3.0.0-beta.1",
     "@datx/network": "3.0.0-beta.1",
-    "@datx/utils": "3.0.0-beta.1",
+    "@datx/utils": "3.0.0-beta.1"
+  },
+  "dependencies": {
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
-    "@angular/common": ">=14",
-    "@angular/core": ">=14",
     "rxjs": "6 || 7"
   }
 }
