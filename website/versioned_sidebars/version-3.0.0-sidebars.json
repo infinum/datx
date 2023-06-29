@@ -15,6 +15,7 @@
       "version-3.0.0-mixins/with-patches",
       "version-3.0.0-mixins/network-mixin",
       "version-3.0.0-mixins/jsonapi-mixin",
+      "version-3.0.0-mixins/jsonapi-angular-mixin",
       "version-3.0.0-mixins/building-your-own-mixin"
     ],
     "API Reference": [
@@ -22,6 +23,7 @@
       "version-3.0.0-api-reference/model",
       "version-3.0.0-api-reference/view",
       "version-3.0.0-api-reference/attribute",
+      "version-3.0.0-api-reference/field",
       "version-3.0.0-api-reference/bucket",
       "version-3.0.0-api-reference/pure-model",
       "version-3.0.0-api-reference/model-utils",
@@ -59,12 +61,10 @@
     "JSON API SWR": ["version-3.0.0-jsonapi-swr/overview", "version-3.0.0-jsonapi-swr/api"],
     "Migration guide": [
       "version-3.0.0-migration-guide/breaking-changes",
-      "version-3.0.0-migration-guide/deprecations",
-      "version-3.0.0-migration-guide/whats-new",
-      "version-3.0.0-migration-guide/from-v1"
+      "version-3.0.0-migration-guide/whats-new"
     ],
-    "Testing": ["version-2.0.0-testing/test-data-factory"],
-    "Troubleshooting": ["version-2.0.0-troubleshooting/known-issues"]
+    "Testing": ["version-3.0.0-testing/test-data-factory"],
+    "Troubleshooting": ["version-3.0.0-troubleshooting/known-issues"]
   },
   "version-3.0.0-examples": {
     "Setup": [

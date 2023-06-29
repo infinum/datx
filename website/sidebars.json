@@ -55,12 +55,7 @@
     ],
     "JSON API Angular": ["jsonapi-angular/mixin"],
     "JSON API SWR": ["jsonapi-swr/overview", "jsonapi-swr/api"],
-    "Migration guide": [
-      "migration-guide/breaking-changes",
-      "migration-guide/deprecations",
-      "migration-guide/whats-new",
-      "migration-guide/from-v1"
-    ],
+    "Migration guide": ["migration-guide/breaking-changes", "migration-guide/whats-new"],
     "Testing": ["testing/test-data-factory"],
     "Troubleshooting": ["troubleshooting/known-issues"]
   },
@@ -71,8 +66,6 @@
       "examples/nextjs-setup",
       "examples/angular-setup"
     ],
-    "Collection": [
-      "examples/adding-models"
-    ]
+    "Collection": ["examples/adding-models"]
   }
 }
