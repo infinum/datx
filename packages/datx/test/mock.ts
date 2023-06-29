@@ -8,7 +8,7 @@ export const User = new Schema(
   'user',
   {
     username: type.String,
-    age: { type: type.Number, optional: true, defaultValue: 0 },
+    age: type.Number.optional(0),
   },
   (data: IResource<Schema>) => `user/${data.username}`,
 );
@@ -31,8 +31,8 @@ export const Comment = new Schema(
     date: type.Date,
     text: type.String,
     upvotes: [User],
-    featured: { type: type.Boolean, optional: true },
-    test: {
+    featured: type.Boolean.optional(),
+    test: type({
       serialize(value: CustomType) {
         return value.foo;
       },
@@ -44,8 +44,7 @@ export const Comment = new Schema(
         c.foo = value;
         return c;
       },
-      optional: true,
-    },
+    }).optional(),
   },
   (data: IResource<Schema>) => `comment/${data.text}`,
 );
