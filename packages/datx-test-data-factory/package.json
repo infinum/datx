@@ -1,6 +1,6 @@
 {
   "name": "@datx/test-data-factory",
-  "version": "3.0.0-beta.2",
+  "version": "3.0.0",
   "description": "DatX companion lib for generating test data with ease!",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -40,9 +40,9 @@
     "typescript": "~4.7.3"
   },
   "dependencies": {
-    "@datx/core": "3.0.0-beta.1",
-    "@datx/jsonapi": "3.0.0-beta.1",
-    "@datx/utils": "3.0.0-beta.1"
+    "@datx/core": "3.0.0",
+    "@datx/jsonapi": "3.0.0",
+    "@datx/utils": "3.0.0"
   },
   "scripts": {
     "test": "jest --coverage",
