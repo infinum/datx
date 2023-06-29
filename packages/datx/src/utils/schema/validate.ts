@@ -28,6 +28,7 @@ export function validateSchema<TSchema extends Schema>(
 ): [boolean, Array<IValidationError>] {
   let dataKeys = Object.keys(data);
   const errors: Array<IValidationError> = [];
+
   mapObjectValues<TSchema['definition'], void>(
     schema.definition,
     (key: keyof TSchema['definition'], def: TSchema['definition'][typeof key]) => {
@@ -72,6 +73,7 @@ export function validateSchema<TSchema extends Schema>(
         if (typeof value === 'undefined' && optional) {
           return;
         }
+
         try {
           if (options?.plain) {
             const clone = def.serialize(def.parseValue(value, key as string | number, data));
@@ -84,6 +86,7 @@ export function validateSchema<TSchema extends Schema>(
             }
           } else {
             let correctType = false;
+
             if (def.test) {
               correctType = def.test(value);
             } else if (def instanceof Schema) {

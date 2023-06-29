@@ -9,6 +9,7 @@ describe('helpers', () => {
         c: Boolean,
       };
       const result = mapObjectValues(obj, (key, value) => `${key}-${value.name}`);
+
       expect(result).toEqual({
         a: 'a-String',
         b: 'b-Number',

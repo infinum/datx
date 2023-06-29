@@ -23,6 +23,7 @@ describe('merge', () => {
     };
 
     const merged = mergeSchema(Foo, target, source);
+
     expect(merged).toEqual({ name: 'Foo', age: 10 });
     expect(target).toEqual({ name: 'Foo' });
   });
@@ -47,6 +48,7 @@ describe('merge', () => {
     };
 
     const merged = mergeSchema(Foo, target, source);
+
     expect(merged).toEqual({ name: 'Bar', age: 10 });
     expect(target).toEqual({ name: 'Foo' });
   });

@@ -11,6 +11,7 @@ export function serializeSchema<TSchema extends Schema>(
   flatten?: false,
   contained?: Array<string | number>,
 ): IPlainResource<TSchema>;
+
 export function serializeSchema<TSchema extends Schema>(
   schema: TSchema,
   data: Array<IResource<TSchema>>,
@@ -18,6 +19,7 @@ export function serializeSchema<TSchema extends Schema>(
   flatten?: false,
   contained?: Array<string | number>,
 ): Array<IPlainResource<TSchema>>;
+
 export function serializeSchema<TSchema extends Schema>(
   schema: TSchema,
   data: IResource<TSchema>,
@@ -25,6 +27,7 @@ export function serializeSchema<TSchema extends Schema>(
   flatten: true,
   contained?: Array<string | number>,
 ): IFlattenedResource<TSchema>;
+
 export function serializeSchema<TSchema extends Schema>(
   schema: TSchema,
   data: Array<IResource<TSchema>>,
@@ -32,6 +35,7 @@ export function serializeSchema<TSchema extends Schema>(
   flatten: true,
   contained?: Array<string | number>,
 ): IFlattenedResource<TSchema, true>;
+
 export function serializeSchema<TSchema extends Schema>(
   schema: TSchema,
   data: IResource<TSchema>,
@@ -43,6 +47,7 @@ export function serializeSchema<TSchema extends Schema>(
   | IFlattenedResource<TSchema>
   | Array<IPlainResource<TSchema>>
   | IFlattenedResource<TSchema, true>;
+
 export function serializeSchema<TSchema extends Schema>(
   schema: TSchema,
   data: IResource<TSchema> | Array<IResource<TSchema>>,

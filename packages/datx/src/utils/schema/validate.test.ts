@@ -6,6 +6,7 @@ describe('instance', () => {
     it('should check for missing properties', () => {
       // @ts-expect-error Wrong on purpose
       const [isError, errors] = validateSchema(User, {});
+
       expect(isError).toBe(true);
       expect(errors).toEqual([
         {
@@ -25,6 +26,7 @@ describe('instance', () => {
         },
         { strict: true },
       );
+
       expect(isError).toBe(true);
       expect(errors).toEqual([
         {
@@ -44,6 +46,7 @@ describe('instance', () => {
         },
         { strict: false },
       );
+
       expect(isError).toBe(false);
       expect(errors).toEqual([]);
     });
@@ -55,6 +58,7 @@ describe('instance', () => {
         // @ts-expect-error Wrong on purpose
         age: 'old',
       });
+
       expect(isError).toBe(true);
       expect(errors).toEqual([
         {

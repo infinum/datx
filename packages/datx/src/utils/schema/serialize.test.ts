@@ -114,10 +114,12 @@ describe('serialization', () => {
       name: 'bar',
       foo,
     };
+
     foo.bar = bar;
 
     const rawFoo = serializeSchema(Foo, foo);
     const cloneFoo = parseSchema(Foo, rawFoo);
+
     expect(cloneFoo.bar.foo).toBe(cloneFoo);
   });
 
@@ -147,9 +149,11 @@ describe('serialization', () => {
       name: 'bar',
       foo,
     };
+
     foo.bar = bar;
 
     const rawFoo = serializeSchema(Foo, foo, 4, true);
+
     expect(rawFoo.data).toEqual({ name: 'foo', bar: 'bar/bar' });
     expect(rawFoo.linked).toEqual([{ name: 'bar', foo: 'foo/foo' }]);
   });

@@ -12,8 +12,7 @@
     "@typescript-eslint/interface-name-prefix": 0,
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "@typescript-eslint/explicit-member-accessibility": 1,
-    "no-underscore-dangle": 1,
-    "prefer-spread": 0
+    "no-underscore-dangle": 1
   },
   "parserOptions": {
     "project": ["./packages/datx/tsconfig.json"]

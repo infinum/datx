@@ -10,6 +10,7 @@ export function mapObjectValues<T extends ISchemaData, TReturn = TResourceProp<T
   fn: (key: keyof T, value: typeof obj[typeof key], item: Partial<TReturn>) => TReturn | undefined,
 ): TReturn {
   const item: Record<string, unknown> = {};
+
   (Object.entries(obj) as Array<[keyof T, typeof obj[keyof T]]>).map(([key, value]) => {
     item[key as string] = fn(key, value, item as Partial<TReturn>);
   });
@@ -62,10 +63,12 @@ export function mapItems<TItem, TResult>(
   items: TItem,
   fn: (item: TItem, index: number) => TResult,
 ): TResult;
+
 export function mapItems<TItem, TResult>(
   items: Array<TItem>,
   fn: (item: TItem, index: number) => TResult,
 ): Array<TResult>;
+
 export function mapItems<TItem, TResult>(
   items: TItem | Array<TItem>,
   fn: (item: TItem, index: number) => TResult,

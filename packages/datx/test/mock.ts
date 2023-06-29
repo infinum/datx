@@ -41,7 +41,9 @@ export const Comment = new Schema(
           throw new Error('Invalid custom type');
         }
         const c = new CustomType();
+
         c.foo = value;
+
         return c;
       },
     }).optional(),

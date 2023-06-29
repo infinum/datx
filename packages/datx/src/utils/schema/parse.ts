@@ -14,6 +14,7 @@ function parseProp<TSchema extends Schema>(data: IPlainResource<TSchema>, collec
   ): TResourceProp<typeof def, true> => {
     const innerDef = outerDef.type;
     const def = innerDef.type;
+
     if ('parseValue' in def) {
       return def.parseValue(
         data[key as keyof typeof data],
@@ -50,11 +51,13 @@ export function parseSchema<TSchema extends Schema>(
   data: IPlainResource<TSchema>,
   extCollection?: Collection,
 ): IResource<TSchema>;
+
 export function parseSchema<TSchema extends Schema>(
   schema: TSchema,
   data: Array<IPlainResource<TSchema>>,
   extCollection?: Collection,
 ): Array<IResource<TSchema>>;
+
 export function parseSchema<TSchema extends Schema>(
   schema: TSchema,
   data: IPlainResource<TSchema> | Array<IPlainResource<TSchema>>,
