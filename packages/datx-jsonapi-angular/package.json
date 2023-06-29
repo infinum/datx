@@ -1,6 +1,6 @@
 {
   "name": "@datx/jsonapi-angular",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "module": "dist/fesm2015/datx-jsonapi-angular.js",
   "es2015": "dist/fesm2015/datx-jsonapi-angular.js",
   "esm2015": "dist/esm2015/datx-jsonapi-angular.js",
