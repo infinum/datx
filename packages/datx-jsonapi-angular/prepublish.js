@@ -12,7 +12,7 @@ distPackageJson.version = packageJson.version;
 Object.keys(distPackageJson.peerDependencies).forEach((key) => {
   if (key.startsWith('@datx/')) {
     distPackageJson.peerDependencies[key] =
-      packageJson.peerDependencies[key] || packageJson.devDependencies[key];
+      packageJson.devDependencies[key] || packageJson.peerDependencies[key];
   }
 });
 
