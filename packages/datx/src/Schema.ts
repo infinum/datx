@@ -3,13 +3,21 @@ import { serializeSchema } from './utils/schema/serialize';
 import { ISchemaData } from './interfaces/ISchemaData';
 import { IPlainResource, IResource } from './interfaces/IResource';
 import { IFlattenedResource } from './interfaces/IFlattenedResource';
+import { IOuterType } from './interfaces/IOuterType';
+import { type } from './type';
+import { IInnerType } from './interfaces/IInnerType';
 
-export class Schema<T extends ISchemaData = ISchemaData> {
+export class Schema<T extends ISchemaData = ISchemaData> implements IOuterType<any> {
+  public readonly type: IInnerType<this>;
   constructor(
-    public readonly type: string | number,
+    public readonly _type: string | number,
     public readonly definition: T,
     public readonly id: (data: IResource<Schema>) => string | number,
-  ) {}
+  ) {
+    this.type = {
+      type: this,
+    };
+  }
 
   public parse(data: IPlainResource<this>): IResource<this>;
   public parse(data: Array<IPlainResource<this>>): Array<IResource<this>>;
@@ -64,5 +72,9 @@ export class Schema<T extends ISchemaData = ISchemaData> {
     | Array<IPlainResource<this>>
     | IFlattenedResource<this, true> {
     return serializeSchema(this, data as IResource<this>, depth, flatten, contained);
+  }
+
+  public optional(defaultValue?: ThisType<T>) {
+    return type(this, true, defaultValue);
   }
 }

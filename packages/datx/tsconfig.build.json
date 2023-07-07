@@ -11,6 +11,7 @@
     "inlineSources": true,
     "lib": [],
     "module": "esnext",
+    "moduleResolution": "node",
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "noUnusedParameters": true,

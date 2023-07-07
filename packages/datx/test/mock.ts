@@ -1,52 +1,53 @@
-import { IResource, Schema, type } from '../src';
+import { ArrayOf, Schema, customScalar } from '../src';
+import { StringType, NumberType, DateType, BooleanType } from '../src';
 
 export class CustomType {
   public foo = 1;
 }
 
-export const User = new Schema(
-  'user',
-  {
-    username: type.String,
-    age: type.Number.optional(0),
+const custom = customScalar(
+  (value: CustomType) => value.foo,
+  (value: number) => {
+    if (typeof value !== 'number') {
+      throw new Error('Invalid custom type');
+    }
+    const c = new CustomType();
+
+    c.foo = value;
+
+    return c;
   },
-  (data: IResource<Schema>) => `user/${data.username}`,
+);
+
+export const User = new Schema(
+  {
+    username: StringType,
+    age: NumberType.optional().default(0),
+  },
+  'user',
+  (data) => `user/${data.username}`,
 );
 
 export const Post = new Schema(
-  'post',
   {
-    title: type.String,
-    date: type.Date,
-    text: type.String,
+    title: StringType,
+    date: DateType,
+    text: StringType,
   },
-  (data: IResource<Schema>) => `post/${data.title}`,
+  'post',
+  (data) => `post/${data.title}`,
 );
 
 export const Comment = new Schema(
-  'comment',
   {
     author: User,
     post: Post,
-    date: type.Date,
-    text: type.String,
-    upvotes: [User],
-    featured: type.Boolean.optional(),
-    test: type({
-      serialize(value: CustomType) {
-        return value.foo;
-      },
-      parseValue(value: number) {
-        if (typeof value !== 'number') {
-          throw new Error('Invalid custom type');
-        }
-        const c = new CustomType();
-
-        c.foo = value;
-
-        return c;
-      },
-    }).optional(),
+    date: DateType,
+    text: StringType,
+    upvotes: ArrayOf(User),
+    featured: BooleanType.optional(),
+    test: custom.optional(),
   },
-  (data: IResource<Schema>) => `comment/${data.text}`,
+  'comment',
+  (data) => `comment/${data.text}`,
 );

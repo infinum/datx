@@ -3,7 +3,7 @@
   "include": ["src/**/*", "test/**/*", "example/**/*", "rollup.config.js"],
   "exclude": ["node_modules", "examples"],
   "compilerOptions": {
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "noUnusedLocals": true,
     "allowJs": true
   }

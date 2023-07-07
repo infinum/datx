@@ -1,11 +1,10 @@
-import { IResource } from '../..';
+import { IResource, Schema } from '../..';
 import { Comment } from '../../../test/mock';
 import { Collection } from '../../Collection';
-import { Schema } from '../../Schema';
 import { schemaOrReference, wrapSchema } from '../helpers';
 import { parseSchema } from './parse';
 import { serializeSchema } from './serialize';
-import { String } from '../../commonTypes';
+import { String } from '../../type';
 
 describe('serialization', () => {
   it('should do nested serialization with custom types', () => {
@@ -41,22 +40,22 @@ describe('serialization', () => {
   });
 
   it('should work for circular references and fixed depth', () => {
-    const Foo: Schema = new Schema(
-      'foo',
+    const Foo = new Schema(
       {
         name: String,
         bar: wrapSchema(() => Bar),
       },
-      (data: IResource<Schema>) => `foo/${data.name}`,
+      'foo',
+      (data) => `foo/${data.name}`,
     );
 
     const Bar = new Schema(
-      'bar',
       {
         name: String,
         foo: Foo,
       },
-      (data: IResource<Schema>) => `bar/${data.name}`,
+      'bar',
+      (data) => `bar/${data.name}`,
     );
 
     const collection = new Collection();
@@ -90,20 +89,20 @@ describe('serialization', () => {
 
   it('should work for references', () => {
     const Foo = new Schema(
-      'foo',
       {
         name: String,
         bar: schemaOrReference(() => Bar),
       },
-      (data: IResource<Schema>) => `foo/${data.name}`,
+      'foo',
+      (data) => `foo/${data.name}`,
     );
     const Bar = new Schema(
-      'bar',
       {
         name: String,
         foo: schemaOrReference(() => Foo),
       },
-      (data: IResource<Schema>) => `bar/${data.name}`,
+      'bar',
+      (data) => `bar/${data.name}`,
     );
 
     const foo: IResource<typeof Foo> = {
@@ -125,20 +124,20 @@ describe('serialization', () => {
 
   it('should work for references when flattening', () => {
     const Foo = new Schema(
-      'foo',
       {
         name: String,
         bar: schemaOrReference(() => Bar),
       },
-      (data: IResource<Schema>) => `foo/${data.name}`,
+      'foo',
+      (data) => `foo/${data.name}`,
     );
     const Bar = new Schema(
-      'bar',
       {
         name: String,
         foo: schemaOrReference(() => Foo),
       },
-      (data: IResource<Schema>) => `bar/${data.name}`,
+      'bar',
+      (data) => `bar/${data.name}`,
     );
 
     const foo: IResource<typeof Foo> = {

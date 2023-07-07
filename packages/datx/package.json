@@ -33,7 +33,7 @@
     "test": "jest --coverage",
     "watch": "jest --watch --coverage",
     "prepublish": "npm run build",
-    "build": "tsup src/index.ts src/min.ts"
+    "build": "tsup src/index.ts"
   },
   "tsup": {
     "clean": true,
