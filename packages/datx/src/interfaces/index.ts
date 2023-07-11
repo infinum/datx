@@ -4,6 +4,7 @@ import { OneOf } from '../utils/types/oneOf';
 import { BooleanType, DateType, NumberType, StringType } from '../utils/types/primitive';
 import { ArrayOf } from '../utils/types/arrayOf';
 import { Schema } from '../utils/types/schema';
+import { lazySchema } from '../utils/helpers';
 
 const locationSchema = new Schema(
   {
@@ -60,3 +61,19 @@ c.age = '1';
 ///////
 
 console.log(wrong, lat);
+
+const ModelA = new Schema(
+  {
+    name: StringType,
+    modelB: lazySchema(() => ModelB) as typeof ModelB,
+  },
+  'modelA',
+);
+
+const ModelB = new Schema(
+  {
+    name: StringType,
+    modelA: ModelA,
+  },
+  'modelB',
+);

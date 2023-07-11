@@ -1,11 +1,11 @@
-import { validateSchema, validatePlainSchema } from './validate';
+import { validateSchemaInstance, validatePlainSchema } from './validate';
 import { Comment, User } from '../../../test/mock';
 
 describe('instance', () => {
   describe('validation', () => {
     it('should check for missing properties', () => {
       // @ts-expect-error Wrong on purpose
-      const [isError, errors] = validateSchema(User, {});
+      const [isError, errors] = validateSchemaInstance(User, {});
 
       expect(isError).toBe(true);
       expect(errors).toEqual([
@@ -17,7 +17,7 @@ describe('instance', () => {
     });
 
     it('should report an error for extra fields in strict mode', () => {
-      const [isError, errors] = validateSchema(
+      const [isError, errors] = validateSchemaInstance(
         User,
         {
           username: 'FooBar',
@@ -37,7 +37,7 @@ describe('instance', () => {
     });
 
     it('should not report an error for extra fields in non-strict mode', () => {
-      const [isError, errors] = validateSchema(
+      const [isError, errors] = validateSchemaInstance(
         User,
         {
           username: 'FooBar',
@@ -52,7 +52,7 @@ describe('instance', () => {
     });
 
     it('should check for wrong primitive types', () => {
-      const [isError, errors] = validateSchema(User, {
+      const [isError, errors] = validateSchemaInstance(User, {
         // @ts-expect-error Wrong on purpose
         username: 42,
         // @ts-expect-error Wrong on purpose
@@ -74,7 +74,7 @@ describe('instance', () => {
 
     it('should throw first error if throw flag is set', () => {
       expect(() =>
-        validateSchema(
+        validateSchemaInstance(
           User,
           {
             // @ts-expect-error Wrong on purpose
@@ -88,7 +88,7 @@ describe('instance', () => {
     });
 
     it('should check for invalid custom types (primitive)', () => {
-      const [isError, errors] = validateSchema(Comment, {
+      const [isError, errors] = validateSchemaInstance(Comment, {
         date: new Date(),
         upvotes: [],
         author: {
@@ -119,7 +119,7 @@ describe('instance', () => {
         public foo = 1;
       }
 
-      const [isError, errors] = validateSchema(Comment, {
+      const [isError, errors] = validateSchemaInstance(Comment, {
         date: new Date(),
         upvotes: [],
         author: {
@@ -145,7 +145,7 @@ describe('instance', () => {
     });
 
     it('should check nested schemas', () => {
-      const [isError, errors] = validateSchema(Comment, {
+      const [isError, errors] = validateSchemaInstance(Comment, {
         date: new Date(),
         upvotes: [],
         author: {

@@ -1,3 +1,4 @@
+import { PartialOnUndefinedDeep } from 'type-fest';
 import { IResource } from '../../interfaces/IResource';
 import { customScalar } from './customScalar';
 
@@ -42,7 +43,7 @@ export function OneOf<
 >(...values: TOneOf) {
   return customScalar<TInstanceType, TPlainType>(
     (instance) => {
-      const value = values.find((value) => value.test(instance));
+      const value = values.find((value) => value.testInstance(instance));
 
       if (!value) {
         throw new Error('Invalid value');
@@ -51,7 +52,7 @@ export function OneOf<
       return value.serialize(instance);
     },
     (plain) => {
-      const value = values.find((value) => value.test(plain));
+      const value = values.find((value) => value.testPlain(plain));
 
       if (!value) {
         throw new Error('Invalid value');
@@ -59,5 +60,9 @@ export function OneOf<
 
       return value.parse(plain);
     },
+    (item: TInstanceType | PartialOnUndefinedDeep<TInstanceType>): item is TInstanceType =>
+      values.some((value) => value.testInstance(item)),
+    (item: TPlainType | PartialOnUndefinedDeep<TPlainType>): item is TPlainType =>
+      values.some((value) => value.testPlain(item)),
   );
 }

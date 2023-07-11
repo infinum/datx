@@ -5,10 +5,9 @@ import { ISchemaInstance } from '../../interfaces/ISchemaInstance';
 import { ISchemaPlain } from '../../interfaces/ISchemaPlain';
 import { parseSchema } from '../schema/parse';
 import { serializeSchema } from '../schema/serialize';
+import { validatePlainSchema, validateSchemaInstance } from '../schema/validate';
 
-export class Schema<TDefinition extends ISchemaDefinition>
-  implements IResource<ISchemaInstance<TDefinition>, ISchemaPlain<TDefinition>>
-{
+export class Schema<TDefinition extends ISchemaDefinition> {
   constructor(
     public readonly definition: TDefinition,
     public readonly type: string,
@@ -41,7 +40,23 @@ export class Schema<TDefinition extends ISchemaDefinition>
     return new Schema(this.definition, this.type, this.getId, this.isOptional, value);
   }
 
-  public test(item: unknown): item is ISchemaInstance<TDefinition> {
-    return true; // TODO: Improve
+  public testInstance(
+    item: PartialOnUndefinedDeep<ISchemaInstance<TDefinition>>,
+  ): item is PartialOnUndefinedDeep<ISchemaInstance<TDefinition>> {
+    if (typeof item !== 'object' || item === null) {
+      return false;
+    }
+
+    return validateSchemaInstance(this, item)[0];
+  }
+
+  public testPlain(
+    item: PartialOnUndefinedDeep<ISchemaPlain<TDefinition>>,
+  ): item is PartialOnUndefinedDeep<ISchemaPlain<TDefinition>> {
+    if (typeof item !== 'object' || item === null) {
+      return false;
+    }
+
+    return validatePlainSchema(this, item)[0];
   }
 }

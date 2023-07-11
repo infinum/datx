@@ -1,4 +1,3 @@
-import { IResource } from '../../interfaces/IResource';
 import { Schema } from '../../Schema';
 import { mergeSchema } from './merge';
 import { String, Number } from '../../type';
@@ -11,7 +10,7 @@ describe('merge', () => {
         name: String,
         age: Number,
       },
-      (data: IResource<Schema>) => `foo/${data.name}`,
+      (data) => `foo/${data.name}`,
     );
 
     const target = {
@@ -35,7 +34,7 @@ describe('merge', () => {
         name: String,
         age: Number,
       },
-      (data: IResource<Schema>) => `foo/${data.name}`,
+      (data) => `foo/${data.name}`,
     );
 
     const target = {

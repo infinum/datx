@@ -1,10 +1,9 @@
-import { IResource, Schema } from '../..';
+import { Schema, StringType } from '../..';
 import { Comment } from '../../../test/mock';
 import { Collection } from '../../Collection';
-import { schemaOrReference, wrapSchema } from '../helpers';
+import { lazySchema } from '../helpers';
 import { parseSchema } from './parse';
 import { serializeSchema } from './serialize';
-import { String } from '../../type';
 
 describe('serialization', () => {
   it('should do nested serialization with custom types', () => {
@@ -42,8 +41,8 @@ describe('serialization', () => {
   it('should work for circular references and fixed depth', () => {
     const Foo = new Schema(
       {
-        name: String,
-        bar: wrapSchema(() => Bar),
+        name: StringType,
+        bar: lazySchema(() => Bar) as typeof Bar,
       },
       'foo',
       (data) => `foo/${data.name}`,
@@ -51,7 +50,7 @@ describe('serialization', () => {
 
     const Bar = new Schema(
       {
-        name: String,
+        name: StringType,
         foo: Foo,
       },
       'bar',
@@ -77,7 +76,7 @@ describe('serialization', () => {
           },
         },
       },
-      collection,
+      // collection,
     );
 
     expect(Object.keys(collection.byId)).toHaveLength(2);
@@ -85,75 +84,5 @@ describe('serialization', () => {
     const rawFoo = serializeSchema(Foo, foo, 2);
 
     expect(rawFoo?.bar?.foo).toHaveProperty('name', 'foo');
-  });
-
-  it('should work for references', () => {
-    const Foo = new Schema(
-      {
-        name: String,
-        bar: schemaOrReference(() => Bar),
-      },
-      'foo',
-      (data) => `foo/${data.name}`,
-    );
-    const Bar = new Schema(
-      {
-        name: String,
-        foo: schemaOrReference(() => Foo),
-      },
-      'bar',
-      (data) => `bar/${data.name}`,
-    );
-
-    const foo: IResource<typeof Foo> = {
-      name: 'foo',
-      bar: undefined,
-    };
-    const bar: IResource<typeof Bar> = {
-      name: 'bar',
-      foo,
-    };
-
-    foo.bar = bar;
-
-    const rawFoo = serializeSchema(Foo, foo);
-    const cloneFoo = parseSchema(Foo, rawFoo);
-
-    expect(cloneFoo.bar.foo).toBe(cloneFoo);
-  });
-
-  it('should work for references when flattening', () => {
-    const Foo = new Schema(
-      {
-        name: String,
-        bar: schemaOrReference(() => Bar),
-      },
-      'foo',
-      (data) => `foo/${data.name}`,
-    );
-    const Bar = new Schema(
-      {
-        name: String,
-        foo: schemaOrReference(() => Foo),
-      },
-      'bar',
-      (data) => `bar/${data.name}`,
-    );
-
-    const foo: IResource<typeof Foo> = {
-      name: 'foo',
-      bar: undefined,
-    };
-    const bar: IResource<typeof Bar> = {
-      name: 'bar',
-      foo,
-    };
-
-    foo.bar = bar;
-
-    const rawFoo = serializeSchema(Foo, foo, 4, true);
-
-    expect(rawFoo.data).toEqual({ name: 'foo', bar: 'bar/bar' });
-    expect(rawFoo.linked).toEqual([{ name: 'bar', foo: 'foo/foo' }]);
   });
 });

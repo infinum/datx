@@ -7,5 +7,10 @@ export interface IResource<TInstanceType, TPlainType> {
   defaultValue?: TInstanceType;
   optional: () => IResource<TInstanceType | undefined, TPlainType | undefined>;
   default: (value: TInstanceType) => IResource<TInstanceType, TPlainType>;
-  test: (item: unknown) => item is TInstanceType;
+  testInstance: (
+    item: PartialOnUndefinedDeep<TInstanceType> | TInstanceType,
+  ) => item is PartialOnUndefinedDeep<TInstanceType> | TInstanceType;
+  testPlain: (
+    item: PartialOnUndefinedDeep<TPlainType> | TPlainType,
+  ) => item is PartialOnUndefinedDeep<TPlainType> | TPlainType;
 }

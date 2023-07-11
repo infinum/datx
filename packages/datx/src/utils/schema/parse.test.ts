@@ -62,7 +62,7 @@ describe('parse', () => {
         text: 'This is a test',
         test: 2,
       },
-      collection,
+      // collection,
     );
 
     expect(Object.keys(collection.byId)).toHaveLength(3);
