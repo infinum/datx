@@ -283,7 +283,6 @@ export class PureCollection {
     return this.toJSON();
   }
 
-  @mobx.computed
   public get length(): number {
     return this.__data.length;
   }
