@@ -9,18 +9,18 @@ DatX is an opinionated JS/TS data store. It features support for simple property
 ## Basic usage
 
 ```typescript
-import { Collection, Model, Attribute } from '@datx/core';
+import { Collection, Model, Field } from '@datx/core';
 
 class Person extends Model {
   public static type = 'person'; // Unique name of the model class
 
-  @Attribute()
+  @Field()
   public name!: string; // A normal property without a default value
 
-  @Attribute()
+  @Field()
   public surname!: string;
 
-  @Attribute({ toOne: Person })
+  @Field({ toOne: Person })
   public spouse?: Person; // A reference to a Person model
 
   public get fullName() {
