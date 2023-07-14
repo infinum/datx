@@ -61,7 +61,8 @@
     "JSON API SWR": ["version-3.0.0-jsonapi-swr/overview", "version-3.0.0-jsonapi-swr/api"],
     "Migration guide": [
       "version-3.0.0-migration-guide/breaking-changes",
-      "version-3.0.0-migration-guide/whats-new"
+      "version-3.0.0-migration-guide/whats-new",
+      "version-3.0.0-migration-guide/codemods"
     ],
     "Testing": ["version-3.0.0-testing/test-data-factory"],
     "Troubleshooting": ["version-3.0.0-troubleshooting/known-issues"]
