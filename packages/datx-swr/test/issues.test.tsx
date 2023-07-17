@@ -68,4 +68,10 @@ describe('issues', () => {
       expect.anything(),
     );
   });
+
+  it('should not allow to use client.request', async () => {
+    const client = createClient();
+
+    expect(() => client.request('test')).toThrowError();
+  });
 });
