@@ -2,7 +2,7 @@ import { IJsonapiModel } from '@datx/jsonapi';
 import useSWRInfinite from 'swr/infinite';
 
 import { DatxInfiniteConfiguration } from '../interfaces/DatxConfiguration';
-import { InfiniteExpression } from '../interfaces/QueryExpression';
+import { IGetRelatedResourcesExpression, InfiniteExpression } from '../interfaces/QueryExpression';
 import { InfiniteModel } from '../interfaces/UseDatx';
 import { middleware } from '../middleware';
 import { CollectionResponse } from '../Response';
@@ -16,6 +16,19 @@ type Narrow<T> = T extends Function
   ? []
   : never | { [K in keyof T]: Narrow<T[K]> };
 
+type Single<T> = T extends Array<infer U> ? U : T;
+
+type InfiniteRelationResponse<
+  TModel extends IJsonapiModel,
+  TExpression extends InfiniteExpression,
+> = NonNullable<Narrow<TExpression>> extends IGetRelatedResourcesExpression
+  ? NonNullable<Narrow<TExpression>>['relation'] extends keyof TModel
+    ? Single<TModel[NonNullable<Narrow<TExpression>>['relation']]> extends IJsonapiModel
+      ? Single<TModel[NonNullable<Narrow<TExpression>>['relation']]>
+      : never
+    : never
+  : TModel;
+
 export function useDatxInfinite<
   TExpression extends InfiniteExpression,
   TModel extends IJsonapiModel = InfiniteModel<TExpression>,
@@ -24,9 +37,21 @@ export function useDatxInfinite<
     pageIndex: number,
     previousPageData: CollectionResponse | null,
   ) => Narrow<TExpression>,
-  config?: DatxInfiniteConfiguration<CollectionResponse<TModel>>,
+  config?: DatxInfiniteConfiguration<
+    CollectionResponse<
+      NonNullable<Narrow<TExpression>> extends IGetRelatedResourcesExpression
+        ? InfiniteRelationResponse<TModel, Narrow<TExpression>>
+        : TModel
+    >
+  >,
 ) {
-  return useSWRInfinite<CollectionResponse<TModel>, CollectionResponse<TModel>>(expression, {
+  type CollectionType = CollectionResponse<
+    NonNullable<Narrow<TExpression>> extends IGetRelatedResourcesExpression
+      ? InfiniteRelationResponse<TModel, Narrow<TExpression>>
+      : TModel
+  >;
+
+  return useSWRInfinite<CollectionType, CollectionType>(expression, {
     ...config,
     use: [middleware, ...(config?.use || [])],
   });
