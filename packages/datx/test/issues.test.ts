@@ -1,5 +1,3 @@
-import testMobx from './mobx';
-
 import {
   Collection,
   PureModel,
@@ -11,9 +9,6 @@ import {
   Model,
 } from '../src';
 import { META_FIELD } from '@datx/utils';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('issues', () => {
   it('should remove references on collection remove', () => {
@@ -128,6 +123,7 @@ describe('issues', () => {
 
     const foo = new Foo();
     const foo2 = store.add(foo);
+
     expect(foo).toBe(foo2);
   });
 

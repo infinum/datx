@@ -19,7 +19,8 @@ export interface IResourceIdentifierObject {
 export type IMeta = Record<string, any>;
 
 /**
- * A JSON:API document MAY include information about its implementation under a top level jsonapi member. If present, the value of the jsonapi member MUST be an object (a “jsonapi object”).
+ * A JSON:API document MAY include information about its implementation under a top level jsonapi member.
+ * If present, the value of the jsonapi member MUST be an object (a “jsonapi object”).
  *
  * @docs https://jsonapi.org/format/#document-jsonapi-object
  * @version json:api v1.1
@@ -52,19 +53,23 @@ export interface IJsonApiObject {
  */
 export interface ILinkObject<TMeta extends IMeta = IMeta> {
   /**
-   * a string whose value is a URI-reference [RFC3986 Section 4.1](https://datatracker.ietf.org/doc/html/rfc3986#section-4.1) pointing to the link’s target.
+   * a string whose value is a URI-reference
+   * [RFC3986 Section 4.1](https://datatracker.ietf.org/doc/html/rfc3986#section-4.1) pointing to the link’s target.
    */
   href: string;
   /**
-   * a string indicating the link’s relation type. The string MUST be a [valid link relation type](https://datatracker.ietf.org/doc/html/rfc8288#section-2.1).
+   * a string indicating the link’s relation type. The string MUST be a
+   * [valid link relation type](https://datatracker.ietf.org/doc/html/rfc8288#section-2.1).
    */
   rel?: string;
   /**
-   * a [link](https://jsonapi.org/format/#document-links-link) to a description document (e.g. OpenAPI or JSON Schema) for the link target.
+   * a [link](https://jsonapi.org/format/#document-links-link) to a description document
+   * (e.g. OpenAPI or JSON Schema) for the link target.
    */
   describedby?: string;
   /**
-   * a string which serves as a label for the destination of a link such that it can be used as a human-readable identifier (e.g., a menu entry).
+   * a string which serves as a label for the destination of a link such that it can be used as a
+   * human-readable identifier (e.g., a menu entry).
    */
   title?: string;
   /**
@@ -72,7 +77,9 @@ export interface ILinkObject<TMeta extends IMeta = IMeta> {
    */
   type?: string;
   /**
-   * a string or an array of strings indicating the language(s) of the link’s target. An array of strings indicates that the link’s target is available in multiple languages. Each string MUST be a valid language tag [RFC5646](https://datatracker.ietf.org/doc/html/rfc5646).
+   * a string or an array of strings indicating the language(s) of the link’s target.
+   * An array of strings indicates that the link’s target is available in multiple languages.
+   * Each string MUST be a valid language tag [RFC5646](https://datatracker.ietf.org/doc/html/rfc5646).
    */
   hreflang?: string;
   /**
@@ -82,7 +89,8 @@ export interface ILinkObject<TMeta extends IMeta = IMeta> {
 }
 
 /**
- * - a string whose value is a URI-reference [RFC3986 Section 4.1](https://datatracker.ietf.org/doc/html/rfc3986#section-4.1) pointing to the link’s target,
+ * - a string whose value is a URI-reference
+ * [RFC3986 Section 4.1](https://datatracker.ietf.org/doc/html/rfc3986#section-4.1) pointing to the link’s target,
  * - a [link object](https://jsonapi.org/format/#document-links-link-object) or
  * - null if the link does not exist.
  *
@@ -251,7 +259,8 @@ export interface IResourceObject extends IResourceIdentifierObject {
   links?: Record<string, ILink>;
 
   /**
-   * A meta object containing non-standard meta-information about a resource that can not be represented as an attribute or relationship.
+   * A meta object containing non-standard meta-information about a resource that can not be represented
+   * as an attribute or relationship.
    * @docs https://jsonapi.org/format/#document-meta
    * @version json:api v1.1
    * @example

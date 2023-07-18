@@ -60,6 +60,7 @@ function fetchInterceptor(
         status: 0,
         error: new Error(`Unexpected request: ${method || 'GET'} ${url}`),
       });
+
       throw new Error(`Unexpected request: ${method || 'GET'} ${url}`);
     }
 

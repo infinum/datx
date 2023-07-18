@@ -2,15 +2,12 @@
 
 DatX is an opinionated JS/TS data store. It features support for simple property definition, references to other models and first-class TypeScript support.
 
-By default, it uses the [MobX](https://mobx.js.org/) state management library, but this is optional and can be used as a pure JS library.
-
 ---
 
 ## Basic usage
 
 ```typescript
 import { Collection, Model, Attribute } from '@datx/core';
-import { computed } from 'mobx';
 
 class Person extends Model {
   public static type = 'person'; // Unique name of the model class
@@ -24,9 +21,7 @@ class Person extends Model {
   @Attribute({ toOne: Person })
   public spouse?: Person; // A reference to a Person model
 
-  @computed
   public get fullName() {
-    // Standard MobX computed props
     return `${this.name} ${this.surname}`;
   }
 }

@@ -31,8 +31,10 @@ export function interpolateParams(url: string, params: Record<string, string>): 
   let newUrl = url;
   let match = interpolationRegex.exec(newUrl);
   let lastIndex = 0;
+
   while (match) {
     let param = params[match[1]];
+
     if (param === undefined) {
       param = match[0];
       lastIndex = interpolationRegex.lastIndex;
@@ -41,6 +43,7 @@ export function interpolateParams(url: string, params: Record<string, string>): 
     interpolationRegex.lastIndex = lastIndex;
     match = interpolationRegex.exec(newUrl);
   }
+
   return newUrl;
 }
 
@@ -53,6 +56,7 @@ function parametrize(
 
   Object.keys(params).forEach((key) => {
     const scoped = `${scope}${scope ? `[${key}]` : key}`;
+
     if (params[key] instanceof Array) {
       if (paramArrayType === ParamArrayType.CommaSeparated) {
         list.push({ key: scoped, value: params[key].join(',') });
@@ -81,6 +85,7 @@ function appendParams(url: string, params: Array<string>): string {
 
   if (params.length) {
     let separator = '';
+
     if (newUrl.indexOf('?') === -1) {
       separator = '?';
     } else if (!newUrl.endsWith('&') && !newUrl.endsWith('?')) {

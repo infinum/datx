@@ -1,6 +1,9 @@
 export { jsonapi, jsonapiModel, jsonapiCollection, jsonapiView } from './mixin';
+
 export { Response } from './Response';
+
 export { NetworkResponse } from './NetworkResponse';
+
 export { GenericModel } from './GenericModel';
 
 export {
@@ -18,6 +21,7 @@ export {
 } from './helpers/model';
 
 export { prepareQuery, buildUrl } from './helpers/url';
+
 export { isJsonApiClass } from './helpers/utils';
 
 export { getResponseRawData } from './helpers/response';
@@ -25,12 +29,20 @@ export { getResponseRawData } from './helpers/response';
 export { BaseJsonapiRequest } from './BaseRequest';
 
 export { ICollectionFetchOpts } from './interfaces/ICollectionFetchOpts';
+
 export { IJsonapiCollection } from './interfaces/IJsonapiCollection';
+
 export { IJsonapiModel } from './interfaces/IJsonapiModel';
+
 export { IJsonapiView } from './interfaces/IJsonapiView';
+
 export { IRawResponse } from './interfaces/IRawResponse';
+
 export { IRequestOptions } from './interfaces/IRequestOptions';
+
 export { IResponseSnapshot } from './interfaces/IResponseSnapshot';
+
+export { IGetAllResponse } from './interfaces/IGetAllResponse';
 
 export {
   /**
@@ -42,7 +54,8 @@ export {
    */
   IResponse,
   /**
-   * @deprecated import directly form `@datx/jsonapi-types`. Will be removed in v3 and renamed to `IResourceIdentifierObject`
+   * @deprecated import directly form `@datx/jsonapi-types`.
+   * Will be removed in v3 and renamed to `IResourceIdentifierObject`
    */
   IDefinition,
 } from '@datx/jsonapi-types';

@@ -103,6 +103,7 @@ describe('updates', () => {
       };
 
       const store = new TestStore();
+
       store
         .getOne('event', '12345')
         .pipe(
@@ -110,6 +111,7 @@ describe('updates', () => {
             record = events.data;
 
             expect(record).toBeInstanceOf(Event);
+
             if (record instanceof Event) {
               setRequest({
                 data: JSON.stringify({
@@ -136,6 +138,7 @@ describe('updates', () => {
 
               return record.save();
             }
+
             return throwError(new Error('Wrong path'));
           }),
         )
@@ -177,12 +180,14 @@ describe('updates', () => {
             });
 
             expect(store.findAll(Event).length).toBe(3);
+
             return record.destroy();
           }),
         )
         .subscribe(() => {
           try {
             const remainingEvents = store.findAll(Event);
+
             expect(remainingEvents.length).toBe(2);
 
             expect(remainingEvents[0] && remainingEvents[0].meta.id).toBe('1');
@@ -218,12 +223,14 @@ describe('updates', () => {
             });
 
             expect(store.findAll(Event).length).toBe(3);
+
             return store.removeOne(record, true);
           }),
         )
         .subscribe(() => {
           try {
             const remainingEvents = store.findAll(Event);
+
             expect(remainingEvents.length).toBe(2);
 
             expect(remainingEvents[0] && remainingEvents[0].meta.id).toBe('1');

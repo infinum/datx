@@ -27,13 +27,13 @@ typings/
 # Optional npm cache directory
 .npm
 .yarn
-.pnp.*
 .yarn/*
 !.yarn/patches
-!.yarn/plugins
 !.yarn/releases
+!.yarn/plugins
 !.yarn/sdks
 !.yarn/versions
+.pnp.*
 
 # Optional eslint cache
 .eslintcache
@@ -55,6 +55,3 @@ website/build
 
 website/.DS_Store
 .DS_Store
-
-disable-mobx.d.ts
-disable-mobx.js

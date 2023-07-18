@@ -67,13 +67,16 @@ export function fetchInterceptor<T extends PureModel>(
         if (status === 204) {
           return null;
         }
+
         if (status === 0) {
           throw new Error('Network not available');
         }
+
         throw error;
       })
       .then((responseData: object) => {
         data = responseData;
+
         if (status >= 400) {
           throw {
             message: `Invalid HTTP status: ${status}`,
@@ -92,6 +95,7 @@ export function fetchInterceptor<T extends PureModel>(
           },
           parse,
         );
+
         return new Response<T>(response, request.collection, undefined, request.views);
       })
       .catch((error) => {
@@ -107,6 +111,7 @@ export function fetchInterceptor<T extends PureModel>(
           },
           parse,
         );
+
         throw new Response<T>(response, request.collection, undefined, request.views);
       });
   };

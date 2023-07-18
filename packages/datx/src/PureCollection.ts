@@ -3,9 +3,6 @@ import {
   getMeta,
   setMeta,
   isArrayLike,
-  mobx,
-  IObservable,
-  IObservableArray,
   removeFromArray,
   replaceInArray,
 } from '@datx/utils';
@@ -52,28 +49,15 @@ export class PureCollection {
     }
   > = {};
 
-  private readonly __data: IObservableArray<PureModel> = mobx.observable.array([], { deep: false });
+  private readonly __data: Array<PureModel> = [];
 
   private readonly __views: Array<string> = [];
 
-  private __dataMap: Record<string, Record<string, PureModel>> = mobx.observable.object(
-    {},
-    undefined,
-    {
-      deep: false,
-    },
-  ) as unknown as Record<string, Record<string, PureModel>>;
+  private __dataMap: Record<string, Record<string, PureModel>> = {};
 
-  private __dataList: Record<string, IObservableArray<PureModel>> = mobx.observable.object(
-    {},
-    undefined,
-    {
-      deep: false,
-    },
-  ) as unknown as Record<string, IObservableArray<PureModel>>;
+  private __dataList: Record<string, Array<PureModel>> = {};
 
   constructor(data: Array<IRawModel> | IRawCollection = []) {
-    mobx.extendObservable(this, {});
     if (isArrayLike(data)) {
       this.insert(data as Array<IRawModel>);
     } else if (data && 'models' in data) {
@@ -206,20 +190,18 @@ export class PureCollection {
     return this.__findOneByType(model as typeof PureModel, id);
   }
 
-  public findAll<T extends PureModel>(model?: IType | IModelConstructor<T>): IObservableArray<T> {
+  public findAll<T extends PureModel>(model?: IType | IModelConstructor<T>): Array<T> {
     if (model) {
       const type = getModelType(model);
 
       if (!(type in this.__dataList)) {
-        mobx.runInAction(() => {
-          mobx.set(this.__dataList, { [type]: mobx.observable.array([]) });
-        });
+        this.__dataList[type] = [];
       }
 
-      return this.__dataList[type] as IObservableArray<T>;
+      return this.__dataList[type] as Array<T>;
     }
 
-    return this.__data as IObservableArray<T>;
+    return this.__data as Array<T>;
   }
 
   public find(test: TFilterFn): PureModel | null {
@@ -238,6 +220,7 @@ export class PureCollection {
     } else if (id) {
       model = this.findOne(obj, id);
     }
+
     if (model) {
       this.__removeModel(model);
     }
@@ -260,10 +243,8 @@ export class PureCollection {
       );
     });
     replaceInArray(this.__data, []);
-    this.__dataList = mobx.observable.object({}, {}, { deep: false }) as unknown as IObservable &
-      Record<string, IObservableArray<PureModel>>;
-    this.__dataMap = mobx.observable.object({}, {}, { deep: false }) as unknown as IObservable &
-      Record<string, Record<string, PureModel>>;
+    this.__dataList = {};
+    this.__dataMap = {};
   }
 
   public toJSON(): IRawCollection {
@@ -283,7 +264,6 @@ export class PureCollection {
     return this.toJSON();
   }
 
-  @mobx.computed
   public get length(): number {
     return this.__data.length;
   }
@@ -304,21 +284,17 @@ export class PureCollection {
     const stringType = type.toString();
     const stringId = id.toString();
 
-    if (stringType === '__proto__') {
+    if (stringType === '__proto__' || stringId === '__proto__') {
       return null;
     }
 
-    mobx.runInAction(() => {
-      if (!(type in this.__dataMap)) {
-        mobx.set(
-          this.__dataMap,
-          stringType,
-          mobx.observable.object({ [stringId]: null }, {}, { deep: false }),
-        );
-      } else if (!(stringId in this.__dataMap[stringType])) {
-        mobx.set(this.__dataMap[stringType], stringId, null);
-      }
-    });
+    if (!(type in this.__dataMap)) {
+      // @ts-ignore
+      this.__dataMap[stringType] = { [stringId]: null };
+    } else if (!(stringId in this.__dataMap[stringType])) {
+      // @ts-ignore
+      this.__dataMap[stringType][stringId] = null;
+    }
 
     return this.__dataMap[stringType][stringId] || null;
   }
@@ -368,6 +344,7 @@ export class PureCollection {
     const modelInstance = upsertModel(data, type, this);
 
     const collectionTypes = (this.constructor as typeof PureCollection).types.map(getModelType);
+
     if (
       !collectionTypes.includes(type) &&
       (typeof model === 'object' || typeof model === 'function')
@@ -398,19 +375,22 @@ export class PureCollection {
     const modelType = type || getModelType(model);
     const modelId = id || getModelId(model);
 
+    if (modelType === '__proto__' || modelId === '__proto__') {
+      return;
+    }
+
     triggerAction(
       {
-        oldValue: mobx.toJS(modelToJSON(model)) as Record<string, any>,
+        oldValue: modelToJSON(model) as Record<string, any>,
         patchType: PatchType.REMOVE,
       },
       model,
     );
 
-    mobx.runInAction(() => {
-      removeFromArray(this.__data, model);
-      removeFromArray(this.__dataList[modelType], model);
-      mobx.set(this.__dataMap[modelType], modelId.toString(), undefined);
-    });
+    removeFromArray(this.__data, model);
+    removeFromArray(this.__dataList[modelType], model);
+    // @ts-ignore
+    this.__dataMap[modelType][modelId.toString()] = undefined;
 
     this.__data.forEach((item) => {
       const fields = getMeta<Record<string, IFieldDefinition>>(
@@ -464,28 +444,24 @@ export class PureCollection {
       if (existingModel !== model) {
         updateModel(existingModel, model);
       }
+
       return;
     }
 
-    mobx.runInAction(() => {
-      this.__data.push(model);
-      if (modelType in this.__dataList) {
-        this.__dataList[modelType].push(model);
-      } else {
-        mobx.set(this.__dataList, stringType, mobx.observable.array([model], { deep: false }));
-      }
+    this.__data.push(model);
 
-      if (modelType in this.__dataMap) {
-        mobx.set(this.__dataMap[modelType], modelId.toString(), model);
-      } else {
-        mobx.set(
-          this.__dataMap,
-          stringType,
-          mobx.observable.object({ [modelId]: model }, {}, { deep: false }),
-        );
-      }
-      updateModelCollection(model, this);
-    });
+    if (modelType in this.__dataList) {
+      this.__dataList[modelType].push(model);
+    } else {
+      this.__dataList[stringType] = [model];
+    }
+
+    if (modelType in this.__dataMap) {
+      this.__dataMap[modelType][modelId.toString()] = model;
+    } else {
+      this.__dataMap[stringType] = { [modelId]: model };
+    }
+    updateModelCollection(model, this);
 
     triggerAction(
       {

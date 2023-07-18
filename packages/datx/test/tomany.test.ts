@@ -1,10 +1,4 @@
-import testMobx from './mobx';
-import { mobx } from '@datx/utils';
-
 import { Collection, Model, Bucket, Attribute, PureCollection } from '../src';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('ToMany', () => {
   describe('static', () => {
@@ -85,53 +79,6 @@ describe('ToMany', () => {
       expect(bucketInstance.value[0]).toBe(foos[0]);
     });
 
-    it('should support array updates with real mobx', () => {
-      class Foo extends Model {
-        public static type = 'foo';
-      }
-      class Bar extends Model {
-        public static type = 'bar';
-      }
-      class AppCollection extends Collection {
-        public static types = [Foo, Bar];
-      }
-
-      const collection = new AppCollection();
-      const foos = collection.add([{}, {}], Foo);
-      const bars = collection.add([{}], Bar);
-      const bucketInstance = new Bucket.ToMany([...foos, ...bars], collection);
-
-      expect(bucketInstance.length).toBe(3);
-      expect(bucketInstance.value[0]).toBe(foos[0]);
-
-      if (mobx.useRealMobX) {
-        bucketInstance.value.shift();
-      } else {
-        bucketInstance.value = bucketInstance.value.slice(1);
-      }
-      expect(bucketInstance.length).toBe(2);
-      expect(bucketInstance.value[0]).toBe(foos[1]);
-
-      if (mobx.useRealMobX) {
-        bucketInstance.value.pop();
-      } else {
-        bucketInstance.value = bucketInstance.value.slice(0, -1);
-      }
-      expect(bucketInstance.length).toBe(1);
-      expect(bucketInstance.value[0]).toBe(foos[1]);
-
-      bucketInstance.value = foos;
-      expect(bucketInstance.length).toBe(2);
-      expect(bucketInstance.value[0]).toBe(foos[0]);
-
-      if (mobx.useRealMobX) {
-        bucketInstance.value.push(bars[0]);
-      } else {
-        bucketInstance.value = [...bucketInstance.value, bars[0]];
-      }
-      expect(bucketInstance.length).toBe(3);
-    });
-
     it('should throw on readonly update', () => {
       class Foo extends Model {
         public static type = 'foo';
@@ -151,11 +98,7 @@ describe('ToMany', () => {
       expect(bucketInstance.length).toBe(3);
       expect(bucketInstance.value[0]).toBe(foos[0]);
       expect(() => {
-        if (mobx.useRealMobX) {
-          bucketInstance.value.shift();
-        } else {
-          bucketInstance.value = bucketInstance.value.slice(1);
-        }
+        bucketInstance.value = bucketInstance.value.slice(1);
       }).toThrowError('[datx exception] This is a read-only bucket');
 
       expect(() => {
@@ -182,6 +125,7 @@ describe('ToMany', () => {
             expect(parentModel).toBeInstanceOf(Foo);
             expect(key).toBe('bar');
             expect(collection).toBeInstanceOf(PureCollection);
+
             return Bar;
           },
         })
@@ -213,6 +157,7 @@ describe('ToMany', () => {
         @Attribute({
           toMany: (data) => {
             expect(data).toEqual({ value: 1 });
+
             return 'bar';
           },
         })
@@ -283,6 +228,7 @@ describe('ToMany', () => {
         @Attribute({
           toMany: (data) => {
             expect(data).toEqual({ value: 1 });
+
             return 'baz';
           },
         })

@@ -7,8 +7,6 @@ import {
   mergeMeta,
   getMetaObj,
   mapItems,
-  isArrayLike,
-  mobx,
 } from '@datx/utils';
 
 import { IModelRef } from '../../interfaces/IModelRef';
@@ -53,9 +51,11 @@ export function modelMapSerialize(modelClass: typeof PureModel, data: object, ke
 }
 
 export function isModelReference(value: IModelRef | Array<IModelRef>): true;
+
 export function isModelReference(value: unknown): false;
+
 export function isModelReference(value: unknown): boolean {
-  if (isArrayLike(value)) {
+  if (Array.isArray(value)) {
     return (value as Array<IModelRef>).every(isModelReference);
   }
 
@@ -76,16 +76,19 @@ export function peekNonNullish(...args: Array<any>): any {
   if (args.length === 0) return null;
 
   let i = -1;
+
   while (++i < args.length) {
     let arg = args[i];
 
     if (typeof arg === 'function') {
       arg = arg();
     }
+
     if (arg !== null && arg !== undefined) {
       return arg;
     }
   }
+
   return null;
 }
 
@@ -119,6 +122,7 @@ export function getModelId(model: PureModel | IIdentifier): IIdentifier {
     if (id !== undefined) {
       return id;
     }
+
     throw error('Model without an ID');
   }
 
@@ -223,12 +227,12 @@ export function modelToJSON(model: PureModel): IRawModel {
       const modelClass = model.constructor as typeof PureModel;
       const mapField = getMeta(modelClass, `${MetaClassField.MapField}_${fieldName}`, null, true);
       const key = mapField ? mapField : fieldName;
+
       // Make sure to use an existing value if the attribute is used multiple times
       raw[key] = raw[key] || modelMapSerialize(modelClass, model, fieldName);
     }
   });
 
-  // return mobx.toJS(raw);
   return getRawData(raw);
 }
 
@@ -264,6 +268,7 @@ export function getOriginalModel<T extends PureModel = PureModel>(model: T): T {
 
     return collection.findOne(model, originalId) as T;
   }
+
   throw error('The given model is not a clone.');
 }
 
@@ -286,47 +291,41 @@ function omitKeys(obj: object, keys: Array<string>): object {
 }
 
 export function assignModel<T extends PureModel>(model: T, key: string, value: any): void {
-  mobx.runInAction(() => {
-    if (!(model instanceof PureModel)) {
-      throw error('The given parameter is not a valid model');
-    }
-    const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
-    const shouldBeReference =
-      (isArrayLike(value) && value.length > 0 && value[0] instanceof PureModel) ||
-      value instanceof PureModel;
+  if (!(model instanceof PureModel)) {
+    throw error('The given parameter is not a valid model');
+  }
+  const fields: Record<string, IFieldDefinition> = getMeta(model, MetaModelField.Fields, {});
+  const shouldBeReference =
+    (Array.isArray(value) && value.length > 0 && value[0] instanceof PureModel) ||
+    value instanceof PureModel;
 
-    if (key in fields) {
-      if (shouldBeReference && !fields[key].referenceDef) {
-        throw error('You should save this value as a reference.');
-      }
-      if (key === getMeta(model.constructor, MetaClassField.IdField, undefined, true)) {
-        return;
-      }
-      // model[key] = shouldBeReference ? value : getRawData(value);
-      model[key] = value;
-    } else {
-      if (shouldBeReference) {
-        mobx.extendObservable(fields, {
-          [key]: {
-            referenceDef: {
-              type: ReferenceType.TO_ONE_OR_MANY,
-              models: Array.from(
-                new Set<IType>(mapItems<PureModel, IType>(value as Array<PureModel>, getModelType)),
-              ),
-            },
-          },
-        });
-      } else {
-        mobx.extendObservable(fields, {
-          [key]: {
-            referenceDef: false,
-          },
-        });
-      }
-      setMeta(model, MetaModelField.Fields, fields);
-      initModelField(model, key, value);
+  if (key in fields) {
+    if (shouldBeReference && !fields[key].referenceDef) {
+      throw error('You should save this value as a reference.');
     }
-  });
+
+    if (key === getMeta(model.constructor, MetaClassField.IdField, undefined, true)) {
+      return;
+    }
+    // model[key] = shouldBeReference ? value : getRawData(value);
+    model[key] = value;
+  } else {
+    if (shouldBeReference) {
+      fields[key] = {
+        referenceDef: {
+          type: ReferenceType.TO_ONE_OR_MANY,
+          // @ts-ignore
+          models: Array.from(
+            new Set<IType>(mapItems<PureModel, IType>(value as Array<PureModel>, getModelType)),
+          ),
+        },
+      };
+    } else {
+      fields[key] = { referenceDef: false };
+    }
+    setMeta(model, MetaModelField.Fields, fields);
+    initModelField(model, key, value);
+  }
 }
 
 export function updateModel<T extends PureModel>(model: T, data: Record<string, any>): T {
@@ -401,6 +400,7 @@ export function isAttributeDirty<T extends PureModel>(model: T, key: keyof T): b
     const value = field.referenceDef
       ? mapItems(model[key] as PureModel | IModelRef, getModelRef)
       : model[key];
+
     return !isSame(value, prevCommit[key as string]);
   }
 

@@ -1,6 +1,7 @@
 export { DEFAULT_TYPE, META_FIELD } from './consts';
 
 export { IRawModel } from './interfaces/IRawModel';
+
 export { IResponseHeaders } from './interfaces/IResponseHeaders';
 
 export {
@@ -19,7 +20,3 @@ export {
   removeFromArray,
   Headers,
 } from './helpers';
-
-export { mobx } from './mobx';
-
-export * from './interfaces/IMobX';

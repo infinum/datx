@@ -36,7 +36,9 @@ import { error, getModelClassRefs } from './utils';
 import { GenericModel } from '../GenericModel';
 
 export function flattenModel(classRefs): null;
+
 export function flattenModel(classRefs, data?: IRecord, modelClass?: IModelConstructor): IRawModel;
+
 export function flattenModel(
   classRefs: Record<string, IReferenceOptions<PureModel>>,
   data?: IRecord,
@@ -57,6 +59,7 @@ export function flattenModel(
     [META_FIELD]: {
       fields: Object.keys(data.attributes || {}).reduce((obj, key) => {
         const mappedName = mapKeys[key] ?? key;
+
         obj[mappedName] = { referenceDef: false };
 
         return obj;
@@ -80,6 +83,7 @@ export function flattenModel(
       if (ref && 'data' in ref && (ref.data || ref.data === null)) {
         if (!(ref.data instanceof Array) || ref.data.length > 0) {
           rawData[key] = ref.data;
+
           if (!classRefs || !(key in classRefs)) {
             refs[key] = {
               referenceDef: {
@@ -94,9 +98,11 @@ export function flattenModel(
           rawData[key] = [];
         }
       }
+
       if (ref && 'links' in ref) {
         refLinks[key] = ref.links;
       }
+
       if (ref && 'meta' in ref) {
         refMeta[key] = ref.meta;
       }
@@ -236,6 +242,7 @@ export function modelToJsonApi(model: IJsonapiModel, onlyDirty?: boolean): IReco
         type: refItem.type,
       })) as IDefinition | Array<IDefinition>,
     };
+
     if (data.attributes) {
       delete data.attributes[key];
     }

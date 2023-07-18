@@ -1,5 +1,4 @@
 import { IType, Model, prop } from '@datx/core';
-import { mobx } from '@datx/utils';
 
 import { jsonapiAngular } from '../../../src/public-api';
 
@@ -12,7 +11,6 @@ export class User extends jsonapiAngular(Model) {
   @prop
   public lastName!: string;
 
-  @mobx.computed
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }

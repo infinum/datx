@@ -1,10 +1,4 @@
-import testMobx from './mobx';
-
 import { Bucket, Collection, Model, Attribute, PureCollection } from '../src';
-import { mobx } from '@datx/utils';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('ToOneOrMany', () => {
   describe('ToOneOrMany with lists', () => {
@@ -28,6 +22,7 @@ describe('ToOneOrMany', () => {
       const bucketInstance = new Bucket.ToOneOrMany(foos, collection);
 
       expect(bucketInstance.value).toBeInstanceOf(Array);
+
       if (bucketInstance.value instanceof Array) {
         expect(bucketInstance.value).toHaveLength(2);
         expect(bucketInstance.value[0]).toBeInstanceOf(Foo);
@@ -53,6 +48,7 @@ describe('ToOneOrMany', () => {
       const bucketInstance = new Bucket.ToOneOrMany([...foos, ...bars], collection);
 
       expect(bucketInstance.value).toBeInstanceOf(Array);
+
       if (bucketInstance.value instanceof Array) {
         expect(bucketInstance.value).toHaveLength(3);
         expect(bucketInstance.value[0]).toBeInstanceOf(Foo);
@@ -85,6 +81,7 @@ describe('ToOneOrMany', () => {
 
       expect(collection.length).toBe(2);
       expect(bucketInstance.value).toBeInstanceOf(Array);
+
       if (bucketInstance.value instanceof Array) {
         expect(bucketInstance.value.length).toBe(2);
         expect(bucketInstance.snapshot).toBeInstanceOf(Array);
@@ -112,17 +109,14 @@ describe('ToOneOrMany', () => {
       const bucketInstance = new Bucket.ToOneOrMany<Foo | Bar>([...foos, ...bars], collection);
 
       expect(bucketInstance.value).toBeInstanceOf(Array);
+
       if (bucketInstance.value instanceof Array) {
         expect(bucketInstance.value).toHaveLength(3);
         expect(bucketInstance.value[0]).toBeInstanceOf(Foo);
         expect(bucketInstance.value[2]).toBeInstanceOf(Bar);
         expect(bucketInstance.value[0]).toBe(foos[0]);
 
-        if (mobx.useRealMobX) {
-          bucketInstance.value.shift();
-        } else {
-          bucketInstance.value = bucketInstance.value.slice(1);
-        }
+        bucketInstance.value = bucketInstance.value.slice(1);
         expect(bucketInstance.value).toHaveLength(2);
         expect(bucketInstance.value[0]).toBe(foos[1]);
 
@@ -152,6 +146,7 @@ describe('ToOneOrMany', () => {
               expect(parentModel).toBeInstanceOf(Foo);
               expect(key).toBe('bar');
               expect(collection).toBeInstanceOf(PureCollection);
+
               return Bar;
             },
           })
@@ -183,6 +178,7 @@ describe('ToOneOrMany', () => {
           @Attribute({
             toOneOrMany: (data) => {
               expect(data).toEqual({ value: 1 });
+
               return 'bar';
             },
           })
@@ -253,6 +249,7 @@ describe('ToOneOrMany', () => {
           @Attribute({
             toOneOrMany: (data) => {
               expect(data).toEqual({ value: 1 });
+
               return 'baz';
             },
           })
@@ -357,6 +354,7 @@ describe('ToOneOrMany', () => {
               expect(parentModel).toBeInstanceOf(Foo);
               expect(key).toBe('bar');
               expect(collection).toBeInstanceOf(PureCollection);
+
               return Bar;
             },
           })
@@ -388,6 +386,7 @@ describe('ToOneOrMany', () => {
           @Attribute({
             toOneOrMany: (data) => {
               expect(data).toEqual({ value: 1 });
+
               return 'bar';
             },
           })
@@ -419,6 +418,7 @@ describe('ToOneOrMany', () => {
           @Attribute({
             toOneOrMany: (data) => {
               expect(data).toEqual({ value: 1 });
+
               return 'baz';
             },
           })

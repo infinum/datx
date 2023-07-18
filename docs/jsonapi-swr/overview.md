@@ -62,8 +62,6 @@ declare module '@datx/swr' {
 ```tsx
 // src/pages/_app.tsx
 
-import '@datx/core/disable-mobx';
-
 import type { AppProps } from 'next/app';
 import { createFetcher, DatxProvider, useInitialize } from '@datx/swr';
 import { createClient } from '../datx/createClient';
@@ -87,8 +85,6 @@ function ExampleApp({ Component, pageProps }: AppProps) {
 
 export default ExampleApp;
 ```
-
-For more details how to disable Mobx see [Disable Mobx](#disable-mobx) section.
 
 ### Define models
 
@@ -175,7 +171,7 @@ export const todosQuery = {
 Query can be a static object or a function. Both cases should be suffixed with `query` to make it clear that it's a query.
 If you use a function, it's recommended to add `get` prefix to indicate that it's a getter.
 
-> Rule of thumb is to use `get` prefix if query depends on some other data. 
+> Rule of thumb is to use `get` prefix if query depends on some other data.
 
 > Lazy initializer function is SWR concept used for conditional fetching. You can find more details in [SWR Conditional Fetching](https://swr.vercel.app/docs/conditional-fetching) documentation.
 
@@ -218,11 +214,15 @@ Lazy initializer function is SWR concept used for conditional fetching. You can 
 #### Simple conditionally fetch
 
 ```ts
-const { data: post } = useDatx(id ? {
-  id,
-  op: 'getOne',
-  type: 'posts',
-} : null);
+const { data: post } = useDatx(
+  id
+    ? {
+        id,
+        op: 'getOne',
+        type: 'posts',
+      }
+    : null,
+);
 ```
 
 #### Lazy initializer function which returns falsy value
@@ -377,29 +377,3 @@ export const Todos: FC = () => {
   );
 };
 ```
-
-## Disable Mobx in Next.js projects
-
-Since we don't want to use Mobx, we need to add a little boilerplate to work around that. First, we need to instruct DatX not to use Mobx, by adding `@datx/core/disable-mobx` before App bootstrap:
-
-```tsx
-// src/pages/_app.tsx
-
-import '@datx/core/disable-mobx';
-```
-
-Next, we need to overwrite Mobx path so that it can be resolved by Datx:
-
-```json
-// /tsconfig.json
-
-{
-  "compilerOptions": {
-    "paths": {
-      "mobx": ["./mobx.js"]
-    }
-  }
-}
-```
-
-> `./mobx.js` is an empty file!

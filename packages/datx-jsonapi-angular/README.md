@@ -1,6 +1,6 @@
 # @datx/jsonapi-angular
 
-DatX is an opinionated data store for use with the [MobX](https://mobx.js.org/) state management library. It features support for simple observable property definition, references to other models and first-class TypeScript support.
+DatX is an opinionated data store. It features support for references to other models and first-class TypeScript support.
 
 `@datx/jsonapi-angular` is a datx mixin that adds [JSON API](https://jsonapi.org/) support for Angular applications.
 
@@ -13,33 +13,6 @@ npm install @datx/jsonapi-angular
 ```
 
 ## Setup
-
-### Disable MobX
-
-Update `main.ts` and `test.ts` by adding this import:
-
-```ts title=src/main.ts | src/test.ts
-import '@datx/core/disable-mobx';
-```
-
-Update `tsconfig.json` mobx path:
-
-```json title=tsconfig.json
-{
-	"compilerOptions": {
-    ...
-		"paths": {
-			"mobx": ["./noop.js"],
-      ...
-		},
-    ...
-	}
-}
-```
-
-`noop.js` can be just an empty file.
-
-This step will become unnecessary in future versions of DatX.
 
 ### Collection
 
@@ -59,6 +32,11 @@ import { APP_COLLECTION } from '@datx/jsonapi-angular';
 import { AppCollection } from './collections/app.collection';
 
 @NgModule({
+  imports: [
+    DatxModule.forRoot({
+      baseUrl: 'https://my-api.com/',
+    }),
+  ],
   providers: [
     {
       provide: APP_COLLECTION,

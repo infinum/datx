@@ -14,10 +14,15 @@ export {
   IFieldDefinition,
   IReferenceDefinition,
 } from './Field';
+
 export { Collection } from './Collection';
+
 export { Model } from './Model';
+
 export { PureCollection } from './PureCollection';
+
 export { PureModel } from './PureModel';
+
 export { View } from './View';
 
 export { updateModelId, getRef, getRefId } from './helpers/model/fields';
@@ -46,20 +51,33 @@ export { upsertModel } from './helpers/collection';
 export { isCollection, isModel, isView } from './helpers/mixin';
 
 export { IModelRef } from './interfaces/IModelRef';
+
 export { ICollectionConstructor } from './interfaces/ICollectionConstructor';
+
 export { IIdentifier } from './interfaces/IIdentifier';
+
 export { IModelConstructor } from './interfaces/IModelConstructor';
+
 export { IPatch } from './interfaces/IPatch';
+
 export { IType } from './interfaces/IType';
+
 export { IRawCollection } from './interfaces/IRawCollection';
+
 export { IReferenceOptions } from './interfaces/IReferenceOptions';
+
 export { IViewConstructor } from './interfaces/IViewConstructor';
+
 export { IActionsMixin } from './interfaces/IActionsMixin';
+
 export { IMetaMixin } from './interfaces/IMetaMixin';
 
 export { PatchType } from './enums/PatchType';
+
 export { ReferenceType } from './enums/ReferenceType';
 
 export { withActions } from './mixins/withActions';
+
 export { withMeta } from './mixins/withMeta';
+
 export { withPatches } from './mixins/withPatches';

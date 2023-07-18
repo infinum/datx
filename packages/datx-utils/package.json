@@ -1,6 +1,6 @@
 {
   "name": "@datx/utils",
-  "version": "2.5.1",
+  "version": "3.0.0",
   "description": "DatX lib utils for mixins",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -17,8 +17,7 @@
   "author": "Infinum JavaScript Team <hello@infinum.com>",
   "license": "MIT",
   "keywords": [
-    "datx",
-    "mobx"
+    "datx"
   ],
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.0",
@@ -27,7 +26,6 @@
     "@types/jest": "^28.1.1",
     "@types/node": "^18.7.6",
     "jest": "^28.1.1",
-    "mobx": "^6.6.0",
     "rollup": "^2.75.6",
     "rollup-plugin-exclude-dependencies-from-bundle": "^1.1.22",
     "rollup-plugin-generate-package-json": "^3.2.0",
@@ -62,9 +60,6 @@
       }
     },
     "preset": "ts-jest",
-    "testMatch": null,
-    "setupFilesAfterEnv": [
-      "./test/setup.ts"
-    ]
+    "testMatch": null
   }
 }

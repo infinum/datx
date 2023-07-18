@@ -84,6 +84,7 @@ export function decorateCollection(
         this.__removeModel(model);
       }
       clearCacheByType(type);
+
       return empty();
     }
   }

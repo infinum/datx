@@ -1,7 +1,12 @@
 import { query, setUrl, paramArrayType, ParamArrayType, encodeQueryString } from '../src';
 import { MockBaseRequest } from './mock/MockBaseRequest';
+import { clearAllCache } from '../src/interceptors/cache';
 
 describe('query params', () => {
+  beforeEach(() => {
+    clearAllCache();
+  });
+
   it('should work for a basic params case', async () => {
     const request = new MockBaseRequest('foobar').pipe(setUrl('/test'), query('test', '123'));
 
@@ -68,6 +73,7 @@ describe('query params', () => {
 
     await request.fetch();
     expect(request['lastUrl']).toBe(
+      // eslint-disable-next-line max-len
       'foobar/test?test[]=123&test[]=234&foo[bar]=1&foo[baz][]=2&foo[baz][]=3&foo[test][foo][bar][]=4&foo[test][foo][bar][]=5',
     );
   });

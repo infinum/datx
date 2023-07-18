@@ -12,7 +12,8 @@ import { ExtractPublic } from '../../types/extract-public';
 import { CollectionService } from './collection.service';
 import { IResourceObject } from '@datx/jsonapi-types';
 
-// TODO: share this helper somehow (the build will break if it is imported from ../../../test/utils and if test dir is not in listed in tsconfig include array)
+// TODO: share this helper somehow (the build will break if it is imported
+// from ../../../test/utils and if test dir is not in listed in tsconfig include array)
 function asyncData<TData>(data: TData): Observable<TData> {
   return of(data).pipe(delay(0));
 }
@@ -30,6 +31,7 @@ export abstract class CollectionTestingService<
 
   public setData(data: Array<IRawModel | IResourceObject>): Array<TModel> {
     this.collection.removeAll(this.ctor);
+
     return this.collection.add(data, this.ctor);
   }
 
@@ -39,6 +41,7 @@ export abstract class CollectionTestingService<
 
   public createAndSave(rawModel: IRawModel | IResourceObject): Observable<TModel> {
     const model = this.create(rawModel);
+
     return this.update(model);
   }
 
@@ -52,6 +55,7 @@ export abstract class CollectionTestingService<
 
   public getMany(_options?: IRequestOptions): Observable<Response<TModel>> {
     const data = this.collection.findAll(this.ctor);
+
     return asyncData({ data, meta: { total_count: data.length } } as Response<TModel>);
   }
 

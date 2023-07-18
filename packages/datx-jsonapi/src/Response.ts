@@ -303,6 +303,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
     }
 
     const rawData = modelToJSON(record);
+
     delete rawData?.['__META__']?.collection;
 
     updateModel(data, rawData);
@@ -316,6 +317,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
     });
 
     const ResponseConstructor: typeof Response = this.constructor as typeof Response;
+
     return new ResponseConstructor(
       this.__internal.response,
       this.collection,
@@ -326,6 +328,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
 
   public clone(): Response<T> {
     const ResponseConstructor: typeof Response = this.constructor as typeof Response;
+
     return new ResponseConstructor(
       this.__internal.response,
       this.collection,
@@ -365,6 +368,7 @@ export class Response<T extends IJsonapiModel, P = IAsync<T>> {
    */
   protected __fetchLink(name: string): () => P {
     const ResponseConstructor: typeof Response = this.constructor as typeof Response;
+
     if (!this.__cache[name]) {
       const link: ILink | null = this.links && name in this.links ? this.links[name] : null;
 

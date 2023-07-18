@@ -22,6 +22,7 @@ export class MockBaseRequest extends BaseJsonapiRequest {
     { method: string; body: string | FormData | undefined; headers: Record<string, string> },
   ] {
     const mockFetch = (this['_config'].fetchReference as jest.Mock).mock.calls;
+
     return mockFetch[mockFetch.length - 1];
   }
 

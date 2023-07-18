@@ -3,7 +3,7 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "A mobx data store",
+    "tagline": "An opinionated data store",
     "docs": {
       "api-reference/attribute": {
         "title": "Attribute"

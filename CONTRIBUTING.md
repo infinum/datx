@@ -28,7 +28,7 @@ Example: If you have made a change in `@datx/utils` and need to use the new chan
 
 ## Testing
 
-To test a specific package, run `yarn test` in its folder. If you want to run all tests, you can run `lerna run test` in the root folder. This will run tests in one of the variants. Once you push the code to the repository, GHA will run tests on all variants (mobx version combinations).
+To test a specific package, run `yarn test` in its folder. If you want to run all tests, you can run `lerna run test` in the root folder. Once you push the code to the repository, GHA will run tests once more.
 
 ## Writing docs
 

@@ -1,5 +1,5 @@
 import { Collection, Model, prop, Attribute } from '@datx/core';
-import { META_FIELD, mobx } from '@datx/utils';
+import { META_FIELD } from '@datx/utils';
 import fetch from 'isomorphic-fetch';
 import {
   getModelMeta,
@@ -59,7 +59,6 @@ describe('Issues', () => {
       class ApiStore extends jsonapiCollection(Collection) {
         public static types = [ImageRecord, EventRecord];
 
-        @mobx.computed
         get image(): Array<ImageRecord> {
           return this.findAll(ImageRecord);
         }
@@ -128,7 +127,6 @@ describe('Issues', () => {
       class ApiStore extends jsonapiCollection(Collection) {
         public static types = [ImageRecord, EventRecord];
 
-        @mobx.computed
         get image(): Array<ImageRecord> {
           return this.findAll(ImageRecord);
         }
@@ -268,12 +266,14 @@ describe('Issues', () => {
 
     const bar1 = store.add({}, Bar);
     const foo1 = store.add({ bar: bar1 }, Foo);
+
     bar1.foo = foo1;
 
     expect(foo1.bars).toContain(bar1);
     expect(foo1.bars).toHaveLength(1);
 
     const jsonapiData = modelToJsonApi(foo1);
+
     expect(jsonapiData.relationships?.bar).toEqual({ data: { id: bar1.meta.id, type: 'bar' } });
     expect(jsonapiData.relationships?.bars).toBeUndefined();
   });
@@ -308,6 +308,7 @@ describe('Issues', () => {
     expect(foo.value).toBe(123);
 
     let snapshot = foo.toJSON();
+
     expect(snapshot.value).toBe('TEST:123');
 
     foo = store.sync({
@@ -399,6 +400,7 @@ describe('Issues', () => {
     });
 
     const newB = new ModelB({ modelA: modelB.modelA }, store);
+
     expect(newB.modelA.name).toBe('A');
     await newB.save();
   });
@@ -457,6 +459,7 @@ describe('Issues', () => {
         attributes: { created_at: new Date(), retrieve_at: new Date() },
       },
     }) as Order;
+
     expect(newOrder1.meta.snapshot[META_FIELD]?.fields?.created_at).toBeUndefined();
     expect(newOrder2.meta.snapshot[META_FIELD]?.fields?.created_at).toBeUndefined();
     expect(newOrder3.meta.snapshot[META_FIELD]?.fields?.created_at).toBeUndefined();

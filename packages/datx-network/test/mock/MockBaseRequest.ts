@@ -23,6 +23,7 @@ export class MockBaseRequest<T extends PureModel = PureModel> extends BaseReques
     { method: string; body: string | FormData | undefined; headers: Record<string, string> },
   ] {
     const mockFetch = (this['_config'].fetchReference as jest.Mock).mock.calls;
+
     return mockFetch[mockFetch.length - 1];
   }
 

@@ -1,12 +1,8 @@
 import { META_FIELD } from '@datx/utils';
-import testMobx from '../mobx';
 
 import { Collection, PureModel, ReferenceType, Attribute, isAttributeDirty } from '../../src';
 import { withMeta } from '../../src/mixins/withMeta';
 import { withActions } from '../../src/mixins/withActions';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('withActions', () => {
   it('should work with initial data', () => {
@@ -87,6 +83,7 @@ describe('withActions', () => {
     const FooMeta = withActions(Foo);
 
     const foo = new FooMeta({ foo: 1 });
+
     expect(isAttributeDirty(foo, 'foo')).toBe(false);
     expect(isAttributeDirty(foo, 'bar')).toBe(false);
 

@@ -1,8 +1,30 @@
 {
   "name": "@datx/jsonapi-angular",
-  "version": "2.6.1",
+  "version": "3.0.0",
+  "module": "dist/fesm2015/datx-jsonapi-angular.js",
+  "es2015": "dist/fesm2015/datx-jsonapi-angular.js",
+  "esm2015": "dist/esm2015/datx-jsonapi-angular.js",
+  "fesm2015": "dist/fesm2015/datx-jsonapi-angular.js",
+  "typings": "dist/datx-jsonapi-angular.d.ts",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infinum/datx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/infinum/datx/issues"
+  },
+  "homepage": "https://github.com/infinum/datx#readme",
+  "author": "Infinum JavaScript Team <hello@infinum.com>",
+  "license": "MIT",
+  "keywords": [
+    "datx",
+    "jsonapi",
+    "angular"
+  ],
   "scripts": {
     "ng": "ng",
+    "prepublish": "npm run build",
     "build": "ng build datx-jsonapi-angular && npm run copy-license && npm run copy-readme && node ./prepublish.js",
     "copy-license": "cp ./LICENSE ./dist/LICENSE",
     "copy-readme": "cp ./README.md ./dist/README.md",
@@ -10,12 +32,12 @@
     "ts:check": "tsc --noEmit",
     "test:watch": "jest --watch --coverage"
   },
-  "peerDependencies": {
-    "@datx/core": "2.5.1",
-    "@datx/jsonapi": "2.5.1",
-    "@datx/jsonapi-types": "2.5.1",
-    "@datx/network": "2.5.1",
-    "@datx/utils": "2.5.1"
+  "dependencies": {
+    "@datx/core": "3.0.0",
+    "@datx/jsonapi": "3.0.0",
+    "@datx/jsonapi-types": "3.0.0",
+    "@datx/network": "3.0.0",
+    "@datx/utils": "3.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~14.1.3",
@@ -29,11 +51,6 @@
     "@angular/platform-browser": "~14.2.0",
     "@angular/platform-browser-dynamic": "~14.1.2",
     "@angular/router": "~14.2.0",
-    "@datx/core": "2.6.1",
-    "@datx/jsonapi": "2.6.1",
-    "@datx/jsonapi-types": "2.5.1",
-    "@datx/network": "2.6.1",
-    "@datx/utils": "2.5.1",
     "@types/jest": "^28.1.1",
     "@types/node": "^18.7.6",
     "jest": "^28.1.1",

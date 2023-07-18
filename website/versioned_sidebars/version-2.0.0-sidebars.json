@@ -63,7 +63,8 @@
       "version-2.0.0-migration-guide/breaking-changes",
       "version-2.0.0-migration-guide/deprecations",
       "version-2.0.0-migration-guide/whats-new",
-      "version-2.0.0-migration-guide/from-v1"
+      "version-2.0.0-migration-guide/from-v1",
+      "version-2.0.0-migration-guide/codemods"
     ],
 
     "Testing": ["version-2.0.0-testing/test-data-factory"],

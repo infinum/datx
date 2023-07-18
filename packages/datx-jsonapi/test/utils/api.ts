@@ -80,6 +80,7 @@ function fetchInterceptor(url: RequestInfo, options?: RequestInit | undefined): 
           if (request.responseFn) {
             response = request.responseFn(url, options?.body as string);
           }
+
           return Promise.resolve(response === undefined ? parsed : response);
         },
       } as any);

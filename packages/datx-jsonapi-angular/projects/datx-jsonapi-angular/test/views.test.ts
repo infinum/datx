@@ -48,6 +48,7 @@ describe('Views', () => {
       const store = new TestStore();
       const JsonapiView = jsonapiAngular(View as IViewConstructor<PureModel>);
       const view = new JsonapiView(Event, store);
+
       view.getMany().subscribe((events) => {
         try {
           expect(events.data).toBeInstanceOf(Array);

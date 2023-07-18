@@ -23,18 +23,22 @@ function prepareDecorator<T extends PureModel>(_obj: T, _key: string, opts?: obj
     // If initializer is undefined, the descriptor will be null and therefore
     // the initializerDefineProperty will be skipped
 
+    // eslint-disable-next-line max-len
     // https://github.com/babel/babel/blob/3aaafae053fa75febb3aa45d45b6f00646e30ba4/packages/babel-helpers/src/helpers.js#L1019
   }
 }
 
 type BasicRefModel = typeof PureModel | IType;
+
 export type FunctionRefModel = (
   data: object,
   parentModel: PureModel,
   key: string,
   collection?: PureCollection,
 ) => BasicRefModel;
+
 export type ParsedRefModel = IType | FunctionRefModel;
+
 export type DynamicRefModel = BasicRefModel | FunctionRefModel;
 
 interface IFieldAttributeOptions {
@@ -192,6 +196,7 @@ export function ViewField<TCollection extends PureCollection, TModel extends Pur
 ) {
   return (obj: TCollection, key: string, opts?: object): void => {
     prepareDecorator(obj, key, opts);
+
     if (!Object.hasOwnProperty.call(obj.constructor, 'views')) {
       obj.constructor['views'] = {};
     }
@@ -223,21 +228,25 @@ function propFn<T extends PureModel>(obj: T, key: string, opts?: object): void {
 export const prop = Object.assign(propFn, {
   defaultValue(value: any) {
     deprecated(propDeprecation);
+
     return Field({ defaultValue: value });
   },
 
   toOne(refModel: typeof PureModel | IType) {
     deprecated(propDeprecation);
+
     return Field({ toOne: refModel });
   },
 
   toMany(refModel: typeof PureModel | IType, property?: string) {
     deprecated(propDeprecation);
+
     return Field({ toMany: refModel, referenceProperty: property });
   },
 
   toOneOrMany(refModel: typeof PureModel | IType) {
     deprecated(propDeprecation);
+
     return Field({ toOneOrMany: refModel });
   },
 

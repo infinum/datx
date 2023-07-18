@@ -6,7 +6,7 @@ title: JSONAPI Mixin
 If you're using the JSON API specification for your API, you can install `datx-jsonapi` to take the full advantage of the `datx` library:
 
 ```bash
-npm install --save datx datx-jsonapi mobx
+npm install --save datx datx-jsonapi
 ```
 
 ## Polyfilling

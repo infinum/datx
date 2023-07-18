@@ -57,6 +57,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     TNewParams extends object = TParams
   >(...operators: Array<IPipeOperator | undefined>): BaseRequest<TNewModel, TNewParams> {
     const destinationPipeline = this.clone<TNewModel, TNewParams>();
+
     operators
       .filter(Boolean)
       .forEach((operator) => (operator as IPipeOperator)(destinationPipeline));
@@ -72,10 +73,12 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     if (this._options.bodyType === BodyType.Json) {
       this._options.headers['content-type'] =
         this._options.headers['content-type'] || 'application/json';
+
       return this._options.body;
     } else if (this._options.bodyType === BodyType.Urlencoded) {
       this._options.headers['content-type'] =
         this._options.headers['content-type'] || 'application/x-www-form-urlencoded';
+
       return typeof this._options.body === 'string'
         ? this._options.body
         : appendQueryParams(
@@ -87,6 +90,7 @@ export class BaseRequest<TModel extends PureModel = PureModel, TParams extends o
     } else if (this._options.bodyType === BodyType.Multipart) {
       this._options.headers['content-type'] =
         this._options.headers['content-type'] || 'multipart/form-data';
+
       return this._options.body instanceof FormData
         ? this._options.body
         : new FormData(this._options.body);

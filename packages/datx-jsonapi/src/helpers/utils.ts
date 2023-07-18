@@ -61,6 +61,7 @@ export async function getAllResponses<M extends IJsonapiModel = IJsonapiModel>(
 
   while (response.next) {
     requests++;
+
     if (requests > maxRequests) {
       break;
     }

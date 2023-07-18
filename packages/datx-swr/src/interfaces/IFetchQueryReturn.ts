@@ -1,5 +1,4 @@
-import { IJsonapiModel } from '@datx/jsonapi';
-import { IGetAllResponse } from '@datx/jsonapi/dist/interfaces/IGetAllResponse';
+import { IJsonapiModel, IGetAllResponse } from '@datx/jsonapi';
 import { CollectionResponse, Response } from '../Response';
 import { IResponseData } from './IResponseData';
 

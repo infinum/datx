@@ -92,6 +92,7 @@ describe('body', () => {
 
   it('should send the correct FormData', async () => {
     const data = new FormData();
+
     data.append('foo', '1');
 
     const request = new MockBaseRequest('foobar').pipe(

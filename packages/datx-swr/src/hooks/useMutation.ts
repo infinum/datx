@@ -27,12 +27,15 @@ const reducer = <TModel extends IJsonapiModel, TData extends IResponseData>(
   if (action.type === 'RESET') {
     return { status: 'idle' };
   }
+
   if (action.type === 'MUTATE') {
     return { status: 'running' };
   }
+
   if (action.type === 'SUCCESS') {
     return { status: 'success', data: action.data };
   }
+
   if (action.type === 'FAILURE') {
     return { status: 'failure', error: action.error };
   }
@@ -72,6 +75,7 @@ export function useMutation<
     config: Omit<IMutationOptions<TInput, TModel, TData>, 'onMutate' | 'useErrorBoundary'> = {},
   ) {
     const mutation = Date.now();
+
     latestMutation.current = mutation;
 
     dispatch({ type: 'MUTATE' });

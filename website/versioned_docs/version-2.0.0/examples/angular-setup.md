@@ -95,6 +95,12 @@ import { AppCollection } from '.collections/app.collection';
 export class AppModule {}
 ```
 
+Config values passed via `forRoot` and via `DATX_CONFIG` and the default values will be merged together into a final configuration object. Values provided `DATX_CONFIG` DI token take precedence over values from `forRoot`, and default values have the lowest precedence.
+
+In the example above, the final config will use some default values, NetworkOnly caching option (as defined in `forRoot`) and whatever value `environmentVariablesService.get('MY_API')` returns for `baseUrl` (as defined in `DATX_CONFIG` provider).
+
+### Usage
+
 ## Basic usage example
 
 Create the base model:

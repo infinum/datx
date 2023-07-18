@@ -1,5 +1,3 @@
-import testMobx from './mobx';
-
 import {
   Collection,
   PureModel,
@@ -11,10 +9,6 @@ import {
 } from '../src';
 import { isCollection, isModel } from '../src/helpers/mixin';
 import { getModelCollection, getModelId, getModelType } from '../src/helpers/model/utils';
-import { mobx } from '@datx/utils';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('Collection', () => {
   describe('Basic features', () => {
@@ -371,57 +365,6 @@ describe('Collection', () => {
       expect(foo1.foo).toBe(1);
     });
 
-    it('should trigger autorun after a model is added', () => {
-      class Foo extends PureModel {
-        public static type = 'foo';
-
-        @Attribute({ isIdentifier: true })
-        public id!: number;
-
-        @Attribute()
-        public foo!: number;
-
-        @Attribute()
-        public bar!: number;
-
-        @Attribute()
-        public baz!: number;
-      }
-
-      class Store extends Collection {
-        public static types = [Foo];
-      }
-
-      const store = new Store();
-
-      let autorunLengthCount = 0;
-      let fooLength;
-
-      testMobx.autorun(() => {
-        autorunLengthCount++;
-        fooLength = store.findAll(Foo).length;
-      });
-
-      let autorunModelCount = 0;
-      let foo;
-
-      testMobx.autorun(() => {
-        autorunModelCount++;
-        foo = store.findOne(Foo, 123);
-      });
-
-      const foo2 = store.add({ id: 123 }, Foo);
-
-      if (mobx.useRealMobX) {
-        expect(autorunModelCount).toBe(2);
-        expect(foo).toBe(foo2);
-
-        expect(autorunLengthCount).toBe(2);
-        expect(fooLength).toBe(1);
-      }
-      // The test doesn't make sense if MobX is not used
-    });
-
     it('should auto set ref value at be a model is added', () => {
       class Pet extends Model {
         static type = 'pet';
@@ -448,6 +391,7 @@ describe('Collection', () => {
       const store = new Store();
       const steve = store.add<Person>({ spouse: 1111, id: 200, pets: [1, 2, 3] }, Person);
       const jane = store.add<Person>({ id: 1111, spouse: 200, toy: 10 }, Person);
+
       store.add([{ id: 1 }, { id: 2 }, { id: 3 }], Pet);
 
       expect(steve.spouse).toBe(jane);
@@ -455,12 +399,14 @@ describe('Collection', () => {
       expect(steve.pets).toBeInstanceOf(Array);
       expect(steve.pets.map((d) => d.id)).toEqual([1, 2, 3]);
       const toy10 = store.add({ id: 10 }, Toy);
+
       expect(jane.toy).toBe(toy10);
       jane.toy = store.add([{ id: 11 }, { id: 12 }], Toy);
       expect(jane.toy.map((d) => d.id)).toEqual([11, 12]);
 
       const store2 = new Store();
       const steve2 = store2.add<Person>({ spouse: { id: 1, type: 'person' }, id: 1 }, Person);
+
       expect(getRefId(steve2, 'spouse')).toEqual({ id: 1, type: 'person' });
     });
 
@@ -477,6 +423,7 @@ describe('Collection', () => {
       }
 
       const store = new Store();
+
       store.add(
         [
           { id: '1', parent: null, children: ['2', '3', '4'] },
@@ -488,6 +435,7 @@ describe('Collection', () => {
       const foo1 = store.findOne<Foo>(Foo, '1');
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const refId = getRefId(foo1!, 'children');
+
       expect(refId).toBeInstanceOf(Array);
       expect((refId as Array<any>).map((d) => d.id)).toEqual(['2', '3', '5']);
     });
@@ -506,8 +454,10 @@ describe('Collection', () => {
 
       const store = new Store();
       const foo = store.add({ id: 0, name: '99999' }, Foo);
+
       expect(foo.id).toBe(0);
       const fooData = modelToJSON(foo);
+
       expect(fooData.id).toBe(0);
       // @ts-ignore
       expect(fooData.__META__.id).toBe(0);
@@ -533,6 +483,7 @@ describe('Collection', () => {
       }
 
       const store = new Store();
+
       store.add(
         {
           id: 1,
@@ -567,6 +518,7 @@ describe('Collection', () => {
       }
 
       const store = new Store();
+
       store.add(
         {
           key: '0',
@@ -583,6 +535,7 @@ describe('Collection', () => {
       );
       expect(store.findAll(Foo).length).toBe(1);
       const foo = store.findOne<Foo>(Foo, '0');
+
       expect(foo?.name).toBe('foo1');
       expect(foo?.children).toEqual([]);
     });

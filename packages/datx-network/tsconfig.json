@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.build.json",
   "include": ["src/**/*", "test/**/*"],
+  "rootDir": ".",
   "compilerOptions": {
     "moduleResolution": "node",
     "noUnusedLocals": true,

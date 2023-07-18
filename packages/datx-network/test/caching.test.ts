@@ -11,6 +11,10 @@ const sleep = (duration: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, duration));
 
 describe('caching', () => {
+  beforeEach(() => {
+    clearAllCache();
+  });
+
   it('should fail if no cache with CacheOnly strategy', async () => {
     const request1 = new MockBaseRequest('foobar');
 
@@ -36,8 +40,10 @@ describe('caching', () => {
 
       it('should fail if no network', async () => {
         request['resetMock']({ status: 0 }, false);
+
         try {
           await request.fetch();
+
           throw Error('The request should fail');
         } catch (response) {
           expect(response).toHaveProperty('error');
@@ -86,6 +92,7 @@ describe('caching', () => {
 
         try {
           await request.fetch();
+
           throw Error('The request should fail');
         } catch (response) {
           expect(response).toHaveProperty('error');
@@ -180,6 +187,7 @@ describe('caching', () => {
 
         try {
           await request.fetch();
+
           throw Error('The request should fail');
         } catch (response) {
           expect(response).toHaveProperty('error');
@@ -191,6 +199,7 @@ describe('caching', () => {
 
       it('should use cache in all calls', async () => {
         const requestNetwork = request.pipe(cache(CachingStrategy.NetworkFirst));
+
         requestNetwork['resetMock']({ status: 200, json: async () => ({ foo: 1 }) });
         await requestNetwork.fetch();
 
@@ -257,6 +266,7 @@ describe('caching', () => {
 
         try {
           await request.fetch();
+
           throw Error('The request should fail');
         } catch (response) {
           expect(response).toHaveProperty('error');
@@ -270,6 +280,7 @@ describe('caching', () => {
         request['resetMock']({ status: 200, json: async () => ({ foo: 1 }) });
         const firstResponse = await request.fetch();
         const firstTest = firstResponse.data;
+
         firstTest.foo = 2;
 
         request['resetMock']({ status: 0 }, false);
@@ -295,8 +306,10 @@ describe('caching', () => {
         clearAllCache();
 
         request['resetMock']({ status: 0 }, false);
+
         try {
           await request.fetch();
+
           throw Error('The request should fail');
         } catch (e) {
           expect(e).toHaveProperty('error');
@@ -326,6 +339,7 @@ describe('caching', () => {
         const response1 = await request.fetch();
 
         const test1 = response1?.data;
+
         if (test1 instanceof PureModel) {
           expect(test1['foo']).toBe(1);
         } else {
@@ -355,6 +369,7 @@ describe('caching', () => {
 
         try {
           await request.fetch();
+
           throw Error('The request should fail');
         } catch (response) {
           expect(response).toHaveProperty('error');

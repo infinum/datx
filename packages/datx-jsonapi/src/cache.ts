@@ -39,7 +39,11 @@ export function saveCache(url: string, response: Response<IJsonapiModel>): void 
   }
 }
 
-export function getCache(url: string, maxAge: number, ResponseConstructor: typeof Response = Response): ICache | undefined {
+export function getCache(
+  url: string,
+  maxAge: number,
+  ResponseConstructor: typeof Response = Response,
+): ICache | undefined {
   const ageLimit = Date.now() - maxAge * 1000;
   const cache = cacheStorage.find((item) => item.url === url && item.time > ageLimit);
 

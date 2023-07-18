@@ -1,4 +1,4 @@
-import { getMeta, setMeta, mobx } from '@datx/utils';
+import { getMeta, setMeta } from '@datx/utils';
 import { PatchType } from '../enums/PatchType';
 import { IPatch } from '../interfaces/IPatch';
 import { PureModel } from '../PureModel';
@@ -103,9 +103,10 @@ export function endAction(model: PureModel, patchType: PatchType = PatchType.UPD
   });
 
   patchData.count--;
+
   if (patchData.count === 0) {
-    const newValue = mobx.toJS(patchData.newValue);
-    const oldValue = mobx.toJS(patchData.oldValue);
+    const newValue = patchData.newValue;
+    const oldValue = patchData.oldValue;
 
     if (!isEmptyObject(newValue) || !isEmptyObject(oldValue)) {
       triggerAction({ newValue, oldValue, patchType }, model);

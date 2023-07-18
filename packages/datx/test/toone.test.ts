@@ -1,9 +1,4 @@
-import testMobx from './mobx';
-
 import { Bucket, Collection, Model, Attribute, PureCollection } from '../src';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('ToOne', () => {
   describe('static', () => {
@@ -187,6 +182,7 @@ describe('ToOne', () => {
             expect(parentModel).toBeInstanceOf(Foo);
             expect(key).toBe('bar');
             expect(collection).toBeInstanceOf(PureCollection);
+
             return Bar;
           },
         })
@@ -218,6 +214,7 @@ describe('ToOne', () => {
         @Attribute({
           toOne: (data) => {
             expect(data).toEqual({ value: 1 });
+
             return 'bar';
           },
         })
@@ -249,6 +246,7 @@ describe('ToOne', () => {
         @Attribute({
           toOne: (data) => {
             expect(data).toEqual({ value: 1 });
+
             return 'baz';
           },
         })

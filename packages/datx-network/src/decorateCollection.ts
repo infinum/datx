@@ -41,6 +41,7 @@ export function decorateCollection(
     ): INetworkModelConstructor {
       const Collection = this.constructor as INetworkCollectionConstructor;
       const modelType = getModelType(type);
+
       return (
         // @ts-ignore
         Collection.types.find((item) => getModelType(item) === modelType) || Collection.defaultModel

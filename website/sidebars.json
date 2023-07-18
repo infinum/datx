@@ -57,9 +57,8 @@
     "JSON API SWR": ["jsonapi-swr/overview", "jsonapi-swr/api"],
     "Migration guide": [
       "migration-guide/breaking-changes",
-      "migration-guide/deprecations",
       "migration-guide/whats-new",
-      "migration-guide/from-v1"
+      "migration-guide/codemods"
     ],
     "Testing": ["testing/test-data-factory"],
     "Troubleshooting": ["troubleshooting/known-issues"]

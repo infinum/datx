@@ -18,11 +18,13 @@ import chalk from 'chalk';
 import isGitClean from 'is-git-clean';
 
 export const jscodeshiftExecutable = require.resolve('.bin/jscodeshift');
+
 export const transformerDirectory = path.join(__dirname, '../', 'transforms');
 
 export function checkGitStatus(force) {
   let clean = false;
   let errorMessage = 'Unable to determine if git directory is clean';
+
   try {
     clean = isGitClean.sync(process.cwd());
     errorMessage = 'Git directory is not clean';
@@ -56,9 +58,11 @@ export function runTransform({ files, flags, transformer }) {
   if (dry) {
     args.push('--dry');
   }
+
   if (print) {
     args.push('--print');
   }
+
   if (runInBand) {
     args.push('--run-in-band');
   }
@@ -107,6 +111,7 @@ const TRANSFORMER_INQUIRER_CHOICES = [
 
 function expandFilePathsIfNeeded(filesBeforeExpansion) {
   const shouldExpandFiles = filesBeforeExpansion.some((file) => file.includes('*'));
+
   return shouldExpandFiles ? globby.sync(filesBeforeExpansion) : filesBeforeExpansion;
 }
 
@@ -173,6 +178,7 @@ export function run() {
 
       if (!filesExpanded.length) {
         console.log(`No files found matching ${filesBeforeExpansion.join(' ')}`);
+
         return null;
       }
 

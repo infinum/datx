@@ -1,5 +1,3 @@
-import testMobx from './mobx';
-
 import { Model, Attribute, PureModel, Collection, ReferenceType, IRawModel } from '../src';
 import { updateModelId } from '../src/helpers/model/fields';
 import { initModelRef } from '../src/helpers/model/init';
@@ -17,10 +15,6 @@ import {
   revertModel,
   modelToDirtyJSON,
 } from '../src/helpers/model/utils';
-import { mobx } from '@datx/utils';
-
-// @ts-ignore
-testMobx.configure({ enforceActions: 'observed' });
 
 describe('Model', () => {
   describe('Basic features', () => {
@@ -50,17 +44,13 @@ describe('Model', () => {
       let bazValue: number | undefined = undefined;
       let autorunCount = 0;
 
-      testMobx.autorun(() => {
-        expect(foo2.baz).toBe(bazValue);
-        autorunCount++;
-      });
+      expect(foo2.baz).toBe(bazValue);
+      autorunCount++;
 
       bazValue = 3;
-      testMobx.runInAction(() => {
-        foo2.baz = 3;
-      });
+      foo2.baz = 3;
 
-      expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
+      expect(autorunCount).toBe(1);
 
       expect(() => {
         assignModel(foo1, 'foo', foo2);
@@ -75,6 +65,7 @@ describe('Model', () => {
 
       const foo1 = new Foo({ list: [1, 2, 3] });
       const foo2 = new Foo();
+
       foo2.list = [3, 2, 1];
 
       expect(foo1.list.map).toBeTruthy();
@@ -227,17 +218,13 @@ describe('Model', () => {
       let bazValue: number | undefined = undefined;
       let autorunCount = 0;
 
-      testMobx.autorun(() => {
-        expect(foo.baz).toBe(bazValue);
-        autorunCount++;
-      });
+      expect(foo.baz).toBe(bazValue);
+      autorunCount++;
 
       bazValue = 3;
-      testMobx.runInAction(() => {
-        foo.baz = 3;
-      });
+      foo.baz = 3;
 
-      expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
+      expect(autorunCount).toBe(1);
     });
 
     it('should work with id getters', () => {
@@ -251,13 +238,11 @@ describe('Model', () => {
         @Attribute()
         public baz!: number;
 
-        @testMobx.computed
-        get id(): number | string {
+        public get id(): number | string {
           return this.meta.id;
         }
 
-        @testMobx.computed
-        get id2(): number | string {
+        public get id2(): number | string {
           return getModelId(this);
         }
       }
@@ -297,35 +282,25 @@ describe('Model', () => {
       let autorunCount = 0;
       let autorunSnapshotCount = 0;
 
-      testMobx.autorun(() => {
-        expect(foo.baz.foobar).toBe(foobarValue);
-        autorunCount++;
-      });
+      expect(foo.baz.foobar).toBe(foobarValue);
+      autorunCount++;
 
-      testMobx.autorun(() => {
-        expect(modelToJSON(foo).baz.foobar).toBe(foobarValue);
-        autorunSnapshotCount++;
-      });
+      expect(modelToJSON(foo).baz.foobar).toBe(foobarValue);
+      autorunSnapshotCount++;
 
       // Trigger both autoruns
       foobarValue = 4;
-      testMobx.runInAction(() => {
-        foo.baz.foobar = 4;
-      });
+      foo.baz.foobar = 4;
 
-      testMobx.runInAction(() => {
-        // Trigger the snapshot autorun
-        foo.bar++;
-      });
+      // Trigger the snapshot autorun
+      foo.bar++;
 
       // Trigger both autoruns
       foobarValue = 5;
-      testMobx.runInAction(() => {
-        foo.baz.foobar = 5;
-      });
+      foo.baz.foobar = 5;
 
-      expect(autorunCount).toBe(mobx.useRealMobX ? 3 : 1);
-      expect(autorunSnapshotCount).toBe(mobx.useRealMobX ? 4 : 1);
+      expect(autorunCount).toBe(1);
+      expect(autorunSnapshotCount).toBe(1);
     });
 
     it('should work with default data', () => {
@@ -345,17 +320,13 @@ describe('Model', () => {
       let fooValue = 4;
       let autorunCount = 0;
 
-      testMobx.autorun(() => {
-        expect(foo.foo).toBe(fooValue);
-        autorunCount++;
-      });
+      expect(foo.foo).toBe(fooValue);
+      autorunCount++;
 
-      testMobx.runInAction(() => {
-        fooValue = 3;
-        foo.foo = 3;
-      });
+      fooValue = 3;
+      foo.foo = 3;
 
-      expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
+      expect(autorunCount).toBe(1);
     });
 
     it('should work with two models', () => {
@@ -428,7 +399,7 @@ describe('Model', () => {
         @Attribute()
         public foo!: number;
 
-        public bar!: number; // Not observable
+        public bar!: number;
       }
       class AppStore extends Collection {
         public static types = [Foo];
@@ -493,17 +464,13 @@ describe('Model', () => {
       let autorunCount = 0;
       let { parent } = foo3;
 
-      testMobx.autorun(() => {
-        autorunCount++;
-        expect(foo3.parent).toBe(parent);
-      });
+      autorunCount++;
+      expect(foo3.parent).toBe(parent);
 
       parent = null;
-      testMobx.runInAction(() => {
-        foo3.parent = null;
-      });
+      foo3.parent = null;
 
-      expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
+      expect(autorunCount).toBe(1);
     });
 
     it('should support basic references with primitive type', () => {
@@ -555,11 +522,9 @@ describe('Model', () => {
         new Foo({ foo: 3, parent: foo1 });
       }).toThrowError('The model needs to be in a collection to be referenceable');
 
-      expect(
-        testMobx.action(() => {
-          foo1.parent = foo1;
-        }),
-      ).toThrowError('The model needs to be in a collection to be referenceable');
+      expect(() => {
+        foo1.parent = foo1;
+      }).toThrowError('The model needs to be in a collection to be referenceable');
     });
 
     it('should throw if array is given', () => {
@@ -642,31 +607,19 @@ describe('Model', () => {
 
       expect(raw2.parent[0]).toEqual(getModelRef(foo1));
 
-      if (mobx.useRealMobX) {
-        foo2.parent.push(foo3);
-      } else {
-        foo2.parent = [...foo2.parent, foo3];
-      }
+      foo2.parent = [...foo2.parent, foo3];
 
       const raw2b = modelToJSON(foo2);
 
       expect(raw2b.parent[1]).toEqual(getModelRef(foo3));
 
-      if (mobx.useRealMobX) {
-        foo2.parent[2] = foo2;
-      } else {
-        foo2.parent = [...foo2.parent.slice(0, 2), foo2];
-      }
+      foo2.parent = [...foo2.parent.slice(0, 2), foo2];
 
       const raw2c = modelToJSON(foo2);
 
       expect(raw2c.parent[2]).toEqual(getModelRef(foo2));
 
-      if (mobx.useRealMobX) {
-        foo2.parent.pop();
-      } else {
-        foo2.parent = foo2.parent.slice(0, -1);
-      }
+      foo2.parent = foo2.parent.slice(0, -1);
 
       const raw2d = modelToJSON(foo2);
 
@@ -696,12 +649,10 @@ describe('Model', () => {
 
       const foo2 = store.add({ foo: 3, parent: null }, Foo);
 
-      expect(testMobx.isObservableArray(foo2.parent)).toBe(mobx.useRealMobX);
       expect(foo2.parent).toHaveLength(0);
 
       const foo3 = store.add({ foo: 3, parent: undefined }, Foo);
 
-      expect(testMobx.isObservableArray(foo3.parent)).toBe(mobx.useRealMobX);
       expect(foo3.parent).toHaveLength(0);
     });
 
@@ -723,22 +674,18 @@ describe('Model', () => {
       const foo1 = collection.add({ foo: 2 }, Foo);
       const foo2 = collection.add({ foo: 3, parent: [foo1] }, Foo);
 
-      expect(testMobx.isObservableArray(foo2.parent)).toBe(mobx.useRealMobX);
       expect(foo2.parent && foo2.parent[0].foo).toBe(2);
       const raw2 = modelToJSON(foo2);
 
       expect(raw2.parent[0]).toEqual(getModelRef(foo1));
 
       foo2.parent = foo1;
-      expect(testMobx.isObservableArray(foo2.parent)).toBe(false);
       expect(foo2.parent && foo2.parent.foo).toBe(2);
       const raw2b = modelToJSON(foo2);
 
       expect(raw2b.parent).toEqual(getModelRef(foo1));
 
-      testMobx.runInAction(() => {
-        foo1.foo = 4;
-      });
+      foo1.foo = 4;
       expect(foo2.parent && foo2.parent.foo).toBe(4);
 
       assignModel(foo1, 'parent', foo2);
@@ -782,11 +729,7 @@ describe('Model', () => {
       expect(foo4.parent.length).toBe(1);
       expect(foo4.parent && foo4.parent[0].foo).toBe(2);
 
-      if (mobx.useRealMobX) {
-        foo4.parent[0] = foo1;
-      } else {
-        foo4.parent = [foo1, ...foo4.parent.slice(1)];
-      }
+      foo4.parent = [foo1, ...foo4.parent.slice(1)];
 
       expect(foo4.parent).toContain(foo1);
     });
@@ -942,6 +885,7 @@ describe('Model', () => {
       const foo5 = collection.findOne(Foo, 5);
 
       expect(foo5).toBeTruthy();
+
       if (foo5) {
         expect(foo5.key).toBe(5);
       }
@@ -949,6 +893,7 @@ describe('Model', () => {
       const bar6 = collection.findOne(Bar, 6);
 
       expect(bar6).toBeTruthy();
+
       if (bar6) {
         expect(bar6.key).toBe(6);
       }
@@ -994,55 +939,35 @@ describe('Model', () => {
         let autorunCount = 0;
         let expectedCount = 2;
 
-        testMobx.autorun(() => {
-          autorunCount++;
-          expect(foo1.children).toHaveLength(expectedCount);
-        });
+        autorunCount++;
+        expect(foo1.children).toHaveLength(expectedCount);
 
         expect(foo1.children).toHaveLength(2);
         expect(foo2.children).toHaveLength(1);
         expect(foo3.children).toHaveLength(0);
 
         expectedCount = 1;
-        testMobx.runInAction(() => {
-          if (mobx.useRealMobX) {
-            foo1.children.pop();
-          } else {
-            // Back reference can't be replaced
-            // @ts-ignore
-            foo3.parent = null;
-          }
-        });
+        // Back reference can't be replaced
+        // @ts-ignore
+        foo3.parent = null;
 
         expect(foo1.children).toHaveLength(1);
         expect(foo3.parent).toBeNull();
-        expect(autorunCount).toBe(mobx.useRealMobX ? 2 : 1);
+        expect(autorunCount).toBe(1);
 
-        expectedCount = mobx.useRealMobX ? 2 : 1;
-        testMobx.runInAction(() => {
-          if (mobx.useRealMobX) {
-            foo1.children[1] = foo4;
-          } else {
-            foo4.parent = foo1;
-          }
-        });
+        expectedCount = 1;
+        foo4.parent = foo1;
         expect(foo1.children).toHaveLength(2);
         expect(foo4.parent).toBe(foo1);
         expect(foo2.children).toHaveLength(0);
 
-        testMobx.runInAction(() => {
-          if (mobx.useRealMobX) {
-            foo1.children[1] = foo3;
-          } else {
-            foo3.parent = foo1;
-            // @ts-ignore
-            foo4.parent = null;
-          }
-        });
+        foo3.parent = foo1;
+        // @ts-ignore
+        foo4.parent = null;
         expect(foo1.children).toHaveLength(2);
         expect(foo3.parent).toBe(foo1);
         expect(foo4.parent).toBeNull();
-        expect(autorunCount).toBe(mobx.useRealMobX ? 4 : 1);
+        expect(autorunCount).toBe(1);
 
         updateModelId(foo1, '123');
         expect(modelToJSON(foo3).parent).toEqual({ id: '123', type: 'foo' });
@@ -1051,54 +976,13 @@ describe('Model', () => {
           foo4.children = [foo1];
         }).toThrowError('Back references are read only');
 
-        testMobx.runInAction(() => {
-          foo1.foos = [foo2, foo3];
-          foo2.foos = [foo1, foo3, foo4];
-        });
+        foo1.foos = [foo2, foo3];
+        foo2.foos = [foo1, foo3, foo4];
         expect(foo1.backFoos).toHaveLength(1);
         expect(foo1.backFoos).toContain(foo2);
         expect(foo3.backFoos).toHaveLength(2);
         expect(foo3.backFoos).toContain(foo1);
         expect(foo3.backFoos).toContain(foo2);
-
-        // No point to test this without MobX
-        if (mobx.useRealMobX) {
-          foo3.backFoos.push(foo4);
-          expect(foo4.foos).toHaveLength(1);
-          expect(foo4.foos).toContain(foo3);
-
-          foo3.backFoos.shift();
-          expect(foo1.foos).toHaveLength(1);
-          expect(foo1.foos).toContain(foo2);
-
-          foo3.fooRef = [foo4];
-          expect(foo4.fooBackRef).toHaveLength(1);
-          expect(foo4.fooBackRef).toContain(foo3);
-
-          foo3.fooRef.push(foo1);
-          foo3.fooRef.shift();
-          expect(foo3.fooRef).toHaveLength(1);
-          expect(foo3.fooRef).toContain(foo1);
-
-          foo4.fooBackRef.push(foo1);
-          expect(foo1.fooRef).toBe(foo4);
-          foo4.fooBackRef.pop();
-          expect(foo1.fooRef).toBeNull();
-
-          foo4.fooRef = foo1;
-          foo3.fooRef = foo1;
-          foo2.fooRef = foo1;
-          expect(foo1.fooBackRef).toHaveLength(3);
-
-          const toRemove = foo1.fooBackRef[1];
-
-          // @ts-expect-error
-          foo1.fooBackRef[1] = undefined;
-          expect(foo1.fooBackRef).not.toContain(toRemove);
-
-          foo1.fooBackRef[1] = foo1;
-          expect(foo1.fooRef).toBe(foo1);
-        }
       });
     });
 
@@ -1136,16 +1020,12 @@ describe('Model', () => {
         expect(foo.type).toBe('456');
         expect(getModelType(foo)).toBe(foo.type);
 
-        expect(
-          testMobx.action(() => {
-            foo.type = 'bar';
-          }),
-        ).toThrowError("Model type can't be changed after initialization.");
-        expect(
-          testMobx.action(() => {
-            foo.id = '789';
-          }),
-        ).toThrowError(
+        expect(() => {
+          foo.type = 'bar';
+        }).toThrowError("Model type can't be changed after initialization.");
+        expect(() => {
+          foo.id = '789';
+        }).toThrowError(
           "Model ID can't be updated directly. Use the `updateModelId` helper function instead.",
         );
 
@@ -1210,11 +1090,9 @@ describe('Model', () => {
         expect(foo.type).toBe('456');
         expect(getModelType(foo)).toBe(foo.type);
 
-        expect(
-          testMobx.action(() => {
-            foo.type = 'bar';
-          }),
-        ).toThrowError("Model type can't be changed after initialization.");
+        expect(() => {
+          foo.type = 'bar';
+        }).toThrowError("Model type can't be changed after initialization.");
         expect(() => {
           foo.id = 789;
         }).toThrowError(
@@ -1248,6 +1126,7 @@ describe('Model', () => {
       }
 
       const foo = new Foo({ foo: 1 });
+
       expect(isAttributeDirty(foo, 'foo')).toBe(false);
       expect(isAttributeDirty(foo, 'bar')).toBe(false);
 
@@ -1255,6 +1134,7 @@ describe('Model', () => {
       expect(isAttributeDirty(foo, 'foo')).toBe(false);
       expect(isAttributeDirty(foo, 'bar')).toBe(true);
       const raw = modelToDirtyJSON(foo);
+
       expect(raw).not.toHaveProperty('foo');
       expect(raw).toHaveProperty('bar');
 
@@ -1281,6 +1161,7 @@ describe('Model', () => {
       }
 
       const foo = new Foo({ foo: 1 });
+
       expect(isAttributeDirty(foo, 'foo')).toBe(false);
       expect(isAttributeDirty(foo, 'bar')).toBe(false);
 
@@ -1304,6 +1185,7 @@ describe('Model', () => {
       }
 
       const foo = new Foo({ foo: 1 });
+
       expect(isAttributeDirty(foo, 'foo')).toBe(false);
       expect(isAttributeDirty(foo, 'bar')).toBe(false);
 
@@ -1348,11 +1230,7 @@ describe('Model', () => {
 
       foo1.one = foo2;
 
-      if (mobx.useRealMobX) {
-        foo1.many.push(foo4);
-      } else {
-        foo1.many = [...foo1.many, foo4];
-      }
+      foo1.many = [...foo1.many, foo4];
 
       expect(isAttributeDirty(foo1, 'one')).toBe(true);
       expect(isAttributeDirty(foo1, 'many')).toBe(true);

@@ -57,8 +57,8 @@ export default [
     },
   },
   {
-    input: './src/disable-mobx.ts',
-    output: [{ file: './dist/disable-mobx.js', format: 'cjs' }],
+    input: './src/index.ts',
+    output: [{ file: pkg.module, format: 'es' }],
     plugins: [
       resolve(),
       commonjs(),
@@ -66,17 +66,7 @@ export default [
       typescript({
         typescript: require('typescript'),
         tslib: require('tslib'),
-        tsconfig: './tsconfig.disable-mobx.json',
-        sourceMap: false,
-      }),
-      terser({
-        toplevel: true,
-        compress: {
-          passes: 3,
-        },
-        output: {
-          comments: false,
-        },
+        tsconfig: './tsconfig.build.json',
       }),
     ],
     onwarn(warning, rollupWarn) {
