@@ -1,7 +1,7 @@
 import testMobx from './mobx';
 
 import { Model, Attribute, PureModel, Collection, ReferenceType, IRawModel } from '../src';
-import { updateModelId } from '../src/helpers/model/fields';
+import { setRefId, updateModelId } from '../src/helpers/model/fields';
 import { initModelRef } from '../src/helpers/model/init';
 import {
   modelToJSON,
@@ -952,6 +952,54 @@ describe('Model', () => {
       if (bar6) {
         expect(bar6.key).toBe(6);
       }
+    });
+
+    it('should support setRefId', () => {
+      class Foo extends PureModel {
+        public static type = 'foo';
+
+        @Attribute()
+        public foo!: number;
+
+        @Attribute({ toOne: Foo })
+        public parent?: Foo | null;
+
+        @Attribute({ toMany: Foo })
+        public list?: Array<Foo> | null;
+
+        @Attribute({ toOneOrMany: Foo })
+        public stuff?: Foo | Array<Foo> | null;
+      }
+
+      class TestCollection extends Collection {
+        public static types = [Foo];
+      }
+      const collection = new TestCollection();
+
+      const foo1 = new Foo({ foo: 1 });
+      const foo2 = new Foo({ foo: 2 });
+      const foo3 = new Foo({ foo: 3 });
+      const foo4 = new Foo({ foo: 4 });
+
+      collection.add([foo1, foo2, foo3, foo4]);
+      foo1.parent = foo2;
+      foo1.list = [foo3, foo4];
+      foo1.stuff = [foo2, foo3];
+
+      expect(foo1.parent).toBe(foo2);
+      expect(foo1.list).toEqual([foo3, foo4]);
+      expect(foo1.stuff).toEqual([foo2, foo3]);
+
+      setRefId(foo1, 'parent', getModelRef(foo3));
+      setRefId(foo1, 'list', [getModelRef(foo1), getModelRef(foo2)]);
+      setRefId(foo1, 'stuff', getModelRef(foo4));
+
+      expect(foo1.parent).toBe(foo3);
+      expect(foo1.list).toEqual([foo1, foo2]);
+      expect(foo1.stuff).toBe(foo4);
+
+      setRefId(foo1, 'stuff', [getModelRef(foo1), getModelRef(foo2)]);
+      expect(foo1.stuff).toEqual([foo1, foo2]);
     });
 
     describe('Back references', () => {

@@ -61,6 +61,22 @@ export class ToOne<T extends PureModel> {
     return this.__rawValue ? getModelRef(this.__rawValue) : null;
   }
 
+  public set refValue(data: IModelRef | null) {
+    if (!this.__collection) {
+      throw error('The model needs to be in a collection to be referenceable');
+    } else if (this.__readonly) {
+      throw error('This is a read-only bucket');
+    } else if (isArrayLike(data)) {
+      throw error("The reference can't be an array of values.");
+    } else if (!isModelReference(data) && data !== null) {
+      throw error('The value needs to be a reference');
+    }
+    this.__rawValue = data;
+    if (this.__model && this.__key) {
+      updateSingleAction(this.__model, this.__key, data);
+    }
+  }
+
   public toJSON(): IModelRef | null {
     return this.refValue;
   }

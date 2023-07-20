@@ -117,6 +117,23 @@ export class ToOneOrMany<T extends PureModel> {
     return this.__isList ? this.__toManyBucket.refValue : this.__toOneBucket.refValue;
   }
 
+  public set refValue(data: Array<IModelRef> | IModelRef | null) {
+    mobx.runInAction(() => {
+      this.__isList = isArrayLike(data);
+      if (this.__isList) {
+        if (!this.__toManyBucket) {
+          this.__toManyBucket = new ToMany([], this.__collection);
+        }
+        this.__toManyBucket.refValue = data as Array<IModelRef>;
+      } else {
+        if (!this.__toOneBucket) {
+          this.__toOneBucket = new ToOne<T>(null, this.__collection);
+        }
+        this.__toOneBucket.refValue = data as IModelRef;
+      }
+    });
+  }
+
   public toJSON(): Array<IModelRef> | IModelRef | null {
     return this.refValue;
   }

@@ -1,4 +1,10 @@
-import { isArrayLike, mobx, IObservableArray, IReactionDisposer, replaceInArray } from '@datx/utils';
+import {
+  isArrayLike,
+  mobx,
+  IObservableArray,
+  IReactionDisposer,
+  replaceInArray,
+} from '@datx/utils';
 
 import { error } from '../helpers/format';
 import { getModelCollection, getModelRef, isReference } from '../helpers/model/utils';
@@ -92,6 +98,27 @@ export class ToMany<T extends PureModel> {
   @mobx.computed
   public get refValue(): Array<IModelRef> {
     return this.__rawList.map(getModelRef);
+  }
+
+  public set refValue(data: Array<IModelRef>) {
+    if (!this.__collection) {
+      throw error('The model needs to be in a collection to be referenceable');
+    } else if (this.__readonly) {
+      throw error('This is a read-only bucket');
+    } else if (data === null) {
+      data = [];
+    } else if (!isArrayLike(data)) {
+      throw error('The reference must be an array of values.');
+    } else if (!data.every(isReference)) {
+      throw error('The reference must be an array of references.');
+    }
+
+    mobx.runInAction(() => {
+      replaceInArray(this.__rawList, data);
+      if (this.__model && this.__key) {
+        updateSingleAction(this.__model, this.__key, data);
+      }
+    });
   }
 
   public toJSON(): any {

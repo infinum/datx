@@ -20,7 +20,7 @@ export { PureCollection } from './PureCollection';
 export { PureModel } from './PureModel';
 export { View } from './View';
 
-export { updateModelId, getRef, getRefId } from './helpers/model/fields';
+export { updateModelId, getRef, getRefId, setRefId } from './helpers/model/fields';
 
 export { initModelRef } from './helpers/model/init';
 

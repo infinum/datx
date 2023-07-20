@@ -40,6 +40,18 @@ export function getRefId(model: PureModel, key: string): IModelRef | Array<IMode
   return value ? value.refValue : null;
 }
 
+export function setRefId(
+  model: PureModel,
+  key: string,
+  value?: IModelRef | Array<IModelRef>,
+): void {
+  const ref: IBucket<PureModel> | undefined = getMeta(model, `ref_${key}`);
+
+  if (ref) {
+    ref.refValue = value ?? null;
+  }
+}
+
 export function updateRef(
   model: PureModel,
   key: string,
