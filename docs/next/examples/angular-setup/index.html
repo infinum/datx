@@ -61,36 +61,40 @@
               }
             });
         </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Angular JSON:API setup</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="installation"></a><a href="#installation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Installation</h2>
-<p>Steps:</p>
-<ul>
-<li>Install <code>datx-jsonapi</code> and <code>datx-jsonapi-angular</code></li>
-<li><a href="./basic-setup">Setup your collection and models</a>, use <a href="/docs/next/jsonapi-angular/mixin"><code>jsonapiAngular</code> mixin</a> when setting them up</li>
-</ul>
-<h2><a class="anchor" aria-hidden="true" id="use-your-store"></a><a href="#use-your-store" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Use your store</h2>
-<p>In this section, we will show you a couple different ways of using your store:</p>
-<h3><a class="anchor" aria-hidden="true" id="setup-your-app"></a><a href="#setup-your-app" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Setup your app</h3>
-<h2><a class="anchor" aria-hidden="true" id="configuration"></a><a href="#configuration" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Configuration</h2>
-<p>Create a collection, provide it under <code>APP_COLLECTION</code> token, import <code>DatxModule</code> in your <code>AppModule</code> and configure it:</p>
-<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { InjectionToken } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
-<span class="hljs-keyword">import</span> { Collection } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
+<pre><code class="hljs css language-bash">npm install @datx/jsonapi-angular
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="setup"></a><a href="#setup" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Setup</h2>
+<h3><a class="anchor" aria-hidden="true" id="disable-mobx"></a><a href="#disable-mobx" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Disable MobX</h3>
+<p>Update <code>main.ts</code> and <code>test.ts</code> by adding this import:</p>
+<pre><code class="hljs css language-ts title=src/main.ts | src/test.ts"><span class="hljs-keyword">import</span> <span class="hljs-string">'@datx/core/disable-mobx'</span>;
+</code></pre>
+<p>Update <code>tsconfig.json</code> mobx path:</p>
+<pre><code class="hljs css language-json title=tsconfig.json">{
+    "compilerOptions": {
+    ...
+        "paths": {
+            "mobx": ["./noop.js"],
+      ...
+        },
+    ...
+    }
+}
+</code></pre>
+<p><code>noop.js</code> can be just an empty file.</p>
+<p>This step will become unnecessary in future versions of DatX.</p>
+<h3><a class="anchor" aria-hidden="true" id="collection"></a><a href="#collection" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Collection</h3>
+<p>Create a collection and provide it under <code>APP_COLLECTION</code> token:</p>
+<pre><code class="hljs css language-ts title=src/app/collections/app.collection"><span class="hljs-keyword">import</span> { Collection } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
 <span class="hljs-keyword">import</span> { jsonapiAngular } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> APP_COLLECTION = <span class="hljs-keyword">new</span> InjectionToken&lt;AppCollection&gt;(<span class="hljs-string">'App collection'</span>);
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppCollection <span class="hljs-keyword">extends</span> jsonapiAngular(Collection) {
   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> readonly types = [...];
 }
 </code></pre>
-<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { NgModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
-<span class="hljs-keyword">import</span> { DatxModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
-<span class="hljs-keyword">import</span> { AppCollection, APP_COLLECTION } <span class="hljs-keyword">from</span> <span class="hljs-string">'./collections/app.collection'</span>;
+<pre><code class="hljs css language-ts title=src/app/app.module.ts"><span class="hljs-keyword">import</span> { APP_COLLECTION } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
+<span class="hljs-keyword">import</span> { AppCollection } <span class="hljs-keyword">from</span> <span class="hljs-string">'./collections/app.collection'</span>;
 
 <span class="hljs-meta">@NgModule</span>({
-  imports: [
-    DatxModule.forRoot({
-      baseUrl: <span class="hljs-string">'https://my-api.com/'</span>,
-    }),
-  ],
   providers: [
     {
       provide: APP_COLLECTION,
@@ -100,18 +104,12 @@
 })
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppModule {}
 </code></pre>
-<p>You can also provide the config via DI if you need to set the config value based on data from some service:</p>
-<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { NgModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
-<span class="hljs-keyword">import</span> { DatxModule, DATX_CONFIG } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
-<span class="hljs-keyword">import</span> { AppCollection, APP_COLLECTION } <span class="hljs-keyword">from</span> <span class="hljs-string">'./collections/app.collection'</span>;
-<span class="hljs-keyword">import</span> { EnvironmentVariablesService } <span class="hljs-keyword">from</span> <span class="hljs-string">'./services/...'</span>;
+<h3><a class="anchor" aria-hidden="true" id="configure-datx"></a><a href="#configure-datx" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Configure DatX</h3>
+<p>Provide <code>DATX_CONFIG</code> with your own values for the config:</p>
+<pre><code class="hljs css language-ts title=src/app/app.module.ts"><span class="hljs-keyword">import</span> { APP_COLLECTION, DATX_CONFIG, setupDatx } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
+<span class="hljs-keyword">import</span> { AppCollection } <span class="hljs-keyword">from</span> <span class="hljs-string">'.collections/app.collection'</span>;
 
 <span class="hljs-meta">@NgModule</span>({
-  imports: [
-    DatxModule.forRoot({
-      cache: CachingStrategy.NetworkOnly,
-    }),
-  ],
   provides: [
     {
       provide: APP_COLLECTION,
@@ -130,9 +128,7 @@
 })
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppModule {}
 </code></pre>
-<p>Config values passed via <code>forRoot</code> and via <code>DATX_CONFIG</code> and the default values will be merged together into a final configuration object. Values provided <code>DATX_CONFIG</code> DI token take precedence over values from <code>forRoot</code>, and default values have the lowest precedence.</p>
-<p>In the example above, the final config will use some default values, NetworkOnly caching option (as defined in <code>forRoot</code>) and whatever value <code>environmentVariablesService.get('MY_API')</code> returns for <code>baseUrl</code> (as defined in <code>DATX_CONFIG</code> provider).</p>
-<h3><a class="anchor" aria-hidden="true" id="usage"></a><a href="#usage" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Usage</h3>
+<h2><a class="anchor" aria-hidden="true" id="basic-usage-example"></a><a href="#basic-usage-example" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Basic usage example</h2>
 <p>Create the base model:</p>
 <pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { IType, Model } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
 <span class="hljs-keyword">import</span> { jsonapiAngular } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
@@ -168,10 +164,6 @@
 })
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ArtistsService <span class="hljs-keyword">extends</span> CollectionService&lt;Artist, AppCollection&gt; {
   <span class="hljs-keyword">protected</span> ctor = Artist;
-
-  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-meta">@Inject</span>(APP_COLLECTION) <span class="hljs-keyword">protected</span> readonly collection: AppCollection</span>) {
-    <span class="hljs-keyword">super</span>(collection);
-  }
 }
 </code></pre>
 <p>Inject the service in your component or other services and use methods like <code>getManyModels</code> and <code>getOneModel</code>:</p>
@@ -182,7 +174,7 @@
 }
 </code></pre>
 <p>That's it!</p>
-</span></div></article></div><div class="docLastUpdate"><em>Last updated on 7/19/2023 by Domen Lisjak</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/examples/nextjs-setup"><span class="arrow-prev">← </span><span>Next.js setup</span></a><a class="docs-next button" href="/docs/next/examples/adding-models"><span>Adding models</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#installation">Installation</a></li><li><a href="#use-your-store">Use your store</a><ul class="toc-headings"><li><a href="#setup-your-app">Setup your app</a></li></ul></li><li><a href="#configuration">Configuration</a><ul class="toc-headings"><li><a href="#usage">Usage</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 7/20/2023 by Darko Kukovec</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/next/examples/nextjs-setup"><span class="arrow-prev">← </span><span>Next.js setup</span></a><a class="docs-next button" href="/docs/next/examples/adding-models"><span>Adding models</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#installation">Installation</a></li><li><a href="#setup">Setup</a><ul class="toc-headings"><li><a href="#disable-mobx">Disable MobX</a></li><li><a href="#collection">Collection</a></li><li><a href="#configure-datx">Configure DatX</a></li></ul></li><li><a href="#basic-usage-example">Basic usage example</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
                 document.addEventListener('keyup', function(e) {
                   if (e.target !== document.body) {
                     return;
