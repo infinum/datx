@@ -2115,6 +2115,7 @@ __metadata:
   resolution: "@datx/jsonapi@workspace:packages/datx-jsonapi"
   dependencies:
     "@datx/core": 3.0.0
+    "@datx/jsonapi-types": 3.0.0
     "@datx/network": 3.0.0
     "@datx/utils": 3.0.0
     "@rollup/plugin-commonjs": ^22.0.0
