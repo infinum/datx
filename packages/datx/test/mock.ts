@@ -8,15 +8,14 @@ export class CustomType {
 const custom = customScalar(
   (value: CustomType) => value.foo,
   (value: number) => {
-    if (typeof value !== 'number') {
-      throw new Error('Invalid custom type');
-    }
     const c = new CustomType();
 
     c.foo = value;
 
     return c;
   },
+  (value): value is CustomType => value instanceof CustomType,
+  (value): value is number => typeof value === 'number',
 );
 
 export const User = new Schema(

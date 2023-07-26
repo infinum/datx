@@ -1,12 +1,25 @@
+import { Simplify } from 'type-fest';
 import { IResource } from './IResource';
 import { IResourceInstance } from './IResourceInstance';
 import { ISchemaDefinition } from './ISchemaDefinition';
 
+type ISpecificInstanceType<TInstanceType, TPlainType> = TInstanceType extends ISchemaInstance<
+  infer TInnerDefinition
+>
+  ? Simplify<ISchemaInstance<TInnerDefinition>>
+  : IResourceInstance<TInstanceType, TPlainType>;
+
+type ISchemaInstanceProperty<
+  TSchemaDefinition extends ISchemaDefinition,
+  TSchemaProperty extends IResource<unknown, unknown> = TSchemaDefinition[keyof TSchemaDefinition],
+> = TSchemaProperty extends IResource<infer TInstanceType, infer TPlainType>
+  ? ISpecificInstanceType<TInstanceType, TPlainType>
+  : never;
+
 export type ISchemaInstance<TSchemaDefinition extends ISchemaDefinition> = {
-  [key in keyof TSchemaDefinition]: TSchemaDefinition[key] extends IResource<
-    infer TInstanceType,
-    infer TPlainType
+  [key in keyof TSchemaDefinition]: TSchemaDefinition[key] extends NonNullable<
+    TSchemaDefinition[key]
   >
-    ? IResourceInstance<TSchemaDefinition[key], TInstanceType, TPlainType>
-    : never;
+    ? ISchemaInstanceProperty<TSchemaDefinition, TSchemaDefinition[key]>
+    : ISchemaInstanceProperty<TSchemaDefinition, NonNullable<TSchemaDefinition[key]>> | undefined;
 };

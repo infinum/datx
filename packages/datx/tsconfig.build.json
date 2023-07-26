@@ -12,7 +12,7 @@
     "lib": [],
     "module": "esnext",
     "moduleResolution": "node",
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noImplicitReturns": true,
     "noUnusedParameters": true,
     "outDir": ".",

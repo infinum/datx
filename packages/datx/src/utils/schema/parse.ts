@@ -9,12 +9,13 @@ export function parseSchema<TDefinition extends ISchemaDefinition>(
   plain: PartialOnUndefinedDeep<ISchemaPlain<TDefinition>>,
 ): Simplify<ISchemaInstance<TDefinition>> {
   const definition = schema.definition;
-  const keys = Object.keys(definition);
-
   const instance: Partial<ISchemaInstance<TDefinition>> = {};
 
-  keys.forEach((key: keyof typeof instance) => {
-    const value = plain[key as string];
+  type TKeys = keyof typeof definition & keyof typeof plain;
+  const keys = Object.keys(definition) as Array<TKeys>;
+
+  keys.forEach((key: TKeys) => {
+    const value = plain[key];
     const type = definition[key];
 
     instance[key] = type.parse(value) as (typeof instance)[typeof key];

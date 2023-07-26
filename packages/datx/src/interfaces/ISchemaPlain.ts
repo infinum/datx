@@ -1,3 +1,4 @@
+import { PartialOnUndefinedDeep, Simplify } from 'type-fest';
 import { IResource } from './IResource';
 import { IResourcePlain } from './IResourcePlain';
 import { ISchemaDefinition } from './ISchemaDefinition';
@@ -7,6 +8,8 @@ export type ISchemaPlain<TSchemaDefinition extends ISchemaDefinition> = {
     infer TInstanceType,
     infer TPlainType
   >
-    ? IResourcePlain<TSchemaDefinition[key], TInstanceType, TPlainType>
+    ? TPlainType extends ISchemaPlain<infer TInnerDefinition>
+      ? PartialOnUndefinedDeep<Simplify<ISchemaPlain<TInnerDefinition>>>
+      : IResourcePlain<TSchemaDefinition[key], TInstanceType, TPlainType>
     : never;
 };

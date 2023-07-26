@@ -18,24 +18,24 @@ interface IValidationError {
   pointer: string;
 }
 
-export function validatePlainSchema<TDefintion extends ISchemaDefinition>(
-  schema: Schema<TDefintion>,
-  data: PartialOnUndefinedDeep<ISchemaPlain<TDefintion>>,
+export function validatePlainSchema<TDefinition extends ISchemaDefinition>(
+  schema: Schema<TDefinition>,
+  data: PartialOnUndefinedDeep<ISchemaPlain<TDefinition>>,
   options: IValidationOptions = {},
 ): [valid: boolean, errors: Array<IValidationError>] {
   return validateSchema(schema, data, { ...options, plain: true, path: '' });
 }
 
-export function validateSchemaInstance<TDefintion extends ISchemaDefinition>(
-  schema: Schema<TDefintion>,
-  data: PartialOnUndefinedDeep<ISchemaInstance<TDefintion>>,
+export function validateSchemaInstance<TDefinition extends ISchemaDefinition>(
+  schema: Schema<TDefinition>,
+  data: PartialOnUndefinedDeep<ISchemaInstance<TDefinition>>,
   options: IValidationOptions = {},
 ): [valid: boolean, errors: Array<IValidationError>] {
   return validateSchema(schema, data, { ...options, plain: false, path: '' });
 }
 
-function validateSchema<TDefintion extends ISchemaDefinition>(
-  schema: Schema<TDefintion>,
+function validateSchema<TDefinition extends ISchemaDefinition>(
+  schema: Schema<TDefinition>,
   data: Record<string, unknown>,
   options: IExtendedValidationOptions,
 ): [valid: boolean, errors: Array<IValidationError>] {
@@ -50,14 +50,14 @@ function validateSchema<TDefintion extends ISchemaDefinition>(
     if (typeof value === 'undefined') {
       if (!type.optional) {
         errors.push({
-          message: `Missing required property ${key as string}`,
-          pointer: `${options.path}${key as string}`,
+          message: `Missing required property ${key}`,
+          pointer: `${options.path}${key}`,
         });
       }
     } else if (type instanceof Schema) {
       const [hasErrors, subErrors] = validateSchema(type, value as Record<string, unknown>, {
         ...options,
-        path: `${options.path}${key as string}.`,
+        path: `${options.path}${key}.`,
       });
 
       if (hasErrors) {

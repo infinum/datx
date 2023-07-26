@@ -1,20 +1,12 @@
 {
-  "env": {
-    "browser": true,
-    "es6": true,
-    "node": true,
-    "jest": true
-  },
-  "extends": "@infinumjs/eslint-config-core-ts",
-  "rules": {
-    "@typescript-eslint/ban-ts-comment": 1,
-    "@typescript-eslint/ban-types": 1,
-    "@typescript-eslint/interface-name-prefix": 0,
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-    "@typescript-eslint/explicit-member-accessibility": 1,
-    "no-underscore-dangle": 1
-  },
+  "extends": ["plugin:@infinum/core", "plugin:@infinum/typescript"],
   "parserOptions": {
     "project": ["./packages/datx/tsconfig.json"]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@typescript-eslint/recommended-requiring-type-checking"]
+    }
+  ]
 }

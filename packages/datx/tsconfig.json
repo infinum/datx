@@ -5,6 +5,15 @@
   "compilerOptions": {
     "moduleResolution": "nodenext",
     "noUnusedLocals": true,
-    "allowJs": true
+    "allowJs": false,
+    "noImplicitAny": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "alwaysStrict": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedParameters": true,
+    "strictFunctionTypes": false
   }
 }

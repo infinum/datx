@@ -7,17 +7,27 @@ import { parseSchema } from '../schema/parse';
 import { serializeSchema } from '../schema/serialize';
 import { validatePlainSchema, validateSchemaInstance } from '../schema/validate';
 
-export class Schema<TDefinition extends ISchemaDefinition> {
+export class Schema<TDefinition extends ISchemaDefinition = ISchemaDefinition> {
   constructor(
     public readonly definition: TDefinition,
     public readonly type: string,
-    public readonly getId: (item: ISchemaInstance<TDefinition>) => string = (item) =>
-      `${type}/${item.id}`,
+    public readonly getId: (item: ISchemaInstance<TDefinition>) => string = (item) => {
+      if (!item || typeof item !== 'object' || item === null || !('id' in item) || !item.id) {
+        return '';
+      }
+
+      const id = item.id as ISchemaInstance<TDefinition>['id'] as string; // TODO: Doesn't really need to be a string
+
+      return `${type}/${id}`;
+    },
     public readonly isOptional = false,
     public readonly defaultValue?: ISchemaInstance<TDefinition>,
   ) {}
 
-  public serialize(instance: ISchemaInstance<TDefinition>): Simplify<ISchemaPlain<TDefinition>> {
+  public serialize(
+    this: Schema<TDefinition>,
+    instance: PartialOnUndefinedDeep<ISchemaInstance<TDefinition>>,
+  ): Simplify<ISchemaPlain<TDefinition>> {
     return serializeSchema(this, instance);
   }
 
@@ -31,13 +41,19 @@ export class Schema<TDefinition extends ISchemaDefinition> {
     ISchemaInstance<TDefinition> | undefined,
     ISchemaPlain<TDefinition> | undefined
   > {
-    return new Schema(this.definition, this.type, this.getId, true, this.defaultValue);
+    return new Schema(this.definition, this.type, this.getId, true, this.defaultValue) as IResource<
+      ISchemaInstance<TDefinition> | undefined,
+      ISchemaPlain<TDefinition> | undefined
+    >;
   }
 
   public default(
     value: ISchemaInstance<TDefinition>,
   ): IResource<ISchemaInstance<TDefinition>, ISchemaPlain<TDefinition>> {
-    return new Schema(this.definition, this.type, this.getId, this.isOptional, value);
+    return new Schema(this.definition, this.type, this.getId, this.isOptional, value) as IResource<
+      ISchemaInstance<TDefinition>,
+      ISchemaPlain<TDefinition>
+    >;
   }
 
   public testInstance(

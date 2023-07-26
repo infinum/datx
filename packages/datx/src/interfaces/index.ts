@@ -10,12 +10,13 @@ const locationSchema = new Schema(
   {
     lat: NumberType,
     lng: NumberType,
-    name: StringType,
+    name: StringType.optional(),
+    date: DateType.optional().default(new Date()),
   },
   'location',
 );
 
-const l = locationSchema.parse({
+const loc = locationSchema.parse({
   lat: 1,
   lng: 2,
   name: 'test',
@@ -29,7 +30,8 @@ const beeingSchema = new Schema(
     dob: DateType.optional(),
     type: OneOf(StringType, NumberType),
     hobbies: ArrayOf(StringType),
-    location: locationSchema.optional(),
+    location: locationSchema,
+    oldLocation: locationSchema.optional(),
   },
   'beeing',
 );
@@ -39,6 +41,14 @@ const b = beeingSchema.parse({
   isHuman: false,
   type: 'dolphin',
   hobbies: ['swimming'],
+  location: {
+    lat: 1,
+    lng: 2,
+  },
+  oldLocation: {
+    lat: 1,
+    lng: 2,
+  },
 });
 // @ts-expect-error - Age must be a number
 const wrong = beeingSchema.parse({ name: '123', age: '123' });
@@ -65,7 +75,7 @@ console.log(wrong, lat);
 const ModelA = new Schema(
   {
     name: StringType,
-    modelB: lazySchema(() => ModelB) as typeof ModelB,
+    // modelB: lazySchema(() => ModelB),
   },
   'modelA',
 );
@@ -73,7 +83,7 @@ const ModelA = new Schema(
 const ModelB = new Schema(
   {
     name: StringType,
-    modelA: ModelA,
+    modelA: lazySchema(() => ModelA),
   },
   'modelB',
 );
