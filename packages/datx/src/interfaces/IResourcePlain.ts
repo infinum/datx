@@ -1,7 +1,7 @@
 import { IResource } from './IResource';
 
 export type IResourcePlain<
-  TResource extends IResource<TInstanceType, TPlainType>,
   TInstanceType,
   TPlainType,
+  TResource extends IResource<TInstanceType, TPlainType> = IResource<TInstanceType, TPlainType>,
 > = ReturnType<TResource['serialize']>;

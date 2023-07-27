@@ -70,7 +70,7 @@ c.age = '1';
 
 ///////
 
-console.log(wrong, lat);
+console.log(wrong, lat, loc, b);
 
 const ModelA = new Schema(
   {

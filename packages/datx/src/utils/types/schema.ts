@@ -16,9 +16,10 @@ export class Schema<TDefinition extends ISchemaDefinition = ISchemaDefinition> {
         return '';
       }
 
-      const id = item.id as ISchemaInstance<TDefinition>['id'] as string; // TODO: Doesn't really need to be a string
+      const id = item.id;
 
-      return `${type}/${id}`;
+      // TODO: Doesn't really need to be a string
+      return `${type}/${id as unknown as string}`;
     },
     public readonly isOptional = false,
     public readonly defaultValue?: ISchemaInstance<TDefinition>,

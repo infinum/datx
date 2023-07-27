@@ -16,10 +16,26 @@ type ISchemaInstanceProperty<
   ? ISpecificInstanceType<TInstanceType, TPlainType>
   : never;
 
+// export type ISchemaInstance<TSchemaDefinition extends ISchemaDefinition> = {
+//   [key in keyof TSchemaDefinition]: TSchemaDefinition[key] extends NonNullable<
+//     TSchemaDefinition[key]
+//   >
+//     ? ISchemaInstanceProperty<TSchemaDefinition, TSchemaDefinition[key]>
+//     : ISchemaInstanceProperty<TSchemaDefinition, NonNullable<TSchemaDefinition[key]>> | undefined;
+// };
+
 export type ISchemaInstance<TSchemaDefinition extends ISchemaDefinition> = {
-  [key in keyof TSchemaDefinition]: TSchemaDefinition[key] extends NonNullable<
-    TSchemaDefinition[key]
+  [key in keyof TSchemaDefinition]: TSchemaDefinition[key] extends IResource<
+    infer IKeyInstanceType,
+    infer IKeyPlainType
   >
-    ? ISchemaInstanceProperty<TSchemaDefinition, TSchemaDefinition[key]>
-    : ISchemaInstanceProperty<TSchemaDefinition, NonNullable<TSchemaDefinition[key]>> | undefined;
+    ? IKeyInstanceType extends NonNullable<IKeyInstanceType>
+      ? ISchemaInstanceProperty<TSchemaDefinition, IResource<IKeyInstanceType, IKeyPlainType>>
+      :
+          | ISchemaInstanceProperty<
+              TSchemaDefinition,
+              IResource<NonNullable<IKeyInstanceType>, NonNullable<IKeyPlainType>>
+            >
+          | undefined
+    : never;
 };

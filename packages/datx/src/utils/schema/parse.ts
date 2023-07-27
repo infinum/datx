@@ -18,7 +18,7 @@ export function parseSchema<TDefinition extends ISchemaDefinition>(
     const value = plain[key];
     const type = definition[key];
 
-    instance[key] = type.parse(value) as (typeof instance)[typeof key];
+    instance[key] = (type.parse(value) ?? type.defaultValue) as (typeof instance)[typeof key];
   });
 
   return instance as ISchemaInstance<TDefinition>;

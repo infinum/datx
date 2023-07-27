@@ -12,8 +12,9 @@ export function serializeSchema<TDefinition extends ISchemaDefinition>(
   const definition = schema.definition;
   const keys = Object.keys(definition);
 
-  type TKey = keyof typeof definition & keyof typeof instance;
   const plain: Partial<ISchemaPlain<TDefinition>> = {};
+
+  type TKey = keyof typeof definition & keyof typeof instance;
 
   keys.forEach((key) => {
     const type = definition[key];
@@ -28,7 +29,8 @@ export function serializeSchema<TDefinition extends ISchemaDefinition>(
         // @ts-expect-error TODO: Fix this - it should be correct[citation needed] but TS can't infer it
         plain[key] = serializeSchema<TInnerSchemaDefinition>(type, value, depth - 1);
       } else {
-        plain[key as TKey] = type.getId(value) as (typeof plain)[TKey];
+        // @ts-expect-error TODO: Check if this is right and if we should have a separate way of defining references
+        plain[key as TKey] = type.getId(value);
       }
     } else {
       const value = instance[key as TKey];
