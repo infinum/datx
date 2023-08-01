@@ -86,7 +86,7 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
             this.__fallback[key] = rawResponses;
           }
 
-          // @ts-ignore
+          // @ts-expect-error logic is correct, but TS is not able to infer it
           return {
             data: response,
             error: undefined,
@@ -102,14 +102,14 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
           this.__fallback[key] = rawResponse;
         }
 
-        // @ts-ignore
+        // @ts-expect-error logic is correct, but TS is not able to infer it
         return {
           data: response,
           error: undefined,
         };
       } catch (error) {
         if (isFunction(prefetch) ? prefetch(error) : prefetch) {
-          // @ts-ignore
+          // @ts-expect-error logic is correct, but TS is not able to infer it
           return {
             data: undefined,
             error,

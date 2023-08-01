@@ -16,7 +16,7 @@ export class CollectionResponse<TModel extends IJsonapiModel = IJsonapiModel> ex
   Promise<CollectionResponse<TModel>>
 > {
   public get data(): Array<TModel> {
-    // @ts-ignore
+    // @ts-expect-error __data is private but we need to access it
     return this.__data.value;
   }
 }
@@ -26,7 +26,7 @@ export class SingleResponse<TModel extends IJsonapiModel = IJsonapiModel> extend
   never
 > {
   public get data(): TModel {
-    // @ts-ignore
+    // @ts-expect-error __data is private but we need to access it
     return this.__data.value;
   }
 }
