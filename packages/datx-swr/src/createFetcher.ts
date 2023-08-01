@@ -88,7 +88,7 @@ export const createFetcher =
 
       const { url } = prepareQuery(type, `${id}/${relation}`, undefined, undefined, client);
 
-      return client.request(url, undefined, undefined, {
+      return client.requestSingle(url, undefined, undefined, {
         queryParams,
         networkConfig,
         fetchOptions: {
@@ -102,7 +102,7 @@ export const createFetcher =
 
       const { url } = prepareQuery(type, `${id}/${relation}`, undefined, undefined, client);
 
-      return client.request(url, undefined, undefined, {
+      return client.requestCollection(url, undefined, undefined, {
         queryParams,
         networkConfig,
         fetchOptions: {

@@ -86,13 +86,13 @@ export interface IGetRelatedResourceExpression<
 
 // fetch a collection of related resources through the primary resource
 export interface IGetRelatedResourcesExpression<
-    TModelType extends JsonapiModelType = JsonapiModelType
+  TModelType extends JsonapiModelType = JsonapiModelType,
 > {
-    readonly op: 'getRelatedResources';
-    readonly type: TModelType['type'];
-    readonly relation: string;
-    id: string;
-    queryParams?: IRequestOptions['queryParams'];
+  readonly op: 'getRelatedResources';
+  readonly type: TModelType['type'];
+  readonly relation: string;
+  id: string;
+  queryParams?: IRequestOptions['queryParams'];
 }
 ```
 
@@ -212,6 +212,8 @@ const client = createClient();
 const todo = await client.requestSingle('todos/1', 'GET', undefined); // returns SingleResponse
 const todos = await client.requestCollection('todos', 'GET', undefined); // returns CollectionResponse
 ```
+
+**_ `request` should not be used with swr, and it will throw an error if used. _**
 
 ### hydrate
 

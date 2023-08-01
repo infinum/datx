@@ -128,13 +128,21 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
       return JSON.parse(JSON.stringify(this.__fallback));
     }
 
+    /**
+     * @override
+     * @deprecated Use `requestSingle` or `requestCollection` instead
+     */
+    public request(): never {
+      throw new Error('Use `requestSingle` or `requestCollection` instead');
+    }
+
     public requestSingle<T extends IJsonapiModel = IJsonapiModel>(
       url: string,
       method?: string | undefined,
       data?: object | undefined,
       options?: IRequestOptions | undefined,
     ): Promise<SingleResponse<T>> {
-      return this.request<T>(url, method, data, options) as Promise<SingleResponse<T>>;
+      return super.request<T>(url, method, data, options) as Promise<SingleResponse<T>>;
     }
 
     public requestCollection<T extends IJsonapiModel = IJsonapiModel>(
@@ -143,7 +151,7 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
       data?: object | undefined,
       options?: IRequestOptions | undefined,
     ): Promise<CollectionResponse<T>> {
-      return this.request<T>(url, method, data, options) as Promise<CollectionResponse<T>>;
+      return super.request<T>(url, method, data, options) as Promise<CollectionResponse<T>>;
     }
   }
 

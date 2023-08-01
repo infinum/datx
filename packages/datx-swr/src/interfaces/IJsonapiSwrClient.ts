@@ -38,6 +38,12 @@ export interface IJsonapiSwrClient {
       : IFetchQueryReturn<TData>
   >;
 
+  /**
+   * @override
+   * @deprecated Use `requestSingle` or `requestCollection` instead
+   */
+  request(): never;
+
   requestSingle<T extends IJsonapiModel = IJsonapiModel>(
     url: string,
     method?: string,

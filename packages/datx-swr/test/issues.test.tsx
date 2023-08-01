@@ -12,11 +12,12 @@ describe('issues', () => {
     const client = createClient();
     const fetcher = createFetcher(client);
 
-    const requestSpy = jest.spyOn(client, 'request');
+    const requestSpySingle = jest.spyOn(client, 'requestSingle');
+    const requestSpyCollection = jest.spyOn(client, 'requestCollection');
 
     await fetcher({ op: 'getRelatedResource', type: 'withEndpoint', id: '1', relation: 'related' });
 
-    expect(requestSpy).toBeCalledWith(
+    expect(requestSpySingle).toBeCalledWith(
       expect.stringContaining('/with-endpoint/1/related'),
       undefined,
       undefined,
@@ -30,14 +31,15 @@ describe('issues', () => {
       relation: 'related',
     });
 
-    expect(requestSpy).toBeCalledWith(
+    expect(requestSpyCollection).toBeCalledWith(
       expect.stringContaining('/with-endpoint/2/related'),
       undefined,
       undefined,
       expect.anything(),
     );
 
-    expect(requestSpy).toBeCalledTimes(2);
+    expect(requestSpySingle).toBeCalledTimes(1);
+    expect(requestSpyCollection).toBeCalledTimes(1);
   });
 
   it('should not duplicate query params when relation query is used', async () => {
@@ -74,7 +76,13 @@ describe('issues', () => {
     );
   });
 
-  fit('should call updated callbacks on useMutation', async () => {
+  it('should not allow to use client.request', async () => {
+    const client = createClient();
+
+    expect(() => client.request('test')).toThrowError();
+  });
+
+  it('should call updated callbacks on useMutation', async () => {
     const mockFn = jest.fn();
     const mockInlineFn = jest.fn();
     const mockMutate = jest.fn(() => {

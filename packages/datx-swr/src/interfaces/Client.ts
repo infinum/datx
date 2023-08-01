@@ -1,4 +1,5 @@
 import { IJsonapiCollection, IJsonapiModel, IRequestOptions } from '@datx/jsonapi';
+import { IJsonapiSwrClient } from './IJsonapiSwrClient';
 
 export declare class JsonapiModel implements IJsonapiModel {
   public static readonly type: string;
@@ -19,8 +20,9 @@ export type ClientInternal = IClient extends { types: Array<unknown> }
   ? IClient
   : {
       types: Array<IGenericResource>;
-      new (...args: any): IJsonapiCollection;
-    } & IJsonapiCollection;
+      new (...args: any): IJsonapiCollection & IJsonapiSwrClient;
+    } & IJsonapiCollection &
+      IJsonapiSwrClient;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IClientInstance extends InstanceType<ClientInternal> {}
