@@ -39,6 +39,7 @@
     "@datx/jsonapi": "3.0.0"
   },
   "devDependencies": {
+    "@infinum/eslint-plugin": "~1.0.0",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.2",
@@ -50,6 +51,9 @@
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.7.6",
     "@types/uuid": "^8.3.4",
+    "eslint-plugin-jsx-a11y": "~6.7.1",
+    "eslint-plugin-react": "~7.32.2",
+    "eslint-plugin-react-hooks": "~4.6.0",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^28.1.1",
     "jest-environment-jsdom": "28.1.3",

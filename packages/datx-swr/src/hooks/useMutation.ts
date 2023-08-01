@@ -7,6 +7,7 @@ import { MutationAction } from '../interfaces/MutationAction';
 import { MutationResult } from '../interfaces/MutationResult';
 import { IMutationState } from '../interfaces/MutationState';
 import { useClient } from './useClient';
+import { useIsomorphicLayoutEffect } from 'swr/_internal';
 
 function useGetLatest<Value>(value: Value): () => Value {
   const ref = useRef<Value>(value);
@@ -70,57 +71,65 @@ export function useMutation<
   const getMutationFn = useGetLatest(mutationFn);
   const latestMutation = useRef(0);
 
-  const mutate = useCallback(async function mutate(
-    input: TInput,
-    config: Omit<IMutationOptions<TInput, TModel, TData>, 'onMutate' | 'useErrorBoundary'> = {},
-  ) {
-    const mutation = Date.now();
+  const callbackRefs = useRef({ onMutate, onSuccess, onFailure, onSettled });
 
-    latestMutation.current = mutation;
+  useIsomorphicLayoutEffect(() => {
+    callbackRefs.current = { onMutate, onSuccess, onFailure, onSettled };
+  });
 
-    dispatch({ type: 'MUTATE' });
-    const rollback = await onMutate?.({ input });
+  const mutate = useCallback(
+    async function mutate(
+      input: TInput,
+      config: Omit<IMutationOptions<TInput, TModel, TData>, 'onMutate' | 'useErrorBoundary'> = {},
+    ) {
+      const mutation = Date.now();
 
-    try {
-      const data = await getMutationFn()(client, input);
+      latestMutation.current = mutation;
 
-      if (latestMutation.current === mutation) {
-        dispatch({ type: 'SUCCESS', data });
+      dispatch({ type: 'MUTATE' });
+      const rollback = await callbackRefs.current.onMutate?.({ input });
+
+      try {
+        const data = await getMutationFn()(client, input);
+
+        if (latestMutation.current === mutation) {
+          dispatch({ type: 'SUCCESS', data });
+        }
+
+        await callbackRefs.current.onSuccess?.({ data, input });
+        await config.onSuccess?.({ data, input });
+
+        await callbackRefs.current.onSettled?.({ status: 'success', data, input });
+        await config.onSettled?.({ status: 'success', data, input });
+
+        return data;
+      } catch (err) {
+        const error = err as Response<TModel, TData>;
+
+        await callbackRefs.current.onFailure?.({ error, rollback, input });
+        await config.onFailure?.({ error, rollback, input });
+
+        await callbackRefs.current.onSettled?.({ status: 'failure', error, input, rollback });
+        await config.onSettled?.({
+          status: 'failure',
+          error,
+          input,
+          rollback,
+        });
+
+        if (latestMutation.current === mutation) {
+          dispatch({ type: 'FAILURE', error });
+        }
+
+        if (config.throwOnFailure ?? throwOnFailure) {
+          throw error;
+        }
+
+        return undefined;
       }
-
-      await onSuccess?.({ data, input });
-      await config.onSuccess?.({ data, input });
-
-      await onSettled?.({ status: 'success', data, input });
-      await config.onSettled?.({ status: 'success', data, input });
-
-      return data;
-    } catch (err) {
-      const error = err as Response<TModel, TData>;
-
-      await onFailure?.({ error, rollback, input });
-      await config.onFailure?.({ error, rollback, input });
-
-      await onSettled?.({ status: 'failure', error, input, rollback });
-      await config.onSettled?.({
-        status: 'failure',
-        error,
-        input,
-        rollback,
-      });
-
-      if (latestMutation.current === mutation) {
-        dispatch({ type: 'FAILURE', error });
-      }
-
-      if (config.throwOnFailure ?? throwOnFailure) {
-        throw error;
-      }
-
-      return;
-    }
-  },
-  []);
+    },
+    [client, getMutationFn, throwOnFailure],
+  );
 
   const reset = useCallback(() => {
     dispatch({ type: 'RESET' });

@@ -1,0 +1,6 @@
+{
+  "extends": ["plugin:@infinum/typescript", "plugin:@infinum/react"],
+  "parserOptions": {
+    "project": "packages/datx-swr/tsconfig.json"
+  }
+}
