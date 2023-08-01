@@ -1,0 +1,198 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Angular JSON:API setup · datx</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Installation"/><meta name="docsearch:version" content="2.0.0"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Angular JSON:API setup · datx"/><meta property="og:type" content="website"/><meta property="og:url" content="https://datx.dev/"/><meta property="og:description" content="## Installation"/><meta property="og:image" content="https://datx.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://datx.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><link rel="stylesheet" href="/css/code-block-buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/code-block-buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100}
+          )
+        });
+        </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/datx-logo.svg" alt="datx"/><h2 class="headerTitleWithLogo">datx</h2></a><a href="/versions"><h3>2.0.0</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/2.0.0/getting-started/installation" target="_self">Docs</a></li><li class="siteNavGroupActive"><a href="/docs/2.0.0/examples/basic-setup" target="_self">Examples</a></li><li class=""><a href="https://github.com/infinum/datx" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Setup</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Setup<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/examples/basic-setup">Basic setup</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/examples/react-setup">React setup</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/examples/nextjs-setup">Next.js Setup</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/2.0.0/examples/angular-setup">Angular JSON:API setup</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Collection<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/examples/adding-models">Adding models</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Angular JSON:API setup</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="installation"></a><a href="#installation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Installation</h2>
+<pre><code class="hljs css language-bash">npm install @datx/jsonapi-angular
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="setup"></a><a href="#setup" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Setup</h2>
+<h3><a class="anchor" aria-hidden="true" id="disable-mobx"></a><a href="#disable-mobx" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Disable MobX</h3>
+<p>Update <code>main.ts</code> and <code>test.ts</code> by adding this import:</p>
+<pre><code class="hljs css language-ts title=src/main.ts | src/test.ts"><span class="hljs-keyword">import</span> <span class="hljs-string">'@datx/core/disable-mobx'</span>;
+</code></pre>
+<p>Update <code>tsconfig.json</code> mobx path:</p>
+<pre><code class="hljs css language-json title=tsconfig.json">{
+    "compilerOptions": {
+    ...
+        "paths": {
+            "mobx": ["./noop.js"],
+      ...
+        },
+    ...
+    }
+}
+</code></pre>
+<p><code>noop.js</code> can be just an empty file.</p>
+<p>This step will become unnecessary in future versions of DatX.</p>
+<h3><a class="anchor" aria-hidden="true" id="collection"></a><a href="#collection" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Collection</h3>
+<p>Create a collection and provide it under <code>APP_COLLECTION</code> token:</p>
+<pre><code class="hljs css language-ts title=src/app/collections/app.collection"><span class="hljs-keyword">import</span> { Collection } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
+<span class="hljs-keyword">import</span> { jsonapiAngular } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppCollection <span class="hljs-keyword">extends</span> jsonapiAngular(Collection) {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> readonly types = [...];
+}
+</code></pre>
+<pre><code class="hljs css language-ts title=src/app/app.module.ts"><span class="hljs-keyword">import</span> { APP_COLLECTION } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
+<span class="hljs-keyword">import</span> { AppCollection } <span class="hljs-keyword">from</span> <span class="hljs-string">'./collections/app.collection'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+  providers: [
+    {
+      provide: APP_COLLECTION,
+      useValue: <span class="hljs-keyword">new</span> AppCollection(),
+    },
+  ],
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppModule {}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="configure-datx"></a><a href="#configure-datx" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Configure DatX</h3>
+<p>Provide <code>DATX_CONFIG</code> with your own values for the config:</p>
+<pre><code class="hljs css language-ts title=src/app/app.module.ts"><span class="hljs-keyword">import</span> { APP_COLLECTION, DATX_CONFIG, setupDatx } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
+<span class="hljs-keyword">import</span> { AppCollection } <span class="hljs-keyword">from</span> <span class="hljs-string">'.collections/app.collection'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+  provides: [
+    {
+      provide: APP_COLLECTION,
+      useValue: <span class="hljs-keyword">new</span> AppCollection(),
+    },
+    {
+      provide: DATX_CONFIG,
+      useFactory: <span class="hljs-function">(<span class="hljs-params">httpClient: HttpClient</span>) =&gt;</span> {
+        <span class="hljs-keyword">return</span> setupDatx(httpClient, {
+          baseUrl: <span class="hljs-string">'/api/v1/'</span>,
+        });
+      },
+      deps: [HttpClient],
+    },
+  ],
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppModule {}
+</code></pre>
+<p>Config values passed via <code>forRoot</code> and via <code>DATX_CONFIG</code> and the default values will be merged together into a final configuration object. Values provided <code>DATX_CONFIG</code> DI token take precedence over values from <code>forRoot</code>, and default values have the lowest precedence.</p>
+<p>In the example above, the final config will use some default values, NetworkOnly caching option (as defined in <code>forRoot</code>) and whatever value <code>environmentVariablesService.get('MY_API')</code> returns for <code>baseUrl</code> (as defined in <code>DATX_CONFIG</code> provider).</p>
+<h3><a class="anchor" aria-hidden="true" id="usage"></a><a href="#usage" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Usage</h3>
+<h2><a class="anchor" aria-hidden="true" id="basic-usage-example"></a><a href="#basic-usage-example" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Basic usage example</h2>
+<p>Create the base model:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { IType, Model } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
+<span class="hljs-keyword">import</span> { jsonapiAngular } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> BaseModel <span class="hljs-keyword">extends</span> jsonapiAngular(Model) {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">get</span> id(): IType {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.meta.id;
+  }
+}
+</code></pre>
+<p>Create specific domain models and add them to <code>types</code> in <code>AppCollection</code></p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { Field } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
+<span class="hljs-keyword">import</span> { BaseModel } <span class="hljs-keyword">from</span> <span class="hljs-string">'src/app/base-model'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> Artist <span class="hljs-keyword">extends</span> BaseModel {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> endpoint = <span class="hljs-string">'artists'</span>;
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">type</span> = <span class="hljs-string">'project'</span>;
+
+  <span class="hljs-meta">@Field</span>()
+  <span class="hljs-keyword">public</span> name!: <span class="hljs-built_in">string</span>;
+}
+</code></pre>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppCollection <span class="hljs-keyword">extends</span> jsonapiAngular(Collection) {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> readonly types = [Artist];
+}
+</code></pre>
+<p>Create services for managing the models (one service per model):</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { Inject, Injectable } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { CollectionService } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi-angular'</span>;
+
+<span class="hljs-meta">@Injectable</span>({
+  providedIn: <span class="hljs-string">'root'</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ArtistsService <span class="hljs-keyword">extends</span> CollectionService&lt;Artist, AppCollection&gt; {
+  <span class="hljs-keyword">protected</span> ctor = Artist;
+}
+</code></pre>
+<p>Inject the service in your component or other services and use methods like <code>getManyModels</code> and <code>getOneModel</code>:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ArtistsComponent {
+  <span class="hljs-keyword">public</span> artists$ = <span class="hljs-keyword">this</span>.artistsService.getAllModels();
+
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> readonly artistsService: ArtistsService</span>) {}
+}
+</code></pre>
+<p>That's it!</p>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 8/1/2023 by Kristian Djaković</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/2.0.0/examples/nextjs-setup"><span class="arrow-prev">← </span><span>Next.js setup</span></a><a class="docs-next button" href="/docs/2.0.0/examples/adding-models"><span>Adding models</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#installation">Installation</a></li><li><a href="#setup">Setup</a><ul class="toc-headings"><li><a href="#disable-mobx">Disable MobX</a></li><li><a href="#collection">Collection</a></li><li><a href="#configure-datx">Configure DatX</a></li><li><a href="#usage">Usage</a></li></ul></li><li><a href="#basic-usage-example">Basic usage example</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'f03607e57957ae747b2342443460477a',
+                indexName: 'datx',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
