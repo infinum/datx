@@ -18,10 +18,10 @@ const hydrate = (client: IClientInstance, fallback: Fallback | undefined) => {
     const response = fallback[currentValue];
 
     if (Array.isArray(response)) {
-      previousValue[currentValue] = response.map((res) => new Response(res, client));
-    } else if ('op' in response) {
-      if (response.op === 'getAll') {
-        previousValue[currentValue] = response.data.reduce(
+      if (currentValue.startsWith('$inf$')) {
+        previousValue[currentValue] = response.map((res) => new Response(res, client));
+      } else {
+        previousValue[currentValue] = response.reduce(
           (fallbackValue, rawResponse) => {
             const res = new Response(rawResponse, client);
 
@@ -33,7 +33,7 @@ const hydrate = (client: IClientInstance, fallback: Fallback | undefined) => {
           { data: [], responses: [] } as Omit<IGetAllResponse<IJsonapiModel>, 'lastResponse'>,
         );
         previousValue[currentValue].lastResponse =
-          previousValue[currentValue].responses[response.data.length - 1];
+          previousValue[currentValue].responses[response.length - 1];
       }
     } else {
       previousValue[currentValue] = new Response(response, client);

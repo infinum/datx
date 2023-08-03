@@ -83,7 +83,7 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
           });
 
           if (hydrate) {
-            this.__fallback[key] = { op: 'getAll', data: rawResponses };
+            this.__fallback[key] = rawResponses;
           }
 
           // @ts-expect-error logic is correct, but TS is not able to infer it

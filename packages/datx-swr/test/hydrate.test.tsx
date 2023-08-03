@@ -50,21 +50,4 @@ describe('hydrate', () => {
       expect(clientResponse?.data).toEqual(serverResponse?.data);
     });
   });
-
-  // it('should hydrate a getAll query', async () => {
-  //   const query = {
-  //     op: 'getAll',
-  //     type: 'todos',
-  //   } as const;
-
-  //   const { data: serverResponse } = await client.fetchQuery(query);
-
-  //   const { result } = renderUseDatx({ query, fallback: client.fallback });
-
-  //   const { data: clientResponse, isLoading } = result.current;
-
-  //   expect(isLoading).toBe(false);
-  //   expect(clientResponse).toBeTruthy();
-  //   expect(clientResponse?.data).toEqual(serverResponse?.data);
-  // });
 });
