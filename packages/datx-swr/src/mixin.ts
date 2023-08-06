@@ -2,13 +2,11 @@ import { ICollectionConstructor, PureCollection } from '@datx/core';
 import {
   IJsonapiCollection,
   IJsonapiModel,
-  IRawResponse,
   IRequestOptions,
   jsonapiCollection,
-  IGetAllResponse,
 } from '@datx/jsonapi';
 import { unstable_serialize } from 'swr';
-import { createFetcher, isGetAll } from './createFetcher';
+import { createFetcher } from './createFetcher';
 import { JsonapiModel } from './interfaces/Client';
 import { IFetchQueryConfiguration } from './interfaces/IFetchQueryConfiguration';
 import { IFetchAllQueryReturn, IFetchQueryReturn } from './interfaces/IFetchQueryReturn';
@@ -25,6 +23,7 @@ import {
 import { Data, Model } from './interfaces/UseDatx';
 import {
   CollectionResponse,
+  dehydrateResponse,
   isCollectionResponse,
   isSingleResponse,
   SingleResponse,
@@ -73,33 +72,8 @@ export function jsonapiSwrClient(BaseClass: typeof PureCollection) {
         const response = await fetcher<TModel>(executableExpression);
         const key = unstable_serialize(expression);
 
-        if (isGetAll(executableExpression)) {
-          const rawResponses = (response as IGetAllResponse<TModel>).responses.map((r) => {
-            const raw = { ...r['__internal'].response };
-
-            delete raw.collection;
-
-            return raw;
-          });
-
-          if (hydrate) {
-            this.__fallback[key] = rawResponses;
-          }
-
-          // @ts-expect-error logic is correct, but TS is not able to infer it
-          return {
-            data: response,
-            error: undefined,
-          };
-        }
-
-        // clone response to avoid mutation
-        const rawResponse = { ...(response['__internal'].response as IRawResponse) };
-
-        delete rawResponse.collection;
-
         if (hydrate) {
-          this.__fallback[key] = rawResponse;
+          this.__fallback[key] = dehydrateResponse(response);
         }
 
         // @ts-expect-error logic is correct, but TS is not able to infer it

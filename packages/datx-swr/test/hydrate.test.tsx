@@ -8,7 +8,7 @@ const renderUseDatx = <TExpression extends Expression>({
   fallback,
 }: {
   query: TExpression;
-  fallback: Fallback;
+  fallback?: Fallback;
 }) => {
   return renderHook(() => useDatx(query), {
     // initialProps: query,
@@ -31,6 +31,25 @@ describe('hydrate', () => {
     client = createClient();
   });
 
+  it("should warn if fallback isn't provided", () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+
+    renderUseDatx({ query: { op: 'getOne', type: 'todos', id: '1' } });
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it("should not warn if fallback isn't provided in production", () => {
+    const previousNodeEnv = process.env.NODE_ENV;
+
+    process.env.NODE_ENV = 'production';
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+
+    renderUseDatx({ query: { op: 'getOne', type: 'todos', id: '1' } });
+    expect(spy).not.toBeCalled();
+
+    process.env.NODE_ENV = previousNodeEnv;
+  });
+
   [
     { op: 'getOne', type: 'todos', id: '1' } as const,
     { op: 'getMany', type: 'todos' } as const,
@@ -49,5 +68,9 @@ describe('hydrate', () => {
       expect(clientResponse).toBeTruthy();
       expect(clientResponse?.data).toEqual(serverResponse?.data);
     });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 });
