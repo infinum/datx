@@ -1,6 +1,6 @@
 {
   "name": "@datx/swr",
-  "version": "2.6.2-beta.1",
+  "version": "2.6.2-beta.2",
   "description": "DatX bindings for SWR",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -35,8 +35,8 @@
     "watch": "rollup --config --watch"
   },
   "dependencies": {
-    "@datx/core": "2.6.2-beta.1",
-    "@datx/jsonapi": "2.6.2-beta.1"
+    "@datx/core": "2.6.2-beta.2",
+    "@datx/jsonapi": "2.6.2-beta.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.0",
