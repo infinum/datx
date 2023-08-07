@@ -1,5 +1,5 @@
 import typescript from '@rollup/plugin-typescript';
-import { terser } from 'rollup-plugin-terser';
+// import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import excludeDependenciesFromBundle from 'rollup-plugin-exclude-dependencies-from-bundle';
@@ -24,15 +24,15 @@ export default [
         tslib: require('tslib'),
         tsconfig: './tsconfig.build.json',
       }),
-      terser({
-        toplevel: true,
-        compress: {
-          passes: 3,
-        },
-        output: {
-          comments: false,
-        },
-      }),
+      // terser({
+      //   toplevel: true,
+      //   compress: {
+      //     passes: 3,
+      //   },
+      //   output: {
+      //     comments: false,
+      //   },
+      // }),
       generatePackageJson({
         outputFolder: 'dist',
         baseContents: (pack) => ({
@@ -69,15 +69,15 @@ export default [
         tsconfig: './tsconfig.disable-mobx.json',
         sourceMap: false,
       }),
-      terser({
-        toplevel: true,
-        compress: {
-          passes: 3,
-        },
-        output: {
-          comments: false,
-        },
-      }),
+      // terser({
+      //   toplevel: true,
+      //   compress: {
+      //     passes: 3,
+      //   },
+      //   output: {
+      //     comments: false,
+      //   },
+      // }),
     ],
     onwarn(warning, rollupWarn) {
       if (warning.code !== 'CIRCULAR_DEPENDENCY') {
