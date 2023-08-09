@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Mobx collection store · datx</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Model definition"/><meta name="docsearch:version" content="2.0.0"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Mobx collection store · datx"/><meta property="og:type" content="website"/><meta property="og:url" content="https://datx.dev/"/><meta property="og:description" content="## Model definition"/><meta property="og:image" content="https://datx.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://datx.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><link rel="stylesheet" href="/css/code-block-buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/code-block-buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100}
+          )
+        });
+        </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/datx-logo.svg" alt="datx"/><h2 class="headerTitleWithLogo">datx</h2></a><a href="/versions"><h3>2.0.0</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/2.0.0/getting-started/installation" target="_self">Docs</a></li><li class=""><a href="/docs/2.0.0/examples/basic-setup" target="_self">Examples</a></li><li class=""><a href="https://github.com/infinum/datx" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Mobx collection store</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="model-definition"></a><a href="#model-definition" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Model definition</h2>
+<p>This is a complete migration guide. If you want to move to <code>datx</code> as fast and possible and refactor later, check out <a href="compat-collection"><code>CompatCollection</code></a> and <a href="compat-model"><code>CompatModel</code></a>.</p>
+<h3><a class="anchor" aria-hidden="true" id="typescript"></a><a href="#typescript" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TypeScript</h3>
+<pre><code class="hljs css language-diff"><span class="hljs-deletion">-- import { Collection, Model } from 'mobx-collection-store';</span>
+<span class="hljs-addition">++ import { Collection, Model, prop } from 'datx';</span>
+   import { computed } from 'mobx';
+
+   class Person extends Model {
+     public static type = 'person';
+<span class="hljs-deletion">--   public static refs = {</span>
+<span class="hljs-deletion">--     spouse: 'person',</span>
+<span class="hljs-deletion">--     pets: {model: 'pet', property: 'owner'}</span>
+<span class="hljs-deletion">--   };</span>
+
+<span class="hljs-deletion">--   public static defaults = {</span>
+<span class="hljs-deletion">--     firstName: undefined, // Required to make the props observable</span>
+<span class="hljs-deletion">--     lastName: undefined, // Required to make the props observable</span>
+<span class="hljs-deletion">--     age: 0</span>
+<span class="hljs-deletion">--   };</span>
+
+<span class="hljs-addition">++   @prop</span>
+     public firstName: string;
+
+<span class="hljs-addition">++   @prop</span>
+     public lastName: string;
+
+<span class="hljs-addition">++   @prop.defaultValue(0)</span>
+     public age: number;
+
+<span class="hljs-addition">++   @prop.toOne(Person)</span>
+     public spouse: Person;
+
+<span class="hljs-addition">++   @prop.toMany(Pet, 'owner')</span>
+     public pets: Array&lt;Pet&gt;;
+
+     @computed public get fullName(): string {
+       return `${this.firstName} ${this.lastName}`;
+     }
+   }
+</code></pre>
+<p>For <code>@prop</code> details check out the <a href="prop">prop documentation</a>.</p>
+<h3><a class="anchor" aria-hidden="true" id="javascript-without-decorators"></a><a href="#javascript-without-decorators" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>JavaScript without decorators</h3>
+<pre><code class="hljs css language-diff"><span class="hljs-deletion">-- import { Collection, Model } from 'mobx-collection-store';</span>
+<span class="hljs-addition">++ import { Collection, Model, setupModel } from 'datx';</span>
+   import { computed } from 'mobx';
+
+
+<span class="hljs-deletion">-- class Person extends Model {</span>
+<span class="hljs-addition">++ const Person = setupModel(Model, {</span>
+
+<span class="hljs-deletion">--   public static type = 'person';</span>
+<span class="hljs-addition">++   type: 'person',</span>
+
+<span class="hljs-deletion">--   public static refs = {</span>
+<span class="hljs-addition">++   references: {</span>
+       spouse: 'person',
+       pets: {model: 'pet', property: 'owner'}
+<span class="hljs-deletion">--   };</span>
+<span class="hljs-addition">++   },</span>
+
+<span class="hljs-deletion">--   public static defaults = {</span>
+<span class="hljs-addition">++   fields: {</span>
+       firstName: undefined, // Required to make the props observable
+       lastName: undefined, // Required to make the props observable
+       age: 0
+<span class="hljs-deletion">--   };</span>
+<span class="hljs-addition">++   }</span>
+   }
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="collection-changes"></a><a href="#collection-changes" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Collection changes</h2>
+<p>To migrate your collections, you should move to either <a href="../api-reference/collection"><code>Collection</code></a> (ideally) or <a href="compat-collection"><code>CompatCollection</code></a>:</p>
+<h3><a class="anchor" aria-hidden="true" id="collection"></a><a href="#collection" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Collection</h3>
+<p>Changed:</p>
+<ul>
+<li><code>insert</code> can receive only an array, not a single object</li>
+<li><code>toJS</code> was renamed to <code>toJSON</code></li>
+<li><a href="https://github.com/infinum/datx/issues/8">Removed</a> <code>patchListen</code> and <code>applyPatch</code></li>
+<li>Removed type getters - use <code>fetchAll</code> instead</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="compatcollection"></a><a href="#compatcollection" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>CompatCollection</h3>
+<p>Changed:</p>
+<ul>
+<li><code>insert</code> can receive only an array, not a single object</li>
+<li><a href="https://github.com/infinum/datx/issues/8">Removed</a> <code>patchListen</code> and <code>applyPatch</code></li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="model-changes"></a><a href="#model-changes" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Model changes</h2>
+<p>Changed:
+To migrate your models, you should move to either <a href="odel"><code>Model</code></a>/<a href="../api-reference/pure-model"><code>PureModel</code></a> (ideally) or <a href="migration-compat-model"><code>CompatModel</code></a>:</p>
+<h3><a class="anchor" aria-hidden="true" id="compatmodel"></a><a href="#compatmodel" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>CompatModel</h3>
+<p>The CompatModel class was created to take advantage of most <code>datx</code> features, but keeping the configuration almost the same as before:</p>
+<p>Same:</p>
+<ul>
+<li><code>assign</code> - Stays the same</li>
+<li><code>assignRef</code> - Stays the same</li>
+<li><code>snapshot</code> - Stays the same</li>
+<li><code>toJS</code> - Stays the same</li>
+<li><code>getRecordId</code> - Stays the same</li>
+<li><code>getRecordType</code> - Stays the same</li>
+</ul>
+<p>Changed:</p>
+<ul>
+<li><code>patchListen</code> - <a href="https://github.com/infinum/datx/issues/8">Removed</a></li>
+<li><code>applyPatch</code> - <a href="https://github.com/infinum/datx/issues/8">Removed</a></li>
+<li>Reference ids - Instead of <code>model[refName + 'Id']</code> use <code>getRefId(refName)</code></li>
+<li><code>__collection</code> (undocumented) - Stays the same, but shouldn't use it anyway...</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="model"></a><a href="#model" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Model</h3>
+<p>The Model class is exposing some methods equivalent to the old Model methods:</p>
+<p>Same:</p>
+<ul>
+<li><code>assign</code> - Stays the same</li>
+<li><code>assignRef</code> - Stays the same</li>
+</ul>
+<p>Changed:</p>
+<ul>
+<li><code>snapshot</code> - Use <code>model.meta.snapshot</code></li>
+<li><code>toJS</code> - Renamed to <code>toJSON</code> or use <code>model.meta.snapshot</code></li>
+<li><code>patchListen</code> - <a href="https://github.com/infinum/datx/issues/8">Removed</a></li>
+<li><code>applyPatch</code> - <a href="https://github.com/infinum/datx/issues/8">Removed</a></li>
+<li><code>getRecordId</code> - Use <code>model.meta.id</code></li>
+<li><code>getRecordType</code> - Use <code>model.meta.type</code></li>
+<li>Reference ids - Instead of <code>model[refName + 'Id']</code> use <code>model.meta.refs[refName]</code></li>
+<li><code>__collection</code> (undocumented) - Use <code>model.meta.collection</code></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="puremodel"></a><a href="#puremodel" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>PureModel</h3>
+<p>The PureModel class doesn't expose anything directly. Instead, you need to use <a href="../api-reference/model-utils">helper methods</a>:</p>
+<p>Changed:</p>
+<ul>
+<li><code>assign</code> - Use <code>assignModel(model, key, value)</code></li>
+<li><code>assignRef</code> - Use <code>updateModel(model, data)</code></li>
+<li><code>snapshot</code> - Use <code>modelToJSON(model)</code></li>
+<li><code>toJS</code> - Use <code>modelToJSON(model)</code></li>
+<li><code>patchListen</code> - <a href="https://github.com/infinum/datx/issues/8">Removed</a></li>
+<li><code>applyPatch</code> - <a href="https://github.com/infinum/datx/issues/8">Removed</a></li>
+<li><code>getRecordId</code> - Use <code>getModelId(model)</code></li>
+<li><code>getRecordType</code> - Use <code>getModelType(model)</code></li>
+<li>Reference ids - Instead of <code>model[refName + 'Id']</code> use <code>getRefId(refName)</code></li>
+<li><code>__collection</code> (undocumented) - Use <code>getModelCollection(model)</code></li>
+</ul>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 8/9/2023 by Ivica Batinić</em></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#model-definition">Model definition</a><ul class="toc-headings"><li><a href="#typescript">TypeScript</a></li><li><a href="#javascript-without-decorators">JavaScript without decorators</a></li></ul></li><li><a href="#collection-changes">Collection changes</a><ul class="toc-headings"><li><a href="#collection">Collection</a></li><li><a href="#compatcollection">CompatCollection</a></li></ul></li><li><a href="#model-changes">Model changes</a><ul class="toc-headings"><li><a href="#compatmodel">CompatModel</a></li><li><a href="#model">Model</a></li><li><a href="#puremodel">PureModel</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'f03607e57957ae747b2342443460477a',
+                indexName: 'datx',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

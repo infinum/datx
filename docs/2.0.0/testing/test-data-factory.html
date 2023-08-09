@@ -1,0 +1,533 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Test data factory · datx</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Rather than instancing random models each time you want to test something in your system you can instead use a _factory_ that can create fake data. This keeps your tests consistent and means that they always use data that replicates the real thing. If your tests work off objects close to the real thing they are more useful and there&#x27;s a higher chance of them finding bugs."/><meta name="docsearch:version" content="2.0.0"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Test data factory · datx"/><meta property="og:type" content="website"/><meta property="og:url" content="https://datx.dev/"/><meta property="og:description" content="Rather than instancing random models each time you want to test something in your system you can instead use a _factory_ that can create fake data. This keeps your tests consistent and means that they always use data that replicates the real thing. If your tests work off objects close to the real thing they are more useful and there&#x27;s a higher chance of them finding bugs."/><meta property="og:image" content="https://datx.dev/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://datx.dev/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css"/><link rel="stylesheet" href="/css/code-block-buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/code-block-buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100}
+          )
+        });
+        </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/datx-logo.svg" alt="datx"/><h2 class="headerTitleWithLogo">datx</h2></a><a href="/versions"><h3>2.0.0</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/2.0.0/getting-started/installation" target="_self">Docs</a></li><li class=""><a href="/docs/2.0.0/examples/basic-setup" target="_self">Examples</a></li><li class=""><a href="https://github.com/infinum/datx" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Testing</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Getting started<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/installation">Installation</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/defining-models">Defining models</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/references">References</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/configuring-the-collection">Configuring the collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/using-the-collection">Using the collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/getting-started/persisting-data-locally">Persisting data locally</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Mixins<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/what-are-mixins">What are mixins</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-actions">withActions</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-meta">withMeta</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/with-patches">withPatches</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/network-mixin">Network Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/jsonapi-mixin">JSONAPI Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/jsonapi-angular-mixin">JSONAPI Angular Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/mixins/building-your-own-mixin">Build your own mixin</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">API Reference<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/collection">Collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/model">Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/view">View</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/attribute">Attribute</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/field">Field</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/bucket">Bucket</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/pure-model">Pure Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/model-utils">Model utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/lib-utils">Lib utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/api-reference/typescript-interfaces">Typescript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Network<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/getting-started">Getting started with DatX Network</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/base-request">BaseRequest</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/caching">Caching</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/fetching">Fetching</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/interceptors">Interceptors</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/operators">Operators</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/response">Response</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/network/typescript-interfaces">TypeScript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-getting-started">Getting started with JSON API</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-basic-configuration">Basic configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-network-configuration">Network configuration</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-network-usage">Network usage</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-spec-compliance">Spec compliance</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-model">Model</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-collection">Collection</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-view">View</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-response">Response</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-config">Config</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-utils">Utils</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi/jsonapi-typescript-interfaces">Typescript interfaces</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API Angular<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-angular/mixin">Mixin</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-angular/example-repo">Example repo</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">JSON API SWR<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-swr/overview">Overview</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/jsonapi-swr/api">API</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Migration guide<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/breaking-changes">Breaking changes since v1</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/deprecations">Deprecations in v2</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/whats-new">What&#x27;s new</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/from-v1">Migration from v1</a></li><li class="navListItem"><a class="navItem" href="/docs/2.0.0/migration-guide/codemods">Codemods</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Testing<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem navListItemActive"><a class="navItem" href="/docs/2.0.0/testing/test-data-factory">Test data factory</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Troubleshooting<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/docs/2.0.0/troubleshooting/known-issues">Known issues</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Test data factory</h1></header><article><div><span><p>Rather than instancing random models each time you want to test something in your system you can instead use a <em>factory</em> that can create fake data. This keeps your tests consistent and means that they always use data that replicates the real thing. If your tests work off objects close to the real thing they are more useful and there's a higher chance of them finding bugs.</p>
+<pre><code class="hljs css language-sh">npm install --save-dev @datx/<span class="hljs-built_in">test</span>-data-factory
+yarn add --dev @datx/<span class="hljs-built_in">test</span>-data-factory
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="creating-your-first-factory"></a><a href="#creating-your-first-factory" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Creating your first factory</h2>
+<p>We use the <code>createFactory</code> function to create a factory. You give a factory an object of fields you want to define:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'John'</span>,
+  },
+});
+
+<span class="hljs-keyword">const</span> user = userFactory();
+
+<span class="hljs-built_in">console</span>.log(user); <span class="hljs-comment">// =&gt; { name: 'John'}</span>
+</code></pre>
+<p>Once you've created a factory, you can call it to generate an instance of that object - in this case, a <code>user</code>.</p>
+<p>It would be boring though if each user had the same <code>name</code> - so <code>@datx/test-data-factory</code> lets you generate data via some API methods:</p>
+<h3><a class="anchor" aria-hidden="true" id="incrementing-ids-with-sequence"></a><a href="#incrementing-ids-with-sequence" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Incrementing IDs with <code>sequence</code></h3>
+<p>Often you will be creating objects that have an ID that comes from a database, so you need to guarantee that it's unique. You can use <code>sequence</code>, which increments every time it's called:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory, sequence } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">id</span>: sequence(),
+  },
+});
+<span class="hljs-keyword">const</span> userOne = userFactory();
+<span class="hljs-keyword">const</span> userTwo = userFactory();
+<span class="hljs-comment">// userOne.id === 1</span>
+<span class="hljs-comment">// userTwo.id === 2</span>
+</code></pre>
+<p>If you need more control, you can pass <code>sequence</code> a function that will be called with the number. This is useful to ensure completely unique emails, for example:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory, sequence } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">email</span>: sequence(<span class="hljs-function">(<span class="hljs-params">x</span>) =&gt;</span> <span class="hljs-string">`example<span class="hljs-subst">${x}</span>@gmail.com`</span>),
+  },
+});
+<span class="hljs-keyword">const</span> userOne = userFactory();
+<span class="hljs-keyword">const</span> userTwo = userFactory();
+<span class="hljs-comment">// userOne.email === example1@gmail.com</span>
+<span class="hljs-comment">// userTwo.email === example2@gmail.com</span>
+</code></pre>
+<p>You can use the <code>reset</code> method to reset the counter used internally when generating a sequence:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory, sequence } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">id</span>: sequence(),
+  },
+});
+
+<span class="hljs-keyword">const</span> userOne = userFactory();
+<span class="hljs-keyword">const</span> userTwo = userFactory();
+
+userFactory.reset();
+
+<span class="hljs-keyword">const</span> userThree = userFactory();
+<span class="hljs-keyword">const</span> userFour = userFactory();
+<span class="hljs-comment">// userOne.id === 1</span>
+<span class="hljs-comment">// userTwo.id === 2</span>
+<span class="hljs-comment">// userThree.id === 1 &lt;- the sequence has been reset here</span>
+<span class="hljs-comment">// userFour.id === 2</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="randomly-picking-between-an-option"></a><a href="#randomly-picking-between-an-option" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Randomly picking between an option</h3>
+<p>If you want an object to have a random value, picked from a list you control, you can use <code>oneOf</code>:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory, sequence, oneOf } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">name</span>: oneOf(<span class="hljs-string">'alice'</span>, <span class="hljs-string">'bob'</span>, <span class="hljs-string">'charlie'</span>),
+  },
+});
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="bool"></a><a href="#bool" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>bool</code></h3>
+<p>If you need something to be either <code>true</code> or <code>false</code>, you can use <code>bool</code>:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory, sequence, bool } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">isAdmin</span>: bool(),
+  },
+});
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="perbuild"></a><a href="#perbuild" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>perBuild</code></h3>
+<p><code>@datx/test-data-factory</code> lets you declare a field to always be a particular value:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory, sequence } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'John'</span>,
+    <span class="hljs-attr">email</span>: <span class="hljs-string">`user-<span class="hljs-subst">${<span class="hljs-built_in">Math</span>.random()}</span>@example.com`</span>,
+  },
+});
+</code></pre>
+<p>A user generated from this factory will always be the same data. However, if you generate two users using the factory above, they will have <em>exactly the same value</em> for the <code>email</code> field:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">const</span> userOne = userFactory();
+<span class="hljs-keyword">const</span> userTwo = userFactory();
+userOne.email === userTwo.email; <span class="hljs-comment">// true</span>
+</code></pre>
+<p>If you want to generate a unique object every time, you can use <code>perBuild</code> which takes a function and executes it when a factory is built:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory, sequence, perBuild } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'John'</span>,
+    <span class="hljs-attr">email</span>: perBuild(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-string">`user-<span class="hljs-subst">${<span class="hljs-built_in">Math</span>.random()}</span>@example.com`</span>),
+  },
+});
+<span class="hljs-keyword">const</span> userOne = userFactory();
+<span class="hljs-keyword">const</span> userTwo = userFactory();
+userOne.details === userTwo.details; <span class="hljs-comment">// false</span>
+</code></pre>
+<p>This approach also lets you use any additional libraries, say if you wanted to use a library to generate fake data:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">const</span> myFakeLibrary = <span class="hljs-built_in">require</span>(<span class="hljs-string">'whatever-library-you-want'</span>);
+<span class="hljs-keyword">import</span> { createFactory, sequence, perBuild } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">name</span>: perBuild(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myFakeLibrary.randomName()),
+  },
+});
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="mapping-over-all-the-created-objects-with-postbuild"></a><a href="#mapping-over-all-the-created-objects-with-postbuild" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Mapping over all the created objects with <code>postBuild</code></h3>
+<p>If you need to transform an object in a way that <code>@datx/test-data-factory</code> doesn't support out the box, you can pass a <code>postBuild</code> function when creating a factory. This factory will run every time you create an object from it.</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory, sequence, perBuild } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">name</span>: perBuild(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-string">'John'</span>),
+  },
+  <span class="hljs-attr">postBuild</span>: <span class="hljs-function">(<span class="hljs-params">user</span>) =&gt;</span> {
+    user.name = user.name.toUpperCase();
+
+    <span class="hljs-keyword">return</span> user;
+  },
+});
+<span class="hljs-keyword">const</span> user = userFactory();
+<span class="hljs-comment">// user.name will be uppercase</span>
+</code></pre>
+<blockquote>
+<p><code>postBuild</code> will be executed after <code>overrides</code> transformations!</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="build-many-helper-buildmany"></a><a href="#build-many-helper-buildmany" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Build many helper <code>buildMany</code></h2>
+<p><code>@datx/test-data-factory</code> provides a helper function <code>buildMany</code> that lets you create many objects at once:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { createFactory, sequence, perBuild, buildMany } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  fields: {
+    id: sequence(),
+    name: sequence(<span class="hljs-function">(<span class="hljs-params">n</span>) =&gt;</span> <span class="hljs-string">`John Doe <span class="hljs-subst">${n}</span>`</span>),
+    email: sequence(<span class="hljs-function">(<span class="hljs-params">n</span>) =&gt;</span> <span class="hljs-string">`john<span class="hljs-subst">${n}</span>@example.com`</span>),
+    createdAt: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'2020-01-01'</span>),
+  },
+});
+
+<span class="hljs-keyword">const</span> users = buildMany(userFactory, <span class="hljs-number">5</span>);
+
+<span class="hljs-comment">// users will be an array of 5 users</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="working-with-deeply-nested-relationships"></a><a href="#working-with-deeply-nested-relationships" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Working with deeply nested relationships</h2>
+<p><code>@datx/test-data-factory</code> lets you create deeply nested relationships between objects.</p>
+<p>For example, if you have a <code>Post</code> model that has many <code>Comment</code> models, and each <code>Comment</code> has
+an <code>author</code> relationship to a <code>User</code> model, you can create a <code>Post</code> with a bunch of <code>Comment</code>s,
+each with an <code>author</code>.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { createFactory, sequence, perBuild, buildMany } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  fields: {
+    id: sequence(),
+    name: sequence(<span class="hljs-function">(<span class="hljs-params">n</span>) =&gt;</span> <span class="hljs-string">`John Doe <span class="hljs-subst">${n}</span>`</span>),
+    email: sequence(<span class="hljs-function">(<span class="hljs-params">n</span>) =&gt;</span> <span class="hljs-string">`john<span class="hljs-subst">${n}</span>@example.com`</span>),
+    createdAt: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'2020-01-01'</span>),
+  },
+});
+
+<span class="hljs-keyword">const</span> commentFactory = factory(Comment, {
+  fields: {
+    id: sequence(),
+    body: <span class="hljs-string">'Hello world'</span>,
+    author: perBuild(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> userFactory()),
+  },
+});
+
+<span class="hljs-keyword">const</span> postFactory = factory(Post, {
+  fields: {
+    id: sequence(),
+    title: <span class="hljs-string">'My first post'</span>,
+    body: <span class="hljs-string">'Hello world'</span>,
+    comments: buildMany(commentFactory, <span class="hljs-number">5</span>),
+  },
+});
+
+<span class="hljs-keyword">const</span> post = postFactory();
+
+<span class="hljs-comment">// post.comments.length === 5;</span>
+<span class="hljs-comment">// post.comments[0].author.name will be 'John Doe 1';</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="overrides-per-build"></a><a href="#overrides-per-build" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Overrides per-build</h2>
+<p>You'll often need to generate a random object but control one of the values directly for the purpose of testing. When you call a factory you can pass in overrides which will override the factory defaults:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory, sequence, perBuild } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">id</span>: sequence(),
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'john'</span>,
+  },
+});
+<span class="hljs-keyword">const</span> user = userFactory({
+  <span class="hljs-attr">overrides</span>: {
+    <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'John'</span>,
+  },
+});
+<span class="hljs-comment">// user.id === 1</span>
+<span class="hljs-comment">// user.name === 'John'</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="editing-object-directly-with-map"></a><a href="#editing-object-directly-with-map" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Editing object directly with <code>map</code></h2>
+<p>If you need to edit the object directly, you can pass in a <code>map</code> function when you call the factory. This will be called after <code>@datx/test-data-factory</code> has generated the fake object, and lets you directly change its properties.</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory, sequence, perBuild } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">id</span>: sequence(),
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'John'</span>,
+  },
+});
+
+<span class="hljs-keyword">const</span> user = userFactory({
+  <span class="hljs-attr">map</span>: <span class="hljs-function">(<span class="hljs-params">user</span>) =&gt;</span> {
+    user.name = user.name.toUpperCase();
+
+    <span class="hljs-keyword">return</span> user;
+  },
+});
+
+<span class="hljs-comment">// user.name === 'JOHN'</span>
+</code></pre>
+<p>Using <code>overrides</code> and <code>map</code> lets you easily customize a specific object that a factory has created.</p>
+<h2><a class="anchor" aria-hidden="true" id="traits"></a><a href="#traits" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Traits</h2>
+<p>Traits let you define a set of overrides for a factory that can easily be re-applied. Let's imagine you've got a users factory where users can be admins:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { createFactory } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  <span class="hljs-attr">fields</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'John'</span>,
+    <span class="hljs-attr">admin</span>: <span class="hljs-literal">false</span>,
+  },
+  <span class="hljs-attr">traits</span>: {
+    <span class="hljs-attr">admin</span>: {
+      <span class="hljs-attr">overrides</span>: {
+        <span class="hljs-attr">admin</span>: <span class="hljs-literal">true</span>,
+      },
+    },
+  },
+});
+</code></pre>
+<p>Notice that we've defined the <code>admin</code> trait here. You don't need to do this; you could easily override the <code>admin</code> field each time:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">const</span> adminUser = userFactory({ <span class="hljs-attr">overrides</span>: { <span class="hljs-attr">admin</span>: <span class="hljs-literal">true</span> } });
+</code></pre>
+<p>But imagine that the field changes, or the way you represent admins changes. Or imagine setting an admin is not just one field but a few fields that need to change. Maybe an admin's email address always has to be a certain domain. We can define that behaviour once as a trait:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> userFactory = factory(User, {
+  fields: {
+    name: <span class="hljs-string">'John'</span>,
+    admin: <span class="hljs-literal">false</span>,
+  },
+  traits: {
+    admin: {
+      overrides: {
+        admin: <span class="hljs-literal">true</span>,
+      },
+    },
+  },
+});
+</code></pre>
+<p>And now building an admin user is easy:</p>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">const</span> admin = userFactory({ <span class="hljs-attr">traits</span>: <span class="hljs-string">'admin'</span> });
+</code></pre>
+<p>You can define and use multiple traits when building an object. Be aware that if two traits override the same value, the one passed in last wins:</p>
+<pre><code class="hljs css language-js"><span class="hljs-comment">// any properties defined in other-trait will override any that admin sets</span>
+<span class="hljs-keyword">const</span> admin = userFactory({ <span class="hljs-attr">traits</span>: [<span class="hljs-string">'admin'</span>, <span class="hljs-string">'other-trait'</span>] });
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="using-faker-library"></a><a href="#using-faker-library" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Using faker library?</h2>
+<pre><code class="hljs css language-js"><span class="hljs-keyword">import</span> { build, perBuild } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-comment">// This can be any fake data library you like.</span>
+<span class="hljs-keyword">import</span> fake <span class="hljs-keyword">from</span> <span class="hljs-string">'faker'</span>;
+
+<span class="hljs-keyword">const</span> userFactory = factory({
+  <span class="hljs-comment">// Within perBuild, call your faker library directly.</span>
+  <span class="hljs-attr">name</span>: perBuild(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> fake().name()),
+});
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="using-with-jsonapi-resources"></a><a href="#using-with-jsonapi-resources" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Using with JSON:API resources</h2>
+<p>When using this library with JSON:API resources, factory will automatically support <code>meta</code> and <code>links</code> fields.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { Collection, Field, Model } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/core'</span>;
+<span class="hljs-keyword">import</span> { jsonapi, getModelMeta, getModelLinks } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/jsonapi'</span>;
+<span class="hljs-keyword">import</span> { createFactory, sequence, perBuild } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+
+<span class="hljs-keyword">class</span> User <span class="hljs-keyword">extends</span> jsonapi(Model) {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">type</span> = <span class="hljs-string">'users'</span>;
+
+  <span class="hljs-meta">@Field</span>({ isIdentifier: <span class="hljs-literal">true</span> })
+  <span class="hljs-keyword">public</span> id!: <span class="hljs-built_in">number</span>;
+
+  <span class="hljs-meta">@Field</span>()
+  <span class="hljs-keyword">public</span> name!: <span class="hljs-built_in">string</span>;
+}
+
+<span class="hljs-keyword">class</span> JsonapiClient <span class="hljs-keyword">extends</span> jsonapi(Collection) {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> types = [User];
+}
+
+<span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> JsonapiClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  fields: {
+    id: sequence(),
+    name: <span class="hljs-string">'John'</span>,
+    meta: {
+      foo: <span class="hljs-string">'bar'</span>,
+    },
+    links: {
+      self: <span class="hljs-string">'https://example.com'</span>,
+    },
+  },
+});
+
+<span class="hljs-keyword">const</span> user = userFactory();
+
+<span class="hljs-keyword">const</span> meta = getModelMeta(user);
+<span class="hljs-keyword">const</span> links = getModelLinks(user);
+
+<span class="hljs-comment">// meta.foo === 'bar';</span>
+<span class="hljs-comment">// links.self === 'https://example.com';</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="using-with-jest-testing-library"></a><a href="#using-with-jest-testing-library" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Using with Jest testing library</h2>
+<p>Here is an example of how to use this library with Jest testing library.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { createFactory, sequence, perBuild } <span class="hljs-keyword">from</span> <span class="hljs-string">'@datx/test-data-factory'</span>;
+<span class="hljs-keyword">import</span> { createClient } <span class="hljs-keyword">from</span> <span class="hljs-string">'./create-client'</span>;
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models/User'</span>;
+
+<span class="hljs-keyword">const</span> client = createClient();
+<span class="hljs-keyword">const</span> factory = createFactory(client);
+
+<span class="hljs-keyword">const</span> userFactory = factory(User, {
+  fields: {
+    id: sequence(),
+    name: <span class="hljs-string">'John'</span>,
+  },
+});
+
+describe(<span class="hljs-string">'User'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    factory.reset();
+  });
+
+  it(<span class="hljs-string">'should create a user'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> user = userFactory();
+
+    expect(user.id).toBe(<span class="hljs-number">1</span>);
+    expect(user.name).toBe(<span class="hljs-string">'John'</span>);
+  });
+});
+</code></pre>
+<blockquote>
+<p>It is important to reset the factory before each test, otherwise the client will not be reset.</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="inspired-by"></a><a href="#inspired-by" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Inspired by</h2>
+<ul>
+<li><a href="https://github.com/jackfranklin/test-data-bot">@jackfranklin/test-data-bot</a> - Generate test data for your tests easily.</li>
+<li><a href="https://github.com/thoughtbot/factory_bot">factory_bot</a> - A library for setting up Ruby objects as test data</li>
+</ul>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 8/9/2023 by Ivica Batinić</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/2.0.0/migration-guide/codemods"><span class="arrow-prev">← </span><span>Codemods</span></a><a class="docs-next button" href="/docs/2.0.0/troubleshooting/known-issues"><span>Known issues</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#creating-your-first-factory">Creating your first factory</a><ul class="toc-headings"><li><a href="#incrementing-ids-with-sequence">Incrementing IDs with <code>sequence</code></a></li><li><a href="#randomly-picking-between-an-option">Randomly picking between an option</a></li><li><a href="#bool"><code>bool</code></a></li><li><a href="#perbuild"><code>perBuild</code></a></li><li><a href="#mapping-over-all-the-created-objects-with-postbuild">Mapping over all the created objects with <code>postBuild</code></a></li></ul></li><li><a href="#build-many-helper-buildmany">Build many helper <code>buildMany</code></a></li><li><a href="#working-with-deeply-nested-relationships">Working with deeply nested relationships</a></li><li><a href="#overrides-per-build">Overrides per-build</a></li><li><a href="#editing-object-directly-with-map">Editing object directly with <code>map</code></a></li><li><a href="#traits">Traits</a></li><li><a href="#using-faker-library">Using faker library?</a></li><li><a href="#using-with-jsonapi-resources">Using with JSON:API resources</a></li><li><a href="#using-with-jest-testing-library">Using with Jest testing library</a></li><li><a href="#inspired-by">Inspired by</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2023 infinum</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'f03607e57957ae747b2342443460477a',
+                indexName: 'datx',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
