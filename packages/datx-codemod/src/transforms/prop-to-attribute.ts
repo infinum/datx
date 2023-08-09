@@ -2,6 +2,20 @@ import { API, FileInfo } from 'jscodeshift';
 
 export const parser = 'tsx';
 
+const replacePropWithAttribute = (path) => {
+  if (path.node.specifiers) {
+    path.node.specifiers = path.node.specifiers.map((specifier) => {
+      if (specifier.type === 'ImportSpecifier') {
+        if (specifier.imported.name === 'prop') {
+          specifier.imported.name = 'Attribute';
+        }
+      }
+
+      return specifier;
+    });
+  }
+};
+
 export default function transformer(file: FileInfo, api: API) {
   const j = api.jscodeshift;
   const root = j(file.source);
@@ -12,31 +26,11 @@ export default function transformer(file: FileInfo, api: API) {
     if (path.node.source.value === 'datx') {
       path.node.source.value = '@datx/core';
 
-      if (path.node.specifiers) {
-        path.node.specifiers = path.node.specifiers.map((specifier) => {
-          if (specifier.type === 'ImportSpecifier') {
-            if (specifier.imported.name === 'prop') {
-              specifier.imported.name = 'Attribute';
-            }
-          }
-
-          return specifier;
-        });
-      }
+      replacePropWithAttribute(path);
     }
 
     if (path.node.source.value === '@datx/core') {
-      if (path.node.specifiers) {
-        path.node.specifiers = path.node.specifiers.map((specifier) => {
-          if (specifier.type === 'ImportSpecifier') {
-            if (specifier.imported.name === 'prop') {
-              specifier.imported.name = 'Attribute';
-            }
-          }
-
-          return specifier;
-        });
-      }
+      replacePropWithAttribute(path);
     }
   });
 
