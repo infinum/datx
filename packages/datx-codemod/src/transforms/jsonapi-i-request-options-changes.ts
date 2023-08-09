@@ -2,6 +2,19 @@ import { API, FileInfo } from 'jscodeshift';
 
 export const parser = 'tsx';
 
+const allowedCallExpressionCalleeNames = [
+  'fetch',
+  'fetchAll',
+  'getOne',
+  'getMany',
+  'getAll',
+  'request',
+  'removeOne',
+  'removeAll',
+  'save',
+  'destroy',
+];
+
 const oldIRequestOptionsPropNames = [
   'headers',
   'include',
@@ -18,7 +31,25 @@ export default function transformer(file: FileInfo, api: API) {
 
   const oldIRequestOptionsObjectLiterals = root.find(j.ObjectExpression).filter((path) => {
     const props = path.get('properties');
-    const propNames = props.map((prop) => prop.node.key.name);
+
+    const propNames = props
+      .filter((prop) => prop.node.type !== 'SpreadElement')
+      .filter((prop) => {
+        const parent = prop.parent.parent;
+
+        if (parent.node.type === 'CallExpression') {
+          const callee = parent.node.callee;
+
+          if (callee.type === 'MemberExpression') {
+            const name = callee.property.name;
+
+            return allowedCallExpressionCalleeNames.includes(name);
+          }
+
+          return allowedCallExpressionCalleeNames.includes(callee.name);
+        }
+      })
+      .map((prop) => prop.node.key.name);
 
     // Filter only headers, include, filter, sort, fields, params, skipCache props
     const allowedPropNames = propNames.filter((name) => oldIRequestOptionsPropNames.includes(name));

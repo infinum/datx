@@ -157,3 +157,7 @@ someRandomFunctionWithSimilarInterface({
   params: [{ key: 'key', value: 'value' }],
   skipCache: true,
 });
+
+const emptyObject = {
+  ...{},
+};
