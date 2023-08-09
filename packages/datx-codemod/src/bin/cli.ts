@@ -104,6 +104,10 @@ const TRANSFORMER_INQUIRER_CHOICES = [
     value: 'scoped-package-name',
   },
   {
+    name: 'jsonapi-i-request-options-changes: Migration to new IRequestOptions interface',
+    value: 'jsonapi-i-request-options-changes',
+  },
+  {
     name: 'attribute-to-field: In DatX 3.0.0, the `@Attribute` decorator is renamed to `@Field`',
     value: 'attribute-to-field',
   },
