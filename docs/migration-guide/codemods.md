@@ -120,7 +120,6 @@ class Pet extends Model {
 }
 ```
 
-
 ## Datx 2.0.0
 
 ### `prop-to-attribute`
@@ -225,3 +224,42 @@ import * as utils from '@datx/utils';
 import * as datx from '@datx/core';
 import * as jsonapi from '@datx/jsonapi';
 ```
+
+### `jsonapi-i-request-options-changes`
+
+The `IRequestOptions` interface has been changed to a different shape to allow for more flexibility. This codemod transforms the `IRequestOptions` interface to the new shape based on this migration guide [here](/docs/migration-guide/from-v1#json-api-irequestoptions-changes).
+
+For example, the following code:
+
+```ts
+store.fetch(Comment, 1, {
+  headers: {},
+  include: ['author'],
+  filter: { key: 'value' },
+  sort: 'name',
+  fields: { key: 'value' },
+  params: [{ key: 'key', value: 'value' }],
+  skipCache: true,
+});
+```
+
+will be transformed to:
+
+```ts
+store.fetch(Comment, 1, {
+  networkConfig: {
+    headers: {},
+  },
+
+  queryParams: {
+    include: ['author'],
+    filter: { key: 'value' },
+    sort: 'name',
+    fields: { key: 'value' },
+    custom: [{ key: 'key', value: 'value' }],
+  },
+
+  cacheOptions: {
+    skipCache: true,
+  },
+});
