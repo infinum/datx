@@ -104,19 +104,17 @@ export default function transformer(file: FileInfo, api: API) {
           } else {
             queryParams.value.properties.push(prop);
           }
+        } else if (name === 'params') {
+          newPropsNodes.push(
+            j.objectProperty(
+              j.identifier('queryParams'),
+              j.objectExpression([j.objectProperty(j.identifier('custom'), prop.value)]),
+            ),
+          );
         } else {
-          if (name === 'params') {
-            newPropsNodes.push(
-              j.objectProperty(
-                j.identifier('queryParams'),
-                j.objectExpression([j.objectProperty(j.identifier('custom'), prop.value)]),
-              ),
-            );
-          } else {
-            newPropsNodes.push(
-              j.objectProperty(j.identifier('queryParams'), j.objectExpression([prop])),
-            );
-          }
+          newPropsNodes.push(
+            j.objectProperty(j.identifier('queryParams'), j.objectExpression([prop])),
+          );
         }
       }
 
