@@ -108,6 +108,11 @@ const TRANSFORMER_INQUIRER_CHOICES = [
     value: 'jsonapi-i-request-options-changes',
   },
   {
+    // eslint-disable-next-line max-len
+    name: 'jsonapi-pagination: The pagination is now using methods instead of just plain property access: await response.next becomes await response.next()',
+    value: 'jsonapi-pagination',
+  },
+  {
     name: 'attribute-to-field: In DatX 3.0.0, the `@Attribute` decorator is renamed to `@Field`',
     value: 'attribute-to-field',
   },

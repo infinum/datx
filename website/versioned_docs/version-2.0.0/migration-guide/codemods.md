@@ -265,3 +265,42 @@ store.fetch(Comment, 1, {
   },
 });
 ```
+
+### `jsonapi-pagination`
+
+The pagination is now using methods instead of just plain property access: `await response.next` becomes `await response.next()`.
+
+For example, the following code:
+
+```ts
+async function getAllUsers() {
+  const users = [];
+  let response = await collection.fetchAll('user');
+
+  users.push(...response.data);
+
+  while (response.next) {
+    response = await response.next; // <-- this line
+    users.push(...response.data);
+  }
+
+  return users;
+}
+```
+
+will be transformed to:
+
+```ts
+async function getAllUsers() {
+  const users = [];
+  let response = await collection.fetchAll('user');
+
+  users.push(...response.data);
+
+  while (response.next) {
+    response = await response.next(); // <-- this line
+    users.push(...response.data);
+  }
+
+  return users;
+}
