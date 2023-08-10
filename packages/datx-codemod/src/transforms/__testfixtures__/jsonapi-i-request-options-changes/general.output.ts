@@ -265,3 +265,21 @@ someRandomFunctionWithSimilarInterface({
 const emptyObject = {
   ...{},
 };
+
+await personalTrack?.save({
+  networkConfig: {
+    headers: {},
+  },
+
+  queryParams: {
+    include: ['author'],
+    filter: { key: 'value' },
+    sort: 'name',
+    fields: { key: 'value' },
+    custom: [{ key: 'key', value: 'value' }],
+  },
+
+  cacheOptions: {
+    skipCache: true,
+  },
+});

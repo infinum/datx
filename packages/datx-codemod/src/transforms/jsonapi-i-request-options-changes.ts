@@ -37,10 +37,13 @@ export default function transformer(file: FileInfo, api: API) {
       .filter((prop) => {
         const parent = prop.parent.parent;
 
-        if (parent.node.type === 'CallExpression') {
+        if (
+          parent.node.type === 'CallExpression' ||
+          parent.node.type === 'OptionalCallExpression'
+        ) {
           const callee = parent.node.callee;
 
-          if (callee.type === 'MemberExpression') {
+          if (callee.type === 'MemberExpression' || callee.type === 'OptionalMemberExpression') {
             const name = callee.property.name;
 
             return allowedCallExpressionCalleeNames.includes(name);
@@ -58,8 +61,8 @@ export default function transformer(file: FileInfo, api: API) {
       return false;
     }
 
-    // If object contains any of other props than it's not IRequestOptions object
     if (allowedPropNames.length > 0) {
+      // If object contains any of other props than it's not IRequestOptions object
       if (propNames.length !== allowedPropNames.length) {
         return false;
       }

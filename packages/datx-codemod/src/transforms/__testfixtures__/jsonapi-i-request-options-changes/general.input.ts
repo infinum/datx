@@ -161,3 +161,13 @@ someRandomFunctionWithSimilarInterface({
 const emptyObject = {
   ...{},
 };
+
+await personalTrack?.save({
+  headers: {},
+  include: ['author'],
+  filter: { key: 'value' },
+  sort: 'name',
+  fields: { key: 'value' },
+  params: [{ key: 'key', value: 'value' }],
+  skipCache: true,
+});
