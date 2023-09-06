@@ -18,6 +18,27 @@ The easiest way is to add a generic polyfill:
 - [Babel 7](https://babeljs.io/docs/en/babel-polyfill) - Install `@babel/polyfill` and import it in your entry file
 - TypeScript - If you're using the target `ES3`, `ES5` or you don't have a target defined, you should add the lib `ES2015` to your [`tsconfig.json` compiler options](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html).
 
+## Usage in combination with Vite
+
+If you're using DatX with Vite and MobX, you might have an issue where it works in dev builds, but not in production builds. This is because DatX needs the commonjs `require` in order to detect MobX support, but Vite doesn't transpile `require` calls in production builds for dependencies.
+
+The solution is to use the `vite-plugin-require-transform` plugin to transform `require` calls in dependencies:
+
+```js
+// vite.config.js
+import requireTransform from 'vite-plugin-require-transform';
+
+export default {
+  plugins: [
+    requireTransform({
+      fileRegex: /.ts$|.tsx$|node_modules\/@datx/,
+    }),
+  ],
+};
+```
+
+Using `vite-plugin-commonjs` might also be a possibility, but it was not yet confirmed.
+
 ## Having other issues?
 
 Feel free to [open an issue](https://github.com/infinum/datx/issues/new/choose).

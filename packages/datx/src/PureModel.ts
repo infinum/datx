@@ -1,4 +1,4 @@
-import { DEFAULT_TYPE, IRawModel, mobx } from '@datx/utils';
+import { DEFAULT_TYPE, IRawModel } from '@datx/utils';
 
 import { PureCollection } from './PureCollection';
 import { initModel } from './helpers/model/init';
@@ -30,6 +30,5 @@ export class PureModel {
     startAction(this);
     initModel(this, rawData, collection);
     endAction(this, PatchType.CRATE);
-    mobx.makeObservable(this);
   }
 }
