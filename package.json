@@ -11,6 +11,7 @@
     "watch": "lerna run watch --no-private",
     "watch:swr": "lerna run watch --scope @datx/swr",
     "test:swr": "lerna run test --scope @datx/swr",
+    "example:nextjs:dev": "lerna run dev --scope nextjs --stream",
     "clean": "lerna clean && yarn clean:dist",
     "clean:dist": "lerna exec -- rm -rf ./dist",
     "pkg:check": "manypkg check",
