@@ -43,5 +43,8 @@
     "typescript": "~4.7.3",
     "yarn-audit-fix": "^10.1.1"
   },
-  "packageManager": "yarn@3.2.4"
+  "packageManager": "yarn@3.2.4",
+  "devDependencies": {
+    "yarn-audit-fix": "^10.1.1"
+  }
 }
