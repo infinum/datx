@@ -1,0 +1,38 @@
+{
+  "name": "nextjs",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "analyze": "ANALYZE=true yarn build",
+    "analyze:sourcemap": "source-map-explorer .next/static/**/*.js"
+  },
+  "dependencies": {
+    "@datx/core": "^2.5.0-beta.0",
+    "@datx/jsonapi": "^2.5.0-beta.1",
+    "@datx/swr": "^2.5.0-beta.3",
+    "@next/bundle-analyzer": "^12.2.2",
+    "mobx": "^6.6.0",
+    "next": "^13.2.4",
+    "next-api-router": "^1.0.4",
+    "next-compose-plugins": "2.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "swr": "^2.1.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@infinumjs/eslint-config-react-ts": "^2.9.0",
+    "@next/eslint-plugin-next": "12.1.5",
+    "@types/node": "^17.0.41",
+    "@types/react": "^18.0.12",
+    "@types/uuid": "^8.3.4",
+    "eslint": "^8.17.0",
+    "eslint-config-next": "12.0.4",
+    "source-map-explorer": "2.5.2",
+    "typescript": "~4.7.3"
+  }
+}
