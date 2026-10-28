@@ -2010,14 +2010,14 @@ __metadata:
     "@datx/jsonapi-types": 3.0.0
     "@datx/network": 3.0.0
     "@datx/utils": 3.0.0
-    "@types/jest": ^28.1.8
-    "@types/node": ^18.19.120
-    jest: ^28.1.3
+    "@types/jest": ^28.1.1
+    "@types/node": ^18.7.6
+    jest: ^28.1.1
     jest-preset-angular: ^12.2.6
     ng-packagr: ^14.3.0
     rxjs: ~7.5.7
-    tslib: ~2.4.1
-    typescript: ~4.9.5
+    tslib: ~2.4.0
+    typescript: ~4.7.3
     zone.js: ~0.11.8
   languageName: unknown
   linkType: soft
@@ -2126,7 +2126,7 @@ __metadata:
     rollup: ^2.75.6
     rollup-plugin-exclude-dependencies-from-bundle: ^1.1.22
     rollup-plugin-terser: ^7.0.2
-    swr: 2.0.0-beta.6
+    swr: 2.0.0
     ts-jest: ^28.0.4
     tslib: ~2.4.0
     typescript: ~4.7.3
@@ -4508,7 +4508,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^28.1.1, @types/jest@npm:^28.1.8":
+"@types/jest@npm:^28.1.1":
   version: 28.1.8
   resolution: "@types/jest@npm:28.1.8"
   dependencies:
@@ -4631,12 +4631,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.19.120, @types/node@npm:^18.7.6":
-  version: 18.19.120
-  resolution: "@types/node@npm:18.19.120"
+"@types/node@npm:18.19.39":
+  version: 18.19.39
+  resolution: "@types/node@npm:18.19.39"
   dependencies:
     undici-types: ~5.26.4
-  checksum: d38430484d1de03a754ae192b28e76588b69036a4ff0f134eefdaca40a2b423536ebdb2c6eb3b460b7d78061c459fc5a4d2d593c01e77f78d5391715b3d0c179
+  checksum: d1de755983127b405458c427ae2cf77c89d120a617ca70999086a75fb0b6c6dbc1bdddfe1a8a7374c9ae55ed0589a2bd023ffb3b09ee25440c013afc6502dfe6
   languageName: node
   linkType: hard
 
@@ -7366,7 +7366,7 @@ __metadata:
     lerna: ^6.6.2
     nx: ^16.10.0
     prettier: 2.8.8
-    typescript: ~4.7.4
+    typescript: ~4.7.3
     yarn-audit-fix: ^10.1.1
   languageName: unknown
   linkType: soft
@@ -10228,13 +10228,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"headers-polyfill@npm:^3.1.0":
-  version: 3.3.0
-  resolution: "headers-polyfill@npm:3.3.0"
-  checksum: 6dd010544b7c1a878aa612b49d9e27d273aa9e8a462e1ae05ca212fafa68e6b7cbdec4765f4e443b2fe70d2818f5d9814eab53fa2ba793bf1e5a6b6eff760474
-  languageName: node
-  linkType: hard
-
 "hosted-git-info@npm:^2.1.4":
   version: 2.8.9
   resolution: "hosted-git-info@npm:2.8.9"
@@ -12029,7 +12022,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^28.1.1, jest@npm:^28.1.3":
+"jest@npm:^28.1.1":
   version: 28.1.3
   resolution: "jest@npm:28.1.3"
   dependencies:
@@ -18075,14 +18068,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:2.0.0-beta.6":
-  version: 2.0.0-beta.6
-  resolution: "swr@npm:2.0.0-beta.6"
+"swr@npm:2.0.0":
+  version: 2.0.0
+  resolution: "swr@npm:2.0.0"
   dependencies:
-    use-sync-external-store: ^1.1.0
+    use-sync-external-store: ^1.2.0
   peerDependencies:
     react: ^16.11.0 || ^17.0.0 || ^18.0.0
-  checksum: a2fa5b4600e84351970636e50dfa5209e65caf279a076a64fab8cbd4fb39407d4bee4c93577579ae95ea61161fb3ae176197a23d56770d1b85d6718d31877e05
+  checksum: 4852d8318ed022a681b40a384e675f65e211104d62075c1250b02f47cc8b739cb9138a954e2191c700e2de22b010b9bd05a113c71b193abe0c351d3c4f4646d8
   languageName: node
   linkType: hard
 
@@ -18538,7 +18531,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:~2.4.0, tslib@npm:~2.4.1":
+"tslib@npm:~2.4.0":
   version: 2.4.1
   resolution: "tslib@npm:2.4.1"
   checksum: 19480d6e0313292bd6505d4efe096a6b31c70e21cf08b5febf4da62e95c265c8f571f7b36fcc3d1a17e068032f59c269fab3459d6cd3ed6949eafecf64315fca
@@ -18723,7 +18716,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^3 || ^4, typescript@npm:~4.9.5":
+"typescript@npm:^3 || ^4":
   version: 4.9.5
   resolution: "typescript@npm:4.9.5"
   bin:
@@ -18733,7 +18726,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:~4.7.3, typescript@npm:~4.7.4":
+"typescript@npm:~4.7.3":
   version: 4.7.4
   resolution: "typescript@npm:4.7.4"
   bin:
@@ -18743,7 +18736,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^3 || ^4#~builtin<compat/typescript>, typescript@patch:typescript@~4.9.5#~builtin<compat/typescript>":
+"typescript@patch:typescript@^3 || ^4#~builtin<compat/typescript>":
   version: 4.9.5
   resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=701156"
   bin:
@@ -18753,7 +18746,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@~4.7.3#~builtin<compat/typescript>, typescript@patch:typescript@~4.7.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@~4.7.3#~builtin<compat/typescript>":
   version: 4.7.4
   resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=701156"
   bin:
@@ -19014,12 +19007,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:^1.1.0":
-  version: 1.5.0
-  resolution: "use-sync-external-store@npm:1.5.0"
+"use-sync-external-store@npm:^1.2.0":
+  version: 1.7.0
+  resolution: "use-sync-external-store@npm:1.7.0"
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 5e639c9273200adb6985b512c96a3a02c458bc8ca1a72e91da9cdc6426144fc6538dca434b0f99b28fb1baabc82e1c383ba7900b25ccdcb43758fb058dc66c34
+  checksum: 55e36d54531a778ec8521123ced6cec974dae28585bf2544429245025e989b3d63822f61a1fadc537d10976c0042f54f66c28de8216c2cde0edcbbe8abdf972f
   languageName: node
   linkType: hard
 
